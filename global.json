@@ -1,0 +1,8 @@
+{
+    "sdk": {
+      "version": "7.0.300-preview.23122.5",
+      "rollForward": "minor",
+      "allowPrerelease": true
+    }
+  }
+  

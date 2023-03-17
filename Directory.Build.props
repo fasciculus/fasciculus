@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+    <!-- Directories -->
+
+  <PropertyGroup>
+    <FasciculusRootDirectory>$(MSBuildThisFileDirectory)</FasciculusRootDirectory>
+    <FasciculusRepositoryDirectory>$([System.IO.Path]::Combine($(FasciculusRootDirectory), '.repository'))</FasciculusRepositoryDirectory>
+    <FasciculusPackagesDirectory>$([System.IO.Path]::Combine($(FasciculusRepositoryDirectory), 'packages'))</FasciculusPackagesDirectory>
+    <FasciculusInstalledPackagesDirectory>$([System.IO.Path]::Combine($(FasciculusPackagesDirectory), 'installed'))</FasciculusInstalledPackagesDirectory>
+  </PropertyGroup>
+</Project>
