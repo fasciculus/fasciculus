@@ -9,4 +9,11 @@
     <FasciculusPackagesDirectory>$([System.IO.Path]::Combine($(FasciculusRepositoryDirectory), 'packages'))</FasciculusPackagesDirectory>
     <FasciculusInstalledPackagesDirectory>$([System.IO.Path]::Combine($(FasciculusPackagesDirectory), 'installed'))</FasciculusInstalledPackagesDirectory>
   </PropertyGroup>
+  
+  <!-- Compiler Settings -->
+
+  <PropertyGroup>
+    <LangVersion>11.0</LangVersion>
+  </PropertyGroup>
+  
 </Project>
