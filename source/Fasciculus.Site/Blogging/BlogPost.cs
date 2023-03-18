@@ -28,6 +28,14 @@ namespace Fasciculus.Site.Blogging
         {
             if (Document is null) return File.CreationTime;
 
+            if (Document["Created"] is string createdString)
+            {
+                if (DateTime.TryParse(createdString, out DateTime created))
+                {
+                    return created;
+                }
+            }
+
             return File.CreationTime;
         }
 
