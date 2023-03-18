@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Blog";
+}
+<h1>Blog</h1>
+<ul>
+    @foreach (var post in Blog.Index())
+    {
+        <li><a href="@post.Link">@post.Title</a></li>
+    }
+</ul>

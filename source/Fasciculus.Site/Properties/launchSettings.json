@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Fasciculus.Site": {
+      "commandName": "Project"
+    },
+    "Fasciculus.Site - Preview": {
+      "commandName": "Project",
+      "commandLineArgs": "preview --port 5277",
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5277"
+    }
+  }
+}
