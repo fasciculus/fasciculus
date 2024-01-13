@@ -1,20 +1,21 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "target": "es2016",
+    "module": "nodenext",
     "sourceMap": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "noEmitOnError": true,
-    "noImplicitAny": false,
-    "removeComments": false,
-    "outDir": "wwwroot/app",
-    "strictNullChecks": false
+    "outDir": "js",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+    //    "moduleResolution": "node",
+    //    "emitDecoratorMetadata": true,
+    //    "experimentalDecorators": true,
+    //    "noEmitOnError": true,
+    //    "noImplicitAny": false,
+    //    "removeComments": false,
+    //    "strictNullChecks": false
   },
-  "files": ["src/*.ts"],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": [ "ts"]
 }

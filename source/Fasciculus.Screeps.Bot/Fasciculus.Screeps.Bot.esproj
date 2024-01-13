@@ -3,15 +3,10 @@
     <CommitDir>C:\Users\rhjoe\AppData\Local\Screeps\scripts\127_0_0_1___21025\default</CommitDir>
   </PropertyGroup>
   <ItemGroup>
-    <BotFiles Include="bot/*.js" />
+    <BotFiles Include="js/*.js" />
+    <BotFiles Include="js/*.map" />
   </ItemGroup>
   <Target Name="CommitBot" AfterTargets="Build">
     <Copy SourceFiles="@(BotFiles)" DestinationFolder="$(CommitDir)" />
   </Target>
-  <ItemGroup>
-    <None Remove="bot\main.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\" />
-  </ItemGroup>
 </Project>
