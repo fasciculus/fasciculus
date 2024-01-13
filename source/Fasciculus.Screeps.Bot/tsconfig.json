@@ -1,0 +1,20 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noEmitOnError": true,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "outDir": "wwwroot/app",
+    "strictNullChecks": false
+  },
+  "files": ["src/*.ts"],
+  "exclude": [
+    "node_modules"
+  ]
+}

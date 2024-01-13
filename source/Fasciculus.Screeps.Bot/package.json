@@ -1,23 +1,23 @@
 {
-  "name": "Fasciculus.Screeps.Bot",
-  "version": "1.0.0",
-  "description": "My bot for Screeps",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
   "author": "",
-  "license": "ISC",
+  "dependencies": {
+    "@types/screeps": "^3.3.7",
+    "lodash": "^4.17.21"
+  },
+  "description": "My bot for Screeps",
   "devDependencies": {
     "eslint": "^8.56.0"
   },
+  "keywords": [],
+  "license": "ISC",
+  "main": "app.js",
+  "name": "fasciculusscreepsbot",
   "repository": {
     "type": "git",
     "url": "git://github.com/fasciculus/fasciculus.git"
   },
-  "dependencies": {
-    "@types/screeps": "^3.3.7",
-    "lodash": "^4.17.21"
-  }
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
 }
