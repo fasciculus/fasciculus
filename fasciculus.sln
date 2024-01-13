@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Site", "source\F
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Fasciculus.Screeps.Bot", "source\Fasciculus.Screeps.Bot\Fasciculus.Screeps.Bot.esproj", "{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Fasciculus.Screeps.Bot2", "source\Fasciculus.Screeps.Bot2\Fasciculus.Screeps.Bot2.esproj", "{11D4D966-5E80-46A6-8F50-32B0F1852DA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,12 @@ Global
 		{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{11D4D966-5E80-46A6-8F50-32B0F1852DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11D4D966-5E80-46A6-8F50-32B0F1852DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11D4D966-5E80-46A6-8F50-32B0F1852DA9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{11D4D966-5E80-46A6-8F50-32B0F1852DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11D4D966-5E80-46A6-8F50-32B0F1852DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11D4D966-5E80-46A6-8F50-32B0F1852DA9}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
