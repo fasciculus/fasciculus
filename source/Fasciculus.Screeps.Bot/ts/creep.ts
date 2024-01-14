@@ -1,51 +1,79 @@
 
-import { NameManager } from "./name";
+import * as _ from "lodash";
 
-var _creeps: Creep[];
-var _workers: Creep[];
-
-function getCreeps(): Creep[]
+export function cleanupCreepsMemory()
 {
-    if (!_creeps)
+    for (let name in Memory.creeps)
     {
-        _creeps = [];
-
-        for (var name in Game.creeps)
+        if (!Game.creeps[name])
         {
-            _creeps.push(Game.creeps[name]);
+            delete Memory.creeps[name];
         }
     }
-
-    return _creeps;
 }
 
-function getWorkers(): Creep[]
+export interface ICreepMemory
 {
-    if (!_workers)
-    {
-        Creeps.filter(creep => NameManager.isWorkerName(creep.name));
-    }
-
-    return _workers;
+    job?: string;
 }
 
-export const Creeps: Creep[] = getCreeps();
-export const Workers: Creep[] = getWorkers();
-
-export class CreepManager
+function getCreepMemory(creep: Creep): ICreepMemory
 {
-    static cleanup()
+    return creep.memory as any as ICreepMemory;
+}
+
+export function getCreepJob(creep: Creep): string | undefined
+{
+    return getCreepMemory(creep).job;
+}
+
+export function setCreepJob(creep: Creep, id: string | undefined)
+{
+    getCreepMemory(creep).job = id;
+}
+
+export function getCreeps(): Creep[]
+{
+    var result: Creep[] = [];
+
+    for (let name in Game.creeps)
     {
-        var existing: Set<string> = new Set();
-
-        Creeps.forEach(creep => existing.add(creep.name));
-
-        for (var name in Memory.creeps)
-        {
-            if (!existing.has(name))
-            {
-                delete Memory.creeps[name];
-            }
-        }
+        result.push(Game.creeps[name]);
     }
+
+    return result;
+}
+
+export function getIdleCreeps(): Creep[]
+{
+    return getCreeps().filter(c => !getCreepJob(c));
+}
+
+export function getIdleHarvesters(): Creep[]
+{
+    return getIdleCreeps().filter(canHarvest);
+}
+
+export function getIdleUpgraders(): Creep[]
+{
+    return getIdleCreeps().filter(canUpgrade);
+}
+
+function creepHasBodyPart(creep: Creep, type: BodyPartConstant): boolean
+{
+    return _.any(creep.body, p => p.hits > 0 && p.type == type);
+}
+
+function canHarvest(creep: Creep): boolean
+{
+    if (creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) return false;
+
+    return creepHasBodyPart(creep, WORK);
+}
+
+function canUpgrade(creep: Creep): boolean
+{
+    if (creep.store.energy == 0) return false;
+
+    return creepHasBodyPart(creep, WORK);
 }

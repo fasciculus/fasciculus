@@ -6,6 +6,9 @@
     <BotFiles Include="js/*.js" />
     <BotFiles Include="js/*.map" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="js\" />
+  </ItemGroup>
   <Target Name="CommitBot" AfterTargets="Build">
     <Copy SourceFiles="@(BotFiles)" DestinationFolder="$(CommitDir)" />
   </Target>

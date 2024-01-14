@@ -1,7 +1,3 @@
-enum NamePrefix
-{
-    Worker = "W"
-}
 
 interface INameMemory
 {
@@ -20,25 +16,18 @@ function getNameMemory(): INameMemory
         result.names =
         {
             worker: 0
-        }
+        };
     }
 
     return result;
 }
 
-export class NameManager
+export function nextWorkerName(): string
 {
-    static nextWorkerName(): string
-    {
-        var mem = getNameMemory();
+    let mem = getNameMemory();
+    let id = mem.names.worker + 1;
 
-        ++mem.names.worker;
+    mem.names.worker = id;
 
-        return NamePrefix.Worker + mem.names.worker;
-    }
-
-    static isWorkerName(name: string): boolean
-    {
-        return name.startsWith(NamePrefix.Worker);
-    }
+    return `W${id}`;
 }

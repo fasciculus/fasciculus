@@ -1,18 +1,13 @@
-import { Rooms } from "./room";
-import { JobManager } from "./job";
 
-export class SourceManager
+import * as _ from "lodash";
+import { getRooms } from "./room";
+
+export function getRoomActiveSources(room: Room): Source[]
 {
-    static run()
-    {
-        for (let room of Rooms)
-        {
-            let sources = room.find<FIND_SOURCES_ACTIVE, Source>(FIND_SOURCES_ACTIVE);
+    return room.find<FIND_SOURCES_ACTIVE, Source>(FIND_SOURCES_ACTIVE);
+}
 
-            for (let source of sources)
-            {
-                JobManager.addHarvest(source);
-            }
-        }
-    }
+export function getActiveSources(): Source[]
+{
+    return _.flatten(getRooms().map(getRoomActiveSources));
 }

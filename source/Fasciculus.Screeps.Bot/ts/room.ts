@@ -1,24 +1,12 @@
-var _rooms: Room[];
 
-function getRooms(): Room[]
+export function getRooms(): Room[]
 {
-    if (!_rooms)
-    {
-        _rooms = [];
+    var result: Room[] = [];
 
-        for (var name in Game.rooms)
-        {
-            _rooms.push(Game.rooms[name]);
-        }
+    for (let name in Game.rooms)
+    {
+        result.push(Game.rooms[name]);
     }
 
-    return _rooms;
+    return result;
 }
-
-export const Rooms: Room[] = getRooms();
-
-export class RoomManager
-{
-
-}
-

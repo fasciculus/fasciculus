@@ -1,50 +1,39 @@
-import { BodyManager } from "./body";
-import { NameManager } from "./name";
 
+import * as _ from "lodash";
+import { nextWorkerName } from "./name";
 
-var _spawns: StructureSpawn[];
+const WORKER_BODY = [WORK, CARRY, MOVE];
+const WORKER_COST = _.sum(WORKER_BODY.map(b => BODYPART_COST[b]));
 
-function getSpawns(): StructureSpawn[]
+function spawnCreepsOfSpawn(spawn: StructureSpawn)
 {
-    if (!_spawns)
+    if (spawn.spawning)
     {
-        _spawns = [];
-
-        for (var name in Game.spawns)
-        {
-            _spawns.push(Game.spawns[name]);
-        }
+        console.log(`spawn ${spawn.name} already spawning`);
+        return;
     }
 
-    return _spawns;
+    let room = spawn.room;
+    let energyAvailable = room.energyAvailable;
+
+    if (energyAvailable < WORKER_COST)
+    {
+        // console.log(`not enough energy in room ${room.name}. required: ${WORKER_COST}, available: ${energyAvailable}`);
+        return;
+    }
+
+    let name = nextWorkerName();
+    let result = spawn.spawnCreep(WORKER_BODY, name);
+
+    console.log(`spawn ${spawn.name} spawning ${name}. result ${result}`);
 }
 
-export const Spawns: StructureSpawn[] = getSpawns();
-export const IdleSpawns: StructureSpawn[] = Spawns.filter(spawn => !spawn.spawning);
-
-export class SpawnManager
+export function spawnCreeps()
 {
-    static run()
+    for (let name in Game.spawns)
     {
-        var usedRooms: Set<string> = new Set<string>();
+        let spawn = Game.spawns[name];
 
-        for (let spawn of IdleSpawns)
-        {
-            let room = spawn.room;
-            let roomName = room.name;
-
-            if (usedRooms.has(roomName)) continue;
-
-            let body = BodyManager.createWorkerBody(room);
-
-            if (body.length == 0) continue;
-
-            let name = NameManager.nextWorkerName();
-
-            if (spawn.spawnCreep(body, name) == OK)
-            {
-                usedRooms.add(roomName);
-            }
-        }
+        spawnCreepsOfSpawn(spawn);
     }
 }

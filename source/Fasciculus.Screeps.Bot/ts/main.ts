@@ -1,12 +1,13 @@
-import { CreepManager } from "./creep";
-import { SpawnManager } from "./spawn";
-import { SourceManager } from "./source";
-import { JobManager } from "./job";
+
+import { cleanupCreepsMemory } from "./creep";
+import { spawnCreeps } from "./spawn";
+import { assignNewJobs } from "./job.assign";
+import { executeJobs } from "./job.execute";
 
 export const loop = function ()
 {
-    CreepManager.cleanup();
-    SpawnManager.run();
-    SourceManager.run();
-    JobManager.run();
+    cleanupCreepsMemory();
+    spawnCreeps();
+    assignNewJobs();
+    executeJobs();
 }
