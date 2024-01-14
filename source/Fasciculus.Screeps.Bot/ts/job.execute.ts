@@ -13,8 +13,6 @@ function executeCreepJob(creep: Creep)
 
     if (!job) return;
 
-    console.log(`executing ${job.id}`);
-
     var done = false;
 
     switch (job.type)
