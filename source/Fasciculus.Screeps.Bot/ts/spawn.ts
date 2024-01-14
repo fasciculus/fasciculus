@@ -2,7 +2,7 @@
 import * as _ from "lodash";
 import { nextWorkerName } from "./name";
 
-const WORKER_BODY = [WORK, CARRY, MOVE];
+const WORKER_BODY = [WORK, CARRY, MOVE, MOVE];
 const WORKER_COST = _.sum(WORKER_BODY.map(b => BODYPART_COST[b]));
 
 function spawnCreepsOfSpawn(spawn: StructureSpawn)
