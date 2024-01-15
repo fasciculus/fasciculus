@@ -73,6 +73,7 @@ export class Jobs
             if (!bot) continue;
 
             bot.job = job;
+            Bots.refresh(false);
         }
     }
 
