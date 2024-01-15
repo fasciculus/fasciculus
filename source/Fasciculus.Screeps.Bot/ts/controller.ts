@@ -1,12 +1,22 @@
+import { IJobCreator } from "./IJobCreator";
+import { Job } from "./Job";
+import { JobType } from "./JobType";
 
-import { getRooms } from "./room";
-
-export function getControllers(): StructureController[]
+export class Controller implements IJobCreator
 {
-    return getRooms().map(r => r.controller).filter(c => c !== undefined) as StructureController[];
-}
+    readonly controller: StructureController;
 
-export function getMyControllers(): StructureController[]
-{
-    return getControllers().filter(c => c.my);
+    constructor(controller: StructureController)
+    {
+        this.controller = controller;
+    }
+
+    get id(): Id<StructureController> { return this.controller.id; }
+
+    get my(): boolean { return this.controller.my; }
+
+    createJobs(): Job[]
+    {
+        return [new Job(JobType.Upgrade, this.id, 1)];
+    }
 }

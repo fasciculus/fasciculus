@@ -1,39 +1,39 @@
 
 import * as _ from "lodash";
-import { nextWorkerName } from "./name";
+import { Names } from "./Names";
+import { IJobCreator } from "./IJobCreator";
+import { Job } from "./Job";
+import { JobType } from "./JobType";
 
 const WORKER_BODY = [WORK, CARRY, MOVE, MOVE];
 const WORKER_COST = _.sum(WORKER_BODY.map(b => BODYPART_COST[b]));
 
-function spawnCreepsOfSpawn(spawn: StructureSpawn)
+export class Spawn implements IJobCreator
 {
-    if (spawn.spawning)
+    readonly spawner: StructureSpawn;
+
+    constructor(spawner: StructureSpawn)
     {
-        console.log(`spawn ${spawn.name} already spawning`);
-        return;
+        this.spawner = spawner;
     }
 
-    let room = spawn.room;
-    let energyAvailable = room.energyAvailable;
+    get idle(): boolean { return !this.spawner.spawning; }
 
-    if (energyAvailable < WORKER_COST)
+    spawn()
     {
-        // console.log(`not enough energy in room ${room.name}. required: ${WORKER_COST}, available: ${energyAvailable}`);
-        return;
+        let energy = this.spawner.room.energyAvailable;
+
+        if (energy < WORKER_COST) return;
+
+        let name = Names.nextWorkerName();
+
+        this.spawner.spawnCreep(WORKER_BODY, name);
     }
 
-    let name = nextWorkerName();
-    let result = spawn.spawnCreep(WORKER_BODY, name);
-
-    console.log(`spawn ${spawn.name} spawning ${name}. result ${result}`);
-}
-
-export function spawnCreeps()
-{
-    for (let name in Game.spawns)
+    createJobs(): Job[]
     {
-        let spawn = Game.spawns[name];
+        if (this.spawner.store.getFreeCapacity() == 0) return [];
 
-        spawnCreepsOfSpawn(spawn);
+        return [new Job(JobType.Supply, this.spawner.id, 1)];
     }
 }

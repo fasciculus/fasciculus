@@ -12,4 +12,11 @@
   <Target Name="CommitBot" AfterTargets="Build">
     <Copy SourceFiles="@(BotFiles)" DestinationFolder="$(CommitDir)" />
   </Target>
+  <Target Name="DeleteJavaScripts" AfterTargets="Clean">
+    <ItemGroup>
+      <FilesToDelete Include="js/*.js" />
+      <FilesToDelete Include="js/*.map" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" />
+  </Target>
 </Project>
