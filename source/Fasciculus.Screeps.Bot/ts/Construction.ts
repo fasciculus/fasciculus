@@ -1,3 +1,6 @@
+import * as _ from "lodash";
+
+import { Bots } from "./Bots";
 import { IJobCreator } from "./IJobCreator";
 import { Job } from "./Job";
 import { JobType } from "./JobType";
@@ -16,6 +19,8 @@ export class Construction implements IJobCreator
 
     createJobs(): Job[]
     {
-        return [new Job(JobType.Build, this.site.id, 1)];
+        var n = 1 + Math.floor(Bots.idleBuilders.length / 2);
+
+        return _.range(1, 1 + n).map(p => new Job(JobType.Build, this.site.id, p))
     }
 }
