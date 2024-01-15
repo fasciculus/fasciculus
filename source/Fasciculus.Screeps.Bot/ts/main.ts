@@ -5,7 +5,8 @@ import { MemoryManager } from "./MemoryManager";
 import { Jobs } from "./Jobs";
 import { Executor } from "./Executor";
 import { Spawns } from "./Spawns";
-import { Springs } from "./Springs";
+import { Constructions } from "./Constructions";
+import { Bots } from "./Bots";
 
 export const loop = function ()
 {
@@ -14,4 +15,6 @@ export const loop = function ()
     Spawns.spawn();
     Jobs.update();
     Executor.run();
+
+    console.log(`${Constructions.my.length}, ${Bots.idleBuilders.length}`);
 }

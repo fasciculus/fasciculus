@@ -2,6 +2,7 @@
 import { BotCapabilities } from "./BotCapabilities";
 import { IBotMemory } from "./IBotMemory";
 import { Job } from "./Job";
+import { JobType } from "./JobType";
 
 export class Bot
 {
@@ -34,5 +35,14 @@ export class Bot
     {
         this.memory.job = job ? job.toMemory() : undefined;
         this._job = job;
+
+        this.sayJob(job);
+    }
+
+    private sayJob(job: Job | undefined)
+    {
+        var message = job ? JobType[job.type] : "Idle";
+
+        this.creep.say(message, false);
     }
 }

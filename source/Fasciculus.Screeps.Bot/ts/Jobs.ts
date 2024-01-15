@@ -8,6 +8,7 @@ import { JobType } from "./JobType";
 import { Bot } from "./Bot";
 import { Controllers } from "./Controllers";
 import { Spawns } from "./Spawns";
+import { Constructions } from "./Constructions";
 
 export class Jobs
 {
@@ -28,6 +29,7 @@ export class Jobs
         result = result.concat(Springs.active);
         result = result.concat(Controllers.my);
         result = result.concat(Spawns.all);
+        result = result.concat(Constructions.my);
 
         return result;
     }
@@ -54,6 +56,10 @@ export class Jobs
 
     private static assign(jobs: Job[])
     {
+        var n = jobs.filter(j => j.type == JobType.Build).length;
+
+        console.log(`${n} builds to assign`);
+
         for (var job of jobs)
         {
             var bot: Bot | null = null;
@@ -63,6 +69,7 @@ export class Jobs
                 case JobType.Harvest: bot = Jobs.find(job, Bots.idleHarvesters); break;
                 case JobType.Upgrade: bot = Jobs.find(job, Bots.idleUpgraders); break;
                 case JobType.Supply: bot = Jobs.find(job, Bots.idleSuppliers); break;
+                case JobType.Build: bot = Jobs.find(job, Bots.idleBuilders); break;
             }
 
             if (!bot) continue;

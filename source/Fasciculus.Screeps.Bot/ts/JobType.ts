@@ -3,5 +3,7 @@ export enum JobType
 {
     Upgrade,
     Harvest,
-    Supply
+    Supply,
+    Repair,
+    Build
 }

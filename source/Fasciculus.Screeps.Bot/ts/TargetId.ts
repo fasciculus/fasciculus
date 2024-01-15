@@ -1,2 +1,2 @@
 
-export type TargetId = Id<Source | StructureController | StructureSpawn>;
+export type TargetId = Id<Source | StructureController | StructureSpawn | ConstructionSite>;

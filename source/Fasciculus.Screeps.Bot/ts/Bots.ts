@@ -16,4 +16,5 @@ export class Bots
     static get idleHarvesters(): Bot[] { return Bots.idle.filter(b => b.capabilities.canHarvest); }
     static get idleUpgraders(): Bot[] { return Bots.idle.filter(b => b.capabilities.canUpgrade); }
     static get idleSuppliers(): Bot[] { return Bots.idle.filter(b => b.capabilities.canSupply); }
+    static get idleBuilders(): Bot[] { return Bots.idle.filter(b => b.capabilities.canBuild); }
 }
