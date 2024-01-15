@@ -56,10 +56,6 @@ export class Jobs
 
     private static assign(jobs: Job[])
     {
-        var n = jobs.filter(j => j.type == JobType.Build).length;
-
-        console.log(`${n} builds to assign`);
-
         for (var job of jobs)
         {
             var bot: Bot | null = null;

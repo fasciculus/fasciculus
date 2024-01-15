@@ -4,6 +4,7 @@ import { Names } from "./Names";
 import { IJobCreator } from "./IJobCreator";
 import { Job } from "./Job";
 import { JobType } from "./JobType";
+import { Bots } from "./Bots";
 
 const WORKER_BODY = [WORK, CARRY, MOVE, MOVE];
 const WORKER_COST = _.sum(WORKER_BODY.map(b => BODYPART_COST[b]));
@@ -21,6 +22,8 @@ export class Spawn implements IJobCreator
 
     spawn()
     {
+        if (Bots.idle.length > 2) return;
+
         let energy = this.spawner.room.energyAvailable;
 
         if (energy < WORKER_COST) return;
