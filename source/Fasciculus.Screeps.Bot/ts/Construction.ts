@@ -21,6 +21,6 @@ export class Construction implements IJobCreator
     {
         var n = 1 + Math.floor(Bots.idleBuilders.length / 2);
 
-        return _.range(1, 1 + n).map(p => new Job(JobType.Build, this.site.id, p))
+        return _.range(1, 1 + n).map(p => new Job(JobType.Build, this.site.id, p));
     }
 }

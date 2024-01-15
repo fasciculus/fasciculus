@@ -1,6 +1,9 @@
+import * as _ from "lodash";
+
 import { IJobCreator } from "./IJobCreator";
 import { Job } from "./Job";
 import { JobType } from "./JobType";
+import { Bots } from "./Bots";
 
 export class Controller implements IJobCreator
 {
@@ -17,6 +20,8 @@ export class Controller implements IJobCreator
 
     createJobs(): Job[]
     {
-        return [new Job(JobType.Upgrade, this.id, 1)];
+        var n = 1 + Math.floor(Bots.idleUpgraders.length / 2);
+
+        return _.range(1, 1 + n).map(p => new Job(JobType.Upgrade, this.id, p));
     }
 }
