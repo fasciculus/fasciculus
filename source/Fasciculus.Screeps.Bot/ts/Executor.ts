@@ -2,6 +2,7 @@ import { Bot } from "./Bot";
 import { Bots } from "./Bots";
 import { JobType } from "./JobType";
 import { TargetId } from "./TargetId";
+import { Targets } from "./Targets";
 
 export class Executor
 {
@@ -38,61 +39,50 @@ export class Executor
     {
         if (!bot.capabilities.canUpgrade) return true;
 
-        let controller = Game.getObjectById<StructureController>(id as Id<StructureController>);
+        let controller = Targets.controller(id);
 
         if (!controller) return true;
 
         var creep = bot.creep;
         var code = creep.upgradeController(controller);
 
-        if (code == ERR_NOT_IN_RANGE)
-        {
-            creep.moveTo(controller);
-            return false;
-        }
-
-        return code != OK;
+        return Executor.result(creep, code, controller.pos);
     }
 
     private static harvest(bot: Bot, id: TargetId): boolean
     {
         if (!bot.capabilities.canHarvest) return true;
 
-        let source = Game.getObjectById<Source>(id as Id<Source>);
+        let source = Targets.source(id);
 
         if (!source) return true;
 
         var creep = bot.creep;
         var code = creep.harvest(source);
 
-        if (code == ERR_NOT_IN_RANGE)
-        {
-            creep.moveTo(source);
-            return false;
-        }
-
-        return code != OK;
+        return Executor.result(creep, code, source.pos);
     }
 
     private static supply(bot: Bot, id: TargetId): boolean
     {
         if (!bot.capabilities.canSupply) return true;
 
-        let spawn = Game.getObjectById<StructureSpawn>(id as Id<StructureSpawn>);
+        let target: StructureSpawn | StructureExtension | null
+            = Targets.spawn(id) || Targets.extension(id);
 
-        if (!spawn) return true;
+        if (!target) return true;
 
         var creep = bot.creep;
-        var code = creep.transfer(spawn, RESOURCE_ENERGY);
+        var code = creep.transfer(target, RESOURCE_ENERGY);
 
-        return Executor.result(creep, code, spawn.pos) || spawn.store.getFreeCapacity() == 0;
+        return Executor.result(creep, code, target.pos) || target.store.getFreeCapacity() == 0;
     }
 
     private static build(bot: Bot, id: TargetId): boolean
     {
         if (!bot.capabilities.canSupply) return true;
 
-        let site = Game.getObjectById<ConstructionSite>(id as Id<ConstructionSite>);
+        let site = Targets.site(id);
 
         if (!site) return true;
 

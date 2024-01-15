@@ -5,6 +5,7 @@ import { IJobCreator } from "./IJobCreator";
 import { Job } from "./Job";
 import { JobType } from "./JobType";
 import { Bots } from "./Bots";
+import { Utils } from "./Utils";
 
 const WORKER_BODY = [WORK, CARRY, MOVE, MOVE];
 const WORKER_COST = _.sum(WORKER_BODY.map(b => BODYPART_COST[b]));
@@ -19,6 +20,8 @@ export class Spawn implements IJobCreator
     }
 
     get idle(): boolean { return !this.spawner.spawning; }
+
+    get freeCapacity(): number { return this.spawner.store.getFreeCapacity(RESOURCE_ENERGY); }
 
     spawn()
     {
@@ -35,7 +38,7 @@ export class Spawn implements IJobCreator
 
     createJobs(): Job[]
     {
-        if (this.spawner.store.getFreeCapacity() == 0) return [];
+        if (this.freeCapacity == 0) return [];
 
         return [new Job(JobType.Supply, this.spawner.id, 1)];
     }

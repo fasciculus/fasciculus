@@ -9,6 +9,7 @@ import { Bot } from "./Bot";
 import { Controllers } from "./Controllers";
 import { Spawns } from "./Spawns";
 import { Constructions } from "./Constructions";
+import { Extensions } from "./Extensions";
 
 export class Jobs
 {
@@ -29,6 +30,7 @@ export class Jobs
         result = result.concat(Springs.active);
         result = result.concat(Controllers.my);
         result = result.concat(Spawns.all);
+        result = result.concat(Extensions.my);
         result = result.concat(Constructions.my);
 
         return result;
