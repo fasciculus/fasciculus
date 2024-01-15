@@ -25,7 +25,7 @@ export class Spawn implements IJobCreator
 
     spawn()
     {
-        if (Bots.idle.length > 2) return;
+        if (Bots.idle.length > 1) return;
 
         let energy = this.spawner.room.energyAvailable;
 
