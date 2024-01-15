@@ -45,4 +45,29 @@ export class Bot
 
         this.creep.say(message, false);
     }
+
+    moveTo(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
+    {
+        return this.creep.moveTo(target);
+    }
+
+    upgradeController(target: StructureController): ScreepsReturnCode
+    {
+        return this.creep.upgradeController(target);
+    }
+
+    harvest(target: Source | Mineral | Deposit): CreepActionReturnCode | ERR_NOT_FOUND | ERR_NOT_ENOUGH_RESOURCES
+    {
+        return this.creep.harvest(target);
+    }
+
+    transfer(target: AnyCreep | Structure, resourceType: ResourceConstant): ScreepsReturnCode
+    {
+        return this.creep.transfer(target, resourceType);
+    }
+
+    build(target: ConstructionSite): CreepActionReturnCode | ERR_NOT_ENOUGH_RESOURCES | ERR_RCL_NOT_ENOUGH
+    {
+        return this.creep.build(target);
+    }
 }

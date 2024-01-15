@@ -41,12 +41,7 @@ export class Executor
 
         let controller = Targets.controller(id);
 
-        if (!controller) return true;
-
-        var creep = bot.creep;
-        var code = creep.upgradeController(controller);
-
-        return Executor.result(creep, code, controller.pos);
+        return controller ? Executor.result(bot, bot.upgradeController(controller), controller) : true;
     }
 
     private static harvest(bot: Bot, id: TargetId): boolean
@@ -55,12 +50,7 @@ export class Executor
 
         let source = Targets.source(id);
 
-        if (!source) return true;
-
-        var creep = bot.creep;
-        var code = creep.harvest(source);
-
-        return Executor.result(creep, code, source.pos);
+        return source ? Executor.result(bot, bot.harvest(source), source) : true;
     }
 
     private static supply(bot: Bot, id: TargetId): boolean
@@ -70,12 +60,7 @@ export class Executor
         let target: StructureSpawn | StructureExtension | null
             = Targets.spawn(id) || Targets.extension(id);
 
-        if (!target) return true;
-
-        var creep = bot.creep;
-        var code = creep.transfer(target, RESOURCE_ENERGY);
-
-        return Executor.result(creep, code, target.pos) || target.store.getFreeCapacity() == 0;
+        return target ? Executor.result(bot, bot.transfer(target, RESOURCE_ENERGY), target) : true;
     }
 
     private static build(bot: Bot, id: TargetId): boolean
@@ -84,19 +69,14 @@ export class Executor
 
         let site = Targets.site(id);
 
-        if (!site) return true;
-
-        var creep = bot.creep;
-        var code = creep.build(site);
-
-        return Executor.result(creep, code, site.pos);
+        return site ? Executor.result(bot, bot.build(site), site) : true;
     }
 
-    private static result(creep: Creep, code: ScreepsReturnCode, dest: RoomPosition): boolean
+    private static result(bot: Bot, code: ScreepsReturnCode, target: { pos: RoomPosition }): boolean
     {
         if (code == ERR_NOT_IN_RANGE)
         {
-            creep.moveTo(dest);
+            bot.moveTo(target);
             return false;
         }
 
