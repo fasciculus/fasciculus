@@ -19,8 +19,8 @@ export class Construction implements IJobCreator
 
     createJobs(): Job[]
     {
-        var n = 1 + Math.floor(this.remaining / 200);
+        var prio = Math.floor(this.remaining / 1000);
 
-        return _.range(n).map(p => new Job(JobType.Build, this.site.id, p));
+        return [new Job(JobType.Build, this.site.id, prio)];
     }
 }
