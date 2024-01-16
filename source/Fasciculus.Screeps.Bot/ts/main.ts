@@ -5,6 +5,7 @@ import { MemoryManager } from "./MemoryManager";
 import { Jobs } from "./Jobs";
 import { Spawns } from "./Spawns";
 import { Initializer } from "./Initializer";
+import { Walls } from "./Walls";
 
 export const loop = function ()
 {
@@ -13,4 +14,9 @@ export const loop = function ()
     
     Jobs.run();
     Spawns.spawn();
+
+    if ((Game.time % 10) == 0)
+    {
+        Walls.report();
+    }
 }
