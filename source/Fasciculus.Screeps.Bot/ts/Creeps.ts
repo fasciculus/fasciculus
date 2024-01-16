@@ -23,7 +23,7 @@ export class Creeps
 
     static ofType(type: CreepType): Creep[] { return Creeps._ofType[type] || []; }
 
-    static type(creep: Creep): CreepType
+    static typeOf(creep: Creep): CreepType
     {
         let memory = creep.memory as ICreepMemory;
 
@@ -34,6 +34,6 @@ export class Creeps
     {
         Creeps._all = _.values(Game.creeps);
         Creeps._my = Creeps._all.filter(c => c.my);
-        Creeps._ofType = _.groupBy(Creeps._my, Creeps.type);
+        Creeps._ofType = _.groupBy(Creeps._my, Creeps.typeOf);
     }
 }

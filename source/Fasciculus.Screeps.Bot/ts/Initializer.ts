@@ -1,6 +1,7 @@
 import { Creeps } from "./Creeps";
 import { Rooms } from "./Rooms";
 import { Spawns } from "./Spawns";
+import { Wellers } from "./Wellers";
 
 export class Initializer
 {
@@ -10,5 +11,6 @@ export class Initializer
         Spawns.initialize();
 
         Creeps.initialize();
+        Wellers.initialize();
     }
 }

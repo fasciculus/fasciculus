@@ -5,12 +5,13 @@ import { Names } from "./Names";
 import { Rooms } from "./Rooms";
 import { Scheduler } from "./Scheduler";
 import { Spawns } from "./Spawns";
+import { Wellers } from "./Wellers";
 
 export const loop = function ()
 {
     Initializer.run();
     Scheduler.run();
 
-    console.log(Creeps.ofType(CreepType.Weller).length);
-    console.log(`cpu used ${Game.cpu.getUsed()}`);
+    console.log(`wellers: ${Wellers.all.length}`);
+    console.log(`cpu used ${Math.ceil(Game.cpu.getUsed())}`);
 }
