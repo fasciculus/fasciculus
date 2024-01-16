@@ -45,6 +45,6 @@ export class Spring implements IJobCreator
 
     createJobs(): Job[]
     {
-        return _.range(1, 1 + this.harvestSlots).map(p => new Job(JobType.Harvest, this.id, p))
+        return _.range(this.harvestSlots).map(p => new Job(JobType.Harvest, this.id, p))
     }
 }

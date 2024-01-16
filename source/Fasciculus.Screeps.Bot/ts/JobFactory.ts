@@ -7,6 +7,7 @@ import { Extensions } from "./Extensions";
 import { Constructions } from "./Constructions";
 import { Job } from "./Job";
 import { Bots } from "./Bots";
+import { Walls } from "./Walls";
 
 export class JobFactory
 {
@@ -19,6 +20,7 @@ export class JobFactory
         result = result.concat(Spawns.all);
         result = result.concat(Extensions.my);
         result = result.concat(Constructions.my);
+        result = result.concat(Walls.my);
 
         return result;
     }

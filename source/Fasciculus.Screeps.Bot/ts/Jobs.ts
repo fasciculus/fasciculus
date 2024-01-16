@@ -12,16 +12,16 @@ export class Jobs
         var jobs = JobFactory.create();
         var unassigned = JobAssigner.assign(jobs);
 
-        var n1 = unassigned.length;
-        var n2 = 0;
+        // var n1 = unassigned.length;
+        // var n2 = 0;
 
         JobRunner.run();
         Bots.refresh(false);
 
         unassigned = JobAssigner.assign(unassigned);
-        n2 = unassigned.length;
+        // n2 = unassigned.length;
         JobRunner.run(unassigned);
 
-        console.log(`unassigned ${n1} -> ${n2}`);
+        // console.log(`unassigned ${n1} -> ${n2}`);
     }
 }

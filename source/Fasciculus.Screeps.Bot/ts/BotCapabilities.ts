@@ -12,6 +12,7 @@ export class BotCapabilities
     readonly canUpgrade: boolean;
     readonly canSupply: boolean;
     readonly canBuild: boolean;
+    readonly canRepair: boolean;
 
     constructor(creep: Creep)
     {
@@ -36,5 +37,6 @@ export class BotCapabilities
         this.canUpgrade = this.canMove && this.canWork && this.canCarry && this.hasEnergy;
         this.canSupply = this.canMove && this.canCarry && this.hasEnergy;
         this.canBuild = this.canMove && this.canWork && this.canCarry && this.hasEnergy;
+        this.canRepair = this.canMove && this.canWork && this.canCarry && this.hasEnergy;
     }
 }

@@ -5,10 +5,7 @@ import { IJobCreator } from "./IJobCreator";
 import { Job } from "./Job";
 import { JobType } from "./JobType";
 import { Bots } from "./Bots";
-import { Utils } from "./Utils";
-
-const WORKER_BODY = [WORK, CARRY, MOVE, MOVE];
-const WORKER_COST = _.sum(WORKER_BODY.map(b => BODYPART_COST[b]));
+import { Bodies, MIN_WORKER_COST } from "./Bodies";
 
 export class Spawn implements IJobCreator
 {
@@ -21,25 +18,37 @@ export class Spawn implements IJobCreator
 
     get idle(): boolean { return !this.spawner.spawning; }
 
-    get freeCapacity(): number { return this.spawner.store.getFreeCapacity(RESOURCE_ENERGY); }
+    get store(): Store<RESOURCE_ENERGY, false> { return this.spawner.store; }
+
+    get capacity(): number { return this.store.getCapacity(RESOURCE_ENERGY); }
+    get freeCapacity(): number { return this.store.getFreeCapacity(RESOURCE_ENERGY); }
 
     spawn()
     {
         if (Bots.idle.length > 1) return;
 
+        let required = Bodies.workerEnergy(this.spawner.room.energyCapacityAvailable);
+
+        if (Bots.my.length < 2)
+        {
+            required = MIN_WORKER_COST;
+        }
+
         let energy = this.spawner.room.energyAvailable;
 
-        if (energy < WORKER_COST) return;
+        if (energy < required) return;
 
-        let name = Names.nextWorkerName();
+        let body = Bodies.workerBody(energy);
 
-        this.spawner.spawnCreep(WORKER_BODY, name);
+        if (!body) return;
+
+        this.spawner.spawnCreep(body, Names.nextWorkerName());
     }
 
     createJobs(): Job[]
     {
         if (this.freeCapacity == 0) return [];
 
-        return [new Job(JobType.Supply, this.spawner.id, 1)];
+        return _.range(2).map(p => new Job(JobType.Supply, this.spawner.id, p));
     }
 }

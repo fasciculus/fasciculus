@@ -4,13 +4,13 @@ import * as _ from "lodash";
 import { MemoryManager } from "./MemoryManager";
 import { Jobs } from "./Jobs";
 import { Spawns } from "./Spawns";
-import { Bots } from "./Bots";
+import { Initializer } from "./Initializer";
 
 export const loop = function ()
 {
     MemoryManager.cleanup();
-
-    Bots.refresh();
+    Initializer.run();
+    
     Jobs.run();
     Spawns.spawn();
 }

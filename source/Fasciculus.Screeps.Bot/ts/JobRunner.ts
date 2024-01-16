@@ -37,6 +37,7 @@ export class JobRunner
             case JobType.Harvest: done = JobRunner.harvest(bot, job.target); break;
             case JobType.Supply: done = JobRunner.supply(bot, job.target); break;
             case JobType.Build: done = JobRunner.build(bot, job.target); break;
+            case JobType.Repair: done = JobRunner.repair(bot, job.target); break;
 
             default: done = true; break;
         }
@@ -81,6 +82,15 @@ export class JobRunner
         let site = Targets.site(id);
 
         return site ? JobRunner.result(bot, bot.build(site), site) : true;
+    }
+
+    private static repair(bot: Bot, id: TargetId)
+    {
+        if (!bot.capabilities.canRepair) return true;
+
+        let target = Targets.structure(id);
+
+        return target ? JobRunner.result(bot, bot.repair(target), target) : true;
     }
 
     private static result(bot: Bot, code: ScreepsReturnCode, target: { pos: RoomPosition }): boolean

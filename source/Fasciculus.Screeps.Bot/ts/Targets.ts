@@ -26,4 +26,9 @@ export class Targets
     {
         return Game.getObjectById<StructureExtension>(id as Id<StructureExtension>);
     }
+
+    static structure(id: TargetId): Structure | null
+    {
+        return Game.getObjectById<Structure>(id as Id<Structure>);
+    }
 }

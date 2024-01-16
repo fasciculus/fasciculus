@@ -19,6 +19,7 @@ export class JobAssigner
                 case JobType.Upgrade: bot = JobAssigner.find(job, Bots.idleUpgraders); break;
                 case JobType.Supply: bot = JobAssigner.find(job, Bots.idleSuppliers); break;
                 case JobType.Build: bot = JobAssigner.find(job, Bots.idleBuilders); break;
+                case JobType.Repair: bot = JobAssigner.find(job, Bots.idleRepairers); break;
             }
 
             if (bot)

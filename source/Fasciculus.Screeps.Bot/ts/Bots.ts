@@ -17,6 +17,7 @@ export class Bots
     private static _idleUpgraders: Bot[] = [];
     private static _idleSuppliers: Bot[] = [];
     private static _idleBuilders: Bot[] = [];
+    private static _idleRepairers: Bot[] = [];
 
     static get all(): Bot[] { return Bots._all; }
 
@@ -30,6 +31,12 @@ export class Bots
     static get idleUpgraders(): Bot[] { return Bots._idleUpgraders; }
     static get idleSuppliers(): Bot[] { return Bots._idleSuppliers; }
     static get idleBuilders(): Bot[] { return Bots._idleBuilders; }
+    static get idleRepairers(): Bot[] { return Bots._idleRepairers; }
+
+    static initialize()
+    {
+        Bots.refresh(true);
+    }
 
     static refresh(all = true)
     {
@@ -47,5 +54,6 @@ export class Bots
         Bots._idleUpgraders = Bots._idle.filter(b => b.capabilities.canUpgrade);
         Bots._idleSuppliers = Bots._idle.filter(b => b.capabilities.canSupply);
         Bots._idleBuilders = Bots._idle.filter(b => b.capabilities.canBuild);
+        Bots._idleRepairers = Bots._idle.filter(b => b.capabilities.canRepair);
     }
 }

@@ -18,6 +18,6 @@ export class Extension implements IJobCreator
     {
         if (this.freeCapacity == 0) return [];
 
-        return [new Job(JobType.Supply, this.extension.id, 1)];
+        return [new Job(JobType.Supply, this.extension.id, 0)];
     }
 }

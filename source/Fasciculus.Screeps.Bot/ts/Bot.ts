@@ -70,4 +70,9 @@ export class Bot
     {
         return this.creep.build(target);
     }
+
+    repair(target: Structure): CreepActionReturnCode | ERR_NOT_ENOUGH_RESOURCES
+    {
+        return this.creep.repair(target);
+    }
 }
