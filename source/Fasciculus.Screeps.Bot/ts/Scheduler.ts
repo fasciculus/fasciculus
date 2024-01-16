@@ -1,5 +1,5 @@
 
-export class Initializer
+export class Scheduler
 {
     static run()
     {

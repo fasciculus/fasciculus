@@ -9,13 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true
-    //    "moduleResolution": "node",
-    //    "emitDecoratorMetadata": true,
-    //    "experimentalDecorators": true,
-    //    "noEmitOnError": true,
-    //    "noImplicitAny": false,
-    //    "removeComments": false,
-    //    "strictNullChecks": false
   },
-  "include": [ "ts"]
+  "include": ["ts"],
+  "exclude": ["bak"]
 }
