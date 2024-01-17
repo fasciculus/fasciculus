@@ -1,3 +1,4 @@
+import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Rooms } from "./Rooms";
 import { Sources } from "./Sources";
@@ -10,6 +11,7 @@ export class Initializer
     static run()
     {
         Rooms.initialize();
+        Controllers.initialize();
         Spawns.initialize();
 
         Sources.initialize();
