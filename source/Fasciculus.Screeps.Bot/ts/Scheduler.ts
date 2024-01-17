@@ -1,5 +1,6 @@
 import { Spawns } from "./Spawns";
 import { Suppliers } from "./Suppliers";
+import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
 
 export class Scheduler
@@ -10,5 +11,6 @@ export class Scheduler
 
         Wellers.run();
         Suppliers.run();
+        Upgraders.run();
     }
 }

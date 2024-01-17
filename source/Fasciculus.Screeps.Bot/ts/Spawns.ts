@@ -5,6 +5,7 @@ import { Sources } from "./Sources";
 import { CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
 import { Names } from "./Names";
 import { Bodies } from "./Bodies";
+import { Controllers } from "./Controllers";
 
 export class Spawns
 {
@@ -39,6 +40,7 @@ export class Spawns
         {
             case CreepType.Weller: Spawns.spawnWeller(spawn); break;
             case CreepType.Supplier: Spawns.spawnSupplier(spawn); break;
+            case CreepType.Upgrader: Spawns.spawnUpgrader(spawn); break;
         }
     }
 
@@ -66,6 +68,10 @@ export class Spawns
         var supplierCount = Creeps.countOf(CreepType.Supplier);
 
         if (supplierCount == 0 && wellerCount > 0) return CreepType.Supplier;
+
+        var upgraderCount = Creeps.countOf(CreepType.Upgrader);
+
+        if (wellerCount == 1 && supplierCount == 1 && upgraderCount == 0) return CreepType.Upgrader;
 
         return undefined;
     }
@@ -97,6 +103,55 @@ export class Spawns
         var memory: ICreepMemory = { type: CreepType.Supplier, state: CreepState.Idle };
 
         Spawns.spawnCreep(spawn, memory);
+    }
+
+    private static spawnUpgrader(spawn: StructureSpawn)
+    {
+        var controller = Spawns.findBestController();
+
+        if (!controller) return;
+
+        var memory: ICreepMemory = { type: CreepType.Upgrader, state: CreepState.Idle, controller: controller.id };
+
+        Spawns.spawnCreep(spawn, memory);
+    }
+
+    private static findBestController(): StructureController | undefined
+    {
+        var controllers = Controllers.all;
+
+        if (controllers.length == 0) return undefined;
+
+        var counts: { [id: Id<StructureController>]: number } = {};
+        var assignees = Creeps.ofType(CreepType.Upgrader);
+
+        controllers.forEach(c => counts[c.id] = 0);
+
+        for (let assignee of assignees)
+        {
+            let id = (assignee.memory as ICreepMemory).controller;
+
+            if (!id || !_.has(counts, id)) continue;
+
+            ++counts[id];
+        }
+
+        var bestController = controllers[0];
+        var bestCount = counts[bestController.id];
+
+        for (let i = 1, n = controllers.length; i < n; ++i)
+        {
+            let controller = controllers[i];
+            let count = counts[controller.id];
+
+            if (count < bestCount)
+            {
+                bestController = controller;
+                bestCount = count;
+            }
+        }
+
+        return bestController;
     }
 
     static spawnCreep(spawn: StructureSpawn, memory: ICreepMemory): ScreepsReturnCode

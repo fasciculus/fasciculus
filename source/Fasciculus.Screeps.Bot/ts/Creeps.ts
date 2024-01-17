@@ -5,7 +5,8 @@ import { Customer, IdCustomer, IdSupply, Objects, Supply } from "./Objects";
 export enum CreepType
 {
     Weller = "W",
-    Supplier = "S"
+    Supplier = "S",
+    Upgrader = "U"
 }
 
 export enum CreepState
@@ -40,9 +41,10 @@ export interface ICreepMemory extends CreepMemory
     state: CreepState;
 
     container?: Id<StructureContainer>;
+    controller?: Id<StructureController>;
+    customer?: IdCustomer;
     source?: Id<Source>;
     supply?: IdSupply;
-    customer?: IdCustomer;
 }
 
 export class CreepBase

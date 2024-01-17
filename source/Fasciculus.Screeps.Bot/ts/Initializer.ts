@@ -4,6 +4,7 @@ import { Rooms } from "./Rooms";
 import { Sources } from "./Sources";
 import { Spawns } from "./Spawns";
 import { Suppliers } from "./Suppliers";
+import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
 
 export class Initializer
@@ -19,5 +20,6 @@ export class Initializer
         Creeps.initialize();
         Wellers.initialize();
         Suppliers.initialize();
+        Upgraders.initialize();
     }
 }

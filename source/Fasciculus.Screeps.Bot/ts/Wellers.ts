@@ -4,9 +4,6 @@ import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps
 import { Bodies } from "./Bodies";
 import { Sources } from "./Sources";
 
-const WELLER_PARTS: BodyPartConstant[] = [CARRY, MOVE, WORK, WORK, WORK, MOVE, WORK, WORK, WORK, MOVE, WORK, WORK, WORK, WORK];
-const WELLER_MIN_SIZE = 3;
-
 export class Weller extends CreepBase
 {
     constructor(creep: Creep)
@@ -60,6 +57,9 @@ export class Weller extends CreepBase
         return CreepState.Harvest;
     }
 }
+
+const WELLER_PARTS: BodyPartConstant[] = [WORK, MOVE, CARRY, WORK, WORK, MOVE, WORK, WORK, MOVE, WORK, WORK, MOVE, WORK, WORK, MOVE, WORK];
+const WELLER_MIN_SIZE = 3;
 
 export class Wellers
 {
