@@ -90,9 +90,9 @@ export class CreepBase
     get energy(): number { return this.store.energy; }
     get freeEnergyCapacity(): number { return this.store.getFreeCapacity<RESOURCE_ENERGY>() }
 
-    moveTo(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
+    moveTo(target: RoomPosition | { pos: RoomPosition }, opts?: MoveToOpts): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
     {
-        return this.creep.moveTo(target);
+        return this.creep.moveTo(target, opts);
     }
 
     harvest(target: Source | Mineral | Deposit): CreepActionReturnCode | ERR_NOT_FOUND | ERR_NOT_ENOUGH_RESOURCES

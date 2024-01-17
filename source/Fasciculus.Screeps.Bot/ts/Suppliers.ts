@@ -5,6 +5,14 @@ import { Spawns } from "./Spawns";
 import { Upgraders } from "./Upgraders";
 import { Weller, Wellers } from "./Wellers";
 
+const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
+{
+    visualizePathStyle:
+    {
+        stroke: "#fff"
+    }
+};
+
 export class Supplier extends CreepBase
 {
     constructor(creep: Creep)
@@ -18,8 +26,8 @@ export class Supplier extends CreepBase
 
         switch (state)
         {
-            case CreepState.MoveToSupply: this.moveTo(this.supply!); break;
-            case CreepState.MoveToCustomer: this.moveTo(this.customer!); break;
+            case CreepState.MoveToSupply: this.moveTo(this.supply!, SUPPLIER_MOVE_TO_OPTS); break;
+            case CreepState.MoveToCustomer: this.moveTo(this.customer!, SUPPLIER_MOVE_TO_OPTS); break;
             case CreepState.Withdraw: this.withdraw(this.supply!, RESOURCE_ENERGY); break;
             case CreepState.Transfer: this.transfer(this.customer!, RESOURCE_ENERGY); break;
         }
