@@ -14,8 +14,19 @@ export enum CreepState
     MoveToSource,
     MoveToContainer,
     Harvest,
-    Idle
+    Idle,
+    Suicide
 }
+
+export const CreepStateText: string[] =
+    [
+        "Start",
+        "→Source",
+        "→Container",
+        "Harvest",
+        "Idle",
+        "Suicide"
+    ];
 
 export interface ICreepMemory extends CreepMemory
 {
@@ -39,8 +50,45 @@ export class CreepBase
 
     get state(): CreepState { return this.memory.state; }
 
+    set state(value: CreepState)
+    {
+        var oldValue = this.memory.state;
+
+        if (value != oldValue)
+        {
+            this.memory.state = value;
+            this.say(CreepStateText[value]);
+        }
+    }
+
     get container(): StructureContainer | null { return Objects.container(this.memory.container); }
     get source(): Source | null { return Objects.source(this.memory.source); }
+
+    get name(): string { return this.creep.name; }
+    get pos(): RoomPosition { return this.creep.pos; }
+
+    get store(): StoreDefinition { return this.creep.store; }
+    get freeEnergyCapacity(): number { return this.store.getFreeCapacity<RESOURCE_ENERGY>() }
+
+    moveTo(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
+    {
+        return this.creep.moveTo(target);
+    }
+
+    harvest(target: Source | Mineral | Deposit): CreepActionReturnCode | ERR_NOT_FOUND | ERR_NOT_ENOUGH_RESOURCES
+    {
+        return this.creep.harvest(target);
+    }
+
+    say(message: string, toPublic?: boolean)
+    {
+        this.creep.say(message, toPublic);
+    }
+
+    suicide(): CreepState
+    {
+        return this.creep.suicide() == OK ? CreepState.Suicide : this.state;
+    }
 }
 
 export interface CreepTemplate

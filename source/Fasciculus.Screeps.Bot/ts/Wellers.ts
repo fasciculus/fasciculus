@@ -14,6 +14,42 @@ export class Weller extends CreepBase
     {
         super(creep);
     }
+
+    run()
+    {
+        var state = this.prepare(this.state);
+
+        switch (state)
+        {
+            case CreepState.MoveToSource: this.moveTo(this.source!); break;
+            case CreepState.Harvest: this.harvest(this.source!); break;
+        }
+
+        this.state = state;
+    }
+
+    private prepare(state: CreepState): CreepState
+    {
+        var source = this.source;
+
+        if (!source) return this.suicide();
+
+        switch (state)
+        {
+            case CreepState.Start: return this.prepare(CreepState.MoveToSource);
+            case CreepState.MoveToSource: return this.pos.inRangeTo(source, 1) ? this.prepare(CreepState.Harvest) : state;
+            case CreepState.Harvest: return this.prepareHarvest();
+        }
+
+        return state;
+    }
+
+    private prepareHarvest(): CreepState
+    {
+        if (this.freeEnergyCapacity < 1) return this.container ? CreepState.MoveToContainer : CreepState.Idle;
+
+        return CreepState.Harvest;
+    }
 }
 
 export class Wellers
@@ -29,6 +65,11 @@ export class Wellers
         Bodies.register(CreepType.Weller, WELLER_MIN_SIZE, WELLER_PARTS);
     }
 
+    static run()
+    {
+        Wellers._all.forEach(w => w.run());
+    }
+
     private static sourceIdOf(weller: Weller): Id<Source>
     {
         var source = weller.source;
@@ -38,13 +79,13 @@ export class Wellers
 
     static findFreeSources(): Source[]
     {
-        var assigned: Set<string> = new Set(Wellers._all.map(Wellers.sourceIdOf));
+        var assigned: Set<Id<Source>> = new Set(Wellers._all.map(Wellers.sourceIdOf));
 
         return Sources.all.filter(s => !assigned.has(s.id));
     }
 
     static createMemory(source: Source): ICreepMemory
     {
-        return { type: CreepType.Weller, state: CreepState.Start, source: source.id };
+        return { type: CreepType.Weller, state: CreepState.MoveToSource, source: source.id };
     }
 }
