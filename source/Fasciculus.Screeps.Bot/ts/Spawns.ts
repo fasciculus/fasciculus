@@ -68,7 +68,7 @@ export class Spawns
 
         var upgraderCount = Creeps.countOf(CreepType.Upgrader);
 
-        if (wellerCount == 1 && supplierCount == 1 && upgraderCount == 0) return CreepType.Upgrader;
+        if (wellerCount > 0 && supplierCount > 0 && upgraderCount == 0) return CreepType.Upgrader;
 
         var room = spawn.room;
 

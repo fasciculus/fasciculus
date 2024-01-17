@@ -116,7 +116,7 @@ export class Builder extends CreepBase
     }
 }
 
-const BUILDER_PARTS: BodyPartConstant[] = [CARRY, WORK, MOVE, WORK, MOVE, CARRY, WORK, MOVE, WORK, MOVE];
+const BUILDER_PARTS: BodyPartConstant[] = [CARRY, WORK, MOVE, CARRY, WORK, MOVE, CARRY, WORK, MOVE, CARRY, WORK, MOVE];
 const BUILDER_MIN_SIZE = 3;
 
 export class Builders
