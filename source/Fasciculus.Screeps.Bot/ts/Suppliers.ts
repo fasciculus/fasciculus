@@ -122,6 +122,12 @@ export class Supplier extends CreepBase
 
     private prepareTransfer(): CreepState
     {
+        if (this.energy < 1)
+        {
+            this.customer = undefined;
+            return this.prepareIdle();
+        }
+
         var customer = this.customer;
 
         if (!customer) return this.prepareIdle();
@@ -139,9 +145,13 @@ export class Supplier extends CreepBase
 
     private findSupply(): Supply | undefined
     {
-        var wellers = Wellers.all.filter(w => w.energy > 0);
+        var wellers = Wellers.all.filter(w => w.energy > 20);
 
-        return wellers.length == 0 ? undefined : this.pos.findClosestByPath<Weller>(wellers)?.creep;
+        if (wellers.length == 0) return undefined;
+
+        wellers = wellers.sort((a, b) => b.energy - a.energy);
+
+        return wellers[0].creep;
     }
 
     private findCustomer(): Customer | undefined
@@ -150,11 +160,13 @@ export class Supplier extends CreepBase
 
         if (spawns.length > 0) return this.pos.findClosestByPath(spawns) || undefined;
 
-        var upgraders = Upgraders.all.sort((a, b) => a.energy - b.energy);
+        var upgraders = Upgraders.all.filter(u => u.freeEnergyCapacity > 20);
 
-        if (upgraders.length > 0) return upgraders[0].creep;
+        if (upgraders.length == 0) return undefined;
 
-        return undefined;
+        upgraders = upgraders.sort((a, b) => a.energy - b.energy);
+
+        return upgraders[0].creep;
     }
 }
 

@@ -10,7 +10,7 @@ import { Wellers } from "./Wellers";
 export const loop = function ()
 {
     Initializer.run();
-    Creeps.resetStates();
+    // Creeps.resetStates();
     Scheduler.run();
 
     // console.log(`cpu used ${Math.ceil(Game.cpu.getUsed())}`);
