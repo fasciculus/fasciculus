@@ -1,6 +1,6 @@
 import { Bodies } from "./Bodies";
 import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
-import { Customer, Supply } from "./Objects";
+import { Customer, IdCustomer, IdSupply, Supply } from "./Objects";
 import { Spawns } from "./Spawns";
 import { Upgraders } from "./Upgraders";
 import { Weller, Wellers } from "./Wellers";
@@ -145,7 +145,8 @@ export class Supplier extends CreepBase
 
     private findSupply(): Supply | undefined
     {
-        var wellers = Wellers.all.filter(w => w.energy > 20);
+        var used = Suppliers.usedSupplies;
+        var wellers = Wellers.all.filter(w => !used.has(w.id) && w.energy > 20);
 
         if (wellers.length == 0) return undefined;
 
@@ -156,11 +157,12 @@ export class Supplier extends CreepBase
 
     private findCustomer(): Customer | undefined
     {
-        var spawns = Spawns.my.filter(s => s.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
+        var served = Suppliers.servedCustomers;
+        var spawns = Spawns.my.filter(s => !served.has(s.id) && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
 
         if (spawns.length > 0) return this.pos.findClosestByPath(spawns) || undefined;
 
-        var upgraders = Upgraders.all.filter(u => u.freeEnergyCapacity > 20);
+        var upgraders = Upgraders.all.filter(u => !served.has(u.id) && u.freeEnergyCapacity > 0);
 
         if (upgraders.length == 0) return undefined;
 
@@ -189,5 +191,19 @@ export class Suppliers
     static run()
     {
         Suppliers._all.forEach(s => s.run());
+    }
+
+    static get usedSupplies(): Set<IdSupply>
+    {
+        var ids = Suppliers._all.map(s => s.memory.supply).filter(id => id) as IdSupply[];
+
+        return new Set(ids);
+    }
+
+    static get servedCustomers(): Set<IdCustomer>
+    {
+        var ids = Suppliers._all.map(s => s.memory.customer).filter(id => id) as IdCustomer[];
+
+        return new Set(ids);
     }
 }

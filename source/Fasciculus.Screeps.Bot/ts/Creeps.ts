@@ -83,6 +83,7 @@ export class CreepBase
     get supply(): Supply | null { return Objects.supply(this.memory.supply); }
     set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
 
+    get id(): Id<Creep> { return this.creep.id; }
     get name(): string { return this.creep.name; }
     get pos(): RoomPosition { return this.creep.pos; }
 
