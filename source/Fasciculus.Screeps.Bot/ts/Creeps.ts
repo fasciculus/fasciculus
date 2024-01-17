@@ -1,6 +1,6 @@
 
 import * as _ from "lodash";
-import { IdSupply, Objects, Supply } from "./Objects";
+import { Customer, IdCustomer, IdSupply, Objects, Supply } from "./Objects";
 
 export enum CreepType
 {
@@ -10,10 +10,10 @@ export enum CreepType
 
 export enum CreepState
 {
-    Start,
     Idle,
     Suicide,
     MoveToContainer,
+    MoveToCustomer,
     MoveToSource,
     MoveToSupply,
     Harvest,
@@ -22,13 +22,14 @@ export enum CreepState
 
 export const CreepStateText: string[] =
     [
-        "Start",
+        "Idle",
+        "Suicide",
         "→Container",
+        "→Customer",
         "→Source",
         "→Supply",
         "Harvest",
-        "Idle",
-        "Suicide"
+        "Withdraw"
     ];
 
 export interface ICreepMemory extends CreepMemory
@@ -39,6 +40,7 @@ export interface ICreepMemory extends CreepMemory
     container?: Id<StructureContainer>;
     source?: Id<Source>;
     supply?: IdSupply;
+    customer?: IdCustomer;
 }
 
 export class CreepBase
@@ -69,6 +71,8 @@ export class CreepBase
     get source(): Source | null { return Objects.source(this.memory.source); }
     get supply(): Supply | null { return Objects.supply(this.memory.supply); }
     set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
+    get customer(): Customer | null { return Objects.customer(this.memory.customer); }
+    set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
 
     get name(): string { return this.creep.name; }
     get pos(): RoomPosition { return this.creep.pos; }
