@@ -1,5 +1,6 @@
 
 import * as _ from "lodash";
+import { Objects } from "./Objects";
 
 export enum CreepType
 {
@@ -7,9 +8,45 @@ export enum CreepType
     Supplier = "S"
 }
 
-export interface ICreepMemory
+export enum CreepState
 {
-    type: CreepType
+    Start,
+    MoveToSource,
+    MoveToContainer,
+    Harvest,
+    Idle
+}
+
+export interface ICreepMemory extends CreepMemory
+{
+    type: CreepType;
+    state: CreepState;
+
+    container?: Id<StructureContainer>;
+    source?: Id<Source>;
+}
+
+export class CreepBase
+{
+    readonly creep: Creep;
+
+    constructor(creep: Creep)
+    {
+        this.creep = creep;
+    }
+
+    get memory(): ICreepMemory { return this.creep.memory as ICreepMemory; }
+
+    get state(): CreepState { return this.memory.state; }
+
+    get container(): StructureContainer | null { return Objects.container(this.memory.container); }
+    get source(): Source | null { return Objects.source(this.memory.source); }
+}
+
+export interface CreepTemplate
+{
+    minBodyParts: number;
+    parts: BodyPartConstant[];
 }
 
 export class Creeps

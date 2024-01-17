@@ -1,36 +1,18 @@
-import { CreepType, Creeps, ICreepMemory } from "./Creeps";
-import { Objects } from "./Objects";
+import * as _ from "lodash";
 
-export enum WellerState
+import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
+import { Bodies } from "./Bodies";
+import { Sources } from "./Sources";
+import { type } from "os";
+
+const WELLER_PARTS: BodyPartConstant[] = [CARRY, MOVE, WORK, WORK, WORK, MOVE, WORK, WORK, WORK, MOVE, WORK, WORK, WORK, WORK];
+const WELLER_MIN_SIZE = 3;
+
+export class Weller extends CreepBase
 {
-    MoveToSource,
-    Harvest,
-    MoveToContainer,
-    Idle
-}
-
-export interface IWellerMemory extends ICreepMemory
-{
-    source: Id<Source>;
-
-    container?: Id<StructureContainer>;
-
-    state: WellerState;
-}
-
-export class Weller
-{
-    readonly creep: Creep;
-
-    get memory(): IWellerMemory { return this.creep.memory as IWellerMemory; }
-
-    get source(): Source | null { return Objects.source(this.memory.source); }
-    get container(): StructureContainer | null { return Objects.container(this.memory.container); }
-    get state(): WellerState { return this.memory.state; }
-
     constructor(creep: Creep)
     {
-        this.creep = creep;
+        super(creep);
     }
 }
 
@@ -43,5 +25,26 @@ export class Wellers
     static initialize()
     {
         Wellers._all = Creeps.ofType(CreepType.Weller).map(c => new Weller(c));
+
+        Bodies.register(CreepType.Weller, WELLER_MIN_SIZE, WELLER_PARTS);
+    }
+
+    private static sourceIdOf(weller: Weller): Id<Source>
+    {
+        var source = weller.source;
+
+        return source ? source.id : ("" as Id<Source>);
+    }
+
+    static findFreeSources(): Source[]
+    {
+        var assigned: Set<string> = new Set(Wellers._all.map(Wellers.sourceIdOf));
+
+        return Sources.all.filter(s => !assigned.has(s.id));
+    }
+
+    static createMemory(source: Source): ICreepMemory
+    {
+        return { type: CreepType.Weller, state: CreepState.Start, source: source.id };
     }
 }

@@ -12,6 +12,5 @@ export const loop = function ()
     Initializer.run();
     Scheduler.run();
 
-    console.log(`wellers: ${Wellers.all.length}`);
     console.log(`cpu used ${Math.ceil(Game.cpu.getUsed())}`);
 }

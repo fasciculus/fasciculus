@@ -4,9 +4,16 @@ export interface INamesMemory
     next: { [prefix: string]: number };
 }
 
+export interface ISourceMemory
+{
+    container?: Id<StructureContainer>;
+}
+
 export interface IMemory
 {
     names?: INamesMemory;
+
+    sources?: { [id: Id<Source>]: ISourceMemory }
 }
 
 export class Memories
@@ -23,8 +30,28 @@ export class Memories
 
         if (!result)
         {
-            result = { next: {} };
-            memory.names = result;
+            memory.names = result = { next: {} };
+        }
+
+        return result;
+    }
+
+    static source(source: Source): ISourceMemory
+    {
+        var memory = Memories.memory;
+        var root = memory.sources;
+
+        if (!root)
+        {
+            memory.sources = root = {};
+        }
+
+        var id = source.id;
+        var result = root[id];
+
+        if (!result)
+        {
+            root[id] = result = {};
         }
 
         return result;
