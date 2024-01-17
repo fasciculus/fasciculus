@@ -1,9 +1,15 @@
 import { Bodies } from "./Bodies";
+import { Builders } from "./Builders";
 import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
 import { Customer, IdCustomer, IdSupply, Supply } from "./Objects";
 import { Spawns } from "./Spawns";
 import { Upgraders } from "./Upgraders";
 import { Weller, Wellers } from "./Wellers";
+
+const MIN_SUPPLIER_ENERGY = 1;
+const MIN_SUPPLIER_CAPACITY = 1;
+const MIN_SUPPLY_ENERGY = 10;
+const MIN_CUSTOMER_CAPACITY = 10;
 
 const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -22,7 +28,7 @@ export class Supplier extends CreepBase
 
     run()
     {
-        var state = this.prepare(this.state);
+        var state = this.prepare(this.state, this.supply, this.customer);
 
         switch (state)
         {
@@ -35,140 +41,155 @@ export class Supplier extends CreepBase
         this.state = state;
     }
 
-    private prepare(state: CreepState): CreepState
+    private prepare(state: CreepState, supply: Supply | null, customer: Customer | null): CreepState
     {
         switch (state)
         {
-            case CreepState.Idle: return this.prepareIdle();
-            case CreepState.MoveToSupply: return this.prepareMoveToSupply();
-            case CreepState.MoveToCustomer: return this.prepareMoveToCustomer();
-            case CreepState.Withdraw: return this.prepareWithdraw();
-            case CreepState.Transfer: return this.prepareTransfer();
+            case CreepState.Idle: return this.prepareIdle(supply, customer);
+            case CreepState.MoveToSupply: return this.prepareMoveToSupply(supply, customer);
+            case CreepState.MoveToCustomer: return this.prepareMoveToCustomer(supply, customer);
+            case CreepState.Withdraw: return this.prepareWithdraw(supply, customer);
+            case CreepState.Transfer: return this.prepareTransfer(supply, customer);
         }
 
         return state;
     }
 
-    private prepareIdle(): CreepState
+    private prepareIdle(supply: Supply | null, customer: Customer | null): CreepState
     {
-        if (this.energy < 1)
+        if (this.energy < MIN_SUPPLIER_ENERGY)
         {
-            var supply = this.supply || this.findSupply();
+            this.customer = null;
 
-            this.customer = undefined;
-            this.supply = supply;
+            if (!supply)
+            {
+                this.supply = supply = this.findSupply();
+            }
 
-            return supply ? this.prepare(CreepState.MoveToSupply) : CreepState.Idle;
+            return supply ? (this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.MoveToSupply) : CreepState.Idle;
         }
         else
         {
-            var customer = this.customer || this.findCustomer();
+            this.supply = null;
 
-            this.customer = customer;
-            this.supply = undefined;
+            if (!customer)
+            {
+                this.customer = customer = this.findCustomer();
+            }
 
-            return customer ? this.prepare(CreepState.MoveToCustomer) : CreepState.Idle;
+            return customer ? (this.inRangeTo(customer) ? CreepState.Transfer : CreepState.MoveToCustomer) : CreepState.Idle;
         }
     }
 
-    private prepareMoveToSupply(): CreepState
+    private prepareMoveToSupply(supply: Supply | null, customer: Customer | null): CreepState
     {
-        var supply = this.supply;
+        if (!supply) return this.prepareIdle(supply, customer);
 
-        if (!supply) return this.prepareIdle();
-
-        if (supply.store.energy < 1)
+        if (!Supplier.hasEnergy(supply))
         {
-            this.supply = undefined;
-            return this.prepareIdle();
+            this.supply = supply = null;
+            return this.prepareIdle(supply, customer);
         }
 
-        return this.pos.inRangeTo(supply, 1) ? CreepState.Withdraw : CreepState.MoveToSupply;
+        return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.MoveToSupply;
     }
 
-    private prepareMoveToCustomer(): CreepState
+    private prepareMoveToCustomer(supply: Supply | null, customer: Customer | null): CreepState
     {
-        var customer = this.customer;
+        if (!customer) return this.prepareIdle(supply, customer);
 
-        if (!customer) return this.prepareIdle();
-
-        if (customer.store.getFreeCapacity(RESOURCE_ENERGY) < 1)
+        if (!Supplier.hasCapacity(customer))
         {
-            this.customer = undefined;
-            return this.prepareIdle();
+            this.customer = customer = null;
+            return this.prepareIdle(supply, customer);
         }
 
-        return this.pos.inRangeTo(customer, 1) ? CreepState.Transfer : CreepState.MoveToCustomer;
+        return this.inRangeTo(customer) ? CreepState.Transfer : CreepState.MoveToCustomer;
     }
 
-    private prepareWithdraw(): CreepState
+    private prepareWithdraw(supply: Supply | null, customer: Customer | null): CreepState
     {
-        if (this.freeEnergyCapacity < 1) return this.prepareIdle();
+        if (!supply) return this.prepareIdle(supply, customer);
+        if (this.freeEnergyCapacity < MIN_SUPPLIER_CAPACITY) return this.prepareIdle(supply, customer);
+        if (!this.inRangeTo(supply)) return CreepState.MoveToSupply;
 
-        var supply = this.supply;
-
-        if (!supply) return this.prepareIdle();
-
-        if (supply.store.energy < 1)
+        if (!Supplier.hasEnergy(supply))
         {
-            this.supply = undefined;
-            return this.prepareIdle();
+            this.supply = supply = null;
+            return this.prepareIdle(supply, customer);
         }
-
-        if (!this.pos.inRangeTo(supply, 1)) return this.prepareMoveToSupply();
 
         return CreepState.Withdraw;
     }
 
-    private prepareTransfer(): CreepState
+    private prepareTransfer(supply: Supply | null, customer: Customer | null): CreepState
     {
-        if (this.energy < 1)
+        if (!customer) return this.prepareIdle(supply, customer);
+        if (this.energy < MIN_SUPPLIER_ENERGY) return this.prepareIdle(supply, customer);
+        if (!this.inRangeTo(customer)) return CreepState.MoveToCustomer;
+
+        if (!Supplier.hasCapacity(customer))
         {
-            this.customer = undefined;
-            return this.prepareIdle();
+            this.customer = customer = null;
+            return this.prepareIdle(supply, customer);
         }
-
-        var customer = this.customer;
-
-        if (!customer) return this.prepareIdle();
-
-        if (customer.store.getFreeCapacity(RESOURCE_ENERGY) < 1)
-        {
-            this.customer = undefined;
-            return this.prepareIdle();
-        }
-
-        if (!this.pos.inRangeTo(customer, 1)) return this.prepareMoveToCustomer();
 
         return CreepState.Transfer;
     }
 
-    private findSupply(): Supply | undefined
+    private inRangeTo(target: Supply | Customer): boolean
     {
-        var used = Suppliers.usedSupplies;
-        var wellers = Wellers.all.filter(w => !used.has(w.id) && w.energy > 20);
-
-        if (wellers.length == 0) return undefined;
-
-        wellers = wellers.sort((a, b) => b.energy - a.energy);
-
-        return wellers[0].creep;
+        return this.pos.inRangeTo(target, 1);
     }
 
-    private findCustomer(): Customer | undefined
+    private findSupply(): Supply | null
+    {
+        var used = Suppliers.usedSupplies;
+        var supplies: Supply[] = Wellers.all.filter(w => !used.has(w.id) && Supplier.hasEnergy(w.creep)).map(w => w.creep);
+
+        if (supplies.length == 0) return null;
+
+        return this.pos.findClosestByPath(supplies);
+    }
+
+    private findCustomer(): Customer | null
     {
         var served = Suppliers.servedCustomers;
-        var spawns = Spawns.my.filter(s => !served.has(s.id) && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
+        var customers: Customer[] = [];
 
-        if (spawns.length > 0) return this.pos.findClosestByPath(spawns) || undefined;
+        customers = Spawns.my.filter(s => !served.has(s.id)).filter(Supplier.hasCapacity);
 
-        var upgraders = Upgraders.all.filter(u => !served.has(u.id) && u.freeEnergyCapacity > 0);
+        if (customers.length == 0)
+        {
+            let upgraders = Upgraders.all.filter(u => !served.has(u.id)).map(u => u.creep);
+            let builders = Builders.all.filter(b => !served.has(b.id)).map(b => b.creep);
 
-        if (upgraders.length == 0) return undefined;
+            customers = upgraders.concat(builders);
+        }
 
-        upgraders = upgraders.sort((a, b) => a.energy - b.energy);
+        if (customers.length == 0) return null;
 
-        return upgraders[0].creep;
+        customers = customers.sort(Supplier.compareCustomers);
+
+        return customers[0];
+    }
+
+    private static hasEnergy(supply: Supply)
+    {
+        return supply.store.energy >= MIN_SUPPLY_ENERGY;
+    }
+
+    private static hasCapacity(customer: Customer)
+    {
+        return customer.store.getFreeCapacity(RESOURCE_ENERGY) >= MIN_CUSTOMER_CAPACITY;
+    }
+
+    private static compareCustomers(a: Customer, b: Customer): number
+    {
+        var aFree = a.store.getFreeCapacity(RESOURCE_ENERGY);
+        var bFree = a.store.getFreeCapacity(RESOURCE_ENERGY);
+
+        return bFree - aFree;
     }
 }
 
