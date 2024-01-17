@@ -20,6 +20,7 @@ export class Supplier extends CreepBase
             case CreepState.MoveToSupply: this.moveTo(this.supply!); break;
             case CreepState.MoveToCustomer: this.moveTo(this.customer!); break;
             case CreepState.Withdraw: this.withdraw(this.supply!, RESOURCE_ENERGY); break;
+            case CreepState.Transfer: this.transfer(this.customer!, RESOURCE_ENERGY); break;
         }
 
         this.state = state;
@@ -33,6 +34,7 @@ export class Supplier extends CreepBase
             case CreepState.MoveToSupply: return this.prepareMoveToSupply();
             case CreepState.MoveToCustomer: return this.prepareMoveToCustomer();
             case CreepState.Withdraw: return this.prepareWithdraw();
+            case CreepState.Transfer: return this.prepareTransfer();
         }
 
         return state;
@@ -75,7 +77,7 @@ export class Supplier extends CreepBase
 
         if (!customer) return this.prepareIdle();
 
-        return this.pos.inRangeTo(customer, 1) ? CreepState.Idle : CreepState.MoveToCustomer;
+        return this.pos.inRangeTo(customer, 1) ? CreepState.Transfer : CreepState.MoveToCustomer;
     }
 
     private prepareWithdraw(): CreepState
@@ -97,9 +99,26 @@ export class Supplier extends CreepBase
         return CreepState.Withdraw;
     }
 
+    private prepareTransfer(): CreepState
+    {
+        var customer = this.customer;
+
+        if (!customer) return this.prepareIdle();
+
+        if (customer.store.getFreeCapacity(RESOURCE_ENERGY) < 1)
+        {
+            this.customer = undefined;
+            return this.prepareIdle();
+        }
+
+        if (!this.pos.inRangeTo(customer, 1)) return this.prepareMoveToCustomer();
+
+        return CreepState.Transfer;
+    }
+
     private findSupply(): Supply | undefined
     {
-        var wellers = Wellers.all.filter(w => w.energy > 49);
+        var wellers = Wellers.all.filter(w => w.energy > 0);
 
         return wellers.length == 0 ? undefined : this.pos.findClosestByPath<Weller>(wellers)?.creep;
     }

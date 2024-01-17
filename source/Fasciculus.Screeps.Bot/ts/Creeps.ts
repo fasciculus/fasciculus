@@ -17,7 +17,8 @@ export enum CreepState
     MoveToSource,
     MoveToSupply,
     Harvest,
-    Withdraw
+    Withdraw,
+    Transfer
 }
 
 export const CreepStateText: string[] =
@@ -29,7 +30,8 @@ export const CreepStateText: string[] =
         "→Source",
         "→Supply",
         "Harvest",
-        "Withdraw"
+        "Withdraw",
+        "Transfer"
     ];
 
 export interface ICreepMemory extends CreepMemory
@@ -89,6 +91,11 @@ export class CreepBase
     harvest(target: Source | Mineral | Deposit): CreepActionReturnCode | ERR_NOT_FOUND | ERR_NOT_ENOUGH_RESOURCES
     {
         return this.creep.harvest(target);
+    }
+
+    transfer(target: AnyCreep | Structure, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode
+    {
+        return this.creep.transfer(target, resourceType, amount);
     }
 
     withdraw(target: Structure | Tombstone | Ruin | Creep, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode

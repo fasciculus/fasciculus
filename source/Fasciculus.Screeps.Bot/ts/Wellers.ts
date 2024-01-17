@@ -35,11 +35,22 @@ export class Weller extends CreepBase
 
         switch (state)
         {
-            case CreepState.MoveToSource: return this.pos.inRangeTo(source, 1) ? this.prepare(CreepState.Harvest) : state;
+            case CreepState.Idle: return this.prepareIdle();
+            case CreepState.MoveToSource: return this.prepareMoveToSource();
             case CreepState.Harvest: return this.prepareHarvest();
         }
 
         return state;
+    }
+
+    private prepareIdle(): CreepState
+    {
+        return this.freeEnergyCapacity > 0 ? this.prepareMoveToSource() : CreepState.Idle;
+    }
+
+    private prepareMoveToSource(): CreepState
+    {
+        return this.pos.inRangeTo(this.source!, 1) ? this.prepareHarvest() : CreepState.MoveToSource;
     }
 
     private prepareHarvest(): CreepState
