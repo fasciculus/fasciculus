@@ -6,6 +6,7 @@ import { CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
 import { Names } from "./Names";
 import { Bodies } from "./Bodies";
 import { Controllers } from "./Controllers";
+import { Constructions } from "./Constructions";
 
 export class Spawns
 {
@@ -41,6 +42,7 @@ export class Spawns
             case CreepType.Weller: Spawns.spawnWeller(spawn); break;
             case CreepType.Supplier: Spawns.spawnSupplier(spawn); break;
             case CreepType.Upgrader: Spawns.spawnUpgrader(spawn); break;
+            case CreepType.Builder: Spawns.spawnBuilder(spawn); break;
         }
     }
 
@@ -74,9 +76,19 @@ export class Spawns
 
         if (wellerCount < sourceCount) return CreepType.Weller;
 
-        var requiredSupplierCount = wellerCount;
+        var builderCount = Creeps.countOf(CreepType.Builder);
+        var requiredSupplierCount = wellerCount + Math.floor(builderCount / 2);
 
         if (supplierCount < requiredSupplierCount) return CreepType.Supplier;
+
+        var siteCount = Constructions.my.length;
+
+        if (siteCount > 0)
+        {
+            let requiredBuilderCount = 1 + Math.floor(Constructions.notWalls.length / 3);
+
+            if (builderCount < requiredBuilderCount) return CreepType.Builder;
+        }
 
         return undefined;
     }
@@ -157,6 +169,13 @@ export class Spawns
         }
 
         return bestController;
+    }
+
+    private static spawnBuilder(spawn: StructureSpawn)
+    {
+        var memory: ICreepMemory = { type: CreepType.Builder, state: CreepState.Idle };
+
+        Spawns.spawnCreep(spawn, memory);
     }
 
     static spawnCreep(spawn: StructureSpawn, memory: ICreepMemory): ScreepsReturnCode

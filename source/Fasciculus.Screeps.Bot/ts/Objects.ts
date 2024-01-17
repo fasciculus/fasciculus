@@ -22,6 +22,11 @@ export class Objects
         return id ? Game.getObjectById<Customer>(id) : null;
     }
 
+    static site(id: Id<ConstructionSite> | undefined): ConstructionSite | null
+    {
+        return id ? Game.getObjectById<ConstructionSite>(id) : null; 
+    }
+
     static source(id: Id<Source> | undefined): Source | null
     {
         return id ? Game.getObjectById<Source>(id) : null;

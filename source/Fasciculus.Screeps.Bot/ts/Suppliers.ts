@@ -9,7 +9,7 @@ const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 {
     visualizePathStyle:
     {
-        stroke: "#fff"
+        stroke: "#ff0"
     }
 };
 

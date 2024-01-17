@@ -6,7 +6,8 @@ export enum CreepType
 {
     Weller = "W",
     Supplier = "S",
-    Upgrader = "U"
+    Upgrader = "U",
+    Builder = "B"
 }
 
 export enum CreepState
@@ -16,12 +17,14 @@ export enum CreepState
     MoveToContainer,
     MoveToController,
     MoveToCustomer,
+    MoveToSite,
     MoveToSource,
     MoveToSupply,
     Harvest,
     Withdraw,
     Transfer,
-    Upgrade
+    Upgrade,
+    Build
 }
 
 export const CreepStateText: string[] =
@@ -31,12 +34,14 @@ export const CreepStateText: string[] =
         "→ Containr",
         "→ Contrllr",
         "→ Customer",
+        "→ Site",
         "→ Source",
         "→ Supply",
         "Harvest",
         "Withdraw",
         "Transfer",
-        "Upgrade"
+        "Upgrade",
+        "Build"
     ];
 
 export interface ICreepMemory extends CreepMemory
@@ -47,6 +52,7 @@ export interface ICreepMemory extends CreepMemory
     container?: Id<StructureContainer>;
     controller?: Id<StructureController>;
     customer?: IdCustomer;
+    site?: Id<ConstructionSite>;
     source?: Id<Source>;
     supply?: IdSupply;
 }
@@ -79,6 +85,8 @@ export class CreepBase
     get controller(): StructureController | null { return Objects.controller(this.memory.controller); }
     get customer(): Customer | null { return Objects.customer(this.memory.customer); }
     set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
+    get site(): ConstructionSite | null { return Objects.site(this.memory.site); }
+    set site(value: ConstructionSite | null) { this.memory.site = value?.id; }
     get source(): Source | null { return Objects.source(this.memory.source); }
     get supply(): Supply | null { return Objects.supply(this.memory.supply); }
     set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
@@ -94,6 +102,11 @@ export class CreepBase
     moveTo(target: RoomPosition | { pos: RoomPosition }, opts?: MoveToOpts): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
     {
         return this.creep.moveTo(target, opts);
+    }
+
+    build(target: ConstructionSite): CreepActionReturnCode | ERR_NOT_ENOUGH_RESOURCES | ERR_RCL_NOT_ENOUGH
+    {
+        return this.creep.build(target);
     }
 
     harvest(target: Source | Mineral | Deposit): CreepActionReturnCode | ERR_NOT_FOUND | ERR_NOT_ENOUGH_RESOURCES

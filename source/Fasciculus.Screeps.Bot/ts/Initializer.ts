@@ -1,3 +1,4 @@
+import { Builders } from "./Builders";
 import { Constructions } from "./Constructions";
 import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
@@ -23,5 +24,6 @@ export class Initializer
         Wellers.initialize();
         Suppliers.initialize();
         Upgraders.initialize();
+        Builders.initialize();
     }
 }
