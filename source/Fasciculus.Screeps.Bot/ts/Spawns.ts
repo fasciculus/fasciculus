@@ -32,7 +32,7 @@ export class Spawns
 
         if (!spawn) return;
 
-        var type = Spawns.nextType();
+        var type = Spawns.nextType(spawn);
 
         if (!type) return;
 
@@ -50,15 +50,10 @@ export class Spawns
 
         if (spawns.length == 0) return undefined;
 
-        return spawns.sort(Spawns.compareSpawns)[0];
+        return spawns.sort((a, b) => b.room.energyAvailable - a.room.energyAvailable)[0];
     }
 
-    private static compareSpawns(a: StructureSpawn, b: StructureSpawn): number
-    {
-        return b.room.energyAvailable - a.room.energyAvailable;
-    }
-
-    private static nextType(): CreepType | undefined
+    private static nextType(spawn: StructureSpawn): CreepType | undefined
     {
         var wellerCount = Creeps.countOf(CreepType.Weller);
         var sourceCount = Sources.all.length;
@@ -72,6 +67,12 @@ export class Spawns
         var upgraderCount = Creeps.countOf(CreepType.Upgrader);
 
         if (wellerCount == 1 && supplierCount == 1 && upgraderCount == 0) return CreepType.Upgrader;
+
+        var room = spawn.room;
+
+        if (room.energyAvailable < room.energyCapacityAvailable) return undefined;
+
+        if (wellerCount < sourceCount) return CreepType.Weller;
 
         return undefined;
     }
