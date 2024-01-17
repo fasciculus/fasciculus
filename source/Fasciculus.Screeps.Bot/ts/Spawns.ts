@@ -74,6 +74,10 @@ export class Spawns
 
         if (wellerCount < sourceCount) return CreepType.Weller;
 
+        var requiredSupplierCount = wellerCount;
+
+        if (supplierCount < requiredSupplierCount) return CreepType.Supplier;
+
         return undefined;
     }
 
