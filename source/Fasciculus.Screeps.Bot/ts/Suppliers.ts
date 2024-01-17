@@ -2,6 +2,7 @@ import { Bodies } from "./Bodies";
 import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
 import { Customer, Supply } from "./Objects";
 import { Spawns } from "./Spawns";
+import { Upgraders } from "./Upgraders";
 import { Weller, Wellers } from "./Wellers";
 
 export class Supplier extends CreepBase
@@ -42,16 +43,7 @@ export class Supplier extends CreepBase
 
     private prepareIdle(): CreepState
     {
-        if (this.energy > 0)
-        {
-            var customer = this.customer || this.findCustomer();
-
-            this.customer = customer;
-            this.supply = undefined;
-
-            return customer ? this.prepare(CreepState.MoveToCustomer) : CreepState.Idle;
-        }
-        else
+        if (this.energy < 1)
         {
             var supply = this.supply || this.findSupply();
 
@@ -59,6 +51,15 @@ export class Supplier extends CreepBase
             this.supply = supply;
 
             return supply ? this.prepare(CreepState.MoveToSupply) : CreepState.Idle;
+        }
+        else
+        {
+            var customer = this.customer || this.findCustomer();
+
+            this.customer = customer;
+            this.supply = undefined;
+
+            return customer ? this.prepare(CreepState.MoveToCustomer) : CreepState.Idle;
         }
     }
 
@@ -68,6 +69,12 @@ export class Supplier extends CreepBase
 
         if (!supply) return this.prepareIdle();
 
+        if (supply.store.energy < 1)
+        {
+            this.supply = undefined;
+            return this.prepareIdle();
+        }
+
         return this.pos.inRangeTo(supply, 1) ? CreepState.Withdraw : CreepState.MoveToSupply;
     }
 
@@ -76,6 +83,12 @@ export class Supplier extends CreepBase
         var customer = this.customer;
 
         if (!customer) return this.prepareIdle();
+
+        if (customer.store.getFreeCapacity(RESOURCE_ENERGY) < 1)
+        {
+            this.customer = undefined;
+            return this.prepareIdle();
+        }
 
         return this.pos.inRangeTo(customer, 1) ? CreepState.Transfer : CreepState.MoveToCustomer;
     }
@@ -128,6 +141,10 @@ export class Supplier extends CreepBase
         var spawns = Spawns.my.filter(s => s.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
 
         if (spawns.length > 0) return this.pos.findClosestByPath(spawns) || undefined;
+
+        var upgraders = Upgraders.all.sort((a, b) => a.energy - b.energy);
+
+        if (upgraders.length > 0) return upgraders[0].creep;
 
         return undefined;
     }

@@ -12,6 +12,16 @@ export class Objects
         return id ? Game.getObjectById<StructureContainer>(id) : null;
     }
 
+    static controller(id: Id<StructureController> | undefined): StructureController | null
+    {
+        return id ? Game.getObjectById<StructureController>(id) : null;
+    }
+
+    static customer(id: IdCustomer | undefined): Customer | null
+    {
+        return id ? Game.getObjectById<Customer>(id) : null;
+    }
+
     static source(id: Id<Source> | undefined): Source | null
     {
         return id ? Game.getObjectById<Source>(id) : null;
@@ -20,10 +30,5 @@ export class Objects
     static supply(id: IdSupply | undefined): Supply | null
     {
         return id ? Game.getObjectById<Supply>(id) : null;
-    }
-
-    static customer(id: IdCustomer | undefined): Customer | null
-    {
-        return id ? Game.getObjectById<Customer>(id) : null;
     }
 }

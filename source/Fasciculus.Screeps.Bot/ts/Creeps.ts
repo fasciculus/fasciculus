@@ -14,25 +14,29 @@ export enum CreepState
     Idle,
     Suicide,
     MoveToContainer,
+    MoveToController,
     MoveToCustomer,
     MoveToSource,
     MoveToSupply,
     Harvest,
     Withdraw,
-    Transfer
+    Transfer,
+    Upgrade
 }
 
 export const CreepStateText: string[] =
     [
         "Idle",
         "Suicide",
-        "→Container",
-        "→Customer",
-        "→Source",
-        "→Supply",
+        "→ Containr",
+        "→ Contrllr",
+        "→ Customer",
+        "→ Source",
+        "→ Supply",
         "Harvest",
         "Withdraw",
-        "Transfer"
+        "Transfer",
+        "Upgrade"
     ];
 
 export interface ICreepMemory extends CreepMemory
@@ -72,11 +76,12 @@ export class CreepBase
     }
 
     get container(): StructureContainer | null { return Objects.container(this.memory.container); }
+    get controller(): StructureController | null { return Objects.controller(this.memory.controller); }
+    get customer(): Customer | null { return Objects.customer(this.memory.customer); }
+    set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
     get source(): Source | null { return Objects.source(this.memory.source); }
     get supply(): Supply | null { return Objects.supply(this.memory.supply); }
     set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
-    get customer(): Customer | null { return Objects.customer(this.memory.customer); }
-    set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
 
     get name(): string { return this.creep.name; }
     get pos(): RoomPosition { return this.creep.pos; }
@@ -98,6 +103,11 @@ export class CreepBase
     transfer(target: AnyCreep | Structure, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode
     {
         return this.creep.transfer(target, resourceType, amount);
+    }
+
+    upgradeController(target: StructureController): ScreepsReturnCode
+    {
+        return this.creep.upgradeController(target);
     }
 
     withdraw(target: Structure | Tombstone | Ruin | Creep, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode
