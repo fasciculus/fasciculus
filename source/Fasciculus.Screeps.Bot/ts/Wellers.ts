@@ -3,7 +3,6 @@ import * as _ from "lodash";
 import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
 import { Bodies } from "./Bodies";
 import { Sources } from "./Sources";
-import { type } from "os";
 
 const WELLER_PARTS: BodyPartConstant[] = [CARRY, MOVE, WORK, WORK, WORK, MOVE, WORK, WORK, WORK, MOVE, WORK, WORK, WORK, WORK];
 const WELLER_MIN_SIZE = 3;
@@ -82,10 +81,5 @@ export class Wellers
         var assigned: Set<Id<Source>> = new Set(Wellers._all.map(Wellers.sourceIdOf));
 
         return Sources.all.filter(s => !assigned.has(s.id));
-    }
-
-    static createMemory(source: Source): ICreepMemory
-    {
-        return { type: CreepType.Weller, state: CreepState.MoveToSource, source: source.id };
     }
 }

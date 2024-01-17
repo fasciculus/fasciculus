@@ -1,9 +1,8 @@
 import * as _ from "lodash";
 
 import { Rooms } from "./Rooms";
-import { Weller, Wellers } from "./Wellers";
 import { Sources } from "./Sources";
-import { CreepState, CreepType, ICreepMemory } from "./Creeps";
+import { CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
 import { Names } from "./Names";
 import { Bodies } from "./Bodies";
 
@@ -32,13 +31,14 @@ export class Spawns
 
         if (!spawn) return;
 
-        var wellerCount = Wellers.all.length;
-        var sourceCount = Sources.all.length;
+        var type = Spawns.nextType();
 
-        if (wellerCount < sourceCount)
+        if (!type) return;
+
+        switch (type)
         {
-            Spawns.spawnWeller(spawn);
-            return;
+            case CreepType.Weller: Spawns.spawnWeller(spawn); break;
+            case CreepType.Supplier: Spawns.spawnSupplier(spawn); break;
         }
     }
 
@@ -56,14 +56,45 @@ export class Spawns
         return b.room.energyAvailable - a.room.energyAvailable;
     }
 
+    private static nextType(): CreepType | undefined
+    {
+        var wellerCount = Creeps.countOf(CreepType.Weller);
+        var sourceCount = Sources.all.length;
+
+        if (wellerCount == 0 && sourceCount > 0) return CreepType.Weller;
+
+        var supplierCount = Creeps.countOf(CreepType.Supplier);
+
+        if (supplierCount == 0 && wellerCount > 0) return CreepType.Supplier;
+
+        return undefined;
+    }
+
     private static spawnWeller(spawn: StructureSpawn)
     {
-        var sources = Wellers.findFreeSources();
+        var sources = Spawns.findFreeSources();
 
         if (sources.length == 0) return;
 
         var source = sources[0];
-        var memory: ICreepMemory = Wellers.createMemory(source);
+        var memory: ICreepMemory = { type: CreepType.Weller, state: CreepState.Idle, source: source.id };
+
+        Spawns.spawnCreep(spawn, memory);
+    }
+
+    private static findFreeSources(): Source[]
+    {
+        var wellers = Creeps.ofType(CreepType.Weller);
+        var memories = wellers.map(w => w.memory as ICreepMemory);
+        var sourceIds = memories.map(m => m.source).filter(i => i) as Id<Source>[];
+        var assigned: Set<Id<Source>> = new Set(sourceIds);
+
+        return Sources.all.filter(s => !assigned.has(s.id));
+    }
+
+    private static spawnSupplier(spawn: StructureSpawn)
+    {
+        var memory: ICreepMemory = { type: CreepType.Supplier, state: CreepState.Idle };
 
         Spawns.spawnCreep(spawn, memory);
     }

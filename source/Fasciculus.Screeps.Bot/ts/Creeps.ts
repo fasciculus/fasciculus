@@ -1,6 +1,6 @@
 
 import * as _ from "lodash";
-import { Objects } from "./Objects";
+import { IdSupply, Objects, Supply } from "./Objects";
 
 export enum CreepType
 {
@@ -11,18 +11,21 @@ export enum CreepType
 export enum CreepState
 {
     Start,
-    MoveToSource,
-    MoveToContainer,
-    Harvest,
     Idle,
-    Suicide
+    Suicide,
+    MoveToContainer,
+    MoveToSource,
+    MoveToSupply,
+    Harvest,
+    Withdraw
 }
 
 export const CreepStateText: string[] =
     [
         "Start",
-        "→Source",
         "→Container",
+        "→Source",
+        "→Supply",
         "Harvest",
         "Idle",
         "Suicide"
@@ -35,6 +38,7 @@ export interface ICreepMemory extends CreepMemory
 
     container?: Id<StructureContainer>;
     source?: Id<Source>;
+    supply?: IdSupply;
 }
 
 export class CreepBase
@@ -63,11 +67,14 @@ export class CreepBase
 
     get container(): StructureContainer | null { return Objects.container(this.memory.container); }
     get source(): Source | null { return Objects.source(this.memory.source); }
+    get supply(): Supply | null { return Objects.supply(this.memory.supply); }
+    set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
 
     get name(): string { return this.creep.name; }
     get pos(): RoomPosition { return this.creep.pos; }
 
     get store(): StoreDefinition { return this.creep.store; }
+    get energy(): number { return this.store.energy; }
     get freeEnergyCapacity(): number { return this.store.getFreeCapacity<RESOURCE_ENERGY>() }
 
     moveTo(target: RoomPosition | { pos: RoomPosition }): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
@@ -78,6 +85,18 @@ export class CreepBase
     harvest(target: Source | Mineral | Deposit): CreepActionReturnCode | ERR_NOT_FOUND | ERR_NOT_ENOUGH_RESOURCES
     {
         return this.creep.harvest(target);
+    }
+
+    withdraw(target: Structure | Tombstone | Ruin | Creep, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode
+    {
+        if (target instanceof Creep)
+        {
+            return target.transfer(this.creep, resourceType, amount);
+        }
+        else
+        {
+            return this.creep.withdraw(target, resourceType, amount);
+        }
     }
 
     say(message: string, toPublic?: boolean)
@@ -107,6 +126,7 @@ export class Creeps
     static get my(): Creep[] { return Creeps._my; }
 
     static ofType(type: CreepType): Creep[] { return Creeps._ofType[type] || []; }
+    static countOf(type: CreepType): number { return Creeps.ofType(type).length; }
 
     static typeOf(creep: Creep): CreepType
     {
@@ -120,5 +140,10 @@ export class Creeps
         Creeps._all = _.values(Game.creeps);
         Creeps._my = Creeps._all.filter(c => c.my);
         Creeps._ofType = _.groupBy(Creeps._my, Creeps.typeOf);
+    }
+
+    static resetStates()
+    {
+        Creeps._my.forEach(c => (c.memory as ICreepMemory).state = CreepState.Idle);
     }
 }

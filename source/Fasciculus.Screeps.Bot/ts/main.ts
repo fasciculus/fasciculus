@@ -1,4 +1,4 @@
-import { CreepType, Creeps } from "./Creeps";
+import { CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
 import { Initializer } from "./Initializer"
 import { Memories } from "./Memories";
 import { Names } from "./Names";
@@ -10,7 +10,8 @@ import { Wellers } from "./Wellers";
 export const loop = function ()
 {
     Initializer.run();
+    Creeps.resetStates();
     Scheduler.run();
 
-    console.log(`cpu used ${Math.ceil(Game.cpu.getUsed())}`);
+    // console.log(`cpu used ${Math.ceil(Game.cpu.getUsed())}`);
 }
