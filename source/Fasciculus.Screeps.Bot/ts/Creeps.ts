@@ -20,29 +20,29 @@ export const CreepStateText: string[] =
         "Build"
     ];
 
-export interface ICreepMemory extends CreepMemory
+export interface CreepBaseMemory extends CreepMemory
 {
     type: CreepType;
     state: CreepState;
 }
 
-export interface WellerMemory extends ICreepMemory
+export interface WellerMemory extends CreepBaseMemory
 {
     source?: Id<Source>;
 }
 
-export interface SupplierMemory extends ICreepMemory
+export interface SupplierMemory extends CreepBaseMemory
 {
     customer?: IdCustomer;
     supply?: IdSupply;
 }
 
-export interface UpgraderMemory extends ICreepMemory
+export interface UpgraderMemory extends CreepBaseMemory
 {
     controller?: Id<StructureController>;
 }
 
-export interface BuilderMemory extends ICreepMemory
+export interface BuilderMemory extends CreepBaseMemory
 {
     site?: Id<ConstructionSite>;
 }
@@ -56,7 +56,7 @@ export class CreepBase
         this.creep = creep;
     }
 
-    get memory(): ICreepMemory { return this.creep.memory as ICreepMemory; }
+    get memory(): CreepBaseMemory { return this.creep.memory as CreepBaseMemory; }
 
     get state(): CreepState { return this.memory.state; }
 
@@ -147,7 +147,7 @@ export class Creeps
 
     static typeOf(creep: Creep): CreepType
     {
-        let memory = creep.memory as ICreepMemory;
+        let memory = creep.memory as CreepBaseMemory;
 
         return memory.type;
     }
@@ -161,6 +161,6 @@ export class Creeps
 
     static resetStates()
     {
-        Creeps._my.forEach(c => (c.memory as ICreepMemory).state = CreepState.Idle);
+        Creeps._my.forEach(c => (c.memory as CreepBaseMemory).state = CreepState.Idle);
     }
 }

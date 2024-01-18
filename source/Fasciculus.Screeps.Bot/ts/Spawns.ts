@@ -2,7 +2,7 @@ import * as _ from "lodash";
 
 import { Rooms } from "./Rooms";
 import { Sources } from "./Sources";
-import { Creeps, ICreepMemory, UpgraderMemory, WellerMemory } from "./Creeps";
+import { Creeps, CreepBaseMemory, UpgraderMemory, WellerMemory } from "./Creeps";
 import { Names } from "./Names";
 import { Bodies } from "./Bodies";
 import { Controllers } from "./Controllers";
@@ -119,7 +119,7 @@ export class Spawns
 
     private static spawnSupplier(spawn: StructureSpawn)
     {
-        var memory: ICreepMemory = { type: CreepType.Supplier, state: CreepState.Idle };
+        var memory: CreepBaseMemory = { type: CreepType.Supplier, state: CreepState.Idle };
 
         Spawns.spawnCreep(spawn, memory);
     }
@@ -175,12 +175,12 @@ export class Spawns
 
     private static spawnBuilder(spawn: StructureSpawn)
     {
-        var memory: ICreepMemory = { type: CreepType.Builder, state: CreepState.Idle };
+        var memory: CreepBaseMemory = { type: CreepType.Builder, state: CreepState.Idle };
 
         Spawns.spawnCreep(spawn, memory);
     }
 
-    static spawnCreep(spawn: StructureSpawn, memory: ICreepMemory): ScreepsReturnCode
+    static spawnCreep(spawn: StructureSpawn, memory: CreepBaseMemory): ScreepsReturnCode
     {
         let energy = spawn.room.energyAvailable;
         let body = Bodies.create(memory.type, energy);
