@@ -3,9 +3,9 @@ import { Builders } from "./Builders";
 import { CreepBase, Creeps, SupplierMemory } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { Extensions } from "./Extensions";
-import { Customer, IdCustomer, Objects } from "./Objects";
+import { Objects } from "./Objects";
 import { Spawns } from "./Spawns";
-import { IdSupply, Supply } from "./Types";
+import { Customer, IdCustomer, IdSupply, Supply } from "./Types";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
 
