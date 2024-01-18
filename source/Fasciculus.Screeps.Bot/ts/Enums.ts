@@ -23,3 +23,20 @@ export enum CreepState
     Upgrade,
     Build
 }
+
+export const CreepStateText: string[] =
+    [
+        "I",
+        "Sc",
+        ">Ct",
+        ">Cl",
+        ">Cu",
+        ">Si",
+        ">W",
+        ">Su",
+        "H",
+        "W",
+        "T",
+        "U",
+        "B"
+    ];

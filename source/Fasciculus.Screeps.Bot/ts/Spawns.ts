@@ -9,6 +9,7 @@ import { Controllers } from "./Controllers";
 import { Constructions } from "./Constructions";
 import { CreepState, CreepType } from "./Enums";
 import { CreepBaseMemory, UpgraderMemory, WellerMemory } from "./Memories";
+import { Wells } from "./Wells";
 
 export class Spawns
 {
@@ -76,7 +77,8 @@ export class Spawns
 
         if (room.energyAvailable < room.energyCapacityAvailable) return undefined;
 
-        if (wellerCount < sourceCount) return CreepType.Weller;
+        if (wellerCount > supplierCount) return CreepType.Supplier;
+        if (Spawns.needMoreWellers()) return CreepType.Weller;
 
         var siteCount = Constructions.my.length;
         var builderCount = Creeps.countOf(CreepType.Builder);
@@ -96,26 +98,22 @@ export class Spawns
         return undefined;
     }
 
-    private static spawnWeller(spawn: StructureSpawn)
+    private static needMoreWellers(): boolean
     {
-        var sources = Spawns.findFreeSources();
+        for (let well of Wells.all)
+        {
+            if (well.assignedWork >= 10) continue;
+            if (well.assignees.length < well.slots.length) return true;
+        }
 
-        if (sources.length == 0) return;
-
-        var source = sources[0];
-        var memory: WellerMemory = { type: CreepType.Weller, state: CreepState.Idle, source: source.id };
-
-        Spawns.spawnCreep(spawn, memory);
+        return false;
     }
 
-    private static findFreeSources(): Source[]
+    private static spawnWeller(spawn: StructureSpawn)
     {
-        var wellers = Creeps.ofType(CreepType.Weller);
-        var memories = wellers.map(w => w.memory as WellerMemory);
-        var sourceIds = memories.map(m => m.source).filter(i => i) as Id<Source>[];
-        var assigned: Set<Id<Source>> = new Set(sourceIds);
+        var memory: CreepBaseMemory = { type: CreepType.Weller, state: CreepState.Idle };
 
-        return Sources.all.filter(s => !assigned.has(s.id));
+        Spawns.spawnCreep(spawn, memory);
     }
 
     private static spawnSupplier(spawn: StructureSpawn)

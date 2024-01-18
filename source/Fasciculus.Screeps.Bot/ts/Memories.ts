@@ -12,11 +12,19 @@ export interface SourceMemory
     container?: Id<StructureContainer>;
 }
 
+export interface WellMemory
+{
+    slots?: DirectionConstant[];
+    container?: Id<StructureContainer>;
+    assignees?: string[];
+    assignedWork?: number;
+}
+
 export interface ExtendedMemory
 {
     names?: NamesMemory;
-
-    sources?: { [id: Id<Source>]: SourceMemory }
+    sources?: { [id: Id<Source>]: SourceMemory };
+    wells?: { [id: Id<Source>]: WellMemory };
 }
 
 export interface CreepBaseMemory extends CreepMemory
@@ -27,7 +35,7 @@ export interface CreepBaseMemory extends CreepMemory
 
 export interface WellerMemory extends CreepBaseMemory
 {
-    source?: Id<Source>;
+    well?: Id<Source>;
 }
 
 export interface SupplierMemory extends CreepBaseMemory
@@ -69,14 +77,8 @@ export class Memories
     static get names(): NamesMemory
     {
         var memory = Memories.memory;
-        var result = memory.names;
 
-        if (!result)
-        {
-            memory.names = result = { next: {} };
-        }
-
-        return result;
+        return memory.names || (memory.names = { next: {} });
     }
 
     static source(source: Source): SourceMemory
@@ -98,5 +100,13 @@ export class Memories
         }
 
         return result;
+    }
+
+    static well(id: Id<Source>): WellMemory
+    {
+        var memory = Memories.memory;
+        var root = memory.wells || (memory.wells = {});
+
+        return root[id] || (root[id] = {});
     }
 }

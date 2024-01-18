@@ -1,28 +1,29 @@
 
 import * as _ from "lodash";
-import { CreepState, CreepType } from "./Enums";
+import { CreepState, CreepStateText, CreepType } from "./Enums";
 import { CreepBaseMemory } from "./Memories";
 import { GameWrap } from "./GameWrap";
 
-export const CreepStateText: string[] =
-    [
-        "Idle",
-        "Suicide",
-        "> Containr",
-        "> Contrllr",
-        "> Customer",
-        "> Site",
-        "> Source",
-        "> Supply",
-        "Harvest",
-        "Withdraw",
-        "Transfer",
-        "Upgrade",
-        "Build"
-    ];
+export class Capabilities
+{
+    readonly work: number = 0;
+
+    constructor(creep: Creep)
+    {
+        for (let part of creep.body)
+        {
+            switch (part.type)
+            {
+                case WORK: ++this.work; break;
+            }
+        }
+    }
+}
 
 export class CreepBase
 {
+    private _capabilities?: Capabilities
+
     readonly creep: Creep;
 
     constructor(creep: Creep)
@@ -41,15 +42,17 @@ export class CreepBase
         if (value != oldValue)
         {
             this.memory.state = value;
-            this.say(CreepStateText[value]);
+            // this.say(CreepStateText[value]);
         }
     }
 
     get id(): Id<Creep> { return this.creep.id; }
     get name(): string { return this.creep.name; }
     get pos(): RoomPosition { return this.creep.pos; }
-
     get store(): StoreDefinition { return this.creep.store; }
+
+    get capabilities() { return this._capabilities || (this._capabilities = new Capabilities(this.creep)); }
+
     get energy(): number { return this.store.energy; }
     get freeEnergyCapacity(): number { return this.store.getFreeCapacity<RESOURCE_ENERGY>() }
 

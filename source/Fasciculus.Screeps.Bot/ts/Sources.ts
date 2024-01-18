@@ -1,7 +1,6 @@
 import * as _ from "lodash";
 
 import { Rooms } from "./Rooms";
-import { Memories } from "./Memories";
 
 export class Sources
 {

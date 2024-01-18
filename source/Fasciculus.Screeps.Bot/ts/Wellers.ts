@@ -2,59 +2,68 @@ import * as _ from "lodash";
 
 import { CreepBase, Creeps } from "./Creeps";
 import { Bodies } from "./Bodies";
-import { Sources } from "./Sources";
 import { CreepState, CreepType } from "./Enums";
 import { WellerMemory } from "./Memories";
-import { GameWrap } from "./GameWrap";
+import { Well, Wells } from "./Wells";
 
 export class Weller extends CreepBase
 {
     get memory(): WellerMemory { return super.memory as WellerMemory; }
 
-    get source(): Source | undefined { return GameWrap.get(this.memory.source); }
+    get well(): Well | undefined { return Wells.get(this.memory.well); }
+    set well(value: Well | undefined) { this.memory.well = value?.id; }
 
     constructor(creep: Creep)
     {
         super(creep);
     }
 
-    run()
+    execute()
     {
-        var state = this.prepare(this.state);
-        var source = this.source;
-
-        if (!source) return;
-
-        switch (state)
+        switch (this.state)
         {
-            case CreepState.MoveToSource: this.moveTo(source); break;
-            case CreepState.Harvest: this.harvest(source); break;
+            case CreepState.MoveToSource: this.executeToWell(); break;
+            case CreepState.Harvest: this.executeHarvest(); break;
         }
-
-        this.state = state;
     }
 
-    private prepare(state: CreepState): CreepState
+    private executeToWell()
     {
-        var source = this.source;
+        let well = this.well;
 
-        if (!source) return CreepState.Idle;
-
-        switch (state)
+        if (well)
         {
-            case CreepState.Idle: return this.prepareIdle(source);
-            case CreepState.MoveToSource: return this.prepareMoveToSource(source);
-            case CreepState.Harvest: return this.prepareHarvest(source);
+            this.moveTo(well);
         }
-
-        return state;
     }
 
-    private prepareIdle(source: Source): CreepState
+    private executeHarvest()
     {
-        if (this.freeEnergyCapacity > 0)
+        let well = this.well;
+
+        if (well)
         {
-            return this.inRangeTo(source) ? CreepState.Harvest : CreepState.MoveToSource;
+            this.harvest(well.source);
+        }
+    }
+
+    prepare()
+    {
+        switch (this.state)
+        {
+            case CreepState.Idle: this.state = this.prepareIdle(); break;
+            case CreepState.MoveToSource: this.state = this.prepareToWell(); break;
+            case CreepState.Harvest: this.state = this.prepareHarvest(); break;
+        }
+    }
+
+    private prepareIdle(): CreepState
+    {
+        let well = this.well;
+
+        if (well && this.freeEnergyCapacity > 0)
+        {
+            return this.inRangeTo(well) ? CreepState.Harvest : CreepState.MoveToSource;
         }
         else
         {
@@ -62,17 +71,17 @@ export class Weller extends CreepBase
         }
     }
 
-    private prepareMoveToSource(source: Source): CreepState
+    private prepareToWell(): CreepState
     {
-        return this.inRangeTo(source) ? this.prepareIdle(source) : CreepState.MoveToSource;
+        return this.inRangeTo(this.well) ? this.prepareIdle() : CreepState.MoveToSource;
     }
 
-    private prepareHarvest(source: Source): CreepState
+    private prepareHarvest(): CreepState
     {
-        return this.freeEnergyCapacity == 0 ? this.prepareIdle(source) : CreepState.Harvest;
+        return this.freeEnergyCapacity == 0 ? this.prepareIdle() : CreepState.Harvest;
     }
 
-    private inRangeTo(target: Source | StructureContainer | null): boolean
+    private inRangeTo(target: Well | StructureContainer | undefined): boolean
     {
         if (!target) return false;
 
@@ -98,20 +107,37 @@ export class Wellers
 
     static run()
     {
-        Wellers._all.forEach(w => w.run());
+        Wellers._all.forEach(w => w.prepare());
+        Wellers.assign();
+        Wellers._all.forEach(w => w.execute());
     }
 
-    private static sourceIdOf(weller: Weller): Id<Source>
+    private static assign()
     {
-        var source = weller.source;
+        let assignments: _.Dictionary<Weller[]> = _.groupBy(Wellers.all, w => w.well?.id || "unassigned");
+        let unassigned: Weller[] = assignments["unassigned"] || [];
 
-        return source ? source.id : ("" as Id<Source>);
-    }
+        for (let well of Wells.all)
+        {
+            let assignees: Weller[] = assignments[well.id] || [];
+            let remainingSlots = well.slots.length - assignees.length;
+            let assignedWork = _.sum(assignees.map(w => w.capabilities.work));
 
-    static findFreeSources(): Source[]
-    {
-        var assigned: Set<Id<Source>> = new Set(Wellers._all.map(Wellers.sourceIdOf));
+            while (remainingSlots > 0 && assignedWork < 10)
+            {
+                let weller = unassigned.pop();
 
-        return Sources.all.filter(s => !assigned.has(s.id));
+                if (!weller) break;
+
+                weller.well = well;
+
+                assignees.push(weller);
+                --remainingSlots;
+                assignedWork += weller.capabilities.work;
+            }
+
+            well.assignees = assignees.map(w => w.name);
+            well.assignedWork = assignedWork;
+        }
     }
 }
