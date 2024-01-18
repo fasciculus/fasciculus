@@ -81,15 +81,15 @@ export class CreepBase
         }
     }
 
-    get container(): StructureContainer | null { return Objects.container(this.memory.container); }
-    get controller(): StructureController | null { return Objects.controller(this.memory.controller); }
-    get customer(): Customer | null { return Objects.customer(this.memory.customer); }
-    set customer(value: Customer | null) { this.memory.customer = value?.id; }
-    get site(): ConstructionSite | null { return Objects.site(this.memory.site); }
-    set site(value: ConstructionSite | null) { this.memory.site = value?.id; }
-    get source(): Source | null { return Objects.source(this.memory.source); }
-    get supply(): Supply | null { return Objects.supply(this.memory.supply); }
-    set supply(value: Supply | null) { this.memory.supply = value?.id; }
+    get container(): StructureContainer | undefined { return Objects.get(this.memory.container); }
+    get controller(): StructureController | undefined { return Objects.get(this.memory.controller); }
+    get customer(): Customer | undefined { return Objects.get(this.memory.customer); }
+    set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
+    get site(): ConstructionSite | undefined { return Objects.get(this.memory.site); }
+    set site(value: ConstructionSite | undefined) { this.memory.site = value?.id; }
+    get source(): Source | undefined { return Objects.get(this.memory.source); }
+    get supply(): Supply | undefined { return Objects.get(this.memory.supply); }
+    set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
 
     get id(): Id<Creep> { return this.creep.id; }
     get name(): string { return this.creep.name; }

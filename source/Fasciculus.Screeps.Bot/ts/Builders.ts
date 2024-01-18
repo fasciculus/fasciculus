@@ -46,7 +46,7 @@ export class Builder extends CreepBase
         }
     }
 
-    private prepareIdle(site: ConstructionSite | null): CreepState
+    private prepareIdle(site?: ConstructionSite): CreepState
     {
         if (!site)
         {
@@ -56,21 +56,21 @@ export class Builder extends CreepBase
         return site ? (this.inRangeTo(site) ? CreepState.Build : CreepState.MoveToSite) : CreepState.Idle
     }
 
-    private prepareMoveToSite(site: ConstructionSite | null): CreepState
+    private prepareMoveToSite(site?: ConstructionSite): CreepState
     {
         if (!site) return this.prepareIdle(site);
 
         return this.inRangeTo(site) ? CreepState.Build : CreepState.MoveToSite;
     }
 
-    private prepareBuild(site: ConstructionSite | null)
+    private prepareBuild(site?: ConstructionSite)
     {
         if (!site) return this.prepareIdle(site);
 
         return this.inRangeTo(site) ? CreepState.Build : CreepState.MoveToSite;
     }
 
-    private findSite(): ConstructionSite | null
+    private findSite(): ConstructionSite | undefined
     {
         var served = Builders.served;
         var sites = Constructions.notWalls.filter(s => !served.has(s.id));
@@ -80,7 +80,7 @@ export class Builder extends CreepBase
             sites = Constructions.walls.filter(s => !served.has(s.id));
         }
 
-        if (sites.length == 0) return null;
+        if (sites.length == 0) return undefined;
 
         let bestSite = sites[0];
         let bestWork = bestSite.progressTotal - bestSite.progress;

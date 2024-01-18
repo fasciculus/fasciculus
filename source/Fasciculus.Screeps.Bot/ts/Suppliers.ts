@@ -41,7 +41,7 @@ export class Supplier extends CreepBase
         this.state = state;
     }
 
-    private prepare(state: CreepState, supply: Supply | null, customer: Customer | null): CreepState
+    private prepare(state: CreepState, supply?: Supply, customer?: Customer): CreepState
     {
         switch (state)
         {
@@ -55,11 +55,11 @@ export class Supplier extends CreepBase
         return state;
     }
 
-    private prepareIdle(supply: Supply | null, customer: Customer | null): CreepState
+    private prepareIdle(supply?: Supply, customer?: Customer): CreepState
     {
         if (this.energy < MIN_SUPPLIER_ENERGY)
         {
-            this.customer = null;
+            this.customer = undefined;
 
             if (!supply)
             {
@@ -70,7 +70,7 @@ export class Supplier extends CreepBase
         }
         else
         {
-            this.supply = null;
+            this.supply = undefined;
 
             if (!customer)
             {
@@ -81,33 +81,33 @@ export class Supplier extends CreepBase
         }
     }
 
-    private prepareMoveToSupply(supply: Supply | null, customer: Customer | null): CreepState
+    private prepareMoveToSupply(supply?: Supply, customer?: Customer): CreepState
     {
         if (!supply) return this.prepareIdle(supply, customer);
 
         if (!Supplier.hasEnergy(supply))
         {
-            this.supply = supply = null;
+            this.supply = supply = undefined;
             return this.prepareIdle(supply, customer);
         }
 
         return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.MoveToSupply;
     }
 
-    private prepareMoveToCustomer(supply: Supply | null, customer: Customer | null): CreepState
+    private prepareMoveToCustomer(supply?: Supply, customer?: Customer): CreepState
     {
         if (!customer) return this.prepareIdle(supply, customer);
 
         if (!Supplier.hasCapacity(customer))
         {
-            this.customer = customer = null;
+            this.customer = customer = undefined;
             return this.prepareIdle(supply, customer);
         }
 
         return this.inRangeTo(customer) ? CreepState.Transfer : CreepState.MoveToCustomer;
     }
 
-    private prepareWithdraw(supply: Supply | null, customer: Customer | null): CreepState
+    private prepareWithdraw(supply?: Supply, customer?: Customer): CreepState
     {
         if (!supply) return this.prepareIdle(supply, customer);
         if (this.freeEnergyCapacity < MIN_SUPPLIER_CAPACITY) return this.prepareIdle(supply, customer);
@@ -115,14 +115,14 @@ export class Supplier extends CreepBase
 
         if (!Supplier.hasEnergy(supply))
         {
-            this.supply = supply = null;
+            this.supply = supply = undefined;
             return this.prepareIdle(supply, customer);
         }
 
         return CreepState.Withdraw;
     }
 
-    private prepareTransfer(supply: Supply | null, customer: Customer | null): CreepState
+    private prepareTransfer(supply?: Supply, customer?: Customer): CreepState
     {
         if (!customer) return this.prepareIdle(supply, customer);
         if (this.energy < MIN_SUPPLIER_ENERGY) return this.prepareIdle(supply, customer);
@@ -130,7 +130,7 @@ export class Supplier extends CreepBase
 
         if (!Supplier.hasCapacity(customer))
         {
-            this.customer = customer = null;
+            this.customer = customer = undefined;
             return this.prepareIdle(supply, customer);
         }
 
@@ -142,17 +142,17 @@ export class Supplier extends CreepBase
         return this.pos.inRangeTo(target, 1);
     }
 
-    private findSupply(): Supply | null
+    private findSupply(): Supply | undefined
     {
         var used = Suppliers.usedSupplies;
         var supplies: Supply[] = Wellers.all.filter(w => !used.has(w.id) && Supplier.hasEnergy(w.creep)).map(w => w.creep);
 
-        if (supplies.length == 0) return null;
+        if (supplies.length == 0) return undefined;
 
-        return this.pos.findClosestByPath(supplies);
+        return this.pos.findClosestByPath(supplies) || undefined;
     }
 
-    private findCustomer(): Customer | null
+    private findCustomer(): Customer | undefined
     {
         var served = Suppliers.servedCustomers;
         var customers: Customer[] = [];
@@ -170,7 +170,7 @@ export class Supplier extends CreepBase
             customers = upgraders.concat(builders);
         }
 
-        if (customers.length == 0) return null;
+        if (customers.length == 0) return undefined;
 
         customers = customers.sort(Supplier.compareCustomers);
 
