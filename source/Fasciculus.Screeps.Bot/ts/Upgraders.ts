@@ -25,12 +25,13 @@ export class Upgrader extends CreepBase
     {
         var controller = this.controller;
 
-        if (!controller || !controller.my) return this.suicide();
+        if (!controller) return CreepState.Idle;
 
         switch (state)
         {
             case CreepState.Idle: return this.prepareIdle(controller);
             case CreepState.MoveToController: return this.prepareMoveToController(controller);
+            case CreepState.Upgrade: return this.prepareUpgrade(controller);
         }
 
         return state;
@@ -38,12 +39,24 @@ export class Upgrader extends CreepBase
 
     private prepareIdle(controller: StructureController): CreepState
     {
-        return this.pos.inRangeTo(controller, 2) ? CreepState.Upgrade : CreepState.MoveToController;
+        if (!this.inRangeTo(controller)) return CreepState.MoveToController;
+
+        return this.energy > 0 ? CreepState.Upgrade : CreepState.Idle;
     }
 
     private prepareMoveToController(controller: StructureController): CreepState
     {
-        return this.pos.inRangeTo(controller, 2) ? CreepState.Upgrade : CreepState.MoveToController;
+        return this.inRangeTo(controller) ? this.prepareIdle(controller) : CreepState.MoveToController;
+    }
+
+    private prepareUpgrade(controller: StructureController): CreepState
+    {
+        return this.energy > 0 ? CreepState.Upgrade : this.prepareIdle(controller);
+    }
+
+    private inRangeTo(controller: StructureController): boolean
+    {
+        return this.pos.inRangeTo(controller, 2)
     }
 }
 

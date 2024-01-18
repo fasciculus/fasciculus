@@ -59,12 +59,10 @@ export class Weller extends CreepBase
 
     private prepareHarvest(source: Source): CreepState
     {
-        if (!this.inRangeTo(source)) return CreepState.MoveToSource;
-
         return this.freeEnergyCapacity == 0 ? this.prepareIdle(source) : CreepState.Harvest;
     }
 
-    private inRangeTo(target: Source | StructureContainer | null)
+    private inRangeTo(target: Source | StructureContainer | null): boolean
     {
         if (!target) return false;
 
