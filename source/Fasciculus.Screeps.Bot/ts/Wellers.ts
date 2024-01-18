@@ -3,15 +3,15 @@ import * as _ from "lodash";
 import { CreepBase, Creeps } from "./Creeps";
 import { Bodies } from "./Bodies";
 import { Sources } from "./Sources";
-import { Objects } from "./Objects";
 import { CreepState, CreepType } from "./Enums";
 import { WellerMemory } from "./Memories";
+import { GameWrap } from "./GameWrap";
 
 export class Weller extends CreepBase
 {
     get memory(): WellerMemory { return super.memory as WellerMemory; }
 
-    get source(): Source | undefined { return Objects.get(this.memory.source); }
+    get source(): Source | undefined { return GameWrap.get(this.memory.source); }
 
     constructor(creep: Creep)
     {

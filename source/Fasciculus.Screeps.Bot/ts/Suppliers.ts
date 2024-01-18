@@ -3,8 +3,8 @@ import { Builders } from "./Builders";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { Extensions } from "./Extensions";
+import { GameWrap } from "./GameWrap";
 import { SupplierMemory } from "./Memories";
-import { Objects } from "./Objects";
 import { Spawns } from "./Spawns";
 import { Customer, IdCustomer, IdSupply, Supply } from "./Types";
 import { Upgraders } from "./Upgraders";
@@ -26,10 +26,10 @@ export class Supplier extends CreepBase
 {
     get memory(): SupplierMemory { return super.memory as SupplierMemory; }
 
-    get supply(): Supply | undefined { return Objects.get(this.memory.supply); }
+    get supply(): Supply | undefined { return GameWrap.get(this.memory.supply); }
     set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
 
-    get customer(): Customer | undefined { return Objects.get(this.memory.customer); }
+    get customer(): Customer | undefined { return GameWrap.get(this.memory.customer); }
     set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
 
     constructor(creep: Creep)

@@ -1,5 +1,6 @@
 
 import * as _ from "lodash";
+import { GameWrap } from "./GameWrap";
 
 export class Rooms
 {
@@ -18,7 +19,7 @@ export class Rooms
 
     static initialize()
     {
-        Rooms._all = _.values(Game.rooms);
+        Rooms._all = GameWrap.rooms;
         Rooms._my = Rooms._all.filter(Rooms.isMyRoom);
     }
 }

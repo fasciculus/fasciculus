@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import { GameWrap } from "./GameWrap";
 
 export class Constructions
 {
@@ -12,7 +13,7 @@ export class Constructions
 
     static initialize()
     {
-        Constructions._my = _.values(Game.constructionSites);
+        Constructions._my = GameWrap.myConstructionSites;
         Constructions._walls = Constructions._my.filter(s => s.structureType == STRUCTURE_WALL);
         Constructions._notWalls = Constructions._my.filter(s => s.structureType != STRUCTURE_WALL);
     }

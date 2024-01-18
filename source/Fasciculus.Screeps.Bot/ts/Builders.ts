@@ -3,9 +3,9 @@ import * as _ from "lodash";
 import { Bodies } from "./Bodies";
 import { Constructions } from "./Constructions";
 import { CreepBase, Creeps } from "./Creeps";
-import { Objects } from "./Objects";
 import { CreepState, CreepType } from "./Enums";
 import { BuilderMemory } from "./Memories";
+import { GameWrap } from "./GameWrap";
 
 const BUILDER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -19,7 +19,7 @@ export class Builder extends CreepBase
 {
     get memory(): BuilderMemory { return super.memory as BuilderMemory; }
 
-    get site(): ConstructionSite | undefined { return Objects.get(this.memory.site); }
+    get site(): ConstructionSite | undefined { return GameWrap.get(this.memory.site); }
     set site(value: ConstructionSite | undefined) { this.memory.site = value?.id; }
 
     constructor(creep: Creep)

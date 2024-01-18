@@ -1,14 +1,14 @@
 import { Bodies } from "./Bodies";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
+import { GameWrap } from "./GameWrap";
 import { UpgraderMemory } from "./Memories";
-import { Objects } from "./Objects";
 
 export class Upgrader extends CreepBase
 {
     get memory(): UpgraderMemory { return super.memory as UpgraderMemory; }
 
-    get controller(): StructureController | undefined { return Objects.get(this.memory.controller); }
+    get controller(): StructureController | undefined { return GameWrap.get(this.memory.controller); }
 
     constructor(creep: Creep)
     {

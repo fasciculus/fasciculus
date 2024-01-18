@@ -2,6 +2,7 @@
 import * as _ from "lodash";
 import { CreepState, CreepType } from "./Enums";
 import { CreepBaseMemory } from "./Memories";
+import { GameWrap } from "./GameWrap";
 
 export const CreepStateText: string[] =
     [
@@ -108,11 +109,9 @@ export interface CreepTemplate
 
 export class Creeps
 {
-    private static _all: Creep[] = [];
     private static _my: Creep[] = [];
     private static _ofType: _.Dictionary<Creep[]> = {};
 
-    static get all(): Creep[] { return Creeps._all; }
     static get my(): Creep[] { return Creeps._my; }
 
     static ofType(type: CreepType): Creep[] { return Creeps._ofType[type] || []; }
@@ -127,8 +126,7 @@ export class Creeps
 
     static initialize()
     {
-        Creeps._all = _.values(Game.creeps);
-        Creeps._my = Creeps._all.filter(c => c.my);
+        Creeps._my = GameWrap.myCreeps;
         Creeps._ofType = _.groupBy(Creeps._my, Creeps.typeOf);
     }
 
