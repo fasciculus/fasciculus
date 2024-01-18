@@ -10,7 +10,7 @@ export interface SourceMemory
     container?: Id<StructureContainer>;
 }
 
-export interface IMemory
+export interface ExtendedMemory
 {
     names?: NamesMemory;
 
@@ -32,9 +32,9 @@ export class Memories
         }
     }
 
-    static get memory(): IMemory
+    static get memory(): ExtendedMemory
     {
-        return Memory as IMemory;
+        return Memory as ExtendedMemory;
     }
 
     static get names(): NamesMemory
