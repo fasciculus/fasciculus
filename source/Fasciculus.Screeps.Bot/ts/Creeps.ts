@@ -1,7 +1,8 @@
 
 import * as _ from "lodash";
-import { IdCustomer, IdSupply } from "./Objects";
+import { IdCustomer } from "./Objects";
 import { CreepState, CreepType } from "./Enums";
+import { IdSupply } from "./Types";
 
 export const CreepStateText: string[] =
     [
