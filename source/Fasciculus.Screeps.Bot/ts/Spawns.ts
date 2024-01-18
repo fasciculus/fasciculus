@@ -76,20 +76,21 @@ export class Spawns
 
         if (wellerCount < sourceCount) return CreepType.Weller;
 
+        var siteCount = Constructions.my.length;
         var builderCount = Creeps.countOf(CreepType.Builder);
-        var requiredSupplierCount = wellerCount + Math.floor(builderCount / 2);
+        var requiredBuilderCount = siteCount > 0 ? 1 + Math.floor(Constructions.notWalls.length / 3) : 0;
+        var requiredSupplierCount = wellerCount + Math.floor(builderCount / 2 + upgraderCount / 2);
 
         if (supplierCount < requiredSupplierCount) return CreepType.Supplier;
+        if (builderCount < requiredBuilderCount) return CreepType.Builder;
 
-        var siteCount = Constructions.my.length;
-
-        if (siteCount > 0)
+        if (upgraderCount < 2)
         {
-            let requiredBuilderCount = 1 + Math.floor(Constructions.notWalls.length / 3);
+            var upgradeForce = _.flatten(Creeps.ofType(CreepType.Upgrader).map(c => c.body)).map(d => d.type).filter(t => t == WORK).length;
 
-            if (builderCount < requiredBuilderCount) return CreepType.Builder;
+            if (upgradeForce < 15) return CreepType.Upgrader;
         }
-
+        
         return undefined;
     }
 

@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 
 export interface INamesMemory
 {
@@ -18,6 +19,19 @@ export interface IMemory
 
 export class Memories
 {
+    static cleanup()
+    {
+        var existing: Set<string> = new Set(_.keys(Game.creeps));
+
+        for (let id in Memory.creeps)
+        {
+            if (!existing.has(id))
+            {
+                delete Memory.creeps[id];
+            }
+        }
+    }
+
     static get memory(): IMemory
     {
         return Memory as IMemory;

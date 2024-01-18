@@ -2,8 +2,8 @@
 export type IdSupply = Id<Creep | StructureContainer>;
 export type Supply = Creep | StructureContainer;
 
-export type IdCustomer = Id<Creep | StructureSpawn>;
-export type Customer = Creep | StructureSpawn;
+export type IdCustomer = Id<Creep | StructureSpawn | StructureExtension>;
+export type Customer = Creep | StructureSpawn | StructureExtension;
 
 export class Objects
 {

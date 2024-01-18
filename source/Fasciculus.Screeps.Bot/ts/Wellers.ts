@@ -32,29 +32,43 @@ export class Weller extends CreepBase
 
         switch (state)
         {
-            case CreepState.Idle: return this.prepareIdle();
-            case CreepState.MoveToSource: return this.prepareMoveToSource();
-            case CreepState.Harvest: return this.prepareHarvest();
+            case CreepState.Idle: return this.prepareIdle(source);
+            case CreepState.MoveToSource: return this.prepareMoveToSource(source);
+            case CreepState.Harvest: return this.prepareHarvest(source);
         }
 
         return state;
     }
 
-    private prepareIdle(): CreepState
+    private prepareIdle(source: Source): CreepState
     {
-        return this.freeEnergyCapacity > 0 ? this.prepareMoveToSource() : CreepState.Idle;
+        if (this.freeEnergyCapacity > 0)
+        {
+            return this.inRangeTo(source) ? CreepState.Harvest : CreepState.MoveToSource;
+        }
+        else
+        {
+            return CreepState.Idle;
+        }
     }
 
-    private prepareMoveToSource(): CreepState
+    private prepareMoveToSource(source: Source): CreepState
     {
-        return this.pos.inRangeTo(this.source!, 1) ? this.prepareHarvest() : CreepState.MoveToSource;
+        return this.inRangeTo(source) ? this.prepareIdle(source) : CreepState.MoveToSource;
     }
 
-    private prepareHarvest(): CreepState
+    private prepareHarvest(source: Source): CreepState
     {
-        if (this.freeEnergyCapacity < 1) return this.container ? CreepState.MoveToContainer : CreepState.Idle;
+        if (!this.inRangeTo(source)) return CreepState.MoveToSource;
 
-        return CreepState.Harvest;
+        return this.freeEnergyCapacity == 0 ? this.prepareIdle(source) : CreepState.Harvest;
+    }
+
+    private inRangeTo(target: Source | StructureContainer | null)
+    {
+        if (!target) return false;
+
+        return this.pos.inRangeTo(target, 1);
     }
 }
 

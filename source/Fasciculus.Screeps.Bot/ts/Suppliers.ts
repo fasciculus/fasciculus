@@ -1,15 +1,15 @@
 import { Bodies } from "./Bodies";
 import { Builders } from "./Builders";
 import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
+import { Extensions } from "./Extensions";
 import { Customer, IdCustomer, IdSupply, Supply } from "./Objects";
 import { Spawns } from "./Spawns";
 import { Upgraders } from "./Upgraders";
-import { Weller, Wellers } from "./Wellers";
+import { Wellers } from "./Wellers";
 
 const MIN_SUPPLIER_ENERGY = 1;
 const MIN_SUPPLIER_CAPACITY = 1;
 const MIN_SUPPLY_ENERGY = 10;
-const MIN_CUSTOMER_CAPACITY = 10;
 
 const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -157,7 +157,10 @@ export class Supplier extends CreepBase
         var served = Suppliers.servedCustomers;
         var customers: Customer[] = [];
 
-        customers = Spawns.my.filter(s => !served.has(s.id)).filter(Supplier.hasCapacity);
+        var spawns: Customer[] = Spawns.my.filter(s => !served.has(s.id)).filter(Supplier.hasCapacity);
+        var extensions: Customer[] = Extensions.my.filter(s => !served.has(s.id)).filter(Supplier.hasCapacity);
+
+        customers = spawns.concat(extensions);
 
         if (customers.length == 0)
         {
@@ -181,7 +184,7 @@ export class Supplier extends CreepBase
 
     private static hasCapacity(customer: Customer)
     {
-        return customer.store.getFreeCapacity(RESOURCE_ENERGY) >= MIN_CUSTOMER_CAPACITY;
+        return customer.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
     }
 
     private static compareCustomers(a: Customer, b: Customer): number
@@ -217,8 +220,25 @@ export class Suppliers
     static get usedSupplies(): Set<IdSupply>
     {
         var ids = Suppliers._all.map(s => s.memory.supply).filter(id => id) as IdSupply[];
+        var counts: { [id: IdSupply]: number } = {};
+        var result: Set<IdSupply> = new Set();
 
-        return new Set(ids);
+        for (let id of ids)
+        {
+            let count: number = counts[id] || 0;
+
+            counts[id] = count + 1;
+        }
+
+        for (let id of ids)
+        {
+            if (counts[id] > 1)
+            {
+                result.add(id);
+            }
+        }
+
+        return result;
     }
 
     static get servedCustomers(): Set<IdCustomer>

@@ -50,26 +50,24 @@ export class Builder extends CreepBase
     {
         if (!site)
         {
-            site = this.findSite();
-
-            if (!site) return CreepState.Idle;
-
-            this.site = site;
+            this.site = site = this.findSite();
         }
 
-        return this.pos.inRangeTo(site, 3) ? CreepState.Build : CreepState.MoveToSite;
+        return site ? (this.inRangeTo(site) ? CreepState.Build : CreepState.MoveToSite) : CreepState.Idle
     }
 
     private prepareMoveToSite(site: ConstructionSite | null): CreepState
     {
         if (!site) return this.prepareIdle(site);
 
-        return this.pos.inRangeTo(site, 3) ? CreepState.Build : CreepState.MoveToSite;
+        return this.inRangeTo(site) ? CreepState.Build : CreepState.MoveToSite;
     }
 
     private prepareBuild(site: ConstructionSite | null)
     {
-        return site ? CreepState.Build : this.prepareIdle(site);
+        if (!site) return this.prepareIdle(site);
+
+        return this.inRangeTo(site) ? CreepState.Build : CreepState.MoveToSite;
     }
 
     private findSite(): ConstructionSite | null
@@ -113,6 +111,11 @@ export class Builder extends CreepBase
         }
 
         return bestSite;
+    }
+
+    private inRangeTo(site: ConstructionSite): boolean
+    {
+        return this.pos.inRangeTo(site, 2);
     }
 }
 
