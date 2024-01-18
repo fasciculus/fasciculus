@@ -2,7 +2,8 @@ import * as _ from "lodash";
 
 import { Bodies } from "./Bodies";
 import { Constructions } from "./Constructions";
-import { CreepBase, CreepState, CreepType, Creeps } from "./Creeps";
+import { BuilderMemory, CreepBase, CreepState, CreepType, Creeps } from "./Creeps";
+import { Objects } from "./Objects";
 
 const BUILDER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -14,6 +15,11 @@ const BUILDER_MOVE_TO_OPTS: MoveToOpts =
 
 export class Builder extends CreepBase
 {
+    get memory(): BuilderMemory { return super.memory as BuilderMemory; }
+
+    get site(): ConstructionSite | undefined { return Objects.get(this.memory.site); }
+    set site(value: ConstructionSite | undefined) { this.memory.site = value?.id; }
+
     constructor(creep: Creep)
     {
         super(creep);

@@ -1,8 +1,13 @@
 import { Bodies } from "./Bodies";
-import { CreepBase, CreepState, CreepType, Creeps } from "./Creeps";
+import { CreepBase, CreepState, CreepType, Creeps, UpgraderMemory } from "./Creeps";
+import { Objects } from "./Objects";
 
 export class Upgrader extends CreepBase
 {
+    get memory(): UpgraderMemory { return super.memory as UpgraderMemory; }
+
+    get controller(): StructureController | undefined { return Objects.get(this.memory.controller); }
+
     constructor(creep: Creep)
     {
         super(creep);

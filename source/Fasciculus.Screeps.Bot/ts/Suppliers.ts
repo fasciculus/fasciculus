@@ -1,8 +1,8 @@
 import { Bodies } from "./Bodies";
 import { Builders } from "./Builders";
-import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
+import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory, SupplierMemory } from "./Creeps";
 import { Extensions } from "./Extensions";
-import { Customer, IdCustomer, IdSupply, Supply } from "./Objects";
+import { Customer, IdCustomer, IdSupply, Objects, Supply } from "./Objects";
 import { Spawns } from "./Spawns";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
@@ -21,6 +21,14 @@ const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 
 export class Supplier extends CreepBase
 {
+    get memory(): SupplierMemory { return super.memory as SupplierMemory; }
+
+    get supply(): Supply | undefined { return Objects.get(this.memory.supply); }
+    set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
+
+    get customer(): Customer | undefined { return Objects.get(this.memory.customer); }
+    set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
+
     constructor(creep: Creep)
     {
         super(creep);

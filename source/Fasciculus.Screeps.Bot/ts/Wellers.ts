@@ -1,11 +1,16 @@
 import * as _ from "lodash";
 
-import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
+import { CreepBase, CreepState, CreepType, Creeps, ICreepMemory, WellerMemory } from "./Creeps";
 import { Bodies } from "./Bodies";
 import { Sources } from "./Sources";
+import { Objects } from "./Objects";
 
 export class Weller extends CreepBase
 {
+    get memory(): WellerMemory { return super.memory as WellerMemory; }
+
+    get source(): Source | undefined { return Objects.get(this.memory.source); }
+
     constructor(creep: Creep)
     {
         super(creep);
@@ -14,11 +19,14 @@ export class Weller extends CreepBase
     run()
     {
         var state = this.prepare(this.state);
+        var source = this.source;
+
+        if (!source) return;
 
         switch (state)
         {
-            case CreepState.MoveToSource: this.moveTo(this.source!); break;
-            case CreepState.Harvest: this.harvest(this.source!); break;
+            case CreepState.MoveToSource: this.moveTo(source); break;
+            case CreepState.Harvest: this.harvest(source); break;
         }
 
         this.state = state;
@@ -28,7 +36,7 @@ export class Weller extends CreepBase
     {
         var source = this.source;
 
-        if (!source) return this.suicide();
+        if (!source) return CreepState.Idle;
 
         switch (state)
         {

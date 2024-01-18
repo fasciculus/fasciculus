@@ -2,7 +2,7 @@ import * as _ from "lodash";
 
 import { Rooms } from "./Rooms";
 import { Sources } from "./Sources";
-import { CreepState, CreepType, Creeps, ICreepMemory } from "./Creeps";
+import { CreepState, CreepType, Creeps, ICreepMemory, UpgraderMemory, WellerMemory } from "./Creeps";
 import { Names } from "./Names";
 import { Bodies } from "./Bodies";
 import { Controllers } from "./Controllers";
@@ -101,7 +101,7 @@ export class Spawns
         if (sources.length == 0) return;
 
         var source = sources[0];
-        var memory: ICreepMemory = { type: CreepType.Weller, state: CreepState.Idle, source: source.id };
+        var memory: WellerMemory = { type: CreepType.Weller, state: CreepState.Idle, source: source.id };
 
         Spawns.spawnCreep(spawn, memory);
     }
@@ -109,7 +109,7 @@ export class Spawns
     private static findFreeSources(): Source[]
     {
         var wellers = Creeps.ofType(CreepType.Weller);
-        var memories = wellers.map(w => w.memory as ICreepMemory);
+        var memories = wellers.map(w => w.memory as WellerMemory);
         var sourceIds = memories.map(m => m.source).filter(i => i) as Id<Source>[];
         var assigned: Set<Id<Source>> = new Set(sourceIds);
 
@@ -129,7 +129,7 @@ export class Spawns
 
         if (!controller) return;
 
-        var memory: ICreepMemory = { type: CreepType.Upgrader, state: CreepState.Idle, controller: controller.id };
+        var memory: UpgraderMemory = { type: CreepType.Upgrader, state: CreepState.Idle, controller: controller.id };
 
         Spawns.spawnCreep(spawn, memory);
     }
@@ -147,7 +147,7 @@ export class Spawns
 
         for (let assignee of assignees)
         {
-            let id = (assignee.memory as ICreepMemory).controller;
+            let id = (assignee.memory as UpgraderMemory).controller;
 
             if (!id || !_.has(counts, id)) continue;
 

@@ -48,13 +48,27 @@ export interface ICreepMemory extends CreepMemory
 {
     type: CreepType;
     state: CreepState;
+}
 
-    container?: Id<StructureContainer>;
-    controller?: Id<StructureController>;
-    customer?: IdCustomer;
-    site?: Id<ConstructionSite>;
+export interface WellerMemory extends ICreepMemory
+{
     source?: Id<Source>;
+}
+
+export interface SupplierMemory extends ICreepMemory
+{
+    customer?: IdCustomer;
     supply?: IdSupply;
+}
+
+export interface UpgraderMemory extends ICreepMemory
+{
+    controller?: Id<StructureController>;
+}
+
+export interface BuilderMemory extends ICreepMemory
+{
+    site?: Id<ConstructionSite>;
 }
 
 export class CreepBase
@@ -80,16 +94,6 @@ export class CreepBase
             this.say(CreepStateText[value]);
         }
     }
-
-    get container(): StructureContainer | undefined { return Objects.get(this.memory.container); }
-    get controller(): StructureController | undefined { return Objects.get(this.memory.controller); }
-    get customer(): Customer | undefined { return Objects.get(this.memory.customer); }
-    set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
-    get site(): ConstructionSite | undefined { return Objects.get(this.memory.site); }
-    set site(value: ConstructionSite | undefined) { this.memory.site = value?.id; }
-    get source(): Source | undefined { return Objects.get(this.memory.source); }
-    get supply(): Supply | undefined { return Objects.get(this.memory.supply); }
-    set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
 
     get id(): Id<Creep> { return this.creep.id; }
     get name(): string { return this.creep.name; }
