@@ -46,10 +46,26 @@ export class Supplier extends CreepBase
             case CreepState.MoveToSupply: this.moveTo(this.supply!, SUPPLIER_MOVE_TO_OPTS); break;
             case CreepState.MoveToCustomer: this.moveTo(this.customer!, SUPPLIER_MOVE_TO_OPTS); break;
             case CreepState.Withdraw: this.withdraw(this.supply!, RESOURCE_ENERGY); break;
-            case CreepState.Transfer: this.transfer(this.customer!, RESOURCE_ENERGY); break;
+            case CreepState.Transfer: this.runTransfer(); break;
         }
 
         this.state = state;
+    }
+
+    private runTransfer()
+    {
+        let customer = this.customer;
+
+        if (customer)
+        {
+            this.transfer(customer, RESOURCE_ENERGY);
+
+            if (customer instanceof Creep)
+            {
+                this.customer = undefined;
+                this.state = CreepState.Idle;
+            }
+        }
     }
 
     private prepare(state: CreepState, supply?: Supply, customer?: Customer): CreepState
@@ -178,7 +194,7 @@ export class Supplier extends CreepBase
             let upgraders = Upgraders.all.filter(u => !served.has(u.id)).map(u => u.creep);
             let builders = Builders.all.filter(b => !served.has(b.id)).map(b => b.creep);
 
-            customers = upgraders.concat(builders);
+            customers = upgraders.concat(builders).filter(Supplier.hasCapacity);
         }
 
         if (customers.length == 0) return undefined;
@@ -188,14 +204,16 @@ export class Supplier extends CreepBase
         return customers[0];
     }
 
-    private static hasEnergy(supply: Supply)
+    private static hasEnergy(supply: Supply): boolean
     {
         return supply.store.energy >= MIN_SUPPLY_ENERGY;
     }
 
-    private static hasCapacity(customer: Customer)
+    private static hasCapacity(customer: Customer): boolean
     {
-        return customer.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+        let minCapacity = customer instanceof Creep ? 20 : 0;
+
+        return customer.store.getFreeCapacity(RESOURCE_ENERGY) > minCapacity;
     }
 
     private static compareCustomers(a: Customer, b: Customer): number
