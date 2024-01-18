@@ -1,8 +1,9 @@
 import { Bodies } from "./Bodies";
 import { Builders } from "./Builders";
-import { CreepBase, Creeps, SupplierMemory } from "./Creeps";
+import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { Extensions } from "./Extensions";
+import { SupplierMemory } from "./Memories";
 import { Objects } from "./Objects";
 import { Spawns } from "./Spawns";
 import { Customer, IdCustomer, IdSupply, Supply } from "./Types";

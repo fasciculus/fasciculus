@@ -1,7 +1,7 @@
 
 import * as _ from "lodash";
 import { CreepState, CreepType } from "./Enums";
-import { IdCustomer, IdSupply } from "./Types";
+import { CreepBaseMemory } from "./Memories";
 
 export const CreepStateText: string[] =
     [
@@ -19,33 +19,6 @@ export const CreepStateText: string[] =
         "Upgrade",
         "Build"
     ];
-
-export interface CreepBaseMemory extends CreepMemory
-{
-    type: CreepType;
-    state: CreepState;
-}
-
-export interface WellerMemory extends CreepBaseMemory
-{
-    source?: Id<Source>;
-}
-
-export interface SupplierMemory extends CreepBaseMemory
-{
-    customer?: IdCustomer;
-    supply?: IdSupply;
-}
-
-export interface UpgraderMemory extends CreepBaseMemory
-{
-    controller?: Id<StructureController>;
-}
-
-export interface BuilderMemory extends CreepBaseMemory
-{
-    site?: Id<ConstructionSite>;
-}
 
 export class CreepBase
 {

@@ -1,6 +1,7 @@
 import { Bodies } from "./Bodies";
-import { CreepBase, Creeps, UpgraderMemory } from "./Creeps";
+import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
+import { UpgraderMemory } from "./Memories";
 import { Objects } from "./Objects";
 
 export class Upgrader extends CreepBase

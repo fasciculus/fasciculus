@@ -1,4 +1,6 @@
 import * as _ from "lodash";
+import { CreepState, CreepType } from "./Enums";
+import { IdCustomer, IdSupply } from "./Types";
 
 export interface NamesMemory
 {
@@ -15,6 +17,33 @@ export interface ExtendedMemory
     names?: NamesMemory;
 
     sources?: { [id: Id<Source>]: SourceMemory }
+}
+
+export interface CreepBaseMemory extends CreepMemory
+{
+    type: CreepType;
+    state: CreepState;
+}
+
+export interface WellerMemory extends CreepBaseMemory
+{
+    source?: Id<Source>;
+}
+
+export interface SupplierMemory extends CreepBaseMemory
+{
+    customer?: IdCustomer;
+    supply?: IdSupply;
+}
+
+export interface UpgraderMemory extends CreepBaseMemory
+{
+    controller?: Id<StructureController>;
+}
+
+export interface BuilderMemory extends CreepBaseMemory
+{
+    site?: Id<ConstructionSite>;
 }
 
 export class Memories
