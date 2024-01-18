@@ -1,20 +1,20 @@
 import * as _ from "lodash";
 
-export interface INamesMemory
+export interface NamesMemory
 {
     next: { [prefix: string]: number };
 }
 
-export interface ISourceMemory
+export interface SourceMemory
 {
     container?: Id<StructureContainer>;
 }
 
 export interface IMemory
 {
-    names?: INamesMemory;
+    names?: NamesMemory;
 
-    sources?: { [id: Id<Source>]: ISourceMemory }
+    sources?: { [id: Id<Source>]: SourceMemory }
 }
 
 export class Memories
@@ -37,7 +37,7 @@ export class Memories
         return Memory as IMemory;
     }
 
-    static get names(): INamesMemory
+    static get names(): NamesMemory
     {
         var memory = Memories.memory;
         var result = memory.names;
@@ -50,7 +50,7 @@ export class Memories
         return result;
     }
 
-    static source(source: Source): ISourceMemory
+    static source(source: Source): SourceMemory
     {
         var memory = Memories.memory;
         var root = memory.sources;
