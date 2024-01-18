@@ -2,9 +2,9 @@ import * as _ from "lodash";
 
 import { Bodies } from "./Bodies";
 import { Constructions } from "./Constructions";
-import { BuilderMemory, CreepBase, CreepState, Creeps } from "./Creeps";
+import { BuilderMemory, CreepBase, Creeps } from "./Creeps";
 import { Objects } from "./Objects";
-import { CreepType } from "./Enums";
+import { CreepState, CreepType } from "./Enums";
 
 const BUILDER_MOVE_TO_OPTS: MoveToOpts =
 {

@@ -1,10 +1,10 @@
 import * as _ from "lodash";
 
-import { CreepBase, CreepState, Creeps, WellerMemory } from "./Creeps";
+import { CreepBase, Creeps, WellerMemory } from "./Creeps";
 import { Bodies } from "./Bodies";
 import { Sources } from "./Sources";
 import { Objects } from "./Objects";
-import { CreepType } from "./Enums";
+import { CreepState, CreepType } from "./Enums";
 
 export class Weller extends CreepBase
 {

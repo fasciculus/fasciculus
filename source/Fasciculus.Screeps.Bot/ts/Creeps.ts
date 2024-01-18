@@ -1,24 +1,7 @@
 
 import * as _ from "lodash";
 import { IdCustomer, IdSupply } from "./Objects";
-import { CreepType } from "./Enums";
-
-export enum CreepState
-{
-    Idle,
-    Suicide,
-    MoveToContainer,
-    MoveToController,
-    MoveToCustomer,
-    MoveToSite,
-    MoveToSource,
-    MoveToSupply,
-    Harvest,
-    Withdraw,
-    Transfer,
-    Upgrade,
-    Build
-}
+import { CreepState, CreepType } from "./Enums";
 
 export const CreepStateText: string[] =
     [

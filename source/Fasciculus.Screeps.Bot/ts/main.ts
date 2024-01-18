@@ -1,4 +1,4 @@
-import { CreepState, Creeps, ICreepMemory } from "./Creeps";
+import { Creeps, ICreepMemory } from "./Creeps";
 import { Initializer } from "./Initializer"
 import { Memories } from "./Memories";
 import { Names } from "./Names";
