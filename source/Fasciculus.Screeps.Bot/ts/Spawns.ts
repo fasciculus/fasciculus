@@ -2,11 +2,12 @@ import * as _ from "lodash";
 
 import { Rooms } from "./Rooms";
 import { Sources } from "./Sources";
-import { CreepState, CreepType, Creeps, ICreepMemory, UpgraderMemory, WellerMemory } from "./Creeps";
+import { CreepState, Creeps, ICreepMemory, UpgraderMemory, WellerMemory } from "./Creeps";
 import { Names } from "./Names";
 import { Bodies } from "./Bodies";
 import { Controllers } from "./Controllers";
 import { Constructions } from "./Constructions";
+import { CreepType } from "./Enums";
 
 export class Spawns
 {

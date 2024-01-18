@@ -1,14 +1,7 @@
 
 import * as _ from "lodash";
-import { Customer, IdCustomer, IdSupply, Objects, Supply } from "./Objects";
-
-export enum CreepType
-{
-    Weller = "W",
-    Supplier = "S",
-    Upgrader = "U",
-    Builder = "B"
-}
+import { IdCustomer, IdSupply } from "./Objects";
+import { CreepType } from "./Enums";
 
 export enum CreepState
 {
