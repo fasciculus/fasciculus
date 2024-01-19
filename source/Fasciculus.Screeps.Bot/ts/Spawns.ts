@@ -102,7 +102,7 @@ export class Spawns
     {
         for (let well of Wells.all)
         {
-            if (well.assignedWork >= 10) continue;
+            if (well.assignedWork >= 5) continue;
             if (well.assignees.length < well.slots.length) return true;
         }
 
