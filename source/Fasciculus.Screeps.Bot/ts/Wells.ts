@@ -24,6 +24,8 @@ export class Well
     get assignedWork(): number { return this.memory.assignedWork || 0; }
     set assignedWork(value: number) { this.memory.assignedWork = value; }
 
+    get unassignedWork(): number { return Math.max(0, 5 - this.assignedWork); }
+
     constructor(source: Source)
     {
         this.source = source;

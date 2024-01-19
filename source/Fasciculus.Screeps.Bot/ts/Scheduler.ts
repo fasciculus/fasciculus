@@ -1,6 +1,6 @@
 import { Builders } from "./Builders";
 import { Memories } from "./Memories";
-import { Spawns } from "./Spawns";
+import { Spawning } from "./Spawning";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
@@ -11,11 +11,11 @@ export class Scheduler
     {
         Memories.cleanup();
 
-        Spawns.run();
-
         Wellers.run();
         Suppliers.run();
         Upgraders.run();
         Builders.run();
+
+        Spawning.run();
     }
 }

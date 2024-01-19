@@ -266,7 +266,7 @@ export class Suppliers
 
         let assignedCustomers: Set<IdCustomer> = new Set(Utils.defined(Suppliers._all.map(s => s.customer?.id)));
 
-        let spawns: Customer[] = Spawns.my.filter(Supplier.hasCapacity);
+        let spawns: Customer[] = Spawns.my.map(s => s.spawn).filter(Supplier.hasCapacity);
         let extensions: Customer[] = Extensions.my.filter(Supplier.hasCapacity);
         let upgraders: Customer[] = Creeps.ofType(CreepType.Upgrader).filter(Supplier.hasCapacity);
         let builders: Customer[] = Creeps.ofType(CreepType.Builder).filter(Supplier.hasCapacity);

@@ -123,7 +123,7 @@ export class Wellers
             let remainingSlots = well.slots.length - assignees.length;
             let assignedWork = _.sum(assignees.map(w => w.capabilities.work));
 
-            while (remainingSlots > 0 && assignedWork < 10)
+            while (remainingSlots > 0 && assignedWork < 5)
             {
                 let weller = unassigned.pop();
 
