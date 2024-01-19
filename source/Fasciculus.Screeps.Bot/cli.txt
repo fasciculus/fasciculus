@@ -1,0 +1,8 @@
+system.resetAllData()
+
+system.pauseSimulation()
+system.resumeSimulation()
+
+system.getTickDuration()
+system.setTickDuration(500)
+system.setTickDuration(1000)

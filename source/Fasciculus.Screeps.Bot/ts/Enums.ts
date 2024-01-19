@@ -9,19 +9,19 @@ export enum CreepType
 
 export enum CreepState
 {
-    Idle,
-    Suicide,
-    MoveToContainer,
-    MoveToController,
-    MoveToCustomer,
-    MoveToSite,
-    MoveToSource,
-    MoveToSupply,
-    Harvest,
-    Withdraw,
-    Transfer,
-    Upgrade,
-    Build
+    Idle = "idle",
+    Suicide = "suicide",
+    ToContainer = "toContainer",
+    ToController = "toController",
+    ToCustomer = "toCustomer",
+    ToSite = "toSite",
+    ToSource = "toSource",
+    ToSupply = "toSupply",
+    Harvest = "harvest",
+    Withdraw = "withdraw",
+    Transfer = "transfer",
+    Upgrade = "upgrade",
+    Build = "build"
 }
 
 export const CreepStateText: string[] =

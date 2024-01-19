@@ -43,8 +43,8 @@ export class Supplier extends CreepBase
 
         switch (state)
         {
-            case CreepState.MoveToSupply: this.moveTo(this.supply!, SUPPLIER_MOVE_TO_OPTS); break;
-            case CreepState.MoveToCustomer: this.moveTo(this.customer!, SUPPLIER_MOVE_TO_OPTS); break;
+            case CreepState.ToSupply: this.moveTo(this.supply!, SUPPLIER_MOVE_TO_OPTS); break;
+            case CreepState.ToCustomer: this.moveTo(this.customer!, SUPPLIER_MOVE_TO_OPTS); break;
             case CreepState.Withdraw: this.withdraw(this.supply!, RESOURCE_ENERGY); break;
             case CreepState.Transfer: this.runTransfer(); break;
         }
@@ -73,8 +73,8 @@ export class Supplier extends CreepBase
         switch (state)
         {
             case CreepState.Idle: return this.prepareIdle(supply, customer);
-            case CreepState.MoveToSupply: return this.prepareMoveToSupply(supply, customer);
-            case CreepState.MoveToCustomer: return this.prepareMoveToCustomer(supply, customer);
+            case CreepState.ToSupply: return this.prepareMoveToSupply(supply, customer);
+            case CreepState.ToCustomer: return this.prepareMoveToCustomer(supply, customer);
             case CreepState.Withdraw: return this.prepareWithdraw(supply, customer);
             case CreepState.Transfer: return this.prepareTransfer(supply, customer);
         }
@@ -93,7 +93,7 @@ export class Supplier extends CreepBase
                 this.supply = supply = this.findSupply();
             }
 
-            return supply ? (this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.MoveToSupply) : CreepState.Idle;
+            return supply ? (this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply) : CreepState.Idle;
         }
         else
         {
@@ -104,7 +104,7 @@ export class Supplier extends CreepBase
                 this.customer = customer = this.findCustomer();
             }
 
-            return customer ? (this.inRangeTo(customer) ? CreepState.Transfer : CreepState.MoveToCustomer) : CreepState.Idle;
+            return customer ? (this.inRangeTo(customer) ? CreepState.Transfer : CreepState.ToCustomer) : CreepState.Idle;
         }
     }
 
@@ -118,7 +118,7 @@ export class Supplier extends CreepBase
             return this.prepareIdle(supply, customer);
         }
 
-        return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.MoveToSupply;
+        return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply;
     }
 
     private prepareMoveToCustomer(supply?: Supply, customer?: Customer): CreepState
@@ -131,14 +131,14 @@ export class Supplier extends CreepBase
             return this.prepareIdle(supply, customer);
         }
 
-        return this.inRangeTo(customer) ? CreepState.Transfer : CreepState.MoveToCustomer;
+        return this.inRangeTo(customer) ? CreepState.Transfer : CreepState.ToCustomer;
     }
 
     private prepareWithdraw(supply?: Supply, customer?: Customer): CreepState
     {
         if (!supply) return this.prepareIdle(supply, customer);
         if (this.freeEnergyCapacity < MIN_SUPPLIER_CAPACITY) return this.prepareIdle(supply, customer);
-        if (!this.inRangeTo(supply)) return CreepState.MoveToSupply;
+        if (!this.inRangeTo(supply)) return CreepState.ToSupply;
 
         if (!Supplier.hasEnergy(supply))
         {
@@ -153,7 +153,7 @@ export class Supplier extends CreepBase
     {
         if (!customer) return this.prepareIdle(supply, customer);
         if (this.energy < MIN_SUPPLIER_ENERGY) return this.prepareIdle(supply, customer);
-        if (!this.inRangeTo(customer)) return CreepState.MoveToCustomer;
+        if (!this.inRangeTo(customer)) return CreepState.ToCustomer;
 
         if (!Supplier.hasCapacity(customer))
         {

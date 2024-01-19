@@ -22,7 +22,7 @@ export class Weller extends CreepBase
     {
         switch (this.state)
         {
-            case CreepState.MoveToSource: this.executeToWell(); break;
+            case CreepState.ToSource: this.executeToWell(); break;
             case CreepState.Harvest: this.executeHarvest(); break;
         }
     }
@@ -52,7 +52,7 @@ export class Weller extends CreepBase
         switch (this.state)
         {
             case CreepState.Idle: this.state = this.prepareIdle(); break;
-            case CreepState.MoveToSource: this.state = this.prepareToWell(); break;
+            case CreepState.ToSource: this.state = this.prepareToWell(); break;
             case CreepState.Harvest: this.state = this.prepareHarvest(); break;
         }
     }
@@ -63,7 +63,7 @@ export class Weller extends CreepBase
 
         if (well && this.freeEnergyCapacity > 0)
         {
-            return this.inRangeTo(well) ? CreepState.Harvest : CreepState.MoveToSource;
+            return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToSource;
         }
         else
         {
@@ -73,7 +73,7 @@ export class Weller extends CreepBase
 
     private prepareToWell(): CreepState
     {
-        return this.inRangeTo(this.well) ? this.prepareIdle() : CreepState.MoveToSource;
+        return this.inRangeTo(this.well) ? this.prepareIdle() : CreepState.ToSource;
     }
 
     private prepareHarvest(): CreepState

@@ -33,7 +33,7 @@ export class Builder extends CreepBase
 
         switch (state)
         {
-            case CreepState.MoveToSite: this.moveTo(this.site!, BUILDER_MOVE_TO_OPTS); break;
+            case CreepState.ToSite: this.moveTo(this.site!, BUILDER_MOVE_TO_OPTS); break;
             case CreepState.Build: this.build(this.site!); break;
         }
 
@@ -48,7 +48,7 @@ export class Builder extends CreepBase
         switch (state)
         {
             case CreepState.Idle: return this.prepareIdle(site);
-            case CreepState.MoveToSite: return this.prepareMoveToSite(site);
+            case CreepState.ToSite: return this.prepareMoveToSite(site);
             case CreepState.Build: return this.prepareBuild(site);
             default: return state;
         }
@@ -61,21 +61,21 @@ export class Builder extends CreepBase
             this.site = site = this.findSite();
         }
 
-        return site ? (this.inRangeTo(site) ? CreepState.Build : CreepState.MoveToSite) : CreepState.Idle
+        return site ? (this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite) : CreepState.Idle
     }
 
     private prepareMoveToSite(site?: ConstructionSite): CreepState
     {
         if (!site) return this.prepareIdle(site);
 
-        return this.inRangeTo(site) ? CreepState.Build : CreepState.MoveToSite;
+        return this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite;
     }
 
     private prepareBuild(site?: ConstructionSite)
     {
         if (!site) return this.prepareIdle(site);
 
-        return this.inRangeTo(site) ? CreepState.Build : CreepState.MoveToSite;
+        return this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite;
     }
 
     private findSite(): ConstructionSite | undefined
