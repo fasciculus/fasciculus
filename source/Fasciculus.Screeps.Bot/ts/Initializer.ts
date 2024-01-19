@@ -1,10 +1,10 @@
 import { Builders } from "./Builders";
 import { Chambers } from "./Chambers";
-import { Constructions } from "./Constructions";
 import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { Rooms } from "./Rooms";
+import { Sites } from "./Sites";
 import { Sources } from "./Sources";
 import { Spawns } from "./Spawns";
 import { Suppliers } from "./Suppliers";
@@ -18,7 +18,7 @@ export class Initializer
     {
         Rooms.initialize();
         Controllers.initialize();
-        Constructions.initialize();
+        Sites.initialize();
         Spawns.initialize();
         Extensions.initialize();
 

@@ -1,11 +1,11 @@
 import * as _ from "lodash";
 
 import { Bodies } from "./Bodies";
-import { Constructions } from "./Constructions";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { BuilderMemory } from "./Memories";
 import { GameWrap } from "./GameWrap";
+import { Site, Sites } from "./Sites";
 
 const BUILDER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -19,109 +19,79 @@ export class Builder extends CreepBase
 {
     get memory(): BuilderMemory { return super.memory as BuilderMemory; }
 
-    get site(): ConstructionSite | undefined { return GameWrap.get(this.memory.site); }
-    set site(value: ConstructionSite | undefined) { this.memory.site = value?.id; }
+    get site(): Site | undefined { return Sites.get(this.memory.site); }
+    set site(value: Site | undefined) { this.memory.site = value?.id; }
 
     constructor(creep: Creep)
     {
         super(creep);
     }
 
-    run()
+    execute()
     {
-        var state = this.prepare();
-
-        switch (state)
+        switch (this.state)
         {
-            case CreepState.ToSite: this.moveTo(this.site!, BUILDER_MOVE_TO_OPTS); break;
-            case CreepState.Build: this.build(this.site!); break;
-        }
-
-        this.state = state;
-    }
-
-    private prepare(): CreepState
-    {
-        var state = this.state;
-        var site = this.site;
-
-        switch (state)
-        {
-            case CreepState.Idle: return this.prepareIdle(site);
-            case CreepState.ToSite: return this.prepareMoveToSite(site);
-            case CreepState.Build: return this.prepareBuild(site);
-            default: return state;
+            case CreepState.ToSite: this.executeToSite(); break;
+            case CreepState.Build: this.executeBuild(); break;
         }
     }
 
-    private prepareIdle(site?: ConstructionSite): CreepState
+    private executeToSite()
     {
-        if (!site)
-        {
-            this.site = site = this.findSite();
-        }
+        let site = this.site;
 
-        return site ? (this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite) : CreepState.Idle
+        if (!site) return;
+
+        this.moveTo(site, BUILDER_MOVE_TO_OPTS);
     }
 
-    private prepareMoveToSite(site?: ConstructionSite): CreepState
+    private executeBuild()
     {
-        if (!site) return this.prepareIdle(site);
+        let site = this.site;
+
+        if (!site) return;
+
+        this.build(site.site);
+    }
+
+    prepare()
+    {
+        switch (this.state)
+        {
+            case CreepState.Idle: this.state = this.prepareIdle(); break;
+            case CreepState.ToSite: this.state = this.prepareToSite(); break;
+            case CreepState.Build: this.state = this.prepareBuild(); break;
+        }
+    }
+
+    private prepareIdle(): CreepState
+    {
+        let site = this.site;
+
+        if (!site) return CreepState.Idle;
 
         return this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite;
     }
 
-    private prepareBuild(site?: ConstructionSite)
+    private prepareToSite(): CreepState
     {
-        if (!site) return this.prepareIdle(site);
+        let site = this.site;
+
+        if (!site) return this.prepareIdle();
 
         return this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite;
     }
 
-    private findSite(): ConstructionSite | undefined
+    private prepareBuild()
     {
-        var served = Builders.served;
-        var sites = Constructions.notWalls.filter(s => !served.has(s.id));
+        let site = this.site;
 
-        if (sites.length == 0)
-        {
-            sites = Constructions.walls.filter(s => !served.has(s.id));
-        }
+        if (!site) return this.prepareIdle();
 
-        if (sites.length == 0) return undefined;
-
-        let bestSite = sites[0];
-        let bestWork = bestSite.progressTotal - bestSite.progress;
-        let bestDist = this.pos.getRangeTo(bestSite);
-
-        for (let i = 1, n = sites.length; i < n; ++i)
-        {
-            let site = sites[i];
-            let work = site.progressTotal - site.progress;
-
-            if (work < bestWork)
-            {
-                bestSite = site;
-                bestWork = work;
-                bestDist = this.pos.getRangeTo(site);
-            }
-            else if (work == bestWork)
-            {
-                let dist = this.pos.getRangeTo(site);
-
-                if (dist < bestDist)
-                {
-                    bestSite = site;
-                    bestWork = work;
-                    bestDist = dist;
-                }
-            }
-        }
-
-        return bestSite;
+        return this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite;
     }
 
-    private inRangeTo(site: ConstructionSite): boolean
+    private inRangeTo(site: Site): boolean
     {
         return this.pos.inRangeTo(site, 2);
     }
@@ -145,13 +115,50 @@ export class Builders
 
     static run()
     {
-        Builders._all.forEach(b => b.run());
+        Builders._all.forEach(b => b.prepare());
+        Builders.assign();
+        Builders._all.forEach(b => b.prepare());
+        Builders._all.forEach(b => b.execute());
     }
 
-    static get served(): Set<Id<ConstructionSite>>
+    private static assign()
     {
-        var ids = Builders._all.map(b => b.memory.site).filter(id => id) as Id<ConstructionSite>[];
+        let unassignedBuilders: _.Dictionary<Builder> = _.indexBy(Builders._all.filter(b => !b.site), "name");
 
-        return new Set(ids);
+        if (_.size(unassignedBuilders) == 0) return;
+
+        let sites = Sites.all.sort(Builders.compareSites);
+
+        for (let i = 0, n = sites.length; i < n; ++i)
+        {
+            let site = sites[i];
+
+            if (site.remaining > 400)
+            {
+                var assignees: Builder[] = _.values(unassignedBuilders);
+
+                console.log(`assigning remaining builders ${assignees.map(a => a.name)}`);
+
+                assignees.forEach(b => b.site = site);
+                break;
+            }
+
+            let assignables: Builder[] = _.values(unassignedBuilders);
+            let builder = site.pos.findClosestByPath(assignables) || undefined;
+
+            if (!builder) continue;
+
+            builder.site = site;
+            delete unassignedBuilders[builder.name];
+
+            console.log(`assigning single builder ${builder.name}`);
+
+            if (_.size(unassignedBuilders) == 0) break;
+        }
+    }
+
+    static compareSites(a: Site, b: Site): number
+    {
+        return a.remaining - b.remaining;
     }
 }

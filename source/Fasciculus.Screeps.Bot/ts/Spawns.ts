@@ -6,10 +6,10 @@ import { Creeps } from "./Creeps";
 import { Names } from "./Names";
 import { Bodies } from "./Bodies";
 import { Controllers } from "./Controllers";
-import { Constructions } from "./Constructions";
 import { CreepState, CreepType } from "./Enums";
 import { CreepBaseMemory, UpgraderMemory, WellerMemory } from "./Memories";
 import { Wells } from "./Wells";
+import { Sites } from "./Sites";
 
 export class Spawns
 {
@@ -80,9 +80,9 @@ export class Spawns
         if (wellerCount > supplierCount) return CreepType.Supplier;
         if (Spawns.needMoreWellers()) return CreepType.Weller;
 
-        var siteCount = Constructions.my.length;
+        var siteCount = Sites.all.length;
         var builderCount = Creeps.countOf(CreepType.Builder);
-        var requiredBuilderCount = siteCount > 0 ? 1 + Math.floor(Constructions.notWalls.length / 3) : 0;
+        var requiredBuilderCount = siteCount > 0 ? 1 + Math.floor(Sites.notWalls.length / 3) : 0;
         var requiredSupplierCount = wellerCount + Math.floor(builderCount / 2 + upgraderCount / 2);
 
         if (supplierCount < requiredSupplierCount) return CreepType.Supplier;

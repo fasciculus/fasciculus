@@ -1,7 +1,6 @@
 import * as _ from "lodash";
 
 import { Bodies } from "./Bodies";
-import { Builders } from "./Builders";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { Extensions } from "./Extensions";
@@ -9,9 +8,7 @@ import { GameWrap } from "./GameWrap";
 import { SupplierMemory } from "./Memories";
 import { Spawns } from "./Spawns";
 import { Customer, IdCustomer, IdSupply, Supply } from "./Types";
-import { Upgraders } from "./Upgraders";
 import { Utils } from "./Utils";
-import { Wellers } from "./Wellers";
 
 const MIN_SUPPLY_ENERGY = 10;
 
@@ -237,14 +234,14 @@ export class Suppliers
 
     private static assignSupplies()
     {
-        let unassignedSuppliers = Suppliers._all.filter(s => s.energy == 0 && !s.memory.supply);
+        let unassignedSuppliers = Suppliers._all.filter(s => s.energy == 0 && !s.supply);
 
         if (unassignedSuppliers.length == 0) return;
 
         let assignedSupplies: Set<IdSupply> = new Set(Utils.defined(Suppliers._all.map(s => s.memory.supply)));
 
-        let wellers: Supply[] = Creeps.ofType(CreepType.Weller).filter(c => Supplier.hasEnergy(c) && !assignedSupplies.has(c.id));
-        let unassignedSupplies: Supply[] = wellers;
+        let wellers: Supply[] = Creeps.ofType(CreepType.Weller).filter(Supplier.hasEnergy);
+        let unassignedSupplies: Supply[] = wellers.filter(c => !assignedSupplies.has(c.id));
         let sortedSupplies: Supply[] = unassignedSupplies.sort(Suppliers.compareSupplies);
 
         for (let supply of sortedSupplies)
@@ -264,11 +261,11 @@ export class Suppliers
 
     private static assignCustomers()
     {
-        let unassignedSuppliers = Suppliers._all.filter(s => s.energy > 0 && !s.memory.customer);
+        let unassignedSuppliers = Suppliers._all.filter(s => s.energy > 0 && !s.customer);
 
         if (unassignedSuppliers.length == 0) return;
 
-        let assignedCustomers: Set<IdCustomer> = new Set(Utils.defined(Suppliers._all.map(s => s.memory.customer)));
+        let assignedCustomers: Set<IdCustomer> = new Set(Utils.defined(Suppliers._all.map(s => s.customer?.id)));
 
         let spawns: Customer[] = Spawns.my.filter(Supplier.hasCapacity);
         let extensions: Customer[] = Extensions.my.filter(Supplier.hasCapacity);
