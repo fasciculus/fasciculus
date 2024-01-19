@@ -234,9 +234,9 @@ export class Suppliers
 
     private static assignSupplies()
     {
-        let unassignedSuppliers = Suppliers._all.filter(s => s.energy == 0 && !s.supply);
+        let unassignedSuppliers: _.Dictionary<Supplier> = _.indexBy(Suppliers._all.filter(s => s.energy == 0 && !s.supply), "name");
 
-        if (unassignedSuppliers.length == 0) return;
+        if (_.size(unassignedSuppliers) == 0) return;
 
         let assignedSupplies: Set<IdSupply> = new Set(Utils.defined(Suppliers._all.map(s => s.memory.supply)));
 
@@ -246,24 +246,23 @@ export class Suppliers
 
         for (let supply of sortedSupplies)
         {
-            let supplier = supply.pos.findClosestByPath(unassignedSuppliers) || undefined;
+            let assignables: Supplier[] = _.values(unassignedSuppliers);
+            let supplier = supply.pos.findClosestByPath(assignables) || undefined;
 
             if (!supplier) continue;
 
-            let name: string = supplier.name;
-
             supplier.supply = supply;
-            unassignedSuppliers = _.remove(unassignedSuppliers, s => s.name == name);
+            delete unassignedSuppliers[supplier.name];
 
-            if (unassignedSuppliers.length == 0) break;
+            if (_.size(unassignedSuppliers) == 0) break;
         }
     }
 
     private static assignCustomers()
     {
-        let unassignedSuppliers = Suppliers._all.filter(s => s.energy > 0 && !s.customer);
+        let unassignedSuppliers: _.Dictionary<Supplier> = _.indexBy(Suppliers._all.filter(s => s.energy > 0 && !s.customer), "name");
 
-        if (unassignedSuppliers.length == 0) return;
+        if (_.size(unassignedSuppliers) == 0) return;
 
         let assignedCustomers: Set<IdCustomer> = new Set(Utils.defined(Suppliers._all.map(s => s.customer?.id)));
 
@@ -277,16 +276,15 @@ export class Suppliers
 
         for (let customer of sortedCustomers)
         {
-            let supplier = customer.pos.findClosestByPath(unassignedSuppliers) || undefined;
+            let assignables: Supplier[] = _.values(unassignedSuppliers);
+            let supplier = customer.pos.findClosestByPath(assignables) || undefined;
 
             if (!supplier) continue;
 
-            let name: string = supplier.name;
-
             supplier.customer = customer;
-            unassignedSuppliers = _.remove(unassignedSuppliers, s => s.name == name);
+            delete unassignedSuppliers[supplier.name];
 
-            if (unassignedSuppliers.length == 0) break;
+            if (_.size(unassignedSuppliers) == 0) break;
         }
     }
 

@@ -137,8 +137,6 @@ export class Builders
             {
                 var assignees: Builder[] = _.values(unassignedBuilders);
 
-                console.log(`assigning remaining builders ${assignees.map(a => a.name)}`);
-
                 assignees.forEach(b => b.site = site);
                 break;
             }
@@ -150,8 +148,6 @@ export class Builders
 
             builder.site = site;
             delete unassignedBuilders[builder.name];
-
-            console.log(`assigning single builder ${builder.name}`);
 
             if (_.size(unassignedBuilders) == 0) break;
         }
