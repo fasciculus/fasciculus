@@ -125,51 +125,9 @@ export class Spawns
 
     private static spawnUpgrader(spawn: StructureSpawn)
     {
-        var controller = Spawns.findBestController();
-
-        if (!controller) return;
-
-        var memory: UpgraderMemory = { type: CreepType.Upgrader, state: CreepState.Idle, controller: controller.id };
+        var memory: CreepBaseMemory = { type: CreepType.Upgrader, state: CreepState.Idle };
 
         Spawns.spawnCreep(spawn, memory);
-    }
-
-    private static findBestController(): StructureController | undefined
-    {
-        var controllers = Controllers.all;
-
-        if (controllers.length == 0) return undefined;
-
-        var counts: { [id: Id<StructureController>]: number } = {};
-        var assignees = Creeps.ofType(CreepType.Upgrader);
-
-        controllers.forEach(c => counts[c.id] = 0);
-
-        for (let assignee of assignees)
-        {
-            let id = (assignee.memory as UpgraderMemory).controller;
-
-            if (!id || !_.has(counts, id)) continue;
-
-            ++counts[id];
-        }
-
-        var bestController = controllers[0];
-        var bestCount = counts[bestController.id];
-
-        for (let i = 1, n = controllers.length; i < n; ++i)
-        {
-            let controller = controllers[i];
-            let count = counts[controller.id];
-
-            if (count < bestCount)
-            {
-                bestController = controller;
-                bestCount = count;
-            }
-        }
-
-        return bestController;
     }
 
     private static spawnBuilder(spawn: StructureSpawn)

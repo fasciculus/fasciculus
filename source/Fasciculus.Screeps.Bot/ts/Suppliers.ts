@@ -234,7 +234,7 @@ export class Suppliers
 
     private static assignSupplies()
     {
-        let unassignedSuppliers: _.Dictionary<Supplier> = _.indexBy(Suppliers._all.filter(s => s.energy == 0 && !s.supply), "name");
+        let unassignedSuppliers: _.Dictionary<Supplier> = _.indexBy(Suppliers._all.filter(s => s.energy == 0 && !s.supply), s => s.name);
 
         if (_.size(unassignedSuppliers) == 0) return;
 
@@ -260,7 +260,7 @@ export class Suppliers
 
     private static assignCustomers()
     {
-        let unassignedSuppliers: _.Dictionary<Supplier> = _.indexBy(Suppliers._all.filter(s => s.energy > 0 && !s.customer), "name");
+        let unassignedSuppliers: _.Dictionary<Supplier> = _.indexBy(Suppliers._all.filter(s => s.energy > 0 && !s.customer), s => s.name);
 
         if (_.size(unassignedSuppliers) == 0) return;
 

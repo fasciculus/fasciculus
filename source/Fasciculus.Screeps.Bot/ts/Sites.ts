@@ -35,6 +35,6 @@ export class Sites
     {
         Sites._all = GameWrap.myConstructionSites.map(s => new Site(s));
         Sites._notWalls = Sites._all.filter(s => s.type != STRUCTURE_WALL);
-        Sites._byId = _.indexBy(Sites._all, "id");
+        Sites._byId = _.indexBy(Sites._all, s => s.id);
     }
 }

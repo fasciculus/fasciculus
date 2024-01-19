@@ -34,6 +34,6 @@ export class Chambers
     static initialize()
     {
         Chambers._all = GameWrap.rooms.map(r => new Chamber(r));
-        Chambers._byName = _.indexBy(Chambers._all, "name");
+        Chambers._byName = _.indexBy(Chambers._all, c => c.name);
     }
 }

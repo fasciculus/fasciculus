@@ -55,6 +55,6 @@ export class Wells
         let sources = _.flatten(Chambers.all.map(c => c.sources));
 
         Wells._all = sources.map(s => new Well(s));
-        Wells._byId = _.indexBy(Wells._all, "id");
+        Wells._byId = _.indexBy(Wells._all, w => w.id);
     }
 }
