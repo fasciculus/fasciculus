@@ -10,6 +10,7 @@ import { Sites } from "./Sites";
 import { Sources } from "./Sources";
 import { Spawns } from "./Spawns";
 import { Starters } from "./Starters";
+import { Statistics } from "./Statistics";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
 import { Walls } from "./Walls";
@@ -20,6 +21,7 @@ export class Initializer
 {
     static run()
     {
+        Statistics.initialize();
         Rooms.initialize();
         Controllers.initialize();
         Sites.initialize();

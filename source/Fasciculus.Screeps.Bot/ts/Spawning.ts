@@ -16,6 +16,8 @@ import { Names } from "./Names";
 import { Repairs } from "./Repairs";
 import { Repairers } from "./Repairers";
 import { Starters } from "./Starters";
+import { Chambers } from "./Chambers";
+import { Statistics } from "./Statistics";
 
 export class Spawning
 {
@@ -54,7 +56,7 @@ export class Spawning
 
         if (spawn.roomEnergyAvailable < spawn.roomEnergyCapacity) return undefined;
 
-        if (supplierCount < wellerCount) return CreepType.Supplier;
+        if (Spawning.moreSuppliers) return CreepType.Supplier;
 
         let totalWellSlots = _.sum(Wells.all.map(w => w.slots));
         let unassignedWellWork = _.sum(Wells.all.map(w => w.unassignedWork));
@@ -86,5 +88,10 @@ export class Spawning
         }
 
         return undefined;
+    }
+
+    static get moreSuppliers(): boolean
+    {
+        return Wells.welled > (Statistics.supplied * 1.2);
     }
 }

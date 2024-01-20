@@ -9,6 +9,8 @@ import { SupplierMemory } from "./Memories";
 import { Spawns } from "./Spawns";
 import { Customer, IdCustomer, IdSupply, Supply } from "./Types";
 import { Utils } from "./Utils";
+import { Stores } from "./Stores";
+import { Statistics } from "./Statistics";
 
 const MIN_SUPPLY_ENERGY = 10;
 
@@ -51,11 +53,17 @@ export class Supplier extends CreepBase
     {
         switch (this.state)
         {
+            case CreepState.Idle: this.executeIdle(); break;
             case CreepState.ToSupply: this.executeToSupply(); break;
             case CreepState.ToCustomer: this.executeToCustomer(); break;
             case CreepState.Withdraw: this.executeWithdraw(); break;
             case CreepState.Transfer: this.executeTransfer(); break;
         }
+    }
+
+    private executeIdle()
+    {
+        Statistics.addSupplied(this.energy / 20);
     }
 
     private executeToSupply()
@@ -91,7 +99,10 @@ export class Supplier extends CreepBase
 
         if (!customer) return;
 
-        this.transfer(customer, RESOURCE_ENERGY);
+        let amount = Math.min(this.energy, Stores.freeEnergyCapacity(customer));
+
+        this.transfer(customer, RESOURCE_ENERGY, amount);
+        Statistics.addSupplied(amount);
 
         if (customer instanceof Creep)
         {
@@ -219,6 +230,8 @@ export class Suppliers
     private static _all: Supplier[] = [];
 
     static get all(): Supplier[] { return Suppliers._all; }
+
+    static get supplied(): number { return _.sum(Suppliers._all.map(s => s.energyCapacity)) / 25; }
 
     static initialize()
     {

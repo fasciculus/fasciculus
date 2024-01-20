@@ -20,11 +20,17 @@ export interface WellMemory
     assignedWork?: number;
 }
 
+export interface StatisticsMemory
+{
+    supplied: number;
+}
+
 export interface ExtendedMemory
 {
     names?: NamesMemory;
     sources?: { [id: Id<Source>]: SourceMemory };
     wells?: { [id: Id<Source>]: WellMemory };
+    statistics?: StatisticsMemory;
 }
 
 export interface CreepBaseMemory extends CreepMemory
@@ -119,5 +125,12 @@ export class Memories
         var root = memory.wells || (memory.wells = {});
 
         return root[id] || (root[id] = {});
+    }
+
+    static get statistics(): StatisticsMemory
+    {
+        var memory = Memories.memory;
+
+        return memory.statistics || (memory.statistics = { supplied: 100 });
     }
 }

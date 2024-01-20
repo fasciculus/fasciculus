@@ -62,6 +62,8 @@ export class Wells
 
     static get all(): Well[] { return Wells._all; }
 
+    static get welled(): number { return _.sum(Wells._all.map(w => w.assignedWork)) * 2; }
+
     static initialize()
     {
         let sources = _.flatten(Chambers.all.map(c => c.sources));

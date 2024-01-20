@@ -6,6 +6,11 @@ export class Stores
         return target.store.energy;
     }
 
+    static energyCapacity(target: { store: StoreDefinition }): number
+    {
+        return target.store.getCapacity(RESOURCE_ENERGY);
+    }
+
     static freeEnergyCapacity(target: { store: StoreDefinition }): number
     {
         return target.store.getFreeCapacity(RESOURCE_ENERGY);
