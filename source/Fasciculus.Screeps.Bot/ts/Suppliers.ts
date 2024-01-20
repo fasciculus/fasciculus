@@ -299,8 +299,20 @@ export class Suppliers
         return b.store.energy - a.store.energy;
     }
 
+    private static customerPriority(customer: Customer): number
+    {
+        if (customer instanceof StructureSpawn) return 1;
+        if (customer instanceof StructureExtension) return 2;
+
+        return 3;
+    }
+
     private static compareCustomers(a: Customer, b: Customer): number
     {
+        let result = Suppliers.customerPriority(a) - Suppliers.customerPriority(b);
+
+        if (result != 0) return result;
+
         return b.store.getFreeCapacity(RESOURCE_ENERGY) - a.store.getFreeCapacity(RESOURCE_ENERGY)
     }
 }
