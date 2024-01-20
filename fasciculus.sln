@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Site", "source\Fasciculus.Site\Fasciculus.Site.csproj", "{A52D30A0-80A7-4508-AF55-400DB6D3593D}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Fasciculus.Screeps.Bot", "source\Fasciculus.Screeps.Bot\Fasciculus.Screeps.Bot.esproj", "{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +15,6 @@ Global
 		{A52D30A0-80A7-4508-AF55-400DB6D3593D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A52D30A0-80A7-4508-AF55-400DB6D3593D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A52D30A0-80A7-4508-AF55-400DB6D3593D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0EBDE5F-345D-4AC6-8F15-22CF93BC929F}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
