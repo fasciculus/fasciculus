@@ -14,7 +14,7 @@ export interface SourceMemory
 
 export interface WellMemory
 {
-    slots?: DirectionConstant[];
+    slots?: number;
     container?: Id<StructureContainer>;
     assignees?: string[];
     assignedWork?: number;

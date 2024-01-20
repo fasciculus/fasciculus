@@ -135,7 +135,7 @@ export class Wellers
         for (let well of Wells.all)
         {
             let assignees: Weller[] = assignments[well.id] || [];
-            let remainingSlots = well.slots.length - assignees.length;
+            let remainingSlots = well.slots - assignees.length;
             let assignedWork = _.sum(assignees.map(w => w.capabilities.work));
 
             while (remainingSlots > 0 && assignedWork < 5)

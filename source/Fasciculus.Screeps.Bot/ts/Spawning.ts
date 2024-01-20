@@ -56,7 +56,7 @@ export class Spawning
 
         if (supplierCount < wellerCount) return CreepType.Supplier;
 
-        let totalWellSlots = _.sum(Wells.all.map(w => w.slots.length));
+        let totalWellSlots = _.sum(Wells.all.map(w => w.slots));
         let unassignedWellWork = _.sum(Wells.all.map(w => w.unassignedWork));
 
         if (unassignedWellWork > 0 && wellerCount < totalWellSlots) return CreepType.Weller;

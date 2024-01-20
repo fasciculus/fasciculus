@@ -5,8 +5,6 @@ import { DIRECTIONS, Point } from "./Geometry";
 
 export class Well
 {
-    private _slots?: DirectionConstant[];
-
     readonly source: Source;
 
     get id(): Id<Source> { return this.source.id; }
@@ -16,8 +14,19 @@ export class Well
     get room(): Room { return this.source.room; }
     get chamber(): Chamber | undefined { return Chambers.get(this.room.name); }
 
-    get slots(): DirectionConstant[] { return this._slots || (this._slots = this.memory.slots || (this.memory.slots = this.findSlots())); }
-    get freeSlots(): number { return this.slots.length - this.assignees.length; }
+    get slots(): number
+    {
+        let result = this.memory.slots;
+
+        if (!result)
+        {
+            this.memory.slots = result = this.countSlots();
+        }
+
+        return result;
+    }
+
+    get freeSlots(): number { return this.slots - this.assignees.length; }
 
     get assignees(): string[] { return this.memory.assignees || []; }
     set assignees(value: string[]) { this.memory.assignees = value; }
@@ -32,15 +41,15 @@ export class Well
         this.source = source;
     }
 
-    private findSlots(): DirectionConstant[]
+    private countSlots(): number
     {
         let territory = this.chamber?.territory;
 
-        if (!territory) return [];
+        if (!territory) return 0;
 
         let types = territory.around(Point.from(this.pos));
 
-        return DIRECTIONS.filter(d => types[d] == 0);
+        return DIRECTIONS.filter(d => types[d] == 0).length;
     }
 }
 
