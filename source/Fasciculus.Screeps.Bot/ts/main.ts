@@ -22,4 +22,5 @@ export const loop = function ()
     Scheduler.run();
 
     // console.log(`walls ${Walls.avg}`);
+    // console.log(`bucket ${Game.cpu.bucket}`);
 }
