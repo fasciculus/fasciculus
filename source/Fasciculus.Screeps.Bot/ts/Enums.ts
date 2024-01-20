@@ -4,7 +4,8 @@ export enum CreepType
     Weller = "W",
     Supplier = "S",
     Upgrader = "U",
-    Builder = "B"
+    Builder = "B",
+    Repairer = "R"
 }
 
 export enum CreepState
@@ -14,6 +15,7 @@ export enum CreepState
     ToContainer = "toContainer",
     ToController = "toController",
     ToCustomer = "toCustomer",
+    ToRepairable = "toRepairable",
     ToSite = "toSite",
     ToSource = "toSource",
     ToSupply = "toSupply",
@@ -21,22 +23,6 @@ export enum CreepState
     Withdraw = "withdraw",
     Transfer = "transfer",
     Upgrade = "upgrade",
-    Build = "build"
+    Build = "build",
+    Repair = "repair"
 }
-
-export const CreepStateText: string[] =
-    [
-        "I",
-        "Sc",
-        ">Ct",
-        ">Cl",
-        ">Cu",
-        ">Si",
-        ">W",
-        ">Su",
-        "H",
-        "W",
-        "T",
-        "U",
-        "B"
-    ];

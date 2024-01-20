@@ -1,6 +1,6 @@
 
 import * as _ from "lodash";
-import { CreepState, CreepStateText, CreepType } from "./Enums";
+import { CreepState, CreepType } from "./Enums";
 import { CreepBaseMemory } from "./Memories";
 import { GameWrap } from "./GameWrap";
 
@@ -42,7 +42,6 @@ export class CreepBase
         if (value != oldValue)
         {
             this.memory.state = value;
-            // this.say(CreepStateText[value]);
         }
     }
 
@@ -91,6 +90,11 @@ export class CreepBase
         {
             return this.creep.withdraw(target, resourceType, amount);
         }
+    }
+
+    repair(target: Structure)
+    {
+        return this.creep.repair(target);
     }
 
     say(message: string, toPublic?: boolean)

@@ -270,8 +270,14 @@ export class Suppliers
         let extensions: Customer[] = Extensions.my.filter(Supplier.hasCapacity);
         let upgraders: Customer[] = Creeps.ofType(CreepType.Upgrader).filter(Supplier.hasCapacity);
         let builders: Customer[] = Creeps.ofType(CreepType.Builder).filter(Supplier.hasCapacity);
+        let repairers: Customer[] = Creeps.ofType(CreepType.Repairer).filter(Supplier.hasCapacity);
 
-        let unassignedCustomers = spawns.concat(extensions).concat(upgraders).concat(builders).filter(c => !assignedCustomers.has(c.id));
+        let unassignedCustomers = spawns.concat(extensions).concat(upgraders).concat(builders).concat(repairers);
+
+        unassignedCustomers = unassignedCustomers.filter(c => !assignedCustomers.has(c.id));
+
+        if (unassignedCustomers.length == 0) return;
+
         let sortedCustomers = unassignedCustomers.sort(Suppliers.compareCustomers);
 
         for (let customer of sortedCustomers)

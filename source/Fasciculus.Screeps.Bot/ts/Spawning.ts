@@ -13,6 +13,8 @@ import { Builders } from "./Builders";
 import { CreepBaseMemory } from "./Memories";
 import { Bodies } from "./Bodies";
 import { Names } from "./Names";
+import { Repairs } from "./Repairs";
+import { Repairers } from "./Repairers";
 
 export class Spawning
 {
@@ -71,6 +73,15 @@ export class Spawning
             let builderCount = Builders.all.length;
 
             if (builderCount < buildersRequired) return CreepType.Builder;
+        }
+
+        let repairCount = Repairs.all.length;
+
+        if (repairCount > 0)
+        {
+            let repairerCount = Repairers.all.length;
+
+            if (repairerCount < 1) return CreepType.Repairer;
         }
 
         return undefined;
