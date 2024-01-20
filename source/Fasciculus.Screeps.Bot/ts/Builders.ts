@@ -1,11 +1,22 @@
 import * as _ from "lodash";
 
-import { Bodies } from "./Bodies";
+import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { BuilderMemory } from "./Memories";
-import { GameWrap } from "./GameWrap";
 import { Site, Sites } from "./Sites";
+
+const BUILDER_TEMPLATE: BodyTemplate =
+{
+    chunks:
+        [
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] }
+        ]
+};
 
 const BUILDER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -97,9 +108,6 @@ export class Builder extends CreepBase
     }
 }
 
-const BUILDER_PARTS: BodyPartConstant[] = [CARRY, WORK, MOVE, CARRY, WORK, MOVE, CARRY, WORK, MOVE, CARRY, WORK, MOVE];
-const BUILDER_MIN_SIZE = 3;
-
 export class Builders
 {
     private static _all: Builder[] = [];
@@ -110,7 +118,7 @@ export class Builders
     {
         Builders._all = Creeps.ofType(CreepType.Builder).map(c => new Builder(c));
 
-        Bodies.register(CreepType.Builder, BUILDER_MIN_SIZE, BUILDER_PARTS);
+        Bodies.register(CreepType.Builder, BUILDER_TEMPLATE);
     }
 
     static run()

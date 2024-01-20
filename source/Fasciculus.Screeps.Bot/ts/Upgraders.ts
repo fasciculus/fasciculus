@@ -1,9 +1,22 @@
 import * as _ from "lodash";
-import { Bodies } from "./Bodies";
+import { Bodies, BodyTemplate } from "./Bodies";
 import { Controller, Controllers } from "./Controllers";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { UpgraderMemory } from "./Memories";
+
+const UPGRADER_TEMPLATE: BodyTemplate =
+{
+    chunks:
+        [
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
+            { cost: 150, parts: [WORK, MOVE] },
+            { cost: 150, parts: [WORK, MOVE] },
+            { cost: 150, parts: [WORK, MOVE] },
+            { cost: 150, parts: [WORK, MOVE] },
+        ]
+};
+
 
 export class Upgrader extends CreepBase
 {
@@ -87,9 +100,6 @@ export class Upgrader extends CreepBase
     }
 }
 
-const UPGRADER_PARTS: BodyPartConstant[] = [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE];
-const UPGRADER_MIN_SIZE = 3;
-
 interface ControllerWork
 {
     controller: Controller;
@@ -106,7 +116,7 @@ export class Upgraders
     {
         Upgraders._all = Creeps.ofType(CreepType.Upgrader).map(c => new Upgrader(c));
 
-        Bodies.register(CreepType.Upgrader, UPGRADER_MIN_SIZE, UPGRADER_PARTS);
+        Bodies.register(CreepType.Upgrader, UPGRADER_TEMPLATE);
     }
 
     static run()

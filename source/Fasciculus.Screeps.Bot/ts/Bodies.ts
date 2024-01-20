@@ -1,19 +1,23 @@
 import * as _ from "lodash";
 
+export interface BodyChunk
+{
+    cost: number;
+    parts: BodyPartConstant[];
+}
+
 export interface BodyTemplate
 {
-    minSize: number;
-
-    parts: BodyPartConstant[];
+    chunks: BodyChunk[];
 }
 
 export class Bodies
 {
     static _registry: { [type: string]: BodyTemplate } = {}
 
-    static register(type: string, minSize: number, parts: BodyPartConstant[])
+    static register(type: string, template: BodyTemplate)
     {
-        Bodies._registry[type] = { minSize, parts };
+        Bodies._registry[type] = template;
     }
 
     static create(type: string, energy: number): BodyPartConstant[] | undefined
@@ -22,24 +26,16 @@ export class Bodies
 
         if (!template) return undefined;
 
-        var result = _.take(template.parts, template.minSize);
-        var minCost = _.sum(result.map(p => BODYPART_COST[p]));
+        var result: BodyPartConstant[] = [];
 
-        if (energy < minCost) return undefined;
-
-        energy -= minCost;
-
-        for (let i = template.minSize, n = template.parts.length; i < n; ++i)
+        for (let chunk of template.chunks)
         {
-            var part = template.parts[i];
-            var cost = BODYPART_COST[part];
+            if (energy < chunk.cost) break;
 
-            if (energy < cost) break;
-
-            result.push(part);
-            energy -= cost;
+            result = result.concat(chunk.parts);
+            energy -= chunk.cost;
         }
 
-        return result;
+        return result.length > 0 ? result : undefined;
     }
 }

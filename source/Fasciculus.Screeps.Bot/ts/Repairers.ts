@@ -1,11 +1,23 @@
 import * as _ from "lodash";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
-import { Bodies } from "./Bodies";
+import { Bodies, BodyTemplate } from "./Bodies";
 import { RepairerMemory } from "./Memories";
 import { Repairable } from "./Types";
 import { Repairs } from "./Repairs";
 import { Walls } from "./Walls";
+
+const REPAIRER_TEMPLATE: BodyTemplate =
+{
+    chunks:
+        [
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
+            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] }
+        ]
+};
 
 const REPAIRER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -113,9 +125,6 @@ export class Repairer extends CreepBase
     }
 }
  
-const REPAIRER_PARTS: BodyPartConstant[] = [WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE];
-const REPAIRER_MIN_SIZE = 3;
-
 interface DamageInfo
 {
     repairable: Repairable;
@@ -132,7 +141,7 @@ export class Repairers
     {
         Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c));
 
-        Bodies.register(CreepType.Repairer, REPAIRER_MIN_SIZE, REPAIRER_PARTS);
+        Bodies.register(CreepType.Repairer, REPAIRER_TEMPLATE);
     }
 
     static run()

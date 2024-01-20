@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-import { Bodies } from "./Bodies";
+import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { Extensions } from "./Extensions";
@@ -11,6 +11,18 @@ import { Customer, IdCustomer, IdSupply, Supply } from "./Types";
 import { Utils } from "./Utils";
 
 const MIN_SUPPLY_ENERGY = 10;
+
+const SUPPLIER_TEMPLATE: BodyTemplate =
+{
+    chunks:
+        [
+            { cost: 100, parts: [CARRY, MOVE] },
+            { cost: 100, parts: [CARRY, MOVE] },
+            { cost: 100, parts: [CARRY, MOVE] },
+            { cost: 100, parts: [CARRY, MOVE] },
+            { cost: 100, parts: [CARRY, MOVE] },
+        ]
+};
 
 const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -202,9 +214,6 @@ export class Supplier extends CreepBase
     }
 }
 
-const SUPPLIER_PARTS: BodyPartConstant[] = [CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE, CARRY, MOVE];
-const SUPPLIER_MIN_SIZE = 2;
-
 export class Suppliers
 {
     private static _all: Supplier[] = [];
@@ -215,7 +224,7 @@ export class Suppliers
     {
         Suppliers._all = Creeps.ofType(CreepType.Supplier).map(c => new Supplier(c));
 
-        Bodies.register(CreepType.Supplier, SUPPLIER_MIN_SIZE, SUPPLIER_PARTS);
+        Bodies.register(CreepType.Supplier, SUPPLIER_TEMPLATE);
     }
 
     static run()

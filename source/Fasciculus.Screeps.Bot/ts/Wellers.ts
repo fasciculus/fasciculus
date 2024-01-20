@@ -1,10 +1,22 @@
 import * as _ from "lodash";
 
 import { CreepBase, Creeps } from "./Creeps";
-import { Bodies } from "./Bodies";
+import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepState, CreepType } from "./Enums";
 import { WellerMemory } from "./Memories";
 import { Well, Wells } from "./Wells";
+
+const WELLER_TEMPLATE: BodyTemplate =
+{
+    chunks:
+        [
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
+        ]
+};
 
 export class Weller extends CreepBase
 {
@@ -89,9 +101,6 @@ export class Weller extends CreepBase
     }
 }
 
-const WELLER_PARTS: BodyPartConstant[] = [WORK, MOVE, CARRY, WORK, WORK, MOVE, WORK, WORK, MOVE, WORK, WORK, MOVE, WORK, WORK, MOVE, WORK];
-const WELLER_MIN_SIZE = 3;
-
 export class Wellers
 {
     private static _all: Weller[] = [];
@@ -102,7 +111,7 @@ export class Wellers
     {
         Wellers._all = Creeps.ofType(CreepType.Weller).map(c => new Weller(c));
 
-        Bodies.register(CreepType.Weller, WELLER_MIN_SIZE, WELLER_PARTS);
+        Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
     }
 
     static run()

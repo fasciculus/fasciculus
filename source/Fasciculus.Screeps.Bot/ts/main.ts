@@ -21,5 +21,5 @@ export const loop = function ()
     Initializer.run();
     Scheduler.run();
 
-    console.log(`walls ${Walls.avg}`);
+    // console.log(`walls ${Walls.avg}`);
 }
