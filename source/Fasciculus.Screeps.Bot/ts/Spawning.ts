@@ -15,6 +15,7 @@ import { Bodies } from "./Bodies";
 import { Names } from "./Names";
 import { Repairs } from "./Repairs";
 import { Repairers } from "./Repairers";
+import { Starters } from "./Starters";
 
 export class Spawning
 {
@@ -42,13 +43,13 @@ export class Spawning
 
     private static nextType(spawn: Spawn): CreepType | undefined
     {
+        let starterCount = Starters.all.length;
         let wellerCount = Wellers.all.length;
         let sourceCount = Sources.all.length;
-
-        if (wellerCount == 0 && sourceCount > 0) return CreepType.Weller;
-
         let supplierCount = Suppliers.all.length;
 
+        if (wellerCount == 0 && supplierCount == 0 && starterCount == 0 && sourceCount > 0) return CreepType.Starter;
+        if (wellerCount == 0 && sourceCount > 0) return CreepType.Weller;
         if (supplierCount == 0 && wellerCount > 0) return CreepType.Supplier;
 
         if (spawn.roomEnergyAvailable < spawn.roomEnergyCapacity) return undefined;

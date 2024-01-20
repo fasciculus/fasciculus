@@ -34,7 +34,7 @@ export class Weller extends CreepBase
     {
         switch (this.state)
         {
-            case CreepState.ToSource: this.executeToWell(); break;
+            case CreepState.ToWell: this.executeToWell(); break;
             case CreepState.Harvest: this.executeHarvest(); break;
         }
     }
@@ -63,9 +63,9 @@ export class Weller extends CreepBase
     {
         switch (this.state)
         {
-            case CreepState.Idle: this.state = this.prepareIdle(); break;
-            case CreepState.ToSource: this.state = this.prepareToWell(); break;
+            case CreepState.ToWell: this.state = this.prepareToWell(); break;
             case CreepState.Harvest: this.state = this.prepareHarvest(); break;
+            default: this.state = this.prepareIdle(); break;
         }
     }
 
@@ -75,7 +75,7 @@ export class Weller extends CreepBase
 
         if (well && this.freeEnergyCapacity > 0)
         {
-            return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToSource;
+            return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell
         }
         else
         {
@@ -85,18 +85,24 @@ export class Weller extends CreepBase
 
     private prepareToWell(): CreepState
     {
-        return this.inRangeTo(this.well) ? this.prepareIdle() : CreepState.ToSource;
+        let well = this.well;
+
+        if (!well) return this.prepareIdle();
+
+        return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell;
     }
 
     private prepareHarvest(): CreepState
     {
-        return this.freeEnergyCapacity == 0 ? this.prepareIdle() : CreepState.Harvest;
+        let well = this.well;
+
+        if (!well) return this.prepareIdle();
+
+        return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell;
     }
 
-    private inRangeTo(target: Well | StructureContainer | undefined): boolean
+    private inRangeTo(target: Well | StructureContainer): boolean
     {
-        if (!target) return false;
-
         return this.pos.inRangeTo(target, 1);
     }
 }

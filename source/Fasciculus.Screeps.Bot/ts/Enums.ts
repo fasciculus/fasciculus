@@ -1,6 +1,7 @@
 
 export enum CreepType
 {
+    Starter = "Z",
     Weller = "W",
     Supplier = "S",
     Upgrader = "U",
@@ -17,8 +18,8 @@ export enum CreepState
     ToCustomer = "toCustomer",
     ToRepairable = "toRepairable",
     ToSite = "toSite",
-    ToSource = "toSource",
     ToSupply = "toSupply",
+    ToWell = "toWell",
     Harvest = "harvest",
     Withdraw = "withdraw",
     Transfer = "transfer",

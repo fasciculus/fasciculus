@@ -33,6 +33,12 @@ export interface CreepBaseMemory extends CreepMemory
     state: CreepState;
 }
 
+export interface StarterMemory extends CreepBaseMemory
+{
+    well?: Id<Source>;
+    customer?: IdCustomer;
+}
+
 export interface WellerMemory extends CreepBaseMemory
 {
     well?: Id<Source>;

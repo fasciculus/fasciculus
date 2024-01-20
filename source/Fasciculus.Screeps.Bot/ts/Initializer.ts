@@ -9,6 +9,7 @@ import { Rooms } from "./Rooms";
 import { Sites } from "./Sites";
 import { Sources } from "./Sources";
 import { Spawns } from "./Spawns";
+import { Starters } from "./Starters";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
 import { Walls } from "./Walls";
@@ -33,6 +34,7 @@ export class Initializer
         Wells.initialize();
 
         Creeps.initialize();
+        Starters.initialize();
         Wellers.initialize();
         Suppliers.initialize();
         Upgraders.initialize();

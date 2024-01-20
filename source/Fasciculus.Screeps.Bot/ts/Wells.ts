@@ -17,6 +17,7 @@ export class Well
     get chamber(): Chamber | undefined { return Chambers.get(this.room.name); }
 
     get slots(): DirectionConstant[] { return this._slots || (this._slots = this.memory.slots || (this.memory.slots = this.findSlots())); }
+    get freeSlots(): number { return this.slots.length - this.assignees.length; }
 
     get assignees(): string[] { return this.memory.assignees || []; }
     set assignees(value: string[]) { this.memory.assignees = value; }

@@ -3,6 +3,7 @@ import * as _ from "lodash";
 import { CreepState, CreepType } from "./Enums";
 import { CreepBaseMemory } from "./Memories";
 import { GameWrap } from "./GameWrap";
+import { Stores } from "./Stores";
 
 export class Capabilities
 {
@@ -52,8 +53,8 @@ export class CreepBase
 
     get capabilities() { return this._capabilities || (this._capabilities = new Capabilities(this.creep)); }
 
-    get energy(): number { return this.store.energy; }
-    get freeEnergyCapacity(): number { return this.store.getFreeCapacity<RESOURCE_ENERGY>() }
+    get energy(): number { return Stores.energy(this); }
+    get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this); }
 
     moveTo(target: RoomPosition | { pos: RoomPosition }, opts?: MoveToOpts): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
     {
