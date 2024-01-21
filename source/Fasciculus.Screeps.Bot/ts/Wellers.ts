@@ -26,6 +26,9 @@ export class Weller extends CreepBase
     get well(): Well | undefined { return Wells.get(this.memory.well); }
     set well(value: Well | undefined) { this.memory.well = value?.id; }
 
+    get harvestCapability(): number { return this.capabilities.work * 2; }
+    get full(): boolean { return this.freeEnergyCapacity < this.harvestCapability; }
+
     constructor(creep: Creep)
     {
         super(creep);
@@ -56,7 +59,7 @@ export class Weller extends CreepBase
 
         if (!well) return;
 
-        let amount = Math.min(well.energy, this.capabilities.work * 2);
+        let amount = Math.min(well.energy, this.harvestCapability);
 
         this.harvest(well.source);
         Statistics.addWelled(amount);
@@ -74,16 +77,13 @@ export class Weller extends CreepBase
 
     private prepareIdle(): CreepState
     {
+        if (this.full) return CreepState.Idle;
+
         let well = this.well;
 
-        if (well && this.freeEnergyCapacity > 0)
-        {
-            return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell
-        }
-        else
-        {
-            return CreepState.Idle;
-        }
+        if (!well) return CreepState.Idle;
+
+        return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell
     }
 
     private prepareToWell(): CreepState
@@ -97,6 +97,8 @@ export class Weller extends CreepBase
 
     private prepareHarvest(): CreepState
     {
+        if (this.full) return this.prepareIdle();
+
         let well = this.well;
 
         if (!well) return this.prepareIdle();

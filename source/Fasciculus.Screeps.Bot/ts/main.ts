@@ -27,8 +27,8 @@ export const loop = function ()
     // console.log(`walls ${Walls.avg}`);
     // console.log(`bucket ${Game.cpu.bucket}`);
 
-    let welled = Math.round(Statistics.welled);
-    let supplied = Math.round(Statistics.supplied);
+    let welled = Utils.round(Statistics.welled, 1);
+    let supplied = Utils.round(Statistics.supplied, 1);
 
     console.log(`${Game.time}: welled ${welled}, supplied ${supplied}`);
 }

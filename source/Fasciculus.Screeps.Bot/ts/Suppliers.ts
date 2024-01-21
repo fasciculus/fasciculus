@@ -18,8 +18,8 @@ const SUPPLIER_TEMPLATE: BodyTemplate =
 {
     chunks:
         [
-            { cost: 100, parts: [CARRY, MOVE] },
-            { cost: 100, parts: [CARRY, MOVE] },
+            { cost: 200, parts: [CARRY, MOVE, CARRY, MOVE] },
+            { cost: 200, parts: [CARRY, MOVE, CARRY, MOVE] },
             { cost: 100, parts: [CARRY, MOVE] },
             { cost: 100, parts: [CARRY, MOVE] },
             { cost: 100, parts: [CARRY, MOVE] },
