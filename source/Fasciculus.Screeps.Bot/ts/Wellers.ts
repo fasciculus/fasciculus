@@ -5,6 +5,7 @@ import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepState, CreepType } from "./Enums";
 import { WellerMemory } from "./Memories";
 import { Well, Wells } from "./Wells";
+import { Statistics } from "./Statistics";
 
 const WELLER_TEMPLATE: BodyTemplate =
 {
@@ -53,10 +54,12 @@ export class Weller extends CreepBase
     {
         let well = this.well;
 
-        if (well)
-        {
-            this.harvest(well.source);
-        }
+        if (!well) return;
+
+        let amount = Math.min(well.energy, this.capabilities.work * 2);
+
+        this.harvest(well.source);
+        Statistics.addWelled(amount);
     }
 
     prepare()

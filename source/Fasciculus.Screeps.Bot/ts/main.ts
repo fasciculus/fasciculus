@@ -27,7 +27,8 @@ export const loop = function ()
     // console.log(`walls ${Walls.avg}`);
     // console.log(`bucket ${Game.cpu.bucket}`);
 
-    let supplied = Math.round(Statistics.supplied * 1.2 * 100) / 100;
+    let welled = Math.round(Statistics.welled);
+    let supplied = Math.round(Statistics.supplied);
 
-    console.log(`${Game.time}: welled ${Wells.welled}, supplied ${supplied}, more ${Spawning.moreSuppliers} `);
+    console.log(`${Game.time}: welled ${welled}, supplied ${supplied}`);
 }

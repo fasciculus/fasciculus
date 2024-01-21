@@ -8,6 +8,7 @@ import { Repairs } from "./Repairs";
 import { Rooms } from "./Rooms";
 import { Sites } from "./Sites";
 import { Sources } from "./Sources";
+import { Spawning } from "./Spawning";
 import { Spawns } from "./Spawns";
 import { Starters } from "./Starters";
 import { Statistics } from "./Statistics";

@@ -14,6 +14,8 @@ export class Well
     get room(): Room { return this.source.room; }
     get chamber(): Chamber | undefined { return Chambers.get(this.room.name); }
 
+    get energy(): number { return this.source.energy; }
+
     get slots(): number
     {
         let result = this.memory.slots;

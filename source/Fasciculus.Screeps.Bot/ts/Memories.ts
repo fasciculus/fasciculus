@@ -22,7 +22,8 @@ export interface WellMemory
 
 export interface StatisticsMemory
 {
-    supplied: number;
+    supplied?: number;
+    welled?: number;
 }
 
 export interface ExtendedMemory
@@ -131,6 +132,6 @@ export class Memories
     {
         var memory = Memories.memory;
 
-        return memory.statistics || (memory.statistics = { supplied: 100 });
+        return memory.statistics || (memory.statistics = {});
     }
 }

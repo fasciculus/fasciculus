@@ -16,23 +16,34 @@ import { Names } from "./Names";
 import { Repairs } from "./Repairs";
 import { Repairers } from "./Repairers";
 import { Starters } from "./Starters";
-import { Chambers } from "./Chambers";
-import { Statistics } from "./Statistics";
 
 export class Spawning
 {
     static run()
     {
-        let idle = Spawns.idle;
+        let spawn = Spawning.findSpawn();
 
-        if (idle.length == 0) return;
+        if (!spawn) return;
 
-        let spawn = idle.sort((a, b) => b.roomEnergyAvailable - a.roomEnergyAvailable)[0];
-        let type = Spawning.nextType(spawn);
+        let type = Spawning.nextType();
 
         if (!type) return;
 
-        let body = Bodies.create(type, spawn.roomEnergyAvailable);
+        Spawning.spawnCreep(spawn, type);
+    }
+
+    private static findSpawn(): Spawn | undefined
+    {
+        let idle = Spawns.idle;
+
+        if (idle.length == 0) return undefined;
+
+        return idle.sort((a, b) => b.roomEnergyAvailable - a.roomEnergyAvailable)[0];
+    }
+
+    private static spawnCreep(spawn: Spawn, type: CreepType)
+    {
+        let body = Spawning.createBody(spawn, type);
 
         if (!body) return;
 
@@ -43,55 +54,91 @@ export class Spawning
         spawn.spawn.spawnCreep(body, name, opts);
     }
 
-    private static nextType(spawn: Spawn): CreepType | undefined
+    private static createBody(spawn: Spawn, type: CreepType): BodyPartConstant[] | undefined
     {
-        let starterCount = Starters.all.length;
-        let wellerCount = Wellers.all.length;
-        let sourceCount = Sources.all.length;
-        let supplierCount = Suppliers.all.length;
+        let body1 = Bodies.create(type, spawn.roomEnergyAvailable);
 
-        if (wellerCount == 0 && supplierCount == 0 && starterCount == 0 && sourceCount > 0) return CreepType.Starter;
-        if (wellerCount == 0 && sourceCount > 0) return CreepType.Weller;
-        if (supplierCount == 0 && wellerCount > 0) return CreepType.Supplier;
+        if (!body1) return undefined;
 
-        if (spawn.roomEnergyAvailable < spawn.roomEnergyCapacity) return undefined;
+        let body2 = Bodies.create(type, spawn.roomEnergyCapacity);
 
+        if (!body2) return undefined;
+        if (body2.length > body1.length) return undefined;
+
+        return body1;
+    }
+
+    private static nextType(): CreepType | undefined
+    {
+        if (Spawning.moreStarters) return CreepType.Starter;
         if (Spawning.moreSuppliers) return CreepType.Supplier;
-
-        let totalWellSlots = _.sum(Wells.all.map(w => w.slots));
-        let unassignedWellWork = _.sum(Wells.all.map(w => w.unassignedWork));
-
-        if (unassignedWellWork > 0 && wellerCount < totalWellSlots) return CreepType.Weller;
-
-        let controllerCount = Controllers.my.length;
-        let upgraderCount = Upgraders.all.length;
-
-        if (upgraderCount < (controllerCount * 2)) return CreepType.Upgrader;
-
-        let siteCount = Sites.all.length;
-
-        if (siteCount > 0)
-        {
-            let buildersRequired = Math.min(3, 1 + siteCount);
-            let builderCount = Builders.all.length;
-
-            if (builderCount < buildersRequired) return CreepType.Builder;
-        }
-
-        let repairCount = Repairs.all.length;
-
-        if (repairCount > 0)
-        {
-            let repairerCount = Repairers.all.length;
-
-            if (repairerCount < 1) return CreepType.Repairer;
-        }
+        if (Spawning.moreWellers) return CreepType.Weller;
+        if (Spawning.moreUpgraders) return CreepType.Upgrader;
+        if (Spawning.moreBuilders) return CreepType.Builder;
+        if (Spawning.moreRepairers) return CreepType.Repairer;
 
         return undefined;
     }
 
-    static get moreSuppliers(): boolean
+    private static get moreStarters(): boolean
     {
-        return Wells.welled > (Statistics.supplied * 1.2);
+        let starterCount = Starters.all.length;
+
+        if (starterCount > 0) return false;
+
+        let sourceCount = Sources.all.length;
+
+        if (sourceCount == 0) return false;
+
+        let wellerCount = Wellers.all.length;
+        let supplierCount = Suppliers.all.length;
+
+        if (wellerCount > 0 && supplierCount > 0) return false;
+
+        return true;
+    }
+
+    private static get moreSuppliers(): boolean
+    {
+        let wellerCount = Wellers.all.length;
+        let supplierCount = Suppliers.all.length;
+
+        return wellerCount > supplierCount;
+    }
+
+    private static get moreWellers(): boolean
+    {
+        let wellerCount = Wellers.all.length;
+        let slotCount = _.sum(Wells.all.map(w => w.slots));
+
+        let unassignedWork = _.sum(Wells.all.map(w => w.unassignedWork));
+
+        return unassignedWork > 0 && wellerCount < slotCount;
+    }
+
+    private static get moreUpgraders(): boolean
+    {
+        let upgraderCount = Upgraders.all.length;
+        let controllerCount = Controllers.my.length;
+
+        return upgraderCount < (controllerCount * 2);
+    }
+
+    private static get moreBuilders(): boolean
+    {
+        let siteCount = Sites.all.length;
+
+        if (siteCount == 0) return false;
+
+        return Builders.all.length < 2;
+    }
+
+    private static get moreRepairers(): boolean
+    {
+        let repairCount = Repairs.all.length;
+
+        if (repairCount == 0) return false;
+
+        return Repairers.all.length < 1;
     }
 }
