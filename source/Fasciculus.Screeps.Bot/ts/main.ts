@@ -30,5 +30,5 @@ export const loop = function ()
     let welled = Utils.round(Statistics.welled, 1);
     let supplied = Utils.round(Statistics.supplied, 1);
 
-    // console.log(`${Game.time}: welled ${welled}, supplied ${supplied}`);
+    console.log(`${Game.time}: welled ${welled}, supplied ${supplied}`);
 }

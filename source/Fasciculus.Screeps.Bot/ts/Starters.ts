@@ -207,7 +207,7 @@ export class Starters
 
     private static findWells(): Well[]
     {
-        return Wells.all.filter(w => w.freeSlots > 0);
+        return Wells.all.filter(w => w.slots > 1 && w.freeSlots > 0);
     }
 
     private static assignCustomers(unassigned: Starter[]): Starter[]

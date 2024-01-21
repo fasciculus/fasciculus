@@ -16,6 +16,7 @@ import { Names } from "./Names";
 import { Repairs } from "./Repairs";
 import { Repairers } from "./Repairers";
 import { Starters } from "./Starters";
+import { Statistics } from "./Statistics";
 
 export class Spawning
 {
@@ -82,10 +83,6 @@ export class Spawning
 
     private static get moreStarters(): boolean
     {
-        let starterCount = Starters.all.length;
-
-        if (starterCount > 0) return false;
-
         let sourceCount = Sources.all.length;
 
         if (sourceCount == 0) return false;
@@ -95,15 +92,19 @@ export class Spawning
 
         if (wellerCount > 0 && supplierCount > 0) return false;
 
-        return true;
+        let starterCount = Starters.all.length;
+        let slotCount = _.sum(Wells.all.map(w => w.slots));
+
+        return starterCount < 2 && starterCount < slotCount;
     }
 
     private static get moreSuppliers(): boolean
     {
-        let wellerCount = Wellers.all.length;
-        let supplierCount = Suppliers.all.length;
+        return Statistics.welled > (Statistics.supplied * 1.2);
+    //    let wellerCount = Wellers.all.length;
+    //    let supplierCount = Suppliers.all.length;
 
-        return wellerCount > supplierCount;
+    //    return wellerCount > supplierCount;
     }
 
     private static get moreWellers(): boolean
