@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 
 export class Utils
 {
@@ -11,5 +12,10 @@ export class Utils
     static defined<T>(array: Array<T | undefined>): T[]
     {
         return array.filter(x => x !== undefined) as T[];
+    }
+
+    static isEmpty<T>(collection:_.List<T> | _.Dictionary<T>): boolean
+    {
+        return _.size(collection) == 0;
     }
 }
