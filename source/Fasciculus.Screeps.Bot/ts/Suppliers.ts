@@ -28,6 +28,8 @@ const SUPPLIER_TEMPLATE: BodyTemplate =
 
 const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 {
+    reusePath: 0,
+
     visualizePathStyle:
     {
         stroke: "#ff0"
