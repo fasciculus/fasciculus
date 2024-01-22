@@ -275,7 +275,8 @@ export class Suppliers
 {
     private static _all: Supplier[] = [];
 
-    static get all(): Supplier[] { return Suppliers._all; }
+    static get count(): number { return Suppliers._all.length; }
+    static get idleCount(): number { return Suppliers._all.filter(s => s.state == CreepState.Idle).length; }
 
     static get performance(): number { return _.sum(Suppliers._all.map(s => s.performance)); }
 

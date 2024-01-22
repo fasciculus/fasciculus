@@ -16,7 +16,8 @@ import { Names } from "./Names";
 import { Repairs } from "./Repairs";
 import { Repairers } from "./Repairers";
 import { Starters } from "./Starters";
-import { Statistics } from "./Statistics";
+
+export const SUPPLIER_PERFORMANCE_FACTOR = 1.2;
 
 export class Spawning
 {
@@ -81,6 +82,19 @@ export class Spawning
         return undefined;
     }
 
+    private static energyAvailable(type: CreepType): number
+    {
+        let energy = Wellers.maxEnergyPerTick;
+
+        switch (type)
+        {
+            case CreepType.Upgrader: return energy * 0.25;
+            case CreepType.Builder: return energy * 0.6;
+            case CreepType.Repairer: return energy * 0.15;
+            default: return 0;
+        }
+    }
+
     private static get moreStarters(): boolean
     {
         let sourceCount = Sources.all.length;
@@ -91,23 +105,18 @@ export class Spawning
 
         if (starterCount > 1) return false;
 
-        let wellerCount = Wellers.all.length;
-        let supplierCount = Suppliers.all.length;
+        if (Wellers.all.length > 0 && Suppliers.count > 0) return false;
 
-        if (wellerCount > 0 && supplierCount > 0) return false;
-
-        let slotCount = _.sum(Wells.all.map(w => w.slots));
+        let slotCount = _.sum(Wells.all.map(w => w.freeSlots));
 
         return starterCount < slotCount;
     }
 
     private static get moreSuppliers(): boolean
     {
-        let idle = Suppliers.all.filter(s => s.state == CreepState.Idle).length;
+        if (Suppliers.idleCount > 0) return false;
 
-        if (idle > 0) return false;
-
-        return Suppliers.performance < Wellers.maxEnergyPerTick;
+        return Suppliers.performance * SUPPLIER_PERFORMANCE_FACTOR < Wellers.maxEnergyPerTick;
     }
 
     private static get moreWellers(): boolean
@@ -124,18 +133,10 @@ export class Spawning
     {
         let controllerCount = Controllers.my.length;
         let upgraderCount = Upgraders.all.length;
-        let maxUpgraderCount = controllerCount * 3;
 
         if (upgraderCount < controllerCount) return true;
-        if (upgraderCount >= maxUpgraderCount) return false;
 
-        let available = Wells.maxEnergyPerTick;
-        let used = Upgraders.maxEnergyPerTick;
-
-        if (Repairs.all.length > 0) used += Repairers.maxEnergyPerTick / 2;
-        if (Sites.all.length > 0) used += Builders.maxEnergyPerTick / 2;
-
-        return used < available;
+        return Upgraders.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Upgrader);
     }
 
     private static get moreBuilders(): boolean
@@ -144,10 +145,7 @@ export class Spawning
 
         if (siteCount == 0) return false;
 
-        let energyAvailable = Wells.maxEnergyPerTick / 2;
-        let energyUsed = Builders.maxEnergyPerTick;
-
-        return energyAvailable > energyUsed;
+        return Builders.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Builder);
     }
 
     private static get moreRepairers(): boolean
@@ -156,6 +154,6 @@ export class Spawning
 
         if (repairCount == 0) return false;
 
-        return Repairers.all.length < 1;
+        return Repairers.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Repairer);
     }
 }

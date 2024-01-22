@@ -1,5 +1,6 @@
 import { MarkerType } from "./Enums";
 import { GameWrap } from "./GameWrap";
+import { SUPPLIER_PERFORMANCE_FACTOR } from "./Spawning";
 import { Suppliers } from "./Suppliers";
 import { Utils } from "./Utils";
 import { Wellers } from "./Wellers";
@@ -52,9 +53,10 @@ export class Marker
         let x = pos.x, y = pos.y;
 
         let wellable = Utils.round(Wellers.maxEnergyPerTick, 1);
-        let performance = Utils.round(Suppliers.performance, 1);
+        let performance = Utils.round(Suppliers.performance * SUPPLIER_PERFORMANCE_FACTOR, 1);
+        let supplierCount = Suppliers.count;
 
-        visual.text(`W / P: ${wellable} / ${performance}`, x + 1, y, INFO_MARKER_TEXT_STYLE);
+        visual.text(`W / P: ${wellable} / ${performance} (${supplierCount})`, x + 1, y, INFO_MARKER_TEXT_STYLE);
         visual.text(`B: ${Game.cpu.bucket}`, x + 1, y + 1, INFO_MARKER_TEXT_STYLE);
     }
 }
