@@ -45,19 +45,23 @@ export class Marker
 
     private runInfo()
     {
-        let visual = this.flag.room?.visual;
+        let room = this.flag.room;
 
-        if (!visual) return;
+        if (!room) return;
 
+        let visual = room.visual;
         let pos = this.flag.pos;
-        let x = pos.x, y = pos.y;
+        let x = pos.x + 1, y = pos.y;
 
+        let energyAvailable = room.energyAvailable;
+        let energyCapacity = room.energyCapacityAvailable;
         let wellable = Utils.round(Wellers.maxEnergyPerTick, 1);
         let performance = Utils.round(Suppliers.performance * SUPPLIER_PERFORMANCE_FACTOR, 1);
         let supplierCount = Suppliers.count;
 
-        visual.text(`W / P: ${wellable} / ${performance} (${supplierCount})`, x + 1, y, INFO_MARKER_TEXT_STYLE);
-        visual.text(`B: ${Game.cpu.bucket}`, x + 1, y + 1, INFO_MARKER_TEXT_STYLE);
+        visual.text(`E: ${energyAvailable} / ${energyCapacity}`, x, y, INFO_MARKER_TEXT_STYLE);
+        visual.text(`W / P: ${wellable} / ${performance} (${supplierCount})`, x, y + 1, INFO_MARKER_TEXT_STYLE);
+        visual.text(`B: ${Game.cpu.bucket}`, x, y + 2, INFO_MARKER_TEXT_STYLE);
     }
 }
 
