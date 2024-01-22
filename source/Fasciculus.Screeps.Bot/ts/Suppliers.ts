@@ -46,11 +46,13 @@ export class Supplier extends CreepBase
     get customer(): Customer | undefined { return GameWrap.get(this.memory.customer); }
     set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
 
-    get performance(): number { return this.memory.performance || 0; }
-    set performance(value: number) { this.memory.performance = value; }
-
-    get worked(): number { return this.memory.worked || 0; }
+    get worked(): number { return this.memory.worked || 1; }
     private set worked(value: number) { this.memory.worked = value; }
+
+    get supplied(): number { return this.memory.supplied || this.energyCapacity; }
+    private set supplied(value: number) { this.memory.supplied = value; }
+
+    get performance(): number { return this.supplied / this.worked; }
 
     constructor(creep: Creep)
     {
@@ -70,7 +72,7 @@ export class Supplier extends CreepBase
 
     private executeToSupply()
     {
-        this.onWork();
+        ++this.worked;
 
         let supply = this.supply;
 
@@ -81,7 +83,7 @@ export class Supplier extends CreepBase
 
     private executeToCustomer()
     {
-        this.onWork();
+        ++this.worked;
 
         let customer = this.customer;
 
@@ -92,7 +94,7 @@ export class Supplier extends CreepBase
 
     private executeWithdraw()
     {
-        this.onWork();
+        ++this.worked;
 
         let supply = this.supply;
 
@@ -103,7 +105,7 @@ export class Supplier extends CreepBase
 
     private executeTransfer()
     {
-        this.onWork();
+        ++this.worked;
 
         let customer = this.customer;
 
@@ -118,17 +120,15 @@ export class Supplier extends CreepBase
         this.onSupplied(amount);
     }
 
-    private onWork()
-    {
-        this.worked = this.worked + 1;
-    }
-
     private onSupplied(amount: number)
     {
-        let energyPerTick = amount / Math.max(1, this.worked);
+        this.supplied += amount;
 
-        this.performance = (this.performance * 49 + energyPerTick) / 50;
-        this.worked = 0;
+        if (this.worked > 100)
+        {
+            this.worked /= 2;
+            this.supplied /= 2;
+        }
     }
 
     prepare()
@@ -284,15 +284,6 @@ export class Suppliers
         Suppliers._all = Creeps.ofType(CreepType.Supplier).map(c => new Supplier(c));
 
         Bodies.register(CreepType.Supplier, SUPPLIER_TEMPLATE);
-
-        Suppliers.initializePerformance();
-    }
-
-    private static initializePerformance()
-    {
-        let initialPerformance = Suppliers.performance / Math.max(1, Suppliers._all.length) + 2;
-
-        Suppliers._all.filter(s => s.spawning).forEach(s => s.performance = initialPerformance);
     }
 
     static run()
