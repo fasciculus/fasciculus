@@ -119,10 +119,14 @@ export class Spawning
 
     private static get moreUpgraders(): boolean
     {
-        let existing = _.sum(Upgraders.all.map(u => u.capabilities.work));
-        let required = Statistics.welled / 5;
+        let controllerCount = Controllers.my.length;
 
-        return required > existing;
+        if (controllerCount == 0) return false;
+
+        let energyAvailable = Statistics.welled / 5;
+        let energyUsed = Upgraders.maxEnergyPerTick;
+
+        return energyAvailable > energyUsed;
     }
 
     private static get moreBuilders(): boolean
@@ -131,8 +135,8 @@ export class Spawning
 
         if (siteCount == 0) return false;
 
-        let energyAvailable = Statistics.welled / 2;
-        let energyUsed = _.sum(Builders.all.map(b => b.capabilities.work)) * 5;
+        let energyAvailable = Wells.maxEnergyPerTick / 2;
+        let energyUsed = Builders.maxEnergyPerTick;
 
         return energyAvailable > energyUsed;
     }

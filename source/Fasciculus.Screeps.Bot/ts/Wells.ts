@@ -15,6 +15,7 @@ export class Well
     get chamber(): Chamber | undefined { return Chambers.get(this.room.name); }
 
     get energy(): number { return this.source.energy; }
+    get energyCapacity(): number { return this.source.energyCapacity; }
 
     get slots(): number
     {
@@ -64,7 +65,7 @@ export class Wells
 
     static get all(): Well[] { return Wells._all; }
 
-    static get welled(): number { return _.sum(Wells._all.map(w => w.assignedWork)) * 2; }
+    static get maxEnergyPerTick(): number { return _.sum(Wells._all.map(w => w.energyCapacity)) / 300; }
 
     static initialize()
     {

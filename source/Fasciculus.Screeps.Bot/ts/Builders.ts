@@ -114,6 +114,8 @@ export class Builders
 
     static get all(): Builder[] { return Builders._all; }
 
+    static get maxEnergyPerTick(): number { return _.sum(Builders._all.map(b => b.capabilities.work)) * 5; }
+
     static initialize()
     {
         Builders._all = Creeps.ofType(CreepType.Builder).map(c => new Builder(c));

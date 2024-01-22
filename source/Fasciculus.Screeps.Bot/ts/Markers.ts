@@ -53,7 +53,7 @@ export class Marker
         let welled = Utils.round(Statistics.welled, 1);
         let supplied = Utils.round(Statistics.supplied, 1);
 
-        visual.text(`W / D: ${welled} / ${supplied}`, x + 1, y, INFO_MARKER_TEXT_STYLE);
+        visual.text(`W / S: ${welled} / ${supplied}`, x + 1, y, INFO_MARKER_TEXT_STYLE);
         visual.text(`B: ${Game.cpu.bucket}`, x + 1, y + 1, INFO_MARKER_TEXT_STYLE);
     }
 }

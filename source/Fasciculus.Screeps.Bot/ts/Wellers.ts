@@ -11,9 +11,9 @@ const WELLER_TEMPLATE: BodyTemplate =
 {
     chunks:
         [
-            { cost: 300, parts: [WORK, CARRY, CARRY, MOVE] },
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
             { cost: 150, parts: [WORK, MOVE] },
-            { cost: 150, parts: [WORK, MOVE] },
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
             { cost: 150, parts: [WORK, MOVE] },
             { cost: 150, parts: [WORK, MOVE] },
         ]
