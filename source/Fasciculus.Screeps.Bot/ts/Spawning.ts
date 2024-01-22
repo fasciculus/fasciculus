@@ -100,11 +100,11 @@ export class Spawning
 
     private static get moreSuppliers(): boolean
     {
-        return Statistics.welled > (Statistics.supplied * 1.2);
-    //    let wellerCount = Wellers.all.length;
-    //    let supplierCount = Suppliers.all.length;
+        let idle = Suppliers.all.filter(s => s.state == CreepState.Idle).length;
 
-    //    return wellerCount > supplierCount;
+        if (idle > 0) return false;
+
+        return Statistics.welled > (Statistics.supplied * 1.2);
     }
 
     private static get moreWellers(): boolean
@@ -119,10 +119,10 @@ export class Spawning
 
     private static get moreUpgraders(): boolean
     {
-        let upgraderCount = Upgraders.all.length;
-        let controllerCount = Controllers.my.length;
+        let existing = _.sum(Upgraders.all.map(u => u.capabilities.work));
+        let required = Statistics.welled / 3.5;
 
-        return upgraderCount < (controllerCount * 2);
+        return required > existing;
     }
 
     private static get moreBuilders(): boolean

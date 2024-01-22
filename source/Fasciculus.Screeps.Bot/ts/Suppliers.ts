@@ -125,38 +125,40 @@ export class Supplier extends CreepBase
 
     private prepareIdle(): CreepState
     {
-        if (this.energy == 0)
+        let supply: Supply | undefined = this.supply;
+        let customer: Customer | undefined = this.customer;
+
+        if (customer && !Supplier.hasCapacity(customer))
         {
-            let supply = this.supply;
-
-            this.customer = undefined;
-
-            if (!supply) return CreepState.Idle;
-
-            if (!Supplier.hasEnergy(supply))
-            {
-                this.supply = undefined;
-                return CreepState.Idle;
-            }
-
-            return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply;
+            this.customer = customer = undefined;
         }
-        else
+
+        if (customer && this.energy == 0)
         {
-            let customer = this.customer;
+            this.customer = customer = undefined;
+        }
 
-            this.supply = undefined;
-
-            if (!customer) return CreepState.Idle;
-
-            if (!Supplier.hasCapacity(customer))
-            {
-                this.customer = undefined;
-                return CreepState.Idle;
-            }
-
+        if (customer)
+        {
             return this.inRangeTo(customer) ? CreepState.Transfer : CreepState.ToCustomer;
         }
+
+        if (supply && this.freeEnergyCapacity == 0)
+        {
+            this.supply = supply = undefined;
+        }
+
+        if (supply && !Supplier.hasEnergy(supply))
+        {
+            this.supply = supply = undefined;
+        }
+
+        if (supply)
+        {
+            return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply;
+        }
+
+        return CreepState.Idle;
     }
 
     private prepareMoveToSupply(): CreepState
@@ -164,12 +166,8 @@ export class Supplier extends CreepBase
         let supply = this.supply;
 
         if (!supply) return this.prepareIdle();
-
-        if (!Supplier.hasEnergy(supply))
-        {
-            this.supply = undefined;
-            return this.prepareIdle();
-        }
+        if (this.freeEnergyCapacity == 0) return this.prepareIdle();
+        if (!Supplier.hasEnergy(supply)) return this.prepareIdle();
 
         return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply;
     }
@@ -179,12 +177,8 @@ export class Supplier extends CreepBase
         let customer = this.customer;
 
         if (!customer) return this.prepareIdle();
-
-        if (!Supplier.hasCapacity(customer))
-        {
-            this.customer = undefined;
-            return this.prepareIdle();
-        }
+        if (this.energy == 0) return this.prepareIdle();
+        if (!Supplier.hasCapacity(customer)) return this.prepareIdle();
 
         return this.inRangeTo(customer) ? CreepState.Transfer : CreepState.ToCustomer;
     }
@@ -194,12 +188,8 @@ export class Supplier extends CreepBase
         let supply = this.supply;
 
         if (!supply) return this.prepareIdle();
-
-        if (this.freeEnergyCapacity == 0 || !Supplier.hasEnergy(supply))
-        {
-            this.supply = undefined;
-            return this.prepareIdle();
-        }
+        if (this.freeEnergyCapacity == 0) return this.prepareIdle();
+        if (!Supplier.hasEnergy(supply)) return this.prepareIdle();
 
         return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply;
     }
@@ -209,12 +199,8 @@ export class Supplier extends CreepBase
         let customer = this.customer;
 
         if (!customer) return this.prepareIdle();
-
-        if (this.energy == 0 || !Supplier.hasCapacity(customer))
-        {
-            this.customer = undefined;
-            return this.prepareIdle();
-        }
+        if (this.energy == 0) return this.prepareIdle();
+        if (!Supplier.hasCapacity(customer)) return this.prepareIdle();
 
         return this.inRangeTo(customer) ? CreepState.Transfer : CreepState.ToCustomer;
     }
@@ -350,7 +336,7 @@ export class Suppliers
 
         for (let supplyInfo of sorted)
         {
-            while (supplyInfo.energy > 0)
+            while (supplyInfo.energy > MIN_SUPPLY_ENERGY)
             {
                 let supply: Supply = supplyInfo.supply;
                 let supplierInfo: SupplierInfo | undefined = Suppliers.findNearest(supply, suppliers);

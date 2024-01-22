@@ -1,3 +1,5 @@
+import * as _ from "lodash";
+
 import { Builders } from "./Builders";
 import { Chambers } from "./Chambers";
 import { Creeps } from "./Creeps";
@@ -14,6 +16,7 @@ import { Spawning } from "./Spawning";
 import { Spawns } from "./Spawns";
 import { Statistics } from "./Statistics";
 import { Suppliers } from "./Suppliers";
+import { Upgraders } from "./Upgraders";
 import { Utils } from "./Utils";
 import { Walls } from "./Walls";
 import { Wellers } from "./Wellers";
@@ -26,9 +29,4 @@ export const loop = function ()
 
     // console.log(`walls ${Walls.avg}`);
     // console.log(`bucket ${Game.cpu.bucket}`);
-
-    let welled = Utils.round(Statistics.welled, 1);
-    let supplied = Utils.round(Statistics.supplied, 1);
-
-    console.log(`${Game.time}: welled ${welled}, supplied ${supplied}`);
 }
