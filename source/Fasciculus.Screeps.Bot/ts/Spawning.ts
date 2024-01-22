@@ -123,13 +123,19 @@ export class Spawning
     private static get moreUpgraders(): boolean
     {
         let controllerCount = Controllers.my.length;
+        let upgraderCount = Upgraders.all.length;
+        let maxUpgraderCount = controllerCount * 3;
 
-        if (controllerCount == 0) return false;
+        if (upgraderCount < controllerCount) return true;
+        if (upgraderCount >= maxUpgraderCount) return false;
 
-        let energyAvailable = Statistics.welled / 5;
-        let energyUsed = Upgraders.maxEnergyPerTick;
+        let available = Wells.maxEnergyPerTick;
+        let used = Upgraders.maxEnergyPerTick;
 
-        return energyAvailable > energyUsed;
+        if (Repairs.all.length > 0) used += Repairers.maxEnergyPerTick / 2;
+        if (Sites.all.length > 0) used += Builders.maxEnergyPerTick / 2;
+
+        return used < available;
     }
 
     private static get moreBuilders(): boolean

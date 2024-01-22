@@ -137,6 +137,8 @@ export class Repairers
 
     static get all(): Repairer[] { return Repairers._all; }
 
+    static get maxEnergyPerTick(): number { return _.sum(Repairers._all.map(r => r.capabilities.work)); }
+
     static initialize()
     {
         Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c));
