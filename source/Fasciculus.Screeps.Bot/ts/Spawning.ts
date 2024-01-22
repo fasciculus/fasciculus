@@ -87,15 +87,18 @@ export class Spawning
 
         if (sourceCount == 0) return false;
 
+        let starterCount = Starters.all.length;
+
+        if (starterCount > 1) return false;
+
         let wellerCount = Wellers.all.length;
         let supplierCount = Suppliers.all.length;
 
         if (wellerCount > 0 && supplierCount > 0) return false;
 
-        let starterCount = Starters.all.length;
         let slotCount = _.sum(Wells.all.map(w => w.slots));
 
-        return starterCount < 2 && starterCount < slotCount;
+        return starterCount < slotCount;
     }
 
     private static get moreSuppliers(): boolean
