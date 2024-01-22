@@ -19,6 +19,16 @@ const WELLER_TEMPLATE: BodyTemplate =
         ]
 };
 
+const WELLER_MOVE_TO_OPTS: MoveToOpts =
+{
+    reusePath: 0,
+
+    visualizePathStyle:
+    {
+        stroke: "#fff"
+    }
+};
+
 export class Weller extends CreepBase
 {
     get memory(): WellerMemory { return super.memory as WellerMemory; }
@@ -49,7 +59,7 @@ export class Weller extends CreepBase
 
         if (well)
         {
-            this.moveTo(well);
+            this.moveTo(well, WELLER_MOVE_TO_OPTS);
         }
     }
 
