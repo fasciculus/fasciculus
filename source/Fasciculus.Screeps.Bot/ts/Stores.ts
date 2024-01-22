@@ -20,4 +20,9 @@ export class Stores
     {
         return target.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
     }
+
+    static energyRatio(target: { store: StoreDefinition }): number
+    {
+        return Stores.energy(target) / Math.max(1, Stores.energyCapacity(target));
+    }
 }

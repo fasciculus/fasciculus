@@ -219,9 +219,9 @@ export class Supplier extends CreepBase
 
     static hasCapacity(customer: Customer): boolean
     {
-        let minCapacity = customer instanceof Creep ? 20 : 0;
+        let maxRatio = customer instanceof Creep ? 0.8 : 1;
 
-        return Stores.freeEnergyCapacity(customer) > minCapacity;
+        return Stores.energyRatio(customer) < maxRatio;
     }
 }
 
@@ -250,6 +250,7 @@ interface CustomerInfo
     id: IdCustomer;
     priority: number;
     demand: number;
+    ratio: number;
 }
 
 export class Suppliers
@@ -501,7 +502,8 @@ export class Suppliers
             customer: customer,
             id: customer.id,
             priority: Suppliers.customerPriority(customer),
-            demand: Stores.freeEnergyCapacity(customer)
+            demand: Stores.freeEnergyCapacity(customer),
+            ratio: Stores.energyRatio(customer)
         }
 
         return info;
@@ -535,7 +537,7 @@ export class Suppliers
 
         if (result != 0) return result;
 
-        return b.demand - a.demand;
+        return b.ratio - b.ratio;
     }
 
     private static compareSupplies(a: SupplyInfo, b: SupplyInfo): number

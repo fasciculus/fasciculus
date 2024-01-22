@@ -56,6 +56,7 @@ export class CreepBase
     get energy(): number { return Stores.energy(this); }
     get energyCapacity(): number { return Stores.energyCapacity(this); }
     get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this); }
+    get energyRatio(): number { return Stores.energyRatio(this); }
 
     moveTo(target: RoomPosition | { pos: RoomPosition }, opts?: MoveToOpts): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
     {
@@ -108,12 +109,6 @@ export class CreepBase
     {
         return this.creep.suicide() == OK ? CreepState.Suicide : this.state;
     }
-}
-
-export interface CreepTemplate
-{
-    minBodyParts: number;
-    parts: BodyPartConstant[];
 }
 
 export class Creeps
