@@ -27,3 +27,9 @@ export enum CreepState
     Build = "build",
     Repair = "repair"
 }
+
+export enum MarkerType
+{
+    Info = "I",
+    Unknown = "U"
+}

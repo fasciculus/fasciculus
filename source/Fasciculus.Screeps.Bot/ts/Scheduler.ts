@@ -1,4 +1,5 @@
 import { Builders } from "./Builders";
+import { Markers } from "./Markers";
 import { Memories } from "./Memories";
 import { Repairers } from "./Repairers";
 import { Spawning } from "./Spawning";
@@ -24,5 +25,6 @@ export class Scheduler
         Spawning.run();
 
         Statistics.run();
+        Markers.run();
     }
 }

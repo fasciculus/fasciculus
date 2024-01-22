@@ -3,12 +3,12 @@ import { Chambers } from "./Chambers";
 import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
+import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
 import { Rooms } from "./Rooms";
 import { Sites } from "./Sites";
 import { Sources } from "./Sources";
-import { Spawning } from "./Spawning";
 import { Spawns } from "./Spawns";
 import { Starters } from "./Starters";
 import { Statistics } from "./Statistics";
@@ -30,6 +30,7 @@ export class Initializer
         Extensions.initialize();
         Walls.initialize();
         Repairs.initialize();
+        Markers.initialize();
 
         Sources.initialize();
 
