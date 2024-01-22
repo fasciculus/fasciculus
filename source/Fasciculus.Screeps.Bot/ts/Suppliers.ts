@@ -12,6 +12,7 @@ import { Utils } from "./Utils";
 import { Stores } from "./Stores";
 
 const MIN_SUPPLY_ENERGY = 10;
+const SUPPLIER_PERFORMANCE_FACTOR = 1.2;
 
 const SUPPLIER_TEMPLATE: BodyTemplate =
 {
@@ -52,7 +53,7 @@ export class Supplier extends CreepBase
     get supplied(): number { return this.memory.supplied || this.energyCapacity; }
     private set supplied(value: number) { this.memory.supplied = value; }
 
-    get performance(): number { return this.supplied / this.worked; }
+    get performance(): number { return (this.supplied / this.worked) * SUPPLIER_PERFORMANCE_FACTOR; }
 
     constructor(creep: Creep)
     {

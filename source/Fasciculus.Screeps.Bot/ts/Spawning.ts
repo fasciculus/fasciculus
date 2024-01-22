@@ -17,8 +17,6 @@ import { Repairs } from "./Repairs";
 import { Repairers } from "./Repairers";
 import { Starters } from "./Starters";
 
-export const SUPPLIER_PERFORMANCE_FACTOR = 1.2;
-
 export class Spawning
 {
     static run()
@@ -116,7 +114,7 @@ export class Spawning
     {
         if (Suppliers.idleCount > 0) return false;
 
-        return Suppliers.performance * SUPPLIER_PERFORMANCE_FACTOR < Wellers.maxEnergyPerTick;
+        return Suppliers.performance < Wellers.maxEnergyPerTick;
     }
 
     private static get moreWellers(): boolean

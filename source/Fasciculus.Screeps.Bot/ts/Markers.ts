@@ -1,6 +1,5 @@
 import { MarkerType } from "./Enums";
 import { GameWrap } from "./GameWrap";
-import { SUPPLIER_PERFORMANCE_FACTOR } from "./Spawning";
 import { Suppliers } from "./Suppliers";
 import { Utils } from "./Utils";
 import { Wellers } from "./Wellers";
@@ -56,7 +55,7 @@ export class Marker
         let energyAvailable = room.energyAvailable;
         let energyCapacity = room.energyCapacityAvailable;
         let wellable = Utils.round(Wellers.maxEnergyPerTick, 1);
-        let performance = Utils.round(Suppliers.performance * SUPPLIER_PERFORMANCE_FACTOR, 1);
+        let performance = Utils.round(Suppliers.performance, 1);
         let supplierCount = Suppliers.count;
 
         visual.text(`E: ${energyAvailable} / ${energyCapacity}`, x, y, INFO_MARKER_TEXT_STYLE);
