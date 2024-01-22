@@ -97,7 +97,7 @@ export class Starter extends CreepBase
 
         if (well)
         {
-            if (this.freeEnergyCapacity > 0)
+            if (this.freeEnergyCapacity > 0 && well.assignable)
             {
                 this.state = this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell;
             }
@@ -135,10 +135,8 @@ export class Starter extends CreepBase
         this.state = CreepState.Idle;
     }
 
-    private inRangeTo(target: Well | Customer | undefined)
+    private inRangeTo(target: Well | Customer)
     {
-        if (!target) return false;
-
         return this.pos.inRangeTo(target, 1);
     }
 }
@@ -147,7 +145,8 @@ export class Starters
 {
     private static _all: Starter[] = [];
 
-    static get all(): Starter[] { return Starters._all; }
+    static get count(): number { return Starters._all.length; }
+    // static get all(): Starter[] { return Starters._all; }
 
     static initialize()
     {
@@ -177,37 +176,27 @@ export class Starters
 
     private static assignWells(unassigned: Starter[]): Starter[]
     {
-        unassigned = unassigned.filter(s => s.energy == 0);
-
-        if (unassigned.length == 0) return [];
-
-        let wells = Starters.findWells();
-
-        if (wells.length == 0)
-        {
-            unassigned.forEach(s => s.suicide());
-            return [];
-        }
-
         var result: Starter[] = [];
 
-        for (let i = 0, n = unassigned.length; i < n; ++i)
+        unassigned = unassigned.filter(s => s.energy == 0);
+
+        for (let starter of unassigned)
         {
-            let starter = unassigned[i];
+            let wells = Wells.assignable
             let well = starter.pos.findClosestByPath(wells) || undefined;
 
-            if (!well) continue;
-
-            starter.well = well;
-            result.push(starter);
+            if (!well)
+            {
+                starter.suicide();
+            }
+            else
+            {
+                starter.well = well;
+                result.push(starter);
+            }
         }
 
         return result;
-    }
-
-    private static findWells(): Well[]
-    {
-        return Wells.all.filter(w => w.slots > 1 && w.freeSlots > 0);
     }
 
     private static assignCustomers(unassigned: Starter[]): Starter[]

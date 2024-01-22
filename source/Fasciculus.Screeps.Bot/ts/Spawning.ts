@@ -95,19 +95,9 @@ export class Spawning
 
     private static get moreStarters(): boolean
     {
-        let sourceCount = Sources.all.length;
+        if (Wellers.count > 0 && Suppliers.count > 0) return false;
 
-        if (sourceCount == 0) return false;
-
-        let starterCount = Starters.all.length;
-
-        if (starterCount > 1) return false;
-
-        if (Wellers.all.length > 0 && Suppliers.count > 0) return false;
-
-        let slotCount = _.sum(Wells.all.map(w => w.freeSlots));
-
-        return starterCount < slotCount;
+        return Starters.count < Math.max(2, Wells.assignable.length);
     }
 
     private static get moreSuppliers(): boolean
@@ -119,12 +109,7 @@ export class Spawning
 
     private static get moreWellers(): boolean
     {
-        let wellerCount = Wellers.all.length;
-        let slotCount = _.sum(Wells.all.map(w => w.slots));
-
-        let unassignedWork = _.sum(Wells.all.map(w => w.unassignedWork));
-
-        return unassignedWork > 0 && wellerCount < slotCount;
+        return Wells.assignable.length > 0;
     }
 
     private static get moreUpgraders(): boolean

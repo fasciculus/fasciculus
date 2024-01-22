@@ -2,6 +2,8 @@ import * as _ from "lodash";
 import { Chamber, Chambers } from "./Chambers";
 import { Memories, WellMemory } from "./Memories";
 import { DIRECTIONS, Point } from "./Geometry";
+import { Capabilities, Creeps } from "./Creeps";
+import { Utils } from "./Utils";
 
 export class Well
 {
@@ -29,19 +31,26 @@ export class Well
         return result;
     }
 
+    get assignees(): Creep[] { return Utils.defined((this.memory.assignees || []).map(n => Creeps.get(n))); }
+    private set assignees(value: Creep[]) { this.memory.assignees = value.map(c => c.name); }
     get freeSlots(): number { return this.slots - this.assignees.length; }
-
-    get assignees(): string[] { return this.memory.assignees || []; }
-    set assignees(value: string[]) { this.memory.assignees = value; }
-
-    get assignedWork(): number { return this.memory.assignedWork || 0; }
-    set assignedWork(value: number) { this.memory.assignedWork = value; }
-
-    get unassignedWork(): number { return Math.max(0, 5 - this.assignedWork); }
+    get assignedWork(): number { return _.sum(this.assignees.map(Capabilities.workOf)); }
+    get maxWork(): number { return this.energyCapacity / 300; }
+    get unassignedWork(): number { return this.maxWork - this.assignedWork; }
+    get assignable(): boolean { return this.freeSlots > 0 && this.unassignedWork > 0; }
 
     constructor(source: Source)
     {
         this.source = source;
+    }
+
+    assign(creep: Creep)
+    {
+        let assignees = this.assignees;
+
+        assignees.push(creep);
+
+        this.assignees = assignees;
     }
 
     private countSlots(): number
@@ -63,7 +72,7 @@ export class Wells
 
     static get(id: Id<Source> | undefined): Well | undefined { return id ? Wells._byId[id] : undefined; }
 
-    static get all(): Well[] { return Wells._all; }
+    static get assignable(): Well[] { return Wells._all.filter(w => w.assignable); }
 
     static get maxEnergyPerTick(): number { return _.sum(Wells._all.map(w => w.energyCapacity)) / 300; }
 

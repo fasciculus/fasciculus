@@ -10,7 +10,9 @@ export class GameWrap
         return result || undefined;
     }
 
+    static creep(name: string): Creep | undefined { return Game.creeps[name]; }
     static get myCreeps(): Creep[] { return _.values(Game.creeps); }
+
     static get myFlags(): Flag[] { return _.values(Game.flags); }
     static get myPowerCreeps(): PowerCreep[] { return _.values(Game.powerCreeps); }
     static get rooms(): Room[] { return _.values(Game.rooms); }

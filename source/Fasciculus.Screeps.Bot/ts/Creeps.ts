@@ -19,6 +19,8 @@ export class Capabilities
             }
         }
     }
+
+    static workOf(creep: Creep): number { return creep.body.filter(p => p.type == WORK).length; }
 }
 
 export class CreepBase
@@ -117,6 +119,8 @@ export class Creeps
 {
     private static _my: Creep[] = [];
     private static _ofType: _.Dictionary<Creep[]> = {};
+
+    static get(name: string): Creep | undefined { return GameWrap.creep(name); }
 
     static get my(): Creep[] { return Creeps._my; }
 

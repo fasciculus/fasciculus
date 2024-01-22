@@ -17,7 +17,6 @@ export interface WellMemory
     slots?: number;
     container?: Id<StructureContainer>;
     assignees?: string[];
-    assignedWork?: number;
 }
 
 export interface StatisticsMemory

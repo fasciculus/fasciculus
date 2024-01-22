@@ -126,6 +126,7 @@ export class Wellers
 {
     private static _all: Weller[] = [];
 
+    static get count(): number { return Wellers._all.length; }
     static get all(): Weller[] { return Wellers._all; }
 
     static get maxEnergyPerTick(): number { return _.sum(Wellers._all.map(w => w.maxEnergyPerTick)); }
@@ -140,36 +141,30 @@ export class Wellers
     static run()
     {
         Wellers._all.forEach(w => w.prepare());
-        Wellers.assign();
+
+        let assigned: Weller[] = Wellers.assign();
+
+        assigned.forEach(w => w.prepare());
         Wellers._all.forEach(w => w.execute());
     }
 
-    private static assign()
+    private static assign(): Weller[]
     {
-        let assignments: _.Dictionary<Weller[]> = _.groupBy(Wellers.all, w => w.well?.id || "unassigned");
-        let unassigned: Weller[] = assignments["unassigned"] || [];
+        var result: Weller[] = [];
+        let unassignedWellers: Weller[] = Wellers.all.filter(w => !w.well);
 
-        for (let well of Wells.all)
+        for (let weller of unassignedWellers)
         {
-            let assignees: Weller[] = assignments[well.id] || [];
-            let remainingSlots = well.slots - assignees.length;
-            let assignedWork = _.sum(assignees.map(w => w.capabilities.work));
+            let assignableWells: Well[] = Wells.assignable;
+            let nearestWell: Well | undefined = weller.pos.findClosestByPath(assignableWells) || undefined;
 
-            while (remainingSlots > 0 && assignedWork < 5)
-            {
-                let weller = unassigned.pop();
+            if (!nearestWell) continue;
 
-                if (!weller) break;
-
-                weller.well = well;
-
-                assignees.push(weller);
-                --remainingSlots;
-                assignedWork += weller.capabilities.work;
-            }
-
-            well.assignees = assignees.map(w => w.name);
-            well.assignedWork = assignedWork;
+            weller.well = nearestWell;
+            nearestWell.assign(weller.creep);
+            result.push(weller);
         }
+
+        return result;
     }
 }
