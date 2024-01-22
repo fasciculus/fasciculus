@@ -12,7 +12,7 @@ import { Utils } from "./Utils";
 import { Stores } from "./Stores";
 
 const MIN_SUPPLY_ENERGY = 10;
-const SUPPLIER_PERFORMANCE_FACTOR = 1.2;
+const SUPPLIER_PERFORMANCE_FACTOR = 1.25;
 
 const SUPPLIER_TEMPLATE: BodyTemplate =
 {
