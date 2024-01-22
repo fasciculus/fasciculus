@@ -107,7 +107,7 @@ export class Spawning
 
         if (idle > 0) return false;
 
-        return Statistics.welled > (Statistics.supplied * 1.2);
+        return Suppliers.performance < Wellers.maxEnergyPerTick;
     }
 
     private static get moreWellers(): boolean

@@ -55,6 +55,9 @@ export interface SupplierMemory extends CreepBaseMemory
 {
     customer?: IdCustomer;
     supply?: IdSupply;
+
+    performance?: number;
+    worked?: number;
 }
 
 export interface UpgraderMemory extends CreepBaseMemory

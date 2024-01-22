@@ -1,7 +1,8 @@
 import { MarkerType } from "./Enums";
 import { GameWrap } from "./GameWrap";
-import { Statistics } from "./Statistics";
+import { Suppliers } from "./Suppliers";
 import { Utils } from "./Utils";
+import { Wellers } from "./Wellers";
 
 const INFO_MARKER_TEXT_STYLE: TextStyle =
 {
@@ -50,10 +51,10 @@ export class Marker
         let pos = this.flag.pos;
         let x = pos.x, y = pos.y;
 
-        let welled = Utils.round(Statistics.welled, 1);
-        let supplied = Utils.round(Statistics.supplied, 1);
+        let wellable = Utils.round(Wellers.maxEnergyPerTick, 1);
+        let performance = Utils.round(Suppliers.performance, 1);
 
-        visual.text(`W / S: ${welled} / ${supplied}`, x + 1, y, INFO_MARKER_TEXT_STYLE);
+        visual.text(`W / P: ${wellable} / ${performance}`, x + 1, y, INFO_MARKER_TEXT_STYLE);
         visual.text(`B: ${Game.cpu.bucket}`, x + 1, y + 1, INFO_MARKER_TEXT_STYLE);
     }
 }

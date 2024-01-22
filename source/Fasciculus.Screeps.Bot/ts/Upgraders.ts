@@ -11,9 +11,11 @@ const UPGRADER_TEMPLATE: BodyTemplate =
         [
             { cost: 200, parts: [WORK, CARRY, MOVE] },
             { cost: 150, parts: [WORK, MOVE] },
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
             { cost: 150, parts: [WORK, MOVE] },
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
             { cost: 150, parts: [WORK, MOVE] },
-            { cost: 150, parts: [WORK, MOVE] },
+            { cost: 200, parts: [WORK, CARRY, MOVE] },
         ]
 };
 

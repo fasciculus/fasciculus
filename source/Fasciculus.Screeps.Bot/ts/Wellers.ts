@@ -36,8 +36,8 @@ export class Weller extends CreepBase
     get well(): Well | undefined { return Wells.get(this.memory.well); }
     set well(value: Well | undefined) { this.memory.well = value?.id; }
 
-    get harvestCapability(): number { return this.capabilities.work * 2; }
-    get full(): boolean { return this.freeEnergyCapacity < this.harvestCapability; }
+    get maxEnergyPerTick(): number { return this.capabilities.work * 2; }
+    get full(): boolean { return this.freeEnergyCapacity < this.maxEnergyPerTick; }
 
     constructor(creep: Creep)
     {
@@ -69,7 +69,7 @@ export class Weller extends CreepBase
 
         if (!well) return;
 
-        let amount = Math.min(well.energy, this.harvestCapability);
+        let amount = Math.min(well.energy, this.maxEnergyPerTick);
 
         this.harvest(well.source);
         Statistics.addWelled(amount);
@@ -127,6 +127,8 @@ export class Wellers
     private static _all: Weller[] = [];
 
     static get all(): Weller[] { return Wellers._all; }
+
+    static get maxEnergyPerTick(): number { return _.sum(Wellers._all.map(w => w.maxEnergyPerTick)); }
 
     static initialize()
     {
