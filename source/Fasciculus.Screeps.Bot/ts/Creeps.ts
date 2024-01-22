@@ -58,6 +58,8 @@ export class CreepBase
     get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this); }
     get energyRatio(): number { return Stores.energyRatio(this); }
 
+    get spawning(): boolean { return this.creep.spawning; }
+
     moveTo(target: RoomPosition | { pos: RoomPosition }, opts?: MoveToOpts): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
     {
         return this.creep.moveTo(target, opts);
