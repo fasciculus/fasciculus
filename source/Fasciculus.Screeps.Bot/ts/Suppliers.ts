@@ -10,7 +10,6 @@ import { Spawns } from "./Spawns";
 import { Customer, IdCustomer, IdSupply, Supply } from "./Types";
 import { Utils } from "./Utils";
 import { Stores } from "./Stores";
-import { Statistics } from "./Statistics";
 
 const MIN_SUPPLY_ENERGY = 10;
 
@@ -28,7 +27,8 @@ const SUPPLIER_TEMPLATE: BodyTemplate =
 
 const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 {
-    reusePath: 0,
+    reusePath: 3,
+    ignoreCreeps: false,
 
     visualizePathStyle:
     {
@@ -46,6 +46,12 @@ export class Supplier extends CreepBase
     get customer(): Customer | undefined { return GameWrap.get(this.memory.customer); }
     set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
 
+    get performance(): number { return this.memory.performance || 0; }
+    set performance(value: number) { this.memory.performance = value; }
+
+    get worked(): number { return this.memory.worked || 0; }
+    private set worked(value: number) { this.memory.worked = value; }
+
     constructor(creep: Creep)
     {
         super(creep);
@@ -55,7 +61,6 @@ export class Supplier extends CreepBase
     {
         switch (this.state)
         {
-            case CreepState.Idle: this.executeIdle(); break;
             case CreepState.ToSupply: this.executeToSupply(); break;
             case CreepState.ToCustomer: this.executeToCustomer(); break;
             case CreepState.Withdraw: this.executeWithdraw(); break;
@@ -63,13 +68,10 @@ export class Supplier extends CreepBase
         }
     }
 
-    private executeIdle()
-    {
-        Statistics.addSupplied(this.energy / 25);
-    }
-
     private executeToSupply()
     {
+        this.onWork();
+
         let supply = this.supply;
 
         if (!supply) return;
@@ -79,6 +81,8 @@ export class Supplier extends CreepBase
 
     private executeToCustomer()
     {
+        this.onWork();
+
         let customer = this.customer;
 
         if (!customer) return;
@@ -88,6 +92,8 @@ export class Supplier extends CreepBase
 
     private executeWithdraw()
     {
+        this.onWork();
+
         let supply = this.supply;
 
         if (!supply) return;
@@ -97,20 +103,32 @@ export class Supplier extends CreepBase
 
     private executeTransfer()
     {
+        this.onWork();
+
         let customer = this.customer;
 
         if (!customer) return;
 
-        let amount = Math.min(this.energy, Stores.freeEnergyCapacity(customer));
+        let amount: number = Math.min(this.energy, Stores.freeEnergyCapacity(customer));
 
         this.transfer(customer, RESOURCE_ENERGY, amount);
-        Statistics.addSupplied(amount);
 
-        if (customer instanceof Creep)
-        {
-            this.customer = undefined;
-            this.state = CreepState.Idle;
-        }
+        if (customer instanceof Creep) this.customer = undefined;
+
+        this.onSupplied(amount);
+    }
+
+    private onWork()
+    {
+        this.worked = this.worked + 1;
+    }
+
+    private onSupplied(amount: number)
+    {
+        let energyPerTick = amount / Math.max(1, this.worked);
+
+        this.performance = (this.performance * 49 + energyPerTick) / 50;
+        this.worked = 0;
     }
 
     prepare()
@@ -259,13 +277,22 @@ export class Suppliers
 
     static get all(): Supplier[] { return Suppliers._all; }
 
-    static get supplied(): number { return _.sum(Suppliers._all.map(s => s.energyCapacity)) / 25; }
+    static get performance(): number { return _.sum(Suppliers._all.map(s => s.performance)); }
 
     static initialize()
     {
         Suppliers._all = Creeps.ofType(CreepType.Supplier).map(c => new Supplier(c));
 
         Bodies.register(CreepType.Supplier, SUPPLIER_TEMPLATE);
+
+        Suppliers.initializePerformance();
+    }
+
+    private static initializePerformance()
+    {
+        let initialPerformance = Suppliers.performance / Math.max(1, Suppliers._all.length) + 2;
+
+        Suppliers._all.filter(s => s.spawning).forEach(s => s.performance = initialPerformance);
     }
 
     static run()
