@@ -73,9 +73,9 @@ export class Spawning
         if (Spawning.moreStarters) return CreepType.Starter;
         if (Spawning.moreSuppliers) return CreepType.Supplier;
         if (Spawning.moreWellers) return CreepType.Weller;
-        if (Spawning.moreUpgraders) return CreepType.Upgrader;
-        if (Spawning.moreBuilders) return CreepType.Builder;
         if (Spawning.moreRepairers) return CreepType.Repairer;
+        if (Spawning.moreBuilders) return CreepType.Builder;
+        if (Spawning.moreUpgraders) return CreepType.Upgrader;
 
         return undefined;
     }
@@ -114,6 +114,8 @@ export class Spawning
 
     private static get moreUpgraders(): boolean
     {
+        if (Suppliers.count == 0) return false;
+
         let controllerCount = Controllers.my.length;
         let upgraderCount = Upgraders.all.length;
 
@@ -124,6 +126,8 @@ export class Spawning
 
     private static get moreBuilders(): boolean
     {
+        if (Suppliers.count == 0) return false;
+
         let siteCount = Sites.all.length;
 
         if (siteCount == 0) return false;
@@ -133,6 +137,8 @@ export class Spawning
 
     private static get moreRepairers(): boolean
     {
+        if (Suppliers.count == 0) return false;
+
         let repairCount = Repairs.all.length;
 
         if (repairCount == 0) return false;

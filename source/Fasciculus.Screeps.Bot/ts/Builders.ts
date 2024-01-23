@@ -5,6 +5,7 @@ import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { BuilderMemory } from "./Memories";
 import { Site, Sites } from "./Sites";
+import { Utils } from "./Utils";
 
 const BUILDER_TEMPLATE: BodyTemplate =
 {
@@ -116,8 +117,6 @@ export class Builders
 {
     private static _all: Builder[] = [];
 
-    static get all(): Builder[] { return Builders._all; }
-
     static get maxEnergyPerTick(): number { return _.sum(Builders._all.map(b => b.maxEnergyPerTick)); }
 
     static initialize()
@@ -130,44 +129,81 @@ export class Builders
     static run()
     {
         Builders._all.forEach(b => b.prepare());
-        Builders.assign();
-        Builders._all.forEach(b => b.prepare());
+        Builders.assign().forEach(b => b.prepare());
         Builders._all.forEach(b => b.execute());
     }
 
-    private static assign()
+    private static assign(): Builder[]
     {
-        let unassignedBuilders: _.Dictionary<Builder> = _.indexBy(Builders._all.filter(b => !b.site), "name");
+        var result: Builder[] = [];
+        let unassigned: Builder[] = Builders._all.filter(b => !b.site);
 
-        if (_.size(unassignedBuilders) == 0) return;
-
-        let sites = Sites.all.sort(Builders.compareSites);
-
-        for (let i = 0, n = sites.length; i < n; ++i)
+        for (let builder of unassigned)
         {
-            let site = sites[i];
+            let focus: Site | undefined = Builders.focus;
 
-            if (site.remaining > 400)
+            if (focus)
             {
-                var assignees: Builder[] = _.values(unassignedBuilders);
-
-                assignees.forEach(b => b.site = site);
-                break;
+                builder.site = focus;
+                result.push(builder);
             }
+            else
+            {
+                let site: Site | undefined = Builders.findSite(builder)
 
-            let assignables: Builder[] = _.values(unassignedBuilders);
-            let builder = site.pos.findClosestByPath(assignables) || undefined;
-
-            if (!builder) continue;
-
-            builder.site = site;
-            delete unassignedBuilders[builder.name];
-
-            if (_.size(unassignedBuilders) == 0) break;
+                if (site)
+                {
+                    builder.site = site;
+                    result.push(builder);
+                }
+            }
         }
+
+        return result;
     }
 
-    static compareSites(a: Site, b: Site): number
+    private static get focus(): Site | undefined
+    {
+        var assigned: Site[] = Builders.assignedSites;
+
+        if (assigned.length == 0) return undefined;
+
+        assigned = assigned.filter(s => s.remaining > 1);
+
+        if (assigned.length == 0) return undefined;
+
+        return assigned[0];
+    }
+
+    private static findSite(builder: Builder): Site | undefined
+    {
+        let result: Site | undefined = undefined;
+        let assigned: Set<Id<ConstructionSite>> = new Set(Builders.assignedSites.map(s => s.id));
+        let unassigned: Site[] = Sites.all.filter(s => !assigned.has(s.id));
+
+        if (unassigned.length == 0) return result;
+
+        let smallSites: Site[] = unassigned.filter(s => s.remaining < 10);
+
+        if (smallSites.length > 0)
+        {
+            result = builder.pos.findClosestByPath(smallSites) || undefined;
+        }
+
+        if (!result)
+        {
+            result = unassigned.sort(Builders.compareSites)[0];
+        }
+
+        return result;
+    }
+
+    private static get assignedSites(): Array<Site>
+    {
+        return Utils.defined(Builders._all.map(b => b.site));
+    }
+
+    private static compareSites(a: Site, b: Site): number
     {
         return a.remaining - b.remaining;
     }
