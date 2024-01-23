@@ -44,9 +44,13 @@ export class Repairer extends CreepBase
     get repairable(): Repairable | undefined { return Repairs.get(this.memory.repairable); }
     set repairable(value: Repairable | undefined) { this.memory.repairable = value?.id; }
 
+    readonly maxEnergyPerTick: number;
+
     constructor(creep: Creep)
     {
         super(creep);
+
+        this.maxEnergyPerTick = this.workParts;
     }
 
     execute()
@@ -137,7 +141,7 @@ export class Repairers
 
     static get all(): Repairer[] { return Repairers._all; }
 
-    static get maxEnergyPerTick(): number { return _.sum(Repairers._all.map(r => r.capabilities.work)); }
+    static get maxEnergyPerTick(): number { return _.sum(Repairers._all.map(r => r.maxEnergyPerTick)); }
 
     static initialize()
     {

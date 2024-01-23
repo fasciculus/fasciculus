@@ -2,8 +2,9 @@ import * as _ from "lodash";
 import { Chamber, Chambers } from "./Chambers";
 import { Memories, WellMemory } from "./Memories";
 import { DIRECTIONS, Point } from "./Geometry";
-import { Capabilities, Creeps } from "./Creeps";
+import { Creeps } from "./Creeps";
 import { Utils } from "./Utils";
+import { Bodies } from "./Bodies";
 
 export class Well
 {
@@ -34,7 +35,7 @@ export class Well
     get assignees(): Creep[] { return Utils.defined((this.memory.assignees || []).map(n => Creeps.get(n))); }
     private set assignees(value: Creep[]) { this.memory.assignees = value.map(c => c.name); }
     get freeSlots(): number { return this.slots - this.assignees.length; }
-    get assignedWork(): number { return _.sum(this.assignees.map(Capabilities.workOf)); }
+    get assignedWork(): number { return _.sum(this.assignees.map(Bodies.workOf)); }
     get maxWork(): number { return this.energyCapacity / 300; }
     get unassignedWork(): number { return this.maxWork - this.assignedWork; }
     get assignable(): boolean { return this.freeSlots > 0 && this.unassignedWork > 0; }

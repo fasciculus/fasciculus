@@ -4,34 +4,21 @@ import { CreepState, CreepType } from "./Enums";
 import { CreepBaseMemory } from "./Memories";
 import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
-
-export class Capabilities
-{
-    readonly work: number = 0;
-
-    constructor(creep: Creep)
-    {
-        for (let part of creep.body)
-        {
-            switch (part.type)
-            {
-                case WORK: ++this.work; break;
-            }
-        }
-    }
-
-    static workOf(creep: Creep): number { return creep.body.filter(p => p.type == WORK).length; }
-}
+import { Bodies } from "./Bodies";
 
 export class CreepBase
 {
-    private _capabilities?: Capabilities
-
     readonly creep: Creep;
+
+    readonly workParts: number;
 
     constructor(creep: Creep)
     {
         this.creep = creep;
+
+        let counts = Bodies.countsOf(creep.body);
+
+        this.workParts = counts.work;
     }
 
     get memory(): CreepBaseMemory { return this.creep.memory as CreepBaseMemory; }
@@ -52,8 +39,6 @@ export class CreepBase
     get name(): string { return this.creep.name; }
     get pos(): RoomPosition { return this.creep.pos; }
     get store(): StoreDefinition { return this.creep.store; }
-
-    get capabilities() { return this._capabilities || (this._capabilities = new Capabilities(this.creep)); }
 
     get energy(): number { return Stores.energy(this); }
     get energyCapacity(): number { return Stores.energyCapacity(this); }

@@ -22,6 +22,8 @@ const UPGRADER_TEMPLATE: BodyTemplate =
 
 export class Upgrader extends CreepBase
 {
+    readonly maxEnergyPerTick: number;
+
     get memory(): UpgraderMemory { return super.memory as UpgraderMemory; }
 
     get controller(): Controller | undefined { return Controllers.get(this.memory.controller); }
@@ -30,6 +32,8 @@ export class Upgrader extends CreepBase
     constructor(creep: Creep)
     {
         super(creep);
+
+        this.maxEnergyPerTick = this.workParts;
     }
 
     execute()
@@ -114,7 +118,7 @@ export class Upgraders
 
     static get all(): Upgrader[] { return Upgraders._all; }
 
-    static get maxEnergyPerTick(): number { return _.sum(Upgraders._all.map(u => u.capabilities.work)); }
+    static get maxEnergyPerTick(): number { return _.sum(Upgraders._all.map(u => u.maxEnergyPerTick)); }
 
     static initialize()
     {
@@ -168,7 +172,7 @@ export class Upgraders
 
             if (!controller) continue;
 
-            byId[controller.id].work += upgrader.capabilities.work;
+            byId[controller.id].work += upgrader.workParts;
         }
 
         return result;

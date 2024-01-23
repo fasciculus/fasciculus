@@ -36,7 +36,7 @@ export class Weller extends CreepBase
     get well(): Well | undefined { return Wells.get(this.memory.well); }
     set well(value: Well | undefined) { this.memory.well = value?.id; }
 
-    get maxEnergyPerTick(): number { return this.capabilities.work * 2; }
+    get maxEnergyPerTick(): number { return this.workParts * 2; }
     get full(): boolean { return this.freeEnergyCapacity < this.maxEnergyPerTick; }
 
     constructor(creep: Creep)

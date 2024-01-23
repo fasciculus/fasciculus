@@ -23,6 +23,11 @@ export interface BodyTemplate
     chunks: BodyChunk[];
 }
 
+export interface BodyPartCounts
+{
+    work: number;
+}
+
 export class Bodies
 {
     static _registry: { [type: string]: BodyTemplate } = {}
@@ -56,5 +61,25 @@ export class Bodies
     private static compareParts(a: BodyPartConstant, b: BodyPartConstant): number
     {
         return PartPriorities[a] - PartPriorities[b];
+    }
+
+    static countsOf(parts: BodyPartDefinition[]): BodyPartCounts
+    {
+        let result: BodyPartCounts = { work: 0 };
+
+        for (let part of parts)
+        {
+            switch (part.type)
+            {
+                case WORK: ++result.work; break;
+            }
+        }
+
+        return result;
+    }
+
+    static workOf(creep: Creep): number
+    {
+        return Bodies.countsOf(creep.body).work;
     }
 }

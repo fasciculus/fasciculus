@@ -33,9 +33,13 @@ export class Builder extends CreepBase
     get site(): Site | undefined { return Sites.get(this.memory.site); }
     set site(value: Site | undefined) { this.memory.site = value?.id; }
 
+    readonly maxEnergyPerTick: number;
+
     constructor(creep: Creep)
     {
         super(creep);
+
+        this.maxEnergyPerTick = this.workParts * 5;
     }
 
     execute()
@@ -114,7 +118,7 @@ export class Builders
 
     static get all(): Builder[] { return Builders._all; }
 
-    static get maxEnergyPerTick(): number { return _.sum(Builders._all.map(b => b.capabilities.work)) * 5; }
+    static get maxEnergyPerTick(): number { return _.sum(Builders._all.map(b => b.maxEnergyPerTick)); }
 
     static initialize()
     {
