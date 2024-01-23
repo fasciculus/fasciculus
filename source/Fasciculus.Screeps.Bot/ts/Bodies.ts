@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import { Vector, Vectors } from "./Collections";
 
 const PartPriorities =
 {
@@ -15,12 +16,12 @@ const PartPriorities =
 export interface BodyChunk
 {
     cost: number;
-    parts: BodyPartConstant[];
+    parts: Vector<BodyPartConstant>;
 }
 
 export class BodyTemplate
 {
-    private chunks: BodyChunk[] = [];
+    private chunks: Vector<BodyChunk> = new Vector();
 
     static create(parts: BodyPartConstant[], times: number = 1): BodyTemplate
     {
@@ -29,19 +30,21 @@ export class BodyTemplate
 
     add(parts: BodyPartConstant[], times: number = 1): BodyTemplate
     {
-        let chunk: BodyChunk = BodyTemplate.createChunk(parts);
+        let chunk: BodyChunk | undefined = BodyTemplate.createChunk(Vectors.from(parts));
+
+        if (!chunk) return this;
 
         for (let i = 0; i < times; ++i)
         {
-            this.chunks.push(chunk);
+            this.chunks.append(chunk);
         }
 
         return this;
     }
 
-    get(energy: number): BodyPartConstant[]
+    get(energy: number): Vector<BodyPartConstant>
     {
-        var result: BodyPartConstant[] = [];
+        var result: Vector<BodyPartConstant> = new Vector();
 
         for (let chunk of this.chunks)
         {
@@ -54,17 +57,19 @@ export class BodyTemplate
         return result;
     }
 
-    static costOf(parts: BodyPartConstant[]): number
+    static costOf(parts: Vector<BodyPartConstant>): number
     {
-        return parts.length == 0 ? 0 : _.sum(parts.map(p => BODYPART_COST[p]));
+        return parts.sum(p => BODYPART_COST[p]);
     }
 
-    private static createChunk(parts: BodyPartConstant[]): BodyChunk
+    private static createChunk(parts: Vector<BodyPartConstant>): BodyChunk | undefined
     {
+        if (parts.length == 0) return undefined;
+
         let result: BodyChunk =
         {
             cost: BodyTemplate.costOf(parts),
-            parts: Array.from(parts)
+            parts: parts
         };
 
         return result;
@@ -78,24 +83,20 @@ export interface BodyPartCounts
 
 export class Bodies
 {
-    static _registry: { [type: string]: BodyTemplate } = {}
+    private static _registry: { [type: string]: BodyTemplate } = {}
 
     static register(type: string, template: BodyTemplate)
     {
         Bodies._registry[type] = template;
     }
 
-    static create(type: string, energy: number): BodyPartConstant[] | undefined
+    static create(type: string, energy: number): Vector<BodyPartConstant>
     {
         var template = Bodies._registry[type];
 
-        if (!template) return undefined;
+        if (!template) return new Vector();
 
-        var result: BodyPartConstant[] = template.get(energy);
-
-        if (result.length == 0) return undefined;
-
-        return result.sort(Bodies.compareParts);
+        return template.get(energy).sort(Bodies.compareParts);
     }
 
     private static compareParts(a: BodyPartConstant, b: BodyPartConstant): number
@@ -103,11 +104,11 @@ export class Bodies
         return PartPriorities[a] - PartPriorities[b];
     }
 
-    static countsOf(parts: BodyPartDefinition[]): BodyPartCounts
+    static countsOf(creep: Creep): BodyPartCounts
     {
         let result: BodyPartCounts = { work: 0 };
 
-        for (let part of parts)
+        for (let part of creep.body)
         {
             switch (part.type)
             {
@@ -120,6 +121,6 @@ export class Bodies
 
     static workOf(creep: Creep): number
     {
-        return Bodies.countsOf(creep.body).work;
+        return Bodies.countsOf(creep).work;
     }
 }

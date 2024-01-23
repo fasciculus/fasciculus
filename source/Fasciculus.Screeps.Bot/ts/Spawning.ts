@@ -16,6 +16,7 @@ import { Names } from "./Names";
 import { Repairs } from "./Repairs";
 import { Repairers } from "./Repairers";
 import { Starters } from "./Starters";
+import { Vector } from "./Collections";
 
 export class Spawning
 {
@@ -56,16 +57,16 @@ export class Spawning
 
     private static createBody(spawn: Spawn, type: CreepType): BodyPartConstant[] | undefined
     {
-        let body1 = Bodies.create(type, spawn.roomEnergyAvailable);
+        let body1: Vector<BodyPartConstant> = Bodies.create(type, spawn.roomEnergyAvailable);
 
-        if (!body1) return undefined;
+        if (body1.length == 0) return undefined;
 
-        let body2 = Bodies.create(type, spawn.roomEnergyCapacity);
+        let body2: Vector<BodyPartConstant> = Bodies.create(type, spawn.roomEnergyCapacity);
 
-        if (!body2) return undefined;
+        if (body2.length == 0) return undefined;
         if (body2.length > body1.length) return undefined;
 
-        return body1;
+        return body1.values;
     }
 
     private static nextType(): CreepType | undefined

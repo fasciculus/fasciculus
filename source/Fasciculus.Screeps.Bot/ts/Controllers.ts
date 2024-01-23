@@ -32,10 +32,25 @@ export class Controllers
 
     static initialize()
     {
-        let controllers: StructureController[] = Utils.defined(Rooms.all.map(r => r.controller).filter(c => c));
+        let controllers: StructureController[] = Controllers.defined(Rooms.all.map(r => r.controller).filter(c => c));
 
         Controllers._all = controllers.map(c => new Controller(c));
         Controllers._my = Controllers._all.filter(c => c.my);
         Controllers._byId = _.indexBy(Controllers._all, c => c.id);
+    }
+
+    private static defined(controllers: Array<StructureController | undefined>): StructureController[]
+    {
+        let result: StructureController[] = [];
+
+        for (let controller of controllers)
+        {
+            if (controller)
+            {
+                result.push(controller);
+            }
+        }
+
+        return result;
     }
 }

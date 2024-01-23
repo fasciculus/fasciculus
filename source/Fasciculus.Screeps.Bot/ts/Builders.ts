@@ -190,7 +190,19 @@ export class Builders
 
     private static get assignedSites(): Array<Site>
     {
-        return Utils.defined(Builders._all.map(b => b.site));
+        let result: Array<Site> = [];
+
+        for (let builder of Builders._all)
+        {
+            let site = builder.site;
+
+            if (site)
+            {
+                result.push(site);
+            }
+        }
+
+        return result;
     }
 
     private static compareSites(a: Site, b: Site): number

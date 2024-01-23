@@ -15,10 +15,7 @@ export class CreepBase
     constructor(creep: Creep)
     {
         this.creep = creep;
-
-        let counts = Bodies.countsOf(creep.body);
-
-        this.workParts = counts.work;
+        this.workParts = Bodies.workOf(creep);
     }
 
     get memory(): CreepBaseMemory { return this.creep.memory as CreepBaseMemory; }
