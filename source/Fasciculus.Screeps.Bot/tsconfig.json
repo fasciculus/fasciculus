@@ -1,8 +1,8 @@
 {
-  "compileOnSave": true,
+  "compileOnSave": false,
   "compilerOptions": {
-    "target": "es2016",
-    "module": "nodenext",
+    "target": "ES2016",
+    "module": "NodeNext",
     "sourceMap": true,
     "outDir": "js",
     "esModuleInterop": true,
