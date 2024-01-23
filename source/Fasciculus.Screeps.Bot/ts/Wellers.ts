@@ -122,6 +122,11 @@ export class Weller extends CreepBase
     }
 }
 
+const FIND_CLOSEST_WELL_OPTS: FindPathOpts =
+{
+    ignoreCreeps: true
+};
+
 export class Wellers
 {
     private static _all: Weller[] = [];
@@ -156,7 +161,7 @@ export class Wellers
         for (let weller of unassignedWellers)
         {
             let assignableWells: Well[] = Wells.assignable;
-            let nearestWell: Well | undefined = weller.pos.findClosestByPath(assignableWells) || undefined;
+            let nearestWell: Well | undefined = weller.pos.findClosestByPath(assignableWells, FIND_CLOSEST_WELL_OPTS) || undefined;
 
             if (!nearestWell) continue;
 
