@@ -1,11 +1,9 @@
-import * as _ from "lodash";
 
 import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { BuilderMemory } from "./Memories";
 import { Site, Sites } from "./Sites";
-import { Utils } from "./Utils";
 import { Vector, Vectors } from "./Collections";
 
 const BUILDER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
@@ -112,7 +110,7 @@ export class Builders
 
     static initialize()
     {
-        Builders._all = Vectors.from(Creeps.ofType(CreepType.Builder)).map(c => new Builder(c));
+        Builders._all = Vector.from(Creeps.ofType(CreepType.Builder)).map(c => new Builder(c));
 
         Bodies.register(CreepType.Builder, BUILDER_TEMPLATE);
     }

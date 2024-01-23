@@ -16,7 +16,7 @@ export class GameWrap
 
     static get myFlags(): Flag[] { return _.values(Game.flags); }
     static get myPowerCreeps(): PowerCreep[] { return _.values(Game.powerCreeps); }
-    static get rooms(): Vector<Room> { return Vectors.from(_.values(Game.rooms)); }
+    static get rooms(): Vector<Room> { return Vector.from(_.values(Game.rooms)); }
     static get mySpawns(): StructureSpawn[] { return _.values(Game.spawns); }
     static get myStructures(): Structure[] { return _.values(Game.structures); }
     static get myConstructionSites(): ConstructionSite[] { return _.values(Game.constructionSites); }

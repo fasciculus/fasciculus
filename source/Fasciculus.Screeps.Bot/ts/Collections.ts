@@ -1,5 +1,3 @@
-import * as _ from "lodash";
-
 export interface Dictionary<T>
 {
     [index: string]: T;
@@ -13,6 +11,8 @@ export class Vector<T> implements Iterable<T>
     {
         this.array = values && values.length > 0 ? Array.from(values) : new Array();
     }
+
+    static from<T>(items?: T[]): Vector<T> { return new Vector(items); }
 
     get length(): number { return this.array.length; }
     get values(): T[] { return Array.from(this.array); }
@@ -59,14 +59,13 @@ export class Vector<T> implements Iterable<T>
 
     concat(vector: Vector<T>): Vector<T>
     {
-        let result: Vector<T> = new Vector(this.array);
+        let a: Array<T> = this.array;
+        let b: Array<T> = vector.array;
 
-        for (let value of vector.array)
-        {
-            result.append(value);
-        }
+        if (a.length == 0) return new Vector(b);
+        if (b.length == 0) return new Vector(a);
 
-        return result;
+        return new Vector(a.concat(b));
     }
 
     filter(predicate: (value: T) => boolean): Vector<T>
@@ -127,8 +126,6 @@ export class Vector<T> implements Iterable<T>
 
 export class Vectors
 {
-    static from<T>(items?: T[]): Vector<T> { return new Vector(items); }
-
     static defined<T>(vector: Vector<T | undefined>): Vector<T>
     {
         var result: Vector<T> = new Vector();

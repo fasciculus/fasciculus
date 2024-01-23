@@ -1,6 +1,6 @@
 import { GameWrap } from "./GameWrap";
 import { Territories, Territory } from "./Territories";
-import { Dictionary, Vector, Vectors } from "./Collections";
+import { Dictionary, Vector } from "./Collections";
 
 export class Chamber
 {
@@ -21,7 +21,7 @@ export class Chamber
     constructor(room: Room)
     {
         this.room = room;
-        this._sources = Vectors.from(room.find<FIND_SOURCES, Source>(FIND_SOURCES));
+        this._sources = Vector.from(room.find<FIND_SOURCES, Source>(FIND_SOURCES));
     }
 }
 

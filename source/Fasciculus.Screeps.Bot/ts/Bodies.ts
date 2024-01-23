@@ -1,5 +1,4 @@
-import * as _ from "lodash";
-import { Vector, Vectors } from "./Collections";
+import { Vector } from "./Collections";
 
 const PartPriorities =
 {
@@ -30,7 +29,7 @@ export class BodyTemplate
 
     add(parts: BodyPartConstant[], times: number = 1): BodyTemplate
     {
-        let chunk: BodyChunk | undefined = BodyTemplate.createChunk(Vectors.from(parts));
+        let chunk: BodyChunk | undefined = BodyTemplate.createChunk(Vector.from(parts));
 
         if (!chunk) return this;
 

@@ -1,6 +1,5 @@
-import * as _ from "lodash";
 import { Rooms } from "./Rooms";
-import { Utils } from "./Utils";
+import { Dictionary, Vector, Vectors } from "./Collections";
 
 export class Controller
 {
@@ -18,39 +17,25 @@ export class Controller
 
 export class Controllers
 {
-    private static _all: Controller[] = [];
-    private static _my: Controller[] = [];
-    private static _byId: _.Dictionary<Controller>;
+    private static _all: Vector<Controller> = new Vector();
+    private static _my: Vector<Controller> = new Vector();
+    private static _byId: Dictionary<Controller>;
 
     static get(id: Id<StructureController> | undefined): Controller | undefined
     {
         return id ? Controllers._byId[id] : undefined;
     }
 
-    static get all(): Controller[] { return Controllers._all; }
-    static get my(): Controller[] { return Controllers._my; }
+    static get all(): Vector<Controller> { return Controllers._all.clone(); }
+    static get my(): Vector<Controller> { return Controllers._my.clone(); }
 
     static initialize()
     {
-        let controllers: StructureController[] = Controllers.defined(Rooms.all.map(r => r.controller).filter(c => c));
+        let optControllers: Vector<StructureController | undefined> = Vector.from(Rooms.all.map(r => r.controller));
+        let controllers: Vector<StructureController> = Vectors.defined(optControllers);
 
         Controllers._all = controllers.map(c => new Controller(c));
         Controllers._my = Controllers._all.filter(c => c.my);
-        Controllers._byId = _.indexBy(Controllers._all, c => c.id);
-    }
-
-    private static defined(controllers: Array<StructureController | undefined>): StructureController[]
-    {
-        let result: StructureController[] = [];
-
-        for (let controller of controllers)
-        {
-            if (controller)
-            {
-                result.push(controller);
-            }
-        }
-
-        return result;
+        Controllers._byId = Controllers._all.indexBy(c => c.id);
     }
 }
