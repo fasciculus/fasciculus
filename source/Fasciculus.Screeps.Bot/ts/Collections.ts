@@ -1,15 +1,25 @@
 
 export class Vector<T> implements Iterable<T>
 {
-    private array: T[];
+    private array: Array<T>;
 
     constructor(items?: T[])
     {
-        this.array = items && items.length > 0 ? Array.from(items) : [];
+        this.array = items && items.length > 0 ? Array.from(items) : new Array();
     }
 
     get length(): number { return this.array.length; }
     get values(): T[] { return Array.from(this.array); }
+
+    at(index: number): T | undefined
+    {
+        let length = this.length;
+        index = Math.round(index);
+
+        if (index < 0 || index >= length) return undefined;
+
+        return this.array[index];
+    }
 
     *[Symbol.iterator](): IterableIterator<T>
     {
@@ -73,6 +83,13 @@ export class Vector<T> implements Iterable<T>
         }
 
         return result;
+    }
+
+    forEach(fn: (value: T) => void)
+    {
+        if (this.length == 0) return;
+
+        this.array.forEach(fn);
     }
 
     sum(fn: (value: T) => number): number

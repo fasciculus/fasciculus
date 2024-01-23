@@ -6,6 +6,7 @@ import { CreepState, CreepType } from "./Enums";
 import { BuilderMemory } from "./Memories";
 import { Site, Sites } from "./Sites";
 import { Utils } from "./Utils";
+import { Vector, Vectors } from "./Collections";
 
 const BUILDER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
@@ -105,13 +106,13 @@ export class Builder extends CreepBase
 
 export class Builders
 {
-    private static _all: Builder[] = [];
+    private static _all: Vector<Builder> = new Vector();
 
-    static get maxEnergyPerTick(): number { return _.sum(Builders._all.map(b => b.maxEnergyPerTick)); }
+    static get maxEnergyPerTick(): number { return Builders._all.sum(b => b.maxEnergyPerTick); }
 
     static initialize()
     {
-        Builders._all = Creeps.ofType(CreepType.Builder).map(c => new Builder(c));
+        Builders._all = Vectors.from(Creeps.ofType(CreepType.Builder)).map(c => new Builder(c));
 
         Bodies.register(CreepType.Builder, BUILDER_TEMPLATE);
     }
@@ -123,10 +124,10 @@ export class Builders
         Builders._all.forEach(b => b.execute());
     }
 
-    private static assign(): Builder[]
+    private static assign(): Vector<Builder>
     {
-        var result: Builder[] = [];
-        let unassigned: Builder[] = Builders._all.filter(b => !b.site);
+        var result: Vector<Builder> = new Vector();
+        let unassigned: Vector<Builder> = Builders._all.filter(b => !b.site);
 
         for (let builder of unassigned)
         {
@@ -135,7 +136,7 @@ export class Builders
             if (focus)
             {
                 builder.site = focus;
-                result.push(builder);
+                result.append(builder);
             }
             else
             {
@@ -144,7 +145,7 @@ export class Builders
                 if (site)
                 {
                     builder.site = site;
-                    result.push(builder);
+                    result.append(builder);
                 }
             }
         }
@@ -154,15 +155,7 @@ export class Builders
 
     private static get focus(): Site | undefined
     {
-        var assigned: Site[] = Builders.assignedSites;
-
-        if (assigned.length == 0) return undefined;
-
-        assigned = assigned.filter(s => s.remaining > 1);
-
-        if (assigned.length == 0) return undefined;
-
-        return assigned[0];
+        return Builders.assignedSites.filter(s => s.remaining > 1).at(0);
     }
 
     private static findSite(builder: Builder): Site | undefined
@@ -188,21 +181,9 @@ export class Builders
         return result;
     }
 
-    private static get assignedSites(): Array<Site>
+    private static get assignedSites(): Vector<Site>
     {
-        let result: Array<Site> = [];
-
-        for (let builder of Builders._all)
-        {
-            let site = builder.site;
-
-            if (site)
-            {
-                result.push(site);
-            }
-        }
-
-        return result;
+        return Vectors.defined(Builders._all.map(b => b.site));
     }
 
     private static compareSites(a: Site, b: Site): number
