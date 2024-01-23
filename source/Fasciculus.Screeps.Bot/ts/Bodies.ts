@@ -1,5 +1,17 @@
 import * as _ from "lodash";
 
+const PartPriorities =
+{
+    "tough": 1,
+    "work": 2,
+    "attack": 3,
+    "ranged_attack": 4,
+    "carry": 5,
+    "move": 6,
+    "heal": 7,
+    "claim": 8
+}
+
 export interface BodyChunk
 {
     cost: number;
@@ -36,6 +48,13 @@ export class Bodies
             energy -= chunk.cost;
         }
 
-        return result.length > 0 ? result : undefined;
+        if (result.length == 0) return undefined;
+
+        return result.sort(Bodies.compareParts);
+    }
+
+    private static compareParts(a: BodyPartConstant, b: BodyPartConstant): number
+    {
+        return PartPriorities[a] - PartPriorities[b];
     }
 }
