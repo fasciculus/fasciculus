@@ -5,20 +5,12 @@ import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { UpgraderMemory } from "./Memories";
 
-const UPGRADER_TEMPLATE: BodyTemplate =
-{
-    chunks:
-        [
-            { cost: 200, parts: [WORK, CARRY, MOVE] },
-            { cost: 150, parts: [WORK, MOVE] },
-            { cost: 200, parts: [WORK, CARRY, MOVE] },
-            { cost: 150, parts: [WORK, MOVE] },
-            { cost: 200, parts: [WORK, CARRY, MOVE] },
-            { cost: 150, parts: [WORK, MOVE] },
-            { cost: 200, parts: [WORK, CARRY, MOVE] },
-        ]
-};
-
+const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
+    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE])
+    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE])
+    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE])
+    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE])
+    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]);
 
 export class Upgrader extends CreepBase
 {

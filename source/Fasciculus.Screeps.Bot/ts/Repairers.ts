@@ -7,17 +7,7 @@ import { Repairable } from "./Types";
 import { Repairs } from "./Repairs";
 import { Walls } from "./Walls";
 
-const REPAIRER_TEMPLATE: BodyTemplate =
-{
-    chunks:
-        [
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] }
-        ]
-};
+const REPAIRER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
 const REPAIRER_MOVE_TO_OPTS: MoveToOpts =
 {

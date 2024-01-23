@@ -7,17 +7,7 @@ import { BuilderMemory } from "./Memories";
 import { Site, Sites } from "./Sites";
 import { Utils } from "./Utils";
 
-const BUILDER_TEMPLATE: BodyTemplate =
-{
-    chunks:
-        [
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] }
-        ]
-};
+const BUILDER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
 const BUILDER_MOVE_TO_OPTS: MoveToOpts =
 {

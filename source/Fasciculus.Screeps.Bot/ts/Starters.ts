@@ -11,13 +11,7 @@ import { Stores } from "./Stores";
 import { Spawns } from "./Spawns";
 import { Extensions } from "./Extensions";
 
-const STARTER_TEMPLATE: BodyTemplate =
-{
-    chunks:
-        [
-            { cost: 250, parts: [WORK, CARRY, MOVE, MOVE] },
-        ]
-};
+const STARTER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE]);
 
 const STARTER_MOVE_TO_OPTS: MoveToOpts =
 {

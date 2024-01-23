@@ -14,17 +14,7 @@ import { Stores } from "./Stores";
 const MIN_SUPPLY_ENERGY = 10;
 const SUPPLIER_PERFORMANCE_FACTOR = 1.25;
 
-const SUPPLIER_TEMPLATE: BodyTemplate =
-{
-    chunks:
-        [
-            { cost: 200, parts: [CARRY, MOVE, CARRY, MOVE] },
-            { cost: 200, parts: [CARRY, MOVE, CARRY, MOVE] },
-            { cost: 100, parts: [CARRY, MOVE] },
-            { cost: 100, parts: [CARRY, MOVE] },
-            { cost: 100, parts: [CARRY, MOVE] },
-        ]
-};
+const SUPPLIER_TEMPLATE: BodyTemplate = BodyTemplate.create([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE], 21);
 
 const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 {

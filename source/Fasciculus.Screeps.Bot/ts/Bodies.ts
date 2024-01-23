@@ -18,9 +18,57 @@ export interface BodyChunk
     parts: BodyPartConstant[];
 }
 
-export interface BodyTemplate
+export class BodyTemplate
 {
-    chunks: BodyChunk[];
+    private chunks: BodyChunk[] = [];
+
+    static create(parts: BodyPartConstant[], times: number = 1): BodyTemplate
+    {
+        return new BodyTemplate().add(parts, times);
+    }
+
+    add(parts: BodyPartConstant[], times: number = 1): BodyTemplate
+    {
+        let chunk: BodyChunk = BodyTemplate.createChunk(parts);
+
+        for (let i = 0; i < times; ++i)
+        {
+            this.chunks.push(chunk);
+        }
+
+        return this;
+    }
+
+    get(energy: number): BodyPartConstant[]
+    {
+        var result: BodyPartConstant[] = [];
+
+        for (let chunk of this.chunks)
+        {
+            if (energy < chunk.cost) break;
+
+            result = result.concat(chunk.parts);
+            energy -= chunk.cost;
+        }
+
+        return result;
+    }
+
+    static costOf(parts: BodyPartConstant[]): number
+    {
+        return parts.length == 0 ? 0 : _.sum(parts.map(p => BODYPART_COST[p]));
+    }
+
+    private static createChunk(parts: BodyPartConstant[]): BodyChunk
+    {
+        let result: BodyChunk =
+        {
+            cost: BodyTemplate.costOf(parts),
+            parts: Array.from(parts)
+        };
+
+        return result;
+    }
 }
 
 export interface BodyPartCounts
@@ -43,15 +91,7 @@ export class Bodies
 
         if (!template) return undefined;
 
-        var result: BodyPartConstant[] = [];
-
-        for (let chunk of template.chunks)
-        {
-            if (energy < chunk.cost) break;
-
-            result = result.concat(chunk.parts);
-            energy -= chunk.cost;
-        }
+        var result: BodyPartConstant[] = template.get(energy);
 
         if (result.length == 0) return undefined;
 

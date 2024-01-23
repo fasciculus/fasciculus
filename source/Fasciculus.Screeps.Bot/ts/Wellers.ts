@@ -7,17 +7,8 @@ import { WellerMemory } from "./Memories";
 import { Well, Wells } from "./Wells";
 import { Statistics } from "./Statistics";
 
-const WELLER_TEMPLATE: BodyTemplate =
-{
-    chunks:
-        [
-            { cost: 200, parts: [WORK, CARRY, MOVE] },
-            { cost: 150, parts: [WORK, MOVE] },
-            { cost: 200, parts: [WORK, CARRY, MOVE] },
-            { cost: 150, parts: [WORK, MOVE] },
-            { cost: 150, parts: [WORK, MOVE] },
-        ]
-};
+const WELLER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
+    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 5);
 
 const WELLER_MOVE_TO_OPTS: MoveToOpts =
 {
