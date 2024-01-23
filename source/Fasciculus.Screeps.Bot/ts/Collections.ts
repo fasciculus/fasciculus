@@ -1,11 +1,17 @@
+import * as _ from "lodash";
+
+export interface Dictionary<T>
+{
+    [index: string]: T;
+}
 
 export class Vector<T> implements Iterable<T>
 {
     private array: Array<T>;
 
-    constructor(items?: T[])
+    constructor(values?: T[])
     {
-        this.array = items && items.length > 0 ? Array.from(items) : new Array();
+        this.array = values && values.length > 0 ? Array.from(values) : new Array();
     }
 
     get length(): number { return this.array.length; }
@@ -34,6 +40,11 @@ export class Vector<T> implements Iterable<T>
         this.array.push(value);
 
         return this;
+    }
+
+    clone(): Vector<T>
+    {
+        return new Vector(this.array);
     }
 
     sort(compare: (left: T, right: T) => number): Vector<T>
@@ -73,6 +84,13 @@ export class Vector<T> implements Iterable<T>
         return result;
     }
 
+    forEach(fn: (value: T) => void)
+    {
+        if (this.length == 0) return;
+
+        this.array.forEach(fn);
+    }
+
     map<U>(fn: (value: T) => U): Vector<U>
     {
         let result: Vector<U> = new Vector();
@@ -85,13 +103,6 @@ export class Vector<T> implements Iterable<T>
         return result;
     }
 
-    forEach(fn: (value: T) => void)
-    {
-        if (this.length == 0) return;
-
-        this.array.forEach(fn);
-    }
-
     sum(fn: (value: T) => number): number
     {
         var result: number = 0;
@@ -100,6 +111,15 @@ export class Vector<T> implements Iterable<T>
         {
             result += fn(value);
         }
+
+        return result;
+    }
+
+    indexBy(toIndex: (value: T) => string): Dictionary<T>
+    {
+        let result: Dictionary<T> = {}
+
+        this.forEach(value => result[toIndex(value)] = value);
 
         return result;
     }
@@ -119,6 +139,18 @@ export class Vectors
             {
                 result.append(value);
             }
+        }
+
+        return result;
+    }
+
+    static flatten<T>(arrays: Vector<Vector<T>>): Vector<T>
+    {
+        var result: Vector<T> = new Vector();
+
+        for (let array of arrays)
+        {
+            result = result.concat(array);
         }
 
         return result;

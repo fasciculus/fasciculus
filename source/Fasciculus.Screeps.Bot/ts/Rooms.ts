@@ -2,14 +2,15 @@
 import * as _ from "lodash";
 
 import { GameWrap } from "./GameWrap";
+import { Vector } from "./Collections";
 
 export class Rooms
 {
-    private static _all: Room[] = [];
-    private static _my: Room[] = [];
+    private static _all: Vector<Room> = new Vector();
+    private static _my: Vector<Room> = new Vector();
 
-    static get all(): Room[] { return Rooms._all; }
-    static get my(): Room[] { return Rooms._my; }
+    static get all(): Room[] { return Rooms._all.values; }
+    static get my(): Room[] { return Rooms._my.values; }
 
     static isMyRoom(room: Room): boolean
     {

@@ -5,6 +5,7 @@ import { DIRECTIONS, Point } from "./Geometry";
 import { Creeps } from "./Creeps";
 import { Utils } from "./Utils";
 import { Bodies } from "./Bodies";
+import { Vectors } from "./Collections";
 
 export class Well
 {
@@ -79,9 +80,9 @@ export class Wells
 
     static initialize()
     {
-        let sources = _.flatten(Chambers.all.map(c => c.sources));
+        let sources = Vectors.flatten(Chambers.all.map(c => c.sources));
 
-        Wells._all = sources.map(s => new Well(s));
+        Wells._all = sources.map(s => new Well(s)).values;
         Wells._byId = _.indexBy(Wells._all, w => w.id);
     }
 }
