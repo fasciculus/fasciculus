@@ -221,8 +221,8 @@ export class Starters
 
     private static findCustomers(): Customer[]
     {
-        let spawns: Customer[] = Spawns.my.map(s => s.spawn);
-        let extensions: Customer[] = Extensions.my;
+        let spawns: Customer[] = Spawns.my.map(s => s.spawn).values;
+        let extensions: Customer[] = Extensions.my.values;
         var customers = spawns.concat(extensions);
 
         customers = customers.filter(c => Stores.hasFreeEnergyCapacity(c));

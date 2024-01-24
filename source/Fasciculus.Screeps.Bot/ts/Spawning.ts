@@ -35,11 +35,7 @@ export class Spawning
 
     private static findSpawn(): Spawn | undefined
     {
-        let idle = Spawns.idle;
-
-        if (idle.length == 0) return undefined;
-
-        return idle.sort((a, b) => b.roomEnergyAvailable - a.roomEnergyAvailable)[0];
+        return Spawns.idle.sort((a, b) => b.roomEnergyAvailable - a.roomEnergyAvailable).at(0);
     }
 
     private static spawnCreep(spawn: Spawn, type: CreepType)

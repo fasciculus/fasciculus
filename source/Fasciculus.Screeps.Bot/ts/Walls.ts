@@ -1,5 +1,5 @@
-import * as _ from "lodash";
 import { Rooms } from "./Rooms";
+import { Vector } from "./Collections";
 
 export class Wall
 {
@@ -15,40 +15,33 @@ export class Wall
 
 export class Walls
 {
-    private static _my: Wall[] = [];
-    private static _newest: Wall[] = [];
+    private static _my: Vector<Wall> = new Vector();
+    private static _newest: Vector<Wall> = new Vector();
     private static _weakest?: Wall = undefined;
 
     private static _avg: number = 0;
 
-    static get my(): Wall[] { return Walls._my; }
+    static get my(): Vector<Wall> { return Walls._my.clone(); }
     static get avg(): number { return Walls._avg; }
 
-    static get newest(): Wall[] { return Walls._newest; }
+    static get newest(): Vector<Wall> { return Walls._newest.clone(); }
     static get weakest(): Wall | undefined { return Walls._weakest; }
 
     static initialize()
     {
-        var structures = _.flatten(Rooms.my.map(r => r.find<FIND_STRUCTURES, StructureWall>(FIND_STRUCTURES)));
-        var walls = structures.filter(s => s.structureType == STRUCTURE_WALL);
-
-        Walls._my = walls.map(w => new Wall(w));
+        Walls._my = Rooms.myWalls.map(w => new Wall(w));
         Walls._newest = Walls._my.filter(w => w.hits == 1);
-        Walls._weakest = Walls.findWekest();
-
-        Walls._avg = _.sum(walls.map(w => w.hits)) / Math.max(1, walls.length);
+        Walls._weakest = Walls.findWeakest();
+        Walls._avg = Walls._my.sum(w => w.hits) / Math.max(1, Walls._my.length);
     }
 
-    private static findWekest(): Wall | undefined
+    private static findWeakest(): Wall | undefined
     {
-        let walls = Walls._my;
+        let weakest: Wall | undefined = Walls.my.sort((a, b) => a.hits - b.hits).at(0);
 
-        if (walls.length == 0) return undefined;
+        if (!weakest) return undefined
+        if (weakest.hits == WALL_HITS_MAX) return undefined;
 
-        let wall = walls.sort((a, b) => a.hits - b.hits)[0];
-
-        if (wall.hits == WALL_HITS_MAX) return undefined;
-
-        return wall;
+        return weakest;
     }
 }

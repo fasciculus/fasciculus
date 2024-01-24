@@ -31,10 +31,7 @@ export class Controllers
 
     static initialize()
     {
-        let optControllers: Vector<StructureController | undefined> = Vector.from(Rooms.all.map(r => r.controller));
-        let controllers: Vector<StructureController> = Vectors.defined(optControllers);
-
-        Controllers._all = controllers.map(c => new Controller(c));
+        Controllers._all = Vectors.defined(Rooms.all.map(r => r.controller)).map(c => new Controller(c));
         Controllers._my = Controllers._all.filter(c => c.my);
         Controllers._byId = Controllers._all.indexBy(c => c.id);
     }

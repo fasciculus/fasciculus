@@ -381,8 +381,8 @@ export class Suppliers
 
     private static findCustomers(): _.Dictionary<CustomerInfo>
     {
-        let spawns: Customer[] = Spawns.my.map(s => s.spawn);
-        let extensions: Customer[] = Extensions.my;
+        let spawns: Customer[] = Spawns.my.map(s => s.spawn).values;
+        let extensions: Customer[] = Extensions.my.values;
         let upgraders: Customer[] = Creeps.ofType(CreepType.Upgrader).values;
         let builders: Customer[] = Creeps.ofType(CreepType.Builder).values;
         let repairers: Customer[] = Creeps.ofType(CreepType.Repairer).values;

@@ -1,14 +1,5 @@
-import * as _ from "lodash";
-
 import { Rooms } from "./Rooms";
-import { Sources } from "./Sources";
-import { Creeps } from "./Creeps";
-import { Names } from "./Names";
-import { Bodies } from "./Bodies";
-import { CreepState, CreepType } from "./Enums";
-import { CreepBaseMemory } from "./Memories";
-import { Wells } from "./Wells";
-import { Sites } from "./Sites";
+import { Vector } from "./Collections";
 
 export class Spawn
 {
@@ -30,17 +21,15 @@ export class Spawn
 
 export class Spawns
 {
-    private static _my: Spawn[] = [];
-    private static _idle: Spawn[] = [];
+    private static _my: Vector<Spawn> = new Vector();
+    private static _idle: Vector<Spawn> = new Vector();
 
-    static get my(): Spawn[] { return Spawns._my; }
-    static get idle(): Spawn[] { return Spawns._idle; }
+    static get my(): Vector<Spawn> { return Spawns._my.clone(); }
+    static get idle(): Vector<Spawn> { return Spawns._idle.clone(); }
 
     static initialize()
     {
-        let mySpawns: StructureSpawn[] = _.flatten(Rooms.all.map(r => r.find<FIND_MY_SPAWNS, StructureSpawn>(FIND_MY_SPAWNS)));
-
-        Spawns._my = mySpawns.map(s => new Spawn(s));
+        Spawns._my = Rooms.mySpawns.map(s => new Spawn(s));
         Spawns._idle = Spawns._my.filter(s => s.idle);
     }
 }

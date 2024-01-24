@@ -32,6 +32,6 @@ export class Repairs
             walls = Walls.my;
         }
 
-        return walls.map(w => w.wall);
+        return walls.map(w => w.wall).values;
     }
 }

@@ -1,20 +1,14 @@
-import * as _ from "lodash";
-
 import { Rooms } from "./Rooms";
+import { Vector } from "./Collections";
 
 export class Extensions
 {
-    private static _my: StructureExtension[] = [];
+    private static _my: Vector<StructureExtension> = new Vector();
 
-    static get my(): StructureExtension[] { return Extensions._my; }
+    static get my(): Vector<StructureExtension> { return Extensions._my.clone(); }
 
     static initialize()
     {
-        Extensions._my = _.flatten(Rooms.my.map(Extensions.myOfRoom));
-    }
-
-    static myOfRoom(room: Room): StructureExtension[]
-    {
-        return room.find<FIND_MY_STRUCTURES, StructureExtension>(FIND_MY_STRUCTURES).filter(s => s.structureType == STRUCTURE_EXTENSION);
+        Extensions._my = Rooms.myExtensions;
     }
 }
