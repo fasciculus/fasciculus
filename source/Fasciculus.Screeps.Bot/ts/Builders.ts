@@ -29,7 +29,7 @@ export class Builder extends CreepBase
     {
         super(creep);
 
-        this.maxEnergyPerTick = this.workParts * 5;
+        this.maxEnergyPerTick = this.workParts * BUILD_POWER;
     }
 
     execute()
@@ -160,7 +160,7 @@ export class Builders
     {
         let result: Site | undefined = undefined;
         let assigned: Set<Id<ConstructionSite>> = new Set(Builders.assignedSites.map(s => s.id));
-        let unassigned: Site[] = Sites.all.filter(s => !assigned.has(s.id));
+        let unassigned: Site[] = Sites.all.filter(s => !assigned.has(s.id)).values;
 
         if (unassigned.length == 0) return result;
 

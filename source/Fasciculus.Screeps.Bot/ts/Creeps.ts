@@ -93,7 +93,7 @@ export class Creeps
     private static _my: Vector<Creep> = new Vector();
     private static _ofType: Dictionary<Vector<Creep>> = {};
 
-    static get(name: string): Creep | undefined { return GameWrap.creep(name); }
+    static get(name: string): Creep | undefined { return GameWrap.myCreep(name); }
 
     static get my(): Vector<Creep> { return Creeps._my.clone(); }
 

@@ -1,3 +1,4 @@
+import { Vector } from "./Collections";
 import { MarkerType } from "./Enums";
 import { GameWrap } from "./GameWrap";
 import { Suppliers } from "./Suppliers";
@@ -66,7 +67,7 @@ export class Marker
 
 export class Markers
 {
-    private static _all: Marker[] = [];
+    private static _all: Vector<Marker> = new Vector();
 
     static initialize()
     {

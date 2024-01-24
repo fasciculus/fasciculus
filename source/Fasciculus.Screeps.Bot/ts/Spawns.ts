@@ -1,5 +1,5 @@
-import { Rooms } from "./Rooms";
 import { Vector } from "./Collections";
+import { GameWrap } from "./GameWrap";
 
 export class Spawn
 {
@@ -29,7 +29,7 @@ export class Spawns
 
     static initialize()
     {
-        Spawns._my = Rooms.mySpawns.map(s => new Spawn(s));
+        Spawns._my = GameWrap.mySpawns.map(s => new Spawn(s));
         Spawns._idle = Spawns._my.filter(s => s.idle);
     }
 }
