@@ -2,7 +2,6 @@ import * as _ from "lodash";
 
 import { Controllers } from "./Controllers";
 import { CreepState, CreepType } from "./Enums";
-import { Sources } from "./Sources";
 import { Spawn, Spawns } from "./Spawns";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
@@ -22,47 +21,38 @@ export class Spawning
 {
     static run()
     {
-        let spawn = Spawning.findSpawn();
+        let spawn: Spawn | undefined = Spawns.best;
 
         if (!spawn) return;
 
-        let type = Spawning.nextType();
+        let type: CreepType | undefined = Spawning.nextType();
 
         if (!type) return;
 
         Spawning.spawnCreep(spawn, type);
     }
 
-    private static findSpawn(): Spawn | undefined
-    {
-        return Spawns.idle.sort((a, b) => b.roomEnergyAvailable - a.roomEnergyAvailable).at(0);
-    }
-
     private static spawnCreep(spawn: Spawn, type: CreepType)
     {
-        let body = Spawning.createBody(spawn, type);
+        let body: Vector<BodyPartConstant> | undefined = Spawning.createBody(spawn, type);
 
         if (!body) return;
 
-        let name = Names.next(type);
-        let memory: CreepBaseMemory = { type, state: CreepState.Idle };
-        let opts: SpawnOptions = { memory };
-
-        spawn.spawn.spawnCreep(body, name, opts);
+        spawn.spawnCreep(type, body);
     }
 
-    private static createBody(spawn: Spawn, type: CreepType): BodyPartConstant[] | undefined
+    private static createBody(spawn: Spawn, type: CreepType): Vector<BodyPartConstant> | undefined
     {
-        let body1: Vector<BodyPartConstant> = Bodies.create(type, spawn.roomEnergyAvailable);
+        let body1: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyAvailable);
 
-        if (body1.length == 0) return undefined;
+        if (!body1) return undefined;
 
-        let body2: Vector<BodyPartConstant> = Bodies.create(type, spawn.roomEnergyCapacity);
+        let body2: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyCapacity);
 
-        if (body2.length == 0) return undefined;
+        if (!body2) return undefined;
         if (body2.length > body1.length) return undefined;
 
-        return body1.values;
+        return body1;
     }
 
     private static nextType(): CreepType | undefined

@@ -19,6 +19,8 @@ export class Vector<T> implements Iterable<T>
 
     private get valuesCopy(): Array<T> { return Array.from(this.values); }
 
+    toSet(): Set<T> { return new Set(this.array); }
+
     at(index: number): T | undefined
     {
         index = Math.round(index);
@@ -26,6 +28,15 @@ export class Vector<T> implements Iterable<T>
         if (index < 0 || index >= this.length) return undefined;
 
         return this.array[index];
+    }
+
+    take(count: number): Vector<T>
+    {
+        count = Math.max(0, Math.min(this.array.length, Math.round(count)));
+
+        if (count == 0) return new Vector();
+
+        return Vector.from(this.array.slice(0, count));
     }
 
     *[Symbol.iterator](): IterableIterator<T>
@@ -43,16 +54,27 @@ export class Vector<T> implements Iterable<T>
         return this;
     }
 
+    concat(vector: Vector<T>): Vector<T>
+    {
+        let a: Array<T> = this.array;
+        let b: Array<T> = vector.array;
+
+        if (a.length == 0) return new Vector(b);
+        if (b.length == 0) return new Vector(a);
+
+        return new Vector(a.concat(b));
+    }
+
     clone(): Vector<T>
     {
         return new Vector(this.array);
     }
 
-    call<R>(fn: (vakues: Array<T>) => R, defaultResult: R): R
+    call(fn: (vakues: Array<T>) => void)
     {
-        if (this.length == 0) return defaultResult;
+        if (this.length == 0) return;
 
-        return fn(this.valuesCopy);
+        fn(this.valuesCopy);
     }
 
     find(fn: (vakues: Array<T>) => T | undefined): T | undefined
@@ -70,17 +92,6 @@ export class Vector<T> implements Iterable<T>
         }
 
         return this;
-    }
-
-    concat(vector: Vector<T>): Vector<T>
-    {
-        let a: Array<T> = this.array;
-        let b: Array<T> = vector.array;
-
-        if (a.length == 0) return new Vector(b);
-        if (b.length == 0) return new Vector(a);
-
-        return new Vector(a.concat(b));
     }
 
     filter(predicate: (value: T) => boolean): Vector<T>
@@ -154,7 +165,30 @@ export class Vector<T> implements Iterable<T>
         return result
     }
 
-    toSet(): Set<T> { return new Set(this.array); }
+    max(fn: (value: T) => number): T | undefined
+    {
+        let array: Array<T> = this.array;
+        let length: number = array.length;
+
+        if (length == 0) return undefined;
+
+        let result: T = array[0];
+        let resultValue: number = fn(result);
+
+        for (let i = 1; i < length; ++i)
+        {
+            let candidate: T = array[i];
+            let candidateValue: number = fn(candidate);
+
+            if (candidateValue > resultValue)
+            {
+                result = candidate;
+                resultValue = candidateValue;
+            }
+        }
+
+        return result;
+    }
 }
 
 export class Vectors

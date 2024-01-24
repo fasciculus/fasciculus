@@ -1,4 +1,5 @@
-import { Vector } from "./Collections";
+import { Vector, Vectors } from "./Collections";
+import { CreepType } from "./Enums";
 
 const PartPriorities =
 {
@@ -10,6 +11,47 @@ const PartPriorities =
     "move": 6,
     "heal": 7,
     "claim": 8
+}
+
+export interface BodyPartCounts
+{
+    work: number;
+}
+
+export class BodyParts
+{
+    static comparePriority(a: BodyPartConstant, b: BodyPartConstant)
+    {
+        let pa: number = PartPriorities[a] || 99;
+        let pb: number = PartPriorities[b] || 99;
+
+        return pa - pb;
+    }
+
+    static costOf(parts: Vector<BodyPartConstant>): number
+    {
+        return parts.sum(p => BODYPART_COST[p]);
+    }
+
+    static countsOf(creep: Creep): BodyPartCounts
+    {
+        let result: BodyPartCounts = { work: 0 };
+
+        for (let part of creep.body)
+        {
+            switch (part.type)
+            {
+                case WORK: ++result.work; break;
+            }
+        }
+
+        return result;
+    }
+
+    static workOf(creep: Creep): number
+    {
+        return BodyParts.countsOf(creep).work;
+    }
 }
 
 export interface BodyChunk
@@ -41,24 +83,27 @@ export class BodyTemplate
         return this;
     }
 
-    get(energy: number): Vector<BodyPartConstant>
+    createBody(energy: number): Vector<BodyPartConstant> | undefined
     {
-        var result: Vector<BodyPartConstant> = new Vector();
+        let chunkCount = this.chunkCount(energy);
+
+        if (chunkCount == 0) return undefined;
+
+        return Vectors.flatten(this.chunks.take(chunkCount).map(c => c.parts)).sort(BodyParts.comparePriority);
+    }
+
+    private chunkCount(energy: number): number
+    {
+        var result: number = 0;
 
         for (let chunk of this.chunks)
         {
             if (energy < chunk.cost) break;
 
-            result = result.concat(chunk.parts);
-            energy -= chunk.cost;
+            ++result;
         }
 
         return result;
-    }
-
-    static costOf(parts: Vector<BodyPartConstant>): number
-    {
-        return parts.sum(p => BODYPART_COST[p]);
     }
 
     private static createChunk(parts: Vector<BodyPartConstant>): BodyChunk | undefined
@@ -67,7 +112,7 @@ export class BodyTemplate
 
         let result: BodyChunk =
         {
-            cost: BodyTemplate.costOf(parts),
+            cost: BodyParts.costOf(parts),
             parts: parts
         };
 
@@ -75,51 +120,19 @@ export class BodyTemplate
     }
 }
 
-export interface BodyPartCounts
-{
-    work: number;
-}
-
 export class Bodies
 {
     private static _registry: { [type: string]: BodyTemplate } = {}
 
-    static register(type: string, template: BodyTemplate)
+    static template(type: CreepType): BodyTemplate | undefined { return Bodies._registry[type]; }
+
+    static register(type: CreepType, template: BodyTemplate)
     {
         Bodies._registry[type] = template;
     }
 
-    static create(type: string, energy: number): Vector<BodyPartConstant>
+    static createBody(type: CreepType, energy: number): Vector<BodyPartConstant> | undefined
     {
-        var template = Bodies._registry[type];
-
-        if (!template) return new Vector();
-
-        return template.get(energy).sort(Bodies.compareParts);
-    }
-
-    private static compareParts(a: BodyPartConstant, b: BodyPartConstant): number
-    {
-        return PartPriorities[a] - PartPriorities[b];
-    }
-
-    static countsOf(creep: Creep): BodyPartCounts
-    {
-        let result: BodyPartCounts = { work: 0 };
-
-        for (let part of creep.body)
-        {
-            switch (part.type)
-            {
-                case WORK: ++result.work; break;
-            }
-        }
-
-        return result;
-    }
-
-    static workOf(creep: Creep): number
-    {
-        return Bodies.countsOf(creep).work;
+        return Bodies.template(type)?.createBody(energy);
     }
 }

@@ -3,7 +3,7 @@ import { CreepState, CreepType } from "./Enums";
 import { CreepBaseMemory } from "./Memories";
 import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
-import { Bodies } from "./Bodies";
+import { BodyParts } from "./Bodies";
 import { Dictionary, Vector } from "./Collections";
 
 export class CreepBase
@@ -15,7 +15,7 @@ export class CreepBase
     constructor(creep: Creep)
     {
         this.creep = creep;
-        this.workParts = Bodies.workOf(creep);
+        this.workParts = BodyParts.workOf(creep);
     }
 
     get memory(): CreepBaseMemory { return this.creep.memory as CreepBaseMemory; }

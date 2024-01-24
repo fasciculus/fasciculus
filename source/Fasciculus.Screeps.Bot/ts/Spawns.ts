@@ -1,5 +1,8 @@
 import { Vector } from "./Collections";
+import { CreepState, CreepType } from "./Enums";
 import { GameWrap } from "./GameWrap";
+import { CreepBaseMemory } from "./Memories";
+import { Names } from "./Names";
 
 export class Spawn
 {
@@ -17,6 +20,14 @@ export class Spawn
         this.spawn = spawn;
     }
 
+    spawnCreep(type: CreepType, body: Vector<BodyPartConstant>)
+    {
+        let name = Names.next(type);
+        let memory: CreepBaseMemory = { type, state: CreepState.Idle };
+        let opts: SpawnOptions = { memory };
+
+        body.call(parts => this.spawn.spawnCreep(parts, name, opts));
+    }
 }
 
 export class Spawns
@@ -26,6 +37,7 @@ export class Spawns
 
     static get my(): Vector<Spawn> { return Spawns._my.clone(); }
     static get idle(): Vector<Spawn> { return Spawns._idle.clone(); }
+    static get best(): Spawn | undefined { return Spawns._idle.max(s => s.roomEnergyAvailable); }
 
     static initialize()
     {
