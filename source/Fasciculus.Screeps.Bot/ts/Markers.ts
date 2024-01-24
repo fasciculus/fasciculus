@@ -55,8 +55,8 @@ export class Marker
 
         let energyAvailable = room.energyAvailable;
         let energyCapacity = room.energyCapacityAvailable;
-        let wellable = Utils.round(Wellers.maxEnergyPerTick, 1);
-        let performance = Utils.round(Suppliers.performance, 1);
+        let wellable = Wellers.maxEnergyPerTick.toFixed(1);
+        let performance = Suppliers.performance.toFixed(1);
         let supplierCount = Suppliers.count;
 
         visual.text(`E: ${energyAvailable} / ${energyCapacity}`, x, y, INFO_MARKER_TEXT_STYLE);
