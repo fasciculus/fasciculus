@@ -10,6 +10,8 @@ import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
 import { Spawns } from "./Spawns";
 import { Extensions } from "./Extensions";
+import { Vector } from "./Collections";
+import { Positions } from "./Positions";
 
 const STARTER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE]);
 
@@ -137,14 +139,13 @@ export class Starter extends CreepBase
 
 export class Starters
 {
-    private static _all: Starter[] = [];
+    private static _all: Vector<Starter> = new Vector();
 
     static get count(): number { return Starters._all.length; }
-    // static get all(): Starter[] { return Starters._all; }
 
     static initialize()
     {
-        Starters._all = Creeps.ofType(CreepType.Starter).map(c => new Starter(c)).values;
+        Starters._all = Creeps.ofType(CreepType.Starter).map(c => new Starter(c));
 
         Bodies.register(CreepType.Starter, STARTER_TEMPLATE);
     }
@@ -152,14 +153,11 @@ export class Starters
     static run()
     {
         Starters._all.forEach(s => s.prepare());
-
-        let assigned = Starters.assign();
-
-        assigned.forEach(s => s.prepare());
+        Starters.assign().forEach(s => s.prepare());
         Starters._all.forEach(s => s.execute());
     }
 
-    private static assign(): Starter[]
+    private static assign(): Vector<Starter>
     {
         let unassigned = Starters._all.filter(s => !s.well && !s.customer);
         let harvesters = Starters.assignWells(unassigned);
@@ -168,9 +166,9 @@ export class Starters
         return harvesters.concat(suppliers);
     }
 
-    private static assignWells(unassigned: Starter[]): Starter[]
+    private static assignWells(unassigned: Vector<Starter>): Vector<Starter>
     {
-        var result: Starter[] = [];
+        let result: Vector<Starter> = new Vector();
 
         unassigned = unassigned.filter(s => s.energy == 0);
 
@@ -186,43 +184,42 @@ export class Starters
             else
             {
                 starter.well = well;
-                result.push(starter);
+                result.append(starter);
             }
         }
 
         return result;
     }
 
-    private static assignCustomers(unassigned: Starter[]): Starter[]
+    private static assignCustomers(unassigned: Vector<Starter>): Vector<Starter>
     {
+        let result: Vector<Starter> = new Vector();
+
         unassigned = unassigned.filter(s => s.energy > 0);
 
-        if (unassigned.length == 0) return [];
+        if (unassigned.length == 0) return result;
 
         let customers = Starters.findCustomers();
 
-        if (customers.length == 0) return [];
+        if (customers.length == 0) return result;
 
-        var result: Starter[] = [];
-
-        for (let i = 0, n = unassigned.length; i < n; ++i)
+        for (let starter of unassigned)
         {
-            let starter = unassigned[i];
-            let customer = starter.pos.findClosestByPath(customers) || undefined;
+            let customer = Positions.closestByPath(starter, customers);
 
             if (!customer) continue;
 
             starter.customer = customer;
-            result.push(starter);
+            result.append(starter);
         }
 
         return result;
     }
 
-    private static findCustomers(): Customer[]
+    private static findCustomers(): Vector<Customer>
     {
-        let spawns: Customer[] = Spawns.my.map(s => s.spawn).values;
-        let extensions: Customer[] = Extensions.my.values;
+        let spawns: Vector<Customer> = Spawns.my.map(s => s.spawn);
+        let extensions: Vector<Customer> = Extensions.my;
         var customers = spawns.concat(extensions);
 
         customers = customers.filter(c => Stores.hasFreeEnergyCapacity(c));
