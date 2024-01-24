@@ -129,7 +129,7 @@ export class Wellers
 
     static initialize()
     {
-        Wellers._all = Creeps.ofType(CreepType.Weller).map(c => new Weller(c));
+        Wellers._all = Creeps.ofType(CreepType.Weller).map(c => new Weller(c)).values;
 
         Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
     }

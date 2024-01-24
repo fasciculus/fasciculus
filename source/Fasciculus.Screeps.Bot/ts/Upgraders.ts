@@ -114,7 +114,7 @@ export class Upgraders
 
     static initialize()
     {
-        Upgraders._all = Creeps.ofType(CreepType.Upgrader).map(c => new Upgrader(c));
+        Upgraders._all = Creeps.ofType(CreepType.Upgrader).map(c => new Upgrader(c)).values;
 
         Bodies.register(CreepType.Upgrader, UPGRADER_TEMPLATE);
     }

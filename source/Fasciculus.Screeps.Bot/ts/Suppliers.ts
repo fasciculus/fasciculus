@@ -273,7 +273,7 @@ export class Suppliers
 
     static initialize()
     {
-        Suppliers._all = Creeps.ofType(CreepType.Supplier).map(c => new Supplier(c));
+        Suppliers._all = Creeps.ofType(CreepType.Supplier).map(c => new Supplier(c)).values;
 
         Bodies.register(CreepType.Supplier, SUPPLIER_TEMPLATE);
     }
@@ -383,9 +383,9 @@ export class Suppliers
     {
         let spawns: Customer[] = Spawns.my.map(s => s.spawn);
         let extensions: Customer[] = Extensions.my;
-        let upgraders: Customer[] = Creeps.ofType(CreepType.Upgrader);
-        let builders: Customer[] = Creeps.ofType(CreepType.Builder);
-        let repairers: Customer[] = Creeps.ofType(CreepType.Repairer);
+        let upgraders: Customer[] = Creeps.ofType(CreepType.Upgrader).values;
+        let builders: Customer[] = Creeps.ofType(CreepType.Builder).values;
+        let repairers: Customer[] = Creeps.ofType(CreepType.Repairer).values;
         var customers: Customer[] = spawns.concat(extensions).concat(upgraders).concat(builders).concat(repairers);
 
         customers = customers.filter(c => Supplier.hasCapacity(c));
@@ -401,7 +401,7 @@ export class Suppliers
 
     private static findSupplies(): _.Dictionary<SupplyInfo>
     {
-        let wellers: Supply[] = Creeps.ofType(CreepType.Weller);
+        let wellers: Supply[] = Creeps.ofType(CreepType.Weller).values;
         let supplies: Supply[] = wellers;
 
         supplies = supplies.filter(s => Supplier.hasEnergy(s));

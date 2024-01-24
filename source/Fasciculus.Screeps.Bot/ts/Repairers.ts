@@ -135,7 +135,7 @@ export class Repairers
 
     static initialize()
     {
-        Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c));
+        Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c)).values;
 
         Bodies.register(CreepType.Repairer, REPAIRER_TEMPLATE);
     }

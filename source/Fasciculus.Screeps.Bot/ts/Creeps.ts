@@ -1,10 +1,10 @@
 
-import * as _ from "lodash";
 import { CreepState, CreepType } from "./Enums";
 import { CreepBaseMemory } from "./Memories";
 import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
 import { Bodies } from "./Bodies";
+import { Dictionary, Vector } from "./Collections";
 
 export class CreepBase
 {
@@ -21,16 +21,7 @@ export class CreepBase
     get memory(): CreepBaseMemory { return this.creep.memory as CreepBaseMemory; }
 
     get state(): CreepState { return this.memory.state; }
-
-    set state(value: CreepState)
-    {
-        var oldValue = this.memory.state;
-
-        if (value != oldValue)
-        {
-            this.memory.state = value;
-        }
-    }
+    set state(value: CreepState) { this.memory.state = value; }
 
     get id(): Id<Creep> { return this.creep.id; }
     get name(): string { return this.creep.name; }
@@ -99,14 +90,14 @@ export class CreepBase
 
 export class Creeps
 {
-    private static _my: Creep[] = [];
-    private static _ofType: _.Dictionary<Creep[]> = {};
+    private static _my: Vector<Creep> = new Vector();
+    private static _ofType: Dictionary<Vector<Creep>> = {};
 
     static get(name: string): Creep | undefined { return GameWrap.creep(name); }
 
-    static get my(): Creep[] { return Creeps._my; }
+    static get my(): Vector<Creep> { return Creeps._my.clone(); }
 
-    static ofType(type: CreepType): Creep[] { return Creeps._ofType[type] || []; }
+    static ofType(type: CreepType): Vector<Creep> { return Creeps._ofType[type] || new Vector(); }
     static countOf(type: CreepType): number { return Creeps.ofType(type).length; }
 
     static typeOf(creep: Creep): CreepType
@@ -119,7 +110,7 @@ export class Creeps
     static initialize()
     {
         Creeps._my = GameWrap.myCreeps;
-        Creeps._ofType = _.groupBy(Creeps._my, Creeps.typeOf);
+        Creeps._ofType = Creeps._my.groupBy(Creeps.typeOf);
     }
 
     static resetStates()

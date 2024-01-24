@@ -110,7 +110,7 @@ export class Builders
 
     static initialize()
     {
-        Builders._all = Vector.from(Creeps.ofType(CreepType.Builder)).map(c => new Builder(c));
+        Builders._all = Creeps.ofType(CreepType.Builder).map(c => new Builder(c));
 
         Bodies.register(CreepType.Builder, BUILDER_TEMPLATE);
     }

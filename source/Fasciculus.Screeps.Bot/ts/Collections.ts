@@ -116,11 +116,27 @@ export class Vector<T> implements Iterable<T>
 
     indexBy(toIndex: (value: T) => string): Dictionary<T>
     {
-        let result: Dictionary<T> = {}
+        let result: Dictionary<T> = {};
 
         this.forEach(value => result[toIndex(value)] = value);
 
         return result;
+    }
+
+    groupBy(toKey: (value: T) => string): Dictionary<Vector<T>>
+    {
+        let result: Dictionary<Vector<T>> = {};
+
+        for (let value of this.array)
+        {
+            let key: string = toKey(value);
+            let entry: Vector<T> = result[key] || new Vector();
+
+            entry.append(value);
+            result[key] = entry;
+        }
+
+        return result
     }
 }
 
@@ -148,6 +164,18 @@ export class Vectors
         for (let array of arrays)
         {
             result = result.concat(array);
+        }
+
+        return result;
+    }
+
+    static values<T>(dictionary: Dictionary<T>): Vector<T>
+    {
+        let result: Vector<T> = new Vector();
+
+        for (let key in dictionary)
+        {
+            result.append(dictionary[key]);
         }
 
         return result;

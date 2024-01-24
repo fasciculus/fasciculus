@@ -144,7 +144,7 @@ export class Starters
 
     static initialize()
     {
-        Starters._all = Creeps.ofType(CreepType.Starter).map(c => new Starter(c));
+        Starters._all = Creeps.ofType(CreepType.Starter).map(c => new Starter(c)).values;
 
         Bodies.register(CreepType.Starter, STARTER_TEMPLATE);
     }
