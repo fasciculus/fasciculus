@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { Bodies, BodyTemplate } from "./Bodies";
@@ -6,6 +5,7 @@ import { RepairerMemory } from "./Memories";
 import { Repairable } from "./Types";
 import { Repairs } from "./Repairs";
 import { Walls } from "./Walls";
+import { Dictionaries, Dictionary, Vector } from "./Collections";
 
 const REPAIRER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
@@ -127,15 +127,15 @@ interface DamageInfo
 
 export class Repairers
 {
-    private static _all: Repairer[] = [];
+    private static _all: Vector<Repairer> = new Vector();
 
-    static get all(): Repairer[] { return Repairers._all; }
+    static get all(): Vector<Repairer> { return Repairers._all.clone(); }
 
-    static get maxEnergyPerTick(): number { return _.sum(Repairers._all.map(r => r.maxEnergyPerTick)); }
+    static get maxEnergyPerTick(): number { return Repairers._all.sum(r => r.maxEnergyPerTick); }
 
     static initialize()
     {
-        Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c)).values;
+        Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c));
 
         Bodies.register(CreepType.Repairer, REPAIRER_TEMPLATE);
     }
@@ -143,50 +143,42 @@ export class Repairers
     static run()
     {
         Repairers._all.forEach(r => r.prepare());
-
-        let assigned = Repairers.assign();
-
-        assigned.forEach(r => r.prepare());
+        Repairers.assign().forEach(r => r.prepare());
         Repairers._all.forEach(r => r.execute());
     }
 
-    private static assign(): Repairer[]
+    private static assign(): Vector<Repairer>
     {
-        var result: Repairer[] = [];
-        var unassigned: _.Dictionary<Repairer> = Repairers.unassignedRepairers;
+        var result: Vector<Repairer> = new Vector();
+        var unassigned: Dictionary<Repairer> = Repairers.unassignedRepairers;
 
-        if (_.size(unassigned) == 0) return result;
+        if (Dictionaries.isEmpty(unassigned)) return result;
 
-        let repairables = Repairers.repairabes.sort(Repairers.compareDamage);
-
-        for (let i = 0, n = repairables.length; i < n; ++i)
+        for (let repairable of Repairers.repairables)
         {
-            let repairable = repairables[i].repairable;
-            let assignables: Repairer[] = _.values(unassigned);
-            let repairer = repairable.pos.findClosestByPath(assignables) || undefined;
+            let assignables: Vector<Repairer> = Dictionaries.values(unassigned);
+            let repairer = repairable.pos.findClosestByPath(assignables.values) || undefined;
 
             if (!repairer) continue;
 
             repairer.repairable = repairable;
-            result.push(repairer);
+            result.append(repairer);
             delete unassigned[repairer.name];
 
-            if (_.size(unassigned) == 0) break;
+            if (Dictionaries.isEmpty(unassigned)) break;
         }
 
         return result;
     }
 
-    private static get unassignedRepairers(): _.Dictionary<Repairer>
+    private static get unassignedRepairers(): Dictionary<Repairer>
     {
-        let unassigned = Repairers.all.filter(r => !r.repairable);
-
-        return _.indexBy(unassigned, r => r.name);
+        return Repairers._all.filter(r => !r.repairable).indexBy(r => r.name);
     }
 
-    private static get repairabes(): DamageInfo[]
+    private static get repairables(): Vector<Repairable>
     {
-        return Repairs.all.map(Repairers.toDamageInfo);
+        return Repairs.all.map(Repairers.toDamageInfo).sort(Repairers.compareDamage).map(d => d.repairable);
     }
 
     private static toDamageInfo(repairable: Repairable): DamageInfo

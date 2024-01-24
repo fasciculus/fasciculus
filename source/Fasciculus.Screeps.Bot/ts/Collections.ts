@@ -172,6 +172,16 @@ export class Vectors
 
 export class Dictionaries
 {
+    static isEmpty<T>(dictionary: Dictionary<T>): boolean
+    {
+        for (let key in dictionary)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     static keys<T>(dictionary: Dictionary<T>): Set<string>
     {
         let keys: Array<string> = new Array();

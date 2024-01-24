@@ -1,37 +1,36 @@
-import * as _ from "lodash";
-
 import { RepairableId, Repairable } from "./Types";
-import { Walls } from "./Walls";
+import { Wall, Walls } from "./Walls";
+import { Dictionary, Vector } from "./Collections";
 
 export class Repairs
 {
-    private static _all: Repairable[] = [];
-    private static _byId: _.Dictionary<Repairable> = {};
+    private static _all: Vector<Repairable> = new Vector();
+    private static _byId: Dictionary<Repairable> = {};
 
     static get(id: RepairableId | undefined): Repairable | undefined
     {
         return id ? Repairs._byId[id] : undefined;
     }
 
-    static get all(): Repairable[] { return Repairs._all; }
+    static get all(): Vector<Repairable> { return Repairs._all.clone(); }
 
     static initialize()
     {
-        let repairables: Repairable[] = Repairs.findWalls();
+        let repairables: Vector<Repairable> = Repairs.findWalls();
 
         Repairs._all = repairables;
-        Repairs._byId = _.indexBy(Repairs._all, r => r.id);
+        Repairs._byId = Repairs._all.indexBy(r => r.id);
     }
 
-    private static findWalls(): StructureWall[]
+    private static findWalls(): Vector<Repairable>
     {
-        let walls = Walls.newest;
+        let walls: Vector<Wall> = Walls.newest;
 
         if (walls.length == 0)
         {
             walls = Walls.my;
         }
 
-        return walls.map(w => w.wall).values;
+        return walls.map(w => w.wall);
     }
 }
