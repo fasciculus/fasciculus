@@ -1,3 +1,4 @@
+import { Vector } from "./Collections";
 
 export const DIRECTIONS: DirectionConstant[] = [TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT];
 
@@ -12,12 +13,12 @@ export class Point
         this.y = y;
     }
 
-    static from(pos: RoomPosition)
+    static from(pos: RoomPosition): Point
     {
         return new Point(pos.x, pos.y);
     }
 
-    around(): Point[]
+    around(): Vector<Point>
     {
         let x = this.x;
         let y = this.y;
@@ -31,6 +32,6 @@ export class Point
         let left = new Point(x - 1, y);
         let topLeft = new Point(x - 1, y - 1);
 
-        return [this, top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft];
+        return Vector.from([this, top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft]);
     }
 }

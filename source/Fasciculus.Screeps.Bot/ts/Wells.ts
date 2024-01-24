@@ -63,7 +63,7 @@ export class Well
 
         let types = territory.around(Point.from(this.pos));
 
-        return DIRECTIONS.filter(d => types[d] == 0).length;
+        return DIRECTIONS.filter(d => types.at(d) == 0).length;
     }
 }
 

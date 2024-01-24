@@ -1,3 +1,4 @@
+import { Dictionary, Vector } from "./Collections";
 import { Point } from "./Geometry";
 
 export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;
@@ -12,12 +13,12 @@ export class Territory
     }
 
     at(p: Point): FieldType { return this.terrain.get(p.x, p.y); }
-    around(p: Point): FieldType[] { return p.around().map(q => this.at(q)); }
+    around(p: Point): Vector<FieldType> { return p.around().map(q => this.at(q)); }
 }
 
 export class Territories
 {
-    private static _cache: { [name: string]: Territory } = {};
+    private static _cache: Dictionary<Territory> = {};
 
     static get(room: Room): Territory
     {
