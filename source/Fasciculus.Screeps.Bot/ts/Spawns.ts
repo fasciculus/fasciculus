@@ -36,7 +36,6 @@ export class Spawns
     private static _idle: Vector<Spawn> = new Vector();
 
     static get my(): Vector<Spawn> { return Spawns._my.clone(); }
-    static get idle(): Vector<Spawn> { return Spawns._idle.clone(); }
     static get best(): Spawn | undefined { return Spawns._idle.max(s => s.roomEnergyAvailable); }
 
     static initialize()
