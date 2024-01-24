@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 
 import { Controllers } from "./Controllers";
-import { CreepState, CreepType } from "./Enums";
+import { CreepType } from "./Enums";
 import { Spawn, Spawns } from "./Spawns";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
@@ -9,9 +9,7 @@ import { Wellers } from "./Wellers";
 import { Wells } from "./Wells";
 import { Sites } from "./Sites";
 import { Builders } from "./Builders";
-import { CreepBaseMemory } from "./Memories";
 import { Bodies } from "./Bodies";
-import { Names } from "./Names";
 import { Repairs } from "./Repairs";
 import { Repairers } from "./Repairers";
 import { Starters } from "./Starters";
@@ -84,7 +82,7 @@ export class Spawning
     {
         if (Wellers.count > 0 && Suppliers.count > 0) return false;
 
-        return Starters.count < Math.max(2, Wells.assignable.length);
+        return Starters.count < Math.max(2, Wells.assignableCount);
     }
 
     private static get moreSuppliers(): boolean
@@ -96,17 +94,13 @@ export class Spawning
 
     private static get moreWellers(): boolean
     {
-        return Wells.assignable.length > 0;
+        return Wells.assignableCount > 0;
     }
 
     private static get moreUpgraders(): boolean
     {
         if (Suppliers.count == 0) return false;
-
-        let controllerCount = Controllers.my.length;
-        let upgraderCount = Upgraders.all.length;
-
-        if (upgraderCount < controllerCount) return true;
+        if (Upgraders.count < Controllers.myCount) return true;
 
         return Upgraders.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Upgrader);
     }
@@ -114,10 +108,7 @@ export class Spawning
     private static get moreBuilders(): boolean
     {
         if (Suppliers.count == 0) return false;
-
-        let siteCount = Sites.all.length;
-
-        if (siteCount == 0) return false;
+        if (Sites.count == 0) return false;
 
         return Builders.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Builder);
     }
@@ -125,10 +116,7 @@ export class Spawning
     private static get moreRepairers(): boolean
     {
         if (Suppliers.count == 0) return false;
-
-        let repairCount = Repairs.all.length;
-
-        if (repairCount == 0) return false;
+        if (Repairs.count == 0) return false;
 
         return Repairers.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Repairer);
     }

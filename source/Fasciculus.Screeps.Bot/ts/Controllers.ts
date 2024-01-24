@@ -26,8 +26,8 @@ export class Controllers
         return id ? Controllers._byId[id] : undefined;
     }
 
-    static get all(): Vector<Controller> { return Controllers._all.clone(); }
     static get my(): Vector<Controller> { return Controllers._my.clone(); }
+    static get myCount(): number { return Controllers._my.length; }
 
     static initialize()
     {

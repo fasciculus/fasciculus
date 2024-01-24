@@ -108,7 +108,7 @@ export class Upgraders
 {
     private static _all: Upgrader[] = [];
 
-    static get all(): Upgrader[] { return Upgraders._all; }
+    static get count(): number { return Upgraders._all.length; }
 
     static get maxEnergyPerTick(): number { return _.sum(Upgraders._all.map(u => u.maxEnergyPerTick)); }
 

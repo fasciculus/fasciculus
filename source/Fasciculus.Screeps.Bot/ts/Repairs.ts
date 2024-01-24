@@ -13,6 +13,7 @@ export class Repairs
     }
 
     static get all(): Vector<Repairable> { return Repairs._all.clone(); }
+    static get count(): number { return Repairs._all.length; }
 
     static initialize()
     {

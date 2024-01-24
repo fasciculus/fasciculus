@@ -33,6 +33,8 @@ export class Sites
     static get all(): Vector<Site> { return Sites._all.clone(); }
     static get notWalls(): Vector<Site> { return Sites._notWalls.clone(); }
 
+    static get count(): number { return Sites._all.length; }
+
     static initialize()
     {
         Sites._all = GameWrap.myConstructionSites.map(s => new Site(s));

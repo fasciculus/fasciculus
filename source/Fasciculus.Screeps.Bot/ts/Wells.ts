@@ -44,6 +44,7 @@ export class Well
     constructor(source: Source)
     {
         this.source = source;
+        this.assignees = this.assignees;
     }
 
     assign(creep: Creep)
@@ -75,6 +76,7 @@ export class Wells
     static get(id: Id<Source> | undefined): Well | undefined { return id ? Wells._byId[id] : undefined; }
 
     static get assignable(): Well[] { return Wells._all.filter(w => w.assignable); }
+    static get assignableCount(): number { return Wells.assignable.length; }
 
     static get maxEnergyPerTick(): number { return _.sum(Wells._all.map(w => w.energyCapacity)) / 300; }
 
