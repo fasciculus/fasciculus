@@ -101,6 +101,7 @@ export class BodyTemplate
             if (energy < chunk.cost) break;
 
             ++result;
+            energy -= chunk.cost;
         }
 
         return result;
