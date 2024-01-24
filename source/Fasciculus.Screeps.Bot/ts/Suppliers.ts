@@ -1,5 +1,3 @@
-import * as _ from "lodash";
-
 import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
@@ -8,8 +6,9 @@ import { GameWrap } from "./GameWrap";
 import { SupplierMemory } from "./Memories";
 import { Spawns } from "./Spawns";
 import { Customer, CustomerId, SupplyId, Supply } from "./Types";
-import { Utils } from "./Utils";
 import { Stores } from "./Stores";
+import { Dictionaries, Dictionary, Vector } from "./Collections";
+import { Positions } from "./Positions";
 
 const MIN_SUPPLY_ENERGY = 10;
 const SUPPLIER_PERFORMANCE_FACTOR = 1.25;
@@ -264,16 +263,16 @@ interface CustomerInfo
 
 export class Suppliers
 {
-    private static _all: Supplier[] = [];
+    private static _all: Vector<Supplier> = new Vector();
 
     static get count(): number { return Suppliers._all.length; }
     static get idleCount(): number { return Suppliers._all.filter(s => s.state == CreepState.Idle).length; }
 
-    static get performance(): number { return _.sum(Suppliers._all.map(s => s.performance)); }
+    static get performance(): number { return Suppliers._all.sum(s => s.performance); }
 
     static initialize()
     {
-        Suppliers._all = Creeps.ofType(CreepType.Supplier).map(c => new Supplier(c)).values;
+        Suppliers._all = Creeps.ofType(CreepType.Supplier).map(c => new Supplier(c));
 
         Bodies.register(CreepType.Supplier, SUPPLIER_TEMPLATE);
     }
@@ -281,39 +280,36 @@ export class Suppliers
     static run()
     {
         Suppliers._all.forEach(s => s.prepare());
-
-        let assigned = Suppliers.assign();
-
-        assigned.forEach(s => s.prepare());
+        Suppliers.assign().forEach(s => s.prepare());
         Suppliers._all.forEach(s => s.execute());
     }
 
-    private static assign(): Supplier[]
+    private static assign(): Vector<Supplier>
     {
-        var result: Supplier[] = [];
-        var suppliers: _.Dictionary<SupplierInfo> = Suppliers.findUnassignedSuppliers();
+        var result: Vector<Supplier> = new Vector();
+        var unassigned: Dictionary<SupplierInfo> = Suppliers.findUnassignedSuppliers();
 
-        if (Utils.isEmpty(suppliers)) return result;
+        if (Dictionaries.isEmpty(unassigned)) return result;
 
-        result = Suppliers.assignCustomers(suppliers);
+        result = Suppliers.assignCustomers(unassigned);
 
-        if (Utils.isEmpty(suppliers)) return result;
+        if (Dictionaries.isEmpty(unassigned)) return result;
 
-        return result.concat(Suppliers.assignSupplies(suppliers));
+        return result.concat(Suppliers.assignSupplies(unassigned));
     }
 
-    private static assignCustomers(unassigned: _.Dictionary<SupplierInfo>): Supplier[]
+    private static assignCustomers(unassigned: Dictionary<SupplierInfo>): Vector<Supplier>
     {
-        let result: Supplier[] = [];
-        let suppliers: _.Dictionary<SupplierInfo> = Suppliers.findSuppliersWithEnergy(unassigned);
+        let result: Vector<Supplier> = new Vector();
+        let suppliers: Dictionary<SupplierInfo> = Suppliers.findSuppliersWithEnergy(unassigned);
 
-        if (Utils.isEmpty(suppliers)) return result;
+        if (Dictionaries.isEmpty(suppliers)) return result;
 
-        let customers: _.Dictionary<CustomerInfo> = Suppliers.findCustomers();
+        let customers: Dictionary<CustomerInfo> = Suppliers.findCustomers();
 
-        if (Utils.isEmpty(customers)) return result;
+        if (Dictionaries.isEmpty(customers)) return result;
 
-        let sorted: CustomerInfo[] = Suppliers.sortCustomers(customers);
+        let sorted: Vector<CustomerInfo> = Suppliers.sortCustomers(customers);
 
         for (let customerInfo of sorted)
         {
@@ -332,20 +328,20 @@ export class Suppliers
                 delete suppliers[supplierInfo.name];
                 delete unassigned[supplierInfo.name];
 
-                result.push(supplier);
+                result.append(supplier);
             }
 
-            if (Utils.isEmpty(suppliers)) break;
+            if (Dictionaries.isEmpty(suppliers)) break;
         }
 
         return result;
     }
 
-    private static assignSupplies(suppliers: _.Dictionary<SupplierInfo>): Supplier[]
+    private static assignSupplies(suppliers: Dictionary<SupplierInfo>): Vector<Supplier>
     {
-        let result: Supplier[] = [];
-        let supplies: _.Dictionary<SupplyInfo> = Suppliers.findSupplies();
-        let sorted: SupplyInfo[] = Suppliers.sortSupplies(supplies);
+        let result: Vector<Supplier> = new Vector();
+        let supplies: Dictionary<SupplyInfo> = Suppliers.findSupplies();
+        let sorted: Vector<SupplyInfo> = Suppliers.sortSupplies(supplies);
 
         for (let supplyInfo of sorted)
         {
@@ -361,37 +357,33 @@ export class Suppliers
                 supplier.supply = supply;
                 supplyInfo.energy -= supplierInfo.capacity;
                 delete suppliers[supplierInfo.name];
-                result.push(supplier);
+                result.append(supplier);
             }
 
-            if (Utils.isEmpty(suppliers)) break;
+            if (Dictionaries.isEmpty(suppliers)) break;
         }
 
         return result;
     }
 
-    private static findSuppliersWithEnergy(unassigned: _.Dictionary<SupplierInfo>): _.Dictionary<SupplierInfo>
+    private static findSuppliersWithEnergy(unassigned: Dictionary<SupplierInfo>): Dictionary<SupplierInfo>
     {
-        var suppliers: SupplierInfo[] = _.values(unassigned);
-
-        suppliers = suppliers.filter(s => s.energy > 0);
-
-        return _.indexBy(suppliers, s => s.name);
+        return Dictionaries.values(unassigned).filter(s => s.energy > 0).indexBy(s => s.name);
     }
 
-    private static findCustomers(): _.Dictionary<CustomerInfo>
+    private static findCustomers(): Dictionary<CustomerInfo>
     {
-        let spawns: Customer[] = Spawns.my.map(s => s.spawn).values;
-        let extensions: Customer[] = Extensions.my.values;
-        let upgraders: Customer[] = Creeps.ofType(CreepType.Upgrader).values;
-        let builders: Customer[] = Creeps.ofType(CreepType.Builder).values;
-        let repairers: Customer[] = Creeps.ofType(CreepType.Repairer).values;
-        var customers: Customer[] = spawns.concat(extensions).concat(upgraders).concat(builders).concat(repairers);
+        let spawns: Vector<Customer> = Spawns.my.map(s => s.spawn);
+        let extensions: Vector<Customer> = Extensions.my;
+        let upgraders: Vector<Customer> = Creeps.ofType(CreepType.Upgrader);
+        let builders: Vector<Customer> = Creeps.ofType(CreepType.Builder);
+        let repairers: Vector<Customer> = Creeps.ofType(CreepType.Repairer);
+        var customers: Vector<Customer> = spawns.concat(extensions).concat(upgraders).concat(builders).concat(repairers);
 
         customers = customers.filter(c => Supplier.hasCapacity(c));
 
-        let infos: CustomerInfo[] = customers.map(Suppliers.createCustomerInfo);
-        let result: _.Dictionary<CustomerInfo> = _.indexBy(infos, i => i.customer.id);
+        let infos: Vector<CustomerInfo> = customers.map(Suppliers.createCustomerInfo);
+        let result: Dictionary<CustomerInfo> = infos.indexBy(i => i.customer.id);
 
         Suppliers.adjustCustomerDemands(result);
         Suppliers.filterCustomers(result);
@@ -399,15 +391,15 @@ export class Suppliers
         return result;
     }
 
-    private static findSupplies(): _.Dictionary<SupplyInfo>
+    private static findSupplies(): Dictionary<SupplyInfo>
     {
-        let wellers: Supply[] = Creeps.ofType(CreepType.Weller).values;
-        let supplies: Supply[] = wellers;
+        let wellers: Vector<Supply> = Creeps.ofType(CreepType.Weller);
+        let supplies: Vector<Supply> = wellers;
 
         supplies = supplies.filter(s => Supplier.hasEnergy(s));
 
-        let infos: SupplyInfo[] = supplies.map(Suppliers.createSupplyInfo);
-        let result: _.Dictionary<SupplyInfo> = _.indexBy(infos, i => i.supply.id);
+        let infos: Vector<SupplyInfo> = supplies.map(Suppliers.createSupplyInfo);
+        let result: Dictionary<SupplyInfo> = infos.indexBy(i => i.supply.id);
 
         Suppliers.adjustSupplyEnergies(result);
         Suppliers.filterSupplies(result);
@@ -415,7 +407,7 @@ export class Suppliers
         return result;
     }
 
-    private static adjustCustomerDemands(infos: _.Dictionary<CustomerInfo>)
+    private static adjustCustomerDemands(infos: Dictionary<CustomerInfo>)
     {
         for (let supplier of Suppliers._all)
         {
@@ -431,7 +423,7 @@ export class Suppliers
         }
     }
 
-    private static adjustSupplyEnergies(infos: _.Dictionary<SupplyInfo>)
+    private static adjustSupplyEnergies(infos: Dictionary<SupplyInfo>)
     {
         for (let supplier of Suppliers._all)
         {
@@ -447,9 +439,9 @@ export class Suppliers
         }
     }
 
-    private static filterCustomers(infos: _.Dictionary<CustomerInfo>)
+    private static filterCustomers(infos: Dictionary<CustomerInfo>)
     {
-        let serveds = _.values<CustomerInfo>(infos).filter(i => i.demand <= 0);
+        let serveds = Dictionaries.values(infos).filter(i => i.demand <= 0);
 
         for (let served of serveds)
         {
@@ -457,9 +449,9 @@ export class Suppliers
         }
     }
 
-    private static filterSupplies(infos: _.Dictionary<SupplyInfo>)
+    private static filterSupplies(infos: Dictionary<SupplyInfo>)
     {
-        let useds = _.values<SupplyInfo>(infos).filter(i => i.energy <= 0);
+        let useds = Dictionaries.values<SupplyInfo>(infos).filter(i => i.energy <= 0);
 
         for (let used of useds)
         {
@@ -467,13 +459,13 @@ export class Suppliers
         }
     }
 
-    private static findUnassignedSuppliers(): _.Dictionary<SupplierInfo>
+    private static findUnassignedSuppliers(): Dictionary<SupplierInfo>
     {
-        var infos: SupplierInfo[] = Suppliers._all.map(Suppliers.createSupplierInfo);
+        var infos: Vector<SupplierInfo> = Suppliers._all.map(Suppliers.createSupplierInfo);
 
         infos = infos.filter(i => !i.supply && !i.customer);
 
-        return _.indexBy(infos, i => i.name);
+        return infos.indexBy(i => i.name);
     }
 
     private static createSupplierInfo(supplier: Supplier): SupplierInfo
@@ -527,18 +519,14 @@ export class Suppliers
         return 3;
     }
 
-    private static sortSupplies(supplies: _.Dictionary<SupplyInfo>): SupplyInfo[]
+    private static sortSupplies(supplies: Dictionary<SupplyInfo>): Vector<SupplyInfo>
     {
-        var result: SupplyInfo[] = _.values(supplies);
-
-        return result.sort(Suppliers.compareSupplies);
+        return Dictionaries.values(supplies).sort(Suppliers.compareSupplies);
     }
 
-    private static sortCustomers(customers: _.Dictionary<CustomerInfo>): CustomerInfo[]
+    private static sortCustomers(customers: Dictionary<CustomerInfo>): Vector<CustomerInfo>
     {
-        var result: CustomerInfo[] = _.values(customers);
-
-        return result.sort(Suppliers.compareCustomers);
+        return Dictionaries.values(customers).sort(Suppliers.compareCustomers);
     }
 
     private static compareCustomers(a: CustomerInfo, b: CustomerInfo): number
@@ -559,8 +547,8 @@ export class Suppliers
         return b.energy - a.energy;
     }
 
-    private static findNearest(target: Customer | Supply, suppliers: _.Dictionary<SupplierInfo>): SupplierInfo | undefined
+    private static findNearest(target: Customer | Supply, suppliers: Dictionary<SupplierInfo>): SupplierInfo | undefined
     {
-        return target.pos.findClosestByPath(_.values<SupplierInfo>(suppliers)) || undefined;
+        return Positions.closestByPath(target, Dictionaries.values(suppliers));
     }
 }

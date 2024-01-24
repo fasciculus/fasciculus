@@ -6,11 +6,11 @@ import { CreepState, CreepType } from "./Enums";
 import { UpgraderMemory } from "./Memories";
 
 const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
-    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE])
-    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE])
-    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE])
-    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE])
-    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE]);
+    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
+    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
+    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
+    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
+    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, MOVE]);
 
 export class Upgrader extends CreepBase
 {
