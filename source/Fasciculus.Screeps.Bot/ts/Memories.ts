@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { CreepState, CreepType } from "./Enums";
-import { ContainerId, ControllerId, IdCustomer, IdRepairable, IdSupply, SiteId, SourceId } from "./Types";
+import { ContainerId, ControllerId, CustomerId, RepairableId, SupplyId, SiteId, SourceId } from "./Types";
 import { Dictionaries, Dictionary } from "./Collections";
 
 export interface NamesMemory
@@ -43,7 +43,7 @@ export interface CreepBaseMemory extends CreepMemory
 export interface StarterMemory extends CreepBaseMemory
 {
     well?: SourceId;
-    customer?: IdCustomer;
+    customer?: CustomerId;
 }
 
 export interface WellerMemory extends CreepBaseMemory
@@ -53,8 +53,8 @@ export interface WellerMemory extends CreepBaseMemory
 
 export interface SupplierMemory extends CreepBaseMemory
 {
-    customer?: IdCustomer;
-    supply?: IdSupply;
+    customer?: CustomerId;
+    supply?: SupplyId;
 
     worked?: number;
     supplied?: number;
@@ -72,7 +72,7 @@ export interface BuilderMemory extends CreepBaseMemory
 
 export interface RepairerMemory extends CreepBaseMemory
 {
-    repairable?: IdRepairable;
+    repairable?: RepairableId;
 }
 
 export class Memories

@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-import { IdRepairable, Repairable } from "./Types";
+import { RepairableId, Repairable } from "./Types";
 import { Walls } from "./Walls";
 
 export class Repairs
@@ -8,7 +8,7 @@ export class Repairs
     private static _all: Repairable[] = [];
     private static _byId: _.Dictionary<Repairable> = {};
 
-    static get(id: IdRepairable | undefined): Repairable | undefined
+    static get(id: RepairableId | undefined): Repairable | undefined
     {
         return id ? Repairs._byId[id] : undefined;
     }

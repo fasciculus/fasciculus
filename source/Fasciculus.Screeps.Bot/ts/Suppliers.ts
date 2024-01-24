@@ -7,7 +7,7 @@ import { Extensions } from "./Extensions";
 import { GameWrap } from "./GameWrap";
 import { SupplierMemory } from "./Memories";
 import { Spawns } from "./Spawns";
-import { Customer, IdCustomer, IdSupply, Supply } from "./Types";
+import { Customer, CustomerId, SupplyId, Supply } from "./Types";
 import { Utils } from "./Utils";
 import { Stores } from "./Stores";
 
@@ -248,7 +248,7 @@ interface SupplierInfo
 interface SupplyInfo
 {
     supply: Supply;
-    id: IdSupply;
+    id: SupplyId;
     energy: number;
     capacity: number;
 }
@@ -256,7 +256,7 @@ interface SupplyInfo
 interface CustomerInfo
 {
     customer: Customer;
-    id: IdCustomer;
+    id: CustomerId;
     priority: number;
     demand: number;
     ratio: number;
