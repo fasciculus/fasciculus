@@ -168,6 +168,21 @@ export class Vectors
 
         return result;
     }
+}
+
+export class Dictionaries
+{
+    static keys<T>(dictionary: Dictionary<T>): Set<string>
+    {
+        let keys: Array<string> = new Array();
+
+        for (let key in dictionary)
+        {
+            keys.push(key);
+        }
+
+        return new Set(keys);
+    }
 
     static values<T>(dictionary: Dictionary<T>): Vector<T>
     {

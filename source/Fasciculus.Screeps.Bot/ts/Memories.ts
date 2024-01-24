@@ -1,21 +1,22 @@
 import * as _ from "lodash";
 import { CreepState, CreepType } from "./Enums";
-import { IdCustomer, IdRepairable, IdSupply } from "./Types";
+import { ContainerId, ControllerId, IdCustomer, IdRepairable, IdSupply, SiteId, SourceId } from "./Types";
+import { Dictionaries, Dictionary } from "./Collections";
 
 export interface NamesMemory
 {
-    next: { [prefix: string]: number };
+    next: Dictionary<number>;
 }
 
 export interface SourceMemory
 {
-    container?: Id<StructureContainer>;
+    container?: ContainerId;
 }
 
 export interface WellMemory
 {
     slots?: number;
-    container?: Id<StructureContainer>;
+    container?: ContainerId;
     assignees?: string[];
 }
 
@@ -28,8 +29,8 @@ export interface StatisticsMemory
 export interface ExtendedMemory
 {
     names?: NamesMemory;
-    sources?: { [id: Id<Source>]: SourceMemory };
-    wells?: { [id: Id<Source>]: WellMemory };
+    sources?: Dictionary<SourceMemory>;
+    wells?: Dictionary<WellMemory>;
     statistics?: StatisticsMemory;
 }
 
@@ -41,13 +42,13 @@ export interface CreepBaseMemory extends CreepMemory
 
 export interface StarterMemory extends CreepBaseMemory
 {
-    well?: Id<Source>;
+    well?: SourceId;
     customer?: IdCustomer;
 }
 
 export interface WellerMemory extends CreepBaseMemory
 {
-    well?: Id<Source>;
+    well?: SourceId;
 }
 
 export interface SupplierMemory extends CreepBaseMemory
@@ -61,12 +62,12 @@ export interface SupplierMemory extends CreepBaseMemory
 
 export interface UpgraderMemory extends CreepBaseMemory
 {
-    controller?: Id<StructureController>;
+    controller?: ControllerId;
 }
 
 export interface BuilderMemory extends CreepBaseMemory
 {
-    site?: Id<ConstructionSite>;
+    site?: SiteId;
 }
 
 export interface RepairerMemory extends CreepBaseMemory
@@ -78,7 +79,7 @@ export class Memories
 {
     static cleanup()
     {
-        var existing: Set<string> = new Set(_.keys(Game.creeps));
+        var existing: Set<string> = Dictionaries.keys(Game.creeps);
 
         for (let id in Memory.creeps)
         {
@@ -104,22 +105,10 @@ export class Memories
     static source(source: Source): SourceMemory
     {
         var memory = Memories.memory;
-        var root = memory.sources;
-
-        if (!root)
-        {
-            memory.sources = root = {};
-        }
-
+        var root = memory.sources || (memory.sources = {});
         var id = source.id;
-        var result = root[id];
 
-        if (!result)
-        {
-            root[id] = result = {};
-        }
-
-        return result;
+        return root[id] || (root[id] = {});
     }
 
     static well(id: Id<Source>): WellMemory

@@ -1,4 +1,9 @@
 
+export type ContainerId = Id<StructureContainer>;
+export type ControllerId = Id<StructureController>;
+export type SiteId = Id<ConstructionSite>;
+export type SourceId = Id<Source>;
+
 export type IdSupply = Id<Creep | StructureContainer>;
 export type Supply = Creep | StructureContainer;
 
