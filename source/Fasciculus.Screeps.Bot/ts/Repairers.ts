@@ -6,6 +6,7 @@ import { Repairable } from "./Types";
 import { Repairs } from "./Repairs";
 import { Walls } from "./Walls";
 import { Dictionaries, Dictionary, Vector } from "./Collections";
+import { Positions } from "./Positions";
 
 const REPAIRER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
@@ -157,7 +158,7 @@ export class Repairers
         for (let repairable of Repairers.repairables)
         {
             let assignables: Vector<Repairer> = Dictionaries.values(unassigned);
-            let repairer = repairable.pos.findClosestByPath(assignables.values) || undefined;
+            let repairer: Repairer | undefined = Positions.closestByPath(repairable, assignables);
 
             if (!repairer) continue;
 

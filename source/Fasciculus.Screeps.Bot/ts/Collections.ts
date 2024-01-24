@@ -47,6 +47,11 @@ export class Vector<T> implements Iterable<T>
         return new Vector(this.array);
     }
 
+    find(fn: (vakues: Array<T>) => T | undefined): T | undefined
+    {
+        return this.length > 0 ? fn(this.array) : undefined;
+    }
+
     sort(compare: (left: T, right: T) => number): Vector<T>
     {
         if (this.array.length > 1)
@@ -138,6 +143,8 @@ export class Vector<T> implements Iterable<T>
 
         return result
     }
+
+    toSet(): Set<T> { return new Set(this.array); }
 }
 
 export class Vectors

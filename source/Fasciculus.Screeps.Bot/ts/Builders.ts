@@ -5,6 +5,8 @@ import { CreepState, CreepType } from "./Enums";
 import { BuilderMemory } from "./Memories";
 import { Site, Sites } from "./Sites";
 import { Vector, Vectors } from "./Collections";
+import { SiteId } from "./Types";
+import { Positions } from "./Positions";
 
 const BUILDER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
@@ -159,21 +161,18 @@ export class Builders
     private static findSite(builder: Builder): Site | undefined
     {
         let result: Site | undefined = undefined;
-        let assigned: Set<Id<ConstructionSite>> = new Set(Builders.assignedSites.map(s => s.id));
-        let unassigned: Site[] = Sites.all.filter(s => !assigned.has(s.id)).values;
-
-        if (unassigned.length == 0) return result;
-
-        let smallSites: Site[] = unassigned.filter(s => s.remaining < 10);
+        let assigned: Set<SiteId> = Builders.assignedSites.map(s => s.id).toSet();
+        let unassigned: Vector<Site> = Sites.all.filter(s => !assigned.has(s.id));
+        let smallSites: Vector<Site> = unassigned.filter(s => s.remaining < 10);
 
         if (smallSites.length > 0)
         {
-            result = builder.pos.findClosestByPath(smallSites) || undefined;
+            result = Positions.closestByPath(builder, smallSites);
         }
 
         if (!result)
         {
-            result = unassigned.sort(Builders.compareSites)[0];
+            result = unassigned.sort(Builders.compareSites).at(0);
         }
 
         return result;
