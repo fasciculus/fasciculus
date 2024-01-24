@@ -1,11 +1,10 @@
-import * as _ from "lodash";
-
 import { CreepBase, Creeps } from "./Creeps";
 import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepState, CreepType } from "./Enums";
 import { WellerMemory } from "./Memories";
 import { Well, Wells } from "./Wells";
 import { Statistics } from "./Statistics";
+import { Vector } from "./Collections";
 
 const WELLER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 5);
@@ -120,16 +119,16 @@ const FIND_CLOSEST_WELL_OPTS: FindPathOpts =
 
 export class Wellers
 {
-    private static _all: Weller[] = [];
+    private static _all: Vector<Weller> = new Vector();
 
     static get count(): number { return Wellers._all.length; }
-    static get all(): Weller[] { return Wellers._all; }
+    static get all(): Vector<Weller> { return Wellers._all.clone(); }
 
-    static get maxEnergyPerTick(): number { return _.sum(Wellers._all.map(w => w.maxEnergyPerTick)); }
+    static get maxEnergyPerTick(): number { return Wellers._all.sum(w => w.maxEnergyPerTick); }
 
     static initialize()
     {
-        Wellers._all = Creeps.ofType(CreepType.Weller).map(c => new Weller(c)).values;
+        Wellers._all = Creeps.ofType(CreepType.Weller).map(c => new Weller(c));
 
         Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
     }
@@ -137,17 +136,14 @@ export class Wellers
     static run()
     {
         Wellers._all.forEach(w => w.prepare());
-
-        let assigned: Weller[] = Wellers.assign();
-
-        assigned.forEach(w => w.prepare());
+        Wellers.assign().forEach(w => w.prepare());
         Wellers._all.forEach(w => w.execute());
     }
 
-    private static assign(): Weller[]
+    private static assign(): Vector<Weller>
     {
-        var result: Weller[] = [];
-        let unassignedWellers: Weller[] = Wellers.all.filter(w => !w.well);
+        var result: Vector<Weller> = new Vector();
+        let unassignedWellers: Vector<Weller> = Wellers.all.filter(w => !w.well);
 
         for (let weller of unassignedWellers)
         {
@@ -158,7 +154,7 @@ export class Wellers
 
             weller.well = nearestWell;
             nearestWell.assign(weller.creep);
-            result.push(weller);
+            result.append(weller);
         }
 
         return result;
