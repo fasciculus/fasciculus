@@ -1,9 +1,10 @@
-import * as _ from "lodash";
 import { Bodies, BodyTemplate } from "./Bodies";
 import { Controller, Controllers } from "./Controllers";
 import { CreepBase, Creeps } from "./Creeps";
 import { CreepState, CreepType } from "./Enums";
 import { UpgraderMemory } from "./Memories";
+import { Dictionary, Vector } from "./Collections";
+import { Positions } from "./Positions";
 
 const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
@@ -106,15 +107,14 @@ interface ControllerWork
 
 export class Upgraders
 {
-    private static _all: Upgrader[] = [];
+    private static _all: Vector<Upgrader> = new Vector();
 
     static get count(): number { return Upgraders._all.length; }
-
-    static get maxEnergyPerTick(): number { return _.sum(Upgraders._all.map(u => u.maxEnergyPerTick)); }
+    static get maxEnergyPerTick(): number { return Upgraders._all.sum(u => u.maxEnergyPerTick); }
 
     static initialize()
     {
-        Upgraders._all = Creeps.ofType(CreepType.Upgrader).map(c => new Upgrader(c)).values;
+        Upgraders._all = Creeps.ofType(CreepType.Upgrader).map(c => new Upgrader(c));
 
         Bodies.register(CreepType.Upgrader, UPGRADER_TEMPLATE);
     }
@@ -122,41 +122,40 @@ export class Upgraders
     static run()
     {
         Upgraders._all.forEach(u => u.prepare());
-
-        var newlyAssigned: Upgrader[]  = Upgraders.assign();
-
-        newlyAssigned.forEach(u => u.prepare());
+        Upgraders.assign().forEach(u => u.prepare());
         Upgraders._all.forEach(u => u.execute());
     }
 
-    private static assign(): Upgrader[]
+    private static assign(): Vector<Upgrader>
     {
-        let unassignedUpgraders = Upgraders._all.filter(u => !u.controller);
+        var result: Vector<Upgrader> = new Vector();
+        let unassigned: Vector<Upgrader> = Upgraders._all.filter(u => !u.controller);
 
-        if (unassignedUpgraders.length == 0) return [];
+        if (unassigned.length == 0) return result;
 
-        let works = Upgraders.getControllerWorks();
+        let works: Vector<ControllerWork> = Upgraders.getControllerWorks();
 
-        if (works.length == 0) return [];
+        if (works.length == 0) return result;
 
-        let sorted = works.sort((a, b) => a.work - b.work);
-        let controller = sorted[0].controller;
-        let upgrader = controller.pos.findClosestByPath(unassignedUpgraders) || undefined;
+        let sorted: Vector<ControllerWork> = works.sort((a, b) => a.work - b.work);
+        let controller: Controller | undefined = sorted.at(0)?.controller;
 
-        if (!upgrader) return [];
+        if (!controller) return result;
+
+        let upgrader: Upgrader | undefined = Positions.closestByPath(controller, unassigned);
+
+        if (!upgrader) return result;
 
         upgrader.controller = controller;
+        result.append(upgrader);
 
-        return [upgrader];
+        return result;
     }
 
-    private static getControllerWorks(): ControllerWork[]
+    private static getControllerWorks(): Vector<ControllerWork>
     {
-        let result: ControllerWork[] = [];
-
-        Controllers.my.forEach(c => result.push({ controller: c, work: 0 }));
-
-        let byId = _.indexBy(result, cw => cw.controller.id);
+        let result: Vector<ControllerWork> = Controllers.my.map(Upgraders.createControllerWork);
+        let byId: Dictionary<ControllerWork> = result.indexBy(cw => cw.controller.id);
 
         for (let upgrader of Upgraders._all)
         {
@@ -166,6 +165,13 @@ export class Upgraders
 
             byId[controller.id].work += upgrader.workParts;
         }
+
+        return result;
+    }
+
+    private static createControllerWork(controller: Controller): ControllerWork
+    {
+        var result: ControllerWork = { controller, work: 0 };
 
         return result;
     }

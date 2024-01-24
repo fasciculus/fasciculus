@@ -6,3 +6,7 @@ system.resumeSimulation()
 system.getTickDuration()
 system.setTickDuration(1000)
 system.setTickDuration(1500)
+
+storage.db['rooms.objects'].update({type:"spawn"}, {$set: {storeCapacityResource:{ energy:300}}});
+
+https://github.com/screeps/storage/blob/master/db.original.json
