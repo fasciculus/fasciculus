@@ -17,9 +17,10 @@ export class Vector<T> implements Iterable<T>
     get length(): number { return this.array.length; }
     get values(): T[] { return Array.from(this.array); }
 
-    private get valuesCopy(): Array<T> { return Array.from(this.values); }
+    private copyValues(): Array<T> { return Array.from(this.values); }
 
     toSet(): Set<T> { return new Set(this.array); }
+    toArray(): Array<T> { return Array.from(this.values); }
 
     at(index: number): T | undefined
     {
@@ -70,18 +71,18 @@ export class Vector<T> implements Iterable<T>
         return new Vector(this.array);
     }
 
-    call(fn: (vakues: Array<T>) => void)
+    call<R = void>(fn: (vakues: Array<T>) => R)
     {
         if (this.length == 0) return;
 
-        fn(this.valuesCopy);
+        return fn(this.copyValues());
     }
 
     find(fn: (vakues: Array<T>) => T | undefined): T | undefined
     {
         if (this.length == 0) return undefined;
 
-        return fn(this.valuesCopy);
+        return fn(this.copyValues());
     }
 
     sort(compare: (left: T, right: T) => number): Vector<T>

@@ -5,6 +5,7 @@ import { WellerMemory } from "./Memories";
 import { Well, Wells } from "./Wells";
 import { Statistics } from "./Statistics";
 import { Vector } from "./Collections";
+import { Positions } from "./Positions";
 
 const WELLER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 5);
@@ -147,8 +148,8 @@ export class Wellers
 
         for (let weller of unassignedWellers)
         {
-            let assignableWells: Well[] = Wells.assignable;
-            let nearestWell: Well | undefined = weller.pos.findClosestByPath(assignableWells, FIND_CLOSEST_WELL_OPTS) || undefined;
+            let assignableWells: Vector<Well> = Wells.assignable;
+            let nearestWell: Well | undefined = Positions.closestByPath(weller, assignableWells, FIND_CLOSEST_WELL_OPTS);
 
             if (!nearestWell) continue;
 

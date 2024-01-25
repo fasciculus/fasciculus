@@ -175,7 +175,7 @@ export class Starters
         for (let starter of unassigned)
         {
             let wells = Wells.assignable
-            let well = starter.pos.findClosestByPath(wells) || undefined;
+            let well = Positions.closestByPath(starter, wells);
 
             if (!well)
             {

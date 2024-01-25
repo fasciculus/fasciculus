@@ -1,17 +1,17 @@
-import * as _ from "lodash";
 import { Chamber, Chambers } from "./Chambers";
 import { Memories, WellMemory } from "./Memories";
 import { DIRECTIONS, Point } from "./Geometry";
 import { Creeps } from "./Creeps";
-import { Utils } from "./Utils";
 import { BodyParts } from "./Bodies";
-import { Vectors } from "./Collections";
+import { Dictionary, Vector, Vectors } from "./Collections";
+import { SourceId } from "./Types";
+import { Sources } from "./Sources";
 
 export class Well
 {
     readonly source: Source;
 
-    get id(): Id<Source> { return this.source.id; }
+    get id(): SourceId { return this.source.id; }
     get memory(): WellMemory { return Memories.well(this.id); }
 
     get pos(): RoomPosition { return this.source.pos; }
@@ -33,11 +33,11 @@ export class Well
         return result;
     }
 
-    get assignees(): Creep[] { return Utils.defined((this.memory.assignees || []).map(n => Creeps.get(n))); }
-    private set assignees(value: Creep[]) { this.memory.assignees = value.map(c => c.name); }
+    get assignees(): Vector<Creep> { return Vectors.defined(Vector.from(this.memory.assignees).map(Creeps.get)); }
+    private set assignees(value: Vector<Creep>) { this.memory.assignees = value.map(c => c.name).toArray(); }
     get freeSlots(): number { return this.slots - this.assignees.length; }
-    get assignedWork(): number { return _.sum(this.assignees.map(BodyParts.workOf)); }
-    get maxWork(): number { return this.energyCapacity / 300; }
+    get assignedWork(): number { return this.assignees.sum(BodyParts.workOf); }
+    get maxWork(): number { return this.energyCapacity / ENERGY_REGEN_TIME; }
     get unassignedWork(): number { return this.maxWork - this.assignedWork; }
     get assignable(): boolean { return this.freeSlots > 0 && this.unassignedWork > 0; }
 
@@ -49,11 +49,7 @@ export class Well
 
     assign(creep: Creep)
     {
-        let assignees = this.assignees;
-
-        assignees.push(creep);
-
-        this.assignees = assignees;
+        this.assignees = this.assignees.append(creep);
     }
 
     private countSlots(): number
@@ -70,21 +66,19 @@ export class Well
 
 export class Wells
 {
-    private static _all: Well[] = [];
-    private static _byId: { [id: Id<Source>]: Well } = {};
+    private static _all: Vector<Well> = new Vector();
+    private static _byId: Dictionary<Well> = {};
 
-    static get(id: Id<Source> | undefined): Well | undefined { return id ? Wells._byId[id] : undefined; }
+    static get(id?: SourceId): Well | undefined { return id ? Wells._byId[id] : undefined; }
 
-    static get assignable(): Well[] { return Wells._all.filter(w => w.assignable); }
+    static get assignable(): Vector<Well> { return Wells._all.filter(w => w.assignable); }
     static get assignableCount(): number { return Wells.assignable.length; }
 
-    static get maxEnergyPerTick(): number { return _.sum(Wells._all.map(w => w.energyCapacity)) / 300; }
+    static get maxEnergyPerTick(): number { return Wells._all.sum(w => w.energyCapacity) / ENERGY_REGEN_TIME; }
 
     static initialize()
     {
-        let sources = Vectors.flatten(Chambers.all.map(c => c.sources));
-
-        Wells._all = sources.map(s => new Well(s)).values;
-        Wells._byId = _.indexBy(Wells._all, w => w.id);
+        Wells._all = Sources.all.map(s => new Well(s));
+        Wells._byId = Wells._all.indexBy(w => w.id);
     }
 }
