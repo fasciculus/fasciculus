@@ -17,7 +17,6 @@ import { Spawns } from "./Spawns";
 import { Statistics } from "./Statistics";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
-import { Utils } from "./Utils";
 import { Walls } from "./Walls";
 import { Wellers } from "./Wellers";
 import { Wells } from "./Wells";

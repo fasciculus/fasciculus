@@ -2,7 +2,6 @@ import { Vector } from "./Collections";
 import { MarkerType } from "./Enums";
 import { GameWrap } from "./GameWrap";
 import { Suppliers } from "./Suppliers";
-import { Utils } from "./Utils";
 import { Wellers } from "./Wellers";
 
 const INFO_MARKER_TEXT_STYLE: TextStyle =
