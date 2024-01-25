@@ -1,6 +1,7 @@
 import { Vector } from "./Collections";
 import { MarkerType } from "./Enums";
 import { GameWrap } from "./GameWrap";
+import { profile } from "./Profiling";
 import { Suppliers } from "./Suppliers";
 import { Wellers } from "./Wellers";
 
@@ -73,6 +74,7 @@ export class Markers
         Markers._all = GameWrap.myFlags.map(f => new Marker(f));
     }
 
+    @profile
     static run()
     {
         Markers._all.forEach(m => m.run());

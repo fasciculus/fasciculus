@@ -5,6 +5,7 @@ import { CreepState, CreepType } from "./Enums";
 import { UpgraderMemory } from "./Memories";
 import { Dictionary, Vector } from "./Collections";
 import { Positions } from "./Positions";
+import { profile } from "./Profiling";
 
 const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
@@ -119,6 +120,7 @@ export class Upgraders
         Bodies.register(CreepType.Upgrader, UPGRADER_TEMPLATE);
     }
 
+    @profile
     static run()
     {
         Upgraders._all.forEach(u => u.prepare());

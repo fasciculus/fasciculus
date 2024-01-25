@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 
 import { CreepBase, Creeps } from "./Creeps";
 import { Bodies, BodyTemplate } from "./Bodies";
@@ -12,6 +11,7 @@ import { Spawns } from "./Spawns";
 import { Extensions } from "./Extensions";
 import { Vector } from "./Collections";
 import { Positions } from "./Positions";
+import { profile } from "./Profiling";
 
 const STARTER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE]);
 
@@ -150,6 +150,7 @@ export class Starters
         Bodies.register(CreepType.Starter, STARTER_TEMPLATE);
     }
 
+    @profile
     static run()
     {
         Starters._all.forEach(s => s.prepare());

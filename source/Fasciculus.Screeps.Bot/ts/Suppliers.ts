@@ -9,7 +9,7 @@ import { Customer, CustomerId, SupplyId, Supply } from "./Types";
 import { Stores } from "./Stores";
 import { Dictionaries, Dictionary, Vector } from "./Collections";
 import { Positions } from "./Positions";
-import { Profiler } from "./Profiler";
+import { profile } from "./Profiling";
 
 const MIN_SUPPLY_ENERGY = 10;
 const SUPPLIER_PERFORMANCE_FACTOR = 1.25;
@@ -18,24 +18,27 @@ const SUPPLIER_TEMPLATE: BodyTemplate = BodyTemplate.create([CARRY, MOVE, CARRY,
 
 const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 {
-    reusePath: 3,
+    reusePath: 6,
     ignoreCreeps: false,
 
-    visualizePathStyle:
-    {
-        stroke: "#ff0"
-    }
+//    visualizePathStyle:
+//    {
+//        stroke: "#ff0"
+//    }
 };
 
 export class Supplier extends CreepBase
 {
+    private _supply?: Supply;
+    private _customer?: Customer;
+
     get memory(): SupplierMemory { return super.memory as SupplierMemory; }
 
-    get supply(): Supply | undefined { return GameWrap.get(this.memory.supply); }
-    set supply(value: Supply | undefined) { this.memory.supply = value?.id; }
+    get supply(): Supply | undefined { return this._supply; }
+    set supply(value: Supply | undefined) { this._supply = value; this.memory.supply = value?.id; }
 
-    get customer(): Customer | undefined { return GameWrap.get(this.memory.customer); }
-    set customer(value: Customer | undefined) { this.memory.customer = value?.id; }
+    get customer(): Customer | undefined { return this._customer; }
+    set customer(value: Customer | undefined) { this._customer = value; this.memory.customer = value?.id; }
 
     get worked(): number { return this.memory.worked || 1; }
     private set worked(value: number) { this.memory.worked = value; }
@@ -48,6 +51,9 @@ export class Supplier extends CreepBase
     constructor(creep: Creep)
     {
         super(creep);
+
+        this.supply = GameWrap.get(this.memory.supply);
+        this._customer = GameWrap.get(this.memory.customer);
     }
 
     execute()
@@ -83,6 +89,7 @@ export class Supplier extends CreepBase
         this.moveTo(customer, SUPPLIER_MOVE_TO_OPTS);
     }
 
+    @profile
     private executeWithdraw()
     {
         ++this.worked;
@@ -94,6 +101,7 @@ export class Supplier extends CreepBase
         this.withdraw(supply, RESOURCE_ENERGY);
     }
 
+    @profile
     private executeTransfer()
     {
         ++this.worked;
@@ -280,12 +288,24 @@ export class Suppliers
 
     static run()
     {
-        Profiler.resetUsed();
-        Suppliers._all.forEach(s => s.prepare()); Profiler.add("prepare");
-        Suppliers.assign().forEach(s => s.prepare()); Profiler.add("assign");
-        Suppliers._all.forEach(s => s.execute()); Profiler.add("execute");
+        Suppliers.prepare(Suppliers._all);
+        Suppliers.prepare(Suppliers.assign());
+        Suppliers.execute(Suppliers._all);
     }
 
+    @profile
+    private static prepare(suppliers: Vector<Supplier>)
+    {
+        suppliers.forEach(s => s.prepare());
+    }
+
+    // @profile
+    private static execute(suppliers: Vector<Supplier>)
+    {
+        suppliers.forEach(s => s.execute());
+    }
+
+    @profile
     private static assign(): Vector<Supplier>
     {
         var result: Vector<Supplier> = new Vector();

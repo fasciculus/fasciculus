@@ -7,6 +7,7 @@ import { Site, Sites } from "./Sites";
 import { Vector, Vectors } from "./Collections";
 import { SiteId } from "./Types";
 import { Positions } from "./Positions";
+import { profile } from "./Profiling";
 
 const BUILDER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
@@ -117,6 +118,7 @@ export class Builders
         Bodies.register(CreepType.Builder, BUILDER_TEMPLATE);
     }
 
+    @profile
     static run()
     {
         Builders._all.forEach(b => b.prepare());

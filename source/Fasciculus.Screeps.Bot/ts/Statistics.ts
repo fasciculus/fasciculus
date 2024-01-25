@@ -1,4 +1,5 @@
 import { Memories } from "./Memories";
+import { profile } from "./Profiling";
 
 export class Statistics
 {
@@ -11,6 +12,7 @@ export class Statistics
         Statistics._welled = 0;
     }
 
+    @profile
     static run()
     {
         let memory = Memories.statistics;

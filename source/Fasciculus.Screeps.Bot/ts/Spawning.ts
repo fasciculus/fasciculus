@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 
 import { Controllers } from "./Controllers";
 import { CreepType } from "./Enums";
@@ -14,9 +13,11 @@ import { Repairs } from "./Repairs";
 import { Repairers } from "./Repairers";
 import { Starters } from "./Starters";
 import { Vector } from "./Collections";
+import { profile } from "./Profiling";
 
 export class Spawning
 {
+    @profile
     static run()
     {
         let spawn: Spawn | undefined = Spawns.best;

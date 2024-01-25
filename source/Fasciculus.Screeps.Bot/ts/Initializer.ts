@@ -4,6 +4,7 @@ import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { Markers } from "./Markers";
+import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
 import { Rooms } from "./Rooms";
@@ -20,6 +21,7 @@ import { Wells } from "./Wells";
 
 export class Initializer
 {
+    // @profile
     static run()
     {
         Statistics.initialize();

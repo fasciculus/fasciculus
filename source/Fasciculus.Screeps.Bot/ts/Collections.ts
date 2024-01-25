@@ -242,40 +242,11 @@ export class Dictionaries
 
     static keys<T>(dictionary: Dictionary<T>): Set<string>
     {
-        let keys: Array<string> = new Array();
-
-        for (let key in dictionary)
-        {
-            keys.push(key);
-        }
-
-        return new Set(keys);
+        return new Set(Object.keys(dictionary));
     }
 
     static values<T>(dictionary: Dictionary<T>): Vector<T>
     {
-        let result: Vector<T> = new Vector();
-
-        for (let key in dictionary)
-        {
-            result.append(dictionary[key]);
-        }
-
-        return result;
-    }
-
-    static entries<T>(dictionary: Dictionary<T>): Vector<DictionaryEntry<T>>
-    {
-        let result: Vector<DictionaryEntry<T>> = new Vector();
-
-        for (let key in dictionary)
-        {
-            let value: T = dictionary[key];
-            let entry: DictionaryEntry<T> = { key, value };
-
-            result.append(entry);
-        }
-
-        return result;
+        return new Vector(Object.values(dictionary)); 
     }
 }

@@ -1,6 +1,7 @@
 import { CreepState, CreepType } from "./Enums";
 import { ContainerId, ControllerId, CustomerId, RepairableId, SupplyId, SiteId, SourceId } from "./Types";
 import { Dictionaries, Dictionary } from "./Collections";
+import { profile } from "./Profiling";
 
 export interface NamesMemory
 {
@@ -25,21 +26,19 @@ export interface StatisticsMemory
     welled?: number;
 }
 
-export type ProfilerMemory = Dictionary<number>;
-
 export interface ExtendedMemory
 {
     names?: NamesMemory;
     sources?: Dictionary<SourceMemory>;
     wells?: Dictionary<WellMemory>;
     statistics?: StatisticsMemory;
-    profiler?: ProfilerMemory;
 }
 
 export interface CreepBaseMemory extends CreepMemory
 {
     type: CreepType;
     state: CreepState;
+    path?: string;
 }
 
 export interface StarterMemory extends CreepBaseMemory
@@ -79,6 +78,7 @@ export interface RepairerMemory extends CreepBaseMemory
 
 export class Memories
 {
+    @profile
     static cleanup()
     {
         var existing: Set<string> = Dictionaries.keys(Game.creeps);
@@ -126,12 +126,5 @@ export class Memories
         var memory = Memories.memory;
 
         return memory.statistics || (memory.statistics = {});
-    }
-
-    static get profiler(): ProfilerMemory
-    {
-        var memory = Memories.memory;
-
-        return memory.profiler || (memory.profiler = {});
     }
 }

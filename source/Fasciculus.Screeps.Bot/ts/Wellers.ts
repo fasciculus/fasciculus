@@ -6,6 +6,7 @@ import { Well, Wells } from "./Wells";
 import { Statistics } from "./Statistics";
 import { Vector } from "./Collections";
 import { Positions } from "./Positions";
+import { profile } from "./Profiling";
 
 const WELLER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 5);
@@ -134,6 +135,7 @@ export class Wellers
         Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
     }
 
+    @profile
     static run()
     {
         Wellers._all.forEach(w => w.prepare());

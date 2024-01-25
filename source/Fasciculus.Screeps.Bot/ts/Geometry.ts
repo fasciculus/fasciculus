@@ -1,6 +1,37 @@
-import { Vector } from "./Collections";
+import { Dictionary, Vector, Vectors } from "./Collections";
 
-export const DIRECTIONS: DirectionConstant[] = [TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT];
+export const DIRECTIONS: Vector<DirectionConstant> = Vector.from([TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT]);
+
+const DIRECTION_STRINGS: string[] = ["", "1", "2", "3", "4", "5", "6", "7", "8"];
+
+const DIRECTION_DICTIONARY: Dictionary<DirectionConstant> =
+{
+    "1": TOP,
+    "2": TOP_RIGHT,
+    "3": RIGHT,
+    "4": BOTTOM_RIGHT,
+    "5": BOTTOM,
+    "6": BOTTOM_LEFT,
+    "7": LEFT,
+    "8": TOP_LEFT
+}
+
+export class Directions
+{
+    static encode(directions: Vector<DirectionConstant>): string
+    {
+        let result: string = "";
+
+        directions.forEach(d => result += DIRECTION_STRINGS[d]);
+
+        return result;
+    }
+
+    static decode(value?: string): Vector<DirectionConstant>
+    {
+        return Vectors.defined(Vector.from(Array.from(value || "")).map(s => DIRECTION_DICTIONARY[s]));
+    }
+}
 
 export class Point
 {

@@ -7,6 +7,7 @@ import { Repairs } from "./Repairs";
 import { Walls } from "./Walls";
 import { Dictionaries, Dictionary, Vector } from "./Collections";
 import { Positions } from "./Positions";
+import { profile } from "./Profiling";
 
 const REPAIRER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
@@ -141,6 +142,7 @@ export class Repairers
         Bodies.register(CreepType.Repairer, REPAIRER_TEMPLATE);
     }
 
+    @profile
     static run()
     {
         Repairers._all.forEach(r => r.prepare());
