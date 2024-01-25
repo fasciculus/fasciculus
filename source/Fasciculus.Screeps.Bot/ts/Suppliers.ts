@@ -9,6 +9,7 @@ import { Customer, CustomerId, SupplyId, Supply } from "./Types";
 import { Stores } from "./Stores";
 import { Dictionaries, Dictionary, Vector } from "./Collections";
 import { Positions } from "./Positions";
+import { Profiler } from "./Profiler";
 
 const MIN_SUPPLY_ENERGY = 10;
 const SUPPLIER_PERFORMANCE_FACTOR = 1.25;
@@ -279,9 +280,10 @@ export class Suppliers
 
     static run()
     {
-        Suppliers._all.forEach(s => s.prepare());
-        Suppliers.assign().forEach(s => s.prepare());
-        Suppliers._all.forEach(s => s.execute());
+        Profiler.resetUsed();
+        Suppliers._all.forEach(s => s.prepare()); Profiler.add("prepare");
+        Suppliers.assign().forEach(s => s.prepare()); Profiler.add("assign");
+        Suppliers._all.forEach(s => s.execute()); Profiler.add("execute");
     }
 
     private static assign(): Vector<Supplier>

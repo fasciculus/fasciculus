@@ -71,10 +71,8 @@ export class Vector<T> implements Iterable<T>
         return new Vector(this.array);
     }
 
-    call<R = void>(fn: (vakues: Array<T>) => R)
+    call<R = void>(fn: (vakues: Array<T>) => R): R
     {
-        if (this.length == 0) return;
-
         return fn(this.copyValues());
     }
 
@@ -110,11 +108,13 @@ export class Vector<T> implements Iterable<T>
         return result;
     }
 
-    forEach(fn: (value: T) => void)
+    forEach(fn: (value: T) => void): Vector<T>
     {
-        if (this.length == 0) return;
+        if (this.length == 0) return this;
 
         this.array.forEach(fn);
+
+        return this;
     }
 
     map<U>(fn: (value: T) => U): Vector<U>
@@ -222,6 +222,12 @@ export class Vectors
     }
 }
 
+export interface DictionaryEntry<T>
+{
+    key: string;
+    value: T;
+}
+
 export class Dictionaries
 {
     static isEmpty<T>(dictionary: Dictionary<T>): boolean
@@ -253,6 +259,21 @@ export class Dictionaries
         for (let key in dictionary)
         {
             result.append(dictionary[key]);
+        }
+
+        return result;
+    }
+
+    static entries<T>(dictionary: Dictionary<T>): Vector<DictionaryEntry<T>>
+    {
+        let result: Vector<DictionaryEntry<T>> = new Vector();
+
+        for (let key in dictionary)
+        {
+            let value: T = dictionary[key];
+            let entry: DictionaryEntry<T> = { key, value };
+
+            result.append(entry);
         }
 
         return result;

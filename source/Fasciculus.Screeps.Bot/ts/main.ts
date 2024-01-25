@@ -20,11 +20,17 @@ import { Upgraders } from "./Upgraders";
 import { Walls } from "./Walls";
 import { Wellers } from "./Wellers";
 import { Wells } from "./Wells";
+import { Profiler } from "./Profiler";
 
 export const loop = function ()
 {
+    Profiler.start();
     Initializer.run();
+    Profiler.add("Initializer");
     Scheduler.run();
+    Profiler.stop();
+
+    if ((Game.time % 10) == 0) Profiler.log();
 
     // console.log(`walls ${Walls.avg}`);
     // console.log(`bucket ${Game.cpu.bucket}`);

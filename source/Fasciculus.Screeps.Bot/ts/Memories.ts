@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { CreepState, CreepType } from "./Enums";
 import { ContainerId, ControllerId, CustomerId, RepairableId, SupplyId, SiteId, SourceId } from "./Types";
 import { Dictionaries, Dictionary } from "./Collections";
@@ -26,12 +25,15 @@ export interface StatisticsMemory
     welled?: number;
 }
 
+export type ProfilerMemory = Dictionary<number>;
+
 export interface ExtendedMemory
 {
     names?: NamesMemory;
     sources?: Dictionary<SourceMemory>;
     wells?: Dictionary<WellMemory>;
     statistics?: StatisticsMemory;
+    profiler?: ProfilerMemory;
 }
 
 export interface CreepBaseMemory extends CreepMemory
@@ -124,5 +126,12 @@ export class Memories
         var memory = Memories.memory;
 
         return memory.statistics || (memory.statistics = {});
+    }
+
+    static get profiler(): ProfilerMemory
+    {
+        var memory = Memories.memory;
+
+        return memory.profiler || (memory.profiler = {});
     }
 }
