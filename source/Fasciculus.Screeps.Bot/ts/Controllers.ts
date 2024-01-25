@@ -19,7 +19,7 @@ export class Controllers
 {
     private static _all: Vector<Controller> = new Vector();
     private static _my: Vector<Controller> = new Vector();
-    private static _byId: Dictionary<Controller>;
+    private static _byId: Dictionary<Controller> = {};
 
     static get(id: Id<StructureController> | undefined): Controller | undefined
     {
