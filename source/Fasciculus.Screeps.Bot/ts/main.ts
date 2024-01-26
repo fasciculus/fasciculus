@@ -5,7 +5,7 @@ import { Profiler } from "./Profiling";
 
 export const loop = function ()
 {
-    Profiler.start(7);
+    Profiler.start(9);
 
     Initializer.run();
     Scheduler.run();

@@ -305,7 +305,6 @@ export class Suppliers
         suppliers.forEach(s => s.execute());
     }
 
-    @profile
     private static assign(): Vector<Supplier>
     {
         var result: Vector<Supplier> = new Vector();
@@ -320,6 +319,7 @@ export class Suppliers
         return result.concat(Suppliers.assignSupplies(unassigned));
     }
 
+    @profile
     private static assignCustomers(unassigned: Dictionary<SupplierInfo>): Vector<Supplier>
     {
         let result: Vector<Supplier> = new Vector();
@@ -359,6 +359,7 @@ export class Suppliers
         return result;
     }
 
+    @profile
     private static assignSupplies(suppliers: Dictionary<SupplierInfo>): Vector<Supplier>
     {
         let result: Vector<Supplier> = new Vector();
@@ -388,6 +389,7 @@ export class Suppliers
         return result;
     }
 
+    @profile
     private static findSuppliersWithEnergy(unassigned: Dictionary<SupplierInfo>): Dictionary<SupplierInfo>
     {
         return Dictionaries.values(unassigned).filter(s => s.energy > 0).indexBy(s => s.name);

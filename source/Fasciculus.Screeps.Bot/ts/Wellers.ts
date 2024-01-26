@@ -135,12 +135,23 @@ export class Wellers
         Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
     }
 
-    @profile
     static run()
     {
-        Wellers._all.forEach(w => w.prepare());
-        Wellers.assign().forEach(w => w.prepare());
-        Wellers._all.forEach(w => w.execute());
+        Wellers.prepare(Wellers._all);
+        Wellers.prepare(Wellers.assign());
+        Wellers.execute(Wellers._all);
+    }
+
+    @profile
+    private static prepare(wellers: Vector<Weller>)
+    {
+        wellers.forEach(w => w.prepare());
+    }
+
+    @profile
+    private static execute(wellers: Vector<Weller>)
+    {
+        wellers.forEach(w => w.execute());
     }
 
     private static assign(): Vector<Weller>
