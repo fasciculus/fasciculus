@@ -104,6 +104,7 @@ export class Creeps
     static get(name: string): Creep | undefined { return GameWrap.myCreep(name); }
 
     static get my(): Vector<Creep> { return Creeps._my.clone(); }
+    static get oldest(): Creep | undefined { return Creeps._my.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
 
     static ofType(type: CreepType): Vector<Creep> { return Creeps._ofType[type] || new Vector(); }
     static countOf(type: CreepType): number { return Creeps.ofType(type).length; }

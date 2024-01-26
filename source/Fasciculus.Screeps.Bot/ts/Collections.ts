@@ -190,6 +190,31 @@ export class Vector<T> implements Iterable<T>
 
         return result;
     }
+
+    min(fn: (value: T) => number): T | undefined
+    {
+        let array: Array<T> = this.array;
+        let length: number = array.length;
+
+        if (length == 0) return undefined;
+
+        let result: T = array[0];
+        let resultValue: number = fn(result);
+
+        for (let i = 1; i < length; ++i)
+        {
+            let candidate: T = array[i];
+            let candidateValue: number = fn(candidate);
+
+            if (candidateValue < resultValue)
+            {
+                result = candidate;
+                resultValue = candidateValue;
+            }
+        }
+
+        return result;
+    }
 }
 
 export class Vectors

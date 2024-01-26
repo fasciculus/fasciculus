@@ -1,4 +1,5 @@
 import { Vector } from "./Collections";
+import { Creeps } from "./Creeps";
 import { MarkerType } from "./Enums";
 import { GameWrap } from "./GameWrap";
 import { profile } from "./Profiling";
@@ -58,10 +59,13 @@ export class Marker
         let wellable = Wellers.maxEnergyPerTick.toFixed(1);
         let performance = Suppliers.performance.toFixed(1);
         let supplierCount = Suppliers.count;
+        let oldest: Creep | undefined = Creeps.oldest;
+        let oldestText = oldest ? `${oldest.name} (${oldest.ticksToLive || CREEP_LIFE_TIME})` : "no creeps";
 
         visual.text(`E: ${energyAvailable} / ${energyCapacity}`, x, y, INFO_MARKER_TEXT_STYLE);
         visual.text(`W / P: ${wellable} / ${performance} (${supplierCount})`, x, y + 1, INFO_MARKER_TEXT_STYLE);
-        visual.text(`B: ${Game.cpu.bucket}`, x, y + 2, INFO_MARKER_TEXT_STYLE);
+        visual.text(`C: ${oldestText}`, x, y + 2, INFO_MARKER_TEXT_STYLE);
+        visual.text(`B: ${Game.cpu.bucket}`, x, y + 3, INFO_MARKER_TEXT_STYLE);
     }
 }
 
