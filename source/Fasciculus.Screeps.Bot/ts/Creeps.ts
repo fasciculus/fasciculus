@@ -12,16 +12,19 @@ export class CreepBase
 
     readonly workParts: number;
 
+    private _state: CreepState;
+
     constructor(creep: Creep)
     {
         this.creep = creep;
         this.workParts = BodyParts.workOf(creep);
+        this._state = this.memory.state;
     }
 
     get memory(): CreepBaseMemory { return this.creep.memory as CreepBaseMemory; }
 
-    get state(): CreepState { return this.memory.state; }
-    set state(value: CreepState) { this.memory.state = value; }
+    get state(): CreepState { return this._state; }
+    set state(value: CreepState) { this._state = value; this.memory.state = value; }
 
     get id(): Id<Creep> { return this.creep.id; }
     get name(): string { return this.creep.name; }

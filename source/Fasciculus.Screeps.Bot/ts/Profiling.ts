@@ -144,7 +144,7 @@ export class Profiler
         for (const entry of entries)
         {
             let label: string = entry.key.padEnd(40);
-            let duration: string = (entry.duration / ticks).toFixed(1).padStart(6);
+            let duration: string = (entry.duration / ticks).toFixed(2).padStart(6);
             let calls: string = (entry.calls / ticks).toFixed(1).padStart(7);
 
             console.log(`${label}${duration}${calls}`);

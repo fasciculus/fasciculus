@@ -23,10 +23,12 @@ const WELLER_MOVE_TO_OPTS: MoveToOpts =
 
 export class Weller extends CreepBase
 {
+    private _well?: Well;
+
     get memory(): WellerMemory { return super.memory as WellerMemory; }
 
-    get well(): Well | undefined { return Wells.get(this.memory.well); }
-    set well(value: Well | undefined) { this.memory.well = value?.id; }
+    get well(): Well | undefined { return this._well; }
+    set well(value: Well | undefined) { this._well = value; this.memory.well = value?.id; }
 
     get maxEnergyPerTick(): number { return this.workParts * HARVEST_POWER; }
     get full(): boolean { return this.freeEnergyCapacity < this.maxEnergyPerTick; }
@@ -34,6 +36,8 @@ export class Weller extends CreepBase
     constructor(creep: Creep)
     {
         super(creep);
+
+        this._well = Wells.get(this.memory.well);
     }
 
     execute()
@@ -45,6 +49,7 @@ export class Weller extends CreepBase
         }
     }
 
+    @profile
     private executeToWell()
     {
         let well = this.well;
@@ -55,6 +60,7 @@ export class Weller extends CreepBase
         }
     }
 
+    @profile
     private executeHarvest()
     {
         let well = this.well;
@@ -148,7 +154,6 @@ export class Wellers
         wellers.forEach(w => w.prepare());
     }
 
-    @profile
     private static execute(wellers: Vector<Weller>)
     {
         wellers.forEach(w => w.execute());

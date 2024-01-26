@@ -21,10 +21,10 @@ const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
     reusePath: 6,
     ignoreCreeps: false,
 
-//    visualizePathStyle:
-//    {
-//        stroke: "#ff0"
-//    }
+    visualizePathStyle:
+    {
+        stroke: "#ff0"
+    }
 };
 
 export class Supplier extends CreepBase
@@ -142,6 +142,7 @@ export class Supplier extends CreepBase
         }
     }
 
+    @profile
     private prepareIdle(): CreepState
     {
         let supply: Supply | undefined = this.supply;
@@ -180,6 +181,7 @@ export class Supplier extends CreepBase
         return CreepState.Idle;
     }
 
+    @profile
     private prepareMoveToSupply(): CreepState
     {
         let supply = this.supply;
@@ -191,6 +193,7 @@ export class Supplier extends CreepBase
         return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply;
     }
 
+    @profile
     private prepareMoveToCustomer(): CreepState
     {
         let customer = this.customer;
@@ -202,6 +205,7 @@ export class Supplier extends CreepBase
         return this.inRangeTo(customer) ? CreepState.Transfer : CreepState.ToCustomer;
     }
 
+    @profile
     private prepareWithdraw(): CreepState
     {
         let supply = this.supply;
@@ -213,6 +217,7 @@ export class Supplier extends CreepBase
         return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply;
     }
 
+    @profile
     private prepareTransfer(): CreepState
     {
         let customer = this.customer;
@@ -293,7 +298,6 @@ export class Suppliers
         Suppliers.execute(Suppliers._all);
     }
 
-    @profile
     private static prepare(suppliers: Vector<Supplier>)
     {
         suppliers.forEach(s => s.prepare());
@@ -571,6 +575,7 @@ export class Suppliers
         return b.energy - a.energy;
     }
 
+    @profile
     private static findNearest(target: Customer | Supply, suppliers: Dictionary<SupplierInfo>): SupplierInfo | undefined
     {
         return Positions.closestByPath(target, Dictionaries.values(suppliers));

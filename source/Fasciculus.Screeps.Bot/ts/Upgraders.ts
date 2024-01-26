@@ -120,12 +120,23 @@ export class Upgraders
         Bodies.register(CreepType.Upgrader, UPGRADER_TEMPLATE);
     }
 
-    @profile
     static run()
     {
-        Upgraders._all.forEach(u => u.prepare());
-        Upgraders.assign().forEach(u => u.prepare());
-        Upgraders._all.forEach(u => u.execute());
+        Upgraders.prepare(Upgraders._all);
+        Upgraders.prepare(Upgraders.assign());
+        Upgraders.execute(Upgraders._all);
+    }
+
+    @profile
+    private static prepare(upgraders: Vector<Upgrader>)
+    {
+        upgraders.forEach(u => u.prepare());
+    }
+
+    @profile
+    private static execute(upgraders: Vector<Upgrader>)
+    {
+        upgraders.forEach(u => u.execute());
     }
 
     private static assign(): Vector<Upgrader>
