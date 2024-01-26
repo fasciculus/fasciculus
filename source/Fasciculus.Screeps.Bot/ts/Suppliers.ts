@@ -1,11 +1,10 @@
 import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepBase, Creeps } from "./Creeps";
-import { CreepState, CreepType } from "./Enums";
 import { Extensions } from "./Extensions";
 import { GameWrap } from "./GameWrap";
 import { SupplierMemory } from "./Memories";
 import { Spawns } from "./Spawns";
-import { Customer, CustomerId, SupplyId, Supply } from "./Types";
+import { Customer, CustomerId, SupplyId, Supply, CreepState, CreepType } from "./Types";
 import { Stores } from "./Stores";
 import { Dictionaries, Dictionary, Vector } from "./Collections";
 import { Positions } from "./Positions";

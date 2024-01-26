@@ -1,5 +1,5 @@
 import { Vector, Vectors } from "./Collections";
-import { CreepType } from "./Enums";
+import { CreepType } from "./Types";
 
 const PartPriorities =
 {

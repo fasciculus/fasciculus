@@ -1,11 +1,10 @@
 
-import { CreepState, CreepType } from "./Enums";
 import { CreepBaseMemory } from "./Memories";
 import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
 import { BodyParts } from "./Bodies";
 import { Dictionary, Vector } from "./Collections";
-import { profile } from "./Profiling";
+import { CreepState, CreepType } from "./Types";
 
 export class CreepBase
 {

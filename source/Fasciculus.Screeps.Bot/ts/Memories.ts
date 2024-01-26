@@ -1,5 +1,5 @@
-import { CreepState, CreepType } from "./Enums";
-import { ContainerId, ControllerId, CustomerId, RepairableId, SupplyId, SiteId, SourceId } from "./Types";
+
+import { ContainerId, ControllerId, CustomerId, RepairableId, SupplyId, SiteId, SourceId, CreepType, CreepState } from "./Types";
 import { Dictionaries, Dictionary } from "./Collections";
 import { profile } from "./Profiling";
 

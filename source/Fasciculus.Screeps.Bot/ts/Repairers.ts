@@ -1,8 +1,7 @@
 import { CreepBase, Creeps } from "./Creeps";
-import { CreepState, CreepType } from "./Enums";
 import { Bodies, BodyTemplate } from "./Bodies";
 import { RepairerMemory } from "./Memories";
-import { Repairable } from "./Types";
+import { CreepState, CreepType, Repairable } from "./Types";
 import { Repairs } from "./Repairs";
 import { Walls } from "./Walls";
 import { Dictionaries, Dictionary, Vector } from "./Collections";

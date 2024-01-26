@@ -1,6 +1,5 @@
 
 import { Controllers } from "./Controllers";
-import { CreepType } from "./Enums";
 import { Spawn, Spawns } from "./Spawns";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
@@ -14,6 +13,7 @@ import { Repairers } from "./Repairers";
 import { Starters } from "./Starters";
 import { Vector } from "./Collections";
 import { profile } from "./Profiling";
+import { CreepType } from "./Types";
 
 export class Spawning
 {

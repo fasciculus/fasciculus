@@ -1,11 +1,11 @@
 import { Bodies, BodyTemplate } from "./Bodies";
 import { Controller, Controllers } from "./Controllers";
 import { CreepBase, Creeps } from "./Creeps";
-import { CreepState, CreepType } from "./Enums";
 import { UpgraderMemory } from "./Memories";
 import { Dictionary, Vector } from "./Collections";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
+import { CreepState, CreepType } from "./Types";
 
 const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])

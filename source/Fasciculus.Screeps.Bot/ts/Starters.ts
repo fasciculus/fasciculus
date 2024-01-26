@@ -2,9 +2,8 @@
 import { CreepBase, Creeps } from "./Creeps";
 import { Bodies, BodyTemplate } from "./Bodies";
 import { StarterMemory } from "./Memories";
-import { CreepState, CreepType } from "./Enums";
 import { Well, Wells } from "./Wells";
-import { Customer } from "./Types";
+import { CreepState, CreepType, Customer } from "./Types";
 import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
 import { Spawns } from "./Spawns";

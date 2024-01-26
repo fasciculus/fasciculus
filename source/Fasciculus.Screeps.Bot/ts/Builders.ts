@@ -1,11 +1,10 @@
 
 import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepBase, Creeps } from "./Creeps";
-import { CreepState, CreepType } from "./Enums";
 import { BuilderMemory } from "./Memories";
 import { Site, Sites } from "./Sites";
 import { Vector, Vectors } from "./Collections";
-import { SiteId } from "./Types";
+import { CreepState, CreepType, SiteId } from "./Types";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
 
