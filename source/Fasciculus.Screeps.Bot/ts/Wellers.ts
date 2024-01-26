@@ -20,11 +20,9 @@ const WELLER_MOVE_TO_OPTS: MoveToOpts =
     }
 };
 
-export class Weller extends CreepBase
+export class Weller extends CreepBase<WellerMemory>
 {
     private _well?: Well;
-
-    get memory(): WellerMemory { return super.memory as WellerMemory; }
 
     get well(): Well | undefined { return this._well; }
     set well(value: Well | undefined) { this._well = value; this.memory.well = value?.id; }

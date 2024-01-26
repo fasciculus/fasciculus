@@ -14,13 +14,11 @@ const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
     .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, MOVE]);
 
-export class Upgrader extends CreepBase
+export class Upgrader extends CreepBase<UpgraderMemory>
 {
     private _controller?: Controller;
 
     readonly maxEnergyPerTick: number;
-
-    get memory(): UpgraderMemory { return super.memory as UpgraderMemory; }
 
     get controller(): Controller | undefined { return this._controller; }
     set controller(value: Controller | undefined) { this._controller = value; this.memory.controller = value?.id; }

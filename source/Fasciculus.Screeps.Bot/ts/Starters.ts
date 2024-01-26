@@ -22,10 +22,8 @@ const STARTER_MOVE_TO_OPTS: MoveToOpts =
     }
 };
 
-export class Starter extends CreepBase
+export class Starter extends CreepBase<StarterMemory>
 {
-    get memory(): StarterMemory { return super.memory as StarterMemory; }
-
     get well(): Well | undefined { return Wells.get(this.memory.well); }
     set well(value: Well | undefined) { this.memory.well = value?.id; }
 

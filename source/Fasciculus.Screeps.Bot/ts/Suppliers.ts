@@ -35,29 +35,25 @@ interface SupplierMemory extends CreepBaseMemory
     handled?: number;
 }
 
-export class Supplier extends CreepBase
+export class Supplier extends CreepBase<SupplierMemory>
 {
-    private _supplierMemory: SupplierMemory;
-
     private _supply?: Supply;
     private _customer?: Customer;
 
     private _travelled: number;
     private _handled: number;
 
-    get supplierMemory(): SupplierMemory { return this._supplierMemory; }
-
     get supply(): Supply | undefined { return this._supply; }
-    set supply(value: Supply | undefined) { this._supply = value; this.supplierMemory.supply = value?.id; }
+    set supply(value: Supply | undefined) { this._supply = value; this.memory.supply = value?.id; }
 
     get customer(): Customer | undefined { return this._customer; }
-    set customer(value: Customer | undefined) { this._customer = value; this.supplierMemory.customer = value?.id; }
+    set customer(value: Customer | undefined) { this._customer = value; this.memory.customer = value?.id; }
 
     get travelled(): number { return this._travelled; }
-    private incrementTravelled() { this._travelled = this.supplierMemory.travelled = this._travelled + 1; }
+    private incrementTravelled() { this._travelled = this.memory.travelled = this._travelled + 1; }
 
     get handled(): number { return this._handled; }
-    private addHandled(amount: number) { this._handled = this.supplierMemory.handled = this._handled + amount; }
+    private addHandled(amount: number) { this._handled = this.memory.handled = this._handled + amount; }
 
     get performance(): number { return (this.handled / this.travelled) * SUPPLIER_PERFORMANCE_FACTOR; }
 
@@ -65,7 +61,7 @@ export class Supplier extends CreepBase
     {
         super(creep);
 
-        let memory = this._supplierMemory = super.memory as SupplierMemory;
+        let memory = this.memory;
 
         this.supply = GameWrap.get(memory.supply);
         this._customer = GameWrap.get(memory.customer);
@@ -142,7 +138,7 @@ export class Supplier extends CreepBase
 
         if (this._travelled > 100)
         {
-            let memory = this.supplierMemory;
+            let memory = this.memory;
 
             this._travelled = memory.travelled = this._travelled / 2;
             this._handled = memory.handled = this._handled / 2;

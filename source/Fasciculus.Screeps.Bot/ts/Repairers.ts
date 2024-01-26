@@ -28,10 +28,8 @@ class DamageHelper
     }
 }
 
-export class Repairer extends CreepBase
+export class Repairer extends CreepBase<RepairerMemory>
 {
-    get memory(): RepairerMemory { return super.memory as RepairerMemory; }
-
     get repairable(): Repairable | undefined { return Repairs.get(this.memory.repairable); }
     set repairable(value: Repairable | undefined) { this.memory.repairable = value?.id; }
 

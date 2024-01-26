@@ -18,10 +18,8 @@ const BUILDER_MOVE_TO_OPTS: MoveToOpts =
     }
 };
 
-export class Builder extends CreepBase
+export class Builder extends CreepBase<BuilderMemory>
 {
-    get memory(): BuilderMemory { return super.memory as BuilderMemory; }
-
     get site(): Site | undefined { return Sites.get(this.memory.site); }
     set site(value: Site | undefined) { this.memory.site = value?.id; }
 

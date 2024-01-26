@@ -6,9 +6,10 @@ import { BodyParts } from "./Bodies";
 import { Dictionary, Vector } from "./Collections";
 import { CreepState, CreepType } from "./Types";
 
-export class CreepBase
+export class CreepBase<M extends CreepBaseMemory>
 {
     readonly creep: Creep;
+    protected readonly memory: M;
 
     readonly workParts: number;
 
@@ -17,11 +18,11 @@ export class CreepBase
     constructor(creep: Creep)
     {
         this.creep = creep;
+        this.memory = this.creep.memory as M;
+
         this.workParts = BodyParts.workOf(creep);
         this._state = this.memory.state;
     }
-
-    get memory(): CreepBaseMemory { return this.creep.memory as CreepBaseMemory; }
 
     get state(): CreepState { return this._state; }
     set state(value: CreepState) { this._state = value; this.memory.state = value; }
