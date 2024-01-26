@@ -126,11 +126,11 @@ export class Profiler
         Profiler._entries = {};
     }
 
-    static log()
+    static log(ignoredKeys?: string[])
     {
         const memory: ProfilerMemory = Profiler.memory;
         const ticks: number = Game.time - memory.start + 1;
-        const entries: ProfilerEntries = Dictionaries.values(memory.entries).sort(Profiler.compare).take(10);
+        const entries: ProfilerEntries = Profiler.getLogEntries(10, ignoredKeys);
         const divider: string = "".padEnd(53, "-");
         let label: string = "method".padEnd(40);
         let duration: string = "cpu".padStart(6);
@@ -149,6 +149,21 @@ export class Profiler
 
             console.log(`${label}${duration}${calls}`);
         }
+    }
+
+    private static getLogEntries(maxCount: number, ignoredKeys?: string[]): ProfilerEntries
+    {
+        let dictionary: ProfilerDictionary = Dictionaries.clone(Profiler.memory.entries);
+
+        if (ignoredKeys)
+        {
+            for (let key of ignoredKeys)
+            {
+                delete dictionary[key];
+            }
+        }
+
+        return Dictionaries.values(dictionary).sort(Profiler.compare).take(maxCount);
     }
 
     private static compare(a: ProfilerEntry, b: ProfilerEntry): number

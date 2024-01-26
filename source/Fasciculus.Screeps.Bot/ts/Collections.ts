@@ -222,12 +222,6 @@ export class Vectors
     }
 }
 
-export interface DictionaryEntry<T>
-{
-    key: string;
-    value: T;
-}
-
 export class Dictionaries
 {
     static isEmpty<T>(dictionary: Dictionary<T>): boolean
@@ -248,5 +242,10 @@ export class Dictionaries
     static values<T>(dictionary: Dictionary<T>): Vector<T>
     {
         return new Vector(Object.values(dictionary)); 
+    }
+
+    static clone<T>(dictionary: Dictionary<T>): Dictionary<T>
+    {
+        return Object.assign({}, dictionary);
     }
 }

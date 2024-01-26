@@ -8,6 +8,6 @@ system.setTickDuration(1000)
 system.setTickDuration(1500)
 
 storage.db['rooms.objects'].update({type:"spawn"}, {$set: {storeCapacityResource:{ energy:300}}});
-storage.db['users'].update({ username: 'rhjoerg' },{ $set: { cpu: 60 }})
+storage.db['users'].update({ username: 'rhjoerg' },{ $set: { cpu: 20 }})
 
 https://github.com/screeps/storage/blob/master/db.original.json
