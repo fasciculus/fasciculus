@@ -52,15 +52,6 @@ export interface WellerMemory extends CreepBaseMemory
     well?: SourceId;
 }
 
-export interface SupplierMemory extends CreepBaseMemory
-{
-    customer?: CustomerId;
-    supply?: SupplyId;
-
-    worked?: number;
-    supplied?: number;
-}
-
 export interface UpgraderMemory extends CreepBaseMemory
 {
     controller?: ControllerId;

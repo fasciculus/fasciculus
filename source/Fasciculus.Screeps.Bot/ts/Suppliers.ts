@@ -2,7 +2,7 @@ import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepBase, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { GameWrap } from "./GameWrap";
-import { SupplierMemory } from "./Memories";
+import { CreepBaseMemory } from "./Memories";
 import { Spawns } from "./Spawns";
 import { Customer, CustomerId, SupplyId, Supply, CreepState, CreepType } from "./Types";
 import { Stores } from "./Stores";
@@ -26,33 +26,52 @@ const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
     }
 };
 
+interface SupplierMemory extends CreepBaseMemory
+{
+    customer?: CustomerId;
+    supply?: SupplyId;
+
+    travelled?: number;
+    handled?: number;
+}
+
 export class Supplier extends CreepBase
 {
+    private _supplierMemory: SupplierMemory;
+
     private _supply?: Supply;
     private _customer?: Customer;
 
-    get memory(): SupplierMemory { return super.memory as SupplierMemory; }
+    private _travelled: number;
+    private _handled: number;
+
+    get supplierMemory(): SupplierMemory { return this._supplierMemory; }
 
     get supply(): Supply | undefined { return this._supply; }
-    set supply(value: Supply | undefined) { this._supply = value; this.memory.supply = value?.id; }
+    set supply(value: Supply | undefined) { this._supply = value; this.supplierMemory.supply = value?.id; }
 
     get customer(): Customer | undefined { return this._customer; }
-    set customer(value: Customer | undefined) { this._customer = value; this.memory.customer = value?.id; }
+    set customer(value: Customer | undefined) { this._customer = value; this.supplierMemory.customer = value?.id; }
 
-    get worked(): number { return this.memory.worked || 1; }
-    private set worked(value: number) { this.memory.worked = value; }
+    get travelled(): number { return this._travelled; }
+    private incrementTravelled() { this._travelled = this.supplierMemory.travelled = this._travelled + 1; }
 
-    get supplied(): number { return this.memory.supplied || this.energyCapacity; }
-    private set supplied(value: number) { this.memory.supplied = value; }
+    get handled(): number { return this._handled; }
+    private addHandled(amount: number) { this._handled = this.supplierMemory.handled = this._handled + amount; }
 
-    get performance(): number { return (this.supplied / this.worked) * SUPPLIER_PERFORMANCE_FACTOR; }
+    get performance(): number { return (this.handled / this.travelled) * SUPPLIER_PERFORMANCE_FACTOR; }
 
     constructor(creep: Creep)
     {
         super(creep);
 
-        this.supply = GameWrap.get(this.memory.supply);
-        this._customer = GameWrap.get(this.memory.customer);
+        let memory = this._supplierMemory = super.memory as SupplierMemory;
+
+        this.supply = GameWrap.get(memory.supply);
+        this._customer = GameWrap.get(memory.customer);
+
+        this._travelled = memory.travelled || 1;
+        this._handled = memory.handled || this.energyCapacity;
     }
 
     execute()
@@ -68,7 +87,7 @@ export class Supplier extends CreepBase
 
     private executeToSupply()
     {
-        ++this.worked;
+        this.incrementTravelled();
 
         let supply = this.supply;
 
@@ -79,7 +98,7 @@ export class Supplier extends CreepBase
 
     private executeToCustomer()
     {
-        ++this.worked;
+        this.incrementTravelled();
 
         let customer = this.customer;
 
@@ -91,20 +110,19 @@ export class Supplier extends CreepBase
     @profile
     private executeWithdraw()
     {
-        ++this.worked;
-
         let supply = this.supply;
 
         if (!supply) return;
 
-        this.withdraw(supply, RESOURCE_ENERGY);
+        let amount = Math.min(this.freeEnergyCapacity, Stores.energy(supply));
+
+        this.withdraw(supply, RESOURCE_ENERGY, amount);
+        this.onHandled(amount);
     }
 
     @profile
     private executeTransfer()
     {
-        ++this.worked;
-
         let customer = this.customer;
 
         if (!customer) return;
@@ -115,17 +133,19 @@ export class Supplier extends CreepBase
 
         if (customer instanceof Creep) this.customer = undefined;
 
-        this.onSupplied(amount);
+        this.onHandled(amount);
     }
 
-    private onSupplied(amount: number)
+    private onHandled(amount: number)
     {
-        this.supplied += amount;
+        this.addHandled(amount);
 
-        if (this.worked > 100)
+        if (this._travelled > 100)
         {
-            this.worked /= 2;
-            this.supplied /= 2;
+            let memory = this.supplierMemory;
+
+            this._travelled = memory.travelled = this._travelled / 2;
+            this._handled = memory.handled = this._handled / 2;
         }
     }
 
