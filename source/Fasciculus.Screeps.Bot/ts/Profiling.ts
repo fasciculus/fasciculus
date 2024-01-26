@@ -126,11 +126,11 @@ export class Profiler
         Profiler._entries = {};
     }
 
-    static log(ignoredKeys?: string[])
+    static log(maxEntries: number, ignoredKeys?: string[])
     {
         const memory: ProfilerMemory = Profiler.memory;
         const ticks: number = Game.time - memory.start + 1;
-        const entries: ProfilerEntries = Profiler.getLogEntries(10, ignoredKeys);
+        const entries: ProfilerEntries = Profiler.getLogEntries(maxEntries, ignoredKeys);
         const divider: string = "".padEnd(53, "-");
         let label: string = "method".padEnd(40);
         let duration: string = "cpu".padStart(6);
@@ -151,7 +151,7 @@ export class Profiler
         }
     }
 
-    private static getLogEntries(maxCount: number, ignoredKeys?: string[]): ProfilerEntries
+    private static getLogEntries(maxEntries: number, ignoredKeys?: string[]): ProfilerEntries
     {
         let dictionary: ProfilerDictionary = Dictionaries.clone(Profiler.memory.entries);
 
@@ -163,7 +163,7 @@ export class Profiler
             }
         }
 
-        return Dictionaries.values(dictionary).sort(Profiler.compare).take(maxCount);
+        return Dictionaries.values(dictionary).sort(Profiler.compare).take(maxEntries);
     }
 
     private static compare(a: ProfilerEntry, b: ProfilerEntry): number

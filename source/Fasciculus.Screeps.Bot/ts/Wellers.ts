@@ -3,7 +3,6 @@ import { Bodies, BodyTemplate } from "./Bodies";
 import { CreepState, CreepType } from "./Enums";
 import { WellerMemory } from "./Memories";
 import { Well, Wells } from "./Wells";
-import { Statistics } from "./Statistics";
 import { Vector } from "./Collections";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
@@ -60,17 +59,13 @@ export class Weller extends CreepBase
         }
     }
 
-    @profile
     private executeHarvest()
     {
         let well = this.well;
 
         if (!well) return;
 
-        let amount = Math.min(well.energy, this.maxEnergyPerTick);
-
         this.harvest(well.source);
-        Statistics.addWelled(amount);
     }
 
     prepare()
@@ -83,6 +78,7 @@ export class Weller extends CreepBase
         }
     }
 
+    @profile
     private prepareIdle(): CreepState
     {
         if (this.full) return CreepState.Idle;
@@ -94,6 +90,7 @@ export class Weller extends CreepBase
         return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell
     }
 
+    @profile
     private prepareToWell(): CreepState
     {
         let well = this.well;
@@ -103,6 +100,7 @@ export class Weller extends CreepBase
         return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell;
     }
 
+    @profile
     private prepareHarvest(): CreepState
     {
         if (this.full) return this.prepareIdle();

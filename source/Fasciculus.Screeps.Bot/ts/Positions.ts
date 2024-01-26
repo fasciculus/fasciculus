@@ -14,6 +14,11 @@ export class Positions
         return targets.find((values) => Positions.positionOf(start).findClosestByPath(values, opts) || undefined);
     }
 
+    static closestByRange<T extends Positioned>(start: Positioned, targets: Vector<T>)
+    {
+        return targets.find((values) => Positions.positionOf(start).findClosestByRange(values) || undefined);
+    }
+
     static encode(pos: RoomPosition): string
     {
         return `${pos.roomName}.${pos.x}.${pos.y}`;

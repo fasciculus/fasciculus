@@ -1,3 +1,4 @@
 
-export const PROFILER_SESSION = 7;
-export const PROFILER_IGNORED_KEYS: string[] = ["Weller:executeHarvest"];
+export const PROFILER_SESSION = 6;
+export const PROFILER_MAX_ENTRIES = 10;
+export const PROFILER_IGNORED_KEYS: string[] = ["Wellers:prepare"];

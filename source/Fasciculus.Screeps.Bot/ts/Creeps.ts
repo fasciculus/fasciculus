@@ -5,6 +5,7 @@ import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
 import { BodyParts } from "./Bodies";
 import { Dictionary, Vector } from "./Collections";
+import { profile } from "./Profiling";
 
 export class CreepBase
 {
@@ -40,7 +41,11 @@ export class CreepBase
 
     moveTo(target: RoomPosition | { pos: RoomPosition }, opts?: MoveToOpts): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
     {
-        return this.creep.moveTo(target, opts);
+        let creep = this.creep;
+
+        if (creep.fatigue > 0) return ERR_TIRED;
+
+        return creep.moveTo(target, opts);
     }
 
     build(target: ConstructionSite): CreepActionReturnCode | ERR_NOT_ENOUGH_RESOURCES | ERR_RCL_NOT_ENOUGH

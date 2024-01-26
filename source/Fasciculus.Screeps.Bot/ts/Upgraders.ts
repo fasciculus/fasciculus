@@ -16,17 +16,20 @@ const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
 
 export class Upgrader extends CreepBase
 {
+    private _controller?: Controller;
+
     readonly maxEnergyPerTick: number;
 
     get memory(): UpgraderMemory { return super.memory as UpgraderMemory; }
 
-    get controller(): Controller | undefined { return Controllers.get(this.memory.controller); }
-    set controller(value: Controller | undefined) { this.memory.controller = value?.id; }
+    get controller(): Controller | undefined { return this._controller; }
+    set controller(value: Controller | undefined) { this._controller = value; this.memory.controller = value?.id; }
 
     constructor(creep: Creep)
     {
         super(creep);
 
+        this._controller = Controllers.get(this.memory.controller);
         this.maxEnergyPerTick = this.workParts;
     }
 
@@ -39,6 +42,7 @@ export class Upgrader extends CreepBase
         }
     }
 
+    @profile
     private executeToController()
     {
         let controller = this.controller;
@@ -133,7 +137,7 @@ export class Upgraders
         upgraders.forEach(u => u.prepare());
     }
 
-    @profile
+    // @profile
     private static execute(upgraders: Vector<Upgrader>)
     {
         upgraders.forEach(u => u.execute());

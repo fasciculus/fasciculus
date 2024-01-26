@@ -435,6 +435,7 @@ export class Suppliers
         return result;
     }
 
+    @profile
     private static adjustCustomerDemands(infos: Dictionary<CustomerInfo>)
     {
         for (let supplier of Suppliers._all)
@@ -578,6 +579,6 @@ export class Suppliers
     @profile
     private static findNearest(target: Customer | Supply, suppliers: Dictionary<SupplierInfo>): SupplierInfo | undefined
     {
-        return Positions.closestByPath(target, Dictionaries.values(suppliers));
+        return Positions.closestByRange(target, Dictionaries.values(suppliers));
     }
 }
