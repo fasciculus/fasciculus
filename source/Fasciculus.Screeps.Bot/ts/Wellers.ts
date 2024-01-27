@@ -1,11 +1,11 @@
 import { CreepBase, Creeps } from "./Creeps";
 import { Bodies, BodyTemplate } from "./Bodies";
-import { WellerMemory } from "./Memories";
+import { CreepBaseMemory } from "./Memories";
 import { Well, Wells } from "./Wells";
 import { Vector } from "./Collections";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
-import { CreepState, CreepType } from "./Types";
+import { CreepState, CreepType, SourceId } from "./Types";
 
 const WELLER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 5);
@@ -19,6 +19,11 @@ const WELLER_MOVE_TO_OPTS: MoveToOpts =
         stroke: "#fff"
     }
 };
+
+interface WellerMemory extends CreepBaseMemory
+{
+    well?: SourceId;
+}
 
 export class Weller extends CreepBase<WellerMemory>
 {

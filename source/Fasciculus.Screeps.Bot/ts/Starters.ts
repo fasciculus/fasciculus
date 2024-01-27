@@ -1,9 +1,8 @@
 
 import { CreepBase, Creeps } from "./Creeps";
 import { Bodies, BodyTemplate } from "./Bodies";
-import { StarterMemory } from "./Memories";
 import { Well, Wells } from "./Wells";
-import { CreepState, CreepType, Customer } from "./Types";
+import { CreepState, CreepType, Customer, CustomerId, SourceId } from "./Types";
 import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
 import { Spawns } from "./Spawns";
@@ -11,6 +10,7 @@ import { Extensions } from "./Extensions";
 import { Vector } from "./Collections";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
+import { CreepBaseMemory } from "./Memories";
 
 const STARTER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE]);
 
@@ -21,6 +21,12 @@ const STARTER_MOVE_TO_OPTS: MoveToOpts =
         stroke: "#ff0"
     }
 };
+
+interface StarterMemory extends CreepBaseMemory
+{
+    well?: SourceId;
+    customer?: CustomerId;
+}
 
 export class Starter extends CreepBase<StarterMemory>
 {

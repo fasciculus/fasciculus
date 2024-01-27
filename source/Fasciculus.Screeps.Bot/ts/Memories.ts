@@ -1,7 +1,7 @@
 
 import { Dictionaries } from "./Collections";
 import { profile } from "./Profiling";
-import { ControllerId, CreepState, CreepType, CustomerId, RepairableId, SiteId, SourceId } from "./Types";
+import { ControllerId, CreepState, CreepType, RepairableId, SiteId, SourceId } from "./Types";
 
 export interface ExtendedMemory extends Memory
 {
@@ -13,17 +13,6 @@ export interface CreepBaseMemory extends CreepMemory
     type: CreepType;
     state: CreepState;
     path?: string;
-}
-
-export interface StarterMemory extends CreepBaseMemory
-{
-    well?: SourceId;
-    customer?: CustomerId;
-}
-
-export interface WellerMemory extends CreepBaseMemory
-{
-    well?: SourceId;
 }
 
 export interface UpgraderMemory extends CreepBaseMemory
