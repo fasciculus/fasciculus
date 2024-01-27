@@ -3,15 +3,6 @@ import { Dictionaries, Dictionary } from "./Collections";
 import { profile } from "./Profiling";
 import { ContainerId, ControllerId, CreepState, CreepType, CustomerId, RepairableId, SiteId, SourceId } from "./Types";
 
-export interface WellMemory
-{
-    slots?: number;
-    container?: ContainerId;
-    assignees?: string[];
-}
-
-export type WellsMemory = Dictionary<WellMemory>;
-
 export interface ExtendedMemory extends Memory
 {
     [index: string]: any;
@@ -69,15 +60,6 @@ export class Memories
     static get memory(): ExtendedMemory
     {
         return Memory as ExtendedMemory;
-    }
-
-    static get wells(): WellsMemory { return Memories.get("wells", {}); }
-
-    static well(id: Id<Source>): WellMemory
-    {
-        var wells = Memories.wells;
-
-        return wells[id] || (wells[id] = {});
     }
 
     static get<T>(key: string, initial: T): T

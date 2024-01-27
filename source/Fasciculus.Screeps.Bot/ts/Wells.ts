@@ -1,18 +1,34 @@
 import { Chamber, Chambers } from "./Chambers";
-import { Memories, WellMemory } from "./Memories";
+import { Memories } from "./Memories";
 import { DIRECTIONS, Point } from "./Geometry";
 import { Creeps } from "./Creeps";
 import { BodyParts } from "./Bodies";
 import { Dictionary, Vector, Vectors } from "./Collections";
-import { SourceId } from "./Types";
+import { ContainerId, SourceId } from "./Types";
 import { Sources } from "./Sources";
+
+export interface WellMemory
+{
+    slots?: number;
+    container?: ContainerId;
+    assignees?: string[];
+}
+
+export type WellsMemory = Dictionary<WellMemory>;
 
 export class Well
 {
     readonly source: Source;
 
     get id(): SourceId { return this.source.id; }
-    get memory(): WellMemory { return Memories.well(this.id); }
+
+    get memory(): WellMemory
+    {
+        const wellsMemory: WellsMemory = Memories.get("wells", {});
+        const id = this.id;
+
+        return wellsMemory[id] || (wellsMemory[id] = {});
+    }
 
     get pos(): RoomPosition { return this.source.pos; }
     get room(): Room { return this.source.room; }
