@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.128-alpha">
   
   <ItemGroup>
-    <Folder Include="js\" />
+    <Folder Include="js/" />
   </ItemGroup>
 
   <Target Name="CreateProfilerSessionKey" BeforeTargets="Build">
