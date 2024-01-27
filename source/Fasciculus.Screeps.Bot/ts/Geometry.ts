@@ -1,5 +1,4 @@
-import { Vector, Vectors } from "./Collections";
-import { Dictionary } from "./Common";
+import { Dictionary, Vector, Vectors } from "./Common";
 
 export const DIRECTIONS: Vector<DirectionConstant> = Vector.from([TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT]);
 

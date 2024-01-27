@@ -1,4 +1,4 @@
-import { Vector } from "./Collections";
+import { Vector } from "./Common";
 
 export type Positioned = RoomPosition | _HasRoomPosition;
 

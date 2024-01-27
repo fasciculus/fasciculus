@@ -1,5 +1,5 @@
+import { Vector } from "./Common";
 import { Rooms } from "./Rooms";
-import { Vector } from "./Collections";
 
 export class Sources
 {

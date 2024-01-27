@@ -1,4 +1,4 @@
-import { Vector } from "./Collections";
+import { Vector } from "./Common";
 import { Directions } from "./Geometry";
 import { Positions } from "./Positions";
 

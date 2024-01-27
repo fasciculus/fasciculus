@@ -1,5 +1,4 @@
-import { Vector, Vectors } from "./Collections";
-import { CreepType } from "./Common";
+import { CreepType, Vector, Vectors } from "./Common";
 
 const PartPriorities =
 {

@@ -1,5 +1,4 @@
-import { Vector } from "./Collections";
-import { Dictionary, Repairable, RepairableId } from "./Common";
+import { Dictionary, Repairable, RepairableId, Vector } from "./Common";
 import { Wall, Walls } from "./Walls";
 
 export class Repairs

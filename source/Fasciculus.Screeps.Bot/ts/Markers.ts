@@ -1,5 +1,4 @@
-import { Vector } from "./Collections";
-import { MarkerType } from "./Common";
+import { MarkerType, Vector } from "./Common";
 import { Creeps } from "./Creeps";
 import { GameWrap } from "./GameWrap";
 import { profile } from "./Profiling";

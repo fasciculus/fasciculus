@@ -1,5 +1,4 @@
-import { Vector } from "./Collections";
-import { CreepState, CreepType } from "./Common";
+import { CreepState, CreepType, Vector } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
 import { GameWrap } from "./GameWrap";
 import { Names } from "./Names";

@@ -1,7 +1,7 @@
 
 import { BodyParts } from "./Bodies";
-import { Dictionaries, Vector } from "./Collections";
-import { CreepState, CreepType, Dictionary } from "./Common";
+import { Dictionaries } from "./Collections";
+import { CreepState, CreepType, Dictionary, Vector } from "./Common";
 import { GameWrap } from "./GameWrap";
 import { profile } from "./Profiling";
 import { Stores } from "./Stores";

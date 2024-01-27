@@ -1,8 +1,7 @@
 
 import { Bodies } from "./Bodies";
 import { Builders } from "./Builders";
-import { Vector } from "./Collections";
-import { CreepType } from "./Common";
+import { CreepType, Vector } from "./Common";
 import { Controllers } from "./Controllers";
 import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
