@@ -1,5 +1,4 @@
-import { Dictionary, Vector } from "./Common";
-import { Point } from "./Geometry";
+import { Dictionary, Point, Vector } from "./Common";
 
 export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;
 

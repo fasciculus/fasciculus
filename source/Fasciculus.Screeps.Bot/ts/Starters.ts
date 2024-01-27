@@ -1,8 +1,7 @@
 
-import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, GameWrap, SourceId, Vector } from "./Common";
+import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, GameWrap, Positions, SourceId, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
-import { Positions } from "./Positions";
 import { profile } from "./Profiling";
 import { Spawns } from "./Spawns";
 import { Stores } from "./Stores";

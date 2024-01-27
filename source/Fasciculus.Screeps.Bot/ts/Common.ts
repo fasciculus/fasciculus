@@ -524,3 +524,59 @@ export class Bodies
         return Bodies.template(type)?.createBody(energy);
     }
 }
+
+export const DirectionConstants: Vector<DirectionConstant> = Vector.from([TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT]);
+
+export class Point
+{
+    readonly x: number;
+    readonly y: number;
+
+    constructor(x: number, y: number)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    static from(pos: RoomPosition): Point
+    {
+        return new Point(pos.x, pos.y);
+    }
+
+    around(): Vector<Point>
+    {
+        let x = this.x;
+        let y = this.y;
+
+        let top = new Point(x, y - 1);
+        let topRight = new Point(x + 1, y - 1);
+        let right = new Point(x + 1, y);
+        let bottomRight = new Point(x + 1, y + 1);
+        let bottom = new Point(x, y + 1);
+        let bottomLeft = new Point(x - 1, y + 1);
+        let left = new Point(x - 1, y);
+        let topLeft = new Point(x - 1, y - 1);
+
+        return Vector.from([this, top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft]);
+    }
+}
+
+export type Positioned = RoomPosition | _HasRoomPosition;
+
+export class Positions
+{
+    static positionOf(target: Positioned): RoomPosition
+    {
+        return target instanceof RoomPosition ? target : target.pos;
+    }
+
+    static closestByPath<T extends Positioned>(start: Positioned, targets: Vector<T>, opts?: FindPathOpts): T | undefined
+    {
+        return targets.find((values) => Positions.positionOf(start).findClosestByPath(values, opts) || undefined);
+    }
+
+    static closestByRange<T extends Positioned>(start: Positioned, targets: Vector<T>)
+    {
+        return targets.find((values) => Positions.positionOf(start).findClosestByRange(values) || undefined);
+    }
+}

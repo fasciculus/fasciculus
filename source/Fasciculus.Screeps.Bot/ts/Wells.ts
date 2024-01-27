@@ -1,7 +1,6 @@
 import { Chamber, Chambers } from "./Chambers";
-import { BodyParts, ContainerId, Dictionary, Memories, SourceId, Vector, Vectors } from "./Common";
+import { BodyParts, ContainerId, Dictionary, DirectionConstants, Memories, Point, SourceId, Vector, Vectors } from "./Common";
 import { Creeps } from "./Creeps";
-import { DIRECTIONS, Point } from "./Geometry";
 import { Sources } from "./Sources";
 
 interface WellMemory
@@ -67,7 +66,7 @@ export class Well
 
         let types = territory.around(Point.from(this.pos));
 
-        return DIRECTIONS.filter(d => types.at(d) == 0).length;
+        return DirectionConstants.filter(d => types.at(d) == 0).length;
     }
 
     private static getMemory(id: SourceId): WellMemory

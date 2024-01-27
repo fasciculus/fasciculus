@@ -1,7 +1,6 @@
-import { Bodies, BodyTemplate, ControllerId, CreepState, CreepType, Dictionary, Vector } from "./Common";
+import { Bodies, BodyTemplate, ControllerId, CreepState, CreepType, Dictionary, Positions, Vector } from "./Common";
 import { Controller, Controllers } from "./Controllers";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
-import { Positions } from "./Positions";
 import { profile } from "./Profiling";
 
 const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
@@ -65,9 +64,9 @@ export class Upgrader extends CreepBase<UpgraderMemory>
     {
         switch (this.state)
         {
-            case CreepState.Idle: this.state = this.prepareIdle();
-            case CreepState.ToController: this.state = this.prepareToController();
-            case CreepState.Upgrade: this.state = this.prepareUpgrade();
+            case CreepState.Idle: this.state = this.prepareIdle(); break;
+            case CreepState.ToController: this.state = this.prepareToController(); break;
+            case CreepState.Upgrade: this.state = this.prepareUpgrade(); break;
         }
     }
 
