@@ -1,6 +1,5 @@
-import { Bodies, BodyTemplate } from "./Bodies";
 import { Builders } from "./Builders";
-import { CreepState, CreepType, Customer, CustomerId, Dictionaries, Dictionary, GameWrap, Supply, SupplyId, Vector } from "./Common";
+import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, Dictionaries, Dictionary, GameWrap, Supply, SupplyId, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { Positions } from "./Positions";

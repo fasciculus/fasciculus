@@ -1,6 +1,5 @@
-import { BodyParts } from "./Bodies";
 import { Chamber, Chambers } from "./Chambers";
-import { ContainerId, Dictionary, Memories, SourceId, Vector, Vectors } from "./Common";
+import { BodyParts, ContainerId, Dictionary, Memories, SourceId, Vector, Vectors } from "./Common";
 import { Creeps } from "./Creeps";
 import { DIRECTIONS, Point } from "./Geometry";
 import { Sources } from "./Sources";

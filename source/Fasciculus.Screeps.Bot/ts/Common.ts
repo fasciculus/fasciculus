@@ -391,3 +391,136 @@ export class Names
         return `${prefix}${id}`;
     }
 }
+
+const BodyPartPriorities =
+{
+    "tough": 1,
+    "work": 2,
+    "attack": 3,
+    "ranged_attack": 4,
+    "carry": 5,
+    "move": 6,
+    "heal": 7,
+    "claim": 8
+}
+
+export interface BodyPartCounts
+{
+    work: number;
+}
+
+export class BodyParts
+{
+    static comparePriority(a: BodyPartConstant, b: BodyPartConstant)
+    {
+        let pa: number = BodyPartPriorities[a] || 99;
+        let pb: number = BodyPartPriorities[b] || 99;
+
+        return pa - pb;
+    }
+
+    static costOf(parts: Vector<BodyPartConstant>): number
+    {
+        return parts.sum(p => BODYPART_COST[p]);
+    }
+
+    static countsOf(creep: Creep): BodyPartCounts
+    {
+        let result: BodyPartCounts = { work: 0 };
+
+        for (let part of creep.body)
+        {
+            switch (part.type)
+            {
+                case WORK: ++result.work; break;
+            }
+        }
+
+        return result;
+    }
+
+    static workOf(creep: Creep): number
+    {
+        return BodyParts.countsOf(creep).work;
+    }
+}
+
+interface BodyPartChunk
+{
+    cost: number;
+    parts: Vector<BodyPartConstant>;
+}
+
+export class BodyTemplate
+{
+    private chunks: Vector<BodyPartChunk> = new Vector();
+
+    static create(parts: BodyPartConstant[], times: number = 1): BodyTemplate
+    {
+        return new BodyTemplate().add(parts, times);
+    }
+
+    add(parts: BodyPartConstant[], times: number = 1): BodyTemplate
+    {
+        let chunk: BodyPartChunk | undefined = BodyTemplate.createChunk(Vector.from(parts));
+
+        if (!chunk) return this;
+
+        for (let i = 0; i < times; ++i)
+        {
+            this.chunks.append(chunk);
+        }
+
+        return this;
+    }
+
+    createBody(energy: number): Vector<BodyPartConstant> | undefined
+    {
+        let chunkCount = this.chunkCount(energy);
+
+        if (chunkCount == 0) return undefined;
+
+        return Vectors.flatten(this.chunks.take(chunkCount).map(c => c.parts)).sort(BodyParts.comparePriority);
+    }
+
+    private chunkCount(energy: number): number
+    {
+        var result: number = 0;
+
+        for (let chunk of this.chunks)
+        {
+            if (energy < chunk.cost) break;
+
+            ++result;
+            energy -= chunk.cost;
+        }
+
+        return result;
+    }
+
+    private static createChunk(parts: Vector<BodyPartConstant>): BodyPartChunk | undefined
+    {
+        if (parts.length == 0) return undefined;
+
+        const cost = BodyParts.costOf(parts);
+
+        return { cost, parts };
+    }
+}
+
+export class Bodies
+{
+    private static _registry: { [type: string]: BodyTemplate } = {}
+
+    private static template(type: CreepType): BodyTemplate | undefined { return Bodies._registry[type]; }
+
+    static register(type: CreepType, template: BodyTemplate)
+    {
+        Bodies._registry[type] = template;
+    }
+
+    static createBody(type: CreepType, energy: number): Vector<BodyPartConstant> | undefined
+    {
+        return Bodies.template(type)?.createBody(energy);
+    }
+}
