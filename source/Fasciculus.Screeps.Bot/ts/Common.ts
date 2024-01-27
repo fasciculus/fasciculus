@@ -68,3 +68,8 @@ export class Memories
         return result as T;
     }
 }
+
+export interface Dictionary<T>
+{
+    [index: string]: T;
+}

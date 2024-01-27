@@ -1,7 +1,7 @@
 import { BodyParts } from "./Bodies";
 import { Chamber, Chambers } from "./Chambers";
-import { Dictionary, Vector, Vectors } from "./Collections";
-import { ContainerId, Memories, SourceId } from "./Common";
+import { Vector, Vectors } from "./Collections";
+import { ContainerId, Dictionary, Memories, SourceId } from "./Common";
 import { Creeps } from "./Creeps";
 import { DIRECTIONS, Point } from "./Geometry";
 import { Sources } from "./Sources";

@@ -1,7 +1,4 @@
-export interface Dictionary<T>
-{
-    [index: string]: T;
-}
+import { Dictionary } from "./Common";
 
 export class Vector<T> implements Iterable<T>
 {

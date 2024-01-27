@@ -1,5 +1,6 @@
 import { Rooms } from "./Rooms";
-import { Dictionary, Vector, Vectors } from "./Collections";
+import { Vector, Vectors } from "./Collections";
+import { Dictionary } from "./Common";
 
 export class Controller
 {

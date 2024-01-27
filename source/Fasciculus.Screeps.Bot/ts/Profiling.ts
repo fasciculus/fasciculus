@@ -1,4 +1,5 @@
-import { Dictionaries, Dictionary, Vector } from "./Collections";
+import { Dictionaries, Vector } from "./Collections";
+import { Dictionary } from "./Common";
 import { PROFILER_SESSION } from "./ProfilerSession";
 import { PROFILER_IGNORED_KEYS, PROFILER_LOG_INTERVAL, PROFILER_MAX_ENTRIES, PROFILER_WARMUP } from "./_Config";
 

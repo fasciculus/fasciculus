@@ -1,6 +1,6 @@
 
-import { Dictionary, Vector } from "./Collections";
-import { SiteId } from "./Common";
+import { Vector } from "./Collections";
+import { Dictionary, SiteId } from "./Common";
 import { GameWrap } from "./GameWrap";
 
 export class Site

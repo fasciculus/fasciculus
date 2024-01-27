@@ -1,6 +1,5 @@
 
-import { Dictionary } from "./Collections";
-import { Memories } from "./Common";
+import { Dictionary, Memories } from "./Common";
 
 interface NamesMemory
 {
