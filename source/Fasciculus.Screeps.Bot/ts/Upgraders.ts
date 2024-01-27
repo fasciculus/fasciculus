@@ -1,11 +1,11 @@
 import { Bodies, BodyTemplate } from "./Bodies";
 import { Controller, Controllers } from "./Controllers";
 import { CreepBase, Creeps } from "./Creeps";
-import { UpgraderMemory } from "./Memories";
+import { CreepBaseMemory } from "./Memories";
 import { Dictionary, Vector } from "./Collections";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
-import { CreepState, CreepType } from "./Types";
+import { ControllerId, CreepState, CreepType } from "./Types";
 
 const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
@@ -13,6 +13,11 @@ const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
     .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
     .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
     .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, MOVE]);
+
+interface UpgraderMemory extends CreepBaseMemory
+{
+    controller?: ControllerId;
+}
 
 export class Upgrader extends CreepBase<UpgraderMemory>
 {

@@ -1,7 +1,7 @@
 
 import { Dictionaries } from "./Collections";
 import { profile } from "./Profiling";
-import { ControllerId, CreepState, CreepType, RepairableId, SiteId, SourceId } from "./Types";
+import { CreepState, CreepType, RepairableId, SiteId } from "./Types";
 
 export interface ExtendedMemory extends Memory
 {
@@ -13,11 +13,6 @@ export interface CreepBaseMemory extends CreepMemory
     type: CreepType;
     state: CreepState;
     path?: string;
-}
-
-export interface UpgraderMemory extends CreepBaseMemory
-{
-    controller?: ControllerId;
 }
 
 export interface BuilderMemory extends CreepBaseMemory
