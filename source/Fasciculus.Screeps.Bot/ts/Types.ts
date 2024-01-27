@@ -1,13 +1,4 @@
 
-export type Supply = Creep | StructureContainer;
-export type SupplyId = Id<Creep | StructureContainer>;
-
-export type CustomerId = Id<Creep | StructureSpawn | StructureExtension>;
-export type Customer = Creep | StructureSpawn | StructureExtension;
-
-export type RepairableId = Id<StructureRoad | StructureWall>
-export type Repairable = StructureRoad | StructureWall
-
 
 export enum CreepType
 {
