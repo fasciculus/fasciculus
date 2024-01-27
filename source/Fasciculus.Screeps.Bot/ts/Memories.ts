@@ -1,17 +1,7 @@
 
-import { ContainerId, ControllerId, CustomerId, RepairableId, SupplyId, SiteId, SourceId, CreepType, CreepState } from "./Types";
 import { Dictionaries, Dictionary } from "./Collections";
 import { profile } from "./Profiling";
-
-export interface NamesMemory
-{
-    next: Dictionary<number>;
-}
-
-export interface SourceMemory
-{
-    container?: ContainerId;
-}
+import { ContainerId, ControllerId, CreepState, CreepType, CustomerId, RepairableId, SiteId, SourceId } from "./Types";
 
 export interface WellMemory
 {
@@ -20,18 +10,11 @@ export interface WellMemory
     assignees?: string[];
 }
 
-export interface StatisticsMemory
-{
-    supplied?: number;
-    welled?: number;
-}
+export type WellsMemory = Dictionary<WellMemory>;
 
-export interface ExtendedMemory
+export interface ExtendedMemory extends Memory
 {
-    names?: NamesMemory;
-    sources?: Dictionary<SourceMemory>;
-    wells?: Dictionary<WellMemory>;
-    statistics?: StatisticsMemory;
+    [index: string]: any;
 }
 
 export interface CreepBaseMemory extends CreepMemory
@@ -88,34 +71,24 @@ export class Memories
         return Memory as ExtendedMemory;
     }
 
-    static get names(): NamesMemory
-    {
-        var memory = Memories.memory;
-
-        return memory.names || (memory.names = { next: {} });
-    }
-
-    static source(source: Source): SourceMemory
-    {
-        var memory = Memories.memory;
-        var root = memory.sources || (memory.sources = {});
-        var id = source.id;
-
-        return root[id] || (root[id] = {});
-    }
+    static get wells(): WellsMemory { return Memories.get("wells", {}); }
 
     static well(id: Id<Source>): WellMemory
     {
-        var memory = Memories.memory;
-        var root = memory.wells || (memory.wells = {});
+        var wells = Memories.wells;
 
-        return root[id] || (root[id] = {});
+        return wells[id] || (wells[id] = {});
     }
 
-    static get statistics(): StatisticsMemory
+    static get<T>(key: string, initial: T): T
     {
-        var memory = Memories.memory;
+        let result: any | undefined = Memories.memory[key];
 
-        return memory.statistics || (memory.statistics = {});
+        if (!result)
+        {
+            Memories.memory[key] = result = initial;
+        }
+
+        return result as T;
     }
 }
