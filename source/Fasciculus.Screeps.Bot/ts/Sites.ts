@@ -1,6 +1,5 @@
 
-import { Dictionary, SiteId, Vector } from "./Common";
-import { GameWrap } from "./GameWrap";
+import { Dictionary, GameWrap, SiteId, Vector } from "./Common";
 
 export class Site
 {

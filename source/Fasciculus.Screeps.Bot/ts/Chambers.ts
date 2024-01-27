@@ -1,6 +1,5 @@
-import { GameWrap } from "./GameWrap";
 import { Territories, Territory } from "./Territories";
-import { Dictionary, Vector } from "./Common";
+import { Dictionary, GameWrap, Vector } from "./Common";
 
 export class Chamber
 {

@@ -1,6 +1,5 @@
-import { MarkerType, Vector } from "./Common";
+import { GameWrap, MarkerType, Vector } from "./Common";
 import { Creeps } from "./Creeps";
-import { GameWrap } from "./GameWrap";
 import { profile } from "./Profiling";
 import { Suppliers } from "./Suppliers";
 import { Wellers } from "./Wellers";

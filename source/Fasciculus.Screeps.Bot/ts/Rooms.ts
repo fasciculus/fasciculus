@@ -1,6 +1,5 @@
 
-import { Vector, Vectors } from "./Common";
-import { GameWrap } from "./GameWrap";
+import { GameWrap, Vector, Vectors } from "./Common";
 
 export class Rooms
 {

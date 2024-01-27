@@ -1,7 +1,5 @@
-import { CreepState, CreepType, Vector } from "./Common";
+import { CreepState, CreepType, GameWrap, Names, Vector } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
-import { GameWrap } from "./GameWrap";
-import { Names } from "./Names";
 
 export class Spawn
 {
