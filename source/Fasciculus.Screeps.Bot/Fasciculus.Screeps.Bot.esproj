@@ -1,9 +1,19 @@
-﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.128-alpha">
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.128-alpha">
   
   <ItemGroup>
     <Folder Include="js\" />
   </ItemGroup>
-  
+
+  <Target Name="CreateProfilerSessionKey" BeforeTargets="Build">
+    <PropertyGroup>
+      <ProfilerSession>$([System.Guid]::NewGuid().ToString("N"))</ProfilerSession>
+      <ProfilerSessionCode>export const PROFILER_SESSION = "$(ProfilerSession)"%3b</ProfilerSessionCode>
+    </PropertyGroup>
+    <ItemGroup></ItemGroup>
+    <Message Importance="high" Text="$(ProfilerSessionCode)" />
+    <WriteLinesToFile File="ts/ProfilerSession.ts" Overwrite="true" Lines="$(ProfilerSessionCode)" />
+  </Target>
+
   <Target Name="CommitToLocalhost" AfterTargets="Build">
     <PropertyGroup>
       <TargetDir>C:\Users\rhjoe\AppData\Local\Screeps\scripts\127_0_0_1___21025\default</TargetDir>

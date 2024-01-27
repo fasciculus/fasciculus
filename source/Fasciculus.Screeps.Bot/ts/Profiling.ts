@@ -1,5 +1,6 @@
 import { Dictionaries, Dictionary, Vector } from "./Collections";
-import { PROFILER_IGNORED_KEYS, PROFILER_LOG_INTERVAL, PROFILER_MAX_ENTRIES, PROFILER_SESSION, PROFILER_WARMUP } from "./_Config";
+import { PROFILER_SESSION } from "./ProfilerSession";
+import { PROFILER_IGNORED_KEYS, PROFILER_LOG_INTERVAL, PROFILER_MAX_ENTRIES, PROFILER_WARMUP } from "./_Config";
 
 export function profile<T extends new (...args: any[]) => any, A extends any[], R>(target: (this: T, ...args: A) => R,
     context: ClassMemberDecoratorContext)
@@ -46,7 +47,7 @@ type ProfilerEntries = Vector<ProfilerEntry>;
 
 interface ProfilerMemory
 {
-    session: number;
+    session: string;
     start: number;
     entries: ProfilerDictionary;
     warmup: number;
@@ -86,7 +87,7 @@ export class Profiler
     {
         let memory: MemoryWithProfiler = Memory as MemoryWithProfiler;
         let result: ProfilerMemory | undefined = memory.profiler;
-        let session: number = PROFILER_SESSION;
+        let session: string = PROFILER_SESSION;
 
         if (!result || result.session != session)
         {

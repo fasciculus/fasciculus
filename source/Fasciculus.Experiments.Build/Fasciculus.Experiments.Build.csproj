@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <Target Name="CreateProfilerSessionKey" BeforeTargets="Build">
+    <PropertyGroup>
+      <ProfilerSession>$([System.Guid]::NewGuid().ToString("N"))</ProfilerSession>
+      <ProfilerSessionCode>export const PROFILER_SESSION = "$(ProfilerSession)"%3b</ProfilerSessionCode>
+    </PropertyGroup>
+    <ItemGroup></ItemGroup>
+    <Message Importance="high" Text="$(ProfilerSessionCode)" />
+    <MakeDir Directories="ts" ContinueOnError="true" />
+    <WriteLinesToFile File="ts/ProfilerSession.ts" Overwrite="true" Lines="$(ProfilerSessionCode)" />
+  </Target>
+
+</Project>
