@@ -2,8 +2,9 @@
 import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
 import { BodyParts } from "./Bodies";
-import { Dictionary, Vector } from "./Collections";
+import { Dictionaries, Dictionary, Vector } from "./Collections";
 import { CreepState, CreepType } from "./Types";
+import { profile } from "./Profiling";
 
 export interface CreepBaseMemory extends CreepMemory
 {
@@ -128,14 +129,24 @@ export class Creeps
         return memory.type;
     }
 
+    @profile
     static initialize()
     {
         Creeps._my = GameWrap.myCreeps;
         Creeps._ofType = Creeps._my.groupBy(Creeps.typeOf);
     }
 
-    static resetStates()
+    @profile
+    static cleanup()
     {
-        Creeps._my.forEach(c => (c.memory as CreepBaseMemory).state = CreepState.Idle);
+        var existing: Set<string> = Dictionaries.keys(Game.creeps);
+
+        for (let id in Memory.creeps)
+        {
+            if (!existing.has(id))
+            {
+                delete Memory.creeps[id];
+            }
+        }
     }
 }

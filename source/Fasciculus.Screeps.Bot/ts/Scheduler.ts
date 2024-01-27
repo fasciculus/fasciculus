@@ -4,7 +4,6 @@ import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { Markers } from "./Markers";
-import { Memories } from "./Memories";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
 import { Rooms } from "./Rooms";
@@ -51,7 +50,7 @@ export class Scheduler
     {
         switch (Game.time % 10)
         {
-            case 1: Memories.cleanup(); break;
+            case 1: Creeps.cleanup(); break;
         }
 
         Starters.run();
