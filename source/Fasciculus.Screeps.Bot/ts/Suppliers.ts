@@ -535,9 +535,13 @@ class Customers
 
         if (this._infos.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
         {
+            this.addCreepInfos(Repairers.all);
+        }
+
+        if (this._infos.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
+        {
             this.addCreepInfos(Upgraders.all);
             this.addCreepInfos(Builders.all);
-            this.addCreepInfos(Repairers.all);
         }
 
         this._infos.sort(Customers.compare);
@@ -667,7 +671,6 @@ export class Suppliers
         return supplies.assign();
     }
 
-    @profile
     private static assignCustomers(assignments: Assignments): Vector<Supplier>
     {
         if (!assignments.canSupply) return new Vector();
