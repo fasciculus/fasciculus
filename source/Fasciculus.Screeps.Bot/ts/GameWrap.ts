@@ -1,6 +1,5 @@
 
-import { Dictionaries } from "./Collections";
-import { Vector } from "./Common";
+import { Dictionaries, Vector } from "./Common";
 
 export class GameWrap
 {

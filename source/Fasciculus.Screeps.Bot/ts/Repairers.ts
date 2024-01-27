@@ -1,6 +1,5 @@
 import { Bodies, BodyTemplate } from "./Bodies";
-import { Dictionaries } from "./Collections";
-import { CreepState, CreepType, Dictionary, Repairable, RepairableId, Vector } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, Repairable, RepairableId, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";

@@ -317,3 +317,31 @@ export class Vectors
         return result;
     }
 }
+
+export class Dictionaries
+{
+    static isEmpty<T>(dictionary: Dictionary<T>): boolean
+    {
+        for (let key in dictionary)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    static keys<T>(dictionary: Dictionary<T>): Set<string>
+    {
+        return new Set(Object.keys(dictionary));
+    }
+
+    static values<T>(dictionary: Dictionary<T>): Vector<T>
+    {
+        return new Vector(Object.values(dictionary));
+    }
+
+    static clone<T>(dictionary: Dictionary<T>): Dictionary<T>
+    {
+        return Object.assign({}, dictionary);
+    }
+}
