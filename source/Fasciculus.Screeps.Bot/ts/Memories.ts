@@ -1,7 +1,7 @@
 
-import { Dictionaries, Dictionary } from "./Collections";
+import { Dictionaries } from "./Collections";
 import { profile } from "./Profiling";
-import { ContainerId, ControllerId, CreepState, CreepType, CustomerId, RepairableId, SiteId, SourceId } from "./Types";
+import { ControllerId, CreepState, CreepType, CustomerId, RepairableId, SiteId, SourceId } from "./Types";
 
 export interface ExtendedMemory extends Memory
 {

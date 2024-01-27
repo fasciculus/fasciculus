@@ -7,28 +7,21 @@ import { Dictionary, Vector, Vectors } from "./Collections";
 import { ContainerId, SourceId } from "./Types";
 import { Sources } from "./Sources";
 
-export interface WellMemory
+interface WellMemory
 {
     slots?: number;
     container?: ContainerId;
     assignees?: string[];
 }
 
-export type WellsMemory = Dictionary<WellMemory>;
+type WellsMemory = Dictionary<WellMemory>;
 
 export class Well
 {
     readonly source: Source;
+    readonly memory: WellMemory; 
 
     get id(): SourceId { return this.source.id; }
-
-    get memory(): WellMemory
-    {
-        const wellsMemory: WellsMemory = Memories.get("wells", {});
-        const id = this.id;
-
-        return wellsMemory[id] || (wellsMemory[id] = {});
-    }
 
     get pos(): RoomPosition { return this.source.pos; }
     get room(): Room { return this.source.room; }
@@ -60,6 +53,7 @@ export class Well
     constructor(source: Source)
     {
         this.source = source;
+        this.memory = Well.getMemory(this.id);
         this.assignees = this.assignees;
     }
 
@@ -77,6 +71,13 @@ export class Well
         let types = territory.around(Point.from(this.pos));
 
         return DIRECTIONS.filter(d => types.at(d) == 0).length;
+    }
+
+    private static getMemory(id: SourceId): WellMemory
+    {
+        const wellsMemory: WellsMemory = Memories.get("wells", {});
+
+        return wellsMemory[id] || (wellsMemory[id] = {});
     }
 }
 
