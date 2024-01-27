@@ -116,14 +116,26 @@ export class Builders
         Bodies.register(CreepType.Builder, BUILDER_TEMPLATE);
     }
 
-    @profile
     static run()
     {
-        Builders._all.forEach(b => b.prepare());
-        Builders.assign().forEach(b => b.prepare());
-        Builders._all.forEach(b => b.execute());
+        Builders.prepare(Builders._all);
+        Builders.prepare(Builders.assign());
+        Builders.execute(Builders._all);
     }
 
+    @profile
+    private static prepare(builders: Vector<Builder>)
+    {
+        builders.forEach(b => b.prepare());
+    }
+
+    @profile
+    private static execute(builders: Vector<Builder>)
+    {
+        builders.forEach(b => b.execute());
+    }
+
+    @profile
     private static assign(): Vector<Builder>
     {
         var result: Vector<Builder> = new Vector();
