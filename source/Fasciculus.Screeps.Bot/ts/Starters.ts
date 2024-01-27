@@ -1,15 +1,16 @@
 
-import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Bodies, BodyTemplate } from "./Bodies";
-import { Well, Wells } from "./Wells";
-import { CreepState, CreepType, Customer, CustomerId, SourceId } from "./Types";
-import { GameWrap } from "./GameWrap";
-import { Stores } from "./Stores";
-import { Spawns } from "./Spawns";
-import { Extensions } from "./Extensions";
 import { Vector } from "./Collections";
+import { SourceId } from "./Common";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { Extensions } from "./Extensions";
+import { GameWrap } from "./GameWrap";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
+import { Spawns } from "./Spawns";
+import { Stores } from "./Stores";
+import { CreepState, CreepType, Customer, CustomerId } from "./Types";
+import { Well, Wells } from "./Wells";
 
 const STARTER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE]);
 

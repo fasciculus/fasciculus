@@ -1,11 +1,10 @@
 import { BodyParts } from "./Bodies";
 import { Chamber, Chambers } from "./Chambers";
 import { Dictionary, Vector, Vectors } from "./Collections";
-import { Memories } from "./Common";
+import { ContainerId, Memories, SourceId } from "./Common";
 import { Creeps } from "./Creeps";
 import { DIRECTIONS, Point } from "./Geometry";
 import { Sources } from "./Sources";
-import { ContainerId, SourceId } from "./Types";
 
 interface WellMemory
 {

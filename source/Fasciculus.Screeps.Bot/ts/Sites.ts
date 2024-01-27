@@ -1,7 +1,7 @@
 
-import { GameWrap } from "./GameWrap";
 import { Dictionary, Vector } from "./Collections";
-import { SiteId } from "./Types";
+import { SiteId } from "./Common";
+import { GameWrap } from "./GameWrap";
 
 export class Site
 {
