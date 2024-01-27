@@ -1,6 +1,6 @@
 import { Vector } from "./Collections";
+import { CreepBaseMemory } from "./Creeps";
 import { GameWrap } from "./GameWrap";
-import { CreepBaseMemory } from "./Memories";
 import { Names } from "./Names";
 import { CreepState, CreepType } from "./Types";
 

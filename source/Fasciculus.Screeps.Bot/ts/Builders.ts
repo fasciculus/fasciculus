@@ -1,7 +1,6 @@
 
 import { Bodies, BodyTemplate } from "./Bodies";
-import { CreepBase, Creeps } from "./Creeps";
-import { BuilderMemory } from "./Memories";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Site, Sites } from "./Sites";
 import { Vector, Vectors } from "./Collections";
 import { CreepState, CreepType, SiteId } from "./Types";
@@ -17,6 +16,11 @@ const BUILDER_MOVE_TO_OPTS: MoveToOpts =
         stroke: "#fff"
     }
 };
+
+interface BuilderMemory extends CreepBaseMemory
+{
+    site?: SiteId;
+}
 
 export class Builder extends CreepBase<BuilderMemory>
 {

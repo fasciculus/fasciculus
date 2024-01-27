@@ -1,28 +1,11 @@
 
 import { Dictionaries } from "./Collections";
 import { profile } from "./Profiling";
-import { CreepState, CreepType, RepairableId, SiteId } from "./Types";
+import { CreepState, CreepType } from "./Types";
 
-export interface ExtendedMemory extends Memory
+interface ExtendedMemory extends Memory
 {
     [index: string]: any;
-}
-
-export interface CreepBaseMemory extends CreepMemory
-{
-    type: CreepType;
-    state: CreepState;
-    path?: string;
-}
-
-export interface BuilderMemory extends CreepBaseMemory
-{
-    site?: SiteId;
-}
-
-export interface RepairerMemory extends CreepBaseMemory
-{
-    repairable?: RepairableId;
 }
 
 export class Memories

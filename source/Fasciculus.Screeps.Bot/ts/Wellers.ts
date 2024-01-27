@@ -1,6 +1,5 @@
-import { CreepBase, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Bodies, BodyTemplate } from "./Bodies";
-import { CreepBaseMemory } from "./Memories";
 import { Well, Wells } from "./Wells";
 import { Vector } from "./Collections";
 import { Positions } from "./Positions";

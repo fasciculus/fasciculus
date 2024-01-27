@@ -1,19 +1,18 @@
 import { Bodies, BodyTemplate } from "./Bodies";
-import { CreepBase, Creeps } from "./Creeps";
+import { Builders } from "./Builders";
+import { Dictionaries, Dictionary, Vector } from "./Collections";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { GameWrap } from "./GameWrap";
-import { CreepBaseMemory } from "./Memories";
-import { Spawns } from "./Spawns";
-import { Customer, CustomerId, SupplyId, Supply, CreepState, CreepType } from "./Types";
-import { Stores } from "./Stores";
-import { Dictionaries, Dictionary, PriorityQueue, Vector } from "./Collections";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
-import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./_Config";
-import { Weller, Wellers } from "./Wellers";
-import { Repairer, Repairers } from "./Repairers";
+import { Repairers } from "./Repairers";
+import { Spawns } from "./Spawns";
+import { Stores } from "./Stores";
+import { CreepState, CreepType, Customer, CustomerId, Supply, SupplyId } from "./Types";
 import { Upgraders } from "./Upgraders";
-import { Builders } from "./Builders";
+import { Wellers } from "./Wellers";
+import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./_Config";
 
 const SUPPLIER_TEMPLATE: BodyTemplate = BodyTemplate.create([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE], 21);
 

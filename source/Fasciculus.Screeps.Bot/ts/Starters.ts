@@ -1,5 +1,5 @@
 
-import { CreepBase, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Bodies, BodyTemplate } from "./Bodies";
 import { Well, Wells } from "./Wells";
 import { CreepState, CreepType, Customer, CustomerId, SourceId } from "./Types";
@@ -10,7 +10,6 @@ import { Extensions } from "./Extensions";
 import { Vector } from "./Collections";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
-import { CreepBaseMemory } from "./Memories";
 
 const STARTER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE]);
 

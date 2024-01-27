@@ -1,7 +1,6 @@
 import { Bodies, BodyTemplate } from "./Bodies";
 import { Controller, Controllers } from "./Controllers";
-import { CreepBase, Creeps } from "./Creeps";
-import { CreepBaseMemory } from "./Memories";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Dictionary, Vector } from "./Collections";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";

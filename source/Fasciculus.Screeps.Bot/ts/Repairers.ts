@@ -1,7 +1,6 @@
-import { CreepBase, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Bodies, BodyTemplate } from "./Bodies";
-import { RepairerMemory } from "./Memories";
-import { CreepState, CreepType, Repairable } from "./Types";
+import { CreepState, CreepType, Repairable, RepairableId } from "./Types";
 import { Repairs } from "./Repairs";
 import { Walls } from "./Walls";
 import { Dictionaries, Dictionary, Vector } from "./Collections";
@@ -26,6 +25,11 @@ class DamageHelper
 
         return Math.max(0, hitsMax - repairable.hits);
     }
+}
+
+interface RepairerMemory extends CreepBaseMemory
+{
+    repairable?: RepairableId;
 }
 
 export class Repairer extends CreepBase<RepairerMemory>

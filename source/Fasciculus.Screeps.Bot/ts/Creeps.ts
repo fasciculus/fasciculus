@@ -1,10 +1,16 @@
 
-import { CreepBaseMemory } from "./Memories";
 import { GameWrap } from "./GameWrap";
 import { Stores } from "./Stores";
 import { BodyParts } from "./Bodies";
 import { Dictionary, Vector } from "./Collections";
 import { CreepState, CreepType } from "./Types";
+
+export interface CreepBaseMemory extends CreepMemory
+{
+    type: CreepType;
+    state: CreepState;
+    path?: string;
+}
 
 export class CreepBase<M extends CreepBaseMemory>
 {
