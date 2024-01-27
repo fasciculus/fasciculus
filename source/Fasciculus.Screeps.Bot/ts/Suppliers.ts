@@ -1,15 +1,14 @@
 import { Builders } from "./Builders";
-import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, Dictionaries, Dictionary, GameWrap, Supply, SupplyId, Vector } from "./Common";
+import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, Dictionaries, Dictionary, GameWrap, Positions, Supply, SupplyId, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
-import { Positions } from "./Positions";
 import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
 import { Spawns } from "./Spawns";
 import { Stores } from "./Stores";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
-import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./_Config";
+import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MAX_NEW_ASSIGNMENTS, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./_Config";
 
 const SUPPLIER_TEMPLATE: BodyTemplate = BodyTemplate.create([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE], 21);
 
@@ -194,11 +193,11 @@ export class Supplier extends CreepBase<SupplierMemory>
     {
         switch (this.state)
         {
-            case CreepState.Idle: this.state = this.prepareIdle();
-            case CreepState.ToSupply: this.state = this.prepareMoveToSupply();
-            case CreepState.ToCustomer: this.state =  this.prepareMoveToCustomer();
-            case CreepState.Withdraw: this.state =  this.prepareWithdraw();
-            case CreepState.Transfer: this.state = this.prepareTransfer();
+            case CreepState.Idle: this.state = this.prepareIdle(); break;
+            case CreepState.ToSupply: this.state = this.prepareMoveToSupply(); break;
+            case CreepState.ToCustomer: this.state = this.prepareMoveToCustomer(); break;
+            case CreepState.Withdraw: this.state = this.prepareWithdraw(); break;
+            case CreepState.Transfer: this.state = this.prepareTransfer(); break;
         }
     }
 
@@ -415,10 +414,15 @@ class Supplies
     constructor(assignments: Assignments)
     {
         this._assignments = assignments;
+        this.collectInfos();
+    }
 
+    private collectInfos()
+    {
         this.addCreepInfos(Wellers.all.filter(SupplierSupport.hasEnergy));
 
         this._infos.sort(Supplies.compare);
+        this._infos = this._infos.take(SUPPLIER_MAX_NEW_ASSIGNMENTS);
     }
 
     assign(): Vector<Supplier>
@@ -487,15 +491,10 @@ class Customers
     {
         this._assignments = assignments;
 
-        this.addCustomerInfos(Spawns.my.map(s => s.spawn));
-        this.addCustomerInfos(Extensions.my);
-        this.addCreepInfos(Upgraders.all);
-        this.addCreepInfos(Builders.all);
-        this.addCreepInfos(Repairers.all);
-
-        this._infos.sort(Customers.compare);
+        this.collectInfos();
     }
 
+    @profile
     assign(): Vector<Supplier>
     {
         const result: Vector<Supplier> = new Vector();
@@ -522,6 +521,27 @@ class Customers
         }
 
         return result;
+    }
+
+    @profile
+    private collectInfos()
+    {
+        this.addCustomerInfos(Spawns.my.map(s => s.spawn));
+
+        if (this._infos.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
+        {
+            this.addCustomerInfos(Extensions.my);
+        }
+
+        if (this._infos.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
+        {
+            this.addCreepInfos(Upgraders.all);
+            this.addCreepInfos(Builders.all);
+            this.addCreepInfos(Repairers.all);
+        }
+
+        this._infos.sort(Customers.compare);
+        this._infos = this._infos.take(SUPPLIER_MAX_NEW_ASSIGNMENTS);
     }
 
     private static customerPriority(customer: Customer): number
