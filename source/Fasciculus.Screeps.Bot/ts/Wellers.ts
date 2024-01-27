@@ -32,7 +32,7 @@ export class Weller extends CreepBase<WellerMemory>
 
     constructor(creep: Creep)
     {
-        super(creep);
+        super(creep, CreepType.Weller);
 
         this._well = Wells.get(this.memory.well);
     }

@@ -37,7 +37,7 @@ export class Repairer extends CreepBase<RepairerMemory>
 
     constructor(creep: Creep)
     {
-        super(creep);
+        super(creep, CreepType.Repairer);
 
         this.maxEnergyPerTick = this.workParts;
     }

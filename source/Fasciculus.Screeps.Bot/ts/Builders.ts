@@ -27,7 +27,7 @@ export class Builder extends CreepBase<BuilderMemory>
 
     constructor(creep: Creep)
     {
-        super(creep);
+        super(creep, CreepType.Builder);
 
         this.maxEnergyPerTick = this.workParts * BUILD_POWER;
     }
@@ -106,6 +106,7 @@ export class Builders
 {
     private static _all: Vector<Builder> = new Vector();
 
+    static get all(): Vector<Builder> { return Builders._all.clone(); }
     static get maxEnergyPerTick(): number { return Builders._all.sum(b => b.maxEnergyPerTick); }
 
     static initialize()

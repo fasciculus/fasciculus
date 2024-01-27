@@ -49,7 +49,10 @@ export class Scheduler
     // @profile
     static run()
     {
-        Memories.cleanup();
+        switch (Game.time % 10)
+        {
+            case 1: Memories.cleanup(); break;
+        }
 
         Starters.run();
         Wellers.run();

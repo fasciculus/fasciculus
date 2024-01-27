@@ -9,19 +9,25 @@ import { CreepState, CreepType } from "./Types";
 export class CreepBase<M extends CreepBaseMemory>
 {
     readonly creep: Creep;
-    protected readonly memory: M;
+    readonly type: CreepType;
 
-    readonly workParts: number;
+    protected readonly memory: M;
 
     private _state: CreepState;
 
-    constructor(creep: Creep)
+    readonly workParts: number;
+
+    constructor(creep: Creep, type: CreepType)
     {
         this.creep = creep;
-        this.memory = this.creep.memory as M;
+        this.type = type;
+
+        let memory: M = this.creep.memory as M;
+
+        this.memory = memory;
+        this._state = memory.state;
 
         this.workParts = BodyParts.workOf(creep);
-        this._state = this.memory.state;
     }
 
     get state(): CreepState { return this._state; }

@@ -6,12 +6,14 @@ import { CreepBaseMemory } from "./Memories";
 import { Spawns } from "./Spawns";
 import { Customer, CustomerId, SupplyId, Supply, CreepState, CreepType } from "./Types";
 import { Stores } from "./Stores";
-import { Dictionaries, Dictionary, Vector } from "./Collections";
+import { Dictionaries, Dictionary, PriorityQueue, Vector } from "./Collections";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
-
-const MIN_SUPPLY_ENERGY = 10;
-const SUPPLIER_PERFORMANCE_FACTOR = 1.25;
+import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./_Config";
+import { Weller, Wellers } from "./Wellers";
+import { Repairer, Repairers } from "./Repairers";
+import { Upgraders } from "./Upgraders";
+import { Builders } from "./Builders";
 
 const SUPPLIER_TEMPLATE: BodyTemplate = BodyTemplate.create([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE], 21);
 
@@ -26,10 +28,28 @@ const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
     }
 };
 
+class SupplierSupport
+{
+    static hasEnergy<M extends CreepBaseMemory>(supply: Supply | CreepBase<M>): boolean
+    {
+        let energy = supply instanceof CreepBase ? supply.energy : Stores.energy(supply);
+
+        return energy >= SUPPLIER_MIN_SUPPLY_ENERGY;
+    }
+
+    static hasCapacity(customer: Customer): boolean
+    {
+        let maxRatio = customer instanceof Creep ? SUPPLIER_MIN_CREEP_FREE_RATIO : 1;
+
+        return Stores.energyRatio(customer) < maxRatio;
+    }
+}
+
 interface SupplierMemory extends CreepBaseMemory
 {
     customer?: CustomerId;
     supply?: SupplyId;
+    supplying?: boolean;
 
     travelled?: number;
     handled?: number;
@@ -43,11 +63,38 @@ export class Supplier extends CreepBase<SupplierMemory>
     private _travelled: number;
     private _handled: number;
 
+    private _supplying: boolean = false;
+
     get supply(): Supply | undefined { return this._supply; }
-    set supply(value: Supply | undefined) { this._supply = value; this.memory.supply = value?.id; }
+
+    set supply(value: Supply | undefined)
+    {
+        this._supply = value;
+        this.memory.supply = value?.id;
+
+        if (value && this._supplying)
+        {
+            this.supplying = false;
+        }
+    }
 
     get customer(): Customer | undefined { return this._customer; }
-    set customer(value: Customer | undefined) { this._customer = value; this.memory.customer = value?.id; }
+
+    set customer(value: Customer | undefined)
+    {
+        this._customer = value;
+        this.memory.customer = value?.id;
+
+        if (value && !this._supplying)
+        {
+            this.supplying = true;
+        }
+    }
+
+    get supplying(): boolean { return this._supplying; }
+    private set supplying(value: boolean) { this._supplying = this.memory.supplying = value; }
+
+    get hasEnoughEnergy(): boolean { return this.energyRatio > SUPPLIER_ENOUGH_ENERGY_RATIO; }
 
     get travelled(): number { return this._travelled; }
     private incrementTravelled() { this._travelled = this.memory.travelled = this._travelled + 1; }
@@ -59,7 +106,7 @@ export class Supplier extends CreepBase<SupplierMemory>
 
     constructor(creep: Creep)
     {
-        super(creep);
+        super(creep, CreepType.Supplier);
 
         let memory = this.memory;
 
@@ -68,6 +115,8 @@ export class Supplier extends CreepBase<SupplierMemory>
 
         this._travelled = memory.travelled || 1;
         this._handled = memory.handled || this.energyCapacity;
+
+        this.supplying = (memory.supplying || false) && this.energy > 0;
     }
 
     execute()
@@ -183,7 +232,7 @@ export class Supplier extends CreepBase<SupplierMemory>
             this.supply = supply = undefined;
         }
 
-        if (supply && !Supplier.hasEnergy(supply))
+        if (supply && !SupplierSupport.hasEnergy(supply))
         {
             this.supply = supply = undefined;
         }
@@ -203,7 +252,7 @@ export class Supplier extends CreepBase<SupplierMemory>
 
         if (!supply) return this.prepareIdle();
         if (this.freeEnergyCapacity == 0) return this.prepareIdle();
-        if (!Supplier.hasEnergy(supply)) return this.prepareIdle();
+        if (!SupplierSupport.hasEnergy(supply)) return this.prepareIdle();
 
         return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply;
     }
@@ -227,7 +276,7 @@ export class Supplier extends CreepBase<SupplierMemory>
 
         if (!supply) return this.prepareIdle();
         if (this.freeEnergyCapacity == 0) return this.prepareIdle();
-        if (!Supplier.hasEnergy(supply)) return this.prepareIdle();
+        if (!SupplierSupport.hasEnergy(supply)) return this.prepareIdle();
 
         return this.inRangeTo(supply) ? CreepState.Withdraw : CreepState.ToSupply;
     }
@@ -249,11 +298,6 @@ export class Supplier extends CreepBase<SupplierMemory>
         return this.pos.inRangeTo(target, 1);
     }
 
-    static hasEnergy(supply: Supply): boolean
-    {
-        return Stores.energy(supply) >= MIN_SUPPLY_ENERGY;
-    }
-
     static hasCapacity(customer: Customer): boolean
     {
         let maxRatio = customer instanceof Creep ? 0.8 : 1;
@@ -262,32 +306,295 @@ export class Supplier extends CreepBase<SupplierMemory>
     }
 }
 
-interface SupplierInfo
+class Assignments
 {
-    supplier: Supplier;
-    name: string;
-    pos: RoomPosition;
-    energy: number;
-    capacity: number;
-    supply: Supply | undefined;
-    customer: Customer | undefined;
+    private _earmarked: Dictionary<number> = {};
+    private _supplied: Dictionary<number> = {};
+
+    private _canSupply: Dictionary<Supplier> = {};
+    private _canSupplyCount: number = 0;
+
+    private _needsSupply: Dictionary<Supplier> = {};
+    private _needsSupplyCount: number = 0;
+
+    earmarked(id: SupplyId): number { return this._earmarked[id] || 0; }
+    supplied(id: CustomerId): number { return this._supplied[id] || 0; }
+
+    get canSupply(): boolean { return this._canSupplyCount > 0; }
+    get needsSupply(): boolean { return this._needsSupplyCount > 0; }
+
+    constructor(suppliers: Vector<Supplier>)
+    {
+        for (let supplier of suppliers)
+        {
+            if (supplier.spawning) continue;
+
+            let supply = supplier.supply;
+
+            if (supply)
+            {
+                let earmarked = this._earmarked;
+                let id = supply.id;
+
+                earmarked[id] = (earmarked[id] || 0) + supplier.freeEnergyCapacity;
+                continue;
+            }
+
+            let customer = supplier.customer;
+
+            if (customer)
+            {
+                let supplied = this._supplied;
+                let id = customer.id;
+
+                supplied[id] = (supplied[id] || 0) + supplier.energy;
+                continue;
+            }
+
+            if (supplier.supplying)
+            {
+                this._canSupply[supplier.name] = supplier;
+                ++this._canSupplyCount;
+            }
+            else
+            {
+                if (supplier.hasEnoughEnergy)
+                {
+                    this._canSupply[supplier.name] = supplier;
+                    ++this._canSupplyCount;
+                }
+                else
+                {
+                    this._needsSupply[supplier.name] = supplier;
+                    ++this._needsSupplyCount;
+                }
+            }
+        }
+    }
+
+    assignSupply(supply: Supply): Supplier | undefined
+    {
+        const needsSupply = this._needsSupply;
+        const suppliers = Dictionaries.values(needsSupply);
+        const supplier = Positions.closestByRange(supply, suppliers);
+
+        if (supplier)
+        {
+            supplier.supply = supply;
+            delete needsSupply[supplier.name];
+            --this._needsSupplyCount;
+        }
+
+        return supplier;
+    }
+
+    assignCustomer(customer: Customer): Supplier | undefined
+    {
+        const canSupply = this._canSupply;
+        const suppliers = Dictionaries.values(canSupply);
+        const supplier = Positions.closestByRange(customer, suppliers);
+
+        if (supplier)
+        {
+            supplier.customer = customer;
+            delete canSupply[supplier.name];
+            --this._canSupplyCount;
+        }
+
+        return supplier;
+    }
 }
 
 interface SupplyInfo
 {
     supply: Supply;
-    id: SupplyId;
     energy: number;
-    capacity: number;
+}
+
+class Supplies
+{
+    private _assignments: Assignments;
+    private _infos: Vector<SupplyInfo> = new Vector();
+
+    constructor(assignments: Assignments)
+    {
+        this._assignments = assignments;
+
+        this.addCreepInfos(Wellers.all.filter(SupplierSupport.hasEnergy));
+
+        this._infos.sort(Supplies.compare);
+    }
+
+    assign(): Vector<Supplier>
+    {
+        const result: Vector<Supplier> = new Vector();
+        const assignments: Assignments = this._assignments;
+
+        for (let info of this._infos)
+        {
+            let supply = info.supply;
+            let energy = info.energy;
+
+            while (energy > 0)
+            {
+                let supplier = assignments.assignSupply(supply);
+
+                if (!supplier) break;
+
+                energy -= supplier.freeEnergyCapacity;
+                result.append(supplier);
+
+                if (!assignments.needsSupply) break;
+            }
+
+            if (!assignments.needsSupply) break;
+        }
+
+        return result;
+    }
+
+    private addCreepInfos<M extends CreepBaseMemory>(creeps: Vector<CreepBase<M>>)
+    {
+        const assignments: Assignments = this._assignments;
+        const infos: Vector<SupplyInfo> = this._infos;
+
+        for (let creep of creeps)
+        {
+            let energy = creep.energy - assignments.earmarked(creep.id);
+
+            if (energy > 0)
+            {
+                infos.append({ supply: creep.creep, energy });
+            }
+        }
+    }
+
+    private static compare(a: SupplyInfo, b: SupplyInfo): number
+    {
+        return b.energy - a.energy;
+    }
 }
 
 interface CustomerInfo
 {
     customer: Customer;
-    id: CustomerId;
     priority: number;
     demand: number;
-    ratio: number;
+}
+
+class Customers
+{
+    private _assignments: Assignments;
+    private _infos: Vector<CustomerInfo> = new Vector();
+
+    constructor(assignments: Assignments)
+    {
+        this._assignments = assignments;
+
+        this.addCustomerInfos(Spawns.my.map(s => s.spawn));
+        this.addCustomerInfos(Extensions.my);
+        this.addCreepInfos(Upgraders.all);
+        this.addCreepInfos(Builders.all);
+        this.addCreepInfos(Repairers.all);
+
+        this._infos.sort(Customers.compare);
+    }
+
+    assign(): Vector<Supplier>
+    {
+        const result: Vector<Supplier> = new Vector();
+        const assignments: Assignments = this._assignments;
+
+        for (let info of this._infos)
+        {
+            let customer = info.customer;
+            let demand = info.demand;
+
+            while (demand > 0)
+            {
+                let supplier = assignments.assignCustomer(customer);
+
+                if (!supplier) break;
+
+                demand -= supplier.energy;
+                result.append(supplier);
+
+                if (!assignments.canSupply) break;
+            }
+
+            if (!assignments.canSupply) break;
+        }
+
+        return result;
+    }
+
+    private static customerPriority(customer: Customer): number
+    {
+        if (customer instanceof StructureSpawn) return 1;
+        if (customer instanceof StructureExtension) return 2;
+
+        return 99;
+    }
+
+    private static creepPriority<M extends CreepBaseMemory>(creep: CreepBase<M>)
+    {
+        switch (creep.type)
+        {
+            case CreepType.Repairer: return 20;
+        }
+
+        return 99;
+    }
+
+    private addCustomerInfos(customers: Vector<Customer>)
+    {
+        const assignments: Assignments = this._assignments;
+        const infos: Vector<CustomerInfo> = this._infos;
+
+        for (let customer of customers)
+        {
+            let demand = Stores.freeEnergyCapacity(customer) - assignments.supplied(customer.id);
+
+            if (demand > 0)
+            {
+                let priority = Customers.customerPriority(customer);
+
+                infos.append({ customer, priority, demand });
+            }
+        }
+    }
+
+    private addCreepInfos<M extends CreepBaseMemory>(creeps: Vector<CreepBase<M>>)
+    {
+        const assignments: Assignments = this._assignments;
+        const infos: Vector<CustomerInfo> = this._infos;
+
+        for (let creep of creeps)
+        {
+            if (creep.spawning) continue;
+
+            let demand = creep.freeEnergyCapacity - assignments.supplied(creep.id);
+
+            if (demand > 0)
+            {
+                let priority = Customers.creepPriority(creep);
+
+                infos.append({ customer: creep.creep, priority, demand });
+            }
+        }
+    }
+
+    private static compare(a: CustomerInfo, b: CustomerInfo): number
+    {
+        var result = a.priority - b.priority;
+
+        if (result == 0)
+        {
+            result = b.demand - a.demand;
+        }
+
+        return result;
+    }
 }
 
 export class Suppliers
@@ -326,274 +633,31 @@ export class Suppliers
 
     private static assign(): Vector<Supplier>
     {
-        var result: Vector<Supplier> = new Vector();
-        var unassigned: Dictionary<SupplierInfo> = Suppliers.findUnassignedSuppliers();
+        const assignments: Assignments = new Assignments(Suppliers._all);
 
-        if (Dictionaries.isEmpty(unassigned)) return result;
+        const assignedToSupplies = Suppliers.assignSupplies(assignments);
+        const assignedToCustomers = Suppliers.assignCustomers(assignments);
 
-        result = Suppliers.assignCustomers(unassigned);
-
-        if (Dictionaries.isEmpty(unassigned)) return result;
-
-        return result.concat(Suppliers.assignSupplies(unassigned));
+        return assignedToSupplies.concat(assignedToCustomers);
     }
 
     @profile
-    private static assignCustomers(unassigned: Dictionary<SupplierInfo>): Vector<Supplier>
+    private static assignSupplies(assignments: Assignments): Vector<Supplier>
     {
-        let result: Vector<Supplier> = new Vector();
-        let suppliers: Dictionary<SupplierInfo> = Suppliers.findSuppliersWithEnergy(unassigned);
+        if (!assignments.needsSupply) return new Vector();
 
-        if (Dictionaries.isEmpty(suppliers)) return result;
+        const supplies: Supplies = new Supplies(assignments);
 
-        let customers: Dictionary<CustomerInfo> = Suppliers.findCustomers();
-
-        if (Dictionaries.isEmpty(customers)) return result;
-
-        let sorted: Vector<CustomerInfo> = Suppliers.sortCustomers(customers);
-
-        for (let customerInfo of sorted)
-        {
-            while (customerInfo.demand > 0)
-            {
-                let customer: Customer = customerInfo.customer;
-                let supplierInfo: SupplierInfo | undefined = Suppliers.findNearest(customer, suppliers);
-
-                if (!supplierInfo) break;
-
-                let supplier: Supplier = supplierInfo.supplier;
-
-                supplier.customer = customer;
-                customerInfo.demand -= supplierInfo.energy;
-
-                delete suppliers[supplierInfo.name];
-                delete unassigned[supplierInfo.name];
-
-                result.append(supplier);
-            }
-
-            if (Dictionaries.isEmpty(suppliers)) break;
-        }
-
-        return result;
+        return supplies.assign();
     }
 
     @profile
-    private static assignSupplies(suppliers: Dictionary<SupplierInfo>): Vector<Supplier>
+    private static assignCustomers(assignments: Assignments): Vector<Supplier>
     {
-        let result: Vector<Supplier> = new Vector();
-        let supplies: Dictionary<SupplyInfo> = Suppliers.findSupplies();
-        let sorted: Vector<SupplyInfo> = Suppliers.sortSupplies(supplies);
+        if (!assignments.canSupply) return new Vector();
 
-        for (let supplyInfo of sorted)
-        {
-            while (supplyInfo.energy > MIN_SUPPLY_ENERGY)
-            {
-                let supply: Supply = supplyInfo.supply;
-                let supplierInfo: SupplierInfo | undefined = Suppliers.findNearest(supply, suppliers);
+        const customers = new Customers(assignments);
 
-                if (!supplierInfo) break;
-
-                let supplier: Supplier = supplierInfo.supplier;
-
-                supplier.supply = supply;
-                supplyInfo.energy -= supplierInfo.capacity;
-                delete suppliers[supplierInfo.name];
-                result.append(supplier);
-            }
-
-            if (Dictionaries.isEmpty(suppliers)) break;
-        }
-
-        return result;
-    }
-
-    @profile
-    private static findSuppliersWithEnergy(unassigned: Dictionary<SupplierInfo>): Dictionary<SupplierInfo>
-    {
-        return Dictionaries.values(unassigned).filter(s => s.energy > 0).indexBy(s => s.name);
-    }
-
-    private static findCustomers(): Dictionary<CustomerInfo>
-    {
-        let spawns: Vector<Customer> = Spawns.my.map(s => s.spawn);
-        let extensions: Vector<Customer> = Extensions.my;
-        let upgraders: Vector<Customer> = Creeps.ofType(CreepType.Upgrader);
-        let builders: Vector<Customer> = Creeps.ofType(CreepType.Builder);
-        let repairers: Vector<Customer> = Creeps.ofType(CreepType.Repairer);
-        var customers: Vector<Customer> = spawns.concat(extensions).concat(upgraders).concat(builders).concat(repairers);
-
-        customers = customers.filter(c => Supplier.hasCapacity(c));
-
-        let infos: Vector<CustomerInfo> = customers.map(Suppliers.createCustomerInfo);
-        let result: Dictionary<CustomerInfo> = infos.indexBy(i => i.customer.id);
-
-        Suppliers.adjustCustomerDemands(result);
-        Suppliers.filterCustomers(result);
-
-        return result;
-    }
-
-    private static findSupplies(): Dictionary<SupplyInfo>
-    {
-        let wellers: Vector<Supply> = Creeps.ofType(CreepType.Weller);
-        let supplies: Vector<Supply> = wellers;
-
-        supplies = supplies.filter(s => Supplier.hasEnergy(s));
-
-        let infos: Vector<SupplyInfo> = supplies.map(Suppliers.createSupplyInfo);
-        let result: Dictionary<SupplyInfo> = infos.indexBy(i => i.supply.id);
-
-        Suppliers.adjustSupplyEnergies(result);
-        Suppliers.filterSupplies(result);
-
-        return result;
-    }
-
-    @profile
-    private static adjustCustomerDemands(infos: Dictionary<CustomerInfo>)
-    {
-        for (let supplier of Suppliers._all)
-        {
-            let customer = supplier.customer;
-
-            if (!customer) continue;
-
-            let info = infos[customer.id];
-
-            if (!info) continue;
-
-            info.demand -= supplier.energy;
-        }
-    }
-
-    private static adjustSupplyEnergies(infos: Dictionary<SupplyInfo>)
-    {
-        for (let supplier of Suppliers._all)
-        {
-            let supply = supplier.supply;
-
-            if (!supply) continue;
-
-            let info = infos[supply.id];
-
-            if (!info) continue;
-
-            info.energy -= supplier.freeEnergyCapacity;
-        }
-    }
-
-    private static filterCustomers(infos: Dictionary<CustomerInfo>)
-    {
-        let serveds = Dictionaries.values(infos).filter(i => i.demand <= 0);
-
-        for (let served of serveds)
-        {
-            delete infos[served.id];
-        }
-    }
-
-    private static filterSupplies(infos: Dictionary<SupplyInfo>)
-    {
-        let useds = Dictionaries.values<SupplyInfo>(infos).filter(i => i.energy <= 0);
-
-        for (let used of useds)
-        {
-            delete infos[used.id];
-        }
-    }
-
-    private static findUnassignedSuppliers(): Dictionary<SupplierInfo>
-    {
-        var infos: Vector<SupplierInfo> = Suppliers._all.map(Suppliers.createSupplierInfo);
-
-        infos = infos.filter(i => !i.supply && !i.customer);
-
-        return infos.indexBy(i => i.name);
-    }
-
-    private static createSupplierInfo(supplier: Supplier): SupplierInfo
-    {
-        let info: SupplierInfo =
-        {
-            supplier: supplier,
-            name: supplier.name,
-            pos: supplier.pos,
-            energy: supplier.energy,
-            capacity: supplier.freeEnergyCapacity,
-            supply: supplier.supply,
-            customer: supplier.customer
-        }
-
-        return info;
-    }
-
-    private static createSupplyInfo(supply: Supply): SupplyInfo
-    {
-        let info: SupplyInfo =
-        {
-            supply: supply,
-            id: supply.id,
-            energy: Stores.energy(supply),
-            capacity:Stores.freeEnergyCapacity(supply)
-        };
-
-        return info;
-    }
-
-    private static createCustomerInfo(customer: Customer): CustomerInfo
-    {
-        let info: CustomerInfo =
-        {
-            customer: customer,
-            id: customer.id,
-            priority: Suppliers.customerPriority(customer),
-            demand: Stores.freeEnergyCapacity(customer),
-            ratio: Stores.energyRatio(customer)
-        }
-
-        return info;
-    }
-
-    private static customerPriority(customer: Customer): number
-    {
-        if (customer instanceof StructureSpawn) return 1;
-        if (customer instanceof StructureExtension) return 2;
-
-        return 3;
-    }
-
-    private static sortSupplies(supplies: Dictionary<SupplyInfo>): Vector<SupplyInfo>
-    {
-        return Dictionaries.values(supplies).sort(Suppliers.compareSupplies);
-    }
-
-    private static sortCustomers(customers: Dictionary<CustomerInfo>): Vector<CustomerInfo>
-    {
-        return Dictionaries.values(customers).sort(Suppliers.compareCustomers);
-    }
-
-    private static compareCustomers(a: CustomerInfo, b: CustomerInfo): number
-    {
-        let result = a.priority - b.priority;
-
-        if (result != 0) return result;
-
-        return b.ratio - b.ratio;
-    }
-
-    private static compareSupplies(a: SupplyInfo, b: SupplyInfo): number
-    {
-        let result = a.capacity - b.capacity;
-
-        if (result != 0) return result;
-
-        return b.energy - a.energy;
-    }
-
-    @profile
-    private static findNearest(target: Customer | Supply, suppliers: Dictionary<SupplierInfo>): SupplierInfo | undefined
-    {
-        return Positions.closestByRange(target, Dictionaries.values(suppliers));
+        return customers.assign();
     }
 }

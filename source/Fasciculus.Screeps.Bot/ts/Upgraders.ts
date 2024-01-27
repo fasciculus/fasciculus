@@ -25,7 +25,7 @@ export class Upgrader extends CreepBase<UpgraderMemory>
 
     constructor(creep: Creep)
     {
-        super(creep);
+        super(creep, CreepType.Upgrader);
 
         this._controller = Controllers.get(this.memory.controller);
         this.maxEnergyPerTick = this.workParts;
@@ -112,6 +112,7 @@ export class Upgraders
 {
     private static _all: Vector<Upgrader> = new Vector();
 
+    static get all(): Vector<Upgrader> { return Upgraders._all.clone(); }
     static get count(): number { return Upgraders._all.length; }
     static get maxEnergyPerTick(): number { return Upgraders._all.sum(u => u.maxEnergyPerTick); }
 

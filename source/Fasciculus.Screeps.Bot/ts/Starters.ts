@@ -32,7 +32,7 @@ export class Starter extends CreepBase<StarterMemory>
 
     constructor(creep: Creep)
     {
-        super(creep);
+        super(creep, CreepType.Starter);
     }
 
     execute()

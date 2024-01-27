@@ -1,6 +1,6 @@
 
-import { Scheduler } from "./Scheduler";
 import { Profiler } from "./Profiling";
+import { Scheduler } from "./Scheduler";
 import { PROFILER_IGNORED_KEYS, PROFILER_MAX_ENTRIES, PROFILER_SESSION } from "./_Config";
 
 export const loop = function ()
