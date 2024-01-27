@@ -1,5 +1,5 @@
 import { Vector, Vectors } from "./Collections";
-import { CreepType } from "./Types";
+import { CreepType } from "./Common";
 
 const PartPriorities =
 {
@@ -125,7 +125,7 @@ export class Bodies
 {
     private static _registry: { [type: string]: BodyTemplate } = {}
 
-    static template(type: CreepType): BodyTemplate | undefined { return Bodies._registry[type]; }
+    private static template(type: CreepType): BodyTemplate | undefined { return Bodies._registry[type]; }
 
     static register(type: CreepType, template: BodyTemplate)
     {

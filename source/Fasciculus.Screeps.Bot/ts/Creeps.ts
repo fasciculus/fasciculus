@@ -1,10 +1,10 @@
 
 import { BodyParts } from "./Bodies";
 import { Dictionaries, Dictionary, Vector } from "./Collections";
+import { CreepState, CreepType } from "./Common";
 import { GameWrap } from "./GameWrap";
 import { profile } from "./Profiling";
 import { Stores } from "./Stores";
-import { CreepState, CreepType } from "./Types";
 
 export interface CreepBaseMemory extends CreepMemory
 {

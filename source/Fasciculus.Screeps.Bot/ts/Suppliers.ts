@@ -1,7 +1,7 @@
 import { Bodies, BodyTemplate } from "./Bodies";
 import { Builders } from "./Builders";
 import { Dictionaries, Dictionary, Vector } from "./Collections";
-import { Customer, CustomerId, Supply, SupplyId } from "./Common";
+import { CreepState, CreepType, Customer, CustomerId, Supply, SupplyId } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { GameWrap } from "./GameWrap";
@@ -10,7 +10,6 @@ import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
 import { Spawns } from "./Spawns";
 import { Stores } from "./Stores";
-import { CreepState, CreepType } from "./Types";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
 import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./_Config";

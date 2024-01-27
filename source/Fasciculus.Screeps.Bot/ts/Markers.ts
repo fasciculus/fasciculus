@@ -1,9 +1,9 @@
 import { Vector } from "./Collections";
+import { MarkerType } from "./Common";
 import { Creeps } from "./Creeps";
 import { GameWrap } from "./GameWrap";
 import { profile } from "./Profiling";
 import { Suppliers } from "./Suppliers";
-import { MarkerType } from "./Types";
 import { Wellers } from "./Wellers";
 
 const INFO_MARKER_TEXT_STYLE: TextStyle =

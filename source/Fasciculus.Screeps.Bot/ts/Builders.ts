@@ -1,12 +1,11 @@
 
 import { Bodies, BodyTemplate } from "./Bodies";
 import { Vector, Vectors } from "./Collections";
-import { SiteId } from "./Common";
+import { CreepState, CreepType, SiteId } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
 import { Site, Sites } from "./Sites";
-import { CreepState, CreepType } from "./Types";
 
 const BUILDER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 

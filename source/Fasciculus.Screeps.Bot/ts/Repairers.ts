@@ -1,11 +1,10 @@
 import { Bodies, BodyTemplate } from "./Bodies";
 import { Dictionaries, Dictionary, Vector } from "./Collections";
-import { Repairable, RepairableId } from "./Common";
+import { CreepState, CreepType, Repairable, RepairableId } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
 import { Repairs } from "./Repairs";
-import { CreepState, CreepType } from "./Types";
 import { Walls } from "./Walls";
 
 const REPAIRER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);

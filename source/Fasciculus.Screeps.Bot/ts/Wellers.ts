@@ -1,10 +1,9 @@
 import { Bodies, BodyTemplate } from "./Bodies";
 import { Vector } from "./Collections";
-import { SourceId } from "./Common";
+import { CreepState, CreepType, SourceId } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Positions } from "./Positions";
 import { profile } from "./Profiling";
-import { CreepState, CreepType } from "./Types";
 import { Well, Wells } from "./Wells";
 
 const WELLER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
