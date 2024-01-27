@@ -61,6 +61,7 @@ interface MemoryWithProfiler
 
 export class Profiler
 {
+    private static _start: number = 0;
     private static _entries: ProfilerDictionary = {};
 
     static record(type: string, name: string, duration: number)
@@ -105,10 +106,14 @@ export class Profiler
     static start()
     {
         Profiler._entries = {};
+        Profiler._start = Game.cpu.getUsed();
+        Profiler.record("global", "load", Profiler._start);
     }
 
     static stop()
     {
+        Profiler.record("global", "main", Game.cpu.getUsed() - Profiler._start);
+
         let memory: ProfilerMemory = Profiler.memory;
 
         if (memory.warmup > 0)

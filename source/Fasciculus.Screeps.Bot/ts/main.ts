@@ -9,6 +9,5 @@ export const loop = function ()
     Scheduler.initialize();
     Scheduler.run();
 
-    Profiler.record("global", "main", Game.cpu.getUsed());
     Profiler.stop();
 }
