@@ -1,4 +1,5 @@
 import { Dictionaries, Dictionary, Vector } from "./Collections";
+import { PROFILER_IGNORED_KEYS, PROFILER_LOG_INTERVAL, PROFILER_MAX_ENTRIES, PROFILER_SESSION, PROFILER_WARMUP } from "./_Config";
 
 export function profile<T extends new (...args: any[]) => any, A extends any[], R>(target: (this: T, ...args: A) => R,
     context: ClassMemberDecoratorContext)
@@ -48,6 +49,7 @@ interface ProfilerMemory
     session: number;
     start: number;
     entries: ProfilerDictionary;
+    warmup: number;
 }
 
 interface MemoryWithProfiler
@@ -57,7 +59,6 @@ interface MemoryWithProfiler
 
 export class Profiler
 {
-    private static _session: number = 0;
     private static _entries: ProfilerDictionary = {};
 
     static record(type: string, name: string, duration: number)
@@ -85,25 +86,45 @@ export class Profiler
     {
         let memory: MemoryWithProfiler = Memory as MemoryWithProfiler;
         let result: ProfilerMemory | undefined = memory.profiler;
-        let session: number = Profiler._session;
+        let session: number = PROFILER_SESSION;
 
-        if (!result || result.session != Profiler._session)
+        if (!result || result.session != session)
         {
-            memory.profiler = result = { session, start: Game.time, entries: {} };
+            let start = Game.time;
+            let entries: ProfilerDictionary = {};
+            let warmup = PROFILER_WARMUP;
+
+            memory.profiler = result = { session, start, entries, warmup };
         }
 
         return result;
     }
 
-    static start(session: number)
+    static start()
     {
-        Profiler._session = session;
         Profiler._entries = {};
     }
 
     static stop()
     {
         let memory: ProfilerMemory = Profiler.memory;
+
+        if (memory.warmup > 0)
+        {
+            --memory.warmup;
+            ++memory.start;
+        }
+        else
+        {
+            Profiler.merge(memory);
+        }
+
+        Profiler._entries = {};
+        Profiler.log(memory);
+    }
+
+    private static merge(memory: ProfilerMemory)
+    {
         let memoryEntries: ProfilerDictionary = memory.entries;
         let entries: ProfilerDictionary = Profiler._entries;
 
@@ -122,22 +143,31 @@ export class Profiler
                 memoryEntry.duration += entry.duration;
             }
         }
-
-        Profiler._entries = {};
     }
 
-    static log(maxEntries: number, ignoredKeys?: string[])
+    static log(memory: ProfilerMemory)
     {
-        const memory: ProfilerMemory = Profiler.memory;
+        if (memory.warmup > 0)
+        {
+            console.log(`Profiler in warmup (${memory.warmup})`);
+            return;
+        }
+
         const ticks: number = Game.time - memory.start + 1;
-        const entries: ProfilerEntries = Profiler.getLogEntries(maxEntries, ignoredKeys);
+
+        if (ticks == 0 || ticks % PROFILER_LOG_INTERVAL != 0)
+        {
+            return;
+        }
+
+        const entries: ProfilerEntries = Profiler.getLogEntries();
         const divider: string = "".padEnd(53, "-");
         let label: string = "method".padEnd(40);
         let duration: string = "cpu".padStart(6);
         let calls: string = "calls".padStart(7);
 
         console.log(divider);
-        console.log(`profile after ${ticks} ticks`);
+        console.log(`Profile after ${ticks} ticks`);
         console.log(`${label}${duration}${calls}`);
         console.log(divider);
 
@@ -151,19 +181,16 @@ export class Profiler
         }
     }
 
-    private static getLogEntries(maxEntries: number, ignoredKeys?: string[]): ProfilerEntries
+    private static getLogEntries(): ProfilerEntries
     {
         let dictionary: ProfilerDictionary = Dictionaries.clone(Profiler.memory.entries);
 
-        if (ignoredKeys)
+        for (let key of PROFILER_IGNORED_KEYS)
         {
-            for (let key of ignoredKeys)
-            {
-                delete dictionary[key];
-            }
+            delete dictionary[key];
         }
 
-        return Dictionaries.values(dictionary).sort(Profiler.compare).take(maxEntries);
+        return Dictionaries.values(dictionary).sort(Profiler.compare).take(PROFILER_MAX_ENTRIES);
     }
 
     private static compare(a: ProfilerEntry, b: ProfilerEntry): number
