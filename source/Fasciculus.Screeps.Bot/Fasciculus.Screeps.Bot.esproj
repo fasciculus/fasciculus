@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.128-alpha">
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.425631-alpha">
   
   <ItemGroup>
     <Folder Include="js/" />
   </ItemGroup>
 
-  <Target Name="CreateProfilerSessionKey" BeforeTargets="Build">
+  <PropertyGroup>
+    <PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);CreateProfilerSessionKey</PrepareForBuildDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CreateProfilerSessionKey">
     <PropertyGroup>
       <ProfilerSession>$([System.Guid]::NewGuid().ToString("N"))</ProfilerSession>
       <ProfilerSessionCode>export const PROFILER_SESSION = "$(ProfilerSession)"%3b</ProfilerSessionCode>
