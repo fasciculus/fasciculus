@@ -419,7 +419,7 @@ class Supplies
 
     private collectInfos()
     {
-        this.addCreepInfos(Wellers.all.filter(SupplierSupport.hasEnergy));
+        this.addCreepInfos(Wellers.ready.filter(SupplierSupport.hasEnergy));
 
         this._infos.sort(Supplies.compare);
         this._infos = this._infos.take(SUPPLIER_MAX_NEW_ASSIGNMENTS);

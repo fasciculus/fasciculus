@@ -1,3 +1,4 @@
+import { unescape } from "querystring";
 import { Bodies, BodyTemplate, CreepState, CreepType, Positions, SourceId, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
@@ -19,23 +20,49 @@ const WELLER_MOVE_TO_OPTS: MoveToOpts =
 interface WellerMemory extends CreepBaseMemory
 {
     well?: SourceId;
+    ready?: boolean;
 }
 
 export class Weller extends CreepBase<WellerMemory>
 {
     private _well?: Well;
+    private _ready: boolean;
+
+    private _maxEnergyPerTick: number;
+    private _full: boolean;
 
     get well(): Well | undefined { return this._well; }
-    set well(value: Well | undefined) { this._well = value; this.memory.well = value?.id; }
+    set well(value: Well | undefined) { this._well = value; this.memory.well = value?.id; this.ready = false; }
 
-    get maxEnergyPerTick(): number { return this.workParts * HARVEST_POWER; }
-    get full(): boolean { return this.freeEnergyCapacity < this.maxEnergyPerTick; }
+    get ready(): boolean { return this._ready; }
+    set ready(value: boolean) { this._ready = this.memory.ready = value; }
+
+    get maxEnergyPerTick(): number { return this._maxEnergyPerTick; }
 
     constructor(creep: Creep)
     {
         super(creep, CreepType.Weller);
 
-        this._well = Wells.get(this.memory.well);
+        let memory = this.memory;
+
+        this._well = Wells.get(memory.well);
+        this._ready = this.initReady();
+        this._maxEnergyPerTick = this.workParts * HARVEST_POWER;
+        this._full = this.freeEnergyCapacity < this._maxEnergyPerTick;
+    }
+
+    private initReady(): boolean
+    {
+        let memory = this.memory;
+        let result = memory.ready;
+
+        if (result === undefined)
+        {
+            result = this.inRangeTo(this._well);
+            memory.ready = result;
+        }
+
+        return result;
     }
 
     execute()
@@ -50,17 +77,16 @@ export class Weller extends CreepBase<WellerMemory>
     @profile
     private executeToWell()
     {
-        let well = this.well;
+        let well = this._well;
 
-        if (well)
-        {
-            this.moveTo(well, WELLER_MOVE_TO_OPTS);
-        }
+        if (!well) return;
+
+        this.moveTo(well, WELLER_MOVE_TO_OPTS);
     }
 
     private executeHarvest()
     {
-        let well = this.well;
+        let well = this._well;
 
         if (!well) return;
 
@@ -80,13 +106,14 @@ export class Weller extends CreepBase<WellerMemory>
     @profile
     private prepareIdle(): CreepState
     {
-        if (this.full) return CreepState.Idle;
+        if (this._full) return CreepState.Idle;
+        if (this._ready) return CreepState.Harvest;
 
         let well = this.well;
 
         if (!well) return CreepState.Idle;
 
-        return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell
+        return CreepState.ToWell;
     }
 
     @profile
@@ -96,24 +123,24 @@ export class Weller extends CreepBase<WellerMemory>
 
         if (!well) return this.prepareIdle();
 
-        return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell;
+        if (this.inRangeTo(well))
+        {
+            this.ready = true;
+            return CreepState.Harvest;
+        }
+
+        return CreepState.ToWell;
     }
 
     @profile
     private prepareHarvest(): CreepState
     {
-        if (this.full) return this.prepareIdle();
-
-        let well = this.well;
-
-        if (!well) return this.prepareIdle();
-
-        return this.inRangeTo(well) ? CreepState.Harvest : CreepState.ToWell;
+        return this._full ? CreepState.Idle : CreepState.Harvest;
     }
 
-    private inRangeTo(target: Well | StructureContainer): boolean
+    private inRangeTo(target: Well | undefined): boolean
     {
-        return this.pos.inRangeTo(target, 1);
+        return (target !== undefined) && this.pos.inRangeTo(target, 1);
     }
 }
 
@@ -125,15 +152,18 @@ const FIND_CLOSEST_WELL_OPTS: FindPathOpts =
 export class Wellers
 {
     private static _all: Vector<Weller> = new Vector();
+    private static _ready: Vector<Weller> = new Vector();
 
     static get count(): number { return Wellers._all.length; }
     static get all(): Vector<Weller> { return Wellers._all.clone(); }
+    static get ready(): Vector<Weller> { return Wellers._ready.clone(); }
 
     static get maxEnergyPerTick(): number { return Wellers._all.sum(w => w.maxEnergyPerTick); }
 
     static initialize()
     {
         Wellers._all = Creeps.ofType(CreepType.Weller).map(c => new Weller(c));
+        Wellers._ready = Wellers._all.filter(w => w.ready);
 
         Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
     }
