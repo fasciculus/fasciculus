@@ -8,4 +8,5 @@
   <Add key="SUPPLIER_MIN_SUPPLY_ENERGY">10</Add>
   <Add key="SUPPLIER_MIN_CREEP_FREE_RATIO">0.8</Add>
   <Add key="SUPPLIER_MAX_NEW_ASSIGNMENTS">2</Add>
+  <Add key="UPGRADER_MAX_COUNT">6</Add>
 </Config>

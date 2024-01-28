@@ -1,6 +1,7 @@
 
 import { Builders } from "./Builders";
 import { Bodies, CreepType, Vector } from "./Common";
+import { UPGRADER_MAX_COUNT } from "./Config";
 import { Controllers } from "./Controllers";
 import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
@@ -64,13 +65,30 @@ export class Spawning
         return undefined;
     }
 
+    private static get upgraderEnergyFactor(): number
+    {
+        var result = 0.65;
+
+        if (Sites.count > 0)
+        {
+            result -= 0.2;
+        }
+
+        if (Repairs.count > 0)
+        {
+            result -= 0.2;
+        }
+
+        return result;
+    }
+
     private static energyAvailable(type: CreepType): number
     {
         let energy = Wellers.maxEnergyPerTick;
 
         switch (type)
         {
-            case CreepType.Upgrader: return energy * 0.25;
+            case CreepType.Upgrader: return energy * Spawning.upgraderEnergyFactor;
             case CreepType.Builder: return energy * 0.6;
             case CreepType.Repairer: return energy * 0.15;
             default: return 0;
@@ -99,7 +117,11 @@ export class Spawning
     private static get moreUpgraders(): boolean
     {
         if (Suppliers.count == 0) return false;
-        if (Upgraders.count < Controllers.myCount) return true;
+
+        const upgraderCount = Upgraders.count;
+
+        if (upgraderCount >= UPGRADER_MAX_COUNT) return false;
+        if (upgraderCount < Controllers.myCount) return true;
 
         return Upgraders.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Upgrader);
     }

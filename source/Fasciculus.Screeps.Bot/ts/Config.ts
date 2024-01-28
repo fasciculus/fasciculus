@@ -1,4 +1,4 @@
-export const PROFILER_SESSION = "fa359f54cfa44bd7aa603251114a7ff7";
+export const PROFILER_SESSION = "9f22aaa0ad7148578cc2db835d54830a";
 export const PROFILER_WARMUP = 10;
 export const PROFILER_LOG_INTERVAL = 10;
 export const PROFILER_MAX_ENTRIES = 10;
@@ -8,3 +8,4 @@ export const SUPPLIER_PERFORMANCE_FACTOR = 0.6;
 export const SUPPLIER_MIN_SUPPLY_ENERGY = 10;
 export const SUPPLIER_MIN_CREEP_FREE_RATIO = 0.8;
 export const SUPPLIER_MAX_NEW_ASSIGNMENTS = 2;
+export const UPGRADER_MAX_COUNT = 6;
