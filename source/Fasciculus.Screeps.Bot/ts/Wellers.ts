@@ -1,11 +1,10 @@
-import { unescape } from "querystring";
 import { Bodies, BodyTemplate, CreepState, CreepType, Positions, SourceId, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Well, Wells } from "./Wells";
 
 const WELLER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
-    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 5);
+    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 3);
 
 const WELLER_MOVE_TO_OPTS: MoveToOpts =
 {
