@@ -5,22 +5,12 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);CreateProfilerSessionKey;CreateConfig</PrepareForBuildDependsOn>
+    <PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);CreateConfig</PrepareForBuildDependsOn>
   </PropertyGroup>
-
-  <Target Name="CreateProfilerSessionKey">
-    <PropertyGroup>
-      <ProfilerSession>$([System.Guid]::NewGuid().ToString("N"))</ProfilerSession>
-      <ProfilerSessionCode>export const PROFILER_SESSION = "$(ProfilerSession)"%3b</ProfilerSessionCode>
-    </PropertyGroup>
-    <ItemGroup></ItemGroup>
-    <Message Importance="high" Text="$(ProfilerSessionCode)" />
-    <WriteLinesToFile File="ts/ProfilerSession.ts" Overwrite="true" Lines="$(ProfilerSessionCode)" />
-  </Target>
 
   <Target Name="CommitToLocalhost" AfterTargets="Build">
     <PropertyGroup>
-      <TargetDir>C:\Users\rhjoe\AppData\Local\Screeps\scripts\127_0_0_1___21025\default</TargetDir>
+      <TargetDir>C:\Users\$(USERNAME)\AppData\Local\Screeps\scripts\127_0_0_1___21025\default</TargetDir>
     </PropertyGroup>
     <ItemGroup>
       <FilesToDelete Include="$(TargetDir)/*.js"/>
@@ -28,6 +18,7 @@
       <FilesToCopy Include="js/*.js"/>
       <FilesToCopy Include="js/*.map"/>
     </ItemGroup>
+    <Message Importance="high" Text="Updating '$(TargetDir)'" />
     <Delete Files="@(FilesToDelete)" />
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(TargetDir)" />
   </Target>

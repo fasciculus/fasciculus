@@ -1,5 +1,6 @@
 import { Builders } from "./Builders";
 import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, Dictionaries, Dictionary, GameWrap, Positions, Supply, SupplyId, Vector } from "./Common";
+import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MAX_NEW_ASSIGNMENTS, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./Config";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { profile } from "./Profiling";
@@ -8,7 +9,6 @@ import { Spawns } from "./Spawns";
 import { Stores } from "./Stores";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
-import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MAX_NEW_ASSIGNMENTS, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./_Config";
 
 const SUPPLIER_TEMPLATE: BodyTemplate = BodyTemplate.create([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE], 21);
 

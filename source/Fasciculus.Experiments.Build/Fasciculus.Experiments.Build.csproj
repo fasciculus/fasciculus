@@ -13,15 +13,11 @@
     </None>
   </ItemGroup>
 
-  <Target Name="CreateProfilerSessionKey" BeforeTargets="Build">
+  <Target Name="EchoUser" BeforeTargets="Build">
     <PropertyGroup>
-      <ProfilerSession>$([System.Guid]::NewGuid().ToString("N"))</ProfilerSession>
-      <ProfilerSessionCode>export const PROFILER_SESSION = "$(ProfilerSession)"%3b</ProfilerSessionCode>
+      <UserName>$(USERNAME)</UserName>
     </PropertyGroup>
-    <ItemGroup></ItemGroup>
-    <Message Importance="high" Text="$(ProfilerSessionCode)" />
-    <MakeDir Directories="ts" ContinueOnError="true" />
-    <WriteLinesToFile File="ts/ProfilerSession.ts" Overwrite="true" Lines="$(ProfilerSessionCode)" />
+    <Message Importance="high" Text="UserName = $(UserName)" />
   </Target>
 
   <Target Name="CreateConfig" BeforeTargets="Build">
