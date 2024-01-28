@@ -1,4 +1,4 @@
-export const PROFILER_SESSION = "adc3b92c466b46659b42bdc7ebf246db";
+export const PROFILER_SESSION = "fa359f54cfa44bd7aa603251114a7ff7";
 export const PROFILER_WARMUP = 10;
 export const PROFILER_LOG_INTERVAL = 10;
 export const PROFILER_MAX_ENTRIES = 10;

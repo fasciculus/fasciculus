@@ -1,7 +1,7 @@
 import { Chamber, Chambers } from "./Chambers";
 import { BodyParts, ContainerId, Dictionary, DirectionConstants, Memories, Point, SourceId, Vector, Vectors } from "./Common";
 import { Creeps } from "./Creeps";
-import { Sources } from "./Sources";
+import { Rooms } from "./Rooms";
 
 interface WellMemory
 {
@@ -91,7 +91,7 @@ export class Wells
 
     static initialize()
     {
-        Wells._all = Sources.all.map(s => new Well(s));
+        Wells._all = Rooms.sources.map(s => new Well(s));
         Wells._byId = Wells._all.indexBy(w => w.id);
     }
 }
