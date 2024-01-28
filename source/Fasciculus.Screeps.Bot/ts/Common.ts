@@ -67,6 +67,11 @@ export class Memories
 
         return result as T;
     }
+
+    static get used(): number
+    {
+        return RawMemory.get().length;
+    }
 }
 
 export interface Dictionary<T>

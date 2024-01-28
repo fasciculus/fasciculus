@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, Vector } from "./Common";
+import { Dictionaries, Dictionary, Memories, Vector } from "./Common";
 import { PROFILER_IGNORED_KEYS, PROFILER_LOG_INTERVAL, PROFILER_MAX_ENTRIES, PROFILER_SESSION, PROFILER_WARMUP } from "./Config";
 
 export function profile<T extends new (...args: any[]) => any, A extends any[], R>(target: (this: T, ...args: A) => R,
@@ -167,12 +167,13 @@ export class Profiler
 
         const entries: ProfilerEntries = Profiler.getLogEntries();
         const divider: string = "".padEnd(53, "-");
+        let memoryUsed: string = (Memories.used / 1024).toFixed(1);
         let label: string = "method".padEnd(40);
         let duration: string = "cpu".padStart(6);
         let calls: string = "calls".padStart(7);
 
         console.log(divider);
-        console.log(`Profile after ${ticks} ticks`);
+        console.log(`Profile after ${ticks} ticks. Memory used: ${memoryUsed} kB.`);
         console.log(`${label}${duration}${calls}`);
         console.log(divider);
 
