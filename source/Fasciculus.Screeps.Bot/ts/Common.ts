@@ -353,6 +353,27 @@ export class Dictionaries
 
 export class GameWrap
 {
+    private static _myCreeps: Vector<Creep> = new Vector();
+    private static _myFlags: Vector<Flag> = new Vector();
+    private static _myPowerCreeps: Vector<PowerCreep> = new Vector();
+    private static _rooms: Vector<Room> = new Vector();
+    private static _mySpawns: Vector<StructureSpawn> = new Vector();
+    private static _myStructures: Vector<Structure> = new Vector();
+    private static _myConstructionSites: Vector<ConstructionSite> = new Vector();
+    private static _username: string = "unknown";
+
+    static initialize()
+    {
+        GameWrap._myCreeps = Dictionaries.values(Game.creeps);
+        GameWrap._myFlags = Dictionaries.values(Game.flags);
+        GameWrap._myPowerCreeps = Dictionaries.values(Game.powerCreeps);
+        GameWrap._rooms = Dictionaries.values(Game.rooms);
+        GameWrap._mySpawns = Dictionaries.values(Game.spawns);
+        GameWrap._myStructures = Dictionaries.values(Game.structures);
+        GameWrap._myConstructionSites = Dictionaries.values(Game.constructionSites);
+        GameWrap._username = GameWrap._mySpawns.at(0)?.owner.username || "unknown";
+    }
+
     static get<T extends _HasId>(id: Id<T> | undefined): T | undefined
     {
         let result: T | null = id ? Game.getObjectById(id) : null;
@@ -361,14 +382,14 @@ export class GameWrap
     }
 
     static myCreep(name: string): Creep | undefined { return Game.creeps[name]; }
-    static get myCreeps(): Vector<Creep> { return Dictionaries.values(Game.creeps); }
-
-    static get myFlags(): Vector<Flag> { return Dictionaries.values(Game.flags); }
-    static get myPowerCreeps(): Vector<PowerCreep> { return Dictionaries.values(Game.powerCreeps); }
-    static get rooms(): Vector<Room> { return Dictionaries.values(Game.rooms); }
-    static get mySpawns(): Vector<StructureSpawn> { return Dictionaries.values(Game.spawns); }
-    static get myStructures(): Vector<Structure> { return Dictionaries.values(Game.structures); }
-    static get myConstructionSites(): Vector<ConstructionSite> { return Dictionaries.values(Game.constructionSites); }
+    static get myCreeps(): Vector<Creep> { return GameWrap._myCreeps.clone(); }
+    static get myFlags(): Vector<Flag> { return GameWrap._myFlags.clone(); }
+    static get myPowerCreeps(): Vector<PowerCreep> { return GameWrap._myPowerCreeps.clone(); }
+    static get rooms(): Vector<Room> { return GameWrap._rooms.clone(); }
+    static get mySpawns(): Vector<StructureSpawn> { return GameWrap._mySpawns.clone(); }
+    static get myStructures(): Vector<Structure> { return GameWrap._myStructures.clone(); }
+    static get myConstructionSites(): Vector<ConstructionSite> { return GameWrap._myConstructionSites.clone(); }
+    static get username(): string { return GameWrap._username; }
 }
 
 interface NamesMemory

@@ -1,5 +1,6 @@
 import { Builders } from "./Builders";
 import { Chambers } from "./Chambers";
+import { GameWrap } from "./Common";
 import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
@@ -21,6 +22,8 @@ export class Scheduler
 {
     static initialize()
     {
+        GameWrap.initialize();
+
         Rooms.initialize();
         Controllers.initialize();
         Sites.initialize();

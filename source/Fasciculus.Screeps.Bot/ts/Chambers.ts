@@ -10,6 +10,8 @@ export class Chamber
 
     get name(): string { return this.room.name; }
 
+    get controller(): StructureController | undefined { return this.room.controller; }
+
     get energyCapacity(): number { return this.room.energyCapacityAvailable; }
 
     get terrain(): RoomTerrain { return this._terrain || (this._terrain = this.room.getTerrain()); }
