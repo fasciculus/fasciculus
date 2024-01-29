@@ -3,9 +3,9 @@ import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, Game
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { profile } from "./Profiling";
+import { Well, Wells } from "./Resources";
 import { Spawns } from "./Spawns";
 import { Stores } from "./Stores";
-import { Well, Wells } from "./Wells";
 
 const STARTER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE]);
 

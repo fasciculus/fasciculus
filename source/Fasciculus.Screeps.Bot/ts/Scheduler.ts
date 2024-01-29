@@ -1,5 +1,4 @@
 import { Builders } from "./Builders";
-import { Chambers } from "./Chambers";
 import { GameWrap } from "./Common";
 import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
@@ -7,6 +6,8 @@ import { Extensions } from "./Extensions";
 import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
+import { Wells } from "./Resources";
+import { Chambers } from "./Rooming";
 import { Rooms } from "./Rooms";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
@@ -16,7 +17,6 @@ import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
 import { Walls } from "./Walls";
 import { Wellers } from "./Wellers";
-import { Wells } from "./Wells";
 
 export class Scheduler
 {

@@ -6,13 +6,13 @@ import { Controllers } from "./Controllers";
 import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
+import { Wells } from "./Resources";
 import { Sites } from "./Sites";
 import { Spawn, Spawns } from "./Spawns";
 import { Starters } from "./Starters";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
-import { Wells } from "./Wells";
 
 export class Spawning
 {
