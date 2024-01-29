@@ -1,6 +1,6 @@
 
 import { Builders } from "./Builders";
-import { Bodies, CreepType, Vector } from "./Common";
+import { Bodies, BodyPartLimits, CreepType, Vector } from "./Common";
 import { UPGRADER_MAX_COUNT } from "./Config";
 import { Controllers } from "./Controllers";
 import { profile } from "./Profiling";
@@ -9,10 +9,9 @@ import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
 import { Sites } from "./Sites";
 import { Spawn, Spawns } from "./Spawns";
-import { Starters } from "./Starters";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
-import { Wellers } from "./Wellers";
+import { Weller, Wellers } from "./Wellers";
 
 export class Spawning
 {
@@ -41,11 +40,13 @@ export class Spawning
 
     private static createBody(spawn: Spawn, type: CreepType): Vector<BodyPartConstant> | undefined
     {
-        let body1: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyAvailable);
+        const limits: BodyPartLimits = Spawning.createLimits(type);
+
+        let body1: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyAvailable, limits);
 
         if (!body1) return undefined;
 
-        let body2: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyCapacity);
+        let body2: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyCapacity, limits);
 
         if (!body2) return undefined;
         if (body2.length > body1.length) return undefined;
@@ -53,9 +54,17 @@ export class Spawning
         return body1;
     }
 
+    private static createLimits(type: CreepType): BodyPartLimits
+    {
+        switch (type)
+        {
+            case CreepType.Supplier: return { carry: Wellers.maxEnergyCapacity / CARRY_CAPACITY, work: 99 };
+            default: return { carry: 99, work: 99 };
+        }
+    }
+
     private static nextType(): CreepType | undefined
     {
-        if (Spawning.moreStarters) return CreepType.Starter;
         if (Spawning.moreSuppliers) return CreepType.Supplier;
         if (Spawning.moreWellers) return CreepType.Weller;
         if (Spawning.moreRepairers) return CreepType.Repairer;
@@ -93,13 +102,6 @@ export class Spawning
             case CreepType.Repairer: return energy * 0.15;
             default: return 0;
         }
-    }
-
-    private static get moreStarters(): boolean
-    {
-        if (Wellers.count > 0 && Suppliers.count > 0) return false;
-
-        return Starters.count < Math.max(2, Wells.assignableCount);
     }
 
     private static get moreSuppliers(): boolean

@@ -10,7 +10,7 @@ import { Stores } from "./Stores";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
 
-const SUPPLIER_TEMPLATE: BodyTemplate = BodyTemplate.create([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE, CARRY, MOVE]).add([CARRY, MOVE], 21);
+const SUPPLIER_TEMPLATE: BodyTemplate = BodyTemplate.create([CARRY, MOVE], 2);
 
 const SUPPLIER_MOVE_TO_OPTS: MoveToOpts =
 {

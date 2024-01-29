@@ -164,6 +164,7 @@ export class Wellers
     static get ready(): Vector<Weller> { return Wellers._ready.clone(); }
 
     static get maxEnergyPerTick(): number { return Wellers._all.sum(w => w.maxEnergyPerTick); }
+    static get maxEnergyCapacity(): number { return Wellers._all.max(w => w.energyCapacity)?.energyCapacity || 0; }
 
     @profile
     static initialize()

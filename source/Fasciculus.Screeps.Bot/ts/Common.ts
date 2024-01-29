@@ -10,7 +10,6 @@ export type Repairable = StructureRoad | StructureWall
 
 export enum CreepType
 {
-    Starter = "Z",
     Weller = "W",
     Supplier = "S",
     Upgrader = "U",
@@ -425,9 +424,28 @@ const BodyPartPriorities =
     "claim": 8
 }
 
-export interface BodyPartCounts
+export class BodyPartCounts
 {
-    work: number;
+    readonly carry: number;
+    readonly work: number;
+
+    constructor(parts: Vector<BodyPartConstant>)
+    {
+        var carry: number = 0;
+        var work: number = 0;
+
+        for (let part of parts)
+        {
+            switch (part)
+            {
+                case CARRY: ++carry; break;
+                case WORK: ++work; break;
+            }
+        }
+
+        this.carry = carry;
+        this.work = work;
+    }
 }
 
 export class BodyParts
@@ -447,17 +465,10 @@ export class BodyParts
 
     static countsOf(creep: Creep): BodyPartCounts
     {
-        let result: BodyPartCounts = { work: 0 };
+        const definitions: Vector<BodyPartDefinition> = Vector.from(creep.body);
+        const parts: Vector<BodyPartConstant> = definitions.map(d => d.type);
 
-        for (let part of creep.body)
-        {
-            switch (part.type)
-            {
-                case WORK: ++result.work; break;
-            }
-        }
-
-        return result;
+        return new BodyPartCounts(parts);
     }
 
     static workOf(creep: Creep): number
@@ -470,6 +481,13 @@ interface BodyPartChunk
 {
     cost: number;
     parts: Vector<BodyPartConstant>;
+    counts: BodyPartCounts;
+}
+
+export interface BodyPartLimits
+{
+    carry: number;
+    work: number;
 }
 
 export class BodyTemplate
@@ -495,22 +513,27 @@ export class BodyTemplate
         return this;
     }
 
-    createBody(energy: number): Vector<BodyPartConstant> | undefined
+    createBody(energy: number, limits: BodyPartLimits): Vector<BodyPartConstant> | undefined
     {
-        let chunkCount = this.chunkCount(energy);
+        let chunkCount = this.chunkCount(energy, limits);
 
         if (chunkCount == 0) return undefined;
 
         return Vectors.flatten(this.chunks.take(chunkCount).map(c => c.parts)).sort(BodyParts.comparePriority);
     }
 
-    private chunkCount(energy: number): number
+    private chunkCount(energy: number, limits: BodyPartLimits): number
     {
         var result: number = 0;
+        var current: BodyPartLimits = { carry: 0, work: 0 };
 
         for (let chunk of this.chunks)
         {
             if (energy < chunk.cost) break;
+
+            BodyTemplate.merge(current, chunk.counts);
+
+            if (BodyTemplate.exceeds(current, limits)) break;
 
             ++result;
             energy -= chunk.cost;
@@ -519,13 +542,28 @@ export class BodyTemplate
         return result;
     }
 
+    private static merge(target: BodyPartLimits, counts: BodyPartCounts)
+    {
+        target.carry += counts.carry;
+        target.work += counts.work;
+    }
+
+    private static exceeds(current: BodyPartLimits, limits: BodyPartLimits): boolean
+    {
+        if (current.carry > limits.carry) return true;
+        if (current.work > limits.work) return true;
+
+        return false;
+    }
+
     private static createChunk(parts: Vector<BodyPartConstant>): BodyPartChunk | undefined
     {
         if (parts.length == 0) return undefined;
 
         const cost = BodyParts.costOf(parts);
+        const counts = new BodyPartCounts(parts);
 
-        return { cost, parts };
+        return { cost, parts, counts };
     }
 }
 
@@ -540,9 +578,9 @@ export class Bodies
         Bodies._registry[type] = template;
     }
 
-    static createBody(type: CreepType, energy: number): Vector<BodyPartConstant> | undefined
+    static createBody(type: CreepType, energy: number, limits: BodyPartLimits): Vector<BodyPartConstant> | undefined
     {
-        return Bodies.template(type)?.createBody(energy);
+        return Bodies.template(type)?.createBody(energy, limits);
     }
 }
 
