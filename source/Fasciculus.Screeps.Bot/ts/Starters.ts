@@ -141,6 +141,7 @@ export class Starters
 
     static get count(): number { return Starters._all.length; }
 
+    @profile
     static initialize()
     {
         Starters._all = Creeps.ofType(CreepType.Starter).map(c => new Starter(c));

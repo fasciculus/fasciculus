@@ -4,12 +4,10 @@ import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { Markers } from "./Markers";
-import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
 import { Chambers } from "./Rooming";
-import { Rooms } from "./Rooms";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
 import { Spawns } from "./Spawns";
@@ -21,13 +19,11 @@ import { Wellers } from "./Wellers";
 
 export class Scheduler
 {
-    @profile
     static initialize()
     {
         GameWrap.initialize();
 
-        Rooms.initialize();
-        Controllers.initialize();
+        Chambers.initialize();
         Sites.initialize();
         Spawns.initialize();
         Extensions.initialize();
@@ -35,8 +31,8 @@ export class Scheduler
         Repairs.initialize();
         Markers.initialize();
 
-        Chambers.initialize();
         Wells.initialize();
+        Controllers.initialize();
 
         Creeps.initialize();
         Starters.initialize();

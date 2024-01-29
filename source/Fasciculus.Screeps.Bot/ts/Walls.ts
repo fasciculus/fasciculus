@@ -1,5 +1,6 @@
-import { Vector } from "./Common";
-import { Rooms } from "./Rooms";
+import { Vector, Vectors } from "./Common";
+import { profile } from "./Profiling";
+import { Chambers } from "./Rooming";
 
 export class Wall
 {
@@ -27,9 +28,10 @@ export class Walls
     static get newest(): Vector<Wall> { return Walls._newest.clone(); }
     static get weakest(): Wall | undefined { return Walls._weakest; }
 
+    @profile
     static initialize()
     {
-        Walls._my = Rooms.myWalls.map(w => new Wall(w));
+        Walls._my = Vectors.flatten(Chambers.my.map(c => c.walls)).map(w => new Wall(w));
         Walls._newest = Walls._my.filter(w => w.hits == 1);
         Walls._weakest = Walls.findWeakest();
         Walls._avg = Walls._my.sum(w => w.hits) / Math.max(1, Walls._my.length);

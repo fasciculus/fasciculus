@@ -1,7 +1,7 @@
 import { BodyParts, ContainerId, Dictionary, Memories, Point, SourceId, Vector, Vectors } from "./Common";
 import { Creeps } from "./Creeps";
+import { profile } from "./Profiling";
 import { Chamber, Chambers } from "./Rooming";
-import { Rooms } from "./Rooms";
 
 interface WellMemory
 {
@@ -24,18 +24,18 @@ export class Well
     readonly energy: number;
     readonly energyCapacity: number;
 
-    readonly slots: number;
+    private _slots?: number;
+    get slots(): number { return this._slots !== undefined ? this._slots : this._slots = this.fetchSlots(); }
 
-    private _assignees: Vector<Creep>;
+    private _assignees?: Vector<Creep>;
+    get assignees(): Vector<Creep> { return this._assignees !== undefined ? this._assignees : this._assignees = this.fetchAssignees(); }
+    private set assignees(value: Vector<Creep>) { this.memory.assignees = value.map(c => c.name).toArray(); this.clearLazies(); }
 
-    private _freeSlots: number;
-    get freeSlots(): number { return this._freeSlots; }
+    private _freeSlots?: number;
+    get freeSlots(): number { return this._freeSlots !== undefined ? this._freeSlots : this._freeSlots = this.fetchFreeSlots(); }
 
-    private _assignable: boolean;
-    get assignable(): boolean { return this._assignable; }
-
-    get assignees(): Vector<Creep> { return this._assignees.clone(); }
-    private set assignees(value: Vector<Creep>) { this.memory.assignees = value.map(c => c.name).toArray(); }
+    private _assignable?: boolean;
+    get assignable(): boolean { return this._assignable !== undefined ? this._assignable : this._assignable = this.fetchAssignable(); }
 
     constructor(source: Source)
     {
@@ -49,21 +49,46 @@ export class Well
         this.chamber = Chambers.get(this.source.room.name);
         this.energy = source.energy;
         this.energyCapacity = source.energyCapacity;
-        this._assignees = Vectors.defined(Vector.from(memory.assignees).map(Creeps.get));
-        memory.assignees = this._assignees.map(c => c.name).toArray();
-        this.slots = memory.slots || (memory.slots = Well.countSlots(this.chamber, this.pos));
-        this._freeSlots = this.slots - this._assignees.length;
-        this._assignable = Well.isAssignable(this.freeSlots, this._assignees, this.energyCapacity);
+    }
+
+    private fetchSlots(): number
+    {
+        return this.memory.slots || (this.memory.slots = Well.countSlots(this.chamber, this.pos));
+    }
+
+    private fetchAssignees(): Vector<Creep>
+    {
+        return Vectors.defined(Vector.from(this.memory.assignees).map(Creeps.get));
+    }
+
+    private fetchFreeSlots(): number
+    {
+        return this.slots - this.assignees.length;
+    }
+
+    private fetchAssignable(): boolean
+    {
+        const assignedWork: number = this.assignees.sum(BodyParts.workOf);
+        const maxWork = this.energyCapacity / ENERGY_REGEN_TIME;
+        const unassignedWork = maxWork - assignedWork;
+
+        return this.freeSlots > 0 && unassignedWork > 0;
+    }
+
+    private clearLazies()
+    {
+        this._assignees = undefined;
+        this._freeSlots = undefined;
+        this._assignable = undefined;
     }
 
     assign(creep: Creep)
     {
-        const assignees = this._assignees;
+        const assignees = this.assignees;
 
         assignees.append(creep);
-        this.memory.assignees = this._assignees.map(c => c.name).toArray();
-        --this._freeSlots;
-        this._assignable = Well.isAssignable(this.freeSlots, assignees, this.energyCapacity);
+        this.memory.assignees = assignees.map(c => c.name).toArray();
+        this.clearLazies();
     }
 
     private static countSlots(chamber: Chamber | undefined, pos: RoomPosition): number
@@ -75,15 +100,6 @@ export class Well
         let types = territory.around(Point.from(pos));
 
         return types.filter(t => t == 0).length;
-    }
-
-    private static isAssignable(freeSlots: number, assignees: Vector<Creep>, energyCapacity: number): boolean
-    {
-        const assignedWork: number = assignees.sum(BodyParts.workOf);
-        const maxWork = energyCapacity / ENERGY_REGEN_TIME;
-        const unassignedWork = maxWork - assignedWork;
-
-        return freeSlots > 0 && unassignedWork > 0;
     }
 
     private static getMemory(id: SourceId): WellMemory
@@ -106,9 +122,10 @@ export class Wells
 
     static get maxEnergyPerTick(): number { return Wells._all.sum(w => w.energyCapacity) / ENERGY_REGEN_TIME; }
 
+    @profile
     static initialize()
     {
-        Wells._all = Rooms.sources.map(s => new Well(s));
+        Wells._all = Vectors.flatten(Chambers.all.map(c => c.sources)).map(s => new Well(s));
         Wells._byId = Wells._all.indexBy(w => w.id);
     }
 }

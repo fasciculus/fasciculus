@@ -1,5 +1,6 @@
-import { Customer, CustomerPriorities, Vector, _Customer } from "./Common";
-import { Rooms } from "./Rooms";
+import { Customer, CustomerPriorities, Vector, Vectors, _Customer } from "./Common";
+import { profile } from "./Profiling";
+import { Chambers } from "./Rooming";
 import { Stores } from "./Stores";
 
 export class Extension implements _Customer
@@ -26,8 +27,9 @@ export class Extensions
 
     static get my(): Vector<Extension> { return Extensions._my.clone(); }
 
+    @profile
     static initialize()
     {
-        Extensions._my = Rooms.myExtensions.map(e => new Extension(e));
+        Extensions._my = Vectors.flatten(Chambers.my.map(c => c.myExtensions)).map(e => new Extension(e));
     }
 }

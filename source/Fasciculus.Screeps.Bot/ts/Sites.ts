@@ -1,5 +1,6 @@
 
 import { Dictionary, GameWrap, SiteId, Vector } from "./Common";
+import { profile } from "./Profiling";
 
 export class Site
 {
@@ -32,6 +33,7 @@ export class Sites
 
     static get count(): number { return Sites._all.length; }
 
+    @profile
     static initialize()
     {
         Sites._all = GameWrap.myConstructionSites.map(s => new Site(s));

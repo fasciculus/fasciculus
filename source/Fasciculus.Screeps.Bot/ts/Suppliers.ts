@@ -575,6 +575,7 @@ export class Suppliers
 
     static get performance(): number { return Suppliers._all.sum(s => s.performance); }
 
+    @profile
     static initialize()
     {
         Suppliers._all = Creeps.ofType(CreepType.Supplier).map(c => new Supplier(c));

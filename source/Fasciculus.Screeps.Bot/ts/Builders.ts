@@ -118,6 +118,7 @@ export class Builders
     static get all(): Vector<Builder> { return Builders._all.clone(); }
     static get maxEnergyPerTick(): number { return Builders._all.sum(b => b.maxEnergyPerTick); }
 
+    @profile
     static initialize()
     {
         Builders._all = Creeps.ofType(CreepType.Builder).map(c => new Builder(c));

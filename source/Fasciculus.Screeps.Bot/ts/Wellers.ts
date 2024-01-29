@@ -165,6 +165,7 @@ export class Wellers
 
     static get maxEnergyPerTick(): number { return Wellers._all.sum(w => w.maxEnergyPerTick); }
 
+    @profile
     static initialize()
     {
         Wellers._all = Creeps.ofType(CreepType.Weller).map(c => new Weller(c));

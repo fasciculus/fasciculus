@@ -1,5 +1,6 @@
-import { Rooms } from "./Rooms";
 import { Dictionary, Vector, Vectors } from "./Common";
+import { profile } from "./Profiling";
+import { Chambers } from "./Rooming";
 
 export class Controller
 {
@@ -29,9 +30,10 @@ export class Controllers
     static get my(): Vector<Controller> { return Controllers._my.clone(); }
     static get myCount(): number { return Controllers._my.length; }
 
+    @profile
     static initialize()
     {
-        Controllers._all = Vectors.defined(Rooms.all.map(r => r.controller)).map(c => new Controller(c));
+        Controllers._all = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => new Controller(c));
         Controllers._my = Controllers._all.filter(c => c.my);
         Controllers._byId = Controllers._all.indexBy(c => c.id);
     }

@@ -71,6 +71,7 @@ export class Markers
 {
     private static _all: Vector<Marker> = new Vector();
 
+    @profile
     static initialize()
     {
         Markers._all = GameWrap.myFlags.map(f => new Marker(f));

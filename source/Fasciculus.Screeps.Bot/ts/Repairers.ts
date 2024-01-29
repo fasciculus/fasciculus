@@ -141,6 +141,7 @@ export class Repairers
 
     static get maxEnergyPerTick(): number { return Repairers._all.sum(r => r.maxEnergyPerTick); }
 
+    @profile
     static initialize()
     {
         Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c));

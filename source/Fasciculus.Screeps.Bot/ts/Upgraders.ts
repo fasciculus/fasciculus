@@ -125,6 +125,7 @@ export class Upgraders
     static get count(): number { return Upgraders._all.length; }
     static get maxEnergyPerTick(): number { return Upgraders._all.sum(u => u.maxEnergyPerTick); }
 
+    @profile
     static initialize()
     {
         Upgraders._all = Creeps.ofType(CreepType.Upgrader).map(c => new Upgrader(c));

@@ -1,5 +1,6 @@
 import { CreepState, CreepType, Customer, CustomerPriorities, GameWrap, Names, Vector, _Customer } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
+import { profile } from "./Profiling";
 import { Stores } from "./Stores";
 
 export class Spawn implements _Customer
@@ -44,6 +45,7 @@ export class Spawns
     static get my(): Vector<Spawn> { return Spawns._my.clone(); }
     static get best(): Spawn | undefined { return Spawns._idle.max(s => s.roomEnergyAvailable); }
 
+    @profile
     static initialize()
     {
         Spawns._my = GameWrap.mySpawns.map(s => new Spawn(s));

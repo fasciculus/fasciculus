@@ -1,4 +1,5 @@
 import { Dictionary, GameWrap, Point, Vector } from "./Common";
+import { profile } from "./Profiling";
 
 export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;
 
@@ -43,17 +44,23 @@ export class Chamber
     readonly my: boolean;
     readonly controlled: boolean;
 
-    private readonly _sources: Vector<Source>
+    private readonly _sources: Vector<Source>;
+    private readonly _walls: Vector<StructureWall>;
+    private readonly _myExtensions: Vector<StructureExtension>;
 
     get territory(): Territory { return Territories.get(this.room); }
 
     get sources(): Vector<Source> { return this._sources.clone(); }
+    get walls(): Vector<StructureWall> { return this._walls.clone(); }
+    get myExtensions(): Vector<StructureExtension> { return this._myExtensions.clone(); }
 
     constructor(room: Room)
     {
         this.room = room;
         this.name = room.name;
         this._sources = Vector.from(room.find<FIND_SOURCES, Source>(FIND_SOURCES));
+        this._walls = Chamber.wallsOf(room);
+        this._myExtensions = Chamber.myExtensionsOf(room);
         this.energyCapacityAvailable = room.energyCapacityAvailable;
 
         const controller = room.controller;
@@ -73,6 +80,28 @@ export class Chamber
             this.controlled = false;
         }
     }
+
+    static wallsOf(room: Room): Vector<StructureWall>
+    {
+        var structures = room.find<FIND_STRUCTURES, StructureWall>(FIND_STRUCTURES);
+
+        if (structures.length == 0) return new Vector();
+
+        let walls = structures.filter(s => s.structureType == STRUCTURE_WALL);
+
+        return Vector.from(walls);
+    }
+
+    private static myExtensionsOf(room: Room): Vector<StructureExtension>
+    {
+        let structures: StructureExtension[] = room.find<FIND_MY_STRUCTURES, StructureExtension>(FIND_MY_STRUCTURES);
+
+        if (structures.length == 0) return new Vector();
+
+        let extensions: StructureExtension[] = structures.filter(s => s.structureType == STRUCTURE_EXTENSION);
+
+        return Vector.from(extensions);
+    }
 }
 
 export class Chambers
@@ -88,6 +117,7 @@ export class Chambers
     static get my(): Vector<Chamber> { return Chambers._my.clone(); }
     static get controlled(): Vector<Chamber> { return Chambers._controlled.clone(); }
 
+    @profile
     static initialize()
     {
         Chambers._all = GameWrap.rooms.map(r => new Chamber(r));

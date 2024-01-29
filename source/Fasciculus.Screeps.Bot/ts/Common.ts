@@ -1,3 +1,4 @@
+import { profile } from "./Profiling";
 
 export type ContainerId = Id<StructureContainer>;
 export type ControllerId = Id<StructureController>;
