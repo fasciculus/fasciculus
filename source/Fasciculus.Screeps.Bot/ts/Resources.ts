@@ -55,10 +55,8 @@ export class Wells
     static get assignable(): Vector<Well> { return Wells._all.filter(w => !w.assignee); }
     static get assignableCount(): number { return Wells.assignable.length; }
 
-    static get maxEnergyPerTick(): number { return Wells._all.sum(w => w.source.energyCapacity) / ENERGY_REGEN_TIME; }
-
     @profile
-    static initialize()
+    static initialize(clear: boolean)
     {
         Wells._all = Vectors.flatten(Chambers.all.map(c => c.sources)).map(s => new Well(s));
         Wells._byId = Wells._all.indexBy(w => w.id);

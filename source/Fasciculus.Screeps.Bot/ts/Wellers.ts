@@ -175,7 +175,6 @@ export class Wellers
         Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
     }
 
-    @profile
     static run()
     {
         Wellers.prepare(Wellers._all);

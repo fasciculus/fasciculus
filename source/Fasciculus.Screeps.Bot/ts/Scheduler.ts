@@ -1,5 +1,6 @@
 import { Builders } from "./Builders";
 import { GameWrap } from "./Common";
+import { VERSION } from "./Config";
 import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
@@ -18,8 +19,14 @@ import { Wellers } from "./Wellers";
 
 export class Scheduler
 {
+    private static _version: string = "";
+
     static initialize()
     {
+        const clear: boolean = Scheduler.updateVersion();
+
+        Scheduler._version = VERSION;
+
         GameWrap.initialize();
 
         Chambers.initialize();
@@ -30,7 +37,7 @@ export class Scheduler
         Repairs.initialize();
         Markers.initialize();
 
-        Wells.initialize();
+        Wells.initialize(clear);
         Controllers.initialize();
 
         Creeps.initialize();
@@ -39,6 +46,15 @@ export class Scheduler
         Upgraders.initialize();
         Builders.initialize();
         Repairers.initialize();
+    }
+
+    private static updateVersion(): boolean
+    {
+        const changed: boolean = Scheduler._version != VERSION;
+
+        Scheduler._version = VERSION;
+
+        return changed;
     }
 
     // @profile
