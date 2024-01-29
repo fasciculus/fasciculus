@@ -1,5 +1,5 @@
 
-import { Bodies, BodyTemplate, CreepState, CreepType, Positions, SiteId, Vector, Vectors } from "./Common";
+import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerPriorities, Positions, SiteId, Vector, Vectors, _Customer } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Site, Sites } from "./Sites";
@@ -19,18 +19,26 @@ interface BuilderMemory extends CreepBaseMemory
     site?: SiteId;
 }
 
-export class Builder extends CreepBase<BuilderMemory>
+export class Builder extends CreepBase<BuilderMemory> implements _Customer
 {
     get site(): Site | undefined { return Sites.get(this.memory.site); }
     set site(value: Site | undefined) { this.memory.site = value?.id; }
 
     readonly maxEnergyPerTick: number;
 
+    readonly customer: Customer;
+    readonly priority: number;
+    demand: number;
+
     constructor(creep: Creep)
     {
         super(creep, CreepType.Builder);
 
         this.maxEnergyPerTick = this.workParts * BUILD_POWER;
+
+        this.customer = creep;
+        this.priority = CustomerPriorities["Builder"];
+        this.demand = this.freeEnergyCapacity;
     }
 
     execute()

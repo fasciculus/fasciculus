@@ -1,7 +1,8 @@
-import { CreepState, CreepType, GameWrap, Names, Vector } from "./Common";
+import { CreepState, CreepType, Customer, CustomerPriorities, GameWrap, Names, Vector, _Customer } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
+import { Stores } from "./Stores";
 
-export class Spawn
+export class Spawn implements _Customer
 {
     readonly spawn: StructureSpawn;
 
@@ -12,9 +13,17 @@ export class Spawn
     get roomEnergyAvailable(): number { return this.room.energyAvailable; }
     get roomEnergyCapacity(): number { return this.room.energyCapacityAvailable; }
 
+    readonly customer: Customer;
+    readonly priority: number;
+    demand: number;
+
     constructor(spawn: StructureSpawn)
     {
         this.spawn = spawn;
+
+        this.customer = spawn;
+        this.priority = CustomerPriorities["Spawn"];
+        this.demand = Stores.freeEnergyCapacity(spawn);
     }
 
     spawnCreep(type: CreepType, body: Vector<BodyPartConstant>)

@@ -1,5 +1,5 @@
 import { Builders } from "./Builders";
-import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, Dictionaries, Dictionary, GameWrap, Positions, Supply, SupplyId, Vector } from "./Common";
+import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, Dictionaries, Dictionary, GameWrap, Positions, Supply, SupplyId, Vector, _Customer } from "./Common";
 import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MAX_NEW_ASSIGNMENTS, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./Config";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
@@ -475,23 +475,16 @@ class Supplies
     }
 }
 
-interface CustomerInfo
-{
-    customer: Customer;
-    priority: number;
-    demand: number;
-}
-
 class Customers
 {
     private _assignments: Assignments;
-    private _infos: Vector<CustomerInfo> = new Vector();
+    private _customers: Vector<_Customer> = new Vector();
 
     constructor(assignments: Assignments)
     {
         this._assignments = assignments;
 
-        this.collectInfos();
+        this.collectCustomers();
     }
 
     @profile
@@ -500,14 +493,13 @@ class Customers
         const result: Vector<Supplier> = new Vector();
         const assignments: Assignments = this._assignments;
 
-        for (let info of this._infos)
+        for (let customer of this._customers)
         {
-            let customer = info.customer;
-            let demand = info.demand;
+            let demand = customer.demand;
 
             while (demand > 0)
             {
-                let supplier = assignments.assignCustomer(customer);
+                let supplier = assignments.assignCustomer(customer.customer);
 
                 if (!supplier) break;
 
@@ -524,87 +516,49 @@ class Customers
     }
 
     @profile
-    private collectInfos()
+    private collectCustomers()
     {
-        this.addCustomerInfos(Spawns.my.map(s => s.spawn));
+        const customers = this._customers;
 
-        if (this._infos.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
+        this.addCustomers(Spawns.my);
+
+        if (customers.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
         {
-            this.addCustomerInfos(Extensions.my.map(e => e.extension));
+            this.addCustomers(Extensions.my);
         }
 
-        if (this._infos.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
+        if (customers.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
         {
-            this.addCreepInfos(Repairers.all);
+            this.addCustomers(Repairers.all);
         }
 
-        if (this._infos.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
+        if (customers.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
         {
-            this.addCreepInfos(Upgraders.all);
-            this.addCreepInfos(Builders.all);
+            this.addCustomers(Upgraders.all);
+            this.addCustomers(Builders.all);
         }
 
-        this._infos.sort(Customers.compare);
-        this._infos = this._infos.take(SUPPLIER_MAX_NEW_ASSIGNMENTS);
+        this._customers.sort(Customers.compare);
+        this._customers = this._customers.take(SUPPLIER_MAX_NEW_ASSIGNMENTS);
     }
 
-    private static customerPriority(customer: Customer): number
-    {
-        if (customer instanceof StructureSpawn) return 1;
-        if (customer instanceof StructureExtension) return 2;
-
-        return 99;
-    }
-
-    private static creepPriority<M extends CreepBaseMemory>(creep: CreepBase<M>)
-    {
-        switch (creep.type)
-        {
-            case CreepType.Repairer: return 20;
-        }
-
-        return 99;
-    }
-
-    private addCustomerInfos(customers: Vector<Customer>)
+    private addCustomers(potentialCustomers: Vector<_Customer>)
     {
         const assignments: Assignments = this._assignments;
-        const infos: Vector<CustomerInfo> = this._infos;
+        const customers: Vector<_Customer> = this._customers;
 
-        for (let customer of customers)
+        for (let customer of potentialCustomers)
         {
-            let demand = Stores.freeEnergyCapacity(customer) - assignments.supplied(customer.id);
+            customer.demand -= assignments.supplied(customer.customer.id);
 
-            if (demand > 0)
+            if (customer.demand > 0)
             {
-                let priority = Customers.customerPriority(customer);
-
-                infos.append({ customer, priority, demand });
+                customers.append(customer);
             }
         }
     }
 
-    private addCreepInfos<M extends CreepBaseMemory>(creeps: Vector<CreepBase<M>>)
-    {
-        const assignments: Assignments = this._assignments;
-        const infos: Vector<CustomerInfo> = this._infos;
-
-        for (let creep of creeps)
-        {
-            if (creep.spawning) continue;
-
-            let demand = creep.freeEnergyCapacity - assignments.supplied(creep.id);
-
-            if (demand > 0)
-            {
-                let priority = Customers.creepPriority(creep);
-
-                infos.append({ customer: creep.creep, priority, demand });
-            }
-        }
-    }
-
-    private static compare(a: CustomerInfo, b: CustomerInfo): number
+    private static compare(a: _Customer, b: _Customer): number
     {
         var result = a.priority - b.priority;
 

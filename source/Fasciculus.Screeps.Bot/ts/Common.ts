@@ -7,9 +7,6 @@ export type SourceId = Id<Source>;
 export type Supply = Creep | StructureContainer;
 export type SupplyId = Id<Creep | StructureContainer>;
 
-export type CustomerId = Id<Creep | StructureSpawn | StructureExtension>;
-export type Customer = Creep | StructureSpawn | StructureExtension;
-
 export type RepairableId = Id<StructureRoad | StructureWall>
 export type Repairable = StructureRoad | StructureWall
 
@@ -605,4 +602,23 @@ export class Positions
     {
         return targets.find((values) => Positions.positionOf(start).findClosestByRange(values) || undefined);
     }
+}
+
+export type CustomerId = Id<Creep | StructureSpawn | StructureExtension>;
+export type Customer = Creep | StructureSpawn | StructureExtension;
+
+export interface _Customer
+{
+    readonly customer: Customer;
+    readonly priority: number;
+    demand: number;
+}
+
+export const CustomerPriorities: Dictionary<number> =
+{
+    "Spawn": 1,
+    "Extension": 2,
+    "Repairer": 3,
+    "Upgrader": 4,
+    "Builder": 4,
 }

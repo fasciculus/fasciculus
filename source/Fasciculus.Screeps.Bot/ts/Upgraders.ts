@@ -1,4 +1,4 @@
-import { Bodies, BodyTemplate, ControllerId, CreepState, CreepType, Dictionary, Positions, Vector } from "./Common";
+import { Bodies, BodyTemplate, ControllerId, CreepState, CreepType, Customer, CustomerPriorities, Dictionary, Positions, Vector, _Customer } from "./Common";
 import { Controller, Controllers } from "./Controllers";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
@@ -15,7 +15,7 @@ interface UpgraderMemory extends CreepBaseMemory
     controller?: ControllerId;
 }
 
-export class Upgrader extends CreepBase<UpgraderMemory>
+export class Upgrader extends CreepBase<UpgraderMemory> implements _Customer
 {
     private _controller?: Controller;
 
@@ -24,12 +24,20 @@ export class Upgrader extends CreepBase<UpgraderMemory>
     get controller(): Controller | undefined { return this._controller; }
     set controller(value: Controller | undefined) { this._controller = value; this.memory.controller = value?.id; }
 
+    readonly customer: Customer;
+    readonly priority: number;
+    demand: number;
+
     constructor(creep: Creep)
     {
         super(creep, CreepType.Upgrader);
 
         this._controller = Controllers.get(this.memory.controller);
         this.maxEnergyPerTick = this.workParts;
+
+        this.customer = creep;
+        this.priority = CustomerPriorities["Upgrader"];
+        this.demand = this.freeEnergyCapacity;
     }
 
     execute()
