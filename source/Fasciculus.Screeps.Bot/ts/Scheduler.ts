@@ -4,6 +4,7 @@ import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { Markers } from "./Markers";
+import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
@@ -20,6 +21,7 @@ import { Wellers } from "./Wellers";
 
 export class Scheduler
 {
+    @profile
     static initialize()
     {
         GameWrap.initialize();
