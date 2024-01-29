@@ -11,7 +11,6 @@ import { Chambers } from "./Rooming";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
 import { Spawns } from "./Spawns";
-import { Starters } from "./Starters";
 import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
 import { Walls } from "./Walls";
@@ -35,7 +34,6 @@ export class Scheduler
         Controllers.initialize();
 
         Creeps.initialize();
-        Starters.initialize();
         Wellers.initialize();
         Suppliers.initialize();
         Upgraders.initialize();
@@ -51,7 +49,6 @@ export class Scheduler
             case 1: Creeps.cleanup(); break;
         }
 
-        Starters.run();
         Wellers.run();
         Suppliers.run();
         Upgraders.run();
