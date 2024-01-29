@@ -530,7 +530,7 @@ class Customers
 
         if (this._infos.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)
         {
-            this.addCustomerInfos(Extensions.my);
+            this.addCustomerInfos(Extensions.my.map(e => e.extension));
         }
 
         if (this._infos.length < SUPPLIER_MAX_NEW_ASSIGNMENTS)

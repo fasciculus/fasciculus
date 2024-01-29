@@ -217,9 +217,7 @@ export class Starters
 
     private static findCustomers(): Vector<Customer>
     {
-        let spawns: Vector<Customer> = Spawns.my.map(s => s.spawn);
-        let extensions: Vector<Customer> = Extensions.my;
-        var customers = spawns.concat(extensions);
+        var customers: Vector<Customer> = Spawns.my.map(s => s.spawn);
 
         customers = customers.filter(c => Stores.hasFreeEnergyCapacity(c));
 
