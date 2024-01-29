@@ -111,7 +111,7 @@ export class Creeps
     private static _my: Vector<Creep> = new Vector();
     private static _ofType: Dictionary<Vector<Creep>> = {};
 
-    static get(name: string): Creep | undefined { return GameWrap.myCreep(name); }
+    static get(name: string | undefined): Creep | undefined { return GameWrap.myCreep(name); }
 
     static get my(): Vector<Creep> { return Creeps._my.clone(); }
     static get oldest(): Creep | undefined { return Creeps._my.min(c => c.ticksToLive || CREEP_LIFE_TIME); }

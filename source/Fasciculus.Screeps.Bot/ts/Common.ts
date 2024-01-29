@@ -375,7 +375,7 @@ export class GameWrap
         return result || undefined;
     }
 
-    static myCreep(name: string): Creep | undefined { return Game.creeps[name]; }
+    static myCreep(name: string | undefined): Creep | undefined { return name ? Game.creeps[name] : undefined; }
     static get myCreeps(): Vector<Creep> { return GameWrap._myCreeps.clone(); }
     static get myFlags(): Vector<Flag> { return GameWrap._myFlags.clone(); }
     static get myPowerCreeps(): Vector<PowerCreep> { return GameWrap._myPowerCreeps.clone(); }

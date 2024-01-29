@@ -1,4 +1,8 @@
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.425631-alpha">
+
+  <PropertyGroup>
+    <Version>0.1.1</Version>
+  </PropertyGroup>
   
   <ItemGroup>
     <Folder Include="js/" />
@@ -33,11 +37,13 @@
 
   <Target Name="CreateConfig" BeforeTargets="Build">
     <Message Importance="high" Text="Creating Config.ts" />
-    <CreateConfig />
+    <CreateConfig Version="$(Version)" />
   </Target>
 
   <UsingTask TaskName="CreateConfig" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
-    <ParameterGroup />
+    <ParameterGroup>
+      <Version ParameterType="System.String" Required="True" Output="False" />
+    </ParameterGroup>
     <Task>
       <Reference Include="System.Xml"/>
       <Using Namespace="System"/>
@@ -51,6 +57,7 @@ doc.Load("Config.xml");
 XmlNodeList adds = doc.GetElementsByTagName("Add");
 List<string> lines = new List<string>();
 string profilerSession = Guid.NewGuid().ToString("N");
+lines.Add("export const VERSION = \"" + Version + "\";");
 lines.Add("export const PROFILER_SESSION = \"" + profilerSession + "\";");
 foreach (var add in adds)
 {

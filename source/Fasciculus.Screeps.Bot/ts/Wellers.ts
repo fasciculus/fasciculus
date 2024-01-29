@@ -175,6 +175,7 @@ export class Wellers
         Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
     }
 
+    @profile
     static run()
     {
         Wellers.prepare(Wellers._all);
@@ -188,11 +189,13 @@ export class Wellers
         wellers.forEach(w => w.prepare());
     }
 
+    @profile
     private static execute(wellers: Vector<Weller>)
     {
         wellers.forEach(w => w.execute());
     }
 
+    @profile
     private static assign(): Vector<Weller>
     {
         var result: Vector<Weller> = new Vector();
@@ -206,7 +209,7 @@ export class Wellers
             if (!nearestWell) continue;
 
             weller.well = nearestWell;
-            nearestWell.assign(weller.creep);
+            nearestWell.assignee = weller.creep;
             result.append(weller);
         }
 
