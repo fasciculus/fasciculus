@@ -1,4 +1,4 @@
-import { Bodies, BodyTemplate, CreepState, CreepType, Positions, SourceId, Vector } from "./Common";
+import { Bodies, BodyTemplate, CreepState, CreepType, Positions, SourceId, Supply, Vector, _Supply } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Well, Wells } from "./Resources";
@@ -22,7 +22,7 @@ interface WellerMemory extends CreepBaseMemory
     ready?: boolean;
 }
 
-export class Weller extends CreepBase<WellerMemory>
+export class Weller extends CreepBase<WellerMemory> implements _Supply
 {
     private _well?: Well;
     private _ready: boolean;
@@ -34,9 +34,12 @@ export class Weller extends CreepBase<WellerMemory>
     set well(value: Well | undefined) { this._well = value; this.memory.well = value?.id; this.ready = false; }
 
     get ready(): boolean { return this._ready; }
-    set ready(value: boolean) { this._ready = this.memory.ready = value; }
+    private set ready(value: boolean) { this._ready = this.memory.ready = value; }
 
     get maxEnergyPerTick(): number { return this._maxEnergyPerTick; }
+
+    readonly supply: Supply;
+    offer: number;
 
     constructor(creep: Creep)
     {
@@ -48,6 +51,9 @@ export class Weller extends CreepBase<WellerMemory>
         this._ready = this.initReady();
         this._maxEnergyPerTick = this.workParts * HARVEST_POWER;
         this._full = this.freeEnergyCapacity < this._maxEnergyPerTick;
+
+        this.supply = creep;
+        this.offer = this.energy;
     }
 
     private initReady(): boolean

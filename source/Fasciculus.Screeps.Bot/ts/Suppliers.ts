@@ -1,5 +1,5 @@
 import { Builders } from "./Builders";
-import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, Dictionaries, Dictionary, GameWrap, Positions, Supply, SupplyId, Vector, _Customer } from "./Common";
+import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerId, Dictionaries, Dictionary, GameWrap, Positions, Supply, SupplyId, Vector, _Customer, _Supply } from "./Common";
 import { SUPPLIER_ENOUGH_ENERGY_RATIO, SUPPLIER_MAX_NEW_ASSIGNMENTS, SUPPLIER_MIN_CREEP_FREE_RATIO, SUPPLIER_MIN_SUPPLY_ENERGY, SUPPLIER_PERFORMANCE_FACTOR } from "./Config";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
@@ -400,29 +400,41 @@ class Assignments
     }
 }
 
-interface SupplyInfo
-{
-    supply: Supply;
-    energy: number;
-}
-
 class Supplies
 {
     private _assignments: Assignments;
-    private _infos: Vector<SupplyInfo> = new Vector();
+    private _supplies: Vector<_Supply> = new Vector();
 
     constructor(assignments: Assignments)
     {
         this._assignments = assignments;
-        this.collectInfos();
+        this.collectSupplies();
     }
 
-    private collectInfos()
+    private collectSupplies()
     {
-        this.addCreepInfos(Wellers.ready.filter(SupplierSupport.hasEnergy));
+        const supplies: Vector<_Supply> = this._supplies;
 
-        this._infos.sort(Supplies.compare);
-        this._infos = this._infos.take(SUPPLIER_MAX_NEW_ASSIGNMENTS);
+        this.addSupplies(Wellers.ready);
+
+        supplies.sort(Supplies.compare);
+        this._supplies = supplies.take(SUPPLIER_MAX_NEW_ASSIGNMENTS);
+    }
+
+    private addSupplies(potentialSupplies: Vector<_Supply>)
+    {
+        const assignments: Assignments = this._assignments;
+        const supplies: Vector<_Supply> = this._supplies;
+
+        for (let supply of potentialSupplies)
+        {
+            supply.offer -= assignments.earmarked(supply.supply.id);
+
+            if (supply.offer > 0)
+            {
+                supplies.append(supply);
+            }
+        }
     }
 
     assign(): Vector<Supplier>
@@ -430,18 +442,17 @@ class Supplies
         const result: Vector<Supplier> = new Vector();
         const assignments: Assignments = this._assignments;
 
-        for (let info of this._infos)
+        for (let supply of this._supplies)
         {
-            let supply = info.supply;
-            let energy = info.energy;
+            let offer = supply.offer;
 
-            while (energy > 0)
+            while (offer > 0)
             {
-                let supplier = assignments.assignSupply(supply);
+                let supplier = assignments.assignSupply(supply.supply);
 
                 if (!supplier) break;
 
-                energy -= supplier.freeEnergyCapacity;
+                offer -= supplier.freeEnergyCapacity;
                 result.append(supplier);
 
                 if (!assignments.needsSupply) break;
@@ -453,25 +464,9 @@ class Supplies
         return result;
     }
 
-    private addCreepInfos<M extends CreepBaseMemory>(creeps: Vector<CreepBase<M>>)
+    private static compare(a: _Supply, b: _Supply): number
     {
-        const assignments: Assignments = this._assignments;
-        const infos: Vector<SupplyInfo> = this._infos;
-
-        for (let creep of creeps)
-        {
-            let energy = creep.energy - assignments.earmarked(creep.id);
-
-            if (energy > 0)
-            {
-                infos.append({ supply: creep.creep, energy });
-            }
-        }
-    }
-
-    private static compare(a: SupplyInfo, b: SupplyInfo): number
-    {
-        return b.energy - a.energy;
+        return b.offer - a.offer;
     }
 }
 
