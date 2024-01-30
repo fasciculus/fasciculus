@@ -100,8 +100,6 @@ export class Creeps
 {
     private static _types: Dictionary<CreepType> = {};
 
-    static ofType(type: CreepType): Vector<Creep> { return GameWrap.myCreeps.filter(c => Creeps._types[c.name] == type); }
-
     static get oldest(): Creep | undefined { return GameWrap.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
 
     @profile
@@ -146,10 +144,7 @@ export class Creeps
 
         return Dictionaries.update(creeps, existing, create);
     }
-}
 
-export class CreepMemories
-{
     @profile
     static cleanup()
     {

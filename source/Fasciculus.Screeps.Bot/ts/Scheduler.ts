@@ -2,7 +2,7 @@ import { Builders } from "./Builders";
 import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
 import { Controllers } from "./Controllers";
-import { CreepMemories, CreepTypes, Creeps } from "./Creeps";
+import { CreepTypes, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
@@ -65,7 +65,7 @@ export class Scheduler
     {
         switch (Game.time % 10)
         {
-            case 1: CreepMemories.cleanup(); break;
+            case 1: Creeps.cleanup(); break;
         }
 
         Wellers.run();
