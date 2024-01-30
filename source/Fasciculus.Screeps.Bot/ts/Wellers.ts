@@ -139,7 +139,7 @@ export class Wellers
     @profile
     static initialize()
     {
-        if (Wellers.updateWellers())
+        if (Creeps.update(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
         {
             Wellers._all = Dictionaries.values(Wellers._wellers);
             Wellers._maxEnergyPerTick = Wellers._all.sum(w => w.maxEnergyPerTick);
@@ -147,13 +147,6 @@ export class Wellers
         }
 
         Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
-    }
-
-    private static updateWellers(): boolean
-    {
-        const existing: Set<string> = CreepTypes.creepsOfType(CreepType.Weller);
-
-        return Dictionaries.update(Wellers._wellers, existing, name => new Weller(name));
     }
 
     static run()

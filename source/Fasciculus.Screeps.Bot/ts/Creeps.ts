@@ -139,6 +139,13 @@ export class Creeps
             Creeps._types[name] = Creeps.typeOf(Game.creeps[name]);
         }
     }
+
+    static update<T>(creeps: Dictionary<T>, type: CreepType, create: (name: string) => T): boolean
+    {
+        const existing: Set<string> = CreepTypes.creepsOfType(type);
+
+        return Dictionaries.update(creeps, existing, create);
+    }
 }
 
 export class CreepMemories

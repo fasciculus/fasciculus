@@ -127,16 +127,21 @@ interface DamageInfo
 
 export class Repairers
 {
+    private static _repairers: Dictionary<Repairer> = {};
     private static _all: Vector<Repairer> = new Vector();
+    private static _maxEnergyPerTick: number = 0;
 
     static get all(): Vector<Repairer> { return Repairers._all.clone(); }
-
-    static get maxEnergyPerTick(): number { return Repairers._all.sum(r => r.maxEnergyPerTick); }
+    static get maxEnergyPerTick(): number { return Repairers._maxEnergyPerTick; }
 
     @profile
     static initialize()
     {
-        Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c.name));
+        if (Creeps.update(Repairers._repairers, CreepType.Repairer, name => new Repairer(name)))
+        {
+            Repairers._all = Dictionaries.values(Repairers._repairers);
+            Repairers._maxEnergyPerTick = Repairers._all.sum(r => r.maxEnergyPerTick);
+        }
 
         Bodies.register(CreepType.Repairer, REPAIRER_TEMPLATE);
     }

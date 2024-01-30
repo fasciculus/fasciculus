@@ -114,20 +114,13 @@ export class Builders
     @profile
     static initialize()
     {
-        if (Builders.updateBuilders())
+        if (Creeps.update(Builders._builders, CreepType.Builder, name => new Builder(name)))
         {
             Builders._all = Dictionaries.values(Builders._builders);
             Builders._maxEnergyPerTick = Dictionaries.values(Builders._builders).sum(b => b.maxEnergyPerTick);
         }
 
         Bodies.register(CreepType.Builder, BUILDER_TEMPLATE);
-    }
-
-    private static updateBuilders(): boolean
-    {
-        const existing: Set<string> = CreepTypes.creepsOfType(CreepType.Builder);
-
-        return Dictionaries.update(Builders._builders, existing, name => new Builder(name));
     }
 
     static run()

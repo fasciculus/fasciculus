@@ -1,6 +1,6 @@
-import { Bodies, BodyTemplate, ControllerId, CreepState, CreepType, Dictionary, Positions, Vector } from "./Common";
+import { Bodies, BodyTemplate, ControllerId, CreepState, CreepType, Dictionaries, Dictionary, Positions, Vector } from "./Common";
 import { Controller, Controllers } from "./Controllers";
-import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, CreepTypes, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 
 const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
@@ -108,16 +108,22 @@ interface ControllerWork
 
 export class Upgraders
 {
+    private static _upgraders: Dictionary<Upgrader> = {};
     private static _all: Vector<Upgrader> = new Vector();
+    private static _maxEnergyPerTick: number = 0;
 
     static get all(): Vector<Upgrader> { return Upgraders._all.clone(); }
     static get count(): number { return Upgraders._all.length; }
-    static get maxEnergyPerTick(): number { return Upgraders._all.sum(u => u.maxEnergyPerTick); }
+    static get maxEnergyPerTick(): number { return Upgraders._maxEnergyPerTick; }
 
     @profile
     static initialize()
     {
-        Upgraders._all = Creeps.ofType(CreepType.Upgrader).map(c => new Upgrader(c.name));
+        if (Creeps.update(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
+        {
+            Upgraders._all = Dictionaries.values(Upgraders._upgraders);
+            Upgraders._maxEnergyPerTick = Upgraders._all.sum(u => u.maxEnergyPerTick);
+        }
 
         Bodies.register(CreepType.Upgrader, UPGRADER_TEMPLATE);
     }
