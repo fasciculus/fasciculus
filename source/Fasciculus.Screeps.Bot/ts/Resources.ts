@@ -31,6 +31,7 @@ export class Wells
     private static _wells: Dictionary<Well> = {};
 
     static get(id?: SourceId): Well | undefined { return id ? Wells._wells[id] : undefined; }
+    static get all(): Vector<Well> { return Dictionaries.values(Wells._wells); }
     static get assignable(): Vector<Well> { return Dictionaries.values(Wells._wells).filter(w => !w.assignee); }
     static get assignableCount(): number { return Wells.assignable.length; }
 

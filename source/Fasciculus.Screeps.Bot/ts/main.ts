@@ -10,4 +10,7 @@ export const loop = function ()
     Scheduler.run();
 
     Profiler.stop();
+
+//    console.log(`---------- ${Game.time} ----------`);
+//    Wells.all.map(w => `${w.id}: ${w.assignee?.name || "undefined"}`).forEach(s => console.log(s));
 }
