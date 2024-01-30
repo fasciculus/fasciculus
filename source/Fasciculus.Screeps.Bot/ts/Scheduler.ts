@@ -2,7 +2,7 @@ import { Builders } from "./Builders";
 import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
 import { Controllers } from "./Controllers";
-import { Creeps } from "./Creeps";
+import { CreepMemories, CreepTypes, Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
@@ -12,7 +12,6 @@ import { Chambers } from "./Rooming";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
 import { Spawns } from "./Spawns";
-import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
 import { Walls } from "./Walls";
 import { Wellers } from "./Wellers";
@@ -43,9 +42,10 @@ export class Scheduler
         Wells.initialize(clear);
         Controllers.initialize();
 
+        CreepTypes.initialize(clear);
+
         Creeps.initialize(clear);
         Wellers.initialize();
-        Suppliers.initialize();
         Upgraders.initialize();
         Builders.initialize();
         Repairers.initialize();
@@ -65,11 +65,10 @@ export class Scheduler
     {
         switch (Game.time % 10)
         {
-            case 1: Creeps.cleanup(); break;
+            case 1: CreepMemories.cleanup(); break;
         }
 
         Wellers.run();
-        Suppliers.run();
         Upgraders.run();
         Builders.run();
         Repairers.run();

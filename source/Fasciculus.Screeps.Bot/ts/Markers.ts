@@ -1,7 +1,6 @@
 import { GameWrap, MarkerType, Vector } from "./Common";
 import { Creeps } from "./Creeps";
 import { profile } from "./Profiling";
-import { Suppliers } from "./Suppliers";
 import { Wellers } from "./Wellers";
 
 const INFO_MARKER_TEXT_STYLE: TextStyle =
@@ -55,8 +54,8 @@ export class Marker
         let energyAvailable = room.energyAvailable;
         let energyCapacity = room.energyCapacityAvailable;
         let wellable = Wellers.maxEnergyPerTick.toFixed(1);
-        let performance = Suppliers.performance.toFixed(1);
-        let supplierCount = Suppliers.count;
+        let performance = "n/a";
+        let supplierCount = "n/a";
         let oldest: Creep | undefined = Creeps.oldest;
         let oldestText = oldest ? `${oldest.name} (${oldest.ticksToLive || CREEP_LIFE_TIME})` : "no creeps";
 

@@ -132,7 +132,7 @@ export class Vector<T> implements Iterable<T>
         }
     }
 
-    append(value: T): Vector<T>
+    add(value: T): Vector<T>
     {
         this.array.push(value);
 
@@ -185,7 +185,7 @@ export class Vector<T> implements Iterable<T>
         {
             if (predicate(value))
             {
-                result.append(value);
+                result.add(value);
             }
         }
 
@@ -207,7 +207,7 @@ export class Vector<T> implements Iterable<T>
 
         for (let value of this.array)
         {
-            result.append(fn(value));
+            result.add(fn(value));
         }
 
         return result;
@@ -243,7 +243,7 @@ export class Vector<T> implements Iterable<T>
             let key: string = toKey(value);
             let entry: Vector<T> = result[key] || new Vector();
 
-            entry.append(value);
+            entry.add(value);
             result[key] = entry;
         }
 
@@ -311,7 +311,7 @@ export class Vectors
         {
             if (value !== undefined)
             {
-                result.append(value);
+                result.add(value);
             }
         }
 
@@ -366,6 +366,23 @@ export class Dictionaries
         }
     }
 
+    static filter<T>(dictionary: Dictionary<T>, filter: (value: T) => boolean): Dictionary<T>
+    {
+        const result: Dictionary<T> = {};
+
+        for (const key of Dictionaries.keys(dictionary))
+        {
+            const value: T = dictionary[key];
+
+            if (filter(value))
+            {
+                result[key] = value;
+            }
+        }
+
+        return result;
+    }
+
     static update<T>(dictionary: Dictionary<T>, existing: Set<string>, create: (key: string) => T): boolean
     {
         const keys: Set<string> = Dictionaries.keys(dictionary);
@@ -385,6 +402,13 @@ export class Dictionaries
 
 export class Sets
 {
+    static clone<T>(set: Set<T> | undefined): Set<T>
+    {
+        if (!set || set.size == 0) return new Set();
+
+        return new Set(set);
+    }
+
     static union<T>(a: Set<T>, b: Set<T>): Set<T>
     {
         return new Set([...a, ...b]);
@@ -581,7 +605,7 @@ export class BodyTemplate
 
         for (let i = 0; i < times; ++i)
         {
-            this.chunks.append(chunk);
+            this.chunks.add(chunk);
         }
 
         return this;
@@ -712,32 +736,4 @@ export class Positions
     {
         return targets.find((values) => Positions.positionOf(start).findClosestByRange(values) || undefined);
     }
-}
-
-export type Supply = Creep | StructureContainer;
-export type SupplyId = Id<Creep | StructureContainer>;
-
-export type CustomerId = Id<Creep | StructureSpawn | StructureExtension>;
-export type Customer = Creep | StructureSpawn | StructureExtension;
-
-export interface _Supply
-{
-    readonly supply: Supply;
-    offer: number;
-}
-
-export interface _Customer
-{
-    readonly customer: Customer;
-    readonly priority: number;
-    demand: number;
-}
-
-export const CustomerPriorities: Dictionary<number> =
-{
-    "Spawn": 1,
-    "Extension": 2,
-    "Repairer": 3,
-    "Upgrader": 4,
-    "Builder": 4,
 }

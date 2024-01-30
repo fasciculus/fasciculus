@@ -1,23 +1,15 @@
-import { Customer, CustomerPriorities, Vector, Vectors, _Customer } from "./Common";
+import { Vector, Vectors } from "./Common";
 import { profile } from "./Profiling";
 import { Chambers } from "./Rooming";
 import { Stores } from "./Stores";
 
-export class Extension implements _Customer
+export class Extension
 {
     readonly extension: StructureExtension;
-
-    readonly customer: Customer;
-    readonly priority: number;
-    demand: number;
 
     constructor(extension: StructureExtension)
     {
         this.extension = extension;
-
-        this.customer = extension;
-        this.priority = CustomerPriorities["Extension"];
-        this.demand = Stores.freeEnergyCapacity(extension);
     }
 }
 

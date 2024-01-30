@@ -1,4 +1,4 @@
-import { Bodies, BodyTemplate, CreepState, CreepType, Customer, CustomerPriorities, Dictionaries, Dictionary, Positions, Repairable, RepairableId, Vector, _Customer } from "./Common";
+import { Bodies, BodyTemplate, CreepState, CreepType, Dictionaries, Dictionary, Positions, Repairable, RepairableId, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Repairs } from "./Repairs";
@@ -29,26 +29,18 @@ interface RepairerMemory extends CreepBaseMemory
     repairable?: RepairableId;
 }
 
-export class Repairer extends CreepBase<RepairerMemory> implements _Customer
+export class Repairer extends CreepBase<RepairerMemory>
 {
     get repairable(): Repairable | undefined { return Repairs.get(this.memory.repairable); }
     set repairable(value: Repairable | undefined) { this.memory.repairable = value?.id; }
 
     readonly maxEnergyPerTick: number;
 
-    readonly customer: Customer;
-    readonly priority: number;
-    demand: number;
-
-    constructor(creep: Creep)
+    constructor(name: string)
     {
-        super(creep, CreepType.Repairer);
+        super(name);
 
         this.maxEnergyPerTick = this.workParts;
-
-        this.customer = creep;
-        this.priority = CustomerPriorities["Repairer"];
-        this.demand = this.freeEnergyCapacity;
     }
 
     execute()
@@ -144,7 +136,7 @@ export class Repairers
     @profile
     static initialize()
     {
-        Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c));
+        Repairers._all = Creeps.ofType(CreepType.Repairer).map(c => new Repairer(c.name));
 
         Bodies.register(CreepType.Repairer, REPAIRER_TEMPLATE);
     }
@@ -172,7 +164,7 @@ export class Repairers
             if (!repairer) continue;
 
             repairer.repairable = repairable;
-            result.append(repairer);
+            result.add(repairer);
             delete unassigned[repairer.name];
 
             if (Dictionaries.isEmpty(unassigned)) break;

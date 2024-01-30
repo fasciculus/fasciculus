@@ -7,47 +7,37 @@ export interface CreepBaseMemory extends CreepMemory
 {
     type: CreepType;
     state: CreepState;
-    path?: string;
 }
 
 export class CreepBase<M extends CreepBaseMemory>
 {
-    readonly creep: Creep;
-    readonly type: CreepType;
+    readonly name: string;
 
-    protected readonly memory: M;
+    get creep(): Creep { return Game.creeps[this.name]; }
+    get memory(): M { return this.creep.memory as M; }
 
-    private _state: CreepState;
-
-    readonly workParts: number;
-
-    constructor(creep: Creep, type: CreepType)
-    {
-        this.creep = creep;
-        this.type = type;
-
-        let memory: M = this.creep.memory as M;
-
-        this.memory = memory;
-        this._state = memory.state;
-
-        this.workParts = BodyParts.workOf(creep);
-    }
-
-    get state(): CreepState { return this._state; }
-    set state(value: CreepState) { this._state = value; this.memory.state = value; }
+    get state(): CreepState { return this.memory.state; }
+    set state(value: CreepState) { this.memory.state = value; }
 
     get id(): Id<Creep> { return this.creep.id; }
-    get name(): string { return this.creep.name; }
     get pos(): RoomPosition { return this.creep.pos; }
-    get store(): StoreDefinition { return this.creep.store; }
 
-    get energy(): number { return Stores.energy(this); }
-    get energyCapacity(): number { return Stores.energyCapacity(this); }
-    get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this); }
-    get energyRatio(): number { return Stores.energyRatio(this); }
+    get energy(): number { return Stores.energy(this.creep); }
+    get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this.creep); }
+    get energyRatio(): number { return Stores.energyRatio(this.creep); }
 
     get spawning(): boolean { return this.creep.spawning; }
+
+    readonly workParts: number;
+    readonly energyCapacity: number;
+
+    constructor(name: string)
+    {
+        this.name = name;
+
+        this.workParts = BodyParts.workOf(this.creep);
+        this.energyCapacity = Stores.energyCapacity(this.creep);
+    }
 
     moveTo(target: RoomPosition | { pos: RoomPosition }, opts?: MoveToOpts): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND
     {
@@ -109,19 +99,16 @@ export class CreepBase<M extends CreepBaseMemory>
 export class Creeps
 {
     private static _types: Dictionary<CreepType> = {};
-    //private static _ofType: Dictionary<Vector<Creep>> = {};
+
+    static ofType(type: CreepType): Vector<Creep> { return GameWrap.myCreeps.filter(c => Creeps._types[c.name] == type); }
 
     static get oldest(): Creep | undefined { return GameWrap.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
-    //static ofType(type: CreepType): Vector<Creep> { return Creeps._ofType[type] || new Vector(); }
-    static ofType(type: CreepType): Vector<Creep> { return GameWrap.myCreeps.filter(c => Creeps._types[c.name] == type); }
 
     @profile
     static initialize(clear: boolean)
     {
         Creeps.clear(clear);
         Creeps.updateTypes();
-
-        //Creeps._ofType = GameWrap.myCreeps.groupBy(Creeps.typeOf);
     }
 
     private static clear(clear: boolean)
@@ -165,5 +152,90 @@ export class Creeps
                 delete Memory.creeps[id];
             }
         }
+    }
+}
+
+export class CreepMemories
+{
+    @profile
+    static cleanup()
+    {
+        const existing: Set<string> = Dictionaries.keys(Game.creeps);
+
+        for (const name in Memory.creeps)
+        {
+            if (!existing.has(name))
+            {
+                delete Memory.creeps[name];
+            }
+        }
+    }
+}
+
+export class CreepTypes
+{
+    private static _types: Dictionary<CreepType> = {};
+    private static _creeps: Dictionary<Set<string>> = {};
+
+    static creepsOfType(type: CreepType): Set<string>
+    {
+        const creeps: Set<string> = CreepTypes._creeps[type] || new Set();
+
+        return Sets.clone(creeps);
+    }
+
+    private static clear(clear: boolean)
+    {
+        if (clear)
+        {
+            CreepTypes._types = {};
+            CreepTypes._creeps = {};
+        }
+    }
+
+    @profile
+    static initialize(clear: boolean)
+    {
+        CreepTypes.clear(clear);
+
+        if (CreepTypes.updateTypes())
+        {
+            CreepTypes.updateCreeps();
+        }
+    }
+
+    private static updateTypes(): boolean
+    {
+        const existing: Set<string> = Dictionaries.keys(Game.creeps);
+
+        return Dictionaries.update(CreepTypes._types, existing, CreepTypes.typeOf);
+    }
+
+    private static typeOf(name: string): CreepType
+    {
+        let memory = Game.creeps[name].memory as CreepBaseMemory;
+
+        return memory.type;
+    }
+
+    private static updateCreeps()
+    {
+        const types: Dictionary<CreepType> = CreepTypes._types
+        const creeps: Dictionary<Set<string>> = {};
+
+        for (const name of Dictionaries.keys(types))
+        {
+            const type = types[name];
+            var names: Set<string> | undefined = creeps[type];
+
+            if (!names)
+            {
+                creeps[type] = names = new Set();
+            }
+
+            names.add(name);
+        }
+
+        CreepTypes._creeps = creeps;
     }
 }

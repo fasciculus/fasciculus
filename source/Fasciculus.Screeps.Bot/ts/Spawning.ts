@@ -9,9 +9,8 @@ import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
 import { Sites } from "./Sites";
 import { Spawn, Spawns } from "./Spawns";
-import { Suppliers } from "./Suppliers";
 import { Upgraders } from "./Upgraders";
-import { Weller, Wellers } from "./Wellers";
+import { Wellers } from "./Wellers";
 
 export class Spawning
 {
@@ -65,7 +64,6 @@ export class Spawning
 
     private static nextType(): CreepType | undefined
     {
-        if (Spawning.moreSuppliers) return CreepType.Supplier;
         if (Spawning.moreWellers) return CreepType.Weller;
         if (Spawning.moreRepairers) return CreepType.Repairer;
         if (Spawning.moreBuilders) return CreepType.Builder;
@@ -104,13 +102,6 @@ export class Spawning
         }
     }
 
-    private static get moreSuppliers(): boolean
-    {
-        if (Suppliers.idleCount > 0) return false;
-
-        return Suppliers.performance < Wellers.maxEnergyPerTick;
-    }
-
     private static get moreWellers(): boolean
     {
         return Wells.assignableCount > 0;
@@ -118,8 +109,6 @@ export class Spawning
 
     private static get moreUpgraders(): boolean
     {
-        if (Suppliers.count == 0) return false;
-
         const upgraderCount = Upgraders.count;
 
         if (upgraderCount >= UPGRADER_MAX_COUNT) return false;
@@ -130,7 +119,6 @@ export class Spawning
 
     private static get moreBuilders(): boolean
     {
-        if (Suppliers.count == 0) return false;
         if (Sites.count == 0) return false;
 
         return Builders.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Builder);
@@ -138,7 +126,6 @@ export class Spawning
 
     private static get moreRepairers(): boolean
     {
-        if (Suppliers.count == 0) return false;
         if (Repairs.count == 0) return false;
 
         return Repairers.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Repairer);

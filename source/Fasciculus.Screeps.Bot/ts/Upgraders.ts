@@ -1,4 +1,4 @@
-import { Bodies, BodyTemplate, ControllerId, CreepState, CreepType, Customer, CustomerPriorities, Dictionary, Positions, Vector, _Customer } from "./Common";
+import { Bodies, BodyTemplate, ControllerId, CreepState, CreepType, Dictionary, Positions, Vector } from "./Common";
 import { Controller, Controllers } from "./Controllers";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
@@ -15,29 +15,18 @@ interface UpgraderMemory extends CreepBaseMemory
     controller?: ControllerId;
 }
 
-export class Upgrader extends CreepBase<UpgraderMemory> implements _Customer
+export class Upgrader extends CreepBase<UpgraderMemory>
 {
-    private _controller?: Controller;
-
     readonly maxEnergyPerTick: number;
 
-    get controller(): Controller | undefined { return this._controller; }
-    set controller(value: Controller | undefined) { this._controller = value; this.memory.controller = value?.id; }
+    get controller(): Controller | undefined { return Controllers.get(this.memory.controller); }
+    set controller(value: Controller | undefined) { this.memory.controller = value?.id; }
 
-    readonly customer: Customer;
-    readonly priority: number;
-    demand: number;
-
-    constructor(creep: Creep)
+    constructor(name: string)
     {
-        super(creep, CreepType.Upgrader);
+        super(name);
 
-        this._controller = Controllers.get(this.memory.controller);
         this.maxEnergyPerTick = this.workParts;
-
-        this.customer = creep;
-        this.priority = CustomerPriorities["Upgrader"];
-        this.demand = this.freeEnergyCapacity;
     }
 
     execute()
@@ -128,7 +117,7 @@ export class Upgraders
     @profile
     static initialize()
     {
-        Upgraders._all = Creeps.ofType(CreepType.Upgrader).map(c => new Upgrader(c));
+        Upgraders._all = Creeps.ofType(CreepType.Upgrader).map(c => new Upgrader(c.name));
 
         Bodies.register(CreepType.Upgrader, UPGRADER_TEMPLATE);
     }
@@ -173,7 +162,7 @@ export class Upgraders
         if (!upgrader) return result;
 
         upgrader.controller = controller;
-        result.append(upgrader);
+        result.add(upgrader);
 
         return result;
     }
