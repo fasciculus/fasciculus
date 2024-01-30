@@ -44,13 +44,11 @@ export class Chamber
     readonly my: boolean;
     readonly controlled: boolean;
 
-    private readonly _sources: Vector<Source>;
     private readonly _walls: Vector<StructureWall>;
     private readonly _myExtensions: Vector<StructureExtension>;
 
     get territory(): Territory { return Territories.get(this.room); }
 
-    get sources(): Vector<Source> { return this._sources.clone(); }
     get walls(): Vector<StructureWall> { return this._walls.clone(); }
     get myExtensions(): Vector<StructureExtension> { return this._myExtensions.clone(); }
 
@@ -58,7 +56,6 @@ export class Chamber
     {
         this.room = room;
         this.name = room.name;
-        this._sources = Vector.from(room.find<FIND_SOURCES, Source>(FIND_SOURCES));
         this._walls = Chamber.wallsOf(room);
         this._myExtensions = Chamber.myExtensionsOf(room);
         this.energyCapacityAvailable = room.energyCapacityAvailable;
