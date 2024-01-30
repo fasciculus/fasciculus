@@ -1,4 +1,4 @@
-import { Dictionary, GameWrap, Point, Vector } from "./Common";
+import { Dictionaries, Dictionary, GameWrap, Point, Vector } from "./Common";
 import { profile } from "./Profiling";
 
 export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;
@@ -36,46 +36,23 @@ export class Territories
 
 export class Chamber
 {
-    readonly room: Room;
     readonly name: string;
-    readonly controller?: StructureController;
-    readonly energyCapacityAvailable: number;
 
-    readonly my: boolean;
-    readonly controlled: boolean;
+    get room(): Room { return Game.rooms[this.name]; }
+    get controller(): StructureController | undefined { return this.room.controller; }
+    get my(): boolean { return this.controller?.my || false; }
+    get reservation(): ReservationDefinition | undefined { return this.controller?.reservation; }
+    get controlled(): boolean { return this.my || this.reservation?.username == GameWrap.username; }
 
-    private readonly _walls: Vector<StructureWall>;
-    private readonly _myExtensions: Vector<StructureExtension>;
+    get energyCapacityAvailable(): number { return this.room.energyCapacityAvailable; }
 
     get territory(): Territory { return Territories.get(this.room); }
 
-    get walls(): Vector<StructureWall> { return this._walls.clone(); }
-    get myExtensions(): Vector<StructureExtension> { return this._myExtensions.clone(); }
+    get walls(): Vector<StructureWall> { return Chamber.wallsOf(this.room); }
 
-    constructor(room: Room)
+    constructor(name: string)
     {
-        this.room = room;
-        this.name = room.name;
-        this._walls = Chamber.wallsOf(room);
-        this._myExtensions = Chamber.myExtensionsOf(room);
-        this.energyCapacityAvailable = room.energyCapacityAvailable;
-
-        const controller = room.controller;
-
-        this.controller = controller;
-
-        if (controller)
-        {
-            const reservation = controller?.reservation;
-
-            this.my = controller.my;
-            this.controlled = this.my || reservation?.username == GameWrap.username;
-        }
-        else
-        {
-            this.my = false;
-            this.controlled = false;
-        }
+        this.name = name;
     }
 
     static wallsOf(room: Room): Vector<StructureWall>
@@ -88,38 +65,27 @@ export class Chamber
 
         return Vector.from(walls);
     }
-
-    private static myExtensionsOf(room: Room): Vector<StructureExtension>
-    {
-        let structures: StructureExtension[] = room.find<FIND_MY_STRUCTURES, StructureExtension>(FIND_MY_STRUCTURES);
-
-        if (structures.length == 0) return new Vector();
-
-        let extensions: StructureExtension[] = structures.filter(s => s.structureType == STRUCTURE_EXTENSION);
-
-        return Vector.from(extensions);
-    }
 }
 
 export class Chambers
 {
-    private static _all: Vector<Chamber> = new Vector();
-    private static _my: Vector<Chamber> = new Vector();
-    private static _controlled: Vector<Chamber> = new Vector();
-    private static _byName: Dictionary<Chamber> = {};
+    private static _chambers: Dictionary<Chamber> = {};
 
-    static get(name: string | undefined): Chamber | undefined { return name ? Chambers._byName[name] : undefined; }
+    static get(name: string | undefined): Chamber | undefined { return name ? Chambers._chambers[name] : undefined; }
 
-    static get all(): Vector<Chamber> { return Chambers._all.clone(); }
-    static get my(): Vector<Chamber> { return Chambers._my.clone(); }
-    static get controlled(): Vector<Chamber> { return Chambers._controlled.clone(); }
+    static get all(): Vector<Chamber> { return Dictionaries.values(Chambers._chambers); }
+    static get my(): Vector<Chamber> { return Chambers.all.filter(c => c.my); }
 
     @profile
-    static initialize()
+    static initialize(reset: boolean)
     {
-        Chambers._all = GameWrap.rooms.map(r => new Chamber(r));
-        Chambers._my = Chambers._all.filter(c => c.my);
-        Chambers._controlled = Chambers._all.filter(c => c.controlled);
-        Chambers._byName = Chambers._all.indexBy(c => c.name);
+        if (reset)
+        {
+            Chambers._chambers = {};
+        }
+
+        const existing: Set<string> = GameWrap.rooms.map(r => r.name).toSet();
+
+        Dictionaries.update(Chambers._chambers, existing, name => new Chamber(name));
     }
 }

@@ -1,6 +1,7 @@
 
 export type ContainerId = Id<StructureContainer>;
 export type ControllerId = Id<StructureController>;
+export type ExtensionId = Id<StructureExtension>;
 export type SiteId = Id<ConstructionSite>;
 export type SourceId = Id<Source>;
 export type SpawnId = Id<StructureSpawn>;

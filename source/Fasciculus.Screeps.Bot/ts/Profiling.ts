@@ -49,7 +49,6 @@ interface ProfilerMemory
     session: string;
     start: number;
     entries: ProfilerDictionary;
-    warmup: number;
 }
 
 interface MemoryWithProfiler
@@ -60,10 +59,12 @@ interface MemoryWithProfiler
 export class Profiler
 {
     private static _start: number = 0;
-    private static _entries: ProfilerDictionary = {};
+    private static _warmup: number = PROFILER_WARMUP;
 
     static record(type: string, name: string, duration: number)
     {
+        if (Profiler._warmup > 0) return;
+
         const key: string = `${type}:${name}`;
         const entry: ProfilerEntry = Profiler.getEntry(key);
 
@@ -73,11 +74,11 @@ export class Profiler
 
     private static getEntry(key: string): ProfilerEntry
     {
-        let result = Profiler._entries[key];
+        let result = Profiler.memory.entries[key];
 
         if (!result)
         {
-            Profiler._entries[key] = result = { key, calls: 0, duration: 0 };
+            Profiler.memory.entries[key] = result = { key, calls: 0, duration: 0 };
         }
 
         return result;
@@ -93,9 +94,8 @@ export class Profiler
         {
             let start = Game.time;
             let entries: ProfilerDictionary = {};
-            let warmup = PROFILER_WARMUP;
 
-            memory.profiler = result = { session, start, entries, warmup };
+            memory.profiler = result = { session, start, entries };
         }
 
         return result;
@@ -103,7 +103,6 @@ export class Profiler
 
     static start()
     {
-        Profiler._entries = {};
         Profiler._start = Game.cpu.getUsed();
         Profiler.record("global", "load", Profiler._start);
     }
@@ -114,47 +113,20 @@ export class Profiler
 
         let memory: ProfilerMemory = Profiler.memory;
 
-        if (memory.warmup > 0)
+        if (Profiler._warmup > 0)
         {
-            --memory.warmup;
+            --Profiler._warmup;
             ++memory.start;
         }
-        else
-        {
-            Profiler.merge(memory);
-        }
 
-        Profiler._entries = {};
         Profiler.log(memory);
-    }
-
-    private static merge(memory: ProfilerMemory)
-    {
-        let memoryEntries: ProfilerDictionary = memory.entries;
-        let entries: ProfilerDictionary = Profiler._entries;
-
-        for (let key in entries)
-        {
-            let entry: ProfilerEntry = entries[key];
-            let memoryEntry: ProfilerEntry | undefined = memoryEntries[key];
-
-            if (memoryEntry === undefined)
-            {
-                memoryEntries[key] = entry;
-            }
-            else
-            {
-                memoryEntry.calls += entry.calls;
-                memoryEntry.duration += entry.duration;
-            }
-        }
     }
 
     static log(memory: ProfilerMemory)
     {
-        if (memory.warmup > 0)
+        if (Profiler._warmup > 0)
         {
-            console.log(`Profiler in warmup (${memory.warmup})`);
+            console.log(`Profiler in warmup (${Profiler._warmup})`);
             return;
         }
 

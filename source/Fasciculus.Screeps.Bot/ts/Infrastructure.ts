@@ -1,4 +1,4 @@
-import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Names, SpawnId, Vector } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, ExtensionId, GameWrap, Names, SpawnId, Vector } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
 import { profile } from "./Profiling";
 
@@ -47,5 +47,53 @@ export class Spawns
         const existing: Set<string> = GameWrap.mySpawns.map(s => s.id).toSet();
 
         Dictionaries.update(Spawns._spawns, existing, id => new Spawn(id as SpawnId));
+    }
+}
+
+export class Extension
+{
+    readonly id: ExtensionId;
+
+    get extension(): StructureExtension { return GameWrap.get<StructureExtension>(this.id)!; }
+
+    constructor(id: ExtensionId)
+    {
+        this.id = id;
+    }
+}
+
+export class Extensions
+{
+    private static _extensions: Dictionary<Extension> = {};
+
+    @profile
+    static initialize(reset: boolean)
+    {
+        if (reset)
+        {
+            Extensions._extensions = {};
+        }
+
+        Dictionaries.update(Extensions._extensions, Extensions.existing, id => new Extension(id as ExtensionId));
+    }
+
+    private static get existing(): Set<string>
+    {
+        const result: Set<string> = new Set();
+
+        for (const room of GameWrap.rooms)
+        {
+            const structures: StructureExtension[] = room.find<FIND_MY_STRUCTURES, StructureExtension>(FIND_MY_STRUCTURES);
+
+            if (structures.length == 0) continue;
+
+            const extensions: StructureExtension[] = structures.filter(s => s.structureType == STRUCTURE_EXTENSION);
+
+            if (extensions.length == 0) continue;
+
+            extensions.forEach(e => result.add(e.id));
+        }
+
+        return result;
     }
 }

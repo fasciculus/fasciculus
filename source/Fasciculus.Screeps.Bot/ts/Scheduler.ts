@@ -3,8 +3,7 @@ import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
 import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
-import { Extensions } from "./Extensions";
-import { Spawns } from "./Infrastructure";
+import { Extensions, Spawns } from "./Infrastructure";
 import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
@@ -26,10 +25,10 @@ export class Scheduler
 
         GameWrap.initialize();
 
-        Chambers.initialize();
+        Chambers.initialize(reset);
         Sites.initialize();
         Spawns.initialize(reset);
-        Extensions.initialize();
+        Extensions.initialize(reset);
         Walls.initialize();
         Repairs.initialize();
         Markers.initialize();
