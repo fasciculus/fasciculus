@@ -365,6 +365,22 @@ export class Dictionaries
             delete dictionary[key];
         }
     }
+
+    static update<T>(dictionary: Dictionary<T>, existing: Set<string>, create: (key: string) => T): boolean
+    {
+        const keys: Set<string> = Dictionaries.keys(dictionary);
+        const toDelete: Set<string> = Sets.difference(keys, existing);
+        const toCreate: Set<string> = Sets.difference(existing, keys);
+
+        Dictionaries.removeAll(dictionary, toDelete);
+
+        for (const key of toCreate)
+        {
+            dictionary[key] = create(key);
+        }
+
+        return toDelete.size > 0 || toCreate.size > 0;
+    }
 }
 
 export class Sets

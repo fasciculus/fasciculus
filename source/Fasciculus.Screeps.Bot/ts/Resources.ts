@@ -57,37 +57,23 @@ export class Wells
     private static updateSources()
     {
         const existing: Set<string> = new Set(GameWrap.rooms.map(r => r.name));
-        const toDelete: Set<string> = Sets.difference(Dictionaries.keys(Wells._roomSources), existing);
-        const toCreate: Set<string> = Sets.difference(existing, Dictionaries.keys(Wells._roomSources));
 
-        Dictionaries.removeAll(Wells._roomSources, toDelete);
-
-        for (const name of toCreate)
-        {
-            const room = Game.rooms[name];
-            const sources: Vector<Source> = Vector.from(room.find<FIND_SOURCES, Source>(FIND_SOURCES));
-            const ids: Set<SourceId> = sources.map(s => s.id).toSet();
-
-            Wells._roomSources[name] = ids;
-        }
-
-        if (toDelete.size > 0 || toCreate.size > 0)
+        if (Dictionaries.update(Wells._roomSources, existing, Wells.sourceIdsOf))
         {
             Wells._sources = Sets.unionAll(Dictionaries.values(Wells._roomSources));
         }
     }
 
+    private static sourceIdsOf(roomName: string): Set<SourceId>
+    {
+        const room = Game.rooms[roomName];
+        const sources: Vector<Source> = Vector.from(room.find<FIND_SOURCES, Source>(FIND_SOURCES));
+
+        return sources.map(s => s.id).toSet();
+    }
+
     private static updateWells()
     {
-        const existing: Set<string> = Wells._sources;
-        const toDelete: Set<string> = Sets.difference(Dictionaries.keys(Wells._wells), existing);
-        const toCreate: Set<string> = Sets.difference(existing, Dictionaries.keys(Wells._wells));
-
-        Dictionaries.removeAll(Wells._wells, toDelete);
-
-        for (const id of toCreate)
-        {
-            Wells._wells[id] = new Well(id as SourceId);
-        }
+        Dictionaries.update(Wells._wells, Wells._sources, id => new Well(id as SourceId));
     }
 }
