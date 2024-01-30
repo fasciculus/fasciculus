@@ -57,7 +57,6 @@ export class Spawning
     {
         switch (type)
         {
-            case CreepType.Supplier: return { carry: Wellers.maxEnergyCapacity / CARRY_CAPACITY, work: 99 };
             default: return { carry: 99, work: 99 };
         }
     }

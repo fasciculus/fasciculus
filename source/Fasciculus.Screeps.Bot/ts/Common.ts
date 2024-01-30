@@ -11,7 +11,6 @@ export type Repairable = StructureRoad | StructureWall
 export enum CreepType
 {
     Weller = "W",
-    Supplier = "S",
     Upgrader = "U",
     Builder = "B",
     Repairer = "R"

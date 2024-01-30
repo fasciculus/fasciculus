@@ -1,5 +1,5 @@
-import { Bodies, BodyTemplate, CreepState, CreepType, Positions, SourceId, Vector } from "./Common";
-import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { Bodies, BodyTemplate, CreepState, CreepType, Dictionaries, Dictionary, Positions, SourceId, Vector } from "./Common";
+import { CreepBase, CreepBaseMemory, CreepTypes, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Well, Wells } from "./Resources";
 
@@ -124,23 +124,36 @@ const FIND_CLOSEST_WELL_OPTS: FindPathOpts =
 
 export class Wellers
 {
+    private static _wellers: Dictionary<Weller> = {};
+
     private static _all: Vector<Weller> = new Vector();
-    private static _ready: Vector<Weller> = new Vector();
+    private static _maxEnergyPerTick: number = 0;
+    private static _maxEnergyCapacity: number = 0;
 
     static get count(): number { return Wellers._all.length; }
     static get all(): Vector<Weller> { return Wellers._all.clone(); }
-    static get ready(): Vector<Weller> { return Wellers._ready.clone(); }
 
-    static get maxEnergyPerTick(): number { return Wellers._all.sum(w => w.maxEnergyPerTick); }
-    static get maxEnergyCapacity(): number { return Wellers._all.max(w => w.energyCapacity)?.energyCapacity || 0; }
+    static get maxEnergyPerTick(): number { return Wellers._maxEnergyPerTick; }
+    static get maxEnergyCapacity(): number { return Wellers._maxEnergyCapacity; }
 
     @profile
     static initialize()
     {
-        Wellers._all = Creeps.ofType(CreepType.Weller).map(c => new Weller(c.name));
-        Wellers._ready = Wellers._all.filter(w => w.ready);
+        if (Wellers.updateWellers())
+        {
+            Wellers._all = Dictionaries.values(Wellers._wellers);
+            Wellers._maxEnergyPerTick = Wellers._all.sum(w => w.maxEnergyPerTick);
+            Wellers._maxEnergyCapacity = Wellers._all.max(w => w.energyCapacity)?.energyCapacity || 0;
+        }
 
         Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
+    }
+
+    private static updateWellers(): boolean
+    {
+        const existing: Set<string> = CreepTypes.creepsOfType(CreepType.Weller);
+
+        return Dictionaries.update(Wellers._wellers, existing, name => new Weller(name));
     }
 
     static run()

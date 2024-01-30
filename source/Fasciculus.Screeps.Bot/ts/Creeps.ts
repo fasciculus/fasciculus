@@ -139,20 +139,6 @@ export class Creeps
             Creeps._types[name] = Creeps.typeOf(Game.creeps[name]);
         }
     }
-
-    @profile
-    static cleanup()
-    {
-        var existing: Set<string> = Dictionaries.keys(Game.creeps);
-
-        for (let id in Memory.creeps)
-        {
-            if (!existing.has(id))
-            {
-                delete Memory.creeps[id];
-            }
-        }
-    }
 }
 
 export class CreepMemories

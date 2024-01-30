@@ -1,5 +1,5 @@
 
-import { Bodies, BodyTemplate, CreepState, CreepType, Positions, SiteId, Vector, Vectors } from "./Common";
+import { Bodies, BodyTemplate, CreepState, CreepType, Dictionaries, Dictionary, Positions, SiteId, Vector, Vectors } from "./Common";
 import { CreepBase, CreepBaseMemory, CreepTypes, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Site, Sites } from "./Sites";
@@ -105,17 +105,29 @@ export class Builder extends CreepBase<BuilderMemory>
 
 export class Builders
 {
+    private static _builders: Dictionary<Builder> = {};
     private static _all: Vector<Builder> = new Vector();
+    private static _maxEnergyPerTick: number = 0;
 
-    static get all(): Vector<Builder> { return Builders._all.clone(); }
-    static get maxEnergyPerTick(): number { return Builders._all.sum(b => b.maxEnergyPerTick); }
+    static get maxEnergyPerTick(): number { return Builders._maxEnergyPerTick; }
 
     @profile
     static initialize()
     {
-        Builders._all = Creeps.ofType(CreepType.Builder).map(c => new Builder(c.name));
+        if (Builders.updateBuilders())
+        {
+            Builders._all = Dictionaries.values(Builders._builders);
+            Builders._maxEnergyPerTick = Dictionaries.values(Builders._builders).sum(b => b.maxEnergyPerTick);
+        }
 
         Bodies.register(CreepType.Builder, BUILDER_TEMPLATE);
+    }
+
+    private static updateBuilders(): boolean
+    {
+        const existing: Set<string> = CreepTypes.creepsOfType(CreepType.Builder);
+
+        return Dictionaries.update(Builders._builders, existing, name => new Builder(name));
     }
 
     static run()
