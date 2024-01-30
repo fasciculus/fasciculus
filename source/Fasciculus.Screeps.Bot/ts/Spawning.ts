@@ -3,12 +3,12 @@ import { Builders } from "./Builders";
 import { Bodies, BodyPartLimits, CreepType, Vector } from "./Common";
 import { UPGRADER_MAX_COUNT } from "./Config";
 import { Controllers } from "./Controllers";
+import { Spawn, Spawns } from "./Infrastructure";
 import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
 import { Sites } from "./Sites";
-import { Spawn, Spawns } from "./Spawns";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
 

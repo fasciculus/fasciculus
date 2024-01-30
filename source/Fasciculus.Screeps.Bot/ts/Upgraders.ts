@@ -116,20 +116,15 @@ export class Upgraders
     static get count(): number { return Upgraders._all.length; }
     static get maxEnergyPerTick(): number { return Upgraders._maxEnergyPerTick; }
 
-    private static clear(clear: boolean)
+    @profile
+    static initialize(reset: boolean)
     {
-        if (clear)
+        if (reset)
         {
             Upgraders._upgraders = {};
             Upgraders._all = new Vector();
             Upgraders._maxEnergyPerTick = 0;
         }
-    }
-
-    @profile
-    static initialize(clear: boolean)
-    {
-        Upgraders.clear(clear);
 
         if (Creeps.update(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
         {

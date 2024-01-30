@@ -104,22 +104,17 @@ export class Creeps
     static get oldest(): Creep | undefined { return GameWrap.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
 
     @profile
-    static initialize(clear: boolean)
+    static initialize(reset: boolean)
     {
-        Creeps.clear(clear);
+        if (reset)
+        {
+            Creeps._types = {};
+            Creeps._creeps = {};
+        }
 
         if (Creeps.updateTypes())
         {
             Creeps.updateCreeps();
-        }
-    }
-
-    private static clear(clear: boolean)
-    {
-        if (clear)
-        {
-            Creeps._types = {};
-            Creeps._creeps = {};
         }
     }
 

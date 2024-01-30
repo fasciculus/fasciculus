@@ -111,20 +111,15 @@ export class Builders
 
     static get maxEnergyPerTick(): number { return Builders._maxEnergyPerTick; }
 
-    private static clear(clear: boolean)
+    @profile
+    static initialize(reset: boolean)
     {
-        if (clear)
+        if (reset)
         {
             Builders._builders = {};
             Builders._all = new Vector();
             Builders._maxEnergyPerTick = 0;
         }
-    }
-
-    @profile
-    static initialize(clear: boolean)
-    {
-        Builders.clear(clear);
 
         if (Creeps.update(Builders._builders, CreepType.Builder, name => new Builder(name)))
         {

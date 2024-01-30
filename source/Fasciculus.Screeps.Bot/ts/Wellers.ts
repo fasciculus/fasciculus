@@ -136,21 +136,16 @@ export class Wellers
     static get maxEnergyPerTick(): number { return Wellers._maxEnergyPerTick; }
     static get maxEnergyCapacity(): number { return Wellers._maxEnergyCapacity; }
 
-    private static clear(clear: boolean)
+    @profile
+    static initialize(reset: boolean)
     {
-        if (clear)
+        if (reset)
         {
             Wellers._wellers = {};
             Wellers._all = new Vector();
             Wellers._maxEnergyPerTick = 0;
             Wellers._maxEnergyCapacity = 0;
         }
-    }
-
-    @profile
-    static initialize(clear: boolean)
-    {
-        Wellers.clear(clear);
 
         if (Creeps.update(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
         {

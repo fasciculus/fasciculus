@@ -4,6 +4,7 @@ import { VERSION } from "./Config";
 import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
+import { Spawns } from "./Infrastructure";
 import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
@@ -11,7 +12,6 @@ import { Wells } from "./Resources";
 import { Chambers } from "./Rooming";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
-import { Spawns } from "./Spawns";
 import { Upgraders } from "./Upgraders";
 import { Walls } from "./Walls";
 import { Wellers } from "./Wellers";
@@ -22,31 +22,26 @@ export class Scheduler
 
     static initialize()
     {
-        const clear: boolean = Scheduler.updateVersion();
-
-        if (clear)
-        {
-            console.log(`clean initialization`);
-        }
+        const reset: boolean = Scheduler.updateVersion();
 
         GameWrap.initialize();
 
         Chambers.initialize();
         Sites.initialize();
-        Spawns.initialize();
+        Spawns.initialize(reset);
         Extensions.initialize();
         Walls.initialize();
         Repairs.initialize();
         Markers.initialize();
 
-        Wells.initialize(clear);
+        Wells.initialize(reset);
         Controllers.initialize();
 
-        Creeps.initialize(clear);
-        Wellers.initialize(clear);
-        Upgraders.initialize(clear);
-        Builders.initialize(clear);
-        Repairers.initialize(clear);
+        Creeps.initialize(reset);
+        Wellers.initialize(reset);
+        Upgraders.initialize(reset);
+        Builders.initialize(reset);
+        Repairers.initialize(reset);
     }
 
     private static updateVersion(): boolean

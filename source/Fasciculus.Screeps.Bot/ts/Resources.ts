@@ -36,21 +36,17 @@ export class Wells
     static get assignableCount(): number { return Wells.assignable.length; }
 
     @profile
-    static initialize(clear: boolean)
+    static initialize(reset: boolean)
     {
-        Wells.clear(clear);
-        Wells.updateSources();
-        Wells.updateWells();
-    }
-
-    private static clear(clear: boolean)
-    {
-        if (clear)
+        if (reset)
         {
             Wells._roomSources = {};
             Wells._sources = new Set();
             Wells._wells = {};
         }
+
+        Wells.updateSources();
+        Wells.updateWells();
     }
 
     @profile
