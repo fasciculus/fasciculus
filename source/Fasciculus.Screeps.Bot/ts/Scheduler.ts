@@ -25,7 +25,10 @@ export class Scheduler
     {
         const clear: boolean = Scheduler.updateVersion();
 
-        Scheduler._version = VERSION;
+        if (clear)
+        {
+            console.log(`clean initialization`);
+        }
 
         GameWrap.initialize();
 
@@ -40,7 +43,7 @@ export class Scheduler
         Wells.initialize(clear);
         Controllers.initialize();
 
-        Creeps.initialize();
+        Creeps.initialize(clear);
         Wellers.initialize();
         Suppliers.initialize();
         Upgraders.initialize();

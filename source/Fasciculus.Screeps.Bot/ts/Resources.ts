@@ -6,30 +6,21 @@ interface WellMemory
     assignee?: string;
 }
 
-type WellsMemory = Dictionary<WellMemory>;
-
 export class Well
 {
     readonly id: SourceId;
-    readonly memory: WellMemory;
+
+    get memory(): WellMemory { return Memories.sub("wells", this.id, {}); }
 
     get source(): Source { return GameWrap.get<Source>(this.id)!; }
     get pos(): RoomPosition { return this.source.pos; }
 
     get assignee(): Creep | undefined { return GameWrap.myCreep(this.memory.assignee); }
-    set assignee(value: Creep | undefined) { this.memory.assignee = value?.name; }
+    set assignee(value: Creep) { this.memory.assignee = value.name; }
 
     constructor(id: SourceId)
     {
         this.id = id;
-        this.memory = Well.getMemory(id);
-    }
-
-    private static getMemory(id: SourceId): WellMemory
-    {
-        const wellsMemory: WellsMemory = Memories.get("wells", {});
-
-        return wellsMemory[id] || (wellsMemory[id] = {});
     }
 }
 
@@ -39,14 +30,6 @@ export class Wells
     private static _sources: Set<SourceId> = new Set();
     private static _wells: Dictionary<Well> = {};
 
-    //private static _all: Vector<Well> = new Vector();
-    //private static _byId: Dictionary<Well> = {};
-
-    //static get(id?: SourceId): Well | undefined { return id ? Wells._byId[id] : undefined; }
-
-    //static get assignable(): Vector<Well> { return Wells._all.filter(w => !w.assignee); }
-    //static get assignableCount(): number { return Wells.assignable.length; }
-
     static get(id?: SourceId): Well | undefined { return id ? Wells._wells[id] : undefined; }
     static get assignable(): Vector<Well> { return Dictionaries.values(Wells._wells).filter(w => !w.assignee); }
     static get assignableCount(): number { return Wells.assignable.length; }
@@ -54,11 +37,19 @@ export class Wells
     @profile
     static initialize(clear: boolean)
     {
-        //Wells._all = Vectors.flatten(Chambers.all.map(c => c.sources)).map(s => new Well(s.id));
-        //Wells._byId = Wells._all.indexBy(w => w.id);
-
+        Wells.clear(clear);
         Wells.updateSources();
         Wells.updateWells();
+    }
+
+    private static clear(clear: boolean)
+    {
+        if (clear)
+        {
+            Wells._roomSources = {};
+            Wells._sources = new Set();
+            Wells._wells = {};
+        }
     }
 
     @profile

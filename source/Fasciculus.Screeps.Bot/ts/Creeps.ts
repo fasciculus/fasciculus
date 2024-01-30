@@ -1,5 +1,5 @@
 
-import { BodyParts, CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Vector } from "./Common";
+import { BodyParts, CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Sets, Vector } from "./Common";
 import { profile } from "./Profiling";
 import { Stores } from "./Stores";
 
@@ -108,29 +108,49 @@ export class CreepBase<M extends CreepBaseMemory>
 
 export class Creeps
 {
-    private static _my: Vector<Creep> = new Vector();
-    private static _ofType: Dictionary<Vector<Creep>> = {};
+    private static _types: Dictionary<CreepType> = {};
+    //private static _ofType: Dictionary<Vector<Creep>> = {};
 
-    static get(name: string | undefined): Creep | undefined { return GameWrap.myCreep(name); }
+    static get oldest(): Creep | undefined { return GameWrap.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
+    //static ofType(type: CreepType): Vector<Creep> { return Creeps._ofType[type] || new Vector(); }
+    static ofType(type: CreepType): Vector<Creep> { return GameWrap.myCreeps.filter(c => Creeps._types[c.name] == type); }
 
-    static get my(): Vector<Creep> { return Creeps._my.clone(); }
-    static get oldest(): Creep | undefined { return Creeps._my.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
+    @profile
+    static initialize(clear: boolean)
+    {
+        Creeps.clear(clear);
+        Creeps.updateTypes();
 
-    static ofType(type: CreepType): Vector<Creep> { return Creeps._ofType[type] || new Vector(); }
-    static countOf(type: CreepType): number { return Creeps.ofType(type).length; }
+        //Creeps._ofType = GameWrap.myCreeps.groupBy(Creeps.typeOf);
+    }
 
-    static typeOf(creep: Creep): CreepType
+    private static clear(clear: boolean)
+    {
+        if (clear)
+        {
+            Creeps._types = {};
+        }
+    }
+
+    private static typeOf(creep: Creep): CreepType
     {
         let memory = creep.memory as CreepBaseMemory;
 
         return memory.type;
     }
 
-    @profile
-    static initialize()
+    private static updateTypes()
     {
-        Creeps._my = GameWrap.myCreeps;
-        Creeps._ofType = Creeps._my.groupBy(Creeps.typeOf);
+        const existing: Set<string> = Dictionaries.keys(Game.creeps);
+        const toDelete: Set<string> = Sets.difference(Dictionaries.keys(Creeps._types), existing);
+        const toCreate: Set<string> = Sets.difference(existing, Dictionaries.keys(Creeps._types));
+
+        Dictionaries.removeAll(Creeps._types, toDelete);
+
+        for (const name of toCreate)
+        {
+            Creeps._types[name] = Creeps.typeOf(Game.creeps[name]);
+        }
     }
 
     @profile

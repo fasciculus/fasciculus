@@ -62,6 +62,20 @@ export class Memories
         return result as T;
     }
 
+    static sub<T>(root: string, key: string, initial: T): T
+    {
+        const memory: ExtendedMemory = Memory as ExtendedMemory;
+        var parent: Dictionary<T> = Memories.get(root, {});
+        var result: T | undefined = parent[key];
+
+        if (!result)
+        {
+            parent[key] = result = initial;
+        }
+
+        return result as T;
+    }
+
     static get used(): number
     {
         return RawMemory.get().length;
