@@ -1,6 +1,6 @@
 
 import { Bodies, BodyTemplate, CreepState, CreepType, Dictionaries, Dictionary, Positions, SiteId, Vector, Vectors } from "./Common";
-import { CreepBase, CreepBaseMemory, CreepTypes, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Site, Sites } from "./Sites";
 
@@ -111,9 +111,21 @@ export class Builders
 
     static get maxEnergyPerTick(): number { return Builders._maxEnergyPerTick; }
 
-    @profile
-    static initialize()
+    private static clear(clear: boolean)
     {
+        if (clear)
+        {
+            Builders._builders = {};
+            Builders._all = new Vector();
+            Builders._maxEnergyPerTick = 0;
+        }
+    }
+
+    @profile
+    static initialize(clear: boolean)
+    {
+        Builders.clear(clear);
+
         if (Creeps.update(Builders._builders, CreepType.Builder, name => new Builder(name)))
         {
             Builders._all = Dictionaries.values(Builders._builders);

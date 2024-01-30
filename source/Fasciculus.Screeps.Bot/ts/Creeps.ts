@@ -99,6 +99,7 @@ export class CreepBase<M extends CreepBaseMemory>
 export class Creeps
 {
     private static _types: Dictionary<CreepType> = {};
+    private static _creeps: Dictionary<Set<string>> = {};
 
     static get oldest(): Creep | undefined { return GameWrap.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
 
@@ -106,7 +107,11 @@ export class Creeps
     static initialize(clear: boolean)
     {
         Creeps.clear(clear);
-        Creeps.updateTypes();
+
+        if (Creeps.updateTypes())
+        {
+            Creeps.updateCreeps();
+        }
     }
 
     private static clear(clear: boolean)
@@ -114,33 +119,49 @@ export class Creeps
         if (clear)
         {
             Creeps._types = {};
+            Creeps._creeps = {};
         }
     }
 
-    private static typeOf(creep: Creep): CreepType
+    private static updateTypes(): boolean
     {
-        let memory = creep.memory as CreepBaseMemory;
+        const existing: Set<string> = Dictionaries.keys(Game.creeps);
+
+        return Dictionaries.update(Creeps._types, existing, Creeps.typeOf);
+    }
+
+    private static typeOf(name: string): CreepType
+    {
+        let memory = Game.creeps[name].memory as CreepBaseMemory;
 
         return memory.type;
     }
 
-    private static updateTypes()
+    private static updateCreeps()
     {
-        const existing: Set<string> = Dictionaries.keys(Game.creeps);
-        const toDelete: Set<string> = Sets.difference(Dictionaries.keys(Creeps._types), existing);
-        const toCreate: Set<string> = Sets.difference(existing, Dictionaries.keys(Creeps._types));
+        const types: Dictionary<CreepType> = Creeps._types
+        const creeps: Dictionary<Set<string>> = {};
 
-        Dictionaries.removeAll(Creeps._types, toDelete);
-
-        for (const name of toCreate)
+        for (const name of Dictionaries.keys(types))
         {
-            Creeps._types[name] = Creeps.typeOf(Game.creeps[name]);
+            const type = types[name];
+            var names: Set<string> | undefined = creeps[type];
+
+            if (!names)
+            {
+                creeps[type] = names = new Set();
+            }
+
+            names.add(name);
         }
+
+        Creeps._creeps = creeps;
     }
+
 
     static update<T>(creeps: Dictionary<T>, type: CreepType, create: (name: string) => T): boolean
     {
-        const existing: Set<string> = CreepTypes.creepsOfType(type);
+        const existing: Set<string> = Creeps._creeps[type] || new Set();
 
         return Dictionaries.update(creeps, existing, create);
     }
@@ -157,73 +178,5 @@ export class Creeps
                 delete Memory.creeps[name];
             }
         }
-    }
-}
-
-export class CreepTypes
-{
-    private static _types: Dictionary<CreepType> = {};
-    private static _creeps: Dictionary<Set<string>> = {};
-
-    static creepsOfType(type: CreepType): Set<string>
-    {
-        const creeps: Set<string> = CreepTypes._creeps[type] || new Set();
-
-        return Sets.clone(creeps);
-    }
-
-    private static clear(clear: boolean)
-    {
-        if (clear)
-        {
-            CreepTypes._types = {};
-            CreepTypes._creeps = {};
-        }
-    }
-
-    @profile
-    static initialize(clear: boolean)
-    {
-        CreepTypes.clear(clear);
-
-        if (CreepTypes.updateTypes())
-        {
-            CreepTypes.updateCreeps();
-        }
-    }
-
-    private static updateTypes(): boolean
-    {
-        const existing: Set<string> = Dictionaries.keys(Game.creeps);
-
-        return Dictionaries.update(CreepTypes._types, existing, CreepTypes.typeOf);
-    }
-
-    private static typeOf(name: string): CreepType
-    {
-        let memory = Game.creeps[name].memory as CreepBaseMemory;
-
-        return memory.type;
-    }
-
-    private static updateCreeps()
-    {
-        const types: Dictionary<CreepType> = CreepTypes._types
-        const creeps: Dictionary<Set<string>> = {};
-
-        for (const name of Dictionaries.keys(types))
-        {
-            const type = types[name];
-            var names: Set<string> | undefined = creeps[type];
-
-            if (!names)
-            {
-                creeps[type] = names = new Set();
-            }
-
-            names.add(name);
-        }
-
-        CreepTypes._creeps = creeps;
     }
 }

@@ -1,6 +1,6 @@
 import { Bodies, BodyTemplate, ControllerId, CreepState, CreepType, Dictionaries, Dictionary, Positions, Vector } from "./Common";
 import { Controller, Controllers } from "./Controllers";
-import { CreepBase, CreepBaseMemory, CreepTypes, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 
 const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
@@ -116,9 +116,21 @@ export class Upgraders
     static get count(): number { return Upgraders._all.length; }
     static get maxEnergyPerTick(): number { return Upgraders._maxEnergyPerTick; }
 
-    @profile
-    static initialize()
+    private static clear(clear: boolean)
     {
+        if (clear)
+        {
+            Upgraders._upgraders = {};
+            Upgraders._all = new Vector();
+            Upgraders._maxEnergyPerTick = 0;
+        }
+    }
+
+    @profile
+    static initialize(clear: boolean)
+    {
+        Upgraders.clear(clear);
+
         if (Creeps.update(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
         {
             Upgraders._all = Dictionaries.values(Upgraders._upgraders);

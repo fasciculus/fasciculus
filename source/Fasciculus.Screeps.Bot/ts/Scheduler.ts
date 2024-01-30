@@ -2,7 +2,7 @@ import { Builders } from "./Builders";
 import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
 import { Controllers } from "./Controllers";
-import { CreepTypes, Creeps } from "./Creeps";
+import { Creeps } from "./Creeps";
 import { Extensions } from "./Extensions";
 import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
@@ -42,13 +42,11 @@ export class Scheduler
         Wells.initialize(clear);
         Controllers.initialize();
 
-        CreepTypes.initialize(clear);
-
         Creeps.initialize(clear);
-        Wellers.initialize();
-        Upgraders.initialize();
-        Builders.initialize();
-        Repairers.initialize();
+        Wellers.initialize(clear);
+        Upgraders.initialize(clear);
+        Builders.initialize(clear);
+        Repairers.initialize(clear);
     }
 
     private static updateVersion(): boolean

@@ -134,9 +134,21 @@ export class Repairers
     static get all(): Vector<Repairer> { return Repairers._all.clone(); }
     static get maxEnergyPerTick(): number { return Repairers._maxEnergyPerTick; }
 
-    @profile
-    static initialize()
+    private static clear(clear: boolean)
     {
+        if (clear)
+        {
+            Repairers._repairers = {};
+            Repairers._all = new Vector();
+            Repairers._maxEnergyPerTick = 0;
+        }
+    }
+
+    @profile
+    static initialize(clear: boolean)
+    {
+        Repairers.clear(clear);
+
         if (Creeps.update(Repairers._repairers, CreepType.Repairer, name => new Repairer(name)))
         {
             Repairers._all = Dictionaries.values(Repairers._repairers);

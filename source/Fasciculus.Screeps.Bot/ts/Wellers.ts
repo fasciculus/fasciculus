@@ -1,5 +1,5 @@
 import { Bodies, BodyTemplate, CreepState, CreepType, Dictionaries, Dictionary, Positions, SourceId, Vector } from "./Common";
-import { CreepBase, CreepBaseMemory, CreepTypes, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Well, Wells } from "./Resources";
 
@@ -136,9 +136,22 @@ export class Wellers
     static get maxEnergyPerTick(): number { return Wellers._maxEnergyPerTick; }
     static get maxEnergyCapacity(): number { return Wellers._maxEnergyCapacity; }
 
-    @profile
-    static initialize()
+    private static clear(clear: boolean)
     {
+        if (clear)
+        {
+            Wellers._wellers = {};
+            Wellers._all = new Vector();
+            Wellers._maxEnergyPerTick = 0;
+            Wellers._maxEnergyCapacity = 0;
+        }
+    }
+
+    @profile
+    static initialize(clear: boolean)
+    {
+        Wellers.clear(clear);
+
         if (Creeps.update(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
         {
             Wellers._all = Dictionaries.values(Wellers._wellers);
