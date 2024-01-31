@@ -1,6 +1,6 @@
 import { Dictionary, Repairable, RepairableId, Vector } from "./Common";
+import { Wall, Walls } from "./Infrastructure";
 import { profile } from "./Profiling";
-import { Wall, Walls } from "./Walls";
 
 export class Repairs
 {

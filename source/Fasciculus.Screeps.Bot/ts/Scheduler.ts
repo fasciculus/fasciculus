@@ -3,7 +3,7 @@ import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
 import { Controllers } from "./Controllers";
 import { Creeps } from "./Creeps";
-import { Extensions, Spawns } from "./Infrastructure";
+import { Extensions, Spawns, Walls } from "./Infrastructure";
 import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
@@ -12,7 +12,6 @@ import { Chambers } from "./Rooming";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
 import { Upgraders } from "./Upgraders";
-import { Walls } from "./Walls";
 import { Wellers } from "./Wellers";
 
 export class Scheduler
