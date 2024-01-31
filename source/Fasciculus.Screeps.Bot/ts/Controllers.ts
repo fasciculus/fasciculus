@@ -1,40 +1,40 @@
-import { Dictionary, Vector, Vectors } from "./Common";
+import { ControllerId, Dictionaries, Dictionary, GameWrap, Vector } from "./Common";
 import { profile } from "./Profiling";
 import { Chambers } from "./Rooming";
 
 export class Controller
 {
-    readonly controller: StructureController;
+    readonly id: ControllerId;
 
-    get id(): Id<StructureController> { return this.controller.id; }
+    get controller(): StructureController { return GameWrap.get<StructureController>(this.id)!; }
+
     get my(): boolean { return this.controller.my; }
     get pos(): RoomPosition { return this.controller.pos; }
 
-    constructor(controller: StructureController)
+    constructor(id: ControllerId)
     {
-        this.controller = controller;
+        this.id = id;
     }
 }
 
 export class Controllers
 {
-    private static _all: Vector<Controller> = new Vector();
-    private static _my: Vector<Controller> = new Vector();
-    private static _byId: Dictionary<Controller> = {};
+    private static _allControllers: Dictionary<Controller> = {};
 
-    static get(id: Id<StructureController> | undefined): Controller | undefined
-    {
-        return id ? Controllers._byId[id] : undefined;
-    }
+    static get(id: ControllerId | undefined): Controller | undefined { return id ? Controllers._allControllers[id] : undefined; }
 
-    static get my(): Vector<Controller> { return Controllers._my.clone(); }
-    static get myCount(): number { return Controllers._my.length; }
+    static get all(): Vector<Controller> { return Dictionaries.values(Controllers._allControllers); }
+    static get my(): Vector<Controller> { return Controllers.all.filter(c => c.my); }
+    static get myCount(): number { return Controllers.my.length; }
 
     @profile
-    static initialize()
+    static initialize(reset: boolean)
     {
-        Controllers._all = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => new Controller(c));
-        Controllers._my = Controllers._all.filter(c => c.my);
-        Controllers._byId = Controllers._all.indexBy(c => c.id);
+        if (reset)
+        {
+            Controllers._allControllers = {};
+        }
+
+        Dictionaries.update(Controllers._allControllers, Chambers.allControllers, id => new Controller(id as ControllerId));
     }
 }

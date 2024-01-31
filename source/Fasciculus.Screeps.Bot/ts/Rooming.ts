@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, GameWrap, Point, Sets, SourceId, Vector, WallId } from "./Common";
+import { ControllerId, Dictionaries, Dictionary, GameWrap, Point, Sets, SourceId, Vector, Vectors, WallId } from "./Common";
 import { profile } from "./Profiling";
 
 export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;
@@ -65,14 +65,16 @@ export class Chamber
 
 export class Chambers
 {
-    private static _chambers: Dictionary<Chamber> = {};
+    private static _allChambers: Dictionary<Chamber> = {};
+    private static _allControllers: Set<ControllerId> = new Set();
     private static _allSources: Set<SourceId> = new Set();
 
-    static get(name: string | undefined): Chamber | undefined { return name ? Chambers._chambers[name] : undefined; }
+    static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers[name] : undefined; }
 
-    static get all(): Vector<Chamber> { return Dictionaries.values(Chambers._chambers); }
+    static get all(): Vector<Chamber> { return Dictionaries.values(Chambers._allChambers); }
     static get my(): Vector<Chamber> { return Chambers.all.filter(c => c.my); }
 
+    static get allControllers(): Set<ControllerId> { return Sets.clone(Chambers._allControllers); }
     static get allSources(): Set<SourceId> { return Sets.clone(Chambers._allSources); }
     static get myWalls(): Set<WallId> { return Sets.unionAll(Chambers.my.map(c => c.walls)); }
 
@@ -81,13 +83,16 @@ export class Chambers
     {
         if (reset)
         {
-            Chambers._chambers = {};
+            Chambers._allChambers = {};
+            Chambers._allControllers = new Set();
+            Chambers._allSources = new Set();
         }
 
         const existing: Set<string> = GameWrap.rooms.map(r => r.name).toSet();
 
-        if (Dictionaries.update(Chambers._chambers, existing, name => new Chamber(name)))
+        if (Dictionaries.update(Chambers._allChambers, existing, name => new Chamber(name)))
         {
+            Chambers._allControllers = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
             Chambers._allSources = Sets.unionAll(Chambers.all.map(c => c.sources));
         }
     }

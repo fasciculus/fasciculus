@@ -33,7 +33,7 @@ export class Scheduler
         Markers.initialize(reset);
 
         Wells.initialize(reset);
-        Controllers.initialize();
+        Controllers.initialize(reset);
 
         Creeps.initialize(reset);
         Wellers.initialize(reset);
