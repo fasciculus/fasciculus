@@ -1,6 +1,7 @@
 
 import { Dictionaries, Dictionary, GameWrap, SiteId, Vector } from "./Common";
 import { profile } from "./Profiling";
+import { Chambers } from "./Rooming";
 
 export class Site
 {
@@ -45,6 +46,7 @@ export class Sites
         if (Dictionaries.update(Sites._sites, existing, id => new Site(id as SiteId)))
         {
             Sites._count = Dictionaries.size(Sites._sites);
+            Chambers.updateStructures();
         }
     }
 }

@@ -69,6 +69,8 @@ export class Chambers
     private static _allControllers: Set<ControllerId> = new Set();
     private static _allSources: Set<SourceId> = new Set();
 
+    private static _myWalls: Set<WallId> = new Set();
+
     static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers[name] : undefined; }
 
     static get all(): Vector<Chamber> { return Dictionaries.values(Chambers._allChambers); }
@@ -76,7 +78,8 @@ export class Chambers
 
     static get allControllers(): Set<ControllerId> { return Sets.clone(Chambers._allControllers); }
     static get allSources(): Set<SourceId> { return Sets.clone(Chambers._allSources); }
-    static get myWalls(): Set<WallId> { return Sets.unionAll(Chambers.my.map(c => c.walls)); }
+
+    static get myWalls(): Set<WallId> { return Sets.clone(Chambers._myWalls); }
 
     @profile
     static initialize(reset: boolean)
@@ -95,5 +98,11 @@ export class Chambers
             Chambers._allControllers = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
             Chambers._allSources = Sets.unionAll(Chambers.all.map(c => c.sources));
         }
+    }
+
+    @profile
+    static updateStructures()
+    {
+        Chambers._myWalls = Sets.unionAll(Chambers.my.map(c => c.walls));
     }
 }
