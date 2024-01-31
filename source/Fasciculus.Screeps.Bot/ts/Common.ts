@@ -5,6 +5,7 @@ export type ExtensionId = Id<StructureExtension>;
 export type SiteId = Id<ConstructionSite>;
 export type SourceId = Id<Source>;
 export type SpawnId = Id<StructureSpawn>;
+export type WallId = Id<StructureWall>;
 
 export type RepairableId = Id<StructureRoad | StructureWall>
 export type Repairable = StructureRoad | StructureWall
@@ -223,6 +224,11 @@ export class Vector<T> implements Iterable<T>
         }
 
         return result;
+    }
+
+    avg(fn: (value: T) => number): number
+    {
+        return this.sum(fn) / Math.max(1, this.array.length);
     }
 
     indexBy(toIndex: (value: T) => string): Dictionary<T>

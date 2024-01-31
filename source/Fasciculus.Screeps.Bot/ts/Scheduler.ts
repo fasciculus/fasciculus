@@ -29,7 +29,7 @@ export class Scheduler
         Sites.initialize(reset);
         Spawns.initialize(reset);
         Extensions.initialize(reset);
-        Walls.initialize();
+        Walls.initialize(reset);
         Repairs.initialize();
         Markers.initialize();
 

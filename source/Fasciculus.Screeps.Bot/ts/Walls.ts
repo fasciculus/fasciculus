@@ -1,49 +1,50 @@
-import { Vector, Vectors } from "./Common";
+import { Dictionaries, Dictionary, GameWrap, Vector, Vectors, WallId } from "./Common";
 import { profile } from "./Profiling";
 import { Chambers } from "./Rooming";
 
 export class Wall
 {
-    readonly wall: StructureWall;
+    readonly id: WallId;
+
+    get wall(): StructureWall { return GameWrap.get<StructureWall>(this.id)!; }
 
     get hits(): number { return this.wall.hits; }
 
-    constructor(wall: StructureWall)
+    constructor(id: WallId)
     {
-        this.wall = wall;
+        this.id = id;
     }
 }
 
 export class Walls
 {
-    private static _my: Vector<Wall> = new Vector();
-    private static _newest: Vector<Wall> = new Vector();
-    private static _weakest?: Wall = undefined;
+    private static _myWalls: Dictionary<Wall> = {};
 
-    private static _avg: number = 0;
+    static get my(): Vector<Wall> { return Dictionaries.values(Walls._myWalls); }
+    static get avg(): number { return Walls.my.avg(w => w.hits); }
 
-    static get my(): Vector<Wall> { return Walls._my.clone(); }
-    static get avg(): number { return Walls._avg; }
-
-    static get newest(): Vector<Wall> { return Walls._newest.clone(); }
-    static get weakest(): Wall | undefined { return Walls._weakest; }
+    static get newest(): Vector<Wall> { return Walls.my.filter(w => w.hits == 1); }
 
     @profile
-    static initialize()
+    static initialize(reset: boolean)
     {
-        Walls._my = Vectors.flatten(Chambers.my.map(c => c.walls)).map(w => new Wall(w));
-        Walls._newest = Walls._my.filter(w => w.hits == 1);
-        Walls._weakest = Walls.findWeakest();
-        Walls._avg = Walls._my.sum(w => w.hits) / Math.max(1, Walls._my.length);
+        if (reset)
+        {
+            Walls._myWalls = {};
+        }
+
+        Dictionaries.update(Walls._myWalls, Chambers.myWalls, id => new Wall(id as WallId));
     }
 
-    private static findWeakest(): Wall | undefined
+    static get myWeakest(): Wall | undefined
     {
-        let weakest: Wall | undefined = Walls.my.sort((a, b) => a.hits - b.hits).at(0);
+        var result: Wall | undefined = Walls.my.min(w => w.hits);
 
-        if (!weakest) return undefined
-        if (weakest.hits == WALL_HITS_MAX) return undefined;
+        if (result && result.hits == WALL_HITS_MAX)
+        {
+            result = undefined;
+        }
 
-        return weakest;
+        return result;
     }
 }

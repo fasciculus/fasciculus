@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, GameWrap, Point, Sets, SourceId, Vector } from "./Common";
+import { Dictionaries, Dictionary, GameWrap, Point, Sets, SourceId, Vector, WallId } from "./Common";
 import { profile } from "./Profiling";
 
 export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;
@@ -49,30 +49,17 @@ export class Chamber
 
     get territory(): Territory { return Territories.get(this.room); }
 
-    get walls(): Vector<StructureWall> { return Chamber.wallsOf(this.room); }
-
     constructor(name: string)
     {
         this.name = name;
-        this.sources = Chamber.sourcesOf(name);
+        this.sources = Vector.from(Game.rooms[name].find<FIND_SOURCES, Source>(FIND_SOURCES)).map(s => s.id).toSet();
     }
 
-    static wallsOf(room: Room): Vector<StructureWall>
+    get walls(): Set<WallId>
     {
-        var structures = room.find<FIND_STRUCTURES, StructureWall>(FIND_STRUCTURES);
+        const structures = Vector.from(this.room.find<FIND_STRUCTURES, StructureWall>(FIND_STRUCTURES));
 
-        if (structures.length == 0) return new Vector();
-
-        let walls = structures.filter(s => s.structureType == STRUCTURE_WALL);
-
-        return Vector.from(walls);
-    }
-
-    private static sourcesOf(name: string): Set<SourceId>
-    {
-        const room = Game.rooms[name];
-
-        return Vector.from(room.find<FIND_SOURCES, Source>(FIND_SOURCES)).map(s => s.id).toSet()
+        return structures.filter(s => s.structureType == STRUCTURE_WALL).map(w => w.id).toSet();
     }
 }
 
@@ -87,6 +74,7 @@ export class Chambers
     static get my(): Vector<Chamber> { return Chambers.all.filter(c => c.my); }
 
     static get allSources(): Set<SourceId> { return Sets.clone(Chambers._allSources); }
+    static get myWalls(): Set<WallId> { return Sets.unionAll(Chambers.my.map(c => c.walls)); }
 
     @profile
     static initialize(reset: boolean)
