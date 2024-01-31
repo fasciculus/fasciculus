@@ -1,14 +1,7 @@
 import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, Positions, Vector } from "./Common";
 import { Controller, Controllers } from "./Controllers";
-import { Bodies, BodyTemplate, CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
-
-const UPGRADER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
-    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
-    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
-    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
-    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE])
-    .add([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, MOVE]);
 
 interface UpgraderMemory extends CreepBaseMemory
 {
@@ -131,8 +124,6 @@ export class Upgraders
             Upgraders._all = Dictionaries.values(Upgraders._upgraders);
             Upgraders._maxEnergyPerTick = Upgraders._all.sum(u => u.maxEnergyPerTick);
         }
-
-        Bodies.register(CreepType.Upgrader, UPGRADER_TEMPLATE);
     }
 
     static run()

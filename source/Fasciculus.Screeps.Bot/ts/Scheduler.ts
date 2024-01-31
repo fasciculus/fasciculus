@@ -2,7 +2,7 @@ import { Builders } from "./Builders";
 import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
 import { Controllers } from "./Controllers";
-import { Creeps } from "./Creeps";
+import { Bodies, Creeps } from "./Creeps";
 import { Extensions, Spawns, Walls } from "./Infrastructure";
 import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
@@ -35,6 +35,7 @@ export class Scheduler
         Wells.initialize(reset);
         Controllers.initialize(reset);
 
+        Bodies.initialize(reset);
         Creeps.initialize(reset);
         Wellers.initialize(reset);
         Upgraders.initialize(reset);

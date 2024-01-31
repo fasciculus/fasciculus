@@ -1,10 +1,7 @@
 import { CreepState, CreepType, Dictionaries, Dictionary, Positions, SourceId, Vector } from "./Common";
-import { Bodies, BodyTemplate, CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Well, Wells } from "./Resources";
-
-const WELLER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE])
-    .add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 3);
 
 const WELLER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -153,8 +150,6 @@ export class Wellers
             Wellers._maxEnergyPerTick = Wellers._all.sum(w => w.maxEnergyPerTick);
             Wellers._maxEnergyCapacity = Wellers._all.max(w => w.energyCapacity)?.energyCapacity || 0;
         }
-
-        Bodies.register(CreepType.Weller, WELLER_TEMPLATE);
     }
 
     static run()

@@ -1,10 +1,8 @@
 
 import { CreepState, CreepType, Dictionaries, Dictionary, Positions, SiteId, Vector, Vectors } from "./Common";
-import { Bodies, BodyTemplate, CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Site, Sites } from "./Sites";
-
-const BUILDER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
 const BUILDER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -126,8 +124,6 @@ export class Builders
             Builders._all = Dictionaries.values(Builders._builders);
             Builders._maxEnergyPerTick = Dictionaries.values(Builders._builders).sum(b => b.maxEnergyPerTick);
         }
-
-        Bodies.register(CreepType.Builder, BUILDER_TEMPLATE);
     }
 
     static run()

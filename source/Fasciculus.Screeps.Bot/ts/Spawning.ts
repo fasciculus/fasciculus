@@ -3,7 +3,7 @@ import { Builders } from "./Builders";
 import {  CreepType, Vector } from "./Common";
 import { UPGRADER_MAX_COUNT } from "./Config";
 import { Controllers } from "./Controllers";
-import { Bodies, BodyPartLimits } from "./Creeps";
+import { Bodies } from "./Creeps";
 import { Spawn, Spawns } from "./Infrastructure";
 import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
@@ -40,26 +40,16 @@ export class Spawning
 
     private static createBody(spawn: Spawn, type: CreepType): Vector<BodyPartConstant> | undefined
     {
-        const limits: BodyPartLimits = Spawning.createLimits(type);
-
-        let body1: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyAvailable, limits);
+        let body1: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyAvailable);
 
         if (!body1) return undefined;
 
-        let body2: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyCapacity, limits);
+        let body2: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, spawn.roomEnergyCapacity);
 
         if (!body2) return undefined;
         if (body2.length > body1.length) return undefined;
 
         return body1;
-    }
-
-    private static createLimits(type: CreepType): BodyPartLimits
-    {
-        switch (type)
-        {
-            default: return { carry: 99, work: 99 };
-        }
     }
 
     private static nextType(): CreepType | undefined

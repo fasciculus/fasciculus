@@ -1,10 +1,8 @@
 import { CreepState, CreepType, Dictionaries, Dictionary, Positions, Repairable, RepairableId, Vector } from "./Common";
-import { Bodies, BodyTemplate, CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Walls } from "./Infrastructure";
 import { profile } from "./Profiling";
 import { Repairs } from "./Repairs";
-
-const REPAIRER_TEMPLATE: BodyTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
 
 const REPAIRER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -149,8 +147,6 @@ export class Repairers
             Repairers._all = Dictionaries.values(Repairers._repairers);
             Repairers._maxEnergyPerTick = Repairers._all.sum(r => r.maxEnergyPerTick);
         }
-
-        Bodies.register(CreepType.Repairer, REPAIRER_TEMPLATE);
     }
 
     @profile

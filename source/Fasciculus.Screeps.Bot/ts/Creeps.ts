@@ -75,12 +75,6 @@ interface BodyPartChunk
     counts: BodyPartCounts;
 }
 
-export interface BodyPartLimits
-{
-    carry: number;
-    work: number;
-}
-
 export class BodyTemplate
 {
     private chunks: Vector<BodyPartChunk> = new Vector();
@@ -104,47 +98,28 @@ export class BodyTemplate
         return this;
     }
 
-    createBody(energy: number, limits: BodyPartLimits): Vector<BodyPartConstant> | undefined
+    createBody(energy: number): Vector<BodyPartConstant> | undefined
     {
-        let chunkCount = this.chunkCount(energy, limits);
+        let chunkCount = this.chunkCount(energy);
 
         if (chunkCount == 0) return undefined;
 
         return Vectors.flatten(this.chunks.take(chunkCount).map(c => c.parts)).sort(BodyParts.comparePriority);
     }
 
-    private chunkCount(energy: number, limits: BodyPartLimits): number
+    private chunkCount(energy: number): number
     {
         var result: number = 0;
-        var current: BodyPartLimits = { carry: 0, work: 0 };
 
         for (let chunk of this.chunks)
         {
             if (energy < chunk.cost) break;
-
-            BodyTemplate.merge(current, chunk.counts);
-
-            if (BodyTemplate.exceeds(current, limits)) break;
 
             ++result;
             energy -= chunk.cost;
         }
 
         return result;
-    }
-
-    private static merge(target: BodyPartLimits, counts: BodyPartCounts)
-    {
-        target.carry += counts.carry;
-        target.work += counts.work;
-    }
-
-    private static exceeds(current: BodyPartLimits, limits: BodyPartLimits): boolean
-    {
-        if (current.carry > limits.carry) return true;
-        if (current.work > limits.work) return true;
-
-        return false;
     }
 
     private static createChunk(parts: Vector<BodyPartConstant>): BodyPartChunk | undefined
@@ -160,18 +135,47 @@ export class BodyTemplate
 
 export class Bodies
 {
-    private static _registry: { [type: string]: BodyTemplate } = {}
+    private static _templates: Dictionary<BodyTemplate> = {};
 
-    private static template(type: CreepType): BodyTemplate | undefined { return Bodies._registry[type]; }
-
-    static register(type: CreepType, template: BodyTemplate)
+    static initialize(reset: boolean)
     {
-        Bodies._registry[type] = template;
+        if (reset)
+        {
+            Bodies._templates = {};
+        }
+
+        if (Dictionaries.isEmpty(Bodies._templates))
+        {
+            Bodies._templates[CreepType.Builder] = Bodies.createBuilderTemplate();
+            Bodies._templates[CreepType.Repairer] = Bodies.createRepairerTemplate();
+            Bodies._templates[CreepType.Upgrader] = Bodies.createUpgraderTemplate();
+            Bodies._templates[CreepType.Weller] = Bodies.createWellerTemplate();
+        }
     }
 
-    static createBody(type: CreepType, energy: number, limits: BodyPartLimits): Vector<BodyPartConstant> | undefined
+    static createBody(type: CreepType, energy: number): Vector<BodyPartConstant> | undefined
     {
-        return Bodies.template(type)?.createBody(energy, limits);
+        return Bodies._templates[type]?.createBody(energy);
+    }
+
+    private static createBuilderTemplate(): BodyTemplate
+    {
+        return BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
+    }
+
+    private static createRepairerTemplate(): BodyTemplate
+    {
+        return BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
+    }
+
+    private static createUpgraderTemplate(): BodyTemplate
+    {
+        return BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
+    }
+
+    private static createWellerTemplate(): BodyTemplate
+    {
+        return BodyTemplate.create([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 3);
     }
 }
 
