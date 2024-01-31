@@ -1,5 +1,5 @@
-import { Bodies, BodyTemplate, CreepState, CreepType, Dictionaries, Dictionary, Positions, SourceId, Vector } from "./Common";
-import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { CreepState, CreepType, Dictionaries, Dictionary, Positions, SourceId, Vector } from "./Common";
+import { Bodies, BodyTemplate, CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Well, Wells } from "./Resources";
 

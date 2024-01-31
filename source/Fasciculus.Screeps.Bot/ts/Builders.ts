@@ -1,6 +1,6 @@
 
-import { Bodies, BodyTemplate, CreepState, CreepType, Dictionaries, Dictionary, Positions, SiteId, Vector, Vectors } from "./Common";
-import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { CreepState, CreepType, Dictionaries, Dictionary, Positions, SiteId, Vector, Vectors } from "./Common";
+import { Bodies, BodyTemplate, CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Site, Sites } from "./Sites";
 
