@@ -1,6 +1,6 @@
 import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, Positions, Vector } from "./Common";
-import { Controller, Controllers } from "./Controllers";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
+import { Controller, Controllers } from "./Infrastructure";
 import { profile } from "./Profiling";
 
 interface UpgraderMemory extends CreepBaseMemory

@@ -1,7 +1,6 @@
 
-import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Sets, Vector, Vectors } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Sets, Stores, Vector, Vectors } from "./Common";
 import { profile } from "./Profiling";
-import { Stores } from "./Stores";
 
 const BodyPartPriorities =
 {
@@ -160,6 +159,7 @@ export class Bodies
         {
             Bodies._templates[CreepType.Builder] = Bodies.createBuilderTemplate();
             Bodies._templates[CreepType.Repairer] = Bodies.createRepairerTemplate();
+            Bodies._templates[CreepType.Tanker] = Bodies.createTankerTemplate();
             Bodies._templates[CreepType.Upgrader] = Bodies.createUpgraderTemplate();
             Bodies._templates[CreepType.Weller] = Bodies.createWellerTemplate();
 
@@ -180,6 +180,11 @@ export class Bodies
     private static createRepairerTemplate(): BodyTemplate
     {
         return BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
+    }
+
+    private static createTankerTemplate(): BodyTemplate
+    {
+        return BodyTemplate.create([CARRY, MOVE], 2);
     }
 
     private static createUpgraderTemplate(): BodyTemplate

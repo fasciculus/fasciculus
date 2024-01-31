@@ -1,9 +1,9 @@
 import { Builders } from "./Builders";
 import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
-import { Controllers } from "./Controllers";
 import { Bodies, Creeps } from "./Creeps";
-import { Extensions, Spawns, Walls } from "./Infrastructure";
+import { Controllers, Extensions, Spawns, Walls } from "./Infrastructure";
+import { Tankers } from "./Logistics";
 import { Markers } from "./Markers";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
@@ -41,6 +41,7 @@ export class Scheduler
         Upgraders.initialize(reset);
         Builders.initialize(reset);
         Repairers.initialize(reset);
+        Tankers.initialize(reset);
     }
 
     private static updateVersion(): boolean
@@ -64,6 +65,7 @@ export class Scheduler
         Upgraders.run();
         Builders.run();
         Repairers.run();
+        Tankers.run();
 
         Spawning.run();
 

@@ -12,10 +12,11 @@ export type Repairable = StructureRoad | StructureWall
 
 export enum CreepType
 {
-    Weller = "W",
-    Upgrader = "U",
     Builder = "B",
-    Repairer = "R"
+    Repairer = "R",
+    Tanker = "T",
+    Upgrader = "U",
+    Weller = "W",
 }
 
 export enum CreepState
@@ -487,6 +488,34 @@ export class GameWrap
     static get myStructures(): Vector<Structure> { return Dictionaries.values(Game.structures); }
     static get myConstructionSites(): Vector<ConstructionSite> { return Dictionaries.values(Game.constructionSites); }
     static get username(): string { return GameWrap._username || "unknown"; }
+}
+
+export class Stores
+{
+    static energy(target: { store: StoreDefinition }): number
+    {
+        return target.store.energy;
+    }
+
+    static energyCapacity(target: { store: StoreDefinition }): number
+    {
+        return target.store.getCapacity(RESOURCE_ENERGY);
+    }
+
+    static freeEnergyCapacity(target: { store: StoreDefinition }): number
+    {
+        return target.store.getFreeCapacity(RESOURCE_ENERGY);
+    }
+
+    static hasFreeEnergyCapacity(target: { store: StoreDefinition }): boolean
+    {
+        return target.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+    }
+
+    static energyRatio(target: { store: StoreDefinition }): number
+    {
+        return Stores.energy(target) / Math.max(1, Stores.energyCapacity(target));
+    }
 }
 
 interface NamesMemory

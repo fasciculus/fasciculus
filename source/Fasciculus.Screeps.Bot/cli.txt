@@ -7,7 +7,17 @@ system.getTickDuration()
 system.setTickDuration(1000)
 system.setTickDuration(1500)
 
-storage.db['rooms.objects'].update({type:"spawn"}, {$set: {storeCapacityResource:{ energy:300}}});
-storage.db['users'].update({ username: 'rhjoerg' },{ $set: { cpu: 20 }})
+Object.keys(storage.db)
+Object.keys(storage.db['rooms.objects']);
+
+storage.db['rooms.objects'].find({type:"spawn"});
+
+storage.db['rooms.objects'].update({type:"spawn"}, {$set: {storeCapacityResource:{ energy:300}, store:{energy:1}}});
+
+storage.db['users'].update({ username: 'rhjoerg' },{ $set: {cpu:20}})
+
+storage.db['rooms.objects'].update({type:"extension"}, {$set: {storeCapacityResource:{energy:200}}}); // or 50/100 depending on RCL
+storage.db['rooms.objects'].update({type:"link"}, {$set: {storeCapacityResource:{energy:800}}});
+storage.db['rooms.objects'].update({type:"tower"}, {$set: {storeCapacityResource:{energy:1000}}});
 
 https://github.com/screeps/storage/blob/master/db.original.json

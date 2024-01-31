@@ -2,9 +2,8 @@
 import { Builders } from "./Builders";
 import {  CreepType, Vector } from "./Common";
 import { UPGRADER_MAX_COUNT } from "./Config";
-import { Controllers } from "./Controllers";
 import { Bodies } from "./Creeps";
-import { Spawn, Spawns } from "./Infrastructure";
+import { Controllers, Spawn, Spawns } from "./Infrastructure";
 import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
