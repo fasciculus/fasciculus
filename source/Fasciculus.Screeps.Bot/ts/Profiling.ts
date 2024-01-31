@@ -145,7 +145,7 @@ export class Profiler
         let calls: string = "calls".padStart(7);
 
         console.log(divider);
-        console.log(`Profile after ${ticks} ticks. Memory used: ${memoryUsed} kB.`);
+        console.log(`Profile after ${ticks} ticks. Memory used: ${memoryUsed} KB.`);
         console.log(`${label}${duration}${calls}`);
         console.log(divider);
 
@@ -163,10 +163,7 @@ export class Profiler
     {
         let dictionary: ProfilerDictionary = Dictionaries.clone(Profiler.memory.entries);
 
-        for (let key of PROFILER_IGNORED_KEYS)
-        {
-            delete dictionary[key];
-        }
+        Dictionaries.removeAll(dictionary, PROFILER_IGNORED_KEYS);
 
         return Dictionaries.values(dictionary).sort(Profiler.compare).take(PROFILER_MAX_ENTRIES);
     }
