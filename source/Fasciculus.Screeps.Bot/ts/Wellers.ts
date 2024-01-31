@@ -59,6 +59,8 @@ export class Weller extends CreepBase<WellerMemory>
 
     private executeHarvest()
     {
+        if (this.full) return;
+
         let well = this.well;
 
         if (!well) return;
@@ -72,18 +74,13 @@ export class Weller extends CreepBase<WellerMemory>
         {
             case CreepState.ToWell: this.state = this.prepareToWell(); break;
             case CreepState.Harvest: this.state = this.prepareHarvest(); break;
-            default: this.state = this.prepareIdle(); break;
         }
     }
 
     @profile
     private prepareIdle(): CreepState
     {
-        if (this.full) return CreepState.Idle;
-        if (this.ready) return CreepState.Harvest;
-        if (!this.well) return CreepState.Idle;
-
-        return CreepState.ToWell;
+        return this.well ? CreepState.ToWell : CreepState.Idle;
     }
 
     @profile
@@ -102,10 +99,9 @@ export class Weller extends CreepBase<WellerMemory>
         return CreepState.ToWell;
     }
 
-    @profile
     private prepareHarvest(): CreepState
     {
-        return this.full ? CreepState.Idle : CreepState.Harvest;
+        return this.well ? CreepState.Harvest : CreepState.Idle;
     }
 
     private inRangeTo(target: Well): boolean
