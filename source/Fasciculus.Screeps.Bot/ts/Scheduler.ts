@@ -31,7 +31,7 @@ export class Scheduler
         Extensions.initialize(reset);
         Walls.initialize(reset);
         Repairs.initialize();
-        Markers.initialize();
+        Markers.initialize(reset);
 
         Wells.initialize(reset);
         Controllers.initialize();

@@ -1,4 +1,4 @@
-import { GameWrap, MarkerType, Vector } from "./Common";
+import { Dictionaries, Dictionary, GameWrap, MarkerType, Vector } from "./Common";
 import { Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Wellers } from "./Wellers";
@@ -11,22 +11,20 @@ const INFO_MARKER_TEXT_STYLE: TextStyle =
 
 export class Marker
 {
-    readonly flag: Flag;
+    readonly name: string; 
     readonly type: MarkerType;
 
-    constructor(flag: Flag)
+    get flag(): Flag { return Game.flags[this.name]; }
+
+    constructor(name: string)
     {
-        this.flag = flag;
-        this.type = Marker.typeOf(flag);
+        this.name = name;
+        this.type = Marker.typeOf(name);
     }
 
-    static typeOf(flag: Flag): MarkerType
+    static typeOf(name: string): MarkerType
     {
-        let name = flag.name;
-
-        if (name.length == 0) return MarkerType.Unknown
-
-        switch (flag.name.charAt(0))
+        switch (name.charAt(0))
         {
             case MarkerType.Info: return MarkerType.Info;
             default: return MarkerType.Unknown;
@@ -68,17 +66,24 @@ export class Marker
 
 export class Markers
 {
-    private static _all: Vector<Marker> = new Vector();
+    private static _markers: Dictionary<Marker> = {};
 
     @profile
-    static initialize()
+    static initialize(reset: boolean)
     {
-        Markers._all = GameWrap.myFlags.map(f => new Marker(f));
+        if (reset)
+        {
+            Markers._markers = {};
+        }
+
+        const existing: Set<string> = new Set(Dictionaries.keys(Game.flags));
+
+        Dictionaries.update(Markers._markers, existing, name => new Marker(name));
     }
 
     @profile
     static run()
     {
-        Markers._all.forEach(m => m.run());
+        Dictionaries.values(Markers._markers).forEach(m => m.run());
     }
 }
