@@ -12,7 +12,7 @@ export class Spawn
 
     get idle(): boolean { return !this.spawn.spawning; }
 
-    get roomEnergyAvailable(): number { return this.room.energyAvailable; }
+    get roomEnergyAvailable(): number { return this.room.energyAvailable || 0; }
     get roomEnergyCapacity(): number { return this.room.energyCapacityAvailable; }
 
     constructor(id: SpawnId)

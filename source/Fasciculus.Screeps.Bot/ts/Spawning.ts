@@ -21,6 +21,7 @@ export class Spawning
         let spawn: Spawn | undefined = Spawns.best;
 
         if (!spawn) return;
+        if (spawn.roomEnergyAvailable < Bodies.minCost) return;
 
         let type: CreepType | undefined = Spawning.nextType();
 

@@ -79,9 +79,18 @@ export class BodyTemplate
 {
     private chunks: Vector<BodyPartChunk> = new Vector();
 
+    readonly minCost: number;
+
+    constructor(minCost: number)
+    {
+        this.minCost = minCost;
+    }
+
     static create(parts: BodyPartConstant[], times: number = 1): BodyTemplate
     {
-        return new BodyTemplate().add(parts, times);
+        const minCost: number = BodyParts.costOf(Vector.from(parts));
+
+        return new BodyTemplate(minCost).add(parts, times);
     }
 
     add(parts: BodyPartConstant[], times: number = 1): BodyTemplate
@@ -136,6 +145,9 @@ export class BodyTemplate
 export class Bodies
 {
     private static _templates: Dictionary<BodyTemplate> = {};
+    private static _minCost: number = 0;
+
+    static get minCost(): number { return Bodies._minCost; }
 
     static initialize(reset: boolean)
     {
@@ -150,6 +162,8 @@ export class Bodies
             Bodies._templates[CreepType.Repairer] = Bodies.createRepairerTemplate();
             Bodies._templates[CreepType.Upgrader] = Bodies.createUpgraderTemplate();
             Bodies._templates[CreepType.Weller] = Bodies.createWellerTemplate();
+
+            Bodies._minCost = Dictionaries.values(Bodies._templates).map(t => t.minCost).min(c => c) || 999999;
         }
     }
 

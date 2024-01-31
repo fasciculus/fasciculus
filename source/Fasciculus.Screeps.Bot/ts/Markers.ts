@@ -49,7 +49,7 @@ export class Marker
         let pos = this.flag.pos;
         let x = pos.x + 1, y = pos.y;
 
-        let energyAvailable = room.energyAvailable;
+        let energyAvailable = room.energyAvailable || 0;
         let energyCapacity = room.energyCapacityAvailable;
         let wellable = Wellers.maxEnergyPerTick.toFixed(1);
         let performance = "n/a";

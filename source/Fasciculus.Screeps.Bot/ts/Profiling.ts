@@ -103,20 +103,29 @@ export class Profiler
 
     static start()
     {
-        Profiler._start = Game.cpu.getUsed();
-        Profiler.record("global", "load", Profiler._start);
+        if (Profiler._warmup > 0)
+        {
+            Profiler.memory.entries = {};
+        }
+        else
+        {
+            Profiler._start = Game.cpu.getUsed();
+            Profiler.record("global", "load", Profiler._start);
+        }
     }
 
     static stop()
     {
-        Profiler.record("global", "main", Game.cpu.getUsed() - Profiler._start);
-
-        let memory: ProfilerMemory = Profiler.memory;
+        const memory: ProfilerMemory = Profiler.memory;
 
         if (Profiler._warmup > 0)
         {
             --Profiler._warmup;
             ++memory.start;
+        }
+        else
+        {
+            Profiler.record("global", "main", Game.cpu.getUsed() - Profiler._start);
         }
 
         Profiler.log(memory);
