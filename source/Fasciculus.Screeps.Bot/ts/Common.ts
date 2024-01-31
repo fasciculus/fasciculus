@@ -369,7 +369,7 @@ export class Dictionaries
         return Object.assign({}, dictionary);
     }
 
-    static removeAll<T>(dictionary: Dictionary<T>, keys: Vector<string> | Set<string>)
+    static removeAll<T>(dictionary: Dictionary<T>, keys: Iterable<string>)
     {
         for (const key of keys)
         {
