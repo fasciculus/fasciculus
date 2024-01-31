@@ -333,6 +333,11 @@ export class Vectors
 
 export class Dictionaries
 {
+    static size<T>(dictionary: Dictionary<T>): number
+    {
+        return Object.keys(dictionary).length;
+    }
+
     static isEmpty<T>(dictionary: Dictionary<T>): boolean
     {
         for (let key in dictionary)

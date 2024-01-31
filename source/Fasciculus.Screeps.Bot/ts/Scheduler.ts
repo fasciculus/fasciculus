@@ -26,7 +26,7 @@ export class Scheduler
         GameWrap.initialize(reset);
 
         Chambers.initialize(reset);
-        Sites.initialize();
+        Sites.initialize(reset);
         Spawns.initialize(reset);
         Extensions.initialize(reset);
         Walls.initialize();

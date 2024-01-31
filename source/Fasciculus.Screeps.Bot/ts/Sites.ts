@@ -1,12 +1,13 @@
 
-import { Dictionary, GameWrap, SiteId, Vector } from "./Common";
+import { Dictionaries, Dictionary, GameWrap, SiteId, Vector } from "./Common";
 import { profile } from "./Profiling";
 
 export class Site
 {
-    readonly site: ConstructionSite;
+    readonly id: SiteId;
 
-    get id(): SiteId { return this.site.id; }
+    get site(): ConstructionSite { return GameWrap.get<ConstructionSite>(this.id)!; }
+
     get type(): BuildableStructureConstant { return this.site.structureType; }
     get pos(): RoomPosition { return this.site.pos; }
 
@@ -14,30 +15,36 @@ export class Site
     get total(): number { return this.site.progressTotal; }
     get remaining(): number { return this.total - this.progress; }
 
-    constructor(site: ConstructionSite)
+    constructor(id: SiteId)
     {
-        this.site = site;
+        this.id = id;
     }
 }
 
 export class Sites
 {
-    private static _all: Vector<Site> = new Vector();
-    private static _notWalls: Vector<Site> = new Vector();
-    private static _byId: Dictionary<Site> = {};
+    private static _sites: Dictionary<Site> = {};
+    private static _count: number = 0;
 
-    static get(id: SiteId | undefined): Site | undefined { return id ? Sites._byId[id] : undefined; }
+    static get(id: SiteId | undefined): Site | undefined { return id ? Sites._sites[id] : undefined; }
 
-    static get all(): Vector<Site> { return Sites._all.clone(); }
-    static get notWalls(): Vector<Site> { return Sites._notWalls.clone(); }
-
-    static get count(): number { return Sites._all.length; }
+    static get all(): Vector<Site> { return Dictionaries.values(Sites._sites); }
+    static get count(): number { return Sites._count; }
 
     @profile
-    static initialize()
+    static initialize(reset: boolean)
     {
-        Sites._all = GameWrap.myConstructionSites.map(s => new Site(s));
-        Sites._notWalls = Sites._all.filter(s => s.type != STRUCTURE_WALL);
-        Sites._byId = Sites._all.indexBy(s => s.id);
+        if (reset)
+        {
+            Sites._sites = {};
+            Sites._count = 0;
+        }
+
+        const existing: Set<string> = GameWrap.myConstructionSites.map(s => s.id).toSet();
+
+        if (Dictionaries.update(Sites._sites, existing, id => new Site(id as SiteId)))
+        {
+            Sites._count = Dictionaries.size(Sites._sites);
+        }
     }
 }
