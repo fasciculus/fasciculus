@@ -1,7 +1,7 @@
 import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, ExtensionId, GameWrap, Names, SpawnId, Stores, Vector, WallId } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
 import { profile } from "./Profiling";
-import { Chambers } from "./Rooming";
+import { Chamber, Chambers } from "./Rooming";
 
 export class Controller
 {
@@ -46,14 +46,14 @@ export class Spawn
     readonly pos: RoomPosition;
 
     get spawn(): StructureSpawn { return GameWrap.get<StructureSpawn>(this.id)!; }
-    get room(): Room { return this.spawn.room; }
+    get chamber(): Chamber { return Chambers.get(this.spawn.room.name)!; }
 
     get idle(): boolean { return !this.spawn.spawning; }
 
     get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this.spawn); }
 
-    get roomEnergyAvailable(): number { return this.room.energyAvailable || 0; }
-    get roomEnergyCapacity(): number { return this.room.energyCapacityAvailable; }
+    get roomEnergyAvailable(): number { return this.chamber.energyAvailable; }
+    get roomEnergyCapacity(): number { return this.chamber.energyCapacityAvailable; }
 
     constructor(id: SpawnId)
     {

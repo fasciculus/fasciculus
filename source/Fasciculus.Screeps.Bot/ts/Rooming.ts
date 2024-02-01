@@ -46,7 +46,8 @@ export class Chamber
     get controlled(): boolean { return this.my || this.reservation?.username == GameWrap.username; }
     get rcl(): number { return this.controller?.level || 0; }
 
-    get energyCapacityAvailable(): number { return this.room.energyCapacityAvailable; }
+    get energyAvailable(): number { return this.room.energyAvailable || 0; }
+    get energyCapacityAvailable(): number { return this.room.energyCapacityAvailable || 0; }
 
     get territory(): Territory { return Territories.get(this.room); }
 
