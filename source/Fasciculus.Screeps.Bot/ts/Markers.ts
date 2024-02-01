@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, GameWrap, MarkerType, Vector } from "./Common";
+import { Dictionaries, Dictionary, MarkerType } from "./Common";
 import { Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Wellers } from "./Wellers";
@@ -9,37 +9,40 @@ const INFO_MARKER_TEXT_STYLE: TextStyle =
     font: 0.5
 }
 
-export class Marker
+export abstract class Marker
 {
     readonly name: string; 
     readonly type: MarkerType;
 
     get flag(): Flag { return Game.flags[this.name]; }
 
-    constructor(name: string)
+    constructor(name: string, type: MarkerType)
     {
         this.name = name;
-        this.type = Marker.typeOf(name);
+        this.type = type;
     }
 
-    static typeOf(name: string): MarkerType
+    abstract run(): void;
+}
+
+class UnknownMarker extends Marker
+{
+    constructor(name: string, type: MarkerType)
     {
-        switch (name.charAt(0))
-        {
-            case MarkerType.Info: return MarkerType.Info;
-            default: return MarkerType.Unknown;
-        }
+        super(name, type);
+    }
+
+    run() {}
+}
+
+export class InfoMarker extends Marker
+{
+    constructor(name: string, type: MarkerType)
+    {
+        super(name, type);
     }
 
     run()
-    {
-        switch (this.type)
-        {
-            case MarkerType.Info: this.runInfo(); break;
-        }
-    }
-
-    private runInfo()
     {
         let room = this.flag.room;
 
@@ -78,7 +81,16 @@ export class Markers
 
         const existing: Set<string> = new Set(Dictionaries.keys(Game.flags));
 
-        Dictionaries.update(Markers._markers, existing, name => new Marker(name));
+        Dictionaries.update(Markers._markers, existing, Markers.create);
+    }
+
+    private static create(name: string): Marker
+    {
+        switch (name.charAt(0))
+        {
+            case MarkerType.Info: return new InfoMarker(name, MarkerType.Info);
+            default: return new UnknownMarker(name, MarkerType.Unknown);
+        }
     }
 
     @profile
