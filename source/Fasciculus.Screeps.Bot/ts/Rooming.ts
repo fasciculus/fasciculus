@@ -44,6 +44,7 @@ export class Chamber
     get my(): boolean { return this.controller?.my || false; }
     get reservation(): ReservationDefinition | undefined { return this.controller?.reservation; }
     get controlled(): boolean { return this.my || this.reservation?.username == GameWrap.username; }
+    get rcl(): number { return this.controller?.level || 0; }
 
     get energyCapacityAvailable(): number { return this.room.energyCapacityAvailable; }
 
