@@ -57,6 +57,7 @@ export class Weller extends CreepBase<WellerMemory>
         this.moveTo(well, WELLER_MOVE_TO_OPTS);
     }
 
+    @profile
     private executeHarvest()
     {
         if (this.full) return;
@@ -100,6 +101,7 @@ export class Weller extends CreepBase<WellerMemory>
         return CreepState.ToWell;
     }
 
+    @profile
     private prepareHarvest(): CreepState
     {
         return this.well ? CreepState.Harvest : CreepState.Idle;
@@ -164,7 +166,6 @@ export class Wellers
         wellers.forEach(w => w.prepare());
     }
 
-    @profile
     private static execute(wellers: Vector<Weller>)
     {
         wellers.forEach(w => w.execute());
