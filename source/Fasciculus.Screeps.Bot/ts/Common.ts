@@ -41,6 +41,7 @@ export enum CreepState
 export enum MarkerType
 {
     Info = "I",
+    Guard = "G",
     Unknown = "U"
 }
 

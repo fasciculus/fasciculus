@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, MarkerType } from "./Common";
+import { Dictionaries, Dictionary, GameWrap, MarkerType, Vector } from "./Common";
 import { Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Wellers } from "./Wellers";
@@ -9,9 +9,9 @@ const INFO_MARKER_TEXT_STYLE: TextStyle =
     font: 0.5
 }
 
-export abstract class Marker
+export abstract class MarkerBase
 {
-    readonly name: string; 
+    readonly name: string;
     readonly type: MarkerType;
 
     get flag(): Flag { return Game.flags[this.name]; }
@@ -25,7 +25,17 @@ export abstract class Marker
     abstract run(): void;
 }
 
-class UnknownMarker extends Marker
+export abstract class Marker<M extends FlagMemory> extends MarkerBase
+{
+    get memory(): M { return this.flag.memory as M; }
+
+    constructor(name: string, type: MarkerType)
+    {
+        super(name, type);
+    }
+}
+
+class UnknownMarker extends Marker<FlagMemory>
 {
     constructor(name: string, type: MarkerType)
     {
@@ -35,7 +45,7 @@ class UnknownMarker extends Marker
     run() {}
 }
 
-export class InfoMarker extends Marker
+export class InfoMarker extends Marker<FlagMemory>
 {
     constructor(name: string, type: MarkerType)
     {
@@ -67,9 +77,31 @@ export class InfoMarker extends Marker
     }
 }
 
+export interface GuardMarkerMemory extends FlagMemory
+{
+    assignee?: string;
+}
+
+export class GuardMarker extends Marker<GuardMarkerMemory>
+{
+    get assignee(): Creep | undefined { return GameWrap.myCreep(this.memory.assignee); }
+    set assignee(value: Creep) { this.memory.assignee = value.name; }
+
+    constructor(name: string, type: MarkerType)
+    {
+        super(name, type);
+    }
+
+    run() { }
+}
+
 export class Markers
 {
-    private static _markers: Dictionary<Marker> = {};
+    private static _markers: Dictionary<MarkerBase> = {};
+
+    private static _guardMarkers: Vector<GuardMarker> = new Vector();
+
+    static get guardMarkers(): Vector<GuardMarker> { return Markers._guardMarkers.clone(); }
 
     @profile
     static initialize(reset: boolean)
@@ -77,18 +109,25 @@ export class Markers
         if (reset)
         {
             Markers._markers = {};
+            Markers._guardMarkers = new Vector();
         }
 
         const existing: Set<string> = new Set(Dictionaries.keys(Game.flags));
 
-        Dictionaries.update(Markers._markers, existing, Markers.create);
+        if (Dictionaries.update(Markers._markers, existing, Markers.create))
+        {
+            const markers = Dictionaries.values(Markers._markers);
+
+            Markers._guardMarkers = markers.filter(m => m.type == MarkerType.Guard) as Vector<GuardMarker>;
+        }
     }
 
-    private static create(name: string): Marker
+    private static create(name: string): MarkerBase
     {
         switch (name.charAt(0))
         {
             case MarkerType.Info: return new InfoMarker(name, MarkerType.Info);
+            case MarkerType.Guard: return new GuardMarker(name, MarkerType.Guard);
             default: return new UnknownMarker(name, MarkerType.Unknown);
         }
     }
