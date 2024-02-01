@@ -120,6 +120,7 @@ export class Extensions
         Dictionaries.update(Extensions._extensions, Extensions.existing, id => new Extension(id as ExtensionId));
     }
 
+    // todo: replace with Chambers.extensions
     private static get existing(): Set<string>
     {
         const result: Set<string> = new Set();

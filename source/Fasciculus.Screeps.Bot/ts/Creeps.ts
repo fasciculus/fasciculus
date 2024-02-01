@@ -1,5 +1,5 @@
 
-import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Sets, Stores, Vector, Vectors } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, DictionaryUpdateInfo, GameWrap, Sets, Stores, Vector, Vectors } from "./Common";
 import { profile } from "./Profiling";
 
 const BodyPartPriorities =
@@ -313,7 +313,7 @@ export class Creeps
         }
     }
 
-    private static updateTypes(): boolean
+    private static updateTypes(): DictionaryUpdateInfo<CreepType> | undefined
     {
         const existing: Set<string> = Dictionaries.keys(Game.creeps);
 
@@ -334,13 +334,8 @@ export class Creeps
 
         for (const name of Dictionaries.keys(types))
         {
-            const type = types[name];
-            var names: Set<string> | undefined = creeps[type];
-
-            if (!names)
-            {
-                creeps[type] = names = new Set();
-            }
+            const type: CreepType = types[name];
+            var names: Set<string> = creeps[type] || (creeps[type] = new Set());
 
             names.add(name);
         }
@@ -348,8 +343,7 @@ export class Creeps
         Creeps._creeps = creeps;
     }
 
-
-    static update<T>(creeps: Dictionary<T>, type: CreepType, create: (name: string) => T): boolean
+    static update<T>(creeps: Dictionary<T>, type: CreepType, create: (name: string) => T): DictionaryUpdateInfo<T> | undefined
     {
         const existing: Set<string> = Creeps._creeps[type] || new Set();
 

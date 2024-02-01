@@ -95,6 +95,7 @@ export class Chambers
 
         if (Dictionaries.update(Chambers._allChambers, existing, name => new Chamber(name)))
         {
+            // todo: modify only changed values
             Chambers._allControllers = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
             Chambers._allSources = Sets.unionAll(Chambers.all.map(c => c.sources));
         }

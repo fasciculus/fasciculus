@@ -122,7 +122,7 @@ export class Builders
         if (Creeps.update(Builders._builders, CreepType.Builder, name => new Builder(name)))
         {
             Builders._all = Dictionaries.values(Builders._builders);
-            Builders._maxEnergyPerTick = Dictionaries.values(Builders._builders).sum(b => b.maxEnergyPerTick);
+            Builders._maxEnergyPerTick = Builders._all.sum(b => b.maxEnergyPerTick);
         }
     }
 

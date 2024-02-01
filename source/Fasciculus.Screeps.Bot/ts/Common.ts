@@ -346,6 +346,12 @@ export class Vectors
     }
 }
 
+export interface DictionaryUpdateInfo<T>
+{
+    deleted: Dictionary<T>;
+    created: Dictionary<T>;
+}
+
 export class Dictionaries
 {
     static size<T>(dictionary: Dictionary<T>): number
@@ -386,37 +392,33 @@ export class Dictionaries
         }
     }
 
-    static filter<T>(dictionary: Dictionary<T>, filter: (value: T) => boolean): Dictionary<T>
-    {
-        const result: Dictionary<T> = {};
-
-        for (const key of Dictionaries.keys(dictionary))
-        {
-            const value: T = dictionary[key];
-
-            if (filter(value))
-            {
-                result[key] = value;
-            }
-        }
-
-        return result;
-    }
-
-    static update<T>(dictionary: Dictionary<T>, existing: Set<string>, create: (key: string) => T): boolean
+    static update<T>(dictionary: Dictionary<T>, existing: Set<string>, create: (key: string) => T): DictionaryUpdateInfo<T> | undefined
     {
         const keys: Set<string> = Dictionaries.keys(dictionary);
         const toDelete: Set<string> = Sets.difference(keys, existing);
         const toCreate: Set<string> = Sets.difference(existing, keys);
+        const changed: boolean = toDelete.size > 0 || toCreate.size > 0;
 
-        Dictionaries.removeAll(dictionary, toDelete);
+        if (!changed) return undefined;
+
+        const deleted: Dictionary<T> = {};
+        const created: Dictionary<T> = {};
+
+        for (const key of toDelete)
+        {
+            deleted[key] = dictionary[key];
+            delete dictionary[key];
+        }
 
         for (const key of toCreate)
         {
-            dictionary[key] = create(key);
+            const value: T = create(key);
+
+            dictionary[key] = value;
+            created[key] = value
         }
 
-        return toDelete.size > 0 || toCreate.size > 0;
+        return { deleted, created };
     }
 }
 
