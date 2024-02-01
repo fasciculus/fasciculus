@@ -191,7 +191,7 @@ export class Builders
 
         if (smallSites.length > 0)
         {
-            result = Positions.closestByPath(builder, smallSites);
+            result = smallSites.at(0); // Positions.closestByPath(builder, smallSites);
         }
 
         if (!result)
@@ -376,7 +376,7 @@ export class Repairers
         for (let repairable of Repairers.repairables)
         {
             let assignables: Vector<Repairer> = Dictionaries.values(unassigned);
-            let repairer: Repairer | undefined = Positions.closestByPath(repairable, assignables);
+            let repairer: Repairer | undefined = assignables.at(0); // Positions.closestByPath(repairable, assignables);
 
             if (!repairer) continue;
 
@@ -571,7 +571,7 @@ export class Upgraders
 
         if (!controller) return result;
 
-        let upgrader: Upgrader | undefined = Positions.closestByPath(controller, unassigned);
+        let upgrader: Upgrader | undefined = unassigned.at(0); // Positions.closestByPath(controller, unassigned);
 
         if (!upgrader) return result;
 
@@ -783,13 +783,14 @@ export class Wellers
         for (let weller of unassignedWellers)
         {
             let assignableWells: Vector<Well> = Wells.assignable;
-            let nearestWell: Well | undefined = Positions.closestByPath(weller, assignableWells, FIND_CLOSEST_WELL_OPTS);
+            let nearestWell: Well | undefined = assignableWells.at(0); // Positions.closestByPath(weller, assignableWells, FIND_CLOSEST_WELL_OPTS);
 
             if (!nearestWell) continue;
 
             weller.well = nearestWell;
             nearestWell.assignee = weller.creep;
             result.add(weller);
+            break;
         }
 
         return result;

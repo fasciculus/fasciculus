@@ -15,6 +15,7 @@ export abstract class MarkerBase
     readonly type: MarkerType;
 
     get flag(): Flag { return Game.flags[this.name]; }
+    get pos(): RoomPosition { return this.flag.pos; }
 
     constructor(name: string, type: MarkerType)
     {
@@ -100,8 +101,10 @@ export class Markers
     private static _markers: Dictionary<MarkerBase> = {};
 
     private static _guardMarkers: Vector<GuardMarker> = new Vector();
+    private static _guardMarkerCount: number = 0;
 
     static get guardMarkers(): Vector<GuardMarker> { return Markers._guardMarkers.clone(); }
+    static get guardMarkerCount(): number { return Markers._guardMarkers.length; }
 
     @profile
     static initialize(reset: boolean)
@@ -110,6 +113,7 @@ export class Markers
         {
             Markers._markers = {};
             Markers._guardMarkers = new Vector();
+            Markers._guardMarkerCount = 0;
         }
 
         const existing: Set<string> = new Set(Dictionaries.keys(Game.flags));
@@ -119,6 +123,7 @@ export class Markers
             const markers = Dictionaries.values(Markers._markers);
 
             Markers._guardMarkers = markers.filter(m => m.type == MarkerType.Guard) as Vector<GuardMarker>;
+            Markers._guardMarkerCount = Markers._guardMarkers.length;
         }
     }
 

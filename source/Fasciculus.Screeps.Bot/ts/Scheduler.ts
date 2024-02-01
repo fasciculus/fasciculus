@@ -1,6 +1,7 @@
 import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
 import { Bodies, Creeps } from "./Creeps";
+import { Guards } from "./Forces";
 import { Controllers, Extensions, Spawns, Walls } from "./Infrastructure";
 import { Tankers } from "./Logistics";
 import { Markers } from "./Markers";
@@ -14,6 +15,15 @@ import { Builders, Repairers, Upgraders, Wellers } from "./Workers";
 export class Scheduler
 {
     private static _version: string = "";
+
+    private static updateVersion(): boolean
+    {
+        const changed: boolean = Scheduler._version != VERSION;
+
+        Scheduler._version = VERSION;
+
+        return changed;
+    }
 
     static initialize()
     {
@@ -39,18 +49,10 @@ export class Scheduler
         Builders.initialize(reset);
         Repairers.initialize(reset);
         Tankers.initialize(reset);
+
+        Guards.initialize(reset);
     }
 
-    private static updateVersion(): boolean
-    {
-        const changed: boolean = Scheduler._version != VERSION;
-
-        Scheduler._version = VERSION;
-
-        return changed;
-    }
-
-    // @profile
     static run()
     {
         switch (Game.time % 10)
@@ -63,6 +65,8 @@ export class Scheduler
         Builders.run();
         Repairers.run();
         Tankers.run();
+
+        Guards.run();
 
         Spawning.run();
 

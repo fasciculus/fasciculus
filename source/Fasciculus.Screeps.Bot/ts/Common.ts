@@ -17,6 +17,7 @@ export enum CreepType
     Tanker = "T",
     Upgrader = "U",
     Weller = "W",
+    Guard = "G"
 }
 
 export enum CreepState
@@ -593,6 +594,13 @@ export class Point
 
 export type Positioned = RoomPosition | _HasRoomPosition;
 
+export interface SerializedPosition
+{
+    x: number;
+    y: number;
+    r: string;
+}
+
 export class Positions
 {
     static positionOf(target: Positioned): RoomPosition
@@ -600,13 +608,23 @@ export class Positions
         return target instanceof RoomPosition ? target : target.pos;
     }
 
-    static closestByPath<T extends Positioned>(start: Positioned, targets: Vector<T>, opts?: FindPathOpts): T | undefined
+    private static closestByPath<T extends Positioned>(start: Positioned, targets: Vector<T>, opts?: FindPathOpts): T | undefined
     {
         return targets.find((values) => Positions.positionOf(start).findClosestByPath(values, opts) || undefined);
     }
 
-    static closestByRange<T extends Positioned>(start: Positioned, targets: Vector<T>)
+    private static closestByRange<T extends Positioned>(start: Positioned, targets: Vector<T>)
     {
         return targets.find((values) => Positions.positionOf(start).findClosestByRange(values) || undefined);
+    }
+
+    static serialize(pos: RoomPosition | undefined): SerializedPosition | undefined
+    {
+        return pos ? { x: pos.x, y: pos.y, r: pos.roomName } : undefined;
+    }
+
+    static deserialize(pos: SerializedPosition | undefined): RoomPosition | undefined
+    {
+        return pos ? new RoomPosition(pos.x, pos.y, pos.r) : undefined;
     }
 }

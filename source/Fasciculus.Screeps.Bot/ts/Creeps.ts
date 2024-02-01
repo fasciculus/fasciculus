@@ -153,6 +153,8 @@ export class Bodies
     private static defaultUpgraderTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
     private static defaultWellerTemplate = BodyTemplate.create([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 3);
 
+    private static defaultGuardTemplate = BodyTemplate.create([RANGED_ATTACK, MOVE], 25);
+
     private static smallTankerTemplate = BodyTemplate.create([CARRY, MOVE]);
     private static largeTankerTemplate = BodyTemplate.create([CARRY, MOVE], 2);
 
@@ -179,6 +181,8 @@ export class Bodies
                 templates[CreepType.Tanker] = Bodies.createTankerTemplate(rcl);
                 templates[CreepType.Upgrader] = Bodies.defaultUpgraderTemplate;
                 templates[CreepType.Weller] = Bodies.defaultWellerTemplate;
+
+                templates[CreepType.Guard] = Bodies.defaultGuardTemplate;
 
                 Bodies._templates.add(templates);
             }

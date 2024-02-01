@@ -219,7 +219,7 @@ export class Tankers
                 wellers.sort(Tankers.compareWellers);
 
                 const weller: Weller = wellers.at(0)!;
-                const tanker: Tanker | undefined = Positions.closestByRange(weller, empty);
+                const tanker: Tanker | undefined = empty.at(0); // Positions.closestByRange(weller, empty);
 
                 if (tanker)
                 {
@@ -238,7 +238,7 @@ export class Tankers
                 customers = customers.sort(Tankers.compareCustomers).take(3);
 
                 const customer: Spawn = customers.at(Random.nextInt(customers.length))!;
-                const tanker: Tanker | undefined = Positions.closestByRange(customer, full);
+                const tanker: Tanker | undefined = full.at(0); // Positions.closestByRange(customer, full);
 
                 if (tanker)
                 {

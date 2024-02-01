@@ -2,8 +2,10 @@
 import { CreepType, Vector } from "./Common";
 import { UPGRADER_MAX_COUNT } from "./Config";
 import { Bodies } from "./Creeps";
+import { Guards } from "./Forces";
 import { Controllers, Spawn, Spawns } from "./Infrastructure";
 import { Tankers } from "./Logistics";
+import { Markers } from "./Markers";
 import { profile } from "./Profiling";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
@@ -58,6 +60,7 @@ export class Spawning
         if (Spawning.moreRepairers) return CreepType.Repairer;
         if (Spawning.moreBuilders) return CreepType.Builder;
         if (Spawning.moreUpgraders) return CreepType.Upgrader;
+        if (Spawning.moreGuards) return CreepType.Guard;
 
         return undefined;
     }
@@ -124,5 +127,10 @@ export class Spawning
         if (Repairs.count == 0) return false;
 
         return Repairers.maxEnergyPerTick < Spawning.energyAvailable(CreepType.Repairer);
+    }
+
+    private static get moreGuards(): boolean
+    {
+        return Guards.count < Markers.guardMarkerCount;
     }
 }
