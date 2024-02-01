@@ -116,6 +116,7 @@ export class Tanker extends CreepBase<TankerMemory>
         }
     }
 
+    @profile
     private executeToSupply()
     {
         const weller = this.weller;
@@ -125,6 +126,7 @@ export class Tanker extends CreepBase<TankerMemory>
         this.moveTo(weller);
     }
 
+    @profile
     private executeToCustomer()
     {
         const customer = this.customer;
@@ -134,6 +136,7 @@ export class Tanker extends CreepBase<TankerMemory>
         this.moveTo(customer);
     }
 
+    @profile
     private executeWithdraw()
     {
         const weller = this.weller;
@@ -143,6 +146,7 @@ export class Tanker extends CreepBase<TankerMemory>
         this.withdraw(weller.creep, RESOURCE_ENERGY);
     }
 
+    @profile
     private executeTransfer()
     {
         const customer = this.customer;
@@ -188,7 +192,6 @@ export class Tankers
         tankers.forEach(t => t.prepare());
     }
 
-    @profile
     private static execute(tankers: Vector<Tanker>)
     {
         tankers.forEach(t => t.execute());
