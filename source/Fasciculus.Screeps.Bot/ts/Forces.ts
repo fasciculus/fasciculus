@@ -1,4 +1,4 @@
-import { CreepType, Dictionaries, Dictionary, Positions, SerializedPosition, Vector } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, Positions, SerializedPosition, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Markers } from "./Markers";
 import { profile } from "./Profiling";
@@ -24,10 +24,60 @@ export class Guard extends CreepBase<GuardMemory>
 
     prepare()
     {
+        switch (this.state)
+        {
+            case CreepState.Idle: this.state = this.prepareIdle(); break;
+            case CreepState.ToPosition: this.state = this.prepareToPosition(); break;
+        }
+    }
+
+    private prepareIdle(): CreepState
+    {
+        if (this.guarding) return CreepState.Idle;
+
+        const sentry = this.sentry;
+
+        if (!sentry) return CreepState.Idle;
+
+        if (this.pos.isEqualTo(sentry))
+        {
+            this.guarding = true;
+            return CreepState.Idle;
+        }
+
+        return CreepState.ToPosition;
+    }
+
+    private prepareToPosition(): CreepState
+    {
+        const sentry = this.sentry;
+
+        if (!sentry) return CreepState.Idle;
+
+        if (this.pos.isEqualTo(sentry))
+        {
+            this.guarding = true;
+            return CreepState.Idle;
+        }
+
+        return CreepState.ToPosition;
     }
 
     execute()
     {
+        switch (this.state)
+        {
+            case CreepState.ToPosition: this.executeToPosition(); break;
+        }
+    }
+
+    private executeToPosition()
+    {
+        const sentry = this.sentry;
+
+        if (!sentry) return;
+
+        this.moveTo(sentry);
     }
 }
 

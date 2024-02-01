@@ -31,6 +31,7 @@ export enum CreepState
     ToSite = "toSite",
     ToSupply = "toSupply",
     ToWell = "toWell",
+    ToPosition = "toPosition",
     Harvest = "harvest",
     Withdraw = "withdraw",
     Transfer = "transfer",
