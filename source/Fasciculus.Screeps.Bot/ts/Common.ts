@@ -84,6 +84,14 @@ export class Memories
     }
 }
 
+export class Random
+{
+    static nextInt(lessThan: number): number
+    {
+        return Math.floor(Math.random() * lessThan);
+    }
+}
+
 export interface Dictionary<T>
 {
     [index: string]: T;

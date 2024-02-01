@@ -72,6 +72,7 @@ export class Weller extends CreepBase<WellerMemory>
     {
         switch (this.state)
         {
+            case CreepState.Idle: this.state = this.prepareIdle(); break;
             case CreepState.ToWell: this.state = this.prepareToWell(); break;
             case CreepState.Harvest: this.state = this.prepareHarvest(); break;
         }
@@ -88,7 +89,7 @@ export class Weller extends CreepBase<WellerMemory>
     {
         let well = this.well;
 
-        if (!well) return this.prepareIdle();
+        if (!well) return CreepState.Idle;
 
         if (this.inRangeTo(well))
         {
@@ -122,6 +123,8 @@ export class Wellers
     private static _all: Vector<Weller> = new Vector();
     private static _maxEnergyPerTick: number = 0;
     private static _maxEnergyCapacity: number = 0;
+
+    static get(name?: string): Weller | undefined { return name ? Wellers._wellers[name] : undefined; }
 
     static get count(): number { return Wellers._all.length; }
     static get all(): Vector<Weller> { return Wellers._all.clone(); }

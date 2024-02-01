@@ -1,4 +1,4 @@
-import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, ExtensionId, GameWrap, Names, SpawnId, Vector, WallId } from "./Common";
+import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, ExtensionId, GameWrap, Names, SpawnId, Stores, Vector, WallId } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
 import { profile } from "./Profiling";
 import { Chambers } from "./Rooming";
@@ -43,11 +43,14 @@ export class Controllers
 export class Spawn
 {
     readonly id: SpawnId;
+    readonly pos: RoomPosition;
 
     get spawn(): StructureSpawn { return GameWrap.get<StructureSpawn>(this.id)!; }
     get room(): Room { return this.spawn.room; }
 
     get idle(): boolean { return !this.spawn.spawning; }
+
+    get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this.spawn); }
 
     get roomEnergyAvailable(): number { return this.room.energyAvailable || 0; }
     get roomEnergyCapacity(): number { return this.room.energyCapacityAvailable; }
@@ -55,6 +58,7 @@ export class Spawn
     constructor(id: SpawnId)
     {
         this.id = id;
+        this.pos = this.spawn.pos;
     }
 
     spawnCreep(type: CreepType, body: Vector<BodyPartConstant>)
@@ -71,7 +75,8 @@ export class Spawns
 {
     private static _spawns: Dictionary<Spawn> = {};
 
-    static get idle(): Vector<Spawn> { return Dictionaries.values(Spawns._spawns).filter(s => s.idle); }
+    static get all(): Vector<Spawn> { return Dictionaries.values(Spawns._spawns); }
+    static get idle(): Vector<Spawn> { return Spawns.all.filter(s => s.idle); }
     static get best(): Spawn | undefined { return Spawns.idle.max(s => s.roomEnergyAvailable); }
 
     @profile

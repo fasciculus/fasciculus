@@ -4,13 +4,14 @@ import {  CreepType, Vector } from "./Common";
 import { UPGRADER_MAX_COUNT } from "./Config";
 import { Bodies } from "./Creeps";
 import { Controllers, Spawn, Spawns } from "./Infrastructure";
+import { Tankers } from "./Logistics";
 import { profile } from "./Profiling";
 import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
 import { Sites } from "./Sites";
 import { Upgraders } from "./Upgraders";
-import { Wellers } from "./Wellers";
+import { Weller, Wellers } from "./Wellers";
 
 export class Spawning
 {
@@ -54,6 +55,7 @@ export class Spawning
 
     private static nextType(): CreepType | undefined
     {
+        if (Spawning.moreTankers) return CreepType.Tanker;
         if (Spawning.moreWellers) return CreepType.Weller;
         if (Spawning.moreRepairers) return CreepType.Repairer;
         if (Spawning.moreBuilders) return CreepType.Builder;
@@ -90,6 +92,11 @@ export class Spawning
             case CreepType.Repairer: return energy * 0.15;
             default: return 0;
         }
+    }
+
+    private static get moreTankers(): boolean
+    {
+        return Tankers.count < Wellers.count;
     }
 
     private static get moreWellers(): boolean
