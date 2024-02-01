@@ -1,4 +1,3 @@
-
 import { CreepState, CreepType, Dictionaries, Dictionary, Positions, SiteId, Vector, Vectors } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { profile } from "./Profiling";

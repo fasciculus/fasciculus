@@ -1,4 +1,3 @@
-import { Builders } from "./Builders";
 import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
 import { Bodies, Creeps } from "./Creeps";
@@ -13,6 +12,7 @@ import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
+import { Builders } from "./Workers";
 
 export class Scheduler
 {

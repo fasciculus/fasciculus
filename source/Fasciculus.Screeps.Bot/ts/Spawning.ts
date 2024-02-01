@@ -1,6 +1,5 @@
 
-import { Builders } from "./Builders";
-import {  CreepType, Vector } from "./Common";
+import { CreepType, Vector } from "./Common";
 import { UPGRADER_MAX_COUNT } from "./Config";
 import { Bodies } from "./Creeps";
 import { Controllers, Spawn, Spawns } from "./Infrastructure";
@@ -12,6 +11,7 @@ import { Wells } from "./Resources";
 import { Sites } from "./Sites";
 import { Upgraders } from "./Upgraders";
 import { Weller, Wellers } from "./Wellers";
+import { Builders } from "./Workers";
 
 export class Spawning
 {
