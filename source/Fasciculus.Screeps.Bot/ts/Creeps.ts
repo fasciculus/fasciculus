@@ -14,7 +14,7 @@ const BodyPartPriorities =
     "claim": 8
 }
 
-export class BodyPartCounts
+class BodyPartCounts
 {
     readonly carry: number;
     readonly work: number;
@@ -38,7 +38,7 @@ export class BodyPartCounts
     }
 }
 
-export class BodyParts
+class BodyParts
 {
     static comparePriority(a: BodyPartConstant, b: BodyPartConstant)
     {
@@ -74,7 +74,7 @@ interface BodyPartChunk
     counts: BodyPartCounts;
 }
 
-export class BodyTemplate
+class BodyTemplate
 {
     private chunks: Vector<BodyPartChunk> = new Vector();
 
@@ -143,58 +143,59 @@ export class BodyTemplate
 
 export class Bodies
 {
-    private static _templates: Dictionary<BodyTemplate> = {};
+    private static _templates: Vector<Dictionary<BodyTemplate>> = new Vector();
     private static _minCost: number = 0;
 
     static get minCost(): number { return Bodies._minCost; }
+
+    private static defaultBuilderTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
+    private static defaultRepairerTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
+    private static defaultUpgraderTemplate = BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
+    private static defaultWellerTemplate = BodyTemplate.create([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 3);
+
+    private static smallTankerTemplate = BodyTemplate.create([CARRY, MOVE]);
+    private static largeTankerTemplate = BodyTemplate.create([CARRY, MOVE], 2);
+
+    private static createTankerTemplate(rcl: number): BodyTemplate
+    {
+        return rcl < 3 ? Bodies.smallTankerTemplate : Bodies.largeTankerTemplate;
+    }
 
     static initialize(reset: boolean)
     {
         if (reset)
         {
-            Bodies._templates = {};
+            Bodies._templates = new Vector();
         }
 
-        if (Dictionaries.isEmpty(Bodies._templates))
+        if (Bodies._templates.length == 0)
         {
-            Bodies._templates[CreepType.Builder] = Bodies.createBuilderTemplate();
-            Bodies._templates[CreepType.Repairer] = Bodies.createRepairerTemplate();
-            Bodies._templates[CreepType.Tanker] = Bodies.createTankerTemplate();
-            Bodies._templates[CreepType.Upgrader] = Bodies.createUpgraderTemplate();
-            Bodies._templates[CreepType.Weller] = Bodies.createWellerTemplate();
+            for (var rcl = 0; rcl < 9; ++rcl)
+            {
+                const templates: Dictionary<BodyTemplate> = {};
 
-            Bodies._minCost = Dictionaries.values(Bodies._templates).map(t => t.minCost).min(c => c) || 999999;
+                templates[CreepType.Builder] = Bodies.defaultBuilderTemplate;
+                templates[CreepType.Repairer] = Bodies.defaultRepairerTemplate;
+                templates[CreepType.Tanker] = Bodies.createTankerTemplate(rcl);
+                templates[CreepType.Upgrader] = Bodies.defaultUpgraderTemplate;
+                templates[CreepType.Weller] = Bodies.defaultWellerTemplate;
+
+                Bodies._templates.add(templates);
+            }
+
+            const at1: Dictionary<BodyTemplate> = Bodies._templates.at(1)!;
+
+            Bodies._minCost = Dictionaries.values(at1).map(t => t.minCost).min(c => c) || 999999;
         }
     }
 
-    static createBody(type: CreepType, energy: number): Vector<BodyPartConstant> | undefined
+    static createBody(type: CreepType, rcl: number, energy: number): Vector<BodyPartConstant> | undefined
     {
-        return Bodies._templates[type]?.createBody(energy);
-    }
+        let templates: Dictionary<BodyTemplate> | undefined = Bodies._templates.at(rcl);
 
-    private static createBuilderTemplate(): BodyTemplate
-    {
-        return BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
-    }
+        if (!templates) return undefined;
 
-    private static createRepairerTemplate(): BodyTemplate
-    {
-        return BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
-    }
-
-    private static createTankerTemplate(): BodyTemplate
-    {
-        return BodyTemplate.create([CARRY, MOVE], 2);
-    }
-
-    private static createUpgraderTemplate(): BodyTemplate
-    {
-        return BodyTemplate.create([WORK, CARRY, MOVE, MOVE], 12);
-    }
-
-    private static createWellerTemplate(): BodyTemplate
-    {
-        return BodyTemplate.create([WORK, CARRY, MOVE]).add([WORK, MOVE]).add([WORK, CARRY, MOVE]).add([WORK, MOVE], 3);
+        return templates[type]?.createBody(energy);
     }
 }
 
