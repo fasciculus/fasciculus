@@ -9,9 +9,8 @@ import { Wells } from "./Resources";
 import { Chambers } from "./Rooming";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
-import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
-import { Builders, Repairers } from "./Workers";
+import { Builders, Repairers, Upgraders } from "./Workers";
 
 export class Scheduler
 {
