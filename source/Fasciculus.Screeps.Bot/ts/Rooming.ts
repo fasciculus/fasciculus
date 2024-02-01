@@ -1,4 +1,4 @@
-import { ControllerId, Dictionaries, Dictionary, GameWrap, Point, Sets, SourceId, Vector, Vectors, WallId } from "./Common";
+import { ControllerId, Dictionaries, Dictionary, GameWrap, Point, Sets, SourceId, SpawnId, Vector, Vectors, WallId } from "./Common";
 import { profile } from "./Profiling";
 
 export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;
@@ -57,11 +57,37 @@ export class Chamber
         this.sources = Vector.from(Game.rooms[name].find<FIND_SOURCES, Source>(FIND_SOURCES)).map(s => s.id).toSet();
     }
 
+    reset()
+    {
+        this._spawns = undefined;
+        this._walls = undefined;
+    }
+
+    private _spawns?: Set<SpawnId> = undefined;
+    private _walls?: Set<WallId> = undefined;
+
+    get spawns(): Set<SpawnId>
+    {
+        if (!this._spawns)
+        {
+            const structures = Vector.from(this.room.find<FIND_STRUCTURES, StructureSpawn>(FIND_STRUCTURES));
+
+            this._spawns = structures.filter(s => s.structureType == STRUCTURE_SPAWN).map(w => w.id).toSet();
+        }
+
+        return this._spawns;
+    }
+
     get walls(): Set<WallId>
     {
-        const structures = Vector.from(this.room.find<FIND_STRUCTURES, StructureWall>(FIND_STRUCTURES));
+        if (!this._walls)
+        {
+            const structures = Vector.from(this.room.find<FIND_STRUCTURES, StructureWall>(FIND_STRUCTURES));
 
-        return structures.filter(s => s.structureType == STRUCTURE_WALL).map(w => w.id).toSet();
+            this._walls = structures.filter(s => s.structureType == STRUCTURE_WALL).map(w => w.id).toSet();
+        }
+
+        return this._walls;
     }
 }
 
