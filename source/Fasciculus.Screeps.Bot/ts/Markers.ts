@@ -1,7 +1,7 @@
 import { Dictionaries, Dictionary, GameWrap, MarkerType, Vector } from "./Common";
 import { Creeps } from "./Creeps";
 import { profile } from "./Profiling";
-import { Wellers } from "./Wellers";
+import { Wellers } from "./Workers";
 
 const INFO_MARKER_TEXT_STYLE: TextStyle =
 {

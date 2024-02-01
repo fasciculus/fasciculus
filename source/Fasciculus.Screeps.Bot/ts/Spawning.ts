@@ -8,8 +8,7 @@ import { profile } from "./Profiling";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
 import { Sites } from "./Sites";
-import { Wellers } from "./Wellers";
-import { Builders, Repairers, Upgraders } from "./Workers";
+import { Builders, Repairers, Upgraders, Wellers } from "./Workers";
 
 export class Spawning
 {

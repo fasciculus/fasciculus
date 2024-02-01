@@ -2,7 +2,7 @@ import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Positions, R
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Spawn, Spawns } from "./Infrastructure";
 import { profile } from "./Profiling";
-import { Weller, Wellers } from "./Wellers";
+import { Weller, Wellers } from "./Workers";
 
 interface TankerMemory extends CreepBaseMemory
 {
