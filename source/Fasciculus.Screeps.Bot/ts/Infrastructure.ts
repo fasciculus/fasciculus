@@ -52,6 +52,7 @@ export class Spawn
 
     get rcl(): number { return this.chamber.rcl; }
 
+    get energy(): number { return Stores.energy(this.spawn); }
     get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this.spawn); }
 
     get roomEnergyAvailable(): number { return this.chamber.energyAvailable; }

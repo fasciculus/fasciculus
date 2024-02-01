@@ -1,6 +1,6 @@
-import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, Positions, Repairable, RepairableId, SiteId, SourceId, Vector, Vectors } from "./Common";
+import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Positions, Repairable, RepairableId, SiteId, SourceId, Stores, Vector, Vectors } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
-import { Controller, Controllers, Walls } from "./Infrastructure";
+import { Controller, Controllers, Spawns, Walls } from "./Infrastructure";
 import { profile } from "./Profiling";
 import { Repairs } from "./Repairs";
 import { Well, Wells } from "./Resources";
@@ -14,13 +14,20 @@ const BUILDER_MOVE_TO_OPTS: MoveToOpts =
     }
 };
 
+type BuilderSupply = StructureSpawn | StructureContainer;
+type BuilderSupplyId = Id<StructureSpawn | StructureContainer>;
+
 interface BuilderMemory extends CreepBaseMemory
 {
+    supply?: BuilderSupplyId;
     site?: SiteId;
 }
 
 export class Builder extends CreepBase<BuilderMemory>
 {
+    get supply(): BuilderSupply | undefined { return GameWrap.get<BuilderSupply>(this.memory.supply); }
+    set supply(value: BuilderSupply | undefined) { this.memory.supply = value?.id; }
+
     get site(): Site | undefined { return Sites.get(this.memory.site); }
     set site(value: Site | undefined) { this.memory.site = value?.id; }
 
@@ -37,7 +44,9 @@ export class Builder extends CreepBase<BuilderMemory>
     {
         switch (this.state)
         {
+            case CreepState.ToSupply: this.executeToSupply(); break;
             case CreepState.ToSite: this.executeToSite(); break;
+            case CreepState.Withdraw: this.executeWithdraw(); break;
             case CreepState.Build: this.executeBuild(); break;
         }
     }
@@ -49,6 +58,26 @@ export class Builder extends CreepBase<BuilderMemory>
         if (!site) return;
 
         this.moveTo(site, BUILDER_MOVE_TO_OPTS);
+    }
+
+    @profile
+    private executeToSupply()
+    {
+        const supply = this.supply;
+
+        if (!supply) return;
+
+        this.moveTo(supply);
+    }
+
+    @profile
+    private executeWithdraw()
+    {
+        const supply = this.supply;
+
+        if (!supply) return;
+
+        this.withdraw(supply, RESOURCE_ENERGY);
     }
 
     private executeBuild()
@@ -65,6 +94,8 @@ export class Builder extends CreepBase<BuilderMemory>
         switch (this.state)
         {
             case CreepState.Idle: this.state = this.prepareIdle(); break;
+            case CreepState.ToSupply: this.state = this.prepareToSupply(); break;
+            case CreepState.Withdraw: this.state = this.prepareWithdraw(); break;
             case CreepState.ToSite: this.state = this.prepareToSite(); break;
             case CreepState.Build: this.state = this.prepareBuild(); break;
         }
@@ -72,32 +103,80 @@ export class Builder extends CreepBase<BuilderMemory>
 
     private prepareIdle(): CreepState
     {
-        let site = this.site;
+        if (this.energy == 0)
+        {
+            const supply = this.supply;
 
-        if (!site) return CreepState.Idle;
+            if (!supply) return CreepState.Idle;
 
-        return this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite;
+            return this.inRangeToSupply(supply) ? CreepState.Withdraw : CreepState.ToSupply;
+        }
+        else
+        {
+            const site = this.site;
+
+            if (!site) return CreepState.Idle;
+
+            return this.inRangeToSite(site) ? CreepState.Build : CreepState.ToSite;
+        }
+    }
+
+    private prepareToSupply(): CreepState
+    {
+        const supply = this.supply;
+
+        if (!supply) return CreepState.Idle;
+
+        if (Stores.energy(supply) == 0)
+        {
+            this.supply = undefined;
+            return CreepState.Idle;
+        }
+
+        return this.inRangeToSupply(supply) ? CreepState.Withdraw : CreepState.ToSupply;
+    }
+
+    private prepareWithdraw(): CreepState
+    {
+        if (this.freeEnergyCapacity == 0)
+        {
+            this.supply = undefined;
+            return CreepState.Idle;
+        }
+
+        const supply = this.supply;
+
+        if (!supply) return CreepState.Idle;
+
+        if (Stores.energy(supply) == 0)
+        {
+            this.supply = undefined;
+            return CreepState.Idle;
+        }
+
+        return CreepState.Withdraw;
     }
 
     private prepareToSite(): CreepState
     {
         let site = this.site;
 
-        if (!site) return this.prepareIdle();
+        if (!site) return CreepState.Idle;
 
-        return this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite;
+        return this.inRangeToSite(site) ? CreepState.Build : CreepState.ToSite;
     }
 
     private prepareBuild()
     {
-        let site = this.site;
-
-        if (!site) return this.prepareIdle();
-
-        return this.inRangeTo(site) ? CreepState.Build : CreepState.ToSite;
+        return this.energy > 0 && this.site ? CreepState.Build : CreepState.Idle;
     }
 
-    private inRangeTo(site: Site): boolean
+    private inRangeToSupply(supply: BuilderSupply)
+    {
+        return this.pos.inRangeTo(supply, 1);
+    }
+
+    private inRangeToSite(site: Site): boolean
     {
         return this.pos.inRangeTo(site, 2);
     }
@@ -151,28 +230,85 @@ export class Builders
     private static assign(): Vector<Builder>
     {
         var result: Vector<Builder> = new Vector();
-        let unassigned: Vector<Builder> = Builders._all.filter(b => !b.site);
+        const unassigned: Vector<Builder> = Builders._all.filter(t => !t.spawning && t.state == CreepState.Idle);
 
-        for (let builder of unassigned)
+        if (unassigned.length == 0) return result;
+
+        const empty: Vector<Builder> = new Vector();
+        const full: Vector<Builder> = new Vector();
+
+        Builders.categorize(unassigned, empty, full);
+
+        if (empty.length > 0) result = Builders.assignEmpty(empty);
+        if (full.length > 0) result = result.concat(Builders.assignFull(full));
+
+        //let unassigned: Vector<Builder> = Builders._all.filter(b => !b.site);
+
+        //for (let builder of unassigned)
+        //{
+        //    let focus: Site | undefined = Builders.focus;
+
+        //    if (focus)
+        //    {
+        //        builder.site = focus;
+        //        result.add(builder);
+        //    }
+        //    else
+        //    {
+        //        let site: Site | undefined = Builders.findSite(builder)
+
+        //        if (site)
+        //        {
+        //            builder.site = site;
+        //            result.add(builder);
+        //        }
+        //    }
+        //}
+
+        return result;
+    }
+
+    private static categorize(builders: Vector<Builder>, empty: Vector<Builder>, full: Vector<Builder>)
+    {
+        for (const builder of builders)
         {
-            let focus: Site | undefined = Builders.focus;
-
-            if (focus)
+            if (builder.energy < builder.energyCapacity)
             {
-                builder.site = focus;
-                result.add(builder);
+                empty.add(builder);
             }
             else
             {
-                let site: Site | undefined = Builders.findSite(builder)
-
-                if (site)
-                {
-                    builder.site = site;
-                    result.add(builder);
-                }
+                full.add(builder);
             }
         }
+    }
+
+    private static assignEmpty(builders: Vector<Builder>): Vector<Builder>
+    {
+        const result: Vector<Builder> = new Vector();
+        const spawns: Vector<BuilderSupply> = Spawns.idle.filter(s => s.energy > 0).map(s => s.spawn);
+
+        if (spawns.length == 0) return result;
+
+        const builder = builders.at(0)!;
+        const supply = spawns.at(0)!;
+
+        builder.supply = supply;
+        result.add(builder);
+
+        return result;
+    }
+
+    private static assignFull(builders: Vector<Builder>): Vector<Builder>
+    {
+        const result: Vector<Builder> = new Vector();
+        const builder = builders.at(0)!;
+        var site: Site | undefined = Builders.focus || Builders.findSite(builder);
+
+        if (!site) return result;
+
+        builder.site = site;
+        result.add(builder);
 
         return result;
     }
@@ -187,6 +323,9 @@ export class Builders
         let result: Site | undefined = undefined;
         let assigned: Set<SiteId> = Builders.assignedSites.map(s => s.id).toSet();
         let unassigned: Vector<Site> = Sites.all.filter(s => !assigned.has(s.id));
+
+        if (unassigned.length == 0) return result;
+
         let smallSites: Vector<Site> = unassigned.filter(s => s.remaining < 10);
 
         if (smallSites.length > 0)

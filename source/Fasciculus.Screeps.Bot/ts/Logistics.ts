@@ -251,9 +251,9 @@ export class Tankers
         return result;
     }
 
-    private static categorize(all: Vector<Tanker>, empty: Vector<Tanker>, full: Vector<Tanker>)
+    private static categorize(tankers: Vector<Tanker>, empty: Vector<Tanker>, full: Vector<Tanker>)
     {
-        for (const tanker of all)
+        for (const tanker of tankers)
         {
             if (tanker.energy == 0)
             {
