@@ -5,13 +5,12 @@ import { Bodies } from "./Creeps";
 import { Controllers, Spawn, Spawns } from "./Infrastructure";
 import { Tankers } from "./Logistics";
 import { profile } from "./Profiling";
-import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
 import { Sites } from "./Sites";
 import { Upgraders } from "./Upgraders";
 import { Weller, Wellers } from "./Wellers";
-import { Builders } from "./Workers";
+import { Builders, Repairers } from "./Workers";
 
 export class Spawning
 {

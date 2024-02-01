@@ -4,7 +4,6 @@ import { Bodies, Creeps } from "./Creeps";
 import { Controllers, Extensions, Spawns, Walls } from "./Infrastructure";
 import { Tankers } from "./Logistics";
 import { Markers } from "./Markers";
-import { Repairers } from "./Repairers";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
 import { Chambers } from "./Rooming";
@@ -12,7 +11,7 @@ import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
 import { Upgraders } from "./Upgraders";
 import { Wellers } from "./Wellers";
-import { Builders } from "./Workers";
+import { Builders, Repairers } from "./Workers";
 
 export class Scheduler
 {
