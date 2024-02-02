@@ -77,7 +77,7 @@ export class Guard extends CreepBase<GuardMemory>
 
         if (!sentry) return;
 
-        this.moveTo(sentry);
+        this.moveTo(sentry, 0);
     }
 }
 

@@ -124,7 +124,7 @@ export class Tanker extends CreepBase<TankerMemory>
 
         if (!weller) return;
 
-        Mover.moveTo(this.creep, weller, 1);
+        this.moveTo(weller, 1);
     }
 
     @profile
@@ -134,7 +134,7 @@ export class Tanker extends CreepBase<TankerMemory>
 
         if (!customer) return;
 
-        Mover.moveTo(this.creep, customer, 1);
+        this.moveTo(customer, 1);
     }
 
     @profile

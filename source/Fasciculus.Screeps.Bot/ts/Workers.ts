@@ -58,7 +58,7 @@ export class Builder extends CreepBase<BuilderMemory>
 
         if (!site) return;
 
-        this.moveTo(site, BUILDER_MOVE_TO_OPTS);
+        this.moveTo(site, 2);
     }
 
     @profile
@@ -68,7 +68,7 @@ export class Builder extends CreepBase<BuilderMemory>
 
         if (!supply) return;
 
-        this.moveTo(supply);
+        this.moveTo(supply, 1);
     }
 
     @profile
@@ -406,7 +406,7 @@ export class Repairer extends CreepBase<RepairerMemory>
 
         if (!repairable) return;
 
-        this.moveTo(repairable, REPAIRER_MOVE_TO_OPTS);
+        this.moveTo(repairable, 2);
     }
 
     private executeRepair()
@@ -589,7 +589,7 @@ export class Upgrader extends CreepBase<UpgraderMemory>
 
         if (!controller) return;
 
-        this.moveTo(controller);
+        this.moveTo(controller, 2);
     }
 
     private executeUpgrade()
@@ -798,7 +798,7 @@ export class Weller extends CreepBase<WellerMemory>
 
         if (!well) return;
 
-        this.moveTo(well, WELLER_MOVE_TO_OPTS);
+        this.moveTo(well, 1);
     }
 
     @profile
