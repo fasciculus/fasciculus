@@ -80,7 +80,9 @@ export class Paths
     static cleanup()
     {
         const paths: Dictionary<Path> = Paths._paths;
-        const size: number = Dictionaries.size(paths)
+        const size: number = Dictionaries.size(paths);
+
+        console.log(`Path cache has ${size} entries.`);
 
         if (size < PATHS_MAX_ENTRIES) return;
 

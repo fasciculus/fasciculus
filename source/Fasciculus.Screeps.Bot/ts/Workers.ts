@@ -5,6 +5,7 @@ import { profile } from "./Profiling";
 import { Repairs } from "./Repairs";
 import { Well, Wells } from "./Resources";
 import { Site, Sites } from "./Sites";
+import { Paths } from "./Travelling";
 
 const BUILDER_MOVE_TO_OPTS: MoveToOpts =
 {
@@ -922,7 +923,7 @@ export class Wellers
         for (let weller of unassignedWellers)
         {
             let assignableWells: Vector<Well> = Wells.assignable;
-            let nearestWell: Well | undefined = assignableWells.at(0); // Positions.closestByPath(weller, assignableWells, FIND_CLOSEST_WELL_OPTS);
+            let nearestWell: Well | undefined = Paths.closest(weller, assignableWells, 1);
 
             if (!nearestWell) continue;
 

@@ -2,6 +2,7 @@ import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Positions, R
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Spawn, Spawns } from "./Infrastructure";
 import { profile } from "./Profiling";
+import { Paths } from "./Travelling";
 import { Weller, Wellers } from "./Workers";
 
 interface TankerMemory extends CreepBaseMemory
@@ -216,10 +217,8 @@ export class Tankers
 
             if (wellers.length > 0)
             {
-                wellers.sort(Tankers.compareWellers);
-
-                const weller: Weller = wellers.at(0)!;
-                const tanker: Tanker | undefined = empty.at(0); // Positions.closestByRange(weller, empty);
+                const weller: Weller = wellers.sort(Tankers.compareWellers).at(0)!;
+                const tanker: Tanker | undefined = Paths.closest(weller, empty, 1);
 
                 if (tanker)
                 {
