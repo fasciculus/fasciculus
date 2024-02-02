@@ -2,7 +2,7 @@ import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Positions, R
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Spawn, Spawns } from "./Infrastructure";
 import { profile } from "./Profiling";
-import { Paths } from "./Travelling";
+import { Mover, Paths } from "./Travelling";
 import { Weller, Wellers } from "./Workers";
 
 interface TankerMemory extends CreepBaseMemory
@@ -124,7 +124,7 @@ export class Tanker extends CreepBase<TankerMemory>
 
         if (!weller) return;
 
-        this.moveTo(weller);
+        Mover.moveTo(this.creep, weller, 1);
     }
 
     @profile
@@ -134,7 +134,7 @@ export class Tanker extends CreepBase<TankerMemory>
 
         if (!customer) return;
 
-        this.moveTo(customer);
+        Mover.moveTo(this.creep, customer, 1);
     }
 
     @profile

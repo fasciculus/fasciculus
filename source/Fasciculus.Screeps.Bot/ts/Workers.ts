@@ -219,6 +219,7 @@ export class Builders
     private static prepare(builders: Vector<Builder>)
     {
         builders.forEach(b => b.prepare());
+        builders.filter(b => b.state == CreepState.Build).forEach(b => Paths.block(b.creep));
     }
 
     @profile
@@ -907,6 +908,7 @@ export class Wellers
     private static prepare(wellers: Vector<Weller>)
     {
         wellers.forEach(w => w.prepare());
+        wellers.filter(w => w.state == CreepState.Harvest).forEach(w => Paths.block(w.creep));
     }
 
     private static execute(wellers: Vector<Weller>)
