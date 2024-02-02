@@ -91,12 +91,24 @@ export class Chamber
 
     reset()
     {
+        this._costMatrix = undefined;
         this._walls = undefined;
     }
 
+    private _costMatrix?: CostMatrix = undefined;
     private _walls?: Set<WallId> = undefined;
 
+    get costMatrix(): CostMatrix { return this._costMatrix || (this._costMatrix = this.createCostMatrix()); }
     get walls(): Set<WallId> { return this._walls || (this._walls = Finder.wallIds(this.room)); }
+
+    private createCostMatrix(): CostMatrix
+    {
+        const cm = new PathFinder.CostMatrix();
+
+        Finder.obstacles(this.room).map(o => o.pos).forEach(p => cm.set(p.x, p.y, 255));
+
+        return cm;
+    }
 }
 
 export class Chambers
