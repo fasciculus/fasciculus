@@ -1,4 +1,6 @@
 
+import "./Types";
+
 import { Profiler } from "./Profiling";
 import { Scheduler } from "./Scheduler";
 
