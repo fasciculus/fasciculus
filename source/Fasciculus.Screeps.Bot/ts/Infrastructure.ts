@@ -1,7 +1,7 @@
 import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, ExtensionId, GameWrap, Names, SpawnId, Stores, Vector, WallId } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
 import { profile } from "./Profiling";
-import { Chamber, Chambers } from "./Rooming";
+import { Chamber, Chambers } from "./Rooms";
 
 export class Controller
 {

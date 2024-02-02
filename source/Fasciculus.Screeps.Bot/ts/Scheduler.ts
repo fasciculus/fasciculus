@@ -7,7 +7,7 @@ import { Tankers } from "./Logistics";
 import { Markers } from "./Markers";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
-import { Chambers } from "./Rooming";
+import { Chambers } from "./Rooms";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
 import { Builders, Repairers, Upgraders, Wellers } from "./Workers";

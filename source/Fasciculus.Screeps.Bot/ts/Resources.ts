@@ -1,6 +1,6 @@
 import { Dictionaries, Dictionary, GameWrap, Memories, Sets, SourceId, Vector } from "./Common";
 import { profile } from "./Profiling";
-import { Chambers } from "./Rooming";
+import { Chambers } from "./Rooms";
 
 interface WellMemory
 {

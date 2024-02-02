@@ -1,7 +1,7 @@
 
 import { Vector } from "./Common";
 import { Profiler } from "./Profiling";
-import { Chambers } from "./Rooming";
+import { Chambers } from "./Rooms";
 import { Scheduler } from "./Scheduler";
 
 function roomCallback(name: string): boolean | CostMatrix

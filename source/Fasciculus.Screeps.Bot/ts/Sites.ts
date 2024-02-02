@@ -1,7 +1,7 @@
 
 import { Dictionaries, Dictionary, GameWrap, SiteId, Vector } from "./Common";
 import { profile } from "./Profiling";
-import { Chambers } from "./Rooming";
+import { Chambers } from "./Rooms";
 
 export class Site
 {
