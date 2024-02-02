@@ -46,7 +46,7 @@ export class Sites
         if (Dictionaries.update(Sites._sites, existing, id => new Site(id as SiteId)))
         {
             Sites._count = Dictionaries.size(Sites._sites);
-            Chambers.updateStructures();
+            Chambers.reset();
         }
     }
 }

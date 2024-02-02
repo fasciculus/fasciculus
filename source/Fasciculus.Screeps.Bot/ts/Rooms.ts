@@ -34,6 +34,38 @@ export class Territories
     }
 }
 
+export class Finder
+{
+    private static obstacleTypes: Set<string> = new Set([STRUCTURE_SPAWN, STRUCTURE_WALL, STRUCTURE_EXTENSION, STRUCTURE_LINK, STRUCTURE_STORAGE,
+        STRUCTURE_TOWER, STRUCTURE_OBSERVER, STRUCTURE_POWER_SPAWN, STRUCTURE_POWER_BANK, STRUCTURE_LAB, STRUCTURE_TERMINAL, STRUCTURE_NUKER,
+        STRUCTURE_FACTORY, STRUCTURE_INVADER_CORE]);
+
+    static structures<T extends AnyStructure>(room: Room, type: string): Vector<T>
+    {
+        const opts: FilterOptions<FIND_STRUCTURES> = { filter: { structureType: type } };
+
+        return Vector.from(room.find<T>(FIND_STRUCTURES, opts));
+    }
+
+    static allStructures(room: Room, types: Set<string>): Vector<AnyStructure>
+    {
+        return Vector.from(room.find<AnyStructure>(FIND_STRUCTURES)).filter(s => types.has(s.structureType));
+    }
+
+    private static ids<T extends _HasId>(values: Vector<T>): Set<Id<T>>
+    {
+        return values.map(v => v.id).toSet();
+    }
+
+    static walls(room: Room) { return Finder.structures<StructureWall>(room, STRUCTURE_WALL); }
+    static wallIds(room: Room): Set<WallId> { return Finder.ids(Finder.walls(room)); }
+
+    static obstacles(room: Room):  Vector<AnyStructure>
+    {
+        return Finder.allStructures(room, Finder.obstacleTypes);
+    }
+}
+
 export class Chamber
 {
     readonly name: string;
@@ -59,36 +91,12 @@ export class Chamber
 
     reset()
     {
-        this._spawns = undefined;
         this._walls = undefined;
     }
 
-    private _spawns?: Set<SpawnId> = undefined;
     private _walls?: Set<WallId> = undefined;
 
-    get spawns(): Set<SpawnId>
-    {
-        if (!this._spawns)
-        {
-            const structures = Vector.from(this.room.find<FIND_STRUCTURES, StructureSpawn>(FIND_STRUCTURES));
-
-            this._spawns = structures.filter(s => s.structureType == STRUCTURE_SPAWN).map(w => w.id).toSet();
-        }
-
-        return this._spawns;
-    }
-
-    get walls(): Set<WallId>
-    {
-        if (!this._walls)
-        {
-            const structures = Vector.from(this.room.find<FIND_STRUCTURES, StructureWall>(FIND_STRUCTURES));
-
-            this._walls = structures.filter(s => s.structureType == STRUCTURE_WALL).map(w => w.id).toSet();
-        }
-
-        return this._walls;
-    }
+    get walls(): Set<WallId> { return this._walls || (this._walls = Finder.wallIds(this.room)); }
 }
 
 export class Chambers
@@ -98,6 +106,8 @@ export class Chambers
     private static _allSources: Set<SourceId> = new Set();
 
     private static _myWalls: Set<WallId> = new Set();
+
+    private static _reset: boolean = false;
 
     static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers[name] : undefined; }
 
@@ -123,15 +133,22 @@ export class Chambers
 
         if (Dictionaries.update(Chambers._allChambers, existing, name => new Chamber(name)))
         {
-            // todo: modify only changed values
             Chambers._allControllers = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
             Chambers._allSources = Sets.unionAll(Chambers.all.map(c => c.sources));
         }
+
+        Chambers._reset = false;
     }
 
     @profile
-    static updateStructures()
+    static reset()
     {
+        if (Chambers._reset) return;
+
         Chambers._myWalls = Sets.unionAll(Chambers.my.map(c => c.walls));
+
+        Chambers.all.forEach(c => c.reset());
+
+        Chambers._reset = true;
     }
 }
