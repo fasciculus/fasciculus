@@ -349,6 +349,12 @@ export class Vectors
     }
 }
 
+export interface DictionaryEntry<T>
+{
+    key: string;
+    value: T;
+}
+
 export interface DictionaryUpdateInfo<T>
 {
     deleted: Dictionary<T>;
@@ -380,6 +386,21 @@ export class Dictionaries
     static values<T>(dictionary: Dictionary<T>): Vector<T>
     {
         return new Vector(Object.values(dictionary));
+    }
+
+    static entries<T>(dictionary: Dictionary<T>): Vector<DictionaryEntry<T>>
+    {
+        const result: Vector<DictionaryEntry<T>> = new Vector();
+
+        for (const key of Dictionaries.keys(dictionary))
+        {
+            const value: T = dictionary[key];
+            const entry: DictionaryEntry<T> = { key, value };
+
+            result.add(entry);
+        }
+
+        return result;
     }
 
     static clone<T>(dictionary: Dictionary<T>): Dictionary<T>
@@ -427,6 +448,18 @@ export class Dictionaries
 
 export class Sets
 {
+    static map<T, U>(set: Set<T>, fn: (value: T) => U): Vector<U>
+    {
+        const result: Vector<U> = new Vector();
+
+        for (const value of set)
+        {
+            result.add(fn(value));
+        }
+
+        return result;
+    }
+
     static clone<T>(set: Set<T> | undefined): Set<T>
     {
         if (!set || set.size == 0) return new Set();
@@ -593,8 +626,6 @@ export class Point
     }
 }
 
-export type Positioned = RoomPosition | _HasRoomPosition;
-
 export interface SerializedPosition
 {
     x: number;
@@ -604,21 +635,6 @@ export interface SerializedPosition
 
 export class Positions
 {
-    static positionOf(target: Positioned): RoomPosition
-    {
-        return target instanceof RoomPosition ? target : target.pos;
-    }
-
-    private static closestByPath<T extends Positioned>(start: Positioned, targets: Vector<T>, opts?: FindPathOpts): T | undefined
-    {
-        return targets.find((values) => Positions.positionOf(start).findClosestByPath(values, opts) || undefined);
-    }
-
-    private static closestByRange<T extends Positioned>(start: Positioned, targets: Vector<T>)
-    {
-        return targets.find((values) => Positions.positionOf(start).findClosestByRange(values) || undefined);
-    }
-
     static serialize(pos: RoomPosition | undefined): SerializedPosition | undefined
     {
         return pos ? { x: pos.x, y: pos.y, r: pos.roomName } : undefined;

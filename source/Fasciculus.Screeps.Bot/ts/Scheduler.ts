@@ -10,6 +10,7 @@ import { Wells } from "./Resources";
 import { Chambers } from "./Rooms";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
+import { Paths } from "./Travelling";
 import { Builders, Repairers, Upgraders, Wellers } from "./Workers";
 
 export class Scheduler
@@ -58,6 +59,7 @@ export class Scheduler
         switch (Game.time % 10)
         {
             case 1: Creeps.cleanup(); break;
+            case 2: Paths.cleanup(); break;
         }
 
         Wellers.run();
