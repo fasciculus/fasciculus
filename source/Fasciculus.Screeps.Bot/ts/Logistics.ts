@@ -1,4 +1,4 @@
-import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Positions, Random, SpawnId, Stores, Vector } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Random, SpawnId, Stores, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Spawn, Spawns } from "./Infrastructure";
 import { profile } from "./Profiling";
@@ -144,7 +144,11 @@ export class Tanker extends CreepBase<TankerMemory>
 
         if (!weller) return;
 
-        this.withdraw(weller.creep, RESOURCE_ENERGY);
+        const amount = Math.min(this.freeEnergyCapacity, Math.max(0, weller.energy - 1));
+
+        if (amount == 0) return;
+
+        this.withdraw(weller.creep, RESOURCE_ENERGY, amount);
     }
 
     @profile

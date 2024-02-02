@@ -15,43 +15,31 @@ export class PositionHelper
     }
 }
 
-class Path
+class PathPart
 {
+    readonly goal: RoomPosition;
+    readonly direction: DirectionConstant;
     readonly cost: number;
-    readonly path: Vector<RoomPosition>;
 
     accessed: number;
 
-    constructor(pfp: PathFinderPath)
+    constructor(goal: RoomPosition, direction: DirectionConstant, cost: number)
     {
-        this.cost = pfp.cost;
-        this.path = Vector.from(pfp.path);
+        this.goal = goal;
+        this.direction = direction;
+        this.cost = cost;
 
         this.accessed = Game.time;
     }
 
-    next(pos: RoomPosition): DirectionConstant | 0
-    {
-        const path: Vector<RoomPosition> = this.path;
-
-        if (path.length == 0) return 0;
-
-        const goal = path.at(0)!;
-
-        return pos.getDirectionTo(goal);
-    }
-
+    @profile
     isBlocked(blocks: Vector<RoomPosition>): boolean
     {
-        const path: Vector<RoomPosition> = this.path;
-
-        if (path.length == 0) return false;
-
-        const next: RoomPosition = path.at(0)!;
+        const goal = this.goal;
 
         for (const pos of blocks)
         {
-            if (pos.isEqualTo(next)) return true;
+            if (pos.isEqualTo(goal)) return true;
         }
 
         return false;
@@ -60,7 +48,7 @@ class Path
 
 export class Paths
 {
-    private static _paths: Dictionary<Path> = {};
+    private static _paths: Dictionary<PathPart> = {};
     private static _blocks: Dictionary<RoomPosition> = {};
 
     private static key(s: RoomPosition, g: RoomPosition, range: number): string
@@ -87,11 +75,11 @@ export class Paths
     }
 
     @profile
-    static find(start: RoomPosition, goal: RoomPosition, range: number): Path | undefined
+    static find(start: RoomPosition, goal: RoomPosition, range: number): PathPart | undefined
     {
         const key = Paths.key(start, goal, range);
         const paths = Paths._paths;
-        var result: Path | undefined = paths[key];
+        var result: PathPart | undefined = paths[key];
 
         if (result && result.isBlocked(Dictionaries.values(Paths._blocks)))
         {
@@ -105,12 +93,36 @@ export class Paths
         }
         else
         {
+            console.log(`finding new path ${key}`);
             const opts: PathFinderOpts = { roomCallback: Paths.callback };
             const pfp: PathFinderPath = PathFinder.search(start, { pos: goal, range }, opts);
+            const length = pfp.path.length;
 
-            if (!pfp.incomplete)
+            if (!pfp.incomplete && length > 0)
             {
-                Paths._paths[key] = result = new Path(pfp);
+                console.log(`found new path ${key}`);
+                const path = pfp.path;
+                const cost: number = pfp.cost;
+
+                var lastPos = start;
+
+                for (var i = 0, n = path.length; i < n; ++i)
+                {
+                    const subKey = Paths.key(lastPos, goal, range);
+                    const subGoal = path[i];
+                    const direction = lastPos.getDirectionTo(subGoal);
+                    const subCost = cost * (length - i) / length;
+
+                    paths[subKey] = new PathPart(subGoal, direction, subCost);
+                    lastPos = subGoal;
+                }
+
+                result = paths[key];
+            }
+
+            if (!result)
+            {
+                console.log(`no new path ${key}`);
             }
         }
 
@@ -138,12 +150,12 @@ export class Paths
     @profile
     static cleanup()
     {
-        const paths: Dictionary<Path> = Paths._paths;
+        const paths: Dictionary<PathPart> = Paths._paths;
         const size: number = Dictionaries.size(paths);
 
         if (size > PATHS_MAX_ENTRIES)
         {
-            const entries: Vector<DictionaryEntry<Path>> = Dictionaries.entries(paths);
+            const entries: Vector<DictionaryEntry<PathPart>> = Dictionaries.entries(paths);
             const toDelete = entries.sort(Paths.older).take(size - PATHS_MAX_ENTRIES);
 
             for (const entry of toDelete)
@@ -155,7 +167,7 @@ export class Paths
         const blocks = Paths._blocks;
         const existing: Set<string> = Dictionaries.keys(Game.creeps);
 
-        for (const name in Dictionaries.keys(blocks))
+        for (const name of Dictionaries.keys(blocks))
         {
             if (!existing.has(name))
             {
@@ -168,7 +180,7 @@ export class Paths
         console.log(`Path cache has ${size} entries and ${blockCount} blocks.`);
     }
 
-    private static older(a: DictionaryEntry<Path>, b: DictionaryEntry<Path>): number
+    private static older(a: DictionaryEntry<PathPart>, b: DictionaryEntry<PathPart>): number
     {
         return a.value.accessed - b.value.accessed;
     }
@@ -180,13 +192,12 @@ export class Mover
     static moveTo(creep: Creep, goal: Positioned, range: number): CreepMoveReturnCode | ERR_NO_PATH
     {
         const start: RoomPosition = creep.pos;
-        const path: Path | undefined = Paths.find(start, PositionHelper.positionOf(goal), range);
+        const path: PathPart | undefined = Paths.find(start, PositionHelper.positionOf(goal), range);
 
+        if (!path) console.log(`no path for ${creep.name}`);
         if (!path) return ERR_NO_PATH;
 
-        const direction: DirectionConstant | 0 = path.next(start);
-
-        if (direction == 0) return OK;
+        const direction: DirectionConstant = path.direction;
 
         return creep.move(direction);
     }

@@ -121,8 +121,6 @@ export class Vector<T> implements Iterable<T>
 
     at(index: number): T | undefined
     {
-        index = Math.round(index);
-
         if (index < 0 || index >= this.length) return undefined;
 
         return this.array[index];
