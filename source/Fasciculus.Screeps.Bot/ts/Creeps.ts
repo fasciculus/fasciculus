@@ -1,7 +1,7 @@
 
 import { CreepState, CreepType, Dictionaries, Dictionary, DictionaryUpdateInfo, GameWrap, Sets, Stores, Vector, Vectors } from "./Common";
 import { profile } from "./Profiling";
-import { Mover } from "./Travelling";
+import { Mover, Positioned } from "./Travelling";
 
 const BodyPartPriorities =
 {
@@ -240,9 +240,9 @@ export class CreepBase<M extends CreepBaseMemory>
         this.energyCapacity = Stores.energyCapacity(this.creep);
     }
 
-    moveTo(target: RoomPosition | { pos: RoomPosition }, range: number): CreepMoveReturnCode | ERR_NO_PATH
+    moveTo(target: Positioned, range: number, ignoreCreeps: boolean = true): CreepMoveReturnCode | ERR_NO_PATH
     {
-        return Mover.moveTo(this.creep, target, range);
+        return Mover.moveTo(this.creep, target, range, ignoreCreeps);
     }
 
     build(target: ConstructionSite): CreepActionReturnCode | ERR_NOT_ENOUGH_RESOURCES | ERR_RCL_NOT_ENOUGH

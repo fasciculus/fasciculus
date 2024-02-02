@@ -589,7 +589,7 @@ export class Upgrader extends CreepBase<UpgraderMemory>
 
         if (!controller) return;
 
-        this.moveTo(controller, 2);
+        this.moveTo(controller, 2, false);
     }
 
     private executeUpgrade()

@@ -3,7 +3,6 @@ import { profile } from "./Profiling";
 import { Chamber, Chambers } from "./Rooms";
 
 const PATH_MAX_COST: number = 1000000;
-const PATHS_MAX_ENTRIES: number = 1000;
 
 export type Positioned = RoomPosition | _HasRoomPosition;
 
@@ -89,9 +88,41 @@ export class Paths
         return costMatrix;
     }
 
-    @profile
-    static find(start: RoomPosition, goal: RoomPosition, range: number): PathPart | undefined
+    private static findWithCreeps(start: RoomPosition, goal: RoomPosition, range: number): PathPart | undefined
     {
+        const chamber: Chamber | undefined = Chambers.get(start.roomName);
+
+        if (!chamber) return undefined;
+
+        if (start.roomName != goal.roomName)
+        {
+            const direction = chamber.room.findExitTo(goal.roomName);
+
+            if (direction != FIND_EXIT_TOP && direction != FIND_EXIT_RIGHT && direction !== FIND_EXIT_BOTTOM && direction != FIND_EXIT_LEFT) return undefined;
+
+            const exit = start.findClosestByRange(direction);
+
+            if (!exit) return undefined;
+
+            goal = exit;
+        }
+
+        const opts: FindPathOpts = { range };
+        const steps: PathStep[] = chamber.room.findPath(start, goal, opts);
+
+        if (!steps || steps.length == 0) return undefined;
+
+        return new PathPart("", steps[0].direction, 1);
+    }
+
+    @profile
+    static find(start: RoomPosition, goal: RoomPosition, range: number, ignoreCreeps: boolean): PathPart | undefined
+    {
+        if (!ignoreCreeps)
+        {
+            return Paths.findWithCreeps(start, goal, range);
+        }
+
         const pathKey = Paths.pathKey(start, goal, range);
         const paths = Paths.paths;
         var result: PathPart | undefined = paths.get(pathKey);
@@ -141,7 +172,7 @@ export class Paths
 
     static cost(start: RoomPosition, goal: RoomPosition, range: number): number
     {
-        return Paths.find(start, goal, range)?.cost || PATH_MAX_COST;
+        return Paths.find(start, goal, range, true)?.cost || PATH_MAX_COST;
     }
 
     @profile
@@ -174,12 +205,13 @@ export class Paths
 export class Mover
 {
     @profile
-    static moveTo(creep: Creep, goal: Positioned, range: number): CreepMoveReturnCode | ERR_NO_PATH
+    static moveTo(creep: Creep, target: Positioned, range: number, ignoreCreeps: boolean = true): CreepMoveReturnCode | ERR_NO_PATH
     {
         if (creep.fatigue > 0) return ERR_TIRED;
 
         const start: RoomPosition = creep.pos;
-        const path: PathPart | undefined = Paths.find(start, PositionHelper.positionOf(goal), range);
+        const goal: RoomPosition = PositionHelper.positionOf(target)
+        const path: PathPart | undefined = Paths.find(start, goal, range, ignoreCreeps);
 
         if (!path) console.log(`no path for ${creep.name}`);
         if (!path) return ERR_NO_PATH;
