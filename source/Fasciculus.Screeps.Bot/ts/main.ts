@@ -11,5 +11,7 @@ export const loop = function ()
     Scheduler.initialize();
     Scheduler.run();
 
+    const map: Map<string, number> = new Map();
+
     Profiler.stop();
 }

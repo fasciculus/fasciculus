@@ -1,17 +1,17 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "module": "NodeNext", // "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ES6",
-    "lib": [ "ES6" ],
-    "sourceMap": true,
-    "outDir": "js",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "module": "NodeNext", // "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noImplicitReturns": true,
-    "skipLibCheck": true
+    "outDir": "js",
+    "skipLibCheck": true,
+    "lib": [ "ES6" ],
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES6"
   },
   "include": ["ts"]
 }

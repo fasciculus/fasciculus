@@ -1,5 +1,5 @@
-import { Dictionaries, Dictionary, Memories, Vector } from "./Common";
-import { PROFILER_IGNORED_KEYS, PROFILER_LOG_INTERVAL, PROFILER_MAX_ENTRIES, PROFILER_SESSION, PROFILER_WARMUP } from "./Config";
+import { Memories } from "./Common";
+import { PROFILER_IGNORED_KEYS, PROFILER_LOG_INTERVAL, PROFILER_MAX_ENTRIES, PROFILER_WARMUP } from "./Config";
 
 export function profile<T extends new (...args: any[]) => any, A extends any[], R>(target: (this: T, ...args: A) => R,
     context: ClassMemberDecoratorContext)
@@ -41,29 +41,20 @@ interface ProfilerEntry
     duration: number;
 }
 
-type ProfilerDictionary = Dictionary<ProfilerEntry>;
-type ProfilerEntries = Vector<ProfilerEntry>;
-
-interface ProfilerMemory
-{
-    session: string;
-    start: number;
-    entries: ProfilerDictionary;
-}
-
-interface MemoryWithProfiler
-{
-    profiler?: ProfilerMemory;
-}
+type ProfilerMap = Map<string, ProfilerEntry>;
 
 export class Profiler
 {
-    private static _start: number = 0;
-    private static _warmup: number = PROFILER_WARMUP;
+    private static warmup: number = PROFILER_WARMUP;
+
+    private static loadUsage: number = 0;
+    private static startTime: number = Game.time;
+
+    private static entries: ProfilerMap = new Map();
 
     static record(type: string, name: string, duration: number)
     {
-        if (Profiler._warmup > 0) return;
+        if (Profiler.warmup > 0) return;
 
         const key: string = `${type}:${name}`;
         const entry: ProfilerEntry = Profiler.getEntry(key);
@@ -74,28 +65,12 @@ export class Profiler
 
     private static getEntry(key: string): ProfilerEntry
     {
-        let result = Profiler.memory.entries[key];
+        var result: ProfilerEntry | undefined = Profiler.entries.get(key);
 
         if (!result)
         {
-            Profiler.memory.entries[key] = result = { key, calls: 0, duration: 0 };
-        }
-
-        return result;
-    }
-
-    private static get memory(): ProfilerMemory
-    {
-        let memory: MemoryWithProfiler = Memory as MemoryWithProfiler;
-        let result: ProfilerMemory | undefined = memory.profiler;
-        let session: string = PROFILER_SESSION;
-
-        if (!result || result.session != session)
-        {
-            let start = Game.time;
-            let entries: ProfilerDictionary = {};
-
-            memory.profiler = result = { session, start, entries };
+            result = { key, calls: 0, duration: 0 };
+            Profiler.entries.set(key, result)
         }
 
         return result;
@@ -103,50 +78,48 @@ export class Profiler
 
     static start()
     {
-        if (Profiler._warmup > 0)
+        if (Profiler.warmup > 0)
         {
-            Profiler.memory.entries = {};
+            Profiler.entries.clear();
         }
         else
         {
-            Profiler._start = Game.cpu.getUsed();
-            Profiler.record("global", "load", Profiler._start);
+            Profiler.loadUsage = Game.cpu.getUsed();
+            Profiler.record("global", "load", Profiler.loadUsage);
         }
     }
 
     static stop()
     {
-        const memory: ProfilerMemory = Profiler.memory;
-
-        if (Profiler._warmup > 0)
+        if (Profiler.warmup > 0)
         {
-            --Profiler._warmup;
-            ++memory.start;
+            --Profiler.warmup;
+            ++Profiler.startTime;
         }
         else
         {
-            Profiler.record("global", "main", Game.cpu.getUsed() - Profiler._start);
+            Profiler.record("global", "main", Game.cpu.getUsed() - Profiler.loadUsage);
         }
 
-        Profiler.log(memory);
+        Profiler.log();
     }
 
-    static log(memory: ProfilerMemory)
+    static log()
     {
-        if (Profiler._warmup > 0)
+        if (Profiler.warmup > 0)
         {
-            console.log(`Profiler in warmup (${Profiler._warmup})`);
+            console.log(`Profiler in warmup (${Profiler.warmup})`);
             return;
         }
 
-        const ticks: number = Game.time - memory.start + 1;
+        const ticks: number = Game.time - Profiler.startTime + 1;
 
         if (ticks == 0 || ticks % PROFILER_LOG_INTERVAL != 0)
         {
             return;
         }
 
-        const entries: ProfilerEntries = Profiler.getLogEntries();
+        const entries: ProfilerEntry[] = Profiler.getLogEntries();
         const divider: string = "".padEnd(53, "-");
         let memoryUsed: string = (Memories.used / 1024).toFixed(1);
         let label: string = "method".padEnd(40);
@@ -168,13 +141,15 @@ export class Profiler
         }
     }
 
-    private static getLogEntries(): ProfilerEntries
+    private static getLogEntries(): ProfilerEntry[]
     {
-        let dictionary: ProfilerDictionary = Dictionaries.clone(Profiler.memory.entries);
+        const entryMap: ProfilerMap = new Map(Profiler.entries);
 
-        Dictionaries.removeAll(dictionary, PROFILER_IGNORED_KEYS);
+        PROFILER_IGNORED_KEYS.forEach(key => entryMap.delete(key));
 
-        return Dictionaries.values(dictionary).sort(Profiler.compare).take(PROFILER_MAX_ENTRIES);
+        const result: ProfilerEntry[] = Array.from(entryMap.values());
+
+        return result.sort(Profiler.compare).slice(0, PROFILER_MAX_ENTRIES);
     }
 
     private static compare(a: ProfilerEntry, b: ProfilerEntry): number
