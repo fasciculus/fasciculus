@@ -1,5 +1,6 @@
 
-import "./Types";
+import "./Types_Common";
+import "./Types_Screeps";
 
 import { Profiler } from "./Profiling";
 import { Scheduler } from "./Scheduler";

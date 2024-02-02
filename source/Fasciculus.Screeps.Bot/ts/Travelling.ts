@@ -48,6 +48,25 @@ export class Paths
         return s.roomName + "_" + s.x + "_" + s.y + "_" + g.roomName + "_" + g.x + "_" + g.y + "_" + range;
     }
 
+    private static direction(from: RoomPosition, to: RoomPosition): DirectionConstant
+    {
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+
+        if (dx < 0)
+        {
+            return dy < 0 ? TOP_LEFT : (dy > 0 ? BOTTOM_LEFT : LEFT);
+        }
+        else if (dx > 0)
+        {
+            return dy < 0 ? TOP_RIGHT : (dy > 0 ? BOTTOM_RIGHT : RIGHT);
+        }
+        else
+        {
+            return dy < 0 ? TOP : BOTTOM;
+        }
+    }
+
     private static callback(roomName: string | undefined): boolean | CostMatrix
     {
         const chamber: Chamber | undefined = Chambers.get(roomName);
@@ -89,14 +108,12 @@ export class Paths
         }
         else
         {
-            console.log(`finding new path ${pathKey}`);
             const opts: PathFinderOpts = { roomCallback: Paths.callback };
             const pfp: PathFinderPath = PathFinder.search(start, { pos: goal, range }, opts);
             const length = pfp.path.length;
 
             if (!pfp.incomplete && length > 0)
             {
-                console.log(`found new path ${pathKey}`);
                 const path = pfp.path;
                 const cost: number = pfp.cost;
 
@@ -107,7 +124,7 @@ export class Paths
                     const subKey = Paths.pathKey(lastPos, goal, range);
                     const subPos = path[i];
                     const posKey = Paths.posKey(subPos);
-                    const direction = lastPos.getDirectionTo(subPos);
+                    const direction = Paths.direction(lastPos, subPos);
                     const subCost = cost * (length - i) / length;
 
                     paths.set(subKey, new PathPart(posKey, direction, subCost))
@@ -116,11 +133,6 @@ export class Paths
                 }
 
                 result = paths.get(pathKey);
-            }
-
-            if (!result)
-            {
-                console.log(`no new path ${pathKey}`);
             }
         }
 
@@ -148,45 +160,14 @@ export class Paths
     @profile
     static cleanup()
     {
-        Paths.cleanupPaths();
-        Paths.cleanupBlocks();
-
-        console.log(`Path cache has ${Paths.paths.size} entries and ${Paths.blocks.size} blocks.`);
-    }
-
-    private static cleanupPaths()
-    {
         const paths = Paths.paths;
-
-        if (paths.size <= PATHS_MAX_ENTRIES) return;
-
-        const toDelete: Array<string> = new Array();
+        const blocks = Paths.blocks;
         const threshold = Game.time - 1500;
 
-        paths.forEach((v, k) => { if (v.accessed < threshold) toDelete.push(k) });
-        toDelete.forEach(k => paths.delete(k));
-    }
+        paths.keep(paths.find(pp => pp.accessed > threshold));
+        blocks.keep(Dictionaries.keys(Game.creeps));
 
-    private static cleanupBlocks()
-    {
-        const blocks = Paths.blocks;
-        const existing: Set<string> = Dictionaries.keys(Game.creeps);
-        const toDelete: Array<string> = new Array();
-
-        for (const key of blocks.keys())
-        {
-            if (!existing.has(key))
-            {
-                toDelete.push(key);
-            }
-        }
-
-        toDelete.forEach(k => blocks.delete(k));
-    }
-
-    private static older(a: [string, PathPart], b: [string, PathPart]): number
-    {
-        return a[1].accessed - b[1].accessed;
+        console.log(`Path cache has ${Paths.paths.size} entries and ${Paths.blocks.size} blocks.`);
     }
 }
 
@@ -195,6 +176,8 @@ export class Mover
     @profile
     static moveTo(creep: Creep, goal: Positioned, range: number): CreepMoveReturnCode | ERR_NO_PATH
     {
+        if (creep.fatigue > 0) return ERR_TIRED;
+
         const start: RoomPosition = creep.pos;
         const path: PathPart | undefined = Paths.find(start, PositionHelper.positionOf(goal), range);
 
