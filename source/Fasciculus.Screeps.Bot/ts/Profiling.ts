@@ -120,15 +120,16 @@ export class Profiler
         }
 
         const entries: ProfilerEntry[] = Profiler.getLogEntries();
-        const divider: string = "".padEnd(53, "-");
+        const divider: string = "".padEnd(62, "-");
         let memoryUsed: string = (Memories.used / 1024).toFixed(1);
         let label: string = "method".padEnd(40);
         let duration: string = "cpu".padStart(6);
         let calls: string = "calls".padStart(7);
+        let cpuPerCall: string = "cpu/call".padStart(9);
 
         console.log(divider);
         console.log(`Profile after ${ticks} ticks. Memory used: ${memoryUsed} KB.`);
-        console.log(`${label}${duration}${calls}`);
+        console.log(`${label}${duration}${calls}${cpuPerCall}`);
         console.log(divider);
 
         for (const entry of entries)
@@ -136,8 +137,9 @@ export class Profiler
             let label: string = entry.key.padEnd(40);
             let duration: string = (entry.duration / ticks).toFixed(2).padStart(6);
             let calls: string = (entry.calls / ticks).toFixed(1).padStart(7);
+            let cpuPerCall: string = (entry.duration / Math.max(1, entry.calls)).toFixed(2).padStart(9);
 
-            console.log(`${label}${duration}${calls}`);
+            console.log(`${label}${duration}${calls}${cpuPerCall}`);
         }
     }
 
