@@ -37,7 +37,13 @@ export class Screeps
 
         Objects.setGetter(Game, "mySpawns", function (): Set<SpawnId>
         {
-            return Object.values(Game.spawns).map(s => s.id).toSet();
+            if (!Game.spawns) return new Set();
+
+            const values = Object.values(Game.spawns);
+
+            if (!values || !Array.isArray(values) || values.length == 0) return new Set();
+
+            return values.map(s => s.id).toSet();
         });
 
         Objects.setGetter(Game, "username", function (): string
