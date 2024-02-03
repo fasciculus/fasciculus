@@ -206,7 +206,7 @@ export class Bodies
 
 export interface CreepBaseMemory extends CreepMemory
 {
-    type: CreepType;
+    type: string; // CreepType;
     state: CreepState;
 }
 
@@ -326,7 +326,7 @@ export class Creeps
     {
         let memory = Game.creeps[name].memory as CreepBaseMemory;
 
-        return memory.type;
+        return memory.type as CreepType;
     }
 
     private static updateCreeps()
