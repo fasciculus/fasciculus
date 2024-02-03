@@ -1,4 +1,5 @@
 import { PROFILER_IGNORED_KEYS, PROFILER_MAX_ENTRIES, PROFILER_WARMUP } from "./Config";
+import { Objects } from "./types.common";
 
 export function profile<T extends new (...args: any[]) => any, A extends any[], R>(target: (this: T, ...args: A) => R,
     context: ClassMemberDecoratorContext)
@@ -85,24 +86,9 @@ export class Profiler
         return result;
     }
 
-    private static setCLI(): void
-    {
-        const names: Set<string> = new Set(Object.getOwnPropertyNames(Game));
-
-        if (names.has("profiler")) return;
-
-        Object.defineProperty(Game, "profiler",
-            {
-                enumerable: false,
-                writable: false,
-                configurable: true,
-                value: Profiler.cli
-            });
-    }
-
     static start(): void
     {
-        Profiler.setCLI();
+        Objects.setValue(Game, "profiler", Profiler.cli);
 
         if (Profiler.resetRequested)
         {
