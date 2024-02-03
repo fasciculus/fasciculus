@@ -85,7 +85,7 @@ export interface GuardMarkerMemory extends FlagMemory
 
 export class GuardMarker extends Marker<GuardMarkerMemory>
 {
-    get assignee(): Creep | undefined { return GameWrap.myCreep(this.memory.assignee); }
+    get assignee(): Creep | undefined { return Game.myCreep(this.memory.assignee); }
     set assignee(value: Creep) { this.memory.assignee = value.name; }
 
     constructor(name: string, type: MarkerType)

@@ -10,6 +10,8 @@ declare global
 
         get mySpawns(): Set<SpawnId>;
 
+        myCreep(name: string | undefined): Creep | undefined;
+
         get username(): string;
     }
 
@@ -44,6 +46,13 @@ export class Screeps
             if (!values || !Array.isArray(values) || values.length == 0) return new Set();
 
             return values.map(s => s.id).toSet();
+        });
+
+        Objects.setFunction(Game, "myCreep", function (name: string | undefined): Creep | undefined
+        {
+            if (!name || !Game.creeps) return undefined;
+
+            return Game.creeps[name] || undefined;
         });
 
         Objects.setGetter(Game, "username", function (): string

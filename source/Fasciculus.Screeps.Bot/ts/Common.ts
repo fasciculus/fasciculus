@@ -472,7 +472,6 @@ export class GameWrap
         return result || undefined;
     }
 
-    static myCreep(name: string | undefined): Creep | undefined { return name ? Game.creeps[name] : undefined; }
     static get myCreeps(): Vector<Creep> { return Dictionaries.values(Game.creeps); }
     static get myFlags(): Vector<Flag> { return Dictionaries.values(Game.flags); }
     static get myPowerCreeps(): Vector<PowerCreep> { return Dictionaries.values(Game.powerCreeps); }

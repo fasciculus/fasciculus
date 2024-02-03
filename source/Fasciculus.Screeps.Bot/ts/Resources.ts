@@ -16,7 +16,7 @@ export class Well
     get source(): Source { return GameWrap.get<Source>(this.id)!; }
     get pos(): RoomPosition { return this.source.pos; }
 
-    get assignee(): Creep | undefined { return GameWrap.myCreep(this.memory.assignee); }
+    get assignee(): Creep | undefined { return Game.myCreep(this.memory.assignee); }
     set assignee(value: Creep) { this.memory.assignee = value.name; }
 
     constructor(id: SourceId)
