@@ -7,7 +7,7 @@ export class Site
 {
     readonly id: SiteId;
 
-    get site(): ConstructionSite { return GameWrap.get<ConstructionSite>(this.id)!; }
+    get site(): ConstructionSite { return Game.get<ConstructionSite>(this.id)!; }
 
     get type(): BuildableStructureConstant { return this.site.structureType; }
     get pos(): RoomPosition { return this.site.pos; }

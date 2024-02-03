@@ -16,7 +16,7 @@ export class Tanker extends CreepBase<TankerMemory>
     get weller(): Weller | undefined { return Wellers.get(this.memory.weller); }
     set weller(value: Weller | undefined) { this.memory.weller = value?.name; }
 
-    get customer(): StructureSpawn | undefined { return GameWrap.get<StructureSpawn>(this.memory.customer); }
+    get customer(): StructureSpawn | undefined { return Game.get<StructureSpawn>(this.memory.customer); }
     set customer(value: Spawn | undefined) { this.memory.customer = value?.id; }
 
     constructor(name: string)

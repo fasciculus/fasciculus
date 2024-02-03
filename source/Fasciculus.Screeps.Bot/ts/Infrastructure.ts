@@ -7,7 +7,7 @@ export class Controller
 {
     readonly id: ControllerId;
 
-    get controller(): StructureController { return GameWrap.get<StructureController>(this.id)!; }
+    get controller(): StructureController { return Game.get<StructureController>(this.id)!; }
 
     get my(): boolean { return this.controller.my; }
     get pos(): RoomPosition { return this.controller.pos; }
@@ -45,7 +45,7 @@ export class Spawn
     readonly id: SpawnId;
     readonly pos: RoomPosition;
 
-    get spawn(): StructureSpawn { return GameWrap.get<StructureSpawn>(this.id)!; }
+    get spawn(): StructureSpawn { return Game.get<StructureSpawn>(this.id)!; }
     get chamber(): Chamber { return Chambers.get(this.spawn.room.name)!; }
 
     get idle(): boolean { return !this.spawn.spawning; }
@@ -100,7 +100,7 @@ export class Extension
 {
     readonly id: ExtensionId;
 
-    get extension(): StructureExtension { return GameWrap.get<StructureExtension>(this.id)!; }
+    get extension(): StructureExtension { return Game.get<StructureExtension>(this.id)!; }
 
     constructor(id: ExtensionId)
     {
@@ -149,7 +149,7 @@ export class Wall
 {
     readonly id: WallId;
 
-    get wall(): StructureWall { return GameWrap.get<StructureWall>(this.id)!; }
+    get wall(): StructureWall { return Game.get<StructureWall>(this.id)!; }
 
     get hits(): number { return this.wall.hits; }
 

@@ -26,7 +26,7 @@ interface BuilderMemory extends CreepBaseMemory
 
 export class Builder extends CreepBase<BuilderMemory>
 {
-    get supply(): BuilderSupply | undefined { return GameWrap.get<BuilderSupply>(this.memory.supply); }
+    get supply(): BuilderSupply | undefined { return Game.get<BuilderSupply>(this.memory.supply); }
     set supply(value: BuilderSupply | undefined) { this.memory.supply = value?.id; }
 
     get site(): Site | undefined { return Sites.get(this.memory.site); }

@@ -465,13 +465,6 @@ export class Sets
 
 export class GameWrap
 {
-    static get<T extends _HasId>(id: Id<T> | undefined): T | undefined
-    {
-        let result: T | null = id ? Game.getObjectById(id) : null;
-
-        return result || undefined;
-    }
-
     static get myCreeps(): Vector<Creep> { return Dictionaries.values(Game.creeps); }
     static get myFlags(): Vector<Flag> { return Dictionaries.values(Game.flags); }
     static get myPowerCreeps(): Vector<PowerCreep> { return Dictionaries.values(Game.powerCreeps); }

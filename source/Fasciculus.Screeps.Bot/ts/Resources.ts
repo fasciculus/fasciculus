@@ -13,7 +13,7 @@ export class Well
 
     get memory(): WellMemory { return Memory.sub("wells", this.id, {}); }
 
-    get source(): Source { return GameWrap.get<Source>(this.id)!; }
+    get source(): Source { return Game.get<Source>(this.id)!; }
     get pos(): RoomPosition { return this.source.pos; }
 
     get assignee(): Creep | undefined { return Game.myCreep(this.memory.assignee); }
