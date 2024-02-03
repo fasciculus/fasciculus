@@ -8,6 +8,7 @@ declare global
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
 
+        get myFlags(): Set<string>;
         get mySpawns(): Set<SpawnId>;
 
         myCreep(name: string | undefined): Creep | undefined;
@@ -36,6 +37,17 @@ export class Screeps
             let result: T | null = id ? Game.getObjectById(id) : null;
 
             return result || undefined;
+        });
+
+        Objects.setGetter(Game, "myFlags", function (): Set<string>
+        {
+            if (!Game.flags) return new Set();
+
+            const values = Object.keys(Game.flags);
+
+            if (!values || !Array.isArray(values) || values.length == 0) return new Set();
+
+            return values.toSet();
         });
 
         Objects.setGetter(Game, "mySpawns", function (): Set<SpawnId>

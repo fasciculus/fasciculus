@@ -101,7 +101,6 @@ export class Markers
     private static _markers: Dictionary<MarkerBase> = {};
 
     private static _guardMarkers: Vector<GuardMarker> = new Vector();
-    private static _guardMarkerCount: number = 0;
 
     static get guardMarkers(): Vector<GuardMarker> { return Markers._guardMarkers.clone(); }
     static get guardMarkerCount(): number { return Markers._guardMarkers.length; }
@@ -113,17 +112,15 @@ export class Markers
         {
             Markers._markers = {};
             Markers._guardMarkers = new Vector();
-            Markers._guardMarkerCount = 0;
         }
 
-        const existing: Set<string> = new Set(Dictionaries.keys(Game.flags));
+        const existing: Set<string> = Game.myFlags;
 
         if (Dictionaries.update(Markers._markers, existing, Markers.create))
         {
             const markers = Dictionaries.values(Markers._markers);
 
             Markers._guardMarkers = markers.filter(m => m.type == MarkerType.Guard) as Vector<GuardMarker>;
-            Markers._guardMarkerCount = Markers._guardMarkers.length;
         }
     }
 
