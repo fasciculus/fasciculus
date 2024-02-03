@@ -36,6 +36,7 @@ export function profile<T extends new (...args: any[]) => any, A extends any[], 
 interface ProfilerCLI
 {
     log(): void;
+    reset(): void;
 }
 
 interface ProfilerEntry
@@ -56,7 +57,9 @@ export class Profiler
 
     private static entries: ProfilerMap = new Map();
 
-    private static cli: ProfilerCLI = { log: Profiler.log };
+    private static resetRequested: boolean = false;
+
+    private static cli: ProfilerCLI = { log: Profiler.log, reset: Profiler.reset };
 
     static record(type: string, name: string, duration: number): void
     {
@@ -82,17 +85,6 @@ export class Profiler
         return result;
     }
 
-    static start(): void
-    {
-        Profiler.setCLI();
-
-        if (Profiler.warmup == 0)
-        {
-            Profiler.loadUsage = Game.cpu.getUsed();
-            Profiler.record("global", "load", Profiler.loadUsage);
-        }
-    }
-
     private static setCLI(): void
     {
         const names: Set<string> = new Set(Object.getOwnPropertyNames(Game));
@@ -108,6 +100,24 @@ export class Profiler
             });
     }
 
+    static start(): void
+    {
+        Profiler.setCLI();
+
+        if (Profiler.resetRequested)
+        {
+            Profiler.entries.clear();
+            Profiler.startTime = Game.time;
+            Profiler.resetRequested = false;
+        }
+
+        if (Profiler.warmup == 0)
+        {
+            Profiler.loadUsage = Game.cpu.getUsed();
+            Profiler.record("global", "load", Profiler.loadUsage);
+        }
+    }
+
     static stop(): void
     {
         if (Profiler.warmup > 0)
@@ -119,6 +129,11 @@ export class Profiler
         {
             Profiler.record("global", "main", Game.cpu.getUsed() - Profiler.loadUsage);
         }
+    }
+
+    static reset(): void
+    {
+        Profiler.resetRequested = true;
     }
 
     static log(): void
