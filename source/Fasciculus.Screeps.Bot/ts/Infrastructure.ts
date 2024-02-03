@@ -90,7 +90,7 @@ export class Spawns
             Spawns._spawns = {};
         }
 
-        const existing: Set<SpawnId> = Game.mySpawns;
+        const existing: Set<SpawnId> = Game.mySpawnIds;
 
         Dictionaries.update(Spawns._spawns, existing, id => new Spawn(id as SpawnId));
     }
@@ -128,7 +128,7 @@ export class Extensions
     {
         const result: Set<string> = new Set();
 
-        for (const room of GameWrap.rooms)
+        for (const room of Game.knownRooms)
         {
             const structures: StructureExtension[] = room.find<FIND_MY_STRUCTURES, StructureExtension>(FIND_MY_STRUCTURES);
 

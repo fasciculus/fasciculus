@@ -465,9 +465,6 @@ export class Sets
 
 export class GameWrap
 {
-    static get myPowerCreeps(): Vector<PowerCreep> { return Dictionaries.values(Game.powerCreeps); }
-    static get rooms(): Vector<Room> { return Dictionaries.values(Game.rooms); }
-    static get mySpawns(): Vector<StructureSpawn> { return Dictionaries.values(Game.spawns); }
     static get myStructures(): Vector<Structure> { return Dictionaries.values(Game.structures); }
     static get myConstructionSites(): Vector<ConstructionSite> { return Dictionaries.values(Game.constructionSites); }
 }

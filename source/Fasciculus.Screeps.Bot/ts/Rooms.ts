@@ -141,7 +141,7 @@ export class Chambers
             Chambers._allSources = new Set();
         }
 
-        const existing: Set<string> = GameWrap.rooms.map(r => r.name).toSet();
+        const existing: Set<string> = Game.knownRoomNames;
 
         if (Dictionaries.update(Chambers._allChambers, existing, name => new Chamber(name)))
         {

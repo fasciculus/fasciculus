@@ -114,7 +114,7 @@ export class Markers
             Markers._guardMarkers = new Vector();
         }
 
-        const existing: Set<string> = Game.myFlags;
+        const existing: Set<string> = Game.myFlagNames;
 
         if (Dictionaries.update(Markers._markers, existing, Markers.create))
         {

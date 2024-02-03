@@ -8,8 +8,13 @@ declare global
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
 
-        get myFlags(): Set<string>;
-        get mySpawns(): Set<SpawnId>;
+        get knownRooms(): Array<Room>;
+        get knownRoomNames(): Set<string>;
+
+        get myFlagNames(): Set<string>;
+
+        get mySpawns(): Array<StructureSpawn>;
+        get mySpawnIds(): Set<SpawnId>;
 
         myCreep(name: string | undefined): Creep | undefined;
         get myCreeps(): Array<Creep>;
@@ -39,26 +44,57 @@ export class Screeps
             return result || undefined;
         });
 
-        Objects.setGetter(Game, "myFlags", function (): Set<string>
+        Objects.setGetter(Game, "knownRooms", function (): Array<Room>
+        {
+            if (!Game.rooms) return new Array();
+
+            const rooms = Object.values(Game.rooms);
+
+            if (!rooms || !Array.isArray(rooms) || rooms.length == 0) return new Array();
+
+            return rooms;
+        });
+
+        Objects.setGetter(Game, "knownRoomNames", function (): Set<string>
+        {
+            if (!Game.rooms) return new Set();
+
+            const names = Object.keys(Game.rooms);
+
+            if (!names || !Array.isArray(names) || names.length == 0) return new Set();
+
+            return names.toSet();
+        });
+
+        Objects.setGetter(Game, "myFlagNames", function (): Set<string>
         {
             if (!Game.flags) return new Set();
 
-            const values = Object.keys(Game.flags);
+            const names = Object.keys(Game.flags);
 
-            if (!values || !Array.isArray(values) || values.length == 0) return new Set();
+            if (!names || !Array.isArray(names) || names.length == 0) return new Set();
 
-            return values.toSet();
+            return names.toSet();
         });
 
-        Objects.setGetter(Game, "mySpawns", function (): Set<SpawnId>
+        Objects.setGetter(Game, "mySpawns", function (): Array<StructureSpawn>
         {
-            if (!Game.spawns) return new Set();
+            if (!Game.spawns) return new Array();
 
-            const values = Object.values(Game.spawns);
+            const spawns = Object.values(Game.spawns);
 
-            if (!values || !Array.isArray(values) || values.length == 0) return new Set();
+            if (!spawns || !Array.isArray(spawns) || spawns.length == 0) return new Array();
 
-            return values.map(s => s.id).toSet();
+            return spawns;
+        });
+
+        Objects.setGetter(Game, "mySpawnIds", function (): Set<SpawnId>
+        {
+            const spawns = Game.mySpawns;
+
+            if (spawns.length == 0) return new Set();
+
+            return spawns.map(s => s.id).toSet();
         });
 
         Objects.setFunction(Game, "myCreep", function (name: string | undefined): Creep | undefined
@@ -72,21 +108,22 @@ export class Screeps
         {
             if (!Game.creeps) return new Array();
 
-            const values = Object.values(Game.creeps);
+            const creeps = Object.values(Game.creeps);
 
-            if (!values || !Array.isArray(values) || values.length == 0) return new Array();
+            if (!creeps || !Array.isArray(creeps) || creeps.length == 0) return new Array();
 
-            return values;
+            return creeps;
         });
 
         Objects.setGetter(Game, "username", function (): string
         {
             if (!Screeps._username)
             {
-                const spawns = Game.mySpawns.toArray();
-                const spawn = spawns.length > 0 ? Game.get(spawns[0]) : undefined;
+                const spawns = Game.mySpawns;
 
-                Screeps._username = spawn?.owner.username || "unknown";
+                if (spawns.length == 0) return "unknown";
+
+                Screeps._username = spawns[0].owner.username;
             }
 
             return Screeps._username;
