@@ -2,9 +2,6 @@
   <PropertyGroup>
     <Version>0.1.2</Version>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="js/" />
-  </ItemGroup>
   <PropertyGroup>
     <PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);CreateConfig</PrepareForBuildDependsOn>
   </PropertyGroup>

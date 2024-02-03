@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, GameWrap, Memories, Sets, SourceId, Vector } from "./Common";
+import { Dictionaries, Dictionary, GameWrap, SourceId, Vector } from "./Common";
 import { profile } from "./Profiling";
 import { Chambers } from "./Rooms";
 
@@ -11,7 +11,7 @@ export class Well
 {
     readonly id: SourceId;
 
-    get memory(): WellMemory { return Memories.sub("wells", this.id, {}); }
+    get memory(): WellMemory { return Memory.sub("wells", this.id, {}); }
 
     get source(): Source { return GameWrap.get<Source>(this.id)!; }
     get pos(): RoomPosition { return this.source.pos; }

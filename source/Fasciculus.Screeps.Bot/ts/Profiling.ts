@@ -1,5 +1,4 @@
-import { Memories } from "./Common";
-import { PROFILER_IGNORED_KEYS, PROFILER_LOG_INTERVAL, PROFILER_MAX_ENTRIES, PROFILER_WARMUP } from "./Config";
+import { PROFILER_IGNORED_KEYS, PROFILER_MAX_ENTRIES, PROFILER_WARMUP } from "./Config";
 
 export function profile<T extends new (...args: any[]) => any, A extends any[], R>(target: (this: T, ...args: A) => R,
     context: ClassMemberDecoratorContext)
@@ -133,7 +132,7 @@ export class Profiler
         const ticks: number = Math.max(1, Game.time - Profiler.startTime + 1);
         const entries: ProfilerEntry[] = Profiler.getLogEntries();
         const divider: string = "".padEnd(62, "-");
-        let memoryUsed: string = (Memories.used / 1024).toFixed(1);
+        let memoryUsed: string = "n/a";
         let label: string = "method".padEnd(40);
         let duration: string = "cpu".padStart(6);
         let calls: string = "calls".padStart(7);

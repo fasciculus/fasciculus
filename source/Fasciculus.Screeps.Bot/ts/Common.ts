@@ -52,41 +52,6 @@ interface ExtendedMemory extends Memory
     [index: string]: any;
 }
 
-export class Memories
-{
-    static get<T>(key: string, initial: T): T
-    {
-        const memory: ExtendedMemory = Memory as ExtendedMemory;
-        let result: any | undefined = memory[key];
-
-        if (!result)
-        {
-            memory[key] = result = initial;
-        }
-
-        return result as T;
-    }
-
-    static sub<T>(root: string, key: string, initial: T): T
-    {
-        const memory: ExtendedMemory = Memory as ExtendedMemory;
-        var parent: Dictionary<T> = Memories.get(root, {});
-        var result: T | undefined = parent[key];
-
-        if (!result)
-        {
-            parent[key] = result = initial;
-        }
-
-        return result as T;
-    }
-
-    static get used(): number
-    {
-        return RawMemory.get().length;
-    }
-}
-
 export class Random
 {
     static nextInt(lessThan: number): number
@@ -565,23 +530,24 @@ export class Stores
 interface NamesMemory
 {
     creeps: Dictionary<number>;
+    flags: Dictionary<number>;
 }
 
 const InitialNamesMemory: NamesMemory =
 {
-    creeps: {}
+    creeps: {},
+    flags: {}
 };
 
 export class Names
 {
-    private static get memory(): NamesMemory { return Memories.get("names", InitialNamesMemory); }
+    private static get memory(): NamesMemory { return Memory.get("names", InitialNamesMemory); }
 
     static next(prefix: string)
     {
         var memory = Names.memory;
-        var id = memory.creeps[prefix] || 0;
+        var id = (memory.creeps[prefix] || 0) + 1;
 
-        ++id;
         memory.creeps[prefix] = id;
 
         return `${prefix}${id}`;
