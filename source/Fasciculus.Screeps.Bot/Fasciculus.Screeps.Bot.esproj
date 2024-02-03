@@ -1,32 +1,27 @@
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.425631-alpha">
-
   <PropertyGroup>
     <Version>0.1.2</Version>
   </PropertyGroup>
-  
   <ItemGroup>
     <Folder Include="js/" />
   </ItemGroup>
-
   <PropertyGroup>
     <PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);CreateConfig</PrepareForBuildDependsOn>
   </PropertyGroup>
-
   <Target Name="CommitToLocalhost" AfterTargets="Build">
     <PropertyGroup>
       <TargetDir>C:\Users\$(USERNAME)\AppData\Local\Screeps\scripts\127_0_0_1___21025\default</TargetDir>
     </PropertyGroup>
     <ItemGroup>
-      <FilesToDelete Include="$(TargetDir)/*.js"/>
-      <FilesToDelete Include="$(TargetDir)/*.map"/>
-      <FilesToCopy Include="js/*.js"/>
-      <FilesToCopy Include="js/*.map"/>
+      <FilesToDelete Include="$(TargetDir)/*.js" />
+      <FilesToDelete Include="$(TargetDir)/*.map" />
+      <FilesToCopy Include="js/*.js" />
+      <FilesToCopy Include="js/*.map" />
     </ItemGroup>
     <Message Importance="high" Text="Updating '$(TargetDir)'" />
     <Delete Files="@(FilesToDelete)" />
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(TargetDir)" />
   </Target>
-  
   <Target Name="DeleteJavaScripts" AfterTargets="Clean">
     <ItemGroup>
       <FilesToDelete Include="js/*.js" />
@@ -35,24 +30,21 @@
     </ItemGroup>
     <Delete Files="@(FilesToDelete)" />
   </Target>
-
   <Target Name="CreateConfig" BeforeTargets="Build">
     <Message Importance="high" Text="Creating Config.ts" />
     <CreateConfig Version="$(Version)" />
   </Target>
-
   <UsingTask TaskName="CreateConfig" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <Version ParameterType="System.String" Required="True" Output="False" />
     </ParameterGroup>
     <Task>
-      <Reference Include="System.Xml"/>
-      <Using Namespace="System"/>
-      <Using Namespace="System.Collections.Generic"/>
-      <Using Namespace="System.IO"/>
-      <Using Namespace="System.Xml"/>
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[
+      <Reference Include="System.Xml" />
+      <Using Namespace="System" />
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Xml" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
 XmlDocument doc = new XmlDocument();
 doc.Load("Config.xml");
 XmlNodeList adds = doc.GetElementsByTagName("Add");
@@ -68,9 +60,7 @@ foreach (var add in adds)
   lines.Add("export const " + key + " = " + value + ";");
 }
 File.WriteAllLines("ts/Config.ts", lines);
-        ]]>
-      </Code>
+        ]]></Code>
     </Task>
   </UsingTask>
-  
 </Project>
