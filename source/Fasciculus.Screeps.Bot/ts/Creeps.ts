@@ -298,7 +298,7 @@ export class Creeps
     private static _types: Dictionary<CreepType> = {};
     private static _creeps: Dictionary<Set<string>> = {};
 
-    static get oldest(): Creep | undefined { return GameWrap.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
+    static get oldest(): Creep | undefined { return Game.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
 
     @profile
     static initialize(reset: boolean)

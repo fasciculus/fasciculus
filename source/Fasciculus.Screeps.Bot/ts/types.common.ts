@@ -45,12 +45,41 @@ declare global
     interface Array<T>
     {
         toSet(): Set<T>;
+
+        min(fn: (value: T) => number): T | undefined;
     }
 }
 
-Objects.setFunction(Array.prototype, "toSet", function <T>(this: Array<T>): Set<T>
+Objects.setFunction(Array.prototype, "toSet", function<T>(this: Array<T>): Set<T>
 {
     return new Set(this);
+});
+
+Objects.setFunction(Array.prototype, "min", function <T>(this: Array<T>, fn: (value: T) => number): T | undefined
+{
+    const length: number = this.length;
+
+    if (length == 0) return undefined;
+
+    var result: T = this[0];
+
+    if (length == 1) return result;
+
+    var minValue: number = fn(result);
+
+    for (let i = 1; i < length; ++i)
+    {
+        const candidate: T = this[i];
+        const value: number = fn(candidate);
+
+        if (value < minValue)
+        {
+            result = candidate;
+            minValue = value;
+        }
+    }
+
+    return result;
 });
 
 declare global
