@@ -13,7 +13,6 @@
       <FilesToDelete Include="$(TargetDir)/*.js" />
       <FilesToDelete Include="$(TargetDir)/*.map" />
       <FilesToCopy Include="js/*.js" />
-      <FilesToCopy Include="js/*.map" />
     </ItemGroup>
     <Message Importance="high" Text="Updating '$(TargetDir)'" />
     <Delete Files="@(FilesToDelete)" />

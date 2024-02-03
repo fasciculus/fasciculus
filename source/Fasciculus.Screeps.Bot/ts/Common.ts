@@ -4,7 +4,6 @@ export type ControllerId = Id<StructureController>;
 export type ExtensionId = Id<StructureExtension>;
 export type SiteId = Id<ConstructionSite>;
 export type SourceId = Id<Source>;
-export type SpawnId = Id<StructureSpawn>;
 export type WallId = Id<StructureWall>;
 
 export type RepairableId = Id<StructureRoad | StructureWall>
@@ -466,21 +465,6 @@ export class Sets
 
 export class GameWrap
 {
-    private static _username?: string;
-
-    static initialize(reset: boolean)
-    {
-        if (reset)
-        {
-            GameWrap._username = undefined;
-        }
-
-        if (!GameWrap._username)
-        {
-            GameWrap._username = GameWrap.mySpawns.at(0)?.owner.username || "unknown";
-        }
-    }
-
     static get<T extends _HasId>(id: Id<T> | undefined): T | undefined
     {
         let result: T | null = id ? Game.getObjectById(id) : null;
@@ -496,7 +480,6 @@ export class GameWrap
     static get mySpawns(): Vector<StructureSpawn> { return Dictionaries.values(Game.spawns); }
     static get myStructures(): Vector<Structure> { return Dictionaries.values(Game.structures); }
     static get myConstructionSites(): Vector<ConstructionSite> { return Dictionaries.values(Game.constructionSites); }
-    static get username(): string { return GameWrap._username || "unknown"; }
 }
 
 export class Stores

@@ -30,8 +30,6 @@ export class Scheduler
     {
         const reset: boolean = Scheduler.updateVersion();
 
-        GameWrap.initialize(reset);
-
         Chambers.initialize(reset);
         Sites.initialize(reset);
         Spawns.initialize(reset);

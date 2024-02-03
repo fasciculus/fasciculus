@@ -1,4 +1,4 @@
-import { ControllerId, Dictionaries, Dictionary, GameWrap, Point, Sets, SourceId, SpawnId, Vector, Vectors, WallId } from "./Common";
+import { ControllerId, Dictionaries, Dictionary, GameWrap, Point, Sets, SourceId, Vector, Vectors, WallId } from "./Common";
 import { profile } from "./Profiling";
 
 export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;
@@ -75,7 +75,7 @@ export class Chamber
     get controller(): StructureController | undefined { return this.room.controller; }
     get my(): boolean { return this.controller?.my || false; }
     get reservation(): ReservationDefinition | undefined { return this.controller?.reservation; }
-    get controlled(): boolean { return this.my || this.reservation?.username == GameWrap.username; }
+    get controlled(): boolean { return this.my || this.reservation?.username == Game.username; }
     get rcl(): number { return this.controller?.level || 0; }
 
     get energyAvailable(): number { return this.room.energyAvailable || 0; }

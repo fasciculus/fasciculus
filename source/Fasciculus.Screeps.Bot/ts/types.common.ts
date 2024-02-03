@@ -7,8 +7,20 @@ export class Objects
         {
             configurable: true,
             enumerable: false,
-            writable: true,
-            value: fn,
+            writable: false,
+            value: fn
+        };
+
+        return Object.defineProperty(target, key, attributes);
+    }
+
+    static setGetter<T>(target: T, key: PropertyKey, fn: () => any): T
+    {
+        const attributes: PropertyDescriptor & ThisType<any> =
+        {
+            configurable: true,
+            enumerable: true,
+            get: fn
         };
 
         return Object.defineProperty(target, key, attributes);
@@ -21,12 +33,38 @@ export class Objects
             configurable: true,
             enumerable: true,
             writable: true,
-            value: value,
+            value: value
         };
 
         return Object.defineProperty(target, key, attributes);
     }
 }
+
+declare global
+{
+    interface Array<T>
+    {
+        toSet(): Set<T>;
+    }
+}
+
+Objects.setFunction(Array.prototype, "toSet", function <T>(this: Array<T>): Set<T>
+{
+    return new Set(this);
+});
+
+declare global
+{
+    interface Set<T>
+    {
+        toArray(): Array<T>;
+    }
+}
+
+Objects.setFunction(Set.prototype, "toArray", function <T>(this: Set<T>): Array<T>
+{
+    return Array.from(this);
+});
 
 declare global
 {

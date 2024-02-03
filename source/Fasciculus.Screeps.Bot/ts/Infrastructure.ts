@@ -1,4 +1,4 @@
-import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, ExtensionId, GameWrap, Names, SpawnId, Stores, Vector, WallId } from "./Common";
+import { ControllerId, CreepState, CreepType, Dictionaries, Dictionary, ExtensionId, GameWrap, Names, Stores, Vector, WallId } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
 import { profile } from "./Profiling";
 import { Chamber, Chambers } from "./Rooms";
@@ -90,7 +90,7 @@ export class Spawns
             Spawns._spawns = {};
         }
 
-        const existing: Set<string> = GameWrap.mySpawns.map(s => s.id).toSet();
+        const existing: Set<SpawnId> = Game.mySpawns;
 
         Dictionaries.update(Spawns._spawns, existing, id => new Spawn(id as SpawnId));
     }
