@@ -34,6 +34,11 @@ export function profile<T extends new (...args: any[]) => any, A extends any[], 
     return replacement;
 }
 
+interface ProfilerCLI
+{
+    log(): void;
+}
+
 interface ProfilerEntry
 {
     key: string;
@@ -52,7 +57,9 @@ export class Profiler
 
     private static entries: ProfilerMap = new Map();
 
-    static record(type: string, name: string, duration: number)
+    private static cli: ProfilerCLI = { log: Profiler.log };
+
+    static record(type: string, name: string, duration: number): void
     {
         if (Profiler.warmup > 0) return;
 
@@ -76,20 +83,33 @@ export class Profiler
         return result;
     }
 
-    static start()
+    static start(): void
     {
-        if (Profiler.warmup > 0)
-        {
-            Profiler.entries.clear();
-        }
-        else
+        Profiler.setCLI();
+
+        if (Profiler.warmup == 0)
         {
             Profiler.loadUsage = Game.cpu.getUsed();
             Profiler.record("global", "load", Profiler.loadUsage);
         }
     }
 
-    static stop()
+    private static setCLI(): void
+    {
+        const names: Set<string> = new Set(Object.getOwnPropertyNames(Game));
+
+        if (names.has("profiler")) return;
+
+        Object.defineProperty(Game, "profiler",
+            {
+                enumerable: false,
+                writable: false,
+                configurable: true,
+                value: Profiler.cli
+            });
+    }
+
+    static stop(): void
     {
         if (Profiler.warmup > 0)
         {
@@ -100,25 +120,17 @@ export class Profiler
         {
             Profiler.record("global", "main", Game.cpu.getUsed() - Profiler.loadUsage);
         }
-
-        Profiler.log();
     }
 
-    static log()
+    static log(): void
     {
         if (Profiler.warmup > 0)
         {
-            console.log(`Profiler in warmup (${Profiler.warmup})`);
+            console.log(`Profiler in warmup. ${Profiler.warmup} ticks to go.`);
             return;
         }
 
-        const ticks: number = Game.time - Profiler.startTime + 1;
-
-        if (ticks == 0 || ticks % PROFILER_LOG_INTERVAL != 0)
-        {
-            return;
-        }
-
+        const ticks: number = Math.max(1, Game.time - Profiler.startTime + 1);
         const entries: ProfilerEntry[] = Profiler.getLogEntries();
         const divider: string = "".padEnd(62, "-");
         let memoryUsed: string = (Memories.used / 1024).toFixed(1);
