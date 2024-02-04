@@ -1,6 +1,5 @@
 
 export type ContainerId = Id<StructureContainer>;
-export type ControllerId = Id<StructureController>;
 export type ExtensionId = Id<StructureExtension>;
 export type SourceId = Id<Source>;
 export type WallId = Id<StructureWall>;

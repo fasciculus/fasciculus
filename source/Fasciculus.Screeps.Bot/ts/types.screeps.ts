@@ -2,6 +2,7 @@ import { Objects } from "./types.common";
 
 declare global
 {
+    type ControllerId = Id<StructureController>;
     type SpawnId = Id<StructureSpawn>;
     type SiteId = Id<ConstructionSite>;
 }
