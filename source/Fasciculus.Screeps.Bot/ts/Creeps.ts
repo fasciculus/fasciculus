@@ -355,6 +355,13 @@ export class Creeps
         return Dictionaries.update(creeps, existing, create);
     }
 
+    static update<T>(creeps: Map<string, T>, type: CreepType, fnCreate: (name: string) => T): boolean
+    {
+        const names: Set<string> = Creeps._creeps.get(type) || new Set();
+
+        return creeps.update(names, fnCreate);
+    }
+
     @profile
     static cleanup()
     {

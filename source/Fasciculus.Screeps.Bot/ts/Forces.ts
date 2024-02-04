@@ -83,7 +83,7 @@ export class Guard extends CreepBase<GuardMemory>
 
 export class Guards
 {
-    private static _guards: Dictionary<Guard> = {};
+    private static _guards: Map<string, Guard> = new Map();
 
     private static _all: Vector<Guard> = new Vector();
 
@@ -94,13 +94,13 @@ export class Guards
     {
         if (reset)
         {
-            Guards._guards = {};
+            Guards._guards.clear();
             Guards._all = new Vector();
         }
 
-        if (Creeps.oldUpdate(Guards._guards, CreepType.Guard, name => new Guard(name)))
+        if (Creeps.update(Guards._guards, CreepType.Guard, name => new Guard(name)))
         {
-            Guards._all = Dictionaries.values(Guards._guards);
+            Guards._all = new Vector(Array.from(Guards._guards.values()));
         }
     }
 
