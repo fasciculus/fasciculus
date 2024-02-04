@@ -24,22 +24,18 @@ export class Site
 
 export class Sites
 {
-    private static _sites: Dictionary<Site> = {};
-    private static _count: number = 0;
+    private static _sites: Map<SiteId, Site> = new Map();
 
-    static get(id: SiteId | undefined): Site | undefined { return id ? Sites._sites[id] : undefined; }
+    static get(id: SiteId | undefined): Site | undefined { return id ? Sites._sites.get(id) : undefined; }
 
-    static get all(): Vector<Site> { return Dictionaries.values(Sites._sites); }
-    static get count(): number { return Sites._count; }
+    static get all(): Vector<Site> { return Vector.from(Sites._sites.vs()); }
+    static get count(): number { return Sites._sites.size; }
 
     @profile
     static initialize()
     {
-        const existing: Set<string> = Game.mySiteIds;
-
-        if (Dictionaries.update(Sites._sites, existing, id => new Site(id as SiteId)))
+        if (Sites._sites.update(Game.mySiteIds, id => new Site(id)))
         {
-            Sites._count = Dictionaries.size(Sites._sites);
             Chambers.reset();
         }
     }
