@@ -185,7 +185,7 @@ export class Builder extends CreepBase<BuilderMemory>
 
 export class Builders
 {
-    private static _builders: Dictionary<Builder> = {};
+    private static _builders: Map<string, Builder> = new Map();
     private static _all: Vector<Builder> = new Vector();
     private static _maxEnergyPerTick: number = 0;
 
@@ -196,14 +196,14 @@ export class Builders
     {
         if (reset)
         {
-            Builders._builders = {};
+            Builders._builders.clear();
             Builders._all = new Vector();
             Builders._maxEnergyPerTick = 0;
         }
 
-        if (Creeps.oldUpdate(Builders._builders, CreepType.Builder, name => new Builder(name)))
+        if (Creeps.update(Builders._builders, CreepType.Builder, name => new Builder(name)))
         {
-            Builders._all = Dictionaries.values(Builders._builders);
+            Builders._all = new Vector(Array.from(Builders._builders.values()));
             Builders._maxEnergyPerTick = Builders._all.sum(b => b.maxEnergyPerTick);
         }
     }
