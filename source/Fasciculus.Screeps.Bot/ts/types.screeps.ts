@@ -202,6 +202,22 @@ class ScreepsRoom
     }
 }
 
+declare global
+{
+    interface StructureSpawn
+    {
+        get rcl(): number;
+    }
+}
+
+class ScreepsSpawn
+{
+    static rcl(this: StructureSpawn): number
+    {
+        return this.room.rcl;
+    }
+}
+
 export class Screeps
 {
     static setup()
@@ -222,6 +238,8 @@ export class Screeps
         Objects.setFunction(Memory, "sub", ScreepsMemory.sub);
 
         Objects.setGetter(Room.prototype, "rcl", ScreepsRoom.rcl);
+
+        Objects.setGetter(StructureSpawn.prototype, "rcl", ScreepsSpawn.rcl);
     }
 }
 

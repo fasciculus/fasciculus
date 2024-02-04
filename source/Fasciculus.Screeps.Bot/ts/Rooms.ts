@@ -41,8 +41,6 @@ export class Chamber
     get room(): Room { return Game.rooms[this.name]; }
     get controller(): StructureController | undefined { return this.room.controller; }
     get my(): boolean { return this.controller?.my || false; }
-    get reservation(): ReservationDefinition | undefined { return this.controller?.reservation; }
-    get rcl(): number { return this.room.rcl; }
 
     get energyAvailable(): number { return this.room.energyAvailable || 0; }
     get energyCapacityAvailable(): number { return this.room.energyCapacityAvailable || 0; }

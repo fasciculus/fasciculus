@@ -50,7 +50,7 @@ export class Spawn
 
     get idle(): boolean { return !this.spawn.spawning; }
 
-    get rcl(): number { return this.chamber.rcl; }
+    get rcl(): number { return this.spawn.rcl; }
 
     get energy(): number { return Stores.energy(this.spawn); }
     get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this.spawn); }
