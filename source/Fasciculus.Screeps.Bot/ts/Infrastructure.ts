@@ -71,18 +71,16 @@ export class Spawn
 
 export class Spawns
 {
-    private static _spawns: Dictionary<Spawn> = {};
+    private static _spawns: Map<SpawnId, Spawn> = new Map();
 
-    static get all(): Vector<Spawn> { return Dictionaries.values(Spawns._spawns); }
+    static get all(): Vector<Spawn> { return Vector.from(Spawns._spawns.vs()); }
     static get idle(): Vector<Spawn> { return Spawns.all.filter(s => s.idle); }
     static get best(): Spawn | undefined { return Spawns.idle.max(s => s.roomEnergyAvailable); }
 
     @profile
     static initialize()
     {
-        const existing: Set<SpawnId> = Game.mySpawnIds;
-
-        Dictionaries.update(Spawns._spawns, existing, id => new Spawn(id as SpawnId));
+        Spawns._spawns.update(Game.mySpawnIds, id => new Spawn(id))
     }
 }
 

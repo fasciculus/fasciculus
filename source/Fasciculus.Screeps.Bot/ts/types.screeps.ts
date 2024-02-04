@@ -26,6 +26,7 @@ declare global
 
         myCreep(name: string | undefined): Creep | undefined;
         get myCreeps(): Array<Creep>;
+        get myCreepNames(): Set<string>;
 
         get username(): string;
     }
@@ -131,6 +132,17 @@ class ScreepsGame
         return creeps;
     }
 
+    static myCreepNames(): Set<string>
+    {
+        if (!Game.creeps) return new Set();
+
+        const names = Object.keys(Game.creeps);
+
+        if (!names || !Array.isArray(names) || names.length == 0) return new Set();
+
+        return Set.from(names);
+    }
+
     private static _username?: string = undefined;
 
     static username(): string
@@ -145,6 +157,22 @@ class ScreepsGame
         }
 
         return ScreepsGame._username;
+    }
+
+    static setup()
+    {
+        Objects.setFunction(Game, "get", ScreepsGame.get);
+        Objects.setGetter(Game, "knownRooms", ScreepsGame.knownRooms);
+        Objects.setGetter(Game, "knownRoomNames", ScreepsGame.knownRoomNames);
+        Objects.setGetter(Game, "myFlagNames", ScreepsGame.myFlagNames);
+        Objects.setGetter(Game, "mySpawns", ScreepsGame.mySpawns);
+        Objects.setGetter(Game, "mySpawnIds", ScreepsGame.mySpawnIds);
+        Objects.setGetter(Game, "mySites", ScreepsGame.mySites);
+        Objects.setGetter(Game, "mySiteIds", ScreepsGame.mySiteIds);
+        Objects.setFunction(Game, "myCreep", ScreepsGame.myCreep);
+        Objects.setGetter(Game, "myCreeps", ScreepsGame.myCreeps);
+        Objects.setGetter(Game, "myCreepNames", ScreepsGame.myCreepNames);
+        Objects.setGetter(Game, "username", ScreepsGame.username);
     }
 }
 
@@ -185,6 +213,12 @@ class ScreepsMemory
 
         return result as T;
     }
+
+    static setup()
+    {
+        Objects.setFunction(Memory, "get", ScreepsMemory.get);
+        Objects.setFunction(Memory, "sub", ScreepsMemory.sub);
+    }
 }
 
 declare global
@@ -200,6 +234,11 @@ class ScreepsRoom
     static rcl(this: Room): number
     {
         return this.controller?.level || 0;
+    }
+
+    static setup()
+    {
+        Objects.setGetter(Room.prototype, "rcl", ScreepsRoom.rcl);
     }
 }
 
@@ -217,30 +256,21 @@ class ScreepsSpawn
     {
         return this.room.rcl;
     }
+
+    static setup()
+    {
+        Objects.setGetter(StructureSpawn.prototype, "rcl", ScreepsSpawn.rcl);
+    }
 }
 
 export class Screeps
 {
     static setup()
     {
-        Objects.setFunction(Game, "get", ScreepsGame.get);
-        Objects.setGetter(Game, "knownRooms", ScreepsGame.knownRooms);
-        Objects.setGetter(Game, "knownRoomNames", ScreepsGame.knownRoomNames);
-        Objects.setGetter(Game, "myFlagNames", ScreepsGame.myFlagNames);
-        Objects.setGetter(Game, "mySpawns", ScreepsGame.mySpawns);
-        Objects.setGetter(Game, "mySpawnIds", ScreepsGame.mySpawnIds);
-        Objects.setGetter(Game, "mySites", ScreepsGame.mySites);
-        Objects.setGetter(Game, "mySiteIds", ScreepsGame.mySiteIds);
-        Objects.setFunction(Game, "myCreep", ScreepsGame.myCreep);
-        Objects.setGetter(Game, "myCreeps", ScreepsGame.myCreeps);
-        Objects.setGetter(Game, "username", ScreepsGame.username);
-
-        Objects.setFunction(Memory, "get", ScreepsMemory.get);
-        Objects.setFunction(Memory, "sub", ScreepsMemory.sub);
-
-        Objects.setGetter(Room.prototype, "rcl", ScreepsRoom.rcl);
-
-        Objects.setGetter(StructureSpawn.prototype, "rcl", ScreepsSpawn.rcl);
+        ScreepsGame.setup();
+        ScreepsMemory.setup();
+        ScreepsRoom.setup();
+        ScreepsSpawn.setup();
     }
 }
 

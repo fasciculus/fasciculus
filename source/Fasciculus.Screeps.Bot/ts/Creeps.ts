@@ -306,9 +306,7 @@ export class Creeps
 
     private static updateTypes(): boolean
     {
-        const existing: Set<string> = Dictionaries.keys(Game.creeps);
-
-        return Creeps._types.update(existing, Creeps.typeOf);
+        return Creeps._types.update(Game.myCreepNames, Creeps.typeOf);
     }
 
     private static typeOf(name: string): CreepType
