@@ -206,6 +206,8 @@ declare global
     {
         find(predicate: (value: V) => boolean): Set<K>;
         keep(keys: Set<K>): Map<K, V>
+
+        update(keys: Set<K>, fnCreate: (key: K) => V): boolean;
     }
 }
 
@@ -229,9 +231,22 @@ class Maps
 
         return this;
     }
+
+    static update<K, V>(this: Map<K, V>, keys: Set<K>, fnCreate: (key: K) => V): boolean
+    {
+        const existing: Set<K> = Set.from(Array.from(this.keys()));
+        const remove: Set<K> = Set.difference(existing, keys);
+        const create: Set<K> = Set.difference(keys, existing);
+
+        remove.forEach(k => this.delete(k));
+        create.forEach(k => this.set(k, fnCreate(k)));
+
+        return remove.size > 0 || create.size > 0;
+    }
 }
 
 Objects.setFunction(Map.prototype, "find", Maps.find);
 Objects.setFunction(Map.prototype, "keep", Maps.keep);
+Objects.setFunction(Map.prototype, "update", Maps.update);
 
 export { };
