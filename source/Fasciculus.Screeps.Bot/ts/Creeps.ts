@@ -296,7 +296,7 @@ export class CreepBase<M extends CreepBaseMemory>
 export class Creeps
 {
     private static _types: Map<string, CreepType> = new Map();
-    private static _creeps: Dictionary<Set<string>> = {};
+    private static _creeps: Map<CreepType, Set<string>> = new Map();
 
     static get oldest(): Creep | undefined { return Game.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
 
@@ -306,7 +306,7 @@ export class Creeps
         if (reset)
         {
             Creeps._types.clear();
-            Creeps._creeps = {};
+            Creeps._creeps.clear();
         }
 
         if (Creeps.updateTypes())
@@ -331,23 +331,26 @@ export class Creeps
 
     private static updateCreeps()
     {
-        const types: Map<string, CreepType> = Creeps._types
-        const creeps: Dictionary<Set<string>> = {};
+        const creeps: Map<string, Set<string>> = Creeps._creeps;
 
-        for (const name of types.keys())
+        creeps.clear();
+
+        Creeps._types.forEach((type, name) =>
         {
-            const type: CreepType = types.get(name) || CreepType.Unknown;
-            var names: Set<string> = creeps[type] || (creeps[type] = new Set());
+            var names: Set<string> | undefined = creeps.get(type);
+
+            if (!names)
+            {
+                creeps.set(type, names = new Set());
+            }
 
             names.add(name);
-        }
-
-        Creeps._creeps = creeps;
+        });
     }
 
     static update<T>(creeps: Dictionary<T>, type: CreepType, create: (name: string) => T): DictionaryUpdateInfo<T> | undefined
     {
-        const existing: Set<string> = Creeps._creeps[type] || new Set();
+        const existing: Set<string> = Creeps._creeps.get(type) || new Set();
 
         return Dictionaries.update(creeps, existing, create);
     }
