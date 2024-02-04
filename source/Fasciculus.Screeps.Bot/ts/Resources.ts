@@ -27,16 +27,16 @@ export class Well
 
 export class Wells
 {
-    private static _wells: Dictionary<Well> = {};
+    private static _wells: Map<SourceId, Well> = new Map();
 
-    static get(id?: SourceId): Well | undefined { return id ? Wells._wells[id] : undefined; }
-    static get all(): Vector<Well> { return Dictionaries.values(Wells._wells); }
-    static get assignable(): Vector<Well> { return Dictionaries.values(Wells._wells).filter(w => !w.assignee); }
+    static get(id?: SourceId): Well | undefined { return id ? Wells._wells.get(id) : undefined; }
+    static get all(): Vector<Well> { return Vector.from(Wells._wells.vs()); }
+    static get assignable(): Vector<Well> { return Wells.all.filter(w => !w.assignee); }
     static get assignableCount(): number { return Wells.assignable.length; }
 
     @profile
     static initialize()
     {
-        Dictionaries.update(Wells._wells, Chambers.allSources, id => new Well(id as SourceId));
+        Wells._wells.update(Chambers.allSources, id => new Well(id));
     }
 }
