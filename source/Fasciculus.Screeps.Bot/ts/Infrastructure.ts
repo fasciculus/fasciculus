@@ -20,11 +20,11 @@ export class Controller
 
 export class Controllers
 {
-    private static _allControllers: Dictionary<Controller> = {};
+    private static _allControllers: Map<ControllerId, Controller> = new Map();
 
-    static get(id: ControllerId | undefined): Controller | undefined { return id ? Controllers._allControllers[id] : undefined; }
+    static get(id: ControllerId | undefined): Controller | undefined { return id ? Controllers._allControllers.get(id) : undefined; }
 
-    static get all(): Vector<Controller> { return Dictionaries.values(Controllers._allControllers); }
+    static get all(): Vector<Controller> { return new Vector(Array.from(Controllers._allControllers.values())); }
     static get my(): Vector<Controller> { return Controllers.all.filter(c => c.my); }
     static get myCount(): number { return Controllers.my.length; }
 
@@ -33,10 +33,10 @@ export class Controllers
     {
         if (reset)
         {
-            Controllers._allControllers = {};
+            Controllers._allControllers.clear();
         }
 
-        Dictionaries.update(Controllers._allControllers, Chambers.allControllers, id => new Controller(id as ControllerId));
+        Controllers._allControllers.update(Chambers.allControllers, id => new Controller(id));
     }
 }
 
