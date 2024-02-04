@@ -50,6 +50,11 @@ declare global
 
         toSet(): Set<T>;
     }
+
+    interface ArrayConstructor
+    {
+        flatten<T>(arrays: Iterable<Iterable<T>>): Array<T>;
+    }
 }
 
 class Arrays
@@ -95,11 +100,25 @@ class Arrays
     {
         return new Set(this);
     }
+
+    static flatten<T>(arrays: Iterable<Iterable<T>>): Array<T>
+    {
+        const result: Array<T> = new Array();
+
+        for (const array of arrays)
+        {
+            result.append(array);
+        }
+
+        return result;
+    }
 }
 
 Objects.setFunction(Array.prototype, "append", Arrays.append);
 Objects.setFunction(Array.prototype, "min", Arrays.min);
 Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
+
+Objects.setFunction(Array, "flatten", Arrays.flatten);
 
 declare global
 {
