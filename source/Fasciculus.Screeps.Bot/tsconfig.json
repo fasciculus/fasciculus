@@ -1,15 +1,18 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": "ts/",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "module": "NodeNext", // "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "newLine": "crlf",
     "noImplicitReturns": true,
     "outDir": "js",
     "skipLibCheck": true,
     "lib": [ "ES6" ],
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": true,
     "target": "ES6"
   },
