@@ -1,5 +1,5 @@
 
-import { CreepState, CreepType, Dictionaries, Dictionary, DictionaryUpdateInfo, Stores, Vector, Vectors } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, Stores, Vector, Vectors } from "./Common";
 import { profile } from "./Profiling";
 import { Mover, Positioned } from "./Travelling";
 
@@ -345,7 +345,7 @@ export class Creeps
     @profile
     static cleanup()
     {
-        const existing: Set<string> = Dictionaries.keys(Game.creeps);
+        const existing: Set<string> = Game.myCreepNames;
 
         for (const name in Memory.creeps)
         {

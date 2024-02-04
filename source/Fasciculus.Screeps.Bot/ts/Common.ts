@@ -308,29 +308,8 @@ export interface DictionaryEntry<T>
     value: T;
 }
 
-export interface DictionaryUpdateInfo<T>
-{
-    deleted: Dictionary<T>;
-    created: Dictionary<T>;
-}
-
 export class Dictionaries
 {
-    static size<T>(dictionary: Dictionary<T>): number
-    {
-        return Object.keys(dictionary).length;
-    }
-
-    static isEmpty<T>(dictionary: Dictionary<T>): boolean
-    {
-        for (let key in dictionary)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     static keys<T>(dictionary: Dictionary<T>): Set<string>
     {
         return new Set(Object.keys(dictionary));
@@ -339,63 +318,6 @@ export class Dictionaries
     static values<T>(dictionary: Dictionary<T>): Vector<T>
     {
         return new Vector(Object.values(dictionary));
-    }
-
-    static entries<T>(dictionary: Dictionary<T>): Vector<DictionaryEntry<T>>
-    {
-        const result: Vector<DictionaryEntry<T>> = new Vector();
-
-        for (const key of Dictionaries.keys(dictionary))
-        {
-            const value: T = dictionary[key];
-            const entry: DictionaryEntry<T> = { key, value };
-
-            result.add(entry);
-        }
-
-        return result;
-    }
-
-    static clone<T>(dictionary: Dictionary<T>): Dictionary<T>
-    {
-        return Object.assign({}, dictionary);
-    }
-
-    static removeAll<T>(dictionary: Dictionary<T>, keys: Iterable<string>)
-    {
-        for (const key of keys)
-        {
-            delete dictionary[key];
-        }
-    }
-
-    static update<T>(dictionary: Dictionary<T>, existing: Set<string>, create: (key: string) => T): DictionaryUpdateInfo<T> | undefined
-    {
-        const keys: Set<string> = Dictionaries.keys(dictionary);
-        const toDelete: Set<string> = Set.difference(keys, existing);
-        const toCreate: Set<string> = Set.difference(existing, keys);
-        const changed: boolean = toDelete.size > 0 || toCreate.size > 0;
-
-        if (!changed) return undefined;
-
-        const deleted: Dictionary<T> = {};
-        const created: Dictionary<T> = {};
-
-        for (const key of toDelete)
-        {
-            deleted[key] = dictionary[key];
-            delete dictionary[key];
-        }
-
-        for (const key of toCreate)
-        {
-            const value: T = create(key);
-
-            dictionary[key] = value;
-            created[key] = value
-        }
-
-        return { deleted, created };
     }
 }
 

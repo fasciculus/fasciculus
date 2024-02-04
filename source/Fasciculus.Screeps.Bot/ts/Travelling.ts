@@ -197,7 +197,7 @@ export class Paths
         const threshold = Game.time - 1500;
 
         paths.keep(paths.find(pp => pp.accessed > threshold));
-        blocks.keep(Dictionaries.keys(Game.creeps));
+        blocks.keep(Game.myCreepNames);
 
         console.log(`Path cache has ${Paths.paths.size} entries and ${Paths.blocks.size} blocks.`);
     }

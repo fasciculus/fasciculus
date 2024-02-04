@@ -490,8 +490,6 @@ export class Repairers
         var result: Vector<Repairer> = new Vector();
         var unassigned: Dictionary<Repairer> = Repairers.unassignedRepairers;
 
-        if (Dictionaries.isEmpty(unassigned)) return result;
-
         for (let repairable of Repairers.repairables)
         {
             let assignables: Vector<Repairer> = Dictionaries.values(unassigned);
@@ -502,8 +500,6 @@ export class Repairers
             repairer.repairable = repairable;
             result.add(repairer);
             delete unassigned[repairer.name];
-
-            if (Dictionaries.isEmpty(unassigned)) break;
         }
 
         return result;
