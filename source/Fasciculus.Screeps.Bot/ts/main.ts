@@ -20,10 +20,10 @@ export const loop = function ()
     const c: Set<number> = Set.from([3, 4, 5]);
     const u1: Set<number> = Set.union(a, b);
     const u2: Set<number> = Set.flatten([a, b, c]);
-    const f1: Array<number> = Array.flatten([a, b, c]);
+    const i: Set<number> = Set.intersect(a, b);
 
     console.log(`a: [${a.toArray()}], a+b: [${u1.toArray()}], a+b+c: [${u2.toArray()}]`);
-    console.log(`f1: [${f1}]`);
+    console.log(`a & b: ${i.toArray()}`);
 
     Profiler.stop();
 }
