@@ -1,6 +1,6 @@
 import { Bodies, Creeps } from "./Creeps";
 import { Guards } from "./Forces";
-import { Controllers, Extensions, Spawns, Walls } from "./Infrastructure";
+import { Controllers, Spawns, Walls } from "./Infrastructure";
 import { Tankers } from "./Logistics";
 import { Markers } from "./Markers";
 import { Repairs } from "./Repairs";
@@ -18,7 +18,6 @@ export class Scheduler
         Chambers.initialize();
         Sites.initialize();
         Spawns.initialize();
-        Extensions.initialize();
         Walls.initialize();
         Repairs.initialize();
         Markers.initialize();

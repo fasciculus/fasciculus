@@ -84,50 +84,6 @@ export class Spawns
     }
 }
 
-export class Extension
-{
-    readonly id: ExtensionId;
-
-    get extension(): StructureExtension { return Game.get<StructureExtension>(this.id)!; }
-
-    constructor(id: ExtensionId)
-    {
-        this.id = id;
-    }
-}
-
-export class Extensions
-{
-    private static _extensions: Dictionary<Extension> = {};
-
-    @profile
-    static initialize()
-    {
-        Dictionaries.update(Extensions._extensions, Extensions.existing, id => new Extension(id as ExtensionId));
-    }
-
-    // todo: replace with Chambers.extensions
-    private static get existing(): Set<string>
-    {
-        const result: Set<string> = new Set();
-
-        for (const room of Game.knownRooms)
-        {
-            const structures: StructureExtension[] = room.find<FIND_MY_STRUCTURES, StructureExtension>(FIND_MY_STRUCTURES);
-
-            if (structures.length == 0) continue;
-
-            const extensions: StructureExtension[] = structures.filter(s => s.structureType == STRUCTURE_EXTENSION);
-
-            if (extensions.length == 0) continue;
-
-            extensions.forEach(e => result.add(e.id));
-        }
-
-        return result;
-    }
-}
-
 export class Wall
 {
     readonly id: WallId;
