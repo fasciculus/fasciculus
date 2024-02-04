@@ -201,7 +201,7 @@ export class Builders
             Builders._maxEnergyPerTick = 0;
         }
 
-        if (Creeps.update(Builders._builders, CreepType.Builder, name => new Builder(name)))
+        if (Creeps.oldUpdate(Builders._builders, CreepType.Builder, name => new Builder(name)))
         {
             Builders._all = Dictionaries.values(Builders._builders);
             Builders._maxEnergyPerTick = Builders._all.sum(b => b.maxEnergyPerTick);
@@ -492,7 +492,7 @@ export class Repairers
             Repairers._maxEnergyPerTick = 0;
         }
 
-        if (Creeps.update(Repairers._repairers, CreepType.Repairer, name => new Repairer(name)))
+        if (Creeps.oldUpdate(Repairers._repairers, CreepType.Repairer, name => new Repairer(name)))
         {
             Repairers._all = Dictionaries.values(Repairers._repairers);
             Repairers._maxEnergyPerTick = Repairers._all.sum(r => r.maxEnergyPerTick);
@@ -670,7 +670,7 @@ export class Upgraders
             Upgraders._maxEnergyPerTick = 0;
         }
 
-        if (Creeps.update(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
+        if (Creeps.oldUpdate(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
         {
             Upgraders._all = Dictionaries.values(Upgraders._upgraders);
             Upgraders._maxEnergyPerTick = Upgraders._all.sum(u => u.maxEnergyPerTick);
@@ -889,7 +889,7 @@ export class Wellers
             Wellers._maxEnergyCapacity = 0;
         }
 
-        if (Creeps.update(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
+        if (Creeps.oldUpdate(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
         {
             Wellers._all = Dictionaries.values(Wellers._wellers);
             Wellers._maxEnergyPerTick = Wellers._all.sum(w => w.maxEnergyPerTick);

@@ -348,7 +348,7 @@ export class Creeps
         });
     }
 
-    static update<T>(creeps: Dictionary<T>, type: CreepType, create: (name: string) => T): DictionaryUpdateInfo<T> | undefined
+    static oldUpdate<T>(creeps: Dictionary<T>, type: CreepType, create: (name: string) => T): DictionaryUpdateInfo<T> | undefined
     {
         const existing: Set<string> = Creeps._creeps.get(type) || new Set();
 

@@ -178,7 +178,7 @@ export class Tankers
             Tankers._all = new Vector();
         }
 
-        if (Creeps.update(Tankers._tankers, CreepType.Tanker, name => new Tanker(name)))
+        if (Creeps.oldUpdate(Tankers._tankers, CreepType.Tanker, name => new Tanker(name)))
         {
             Tankers._all = Dictionaries.values(Tankers._tankers);
         }
