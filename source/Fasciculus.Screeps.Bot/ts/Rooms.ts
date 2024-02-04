@@ -75,7 +75,7 @@ export class Chamber
 
 export class Chambers
 {
-    private static _allChambers: Dictionary<Chamber> = {};
+    private static _allChambers: Map<string, Chamber> = new Map();
     private static _allControllers: Set<ControllerId> = new Set();
     private static _allSources: Set<SourceId> = new Set();
 
@@ -83,9 +83,9 @@ export class Chambers
 
     private static _reset: boolean = false;
 
-    static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers[name] : undefined; }
+    static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers.get(name) : undefined; }
 
-    static get all(): Vector<Chamber> { return Dictionaries.values(Chambers._allChambers); }
+    static get all(): Vector<Chamber> { return Vector.from(Chambers._allChambers.vs()); }
     static get my(): Vector<Chamber> { return Chambers.all.filter(c => c.my); }
 
     static get allControllers(): Set<ControllerId> { return Chambers._allControllers.clone(); }
@@ -96,9 +96,7 @@ export class Chambers
     @profile
     static initialize()
     {
-        const existing: Set<string> = Game.knownRoomNames;
-
-        if (Dictionaries.update(Chambers._allChambers, existing, name => new Chamber(name)))
+        if (Chambers._allChambers.update(Game.knownRoomNames, name => new Chamber(name)))
         {
             Chambers._allControllers = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
             Chambers._allSources = Set.flatten(Chambers.all.map(c => c.sources));
