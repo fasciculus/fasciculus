@@ -94,7 +94,7 @@ export class Guards
     {
         if (Creeps.update(Guards._guards, CreepType.Guard, name => new Guard(name)))
         {
-            Guards._all = new Vector(Array.from(Guards._guards.values()));
+            Guards._all = new Vector(Guards._guards.vs());
         }
     }
 

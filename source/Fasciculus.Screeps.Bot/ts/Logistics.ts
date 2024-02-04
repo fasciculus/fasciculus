@@ -174,7 +174,7 @@ export class Tankers
     {
         if (Creeps.update(Tankers._tankers, CreepType.Tanker, name => new Tanker(name)))
         {
-            Tankers._all = new Vector(Array.from(Tankers._tankers.values()));
+            Tankers._all = new Vector(Tankers._tankers.vs());
         }
     }
 

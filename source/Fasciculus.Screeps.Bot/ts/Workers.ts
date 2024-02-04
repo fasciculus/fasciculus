@@ -196,7 +196,7 @@ export class Builders
     {
         if (Creeps.update(Builders._builders, CreepType.Builder, name => new Builder(name)))
         {
-            Builders._all = new Vector(Array.from(Builders._builders.values()));
+            Builders._all = new Vector(Builders._builders.vs());
             Builders._maxEnergyPerTick = Builders._all.sum(b => b.maxEnergyPerTick);
         }
     }
@@ -480,7 +480,7 @@ export class Repairers
     {
         if (Creeps.update(Repairers._repairers, CreepType.Repairer, name => new Repairer(name)))
         {
-            Repairers._all = new Vector(Array.from(Repairers._repairers.values()));;
+            Repairers._all = new Vector(Repairers._repairers.vs());
             Repairers._maxEnergyPerTick = Repairers._all.sum(r => r.maxEnergyPerTick);
         }
     }
@@ -651,7 +651,7 @@ export class Upgraders
     {
         if (Creeps.update(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
         {
-            Upgraders._all = new Vector(Array.from(Upgraders._upgraders.values()));
+            Upgraders._all = new Vector(Upgraders._upgraders.vs());
             Upgraders._maxEnergyPerTick = Upgraders._all.sum(u => u.maxEnergyPerTick);
         }
     }
@@ -862,7 +862,7 @@ export class Wellers
     {
         if (Creeps.update(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
         {
-            Wellers._all = new Vector(Array.from(Wellers._wellers.values()));;
+            Wellers._all = new Vector(Wellers._wellers.vs());
             Wellers._maxEnergyPerTick = Wellers._all.sum(w => w.maxEnergyPerTick);
             Wellers._maxEnergyCapacity = Wellers._all.max(w => w.energyCapacity)?.energyCapacity || 0;
         }

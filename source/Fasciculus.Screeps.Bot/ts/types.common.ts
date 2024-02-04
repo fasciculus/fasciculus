@@ -130,7 +130,7 @@ declare global
 
     interface SetConstructor
     {
-        from<T>(values?: readonly T[] | null): Set<T>
+        from<T>(iterable?: Iterable<T> | null): Set<T>
 
         union<T>(a: Set<T>, b: Set<T>): Set<T>;
         intersect<T>(a: Set<T>, b: Set<T>): Set<T>;
@@ -152,9 +152,9 @@ class Sets
         return Array.from(this);
     }
 
-    static from<T>(values?: readonly T[] | null): Set<T>
+    static from<T>(iterable?: Iterable<T> | null): Set<T>
     {
-        return new Set(values);
+        return iterable ? new Set(iterable) : new Set();
     }
 
     static union<T>(a: Set<T>, b: Set<T>): Set<T>
@@ -204,6 +204,9 @@ declare global
 {
     interface Map<K, V>
     {
+        ks(): Set<K>;
+        vs(): Array<V>;
+
         find(predicate: (value: V) => boolean): Set<K>;
         keep(keys: Set<K>): Map<K, V>
 
@@ -213,6 +216,16 @@ declare global
 
 class Maps
 {
+    static ks<K, V>(this: Map<K, V>): Set<K>
+    {
+        return Set.from(this.keys());
+    }
+
+    static vs<K, V>(this: Map<K, V>): Array<V>
+    {
+        return Array.from(this.values());
+    }
+
     static find<K, V>(this: Map<K, V>, predicate: (value: V) => boolean): Set<K>
     {
         const array: Array<K> = new Array();
@@ -234,7 +247,7 @@ class Maps
 
     static update<K, V>(this: Map<K, V>, keys: Set<K>, fnCreate: (key: K) => V): boolean
     {
-        const existing: Set<K> = Set.from(Array.from(this.keys()));
+        const existing: Set<K> = this.ks();
         const remove: Set<K> = Set.difference(existing, keys);
         const create: Set<K> = Set.difference(keys, existing);
 
@@ -245,6 +258,8 @@ class Maps
     }
 }
 
+Objects.setFunction(Map.prototype, "ks", Maps.ks);
+Objects.setFunction(Map.prototype, "vs", Maps.vs);
 Objects.setFunction(Map.prototype, "find", Maps.find);
 Objects.setFunction(Map.prototype, "keep", Maps.keep);
 Objects.setFunction(Map.prototype, "update", Maps.update);

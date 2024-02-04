@@ -161,7 +161,7 @@ export class Profiler
 
         PROFILER_IGNORED_KEYS.forEach(key => entryMap.delete(key));
 
-        const result: ProfilerEntry[] = Array.from(entryMap.values());
+        const result: Array<ProfilerEntry> = entryMap.vs();
 
         return result.sort(Profiler.compare).slice(0, PROFILER_MAX_ENTRIES);
     }
