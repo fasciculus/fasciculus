@@ -15,9 +15,13 @@ export const loop = function ()
     Scheduler.initialize();
     Scheduler.run();
 
-    const set1: Set<number> = Set.from([1, 2, 3]);
+    const a: Set<number> = Set.from([1, 2, 3]);
+    const b: Set<number> = Set.from([2, 3, 4]);
+    const c: Set<number> = Set.from([3, 4, 5]);
+    const u: Set<number> = Set.union(a, b);
+    const ua: Set<number> = Set.unionAll([a, b, c]);
 
-    console.log(`set1: [${set1.toArray()}]`);
+    console.log(`a: [${a.toArray()}], a+b: [${u.toArray()}], a+b+c: [${ua.toArray()}]`);
 
     Profiler.stop();
 }

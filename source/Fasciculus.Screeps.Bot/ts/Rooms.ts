@@ -88,10 +88,10 @@ export class Chambers
     static get all(): Vector<Chamber> { return Dictionaries.values(Chambers._allChambers); }
     static get my(): Vector<Chamber> { return Chambers.all.filter(c => c.my); }
 
-    static get allControllers(): Set<ControllerId> { return Sets.clone(Chambers._allControllers); }
-    static get allSources(): Set<SourceId> { return Sets.clone(Chambers._allSources); }
+    static get allControllers(): Set<ControllerId> { return Chambers._allControllers.clone(); }
+    static get allSources(): Set<SourceId> { return Chambers._allSources.clone(); }
 
-    static get myWalls(): Set<WallId> { return Sets.clone(Chambers._myWalls); }
+    static get myWalls(): Set<WallId> { return Chambers._myWalls.clone(); }
 
     @profile
     static initialize(reset: boolean)
@@ -108,7 +108,7 @@ export class Chambers
         if (Dictionaries.update(Chambers._allChambers, existing, name => new Chamber(name)))
         {
             Chambers._allControllers = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
-            Chambers._allSources = Sets.unionAll(Chambers.all.map(c => c.sources));
+            Chambers._allSources = Set.unionAll(Chambers.all.map(c => c.sources));
         }
 
         Chambers._reset = false;
@@ -119,7 +119,7 @@ export class Chambers
     {
         if (Chambers._reset) return;
 
-        Chambers._myWalls = Sets.unionAll(Chambers.my.map(c => c.walls));
+        Chambers._myWalls = Set.unionAll(Chambers.my.map(c => c.walls));
 
         Chambers.all.forEach(c => c.reset());
 

@@ -409,25 +409,6 @@ export class Dictionaries
 
 export class Sets
 {
-    static map<T, U>(set: Set<T>, fn: (value: T) => U): Vector<U>
-    {
-        const result: Vector<U> = new Vector();
-
-        for (const value of set)
-        {
-            result.add(fn(value));
-        }
-
-        return result;
-    }
-
-    static clone<T>(set: Set<T> | undefined): Set<T>
-    {
-        if (!set || set.size == 0) return new Set();
-
-        return new Set(set);
-    }
-
     static union<T>(a: Set<T>, b: Set<T>): Set<T>
     {
         return new Set([...a, ...b]);
@@ -445,13 +426,13 @@ export class Sets
         return result;
     }
 
-    static intersect<T>(a: Set<T>, b: Set<T>): Set<T>
-    {
-        if (a.size == 0) return new Set(b);
-        if (b.size == 0) return new Set(a);
+    //static intersect<T>(a: Set<T>, b: Set<T>): Set<T>
+    //{
+    //    if (a.size == 0) return new Set(b);
+    //    if (b.size == 0) return new Set(a);
 
-        return new Set(Array.from(a).filter(x => b.has(x)));
-    }
+    //    return new Set(Array.from(a).filter(x => b.has(x)));
+    //}
 
     static difference<T>(a: Set<T>, b: Set<T>): Set<T>
     {

@@ -44,17 +44,24 @@ declare global
 {
     interface Array<T>
     {
-        toSet(): Set<T>;
+        append(values: Iterable<T>): number;
 
         min(fn: (value: T) => number): T | undefined;
+
+        toSet(): Set<T>;
     }
 }
 
 class Arrays
 {
-    static toSet<T>(this: Array<T>): Set<T>
+    static append<T>(this: Array<T>, values: Iterable<T>): number
     {
-        return new Set(this);
+        for (const value of values)
+        {
+            this.push(value);
+        }
+
+        return this.length;
     }
 
     static min<T>(this: Array<T>, fn: (value: T) => number): T | undefined
@@ -83,26 +90,41 @@ class Arrays
 
         return result;
     }
+
+    static toSet<T>(this: Array<T>): Set<T>
+    {
+        return new Set(this);
+    }
 }
 
-Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
+Objects.setFunction(Array.prototype, "append", Arrays.append);
 Objects.setFunction(Array.prototype, "min", Arrays.min);
+Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
 
 declare global
 {
     interface Set<T>
     {
+        clone(): Set<T>;
         toArray(): Array<T>;
     }
 
     interface SetConstructor
     {
         from<T>(values?: readonly T[] | null): Set<T>
+
+        union<T>(a: Set<T>, b: Set<T>): Set<T>;
+        unionAll<T>(sets: Iterable<Set<T>>): Set<T>;
     }
 }
 
 class Sets
 {
+    static clone<T>(this: Set<T>): Set<T>
+    {
+        return new Set(this);
+    }
+
     static toArray<T>(this: Set<T>): Array<T>
     {
         return Array.from(this);
@@ -112,10 +134,31 @@ class Sets
     {
         return new Set(values);
     }
+
+    static union<T>(a: Set<T>, b: Set<T>): Set<T>
+    {
+        return new Set([...a, ...b]);
+    }
+
+    static unionAll<T>(sets: Iterable<Set<T>>): Set<T>
+    {
+        const array: Array<T> = new Array();
+
+        for (const set of sets)
+        {
+            array.append(set);
+        }
+
+        return new Set(array);
+    }
 }
 
+Objects.setFunction(Set.prototype, "clone", Sets.clone);
 Objects.setFunction(Set.prototype, "toArray", Sets.toArray);
+
 Objects.setFunction(Set, "from", Sets.from);
+Objects.setFunction(Set, "union", Sets.union);
+Objects.setFunction(Set, "unionAll", Sets.unionAll);
 
 declare global
 {
