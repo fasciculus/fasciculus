@@ -15,7 +15,8 @@ export enum CreepType
     Tanker = "T",
     Upgrader = "U",
     Weller = "W",
-    Guard = "G"
+    Guard = "G",
+    Unknown = "_"
 }
 
 export enum CreepState
