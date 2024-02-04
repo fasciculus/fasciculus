@@ -348,13 +348,6 @@ export class Creeps
         });
     }
 
-    static oldUpdate<T>(creeps: Dictionary<T>, type: CreepType, create: (name: string) => T): DictionaryUpdateInfo<T> | undefined
-    {
-        const existing: Set<string> = Creeps._creeps.get(type) || new Set();
-
-        return Dictionaries.update(creeps, existing, create);
-    }
-
     static update<T>(creeps: Map<string, T>, type: CreepType, fnCreate: (name: string) => T): boolean
     {
         const names: Set<string> = Creeps._creeps.get(type) || new Set();

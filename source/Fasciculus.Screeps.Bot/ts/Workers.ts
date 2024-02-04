@@ -475,7 +475,7 @@ interface DamageInfo
 
 export class Repairers
 {
-    private static _repairers: Dictionary<Repairer> = {};
+    private static _repairers: Map<string, Repairer> = new Map();
     private static _all: Vector<Repairer> = new Vector();
     private static _maxEnergyPerTick: number = 0;
 
@@ -487,14 +487,14 @@ export class Repairers
     {
         if (reset)
         {
-            Repairers._repairers = {};
+            Repairers._repairers.clear();
             Repairers._all = new Vector();
             Repairers._maxEnergyPerTick = 0;
         }
 
-        if (Creeps.oldUpdate(Repairers._repairers, CreepType.Repairer, name => new Repairer(name)))
+        if (Creeps.update(Repairers._repairers, CreepType.Repairer, name => new Repairer(name)))
         {
-            Repairers._all = Dictionaries.values(Repairers._repairers);
+            Repairers._all = new Vector(Array.from(Repairers._repairers.values()));;
             Repairers._maxEnergyPerTick = Repairers._all.sum(r => r.maxEnergyPerTick);
         }
     }
@@ -652,7 +652,7 @@ interface ControllerWork
 
 export class Upgraders
 {
-    private static _upgraders: Dictionary<Upgrader> = {};
+    private static _upgraders: Map<string, Upgrader> = new Map();
     private static _all: Vector<Upgrader> = new Vector();
     private static _maxEnergyPerTick: number = 0;
 
@@ -665,14 +665,14 @@ export class Upgraders
     {
         if (reset)
         {
-            Upgraders._upgraders = {};
+            Upgraders._upgraders.clear();
             Upgraders._all = new Vector();
             Upgraders._maxEnergyPerTick = 0;
         }
 
-        if (Creeps.oldUpdate(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
+        if (Creeps.update(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
         {
-            Upgraders._all = Dictionaries.values(Upgraders._upgraders);
+            Upgraders._all = new Vector(Array.from(Upgraders._upgraders.values()));
             Upgraders._maxEnergyPerTick = Upgraders._all.sum(u => u.maxEnergyPerTick);
         }
     }
@@ -864,13 +864,13 @@ const FIND_CLOSEST_WELL_OPTS: FindPathOpts =
 
 export class Wellers
 {
-    private static _wellers: Dictionary<Weller> = {};
+    private static _wellers: Map<string, Weller> = new Map();
 
     private static _all: Vector<Weller> = new Vector();
     private static _maxEnergyPerTick: number = 0;
     private static _maxEnergyCapacity: number = 0;
 
-    static get(name?: string): Weller | undefined { return name ? Wellers._wellers[name] : undefined; }
+    static get(name?: string): Weller | undefined { return name ? Wellers._wellers.get(name) : undefined; }
 
     static get count(): number { return Wellers._all.length; }
     static get all(): Vector<Weller> { return Wellers._all.clone(); }
@@ -883,15 +883,15 @@ export class Wellers
     {
         if (reset)
         {
-            Wellers._wellers = {};
+            Wellers._wellers.clear();
             Wellers._all = new Vector();
             Wellers._maxEnergyPerTick = 0;
             Wellers._maxEnergyCapacity = 0;
         }
 
-        if (Creeps.oldUpdate(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
+        if (Creeps.update(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
         {
-            Wellers._all = Dictionaries.values(Wellers._wellers);
+            Wellers._all = new Vector(Array.from(Wellers._wellers.values()));;
             Wellers._maxEnergyPerTick = Wellers._all.sum(w => w.maxEnergyPerTick);
             Wellers._maxEnergyCapacity = Wellers._all.max(w => w.energyCapacity)?.energyCapacity || 0;
         }
