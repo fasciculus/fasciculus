@@ -4,7 +4,10 @@ declare global
 {
     type SpawnId = Id<StructureSpawn>;
     type SiteId = Id<ConstructionSite>;
+}
 
+declare global
+{
     interface Game
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
@@ -24,14 +27,6 @@ declare global
         get myCreeps(): Array<Creep>;
 
         get username(): string;
-    }
-
-    interface Memory
-    {
-        [index: string]: any;
-
-        get<T>(key: string, initial: T): T;
-        sub<T>(root: string, key: string, initial: T): T;
     }
 }
 
@@ -152,6 +147,61 @@ class ScreepsGame
     }
 }
 
+declare global
+{
+    interface Memory
+    {
+        [index: string]: any;
+
+        get<T>(key: string, initial: T): T;
+        sub<T>(root: string, key: string, initial: T): T;
+    }
+}
+
+class ScreepsMemory
+{
+    static get<T>(key: string, initial: T): T
+    {
+        var result: any | undefined = Memory[key];
+
+        if (!result)
+        {
+            Memory[key] = result = initial;
+        }
+
+        return result as T;
+    }
+
+    static sub<T>(root: string, key: string, initial: T): T
+    {
+        const parent: { [index: string]: T } = ScreepsMemory.get(root, {});
+        var result: T | undefined = parent[key];
+
+        if (!result)
+        {
+            parent[key] = result = initial;
+        }
+
+        return result as T;
+    }
+}
+
+declare global
+{
+    interface Room
+    {
+        get rcl(): number;
+    }
+}
+
+class ScreepsRoom
+{
+    static rcl(this: Room): number
+    {
+        return this.controller?.level || 0;
+    }
+}
+
 export class Screeps
 {
     static setup()
@@ -168,30 +218,10 @@ export class Screeps
         Objects.setGetter(Game, "myCreeps", ScreepsGame.myCreeps);
         Objects.setGetter(Game, "username", ScreepsGame.username);
 
-        Objects.setFunction(Memory, "get", function <T>(key: string, initial: T): T
-        {
-            var result: any | undefined = Memory[key];
+        Objects.setFunction(Memory, "get", ScreepsMemory.get);
+        Objects.setFunction(Memory, "sub", ScreepsMemory.sub);
 
-            if (!result)
-            {
-                Memory[key] = result = initial;
-            }
-
-            return result as T;
-        });
-
-        Objects.setFunction(Memory, "sub", function <T>(root: string, key: string, initial: T): T
-        {
-            const parent: { [index: string]: T } = Memory.get(root, {});
-            var result: T | undefined = parent[key];
-
-            if (!result)
-            {
-                parent[key] = result = initial;
-            }
-
-            return result as T;
-        });
+        Objects.setGetter(Room.prototype, "rcl", ScreepsRoom.rcl);
     }
 }
 
