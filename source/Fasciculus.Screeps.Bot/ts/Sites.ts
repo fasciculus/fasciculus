@@ -33,14 +33,8 @@ export class Sites
     static get count(): number { return Sites._count; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Sites._sites = {};
-            Sites._count = 0;
-        }
-
         const existing: Set<string> = Game.mySiteIds;
 
         if (Dictionaries.update(Sites._sites, existing, id => new Site(id as SiteId)))

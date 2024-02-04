@@ -29,13 +29,8 @@ export class Controllers
     static get myCount(): number { return Controllers.my.length; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Controllers._allControllers.clear();
-        }
-
         Controllers._allControllers.update(Chambers.allControllers, id => new Controller(id));
     }
 }
@@ -83,13 +78,8 @@ export class Spawns
     static get best(): Spawn | undefined { return Spawns.idle.max(s => s.roomEnergyAvailable); }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Spawns._spawns = {};
-        }
-
         const existing: Set<SpawnId> = Game.mySpawnIds;
 
         Dictionaries.update(Spawns._spawns, existing, id => new Spawn(id as SpawnId));
@@ -113,13 +103,8 @@ export class Extensions
     private static _extensions: Dictionary<Extension> = {};
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Extensions._extensions = {};
-        }
-
         Dictionaries.update(Extensions._extensions, Extensions.existing, id => new Extension(id as ExtensionId));
     }
 
@@ -169,13 +154,8 @@ export class Walls
     static get newest(): Vector<Wall> { return Walls.my.filter(w => w.hits == 1); }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Walls._myWalls = {};
-        }
-
         Dictionaries.update(Walls._myWalls, Chambers.myWalls, id => new Wall(id as WallId));
     }
 

@@ -35,13 +35,8 @@ export class Wells
     static get assignableCount(): number { return Wells.assignable.length; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Wells._wells = {};
-        }
-
         Dictionaries.update(Wells._wells, Chambers.allSources, id => new Well(id as SourceId));
     }
 }

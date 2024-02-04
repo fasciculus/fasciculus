@@ -1,4 +1,3 @@
-import { VERSION } from "./Config";
 import { Bodies, Creeps } from "./Creeps";
 import { Guards } from "./Forces";
 import { Controllers, Extensions, Spawns, Walls } from "./Infrastructure";
@@ -14,41 +13,28 @@ import { Builders, Repairers, Upgraders, Wellers } from "./Workers";
 
 export class Scheduler
 {
-    private static _version: string = "";
-
-    private static updateVersion(): boolean
-    {
-        const changed: boolean = Scheduler._version != VERSION;
-
-        Scheduler._version = VERSION;
-
-        return changed;
-    }
-
     static initialize()
     {
-        const reset: boolean = Scheduler.updateVersion();
-
-        Chambers.initialize(reset);
-        Sites.initialize(reset);
-        Spawns.initialize(reset);
-        Extensions.initialize(reset);
-        Walls.initialize(reset);
+        Chambers.initialize();
+        Sites.initialize();
+        Spawns.initialize();
+        Extensions.initialize();
+        Walls.initialize();
         Repairs.initialize();
-        Markers.initialize(reset);
+        Markers.initialize();
 
-        Wells.initialize(reset);
-        Controllers.initialize(reset);
+        Wells.initialize();
+        Controllers.initialize();
 
-        Bodies.initialize(reset);
-        Creeps.initialize(reset);
-        Wellers.initialize(reset);
-        Upgraders.initialize(reset);
-        Builders.initialize(reset);
-        Repairers.initialize(reset);
-        Tankers.initialize(reset);
+        Bodies.initialize();
+        Creeps.initialize();
+        Wellers.initialize();
+        Upgraders.initialize();
+        Builders.initialize();
+        Repairers.initialize();
+        Tankers.initialize();
 
-        Guards.initialize(reset);
+        Guards.initialize();
     }
 
     static run()

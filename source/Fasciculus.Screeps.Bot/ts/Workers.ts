@@ -192,15 +192,8 @@ export class Builders
     static get maxEnergyPerTick(): number { return Builders._maxEnergyPerTick; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Builders._builders.clear();
-            Builders._all = new Vector();
-            Builders._maxEnergyPerTick = 0;
-        }
-
         if (Creeps.update(Builders._builders, CreepType.Builder, name => new Builder(name)))
         {
             Builders._all = new Vector(Array.from(Builders._builders.values()));
@@ -483,15 +476,8 @@ export class Repairers
     static get maxEnergyPerTick(): number { return Repairers._maxEnergyPerTick; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Repairers._repairers.clear();
-            Repairers._all = new Vector();
-            Repairers._maxEnergyPerTick = 0;
-        }
-
         if (Creeps.update(Repairers._repairers, CreepType.Repairer, name => new Repairer(name)))
         {
             Repairers._all = new Vector(Array.from(Repairers._repairers.values()));;
@@ -661,15 +647,8 @@ export class Upgraders
     static get maxEnergyPerTick(): number { return Upgraders._maxEnergyPerTick; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Upgraders._upgraders.clear();
-            Upgraders._all = new Vector();
-            Upgraders._maxEnergyPerTick = 0;
-        }
-
         if (Creeps.update(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
         {
             Upgraders._all = new Vector(Array.from(Upgraders._upgraders.values()));
@@ -879,16 +858,8 @@ export class Wellers
     static get maxEnergyCapacity(): number { return Wellers._maxEnergyCapacity; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Wellers._wellers.clear();
-            Wellers._all = new Vector();
-            Wellers._maxEnergyPerTick = 0;
-            Wellers._maxEnergyCapacity = 0;
-        }
-
         if (Creeps.update(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
         {
             Wellers._all = new Vector(Array.from(Wellers._wellers.values()));;

@@ -164,13 +164,8 @@ export class Bodies
         return rcl < 3 ? Bodies.smallTankerTemplate : Bodies.largeTankerTemplate;
     }
 
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Bodies._templates = new Vector();
-        }
-
         if (Bodies._templates.length == 0)
         {
             for (var rcl = 0; rcl < 9; ++rcl)
@@ -301,14 +296,8 @@ export class Creeps
     static get oldest(): Creep | undefined { return Game.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Creeps._types.clear();
-            Creeps._creeps.clear();
-        }
-
         if (Creeps.updateTypes())
         {
             Creeps.updateCreeps();

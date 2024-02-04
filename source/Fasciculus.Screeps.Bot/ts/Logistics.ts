@@ -170,14 +170,8 @@ export class Tankers
     static get count(): number { return Tankers._all.length; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Tankers._tankers.clear();
-            Tankers._all = new Vector();
-        }
-
         if (Creeps.update(Tankers._tankers, CreepType.Tanker, name => new Tanker(name)))
         {
             Tankers._all = new Vector(Array.from(Tankers._tankers.values()));

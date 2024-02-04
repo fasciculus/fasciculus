@@ -94,15 +94,8 @@ export class Chambers
     static get myWalls(): Set<WallId> { return Chambers._myWalls.clone(); }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Chambers._allChambers = {};
-            Chambers._allControllers = new Set();
-            Chambers._allSources = new Set();
-        }
-
         const existing: Set<string> = Game.knownRoomNames;
 
         if (Dictionaries.update(Chambers._allChambers, existing, name => new Chamber(name)))

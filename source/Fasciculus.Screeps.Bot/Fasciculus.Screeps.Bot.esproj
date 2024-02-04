@@ -45,9 +45,6 @@ XmlDocument doc = new XmlDocument();
 doc.Load("Config.xml");
 XmlNodeList adds = doc.GetElementsByTagName("Add");
 List<string> lines = new List<string>();
-string profilerSession = Guid.NewGuid().ToString("N");
-lines.Add("export const VERSION = \"" + Version + "\";");
-lines.Add("export const PROFILER_SESSION = \"" + profilerSession + "\";");
 foreach (var add in adds)
 {
   XmlElement element = (XmlElement)add;

@@ -106,14 +106,8 @@ export class Markers
     static get guardMarkerCount(): number { return Markers._guardMarkers.length; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Markers._markers = {};
-            Markers._guardMarkers = new Vector();
-        }
-
         const existing: Set<string> = Game.myFlagNames;
 
         if (Dictionaries.update(Markers._markers, existing, Markers.create))

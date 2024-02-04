@@ -90,14 +90,8 @@ export class Guards
     static get count(): number { return Guards._all.length; }
 
     @profile
-    static initialize(reset: boolean)
+    static initialize()
     {
-        if (reset)
-        {
-            Guards._guards.clear();
-            Guards._all = new Vector();
-        }
-
         if (Creeps.update(Guards._guards, CreepType.Guard, name => new Guard(name)))
         {
             Guards._all = new Vector(Array.from(Guards._guards.values()));
