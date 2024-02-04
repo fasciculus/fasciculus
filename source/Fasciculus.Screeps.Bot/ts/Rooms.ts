@@ -1,38 +1,5 @@
-import { ControllerId, Dictionaries, Dictionary, Point, Sets, SourceId, Vector, Vectors, WallId } from "./Common";
+import { ControllerId, Dictionaries, Dictionary, Sets, SourceId, Vector, Vectors, WallId } from "./Common";
 import { profile } from "./Profiling";
-
-export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;
-
-export class Territory
-{
-    readonly terrain: RoomTerrain;
-
-    constructor(terrain: RoomTerrain)
-    {
-        this.terrain = terrain;
-    }
-
-    at(p: Point): FieldType { return this.terrain.get(p.x, p.y); }
-    around(p: Point): Vector<FieldType> { return p.around().map(q => this.at(q)); }
-}
-
-export class Territories
-{
-    private static _cache: Dictionary<Territory> = {};
-
-    static get(room: Room): Territory
-    {
-        let name = room.name;
-        let result: Territory | undefined = Territories._cache[name];
-
-        if (!result)
-        {
-            result = Territories._cache[name] = new Territory(room.getTerrain());
-        }
-
-        return result;
-    }
-}
 
 export class Finder
 {
@@ -75,13 +42,10 @@ export class Chamber
     get controller(): StructureController | undefined { return this.room.controller; }
     get my(): boolean { return this.controller?.my || false; }
     get reservation(): ReservationDefinition | undefined { return this.controller?.reservation; }
-    get controlled(): boolean { return this.my || this.reservation?.username == Game.username; }
     get rcl(): number { return this.controller?.level || 0; }
 
     get energyAvailable(): number { return this.room.energyAvailable || 0; }
     get energyCapacityAvailable(): number { return this.room.energyCapacityAvailable || 0; }
-
-    get territory(): Territory { return Territories.get(this.room); }
 
     constructor(name: string)
     {
