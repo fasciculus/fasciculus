@@ -28,12 +28,10 @@
   </Target>
   <Target Name="CreateConfig" BeforeTargets="Build">
     <Message Importance="high" Text="Creating Config.ts" />
-    <CreateConfig Version="$(Version)" />
+    <CreateConfig />
   </Target>
   <UsingTask TaskName="CreateConfig" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
-    <ParameterGroup>
-      <Version ParameterType="System.String" Required="True" Output="False" />
-    </ParameterGroup>
+    <ParameterGroup />
     <Task>
       <Reference Include="System.Xml" />
       <Using Namespace="System" />
