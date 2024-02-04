@@ -409,23 +409,6 @@ export class Dictionaries
 
 export class Sets
 {
-    static union<T>(a: Set<T>, b: Set<T>): Set<T>
-    {
-        return new Set([...a, ...b]);
-    }
-
-    static unionAll<T>(sets: Iterable<Set<T>>): Set<T>
-    {
-        var result: Set<T> = new Set();
-
-        for (const set of sets)
-        {
-            result = Sets.union(result, set);
-        }
-
-        return result;
-    }
-
     //static intersect<T>(a: Set<T>, b: Set<T>): Set<T>
     //{
     //    if (a.size == 0) return new Set(b);
