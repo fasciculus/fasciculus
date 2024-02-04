@@ -380,8 +380,8 @@ export class Dictionaries
     static update<T>(dictionary: Dictionary<T>, existing: Set<string>, create: (key: string) => T): DictionaryUpdateInfo<T> | undefined
     {
         const keys: Set<string> = Dictionaries.keys(dictionary);
-        const toDelete: Set<string> = Sets.difference(keys, existing);
-        const toCreate: Set<string> = Sets.difference(existing, keys);
+        const toDelete: Set<string> = Set.difference(keys, existing);
+        const toCreate: Set<string> = Set.difference(existing, keys);
         const changed: boolean = toDelete.size > 0 || toCreate.size > 0;
 
         if (!changed) return undefined;
@@ -404,25 +404,6 @@ export class Dictionaries
         }
 
         return { deleted, created };
-    }
-}
-
-export class Sets
-{
-    //static intersect<T>(a: Set<T>, b: Set<T>): Set<T>
-    //{
-    //    if (a.size == 0) return new Set(b);
-    //    if (b.size == 0) return new Set(a);
-
-    //    return new Set(Array.from(a).filter(x => b.has(x)));
-    //}
-
-    static difference<T>(a: Set<T>, b: Set<T>): Set<T>
-    {
-        if (a.size == 0) return new Set();
-        if (b.size == 0) return new Set(a);
-
-        return new Set(Array.from(a).filter(x => !b.has(x)));
     }
 }
 
