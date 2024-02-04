@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, SourceId, Vector, Vectors, WallId } from "./Common";
+import { Dictionaries, Dictionary, Vector, Vectors } from "./Common";
 import { profile } from "./Profiling";
 
 export class Finder

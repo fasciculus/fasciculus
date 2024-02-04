@@ -1,4 +1,4 @@
-import { CreepState, CreepType, Dictionaries, Dictionary, Repairable, RepairableId, SourceId, Stores, Vector, Vectors } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, Stores, Vector, Vectors } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Controller, Controllers, Spawns, Walls } from "./Infrastructure";
 import { profile } from "./Profiling";
@@ -6,14 +6,6 @@ import { Repairs } from "./Repairs";
 import { Well, Wells } from "./Resources";
 import { Site, Sites } from "./Sites";
 import { Paths } from "./Travelling";
-
-const BUILDER_MOVE_TO_OPTS: MoveToOpts =
-{
-    visualizePathStyle:
-    {
-        stroke: "#fff"
-    }
-};
 
 type BuilderSupply = StructureSpawn | StructureContainer;
 type BuilderSupplyId = Id<StructureSpawn | StructureContainer>;

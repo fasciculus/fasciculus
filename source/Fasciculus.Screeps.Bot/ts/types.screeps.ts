@@ -2,9 +2,16 @@ import { Objects } from "./types.common";
 
 declare global
 {
+    type ContainerId = Id<StructureContainer>;
     type ControllerId = Id<StructureController>;
+    type ExtensionId = Id<StructureExtension>;
     type SpawnId = Id<StructureSpawn>;
     type SiteId = Id<ConstructionSite>;
+    type SourceId = Id<Source>;
+    type WallId = Id<StructureWall>;
+
+    type RepairableId = Id<StructureRoad | StructureWall>;
+    type Repairable = StructureRoad | StructureWall;
 }
 
 declare global

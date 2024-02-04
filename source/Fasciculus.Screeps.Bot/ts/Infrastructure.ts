@@ -1,4 +1,4 @@
-import { CreepState, CreepType, Dictionaries, Dictionary, ExtensionId, Names, Stores, Vector, WallId } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, Names, Stores, Vector } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
 import { profile } from "./Profiling";
 import { Chamber, Chambers } from "./Rooms";

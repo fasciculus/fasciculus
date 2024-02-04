@@ -1,4 +1,4 @@
-import { Dictionary, Repairable, RepairableId, Vector } from "./Common";
+import { Dictionary, Vector } from "./Common";
 import { Wall, Walls } from "./Infrastructure";
 import { profile } from "./Profiling";
 

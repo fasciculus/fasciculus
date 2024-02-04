@@ -1,12 +1,4 @@
 
-export type ContainerId = Id<StructureContainer>;
-export type ExtensionId = Id<StructureExtension>;
-export type SourceId = Id<Source>;
-export type WallId = Id<StructureWall>;
-
-export type RepairableId = Id<StructureRoad | StructureWall>
-export type Repairable = StructureRoad | StructureWall
-
 export enum CreepType
 {
     Builder = "B",
