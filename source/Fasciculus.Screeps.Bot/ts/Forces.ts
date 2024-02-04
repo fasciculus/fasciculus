@@ -135,7 +135,7 @@ export class Guards
 
         for (const guard of unassignedGuards)
         {
-            const nearestMarker = unassignedMarkers.at(0); // Positions.closestByRange(guard, unassignedMarkers);
+            const nearestMarker = unassignedMarkers[0]; // Positions.closestByRange(guard, unassignedMarkers);
 
             if (!nearestMarker) console.log("no nearestMarker");
             if (!nearestMarker) continue;

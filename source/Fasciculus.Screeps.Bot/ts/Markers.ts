@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, MarkerType, Vector } from "./Common";
+import { Dictionaries, MarkerType } from "./Common";
 import { Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Wellers } from "./Workers";
@@ -98,23 +98,19 @@ export class GuardMarker extends Marker<GuardMarkerMemory>
 
 export class Markers
 {
-    private static _markers: Dictionary<MarkerBase> = {};
+    private static _markers: Map<string, MarkerBase> = new Map();
 
-    private static _guardMarkers: Vector<GuardMarker> = new Vector();
+    private static _guardMarkers: Array<GuardMarker> = new Array();
 
-    static get guardMarkers(): Vector<GuardMarker> { return Markers._guardMarkers.clone(); }
+    static get guardMarkers(): Array<GuardMarker> { return Array.from(Markers._guardMarkers); }
     static get guardMarkerCount(): number { return Markers._guardMarkers.length; }
 
     @profile
     static initialize()
     {
-        const existing: Set<string> = Game.myFlagNames;
-
-        if (Dictionaries.update(Markers._markers, existing, Markers.create))
+        if (Markers._markers.update(Game.myFlagNames, Markers.create))
         {
-            const markers = Dictionaries.values(Markers._markers);
-
-            Markers._guardMarkers = markers.filter(m => m.type == MarkerType.Guard) as Vector<GuardMarker>;
+            Markers._guardMarkers = Markers._markers.vs().filter(m => m.type == MarkerType.Guard) as Array<GuardMarker>;
         }
     }
 
@@ -131,6 +127,6 @@ export class Markers
     @profile
     static run()
     {
-        Dictionaries.values(Markers._markers).forEach(m => m.run());
+        Markers._markers.forEach(m => m.run());
     }
 }
