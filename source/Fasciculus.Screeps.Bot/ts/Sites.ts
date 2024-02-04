@@ -1,5 +1,5 @@
 
-import { Dictionaries, Dictionary, GameWrap, SiteId, Vector } from "./Common";
+import { Dictionaries, Dictionary, Vector } from "./Common";
 import { profile } from "./Profiling";
 import { Chambers } from "./Rooms";
 
@@ -41,7 +41,7 @@ export class Sites
             Sites._count = 0;
         }
 
-        const existing: Set<string> = GameWrap.myConstructionSites.map(s => s.id).toSet();
+        const existing: Set<string> = Game.mySiteIds;
 
         if (Dictionaries.update(Sites._sites, existing, id => new Site(id as SiteId)))
         {

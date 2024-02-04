@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, GameWrap, MarkerType, Vector } from "./Common";
+import { Dictionaries, Dictionary, MarkerType, Vector } from "./Common";
 import { Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Wellers } from "./Workers";

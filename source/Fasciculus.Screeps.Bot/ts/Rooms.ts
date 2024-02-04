@@ -1,4 +1,4 @@
-import { ControllerId, Dictionaries, Dictionary, GameWrap, Point, Sets, SourceId, Vector, Vectors, WallId } from "./Common";
+import { ControllerId, Dictionaries, Dictionary, Point, Sets, SourceId, Vector, Vectors, WallId } from "./Common";
 import { profile } from "./Profiling";
 
 export type FieldType = 0 | TERRAIN_MASK_WALL | TERRAIN_MASK_SWAMP;

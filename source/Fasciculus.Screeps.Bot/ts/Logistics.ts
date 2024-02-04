@@ -1,8 +1,8 @@
-import { CreepState, CreepType, Dictionaries, Dictionary, GameWrap, Random, Stores, Vector } from "./Common";
+import { CreepState, CreepType, Dictionaries, Dictionary, Random, Stores, Vector } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Spawn, Spawns } from "./Infrastructure";
 import { profile } from "./Profiling";
-import { Mover, Paths } from "./Travelling";
+import { Paths } from "./Travelling";
 import { Weller, Wellers } from "./Workers";
 
 interface TankerMemory extends CreepBaseMemory

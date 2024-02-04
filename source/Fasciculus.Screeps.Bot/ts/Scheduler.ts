@@ -1,4 +1,3 @@
-import { GameWrap } from "./Common";
 import { VERSION } from "./Config";
 import { Bodies, Creeps } from "./Creeps";
 import { Guards } from "./Forces";

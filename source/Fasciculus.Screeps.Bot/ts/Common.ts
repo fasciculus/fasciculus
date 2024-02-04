@@ -2,7 +2,6 @@
 export type ContainerId = Id<StructureContainer>;
 export type ControllerId = Id<StructureController>;
 export type ExtensionId = Id<StructureExtension>;
-export type SiteId = Id<ConstructionSite>;
 export type SourceId = Id<Source>;
 export type WallId = Id<StructureWall>;
 
@@ -461,12 +460,6 @@ export class Sets
 
         return new Set(Array.from(a).filter(x => !b.has(x)));
     }
-}
-
-export class GameWrap
-{
-    static get myStructures(): Vector<Structure> { return Dictionaries.values(Game.structures); }
-    static get myConstructionSites(): Vector<ConstructionSite> { return Dictionaries.values(Game.constructionSites); }
 }
 
 export class Stores
