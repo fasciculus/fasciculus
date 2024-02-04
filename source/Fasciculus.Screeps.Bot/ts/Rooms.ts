@@ -108,7 +108,7 @@ export class Chambers
         if (Dictionaries.update(Chambers._allChambers, existing, name => new Chamber(name)))
         {
             Chambers._allControllers = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
-            Chambers._allSources = Set.unionAll(Chambers.all.map(c => c.sources));
+            Chambers._allSources = Set.flatten(Chambers.all.map(c => c.sources));
         }
 
         Chambers._reset = false;
@@ -119,7 +119,7 @@ export class Chambers
     {
         if (Chambers._reset) return;
 
-        Chambers._myWalls = Set.unionAll(Chambers.my.map(c => c.walls));
+        Chambers._myWalls = Set.flatten(Chambers.my.map(c => c.walls));
 
         Chambers.all.forEach(c => c.reset());
 

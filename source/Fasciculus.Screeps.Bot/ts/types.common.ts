@@ -133,7 +133,7 @@ declare global
         from<T>(values?: readonly T[] | null): Set<T>
 
         union<T>(a: Set<T>, b: Set<T>): Set<T>;
-        unionAll<T>(sets: Iterable<Set<T>>): Set<T>;
+        flatten<T>(sets: Iterable<Set<T>>): Set<T>;
     }
 }
 
@@ -159,7 +159,7 @@ class Sets
         return new Set([...a, ...b]);
     }
 
-    static unionAll<T>(sets: Iterable<Set<T>>): Set<T>
+    static flatten<T>(sets: Iterable<Set<T>>): Set<T>
     {
         const array: Array<T> = new Array();
 
@@ -177,7 +177,7 @@ Objects.setFunction(Set.prototype, "toArray", Sets.toArray);
 
 Objects.setFunction(Set, "from", Sets.from);
 Objects.setFunction(Set, "union", Sets.union);
-Objects.setFunction(Set, "unionAll", Sets.unionAll);
+Objects.setFunction(Set, "flatten", Sets.flatten);
 
 declare global
 {
