@@ -15,5 +15,9 @@ export const loop = function ()
     Scheduler.initialize();
     Scheduler.run();
 
+    const set1: Set<number> = Set.from([1, 2, 3]);
+
+    console.log(`set1: [${set1.toArray()}]`);
+
     Profiler.stop();
 }

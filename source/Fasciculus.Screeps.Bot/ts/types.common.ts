@@ -50,37 +50,43 @@ declare global
     }
 }
 
-Objects.setFunction(Array.prototype, "toSet", function<T>(this: Array<T>): Set<T>
+class Arrays
 {
-    return new Set(this);
-});
-
-Objects.setFunction(Array.prototype, "min", function <T>(this: Array<T>, fn: (value: T) => number): T | undefined
-{
-    const length: number = this.length;
-
-    if (length == 0) return undefined;
-
-    var result: T = this[0];
-
-    if (length == 1) return result;
-
-    var minValue: number = fn(result);
-
-    for (let i = 1; i < length; ++i)
+    static toSet<T>(this: Array<T>): Set<T>
     {
-        const candidate: T = this[i];
-        const value: number = fn(candidate);
-
-        if (value < minValue)
-        {
-            result = candidate;
-            minValue = value;
-        }
+        return new Set(this);
     }
 
-    return result;
-});
+    static min<T>(this: Array<T>, fn: (value: T) => number): T | undefined
+    {
+        const length: number = this.length;
+
+        if (length == 0) return undefined;
+
+        var result: T = this[0];
+
+        if (length == 1) return result;
+
+        var minValue: number = fn(result);
+
+        for (let i = 1; i < length; ++i)
+        {
+            const candidate: T = this[i];
+            const value: number = fn(candidate);
+
+            if (value < minValue)
+            {
+                result = candidate;
+                minValue = value;
+            }
+        }
+
+        return result;
+    }
+}
+
+Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
+Objects.setFunction(Array.prototype, "min", Arrays.min);
 
 declare global
 {
@@ -88,12 +94,28 @@ declare global
     {
         toArray(): Array<T>;
     }
+
+    interface SetConstructor
+    {
+        from<T>(values?: readonly T[] | null): Set<T>
+    }
 }
 
-Objects.setFunction(Set.prototype, "toArray", function <T>(this: Set<T>): Array<T>
+class Sets
 {
-    return Array.from(this);
-});
+    static toArray<T>(this: Set<T>): Array<T>
+    {
+        return Array.from(this);
+    }
+
+    static from<T>(values?: readonly T[] | null): Set<T>
+    {
+        return new Set(values);
+    }
+}
+
+Objects.setFunction(Set.prototype, "toArray", Sets.toArray);
+Objects.setFunction(Set, "from", Sets.from);
 
 declare global
 {
@@ -104,23 +126,29 @@ declare global
     }
 }
 
-Objects.setFunction(Map.prototype, "find", function <K, V>(this: Map<K, V>, predicate: (value: V) => boolean): Set<K>
+class Maps
 {
-    const result: Set<K> = new Set();
+    static find<K, V>(this: Map<K, V>, predicate: (value: V) => boolean): Set<K>
+    {
+        const array: Array<K> = new Array();
 
-    this.forEach((v, k) => { if (predicate(v)) result.add(k); });
+        this.forEach((v, k) => { if (predicate(v)) array.push(k); });
 
-    return result;
-});
+        return new Set(array);
+    }
 
-Objects.setFunction(Map.prototype, "keep", function <K, V>(this: Map<K, V>, keys: Set<K>): Map<K, V>
-{
-    const toDelete: Array<K> = new Array();
+    static keep<K, V>(this: Map<K, V>, keys: Set<K>): Map<K, V>
+    {
+        const toDelete: Array<K> = new Array();
 
-    this.forEach((v, k) => { if (!keys.has(k)) toDelete.push(k); });
-    toDelete.forEach(k => this.delete(k));
+        this.forEach((v, k) => { if (!keys.has(k)) toDelete.push(k); });
+        toDelete.forEach(k => this.delete(k));
 
-    return this;
-});
+        return this;
+    }
+}
+
+Objects.setFunction(Map.prototype, "find", Maps.find);
+Objects.setFunction(Map.prototype, "keep", Maps.keep);
 
 export { };
