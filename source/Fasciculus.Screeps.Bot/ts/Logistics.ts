@@ -164,7 +164,7 @@ export class Tanker extends CreepBase<TankerMemory>
 
 export class Tankers
 {
-    private static _tankers: Dictionary<Tanker> = {};
+    private static _tankers: Map<string, Tanker> = new Map();
     private static _all: Vector<Tanker> = new Vector();
 
     static get count(): number { return Tankers._all.length; }
@@ -174,13 +174,13 @@ export class Tankers
     {
         if (reset)
         {
-            Tankers._tankers = {};
+            Tankers._tankers.clear();
             Tankers._all = new Vector();
         }
 
-        if (Creeps.oldUpdate(Tankers._tankers, CreepType.Tanker, name => new Tanker(name)))
+        if (Creeps.update(Tankers._tankers, CreepType.Tanker, name => new Tanker(name)))
         {
-            Tankers._all = Dictionaries.values(Tankers._tankers);
+            Tankers._all = new Vector(Array.from(Tankers._tankers.values()));
         }
     }
 
