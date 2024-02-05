@@ -10,11 +10,14 @@ import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
 import { Paths } from "./Travelling";
 import { Builders, Repairers, Upgraders, Wellers } from "./Workers";
+import { CLI } from "./cli";
 
 export class Scheduler
 {
     static initialize()
     {
+        CLI.setup();
+
         Sites.initialize();
         Spawns.initialize();
         Walls.initialize();

@@ -1,5 +1,4 @@
-import { PROFILER_IGNORED_KEYS, PROFILER_MAX_ENTRIES, PROFILER_WARMUP } from "./Config";
-import { Objects } from "./types.common";
+import { PROFILER_WARMUP } from "./Config";
 
 export function profile<T extends new (...args: any[]) => any, A extends any[], R>(target: (this: T, ...args: A) => R,
     context: ClassMemberDecoratorContext)
@@ -34,37 +33,30 @@ export function profile<T extends new (...args: any[]) => any, A extends any[], 
     return replacement;
 }
 
-interface ProfilerCLI
-{
-    log(): void;
-    reset(): void;
-}
-
-interface ProfilerEntry
+export interface ProfilerEntry
 {
     key: string;
     calls: number;
     duration: number;
 }
 
-type ProfilerMap = Map<string, ProfilerEntry>;
-
 export class Profiler
 {
-    private static warmup: number = PROFILER_WARMUP;
+    private static _warmup: number = PROFILER_WARMUP;
 
-    private static loadUsage: number = 0;
-    private static startTime: number = Game.time;
+    private static _loadUsage: number = 0;
+    private static _startTime: number = Game.time;
 
-    private static entries: ProfilerMap = new Map();
+    private static _entries: Map<string, ProfilerEntry> = new Map();
 
-    private static resetRequested: boolean = false;
+    private static _resetRequested: boolean = false;
 
-    private static cli: ProfilerCLI = { log: Profiler.log, reset: Profiler.reset };
+    static get warmup(): number { return Profiler._warmup; }
+    static get ticks(): number { return Math.max(1, Game.time - Profiler._startTime + 1); }
 
     static record(type: string, name: string, duration: number): void
     {
-        if (Profiler.warmup > 0) return;
+        if (Profiler._warmup > 0) return;
 
         const key: string = `${type}:${name}`;
         const entry: ProfilerEntry = Profiler.getEntry(key);
@@ -75,12 +67,12 @@ export class Profiler
 
     private static getEntry(key: string): ProfilerEntry
     {
-        var result: ProfilerEntry | undefined = Profiler.entries.get(key);
+        var result: ProfilerEntry | undefined = Profiler._entries.get(key);
 
         if (!result)
         {
             result = { key, calls: 0, duration: 0 };
-            Profiler.entries.set(key, result)
+            Profiler._entries.set(key, result)
         }
 
         return result;
@@ -88,86 +80,44 @@ export class Profiler
 
     static start(): void
     {
-        Objects.setValue(Game, "profiler", Profiler.cli);
-
-        if (Profiler.resetRequested)
+        if (Profiler._resetRequested)
         {
-            Profiler.entries.clear();
-            Profiler.startTime = Game.time;
-            Profiler.resetRequested = false;
+            Profiler._entries.clear();
+            Profiler._startTime = Game.time;
+            Profiler._resetRequested = false;
         }
 
-        if (Profiler.warmup == 0)
+        if (Profiler._warmup == 0)
         {
-            Profiler.loadUsage = Game.cpu.getUsed();
-            Profiler.record("global", "load", Profiler.loadUsage);
+            Profiler._loadUsage = Game.cpu.getUsed();
+            Profiler.record("global", "load", Profiler._loadUsage);
         }
     }
 
     static stop(): void
     {
-        if (Profiler.warmup > 0)
+        if (Profiler._warmup > 0)
         {
-            --Profiler.warmup;
-            ++Profiler.startTime;
+            --Profiler._warmup;
+            ++Profiler._startTime;
         }
         else
         {
-            Profiler.record("global", "main", Game.cpu.getUsed() - Profiler.loadUsage);
+            Profiler.record("global", "main", Game.cpu.getUsed() - Profiler._loadUsage);
         }
     }
 
     static reset(): void
     {
-        Profiler.resetRequested = true;
+        Profiler._resetRequested = true;
     }
 
-    static log(): void
+    static entries(ignore: Array<string>, count: number): Array<ProfilerEntry>
     {
-        if (Profiler.warmup > 0)
-        {
-            console.log(`Profiler in warmup. ${Profiler.warmup} ticks to go.`);
-            return;
-        }
+        const entries: Map<string, ProfilerEntry> = new Map(Profiler._entries);
 
-        const ticks: number = Math.max(1, Game.time - Profiler.startTime + 1);
-        const entries: ProfilerEntry[] = Profiler.getLogEntries();
-        const divider: string = "".padEnd(62, "-");
-        let memoryUsed: string = "n/a";
-        let label: string = "method".padEnd(40);
-        let duration: string = "cpu".padStart(6);
-        let calls: string = "calls".padStart(7);
-        let cpuPerCall: string = "cpu/call".padStart(9);
+        ignore.forEach(key => entries.delete(key));
 
-        console.log(divider);
-        console.log(`Profile after ${ticks} ticks. Memory used: ${memoryUsed} KB.`);
-        console.log(`${label}${duration}${calls}${cpuPerCall}`);
-        console.log(divider);
-
-        for (const entry of entries)
-        {
-            let label: string = entry.key.padEnd(40);
-            let duration: string = (entry.duration / ticks).toFixed(2).padStart(6);
-            let calls: string = (entry.calls / ticks).toFixed(1).padStart(7);
-            let cpuPerCall: string = (entry.duration / Math.max(1, entry.calls)).toFixed(2).padStart(9);
-
-            console.log(`${label}${duration}${calls}${cpuPerCall}`);
-        }
-    }
-
-    private static getLogEntries(): ProfilerEntry[]
-    {
-        const entryMap: ProfilerMap = new Map(Profiler.entries);
-
-        PROFILER_IGNORED_KEYS.forEach(key => entryMap.delete(key));
-
-        const result: Array<ProfilerEntry> = entryMap.vs();
-
-        return result.sort(Profiler.compare).slice(0, PROFILER_MAX_ENTRIES);
-    }
-
-    private static compare(a: ProfilerEntry, b: ProfilerEntry): number
-    {
-        return b.duration - a.duration;
+        return entries.vs().sort((a, b) => b.duration - a.duration).take(count);
     }
 }
