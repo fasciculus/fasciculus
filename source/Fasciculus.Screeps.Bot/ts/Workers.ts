@@ -1,4 +1,4 @@
-import { CreepState, CreepType, Dictionaries, Dictionary, Stores, Vector, Vectors } from "./Common";
+import { CreepState, CreepType, Stores } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Controller, Controllers, Spawns, Walls } from "./Infrastructure";
 import { profile } from "./Profiling";

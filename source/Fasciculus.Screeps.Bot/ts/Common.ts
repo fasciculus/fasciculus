@@ -67,26 +67,6 @@ export class Vector<T> implements Iterable<T>
     static from<T>(items?: T[]): Vector<T> { return new Vector(items); }
 
     get length(): number { return this.array.length; }
-    get values(): T[] { return Array.from(this.array); }
-
-    toSet(): Set<T> { return new Set(this.array); }
-    toArray(): Array<T> { return Array.from(this.values); }
-
-    at(index: number): T | undefined
-    {
-        if (index < 0 || index >= this.length) return undefined;
-
-        return this.array[index];
-    }
-
-    take(count: number): Vector<T>
-    {
-        count = Math.max(0, Math.min(this.array.length, Math.round(count)));
-
-        if (count == 0) return new Vector();
-
-        return Vector.from(this.array.slice(0, count));
-    }
 
     *[Symbol.iterator](): IterableIterator<T>
     {
@@ -101,47 +81,6 @@ export class Vector<T> implements Iterable<T>
         this.array.push(value);
 
         return this;
-    }
-
-    concat(vector: Vector<T>): Vector<T>
-    {
-        let a: Array<T> = this.array;
-        let b: Array<T> = vector.array;
-
-        if (a.length == 0) return new Vector(b);
-        if (b.length == 0) return new Vector(a);
-
-        return new Vector(a.concat(b));
-    }
-
-    clone(): Vector<T>
-    {
-        return new Vector(this.array);
-    }
-
-    sort(compare: (left: T, right: T) => number): Vector<T>
-    {
-        if (this.array.length > 1)
-        {
-            this.array.sort(compare);
-        }
-
-        return this;
-    }
-
-    filter(predicate: (value: T) => boolean): Vector<T>
-    {
-        let result: Vector<T> = new Vector();
-
-        for (let value of this.array)
-        {
-            if (predicate(value))
-            {
-                result.add(value);
-            }
-        }
-
-        return result;
     }
 
     forEach(fn: (value: T) => void): Vector<T>
@@ -160,52 +99,6 @@ export class Vector<T> implements Iterable<T>
         for (let value of this.array)
         {
             result.add(fn(value));
-        }
-
-        return result;
-    }
-
-    sum(fn: (value: T) => number): number
-    {
-        var result: number = 0;
-
-        for (let value of this.array)
-        {
-            result += fn(value);
-        }
-
-        return result;
-    }
-
-    indexBy(toIndex: (value: T) => string): Dictionary<T>
-    {
-        let result: Dictionary<T> = {};
-
-        this.forEach(value => result[toIndex(value)] = value);
-
-        return result;
-    }
-
-    max(fn: (value: T) => number): T | undefined
-    {
-        let array: Array<T> = this.array;
-        let length: number = array.length;
-
-        if (length == 0) return undefined;
-
-        let result: T = array[0];
-        let resultValue: number = fn(result);
-
-        for (let i = 1; i < length; ++i)
-        {
-            let candidate: T = array[i];
-            let candidateValue: number = fn(candidate);
-
-            if (candidateValue > resultValue)
-            {
-                result = candidate;
-                resultValue = candidateValue;
-            }
         }
 
         return result;
@@ -231,36 +124,6 @@ export class Vector<T> implements Iterable<T>
                 result = candidate;
                 resultValue = candidateValue;
             }
-        }
-
-        return result;
-    }
-}
-
-export class Vectors
-{
-    static defined<T>(vector: Vector<T | undefined>): Vector<T>
-    {
-        var result: Vector<T> = new Vector();
-
-        for (let value of vector)
-        {
-            if (value !== undefined)
-            {
-                result.add(value);
-            }
-        }
-
-        return result;
-    }
-
-    static flatten<T>(arrays: Vector<Vector<T>>): Vector<T>
-    {
-        var result: Vector<T> = new Vector();
-
-        for (let array of arrays)
-        {
-            result = result.concat(array);
         }
 
         return result;
@@ -359,7 +222,7 @@ export class Point
         return new Point(pos.x, pos.y);
     }
 
-    around(): Vector<Point>
+    around(): Array<Point>
     {
         let x = this.x;
         let y = this.y;
@@ -373,7 +236,7 @@ export class Point
         let left = new Point(x - 1, y);
         let topLeft = new Point(x - 1, y - 1);
 
-        return Vector.from([this, top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft]);
+        return Array.from([this, top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft]);
     }
 }
 
