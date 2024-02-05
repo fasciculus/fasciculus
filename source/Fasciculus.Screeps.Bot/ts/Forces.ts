@@ -1,4 +1,4 @@
-import { CreepState, CreepType, Dictionaries, Dictionary, Positions, SerializedPosition, Vector } from "./Common";
+import { CreepState, CreepType, Positions, SerializedPosition } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Markers } from "./Markers";
 import { profile } from "./Profiling";

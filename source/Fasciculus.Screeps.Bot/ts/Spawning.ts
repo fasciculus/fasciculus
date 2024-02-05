@@ -1,5 +1,5 @@
 
-import { CreepType, Vector } from "./Common";
+import { CreepType } from "./Common";
 import { UPGRADER_MAX_COUNT } from "./Config";
 import { Bodies } from "./Creeps";
 import { Guards } from "./Forces";

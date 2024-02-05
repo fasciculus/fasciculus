@@ -55,98 +55,10 @@ export interface Dictionary<T>
     [index: string]: T;
 }
 
-export class Vector<T> implements Iterable<T>
-{
-    private array: Array<T>;
-
-    constructor(values?: T[])
-    {
-        this.array = values && values.length > 0 ? Array.from(values) : new Array();
-    }
-
-    static from<T>(items?: T[]): Vector<T> { return new Vector(items); }
-
-    get length(): number { return this.array.length; }
-
-    *[Symbol.iterator](): IterableIterator<T>
-    {
-        for (let i = 0; i < this.array.length; ++i)
-        {
-            yield this.array[i];
-        }
-    }
-
-    add(value: T): Vector<T>
-    {
-        this.array.push(value);
-
-        return this;
-    }
-
-    forEach(fn: (value: T) => void): Vector<T>
-    {
-        if (this.length == 0) return this;
-
-        this.array.forEach(fn);
-
-        return this;
-    }
-
-    map<U>(fn: (value: T) => U): Vector<U>
-    {
-        let result: Vector<U> = new Vector();
-
-        for (let value of this.array)
-        {
-            result.add(fn(value));
-        }
-
-        return result;
-    }
-
-    min(fn: (value: T) => number): T | undefined
-    {
-        let array: Array<T> = this.array;
-        let length: number = array.length;
-
-        if (length == 0) return undefined;
-
-        let result: T = array[0];
-        let resultValue: number = fn(result);
-
-        for (let i = 1; i < length; ++i)
-        {
-            let candidate: T = array[i];
-            let candidateValue: number = fn(candidate);
-
-            if (candidateValue < resultValue)
-            {
-                result = candidate;
-                resultValue = candidateValue;
-            }
-        }
-
-        return result;
-    }
-}
-
 export interface DictionaryEntry<T>
 {
     key: string;
     value: T;
-}
-
-export class Dictionaries
-{
-    static keys<T>(dictionary: Dictionary<T>): Set<string>
-    {
-        return new Set(Object.keys(dictionary));
-    }
-
-    static values<T>(dictionary: Dictionary<T>): Vector<T>
-    {
-        return new Vector(Object.values(dictionary));
-    }
 }
 
 export class Stores
@@ -203,8 +115,6 @@ export class Names
         return `${prefix}${id}`;
     }
 }
-
-export const DirectionConstants: Vector<DirectionConstant> = Vector.from([TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT]);
 
 export class Point
 {

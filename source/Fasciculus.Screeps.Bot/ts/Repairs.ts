@@ -1,4 +1,3 @@
-import { Vector } from "./Common";
 import { Wall, Walls } from "./Infrastructure";
 import { profile } from "./Profiling";
 

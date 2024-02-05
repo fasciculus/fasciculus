@@ -1,4 +1,4 @@
-import { Dictionaries, MarkerType } from "./Common";
+import { MarkerType } from "./Common";
 import { Creeps } from "./Creeps";
 import { profile } from "./Profiling";
 import { Wellers } from "./Workers";

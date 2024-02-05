@@ -1,5 +1,5 @@
 
-import { CreepState, CreepType, Dictionaries, Dictionary, Stores } from "./Common";
+import { CreepState, CreepType, Stores } from "./Common";
 import { profile } from "./Profiling";
 import { Mover, Positioned } from "./Travelling";
 
