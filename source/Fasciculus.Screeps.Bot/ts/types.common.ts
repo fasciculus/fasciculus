@@ -313,6 +313,8 @@ declare global
         keep(keys: Set<K>): Map<K, V>
 
         update(keys: Set<K>, fnCreate: (key: K) => V): boolean;
+
+        clone(): Map<K, V>;
     }
 }
 
@@ -357,6 +359,15 @@ class Maps
         create.forEach(k => this.set(k, fnCreate(k)));
 
         return remove.size > 0 || create.size > 0;
+    }
+
+    static clone<K, V>(this: Map<K, V>): Map<K, V>
+    {
+        const result: Map<K, V> = new Map();
+
+        this.forEach((v, k) => result.set(k, v));
+
+        return result;
     }
 }
 
