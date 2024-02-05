@@ -59,13 +59,13 @@ export class Spawn
         this.pos = this.spawn.pos;
     }
 
-    spawnCreep(type: CreepType, body: Vector<BodyPartConstant>)
+    spawnCreep(type: CreepType, body: Array<BodyPartConstant>)
     {
         let name = Names.next(type);
         let memory: CreepBaseMemory = { type, state: CreepState.Idle };
         let opts: SpawnOptions = { memory };
 
-        body.call(parts => this.spawn.spawnCreep(parts, name, opts));
+        this.spawn.spawnCreep(body, name, opts);
     }
 }
 

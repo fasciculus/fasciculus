@@ -35,7 +35,7 @@ export class Spawning
 
         if (!body) return;
 
-        spawn.spawnCreep(type, Vector.from(body));
+        spawn.spawnCreep(type, body);
     }
 
     private static createBody(spawn: Spawn, type: CreepType): Array<BodyPartConstant> | undefined
