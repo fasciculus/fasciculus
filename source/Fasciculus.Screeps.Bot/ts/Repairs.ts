@@ -26,7 +26,7 @@ export class Repairs
 
     private static findWalls(): Vector<Repairable>
     {
-        let walls: Vector<Wall> = Walls.newest;
+        let walls: Vector<Wall> = Vector.from(Walls.newest);
 
         if (walls.length == 0)
         {

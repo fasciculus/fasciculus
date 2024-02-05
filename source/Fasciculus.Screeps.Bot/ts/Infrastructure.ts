@@ -105,7 +105,7 @@ export class Walls
     static get my(): Array<Wall> { return Walls._myWalls.vs(); }
     static get avg(): number { return Walls.my.avg(w => w.hits); }
 
-    static get newest(): Vector<Wall> { return Vector.from(Walls.my.filter(w => w.hits == 1)); }
+    static get newest(): Array<Wall> { return Walls.my.filter(w => w.hits == 1); }
 
     @profile
     static initialize()
