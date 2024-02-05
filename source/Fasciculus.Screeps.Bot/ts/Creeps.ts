@@ -142,7 +142,7 @@ class BodyTemplate
 
 export class Bodies
 {
-    private static _templates: Array<Dictionary<BodyTemplate>> = new Array();
+    private static _templates: Array<Map<string, BodyTemplate>> = new Array();
     private static _minCost: number = 0;
 
     static get minCost(): number { return Bodies._minCost; }
@@ -168,32 +168,34 @@ export class Bodies
         {
             for (var rcl = 0; rcl < 9; ++rcl)
             {
-                const templates: Dictionary<BodyTemplate> = {};
+                const templates: Map<string, BodyTemplate> = new Map();
 
-                templates[CreepType.Builder] = Bodies.defaultBuilderTemplate;
-                templates[CreepType.Repairer] = Bodies.defaultRepairerTemplate;
-                templates[CreepType.Tanker] = Bodies.createTankerTemplate(rcl);
-                templates[CreepType.Upgrader] = Bodies.defaultUpgraderTemplate;
-                templates[CreepType.Weller] = Bodies.defaultWellerTemplate;
+                templates.set(CreepType.Builder, Bodies.defaultBuilderTemplate);
+                templates.set(CreepType.Repairer, Bodies.defaultRepairerTemplate);
+                templates.set(CreepType.Tanker, Bodies.createTankerTemplate(rcl));
+                templates.set(CreepType.Upgrader, Bodies.defaultUpgraderTemplate);
+                templates.set(CreepType.Weller, Bodies.defaultWellerTemplate);
 
-                templates[CreepType.Guard] = Bodies.defaultGuardTemplate;
+                templates.set(CreepType.Guard, Bodies.defaultGuardTemplate);
 
                 Bodies._templates.push(templates);
             }
 
-            const at1: Dictionary<BodyTemplate> = Bodies._templates[0];
-
-            Bodies._minCost = Dictionaries.values(at1).map(t => t.minCost).min(c => c) || 999999;
+            Bodies._minCost = Bodies._templates[0].vs().map(t => t.minCost).min(c => c) || 999999;
         }
     }
 
     static createBody(type: CreepType, rcl: number, energy: number): Array<BodyPartConstant> | undefined
     {
-        let templates: Dictionary<BodyTemplate> | undefined = Bodies._templates[rcl];
+        const templates: Map<string, BodyTemplate> | undefined = Bodies._templates[rcl];
 
         if (!templates) return undefined;
 
-        return templates[type]?.createBody(energy);
+        const template: BodyTemplate | undefined = templates.get(type);
+
+        if (!template) return undefined;
+
+        return template.createBody(energy);
     }
 }
 
