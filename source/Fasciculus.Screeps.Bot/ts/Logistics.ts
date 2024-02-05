@@ -165,7 +165,7 @@ export class Tanker extends CreepBase<TankerMemory>
 export class Tankers
 {
     private static _tankers: Map<string, Tanker> = new Map();
-    private static _all: Vector<Tanker> = new Vector();
+    private static _all: Array<Tanker> = new Array();
 
     static get count(): number { return Tankers._all.length; }
 
@@ -174,15 +174,15 @@ export class Tankers
     {
         if (Creeps.update(Tankers._tankers, CreepType.Tanker, name => new Tanker(name)))
         {
-            Tankers._all = new Vector(Tankers._tankers.vs());
+            Tankers._all = Tankers._tankers.vs();
         }
     }
 
     static run()
     {
-        Tankers.prepare(Tankers._all);
+        Tankers.prepare(Vector.from(Tankers._all));
         Tankers.prepare(Tankers.assign());
-        Tankers.execute(Tankers._all);
+        Tankers.execute(Vector.from(Tankers._all));
     }
 
     @profile
@@ -200,7 +200,7 @@ export class Tankers
     private static assign(): Vector<Tanker>
     {
         const result: Vector<Tanker> = new Vector();
-        const unassigned: Vector<Tanker> = Tankers._all.filter(t => !t.spawning && t.state == CreepState.Idle);
+        const unassigned: Vector<Tanker> = Vector.from(Tankers._all.filter(t => !t.spawning && t.state == CreepState.Idle));
 
         if (unassigned.length == 0) return result;
 
