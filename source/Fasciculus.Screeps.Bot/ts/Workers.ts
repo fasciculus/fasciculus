@@ -592,10 +592,10 @@ interface ControllerWork
 export class Upgraders
 {
     private static _upgraders: Map<string, Upgrader> = new Map();
-    private static _all: Vector<Upgrader> = new Vector();
+    private static _all: Array<Upgrader> = new Array();
     private static _maxEnergyPerTick: number = 0;
 
-    static get all(): Vector<Upgrader> { return Upgraders._all.clone(); }
+    static get all(): Array<Upgrader> { return Upgraders._all.clone(); }
     static get count(): number { return Upgraders._all.length; }
     static get maxEnergyPerTick(): number { return Upgraders._maxEnergyPerTick; }
 
@@ -604,7 +604,7 @@ export class Upgraders
     {
         if (Creeps.update(Upgraders._upgraders, CreepType.Upgrader, name => new Upgrader(name)))
         {
-            Upgraders._all = new Vector(Upgraders._upgraders.vs());
+            Upgraders._all = Upgraders._upgraders.vs();
             Upgraders._maxEnergyPerTick = Upgraders._all.sum(u => u.maxEnergyPerTick);
         }
     }
@@ -617,21 +617,20 @@ export class Upgraders
     }
 
     @profile
-    private static prepare(upgraders: Vector<Upgrader>)
+    private static prepare(upgraders: Array<Upgrader>)
     {
         upgraders.forEach(u => u.prepare());
     }
 
-    // @profile
-    private static execute(upgraders: Vector<Upgrader>)
+    private static execute(upgraders: Array<Upgrader>)
     {
         upgraders.forEach(u => u.execute());
     }
 
-    private static assign(): Vector<Upgrader>
+    private static assign(): Array<Upgrader>
     {
-        var result: Vector<Upgrader> = new Vector();
-        let unassigned: Vector<Upgrader> = Upgraders._all.filter(u => !u.controller);
+        var result: Array<Upgrader> = new Array();
+        let unassigned: Array<Upgrader> = Upgraders._all.filter(u => !u.controller);
 
         if (unassigned.length == 0) return result;
 
@@ -644,12 +643,12 @@ export class Upgraders
 
         if (!controller) return result;
 
-        let upgrader: Upgrader | undefined = unassigned.at(0); // Positions.closestByPath(controller, unassigned);
+        let upgrader: Upgrader | undefined = unassigned[0]; // Positions.closestByPath(controller, unassigned);
 
         if (!upgrader) return result;
 
         upgrader.controller = controller;
-        result.add(upgrader);
+        result.push(upgrader);
 
         return result;
     }
@@ -678,16 +677,6 @@ export class Upgraders
         return result;
     }
 }
-
-const WELLER_MOVE_TO_OPTS: MoveToOpts =
-{
-    reusePath: 0,
-
-    visualizePathStyle:
-    {
-        stroke: "#fff"
-    }
-};
 
 interface WellerMemory extends CreepBaseMemory
 {
