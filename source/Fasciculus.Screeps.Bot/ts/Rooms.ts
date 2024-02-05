@@ -56,7 +56,7 @@ export class Chamber
     constructor(name: string)
     {
         this.name = name;
-        this.sources = Vector.from(Game.rooms[name].find<FIND_SOURCES, Source>(FIND_SOURCES)).map(s => s.id).toSet();
+        this.sources = Game.rooms[name].find<FIND_SOURCES, Source>(FIND_SOURCES).map(s => s.id).toSet();
     }
 
     reset()
