@@ -104,13 +104,13 @@ class BodyTemplate
         return this;
     }
 
-    createBody(energy: number): Vector<BodyPartConstant> | undefined
+    createBody(energy: number): Array<BodyPartConstant> | undefined
     {
         let chunkCount = this.chunkCount(energy);
 
         if (chunkCount == 0) return undefined;
 
-        return Vector.from(Array.flatten(this.chunks.take(chunkCount).map(c => c.parts)).sort(BodyParts.comparePriority));
+        return Array.flatten(this.chunks.take(chunkCount).map(c => c.parts)).sort(BodyParts.comparePriority);
 
     }
 
@@ -187,7 +187,7 @@ export class Bodies
         }
     }
 
-    static createBody(type: CreepType, rcl: number, energy: number): Vector<BodyPartConstant> | undefined
+    static createBody(type: CreepType, rcl: number, energy: number): Array<BodyPartConstant> | undefined
     {
         let templates: Dictionary<BodyTemplate> | undefined = Bodies._templates.at(rcl);
 

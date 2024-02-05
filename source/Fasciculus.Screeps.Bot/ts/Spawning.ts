@@ -31,21 +31,21 @@ export class Spawning
 
     private static spawnCreep(spawn: Spawn, type: CreepType)
     {
-        let body: Vector<BodyPartConstant> | undefined = Spawning.createBody(spawn, type);
+        let body: Array<BodyPartConstant> | undefined = Spawning.createBody(spawn, type);
 
         if (!body) return;
 
-        spawn.spawnCreep(type, body);
+        spawn.spawnCreep(type, Vector.from(body));
     }
 
-    private static createBody(spawn: Spawn, type: CreepType): Vector<BodyPartConstant> | undefined
+    private static createBody(spawn: Spawn, type: CreepType): Array<BodyPartConstant> | undefined
     {
         const rcl = spawn.rcl;
-        let body1: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, rcl, spawn.roomEnergyAvailable);
+        let body1: Array<BodyPartConstant> | undefined = Bodies.createBody(type, rcl, spawn.roomEnergyAvailable);
 
         if (!body1) return undefined;
 
-        let body2: Vector<BodyPartConstant> | undefined = Bodies.createBody(type, rcl, spawn.roomEnergyCapacity);
+        let body2: Array<BodyPartConstant> | undefined = Bodies.createBody(type, rcl, spawn.roomEnergyCapacity);
 
         if (!body2) return undefined;
         if (body2.length > body1.length) return undefined;
