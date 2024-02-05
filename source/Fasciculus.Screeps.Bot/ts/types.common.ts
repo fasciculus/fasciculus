@@ -46,6 +46,7 @@ declare global
     {
         append(values: Iterable<T>): number;
 
+        sum(fn: (value: T) => number): number;
         min(fn: (value: T) => number): T | undefined;
 
         toSet(): Set<T>;
@@ -67,6 +68,18 @@ class Arrays
         }
 
         return this.length;
+    }
+
+    static sum<T>(this: Array<T>, fn: (value: T) => number): number
+    {
+        var result: number = 0;
+
+        for (const value of this)
+        {
+            result += fn(value);
+        }
+
+        return result;
     }
 
     static min<T>(this: Array<T>, fn: (value: T) => number): T | undefined
@@ -116,6 +129,7 @@ class Arrays
 
 Objects.setFunction(Array.prototype, "append", Arrays.append);
 Objects.setFunction(Array.prototype, "min", Arrays.min);
+Objects.setFunction(Array.prototype, "sum", Arrays.sum);
 Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
 
 Objects.setFunction(Array, "flatten", Arrays.flatten);

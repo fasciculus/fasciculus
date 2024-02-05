@@ -20,7 +20,7 @@ class BodyPartCounts
     readonly carry: number;
     readonly work: number;
 
-    constructor(parts: Vector<BodyPartConstant>)
+    constructor(parts: Array<BodyPartConstant>)
     {
         var carry: number = 0;
         var work: number = 0;
@@ -57,7 +57,7 @@ class BodyParts
     static countsOf(creep: Creep): BodyPartCounts
     {
         const definitions: Vector<BodyPartDefinition> = Vector.from(creep.body);
-        const parts: Vector<BodyPartConstant> = definitions.map(d => d.type);
+        const parts: Array<BodyPartConstant> = definitions.map(d => d.type).toArray();
 
         return new BodyPartCounts(parts);
     }
@@ -136,7 +136,7 @@ class BodyTemplate
         if (parts.length == 0) return undefined;
 
         const cost = BodyParts.costOf(parts);
-        const counts = new BodyPartCounts(parts);
+        const counts = new BodyPartCounts(parts.toArray());
 
         return { cost, parts, counts };
     }

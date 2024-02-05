@@ -8,5 +8,6 @@ Weller  : 1@200, 2@350, 3@550, RCL3, 4@700, RCL4, 5@850
 Upgrader: 1@200, 2@400, 3@550, RCL3, 4@750, RCL4, 5@900
 
 replacing Dictionary with Map
+replacing Vector with Array
 
 Game.profiler.log()
