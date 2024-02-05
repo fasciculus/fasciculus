@@ -93,8 +93,8 @@ export class Chambers
 
     static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers.get(name) : undefined; }
 
-    static get all(): Vector<Chamber> { return Vector.from(Chambers._allChambers.vs()); }
-    static get my(): Vector<Chamber> { return Chambers.all.filter(c => c.my); }
+    static get all(): Array<Chamber> { return Chambers._allChambers.vs(); }
+    static get my(): Array<Chamber> { return Chambers.all.filter(c => c.my); }
 
     static get allControllers(): Set<ControllerId> { return Chambers._allControllers.clone(); }
     static get allSources(): Set<SourceId> { return Chambers._allSources.clone(); }
@@ -106,7 +106,7 @@ export class Chambers
     {
         if (Chambers._allChambers.update(Game.knownRoomNames, name => new Chamber(name)))
         {
-            Chambers._allControllers = Vectors.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
+            Chambers._allControllers = Array.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
             Chambers._allSources = Set.flatten(Chambers.all.map(c => c.sources));
         }
 
