@@ -142,7 +142,7 @@ class BodyTemplate
 
 export class Bodies
 {
-    private static _templates: Vector<Dictionary<BodyTemplate>> = new Vector();
+    private static _templates: Array<Dictionary<BodyTemplate>> = new Array();
     private static _minCost: number = 0;
 
     static get minCost(): number { return Bodies._minCost; }
@@ -178,10 +178,10 @@ export class Bodies
 
                 templates[CreepType.Guard] = Bodies.defaultGuardTemplate;
 
-                Bodies._templates.add(templates);
+                Bodies._templates.push(templates);
             }
 
-            const at1: Dictionary<BodyTemplate> = Bodies._templates.at(1)!;
+            const at1: Dictionary<BodyTemplate> = Bodies._templates[0];
 
             Bodies._minCost = Dictionaries.values(at1).map(t => t.minCost).min(c => c) || 999999;
         }
@@ -189,7 +189,7 @@ export class Bodies
 
     static createBody(type: CreepType, rcl: number, energy: number): Array<BodyPartConstant> | undefined
     {
-        let templates: Dictionary<BodyTemplate> | undefined = Bodies._templates.at(rcl);
+        let templates: Dictionary<BodyTemplate> | undefined = Bodies._templates[rcl];
 
         if (!templates) return undefined;
 
