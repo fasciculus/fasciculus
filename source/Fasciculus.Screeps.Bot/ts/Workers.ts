@@ -629,21 +629,21 @@ export class Upgraders
 
     private static assign(): Array<Upgrader>
     {
-        var result: Array<Upgrader> = new Array();
-        let unassigned: Array<Upgrader> = Upgraders._all.filter(u => !u.controller);
+        const result: Array<Upgrader> = new Array();
+        const unassigned: Array<Upgrader> = Upgraders._all.filter(u => !u.controller);
 
         if (unassigned.length == 0) return result;
 
-        let works: Vector<ControllerWork> = Upgraders.getControllerWorks();
+        const works: Array<ControllerWork> = Upgraders.getControllerWorks();
 
         if (works.length == 0) return result;
 
-        let sorted: Vector<ControllerWork> = works.sort((a, b) => a.work - b.work);
-        let controller: Controller | undefined = sorted.at(0)?.controller;
+        const sorted: Array<ControllerWork> = works.sort((a, b) => a.work - b.work);
+        const controller: Controller | undefined = sorted[0]?.controller;
 
         if (!controller) return result;
 
-        let upgrader: Upgrader | undefined = unassigned[0]; // Positions.closestByPath(controller, unassigned);
+        const upgrader: Upgrader | undefined = unassigned[0];
 
         if (!upgrader) return result;
 
@@ -653,18 +653,23 @@ export class Upgraders
         return result;
     }
 
-    private static getControllerWorks(): Vector<ControllerWork>
+    private static getControllerWorks(): Array<ControllerWork>
     {
-        let result: Vector<ControllerWork> = Vector.from(Controllers.my.map(Upgraders.createControllerWork));
-        let byId: Dictionary<ControllerWork> = result.indexBy(cw => cw.controller.id);
+        const result: Array<ControllerWork> = Controllers.my.map(Upgraders.createControllerWork);
+        const byId: Map<ControllerId, ControllerWork> = result.indexBy(cw => cw.controller.id);
 
-        for (let upgrader of Upgraders._all)
+        for (const upgrader of Upgraders._all)
         {
-            let controller = upgrader.controller;
+            const controller = upgrader.controller;
 
             if (!controller) continue;
 
-            byId[controller.id].work += upgrader.workParts;
+            var entry = byId.get(controller.id);
+
+            if (entry)
+            {
+                entry.work += upgrader.workParts;
+            }
         }
 
         return result;
