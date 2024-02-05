@@ -50,6 +50,7 @@ declare global
 
         sum(fn: (value: T) => number): number;
         min(fn: (value: T) => number): T | undefined;
+        max(fn: (value: T) => number): T | undefined;
 
         indexBy<K>(fnKey: (value: T) => K): Map<K, Array<T>>;
 
@@ -97,6 +98,8 @@ class Arrays
 
     static min<T>(this: Array<T>, fn: (value: T) => number): T | undefined
     {
+        const better = function (a: number, b: number): boolean { return a < b; };
+
         const length: number = this.length;
 
         if (length == 0) return undefined;
@@ -116,6 +119,33 @@ class Arrays
             {
                 result = candidate;
                 minValue = value;
+            }
+        }
+
+        return result;
+    }
+
+    static max<T>(this: Array<T>, fn: (value: T) => number): T | undefined
+    {
+        const length: number = this.length;
+
+        if (length == 0) return undefined;
+
+        var result: T = this[0];
+
+        if (length == 1) return result;
+
+        var maxValue: number = fn(result);
+
+        for (let i = 1; i < length; ++i)
+        {
+            const candidate: T = this[i];
+            const value: number = fn(candidate);
+
+            if (value > maxValue)
+            {
+                result = candidate;
+                maxValue = value;
             }
         }
 
@@ -161,6 +191,7 @@ Objects.setFunction(Array.prototype, "append", Arrays.append);
 Objects.setFunction(Array.prototype, "take", Arrays.take);
 Objects.setFunction(Array.prototype, "sum", Arrays.sum);
 Objects.setFunction(Array.prototype, "min", Arrays.min);
+Objects.setFunction(Array.prototype, "max", Arrays.max);
 Objects.setFunction(Array.prototype, "indexBy", Arrays.indexBy);
 Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
 
