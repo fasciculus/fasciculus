@@ -454,9 +454,9 @@ export class Repairers
         Repairers._all.forEach(r => r.execute());
     }
 
-    private static assign(): Vector<Repairer>
+    private static assign(): Array<Repairer>
     {
-        const result: Vector<Repairer> = new Vector();
+        const result: Array<Repairer> = new Array();
         const unassigned: Map<string, Repairer> = Repairers.unassignedRepairers;
         const repairables: Array<Repairable> = Repairs.all.map(Repairers.toDamageInfo).sort(Repairers.compareDamage).map(d => d.repairable);
 
@@ -468,7 +468,7 @@ export class Repairers
             if (!repairer) continue;
 
             repairer.repairable = repairable;
-            result.add(repairer);
+            result.push(repairer);
             unassigned.delete(repairer.name);
         }
 
