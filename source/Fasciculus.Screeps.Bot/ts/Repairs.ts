@@ -1,24 +1,24 @@
-import { Dictionary, Vector } from "./Common";
+import { Vector } from "./Common";
 import { Wall, Walls } from "./Infrastructure";
 import { profile } from "./Profiling";
 
 export class Repairs
 {
-    private static _all: Vector<Repairable> = new Vector();
-    private static _byId: Dictionary<Repairable> = {};
+    private static _all: Array<Repairable> = new Array();
+    private static _byId: Map<RepairableId, Repairable> = new Map();
 
     static get(id: RepairableId | undefined): Repairable | undefined
     {
-        return id ? Repairs._byId[id] : undefined;
+        return id ? Repairs._byId.get(id) : undefined;
     }
 
-    static get all(): Vector<Repairable> { return Repairs._all.clone(); }
+    static get all(): Vector<Repairable> { return Vector.from(Repairs._all); }
     static get count(): number { return Repairs._all.length; }
 
     @profile
     static initialize()
     {
-        let repairables: Vector<Repairable> = Repairs.findWalls();
+        let repairables: Array<Repairable> = Repairs.findWalls().toArray();
 
         Repairs._all = repairables;
         Repairs._byId = Repairs._all.indexBy(r => r.id);
