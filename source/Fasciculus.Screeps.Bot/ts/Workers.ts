@@ -430,10 +430,10 @@ interface DamageInfo
 export class Repairers
 {
     private static _repairers: Map<string, Repairer> = new Map();
-    private static _all: Vector<Repairer> = new Vector();
+    private static _all: Array<Repairer> = new Array();
     private static _maxEnergyPerTick: number = 0;
 
-    static get all(): Vector<Repairer> { return Repairers._all.clone(); }
+    static get all(): Array<Repairer> { return Repairers._all.clone(); }
     static get maxEnergyPerTick(): number { return Repairers._maxEnergyPerTick; }
 
     @profile
@@ -441,7 +441,7 @@ export class Repairers
     {
         if (Creeps.update(Repairers._repairers, CreepType.Repairer, name => new Repairer(name)))
         {
-            Repairers._all = new Vector(Repairers._repairers.vs());
+            Repairers._all = Repairers._repairers.vs();
             Repairers._maxEnergyPerTick = Repairers._all.sum(r => r.maxEnergyPerTick);
         }
     }
@@ -457,25 +457,25 @@ export class Repairers
     private static assign(): Vector<Repairer>
     {
         const result: Vector<Repairer> = new Vector();
-        const unassigned: Dictionary<Repairer> = Repairers.unassignedRepairers;
+        const unassigned: Map<string, Repairer> = Repairers.unassignedRepairers;
         const repairables: Array<Repairable> = Repairs.all.map(Repairers.toDamageInfo).sort(Repairers.compareDamage).map(d => d.repairable);
 
         for (let repairable of repairables)
         {
-            let assignables: Vector<Repairer> = Dictionaries.values(unassigned);
-            let repairer: Repairer | undefined = assignables.at(0); // Positions.closestByPath(repairable, assignables);
+            let assignables: Array<Repairer> = unassigned.vs();
+            let repairer: Repairer | undefined = Paths.closest(repairable, assignables, 2);
 
             if (!repairer) continue;
 
             repairer.repairable = repairable;
             result.add(repairer);
-            delete unassigned[repairer.name];
+            unassigned.delete(repairer.name);
         }
 
         return result;
     }
 
-    private static get unassignedRepairers(): Dictionary<Repairer>
+    private static get unassignedRepairers(): Map<string, Repairer>
     {
         return Repairers._all.filter(r => !r.repairable).indexBy(r => r.name);
     }
