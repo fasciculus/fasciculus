@@ -1,5 +1,5 @@
 import { profile } from "./Profiling";
-import { Cached } from "./types.screeps";
+import { Cached } from "./screeps";
 
 export class Finder
 {

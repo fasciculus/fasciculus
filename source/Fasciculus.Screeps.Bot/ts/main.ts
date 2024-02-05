@@ -1,10 +1,7 @@
 
-import "./types.common";
-import "./types.screeps";
-
 import { Profiler } from "./Profiling";
 import { Scheduler } from "./Scheduler";
-import { Screeps } from "./types.screeps";
+import { Screeps } from "./screeps";
 
 export const loop = function ()
 {
