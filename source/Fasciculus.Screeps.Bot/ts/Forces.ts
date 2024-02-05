@@ -85,7 +85,7 @@ export class Guards
 {
     private static _guards: Map<string, Guard> = new Map();
 
-    private static _all: Vector<Guard> = new Vector();
+    private static _all: Array<Guard> = new Array();
 
     static get count(): number { return Guards._all.length; }
 
@@ -94,7 +94,7 @@ export class Guards
     {
         if (Creeps.update(Guards._guards, CreepType.Guard, name => new Guard(name)))
         {
-            Guards._all = new Vector(Guards._guards.vs());
+            Guards._all = Guards._guards.vs();
         }
     }
 
@@ -107,21 +107,21 @@ export class Guards
     }
 
     @profile
-    private static prepare(guards: Vector<Guard>)
+    private static prepare(guards: Array<Guard>)
     {
         guards.forEach(b => b.prepare());
     }
 
     @profile
-    private static execute(guards: Vector<Guard>)
+    private static execute(guards: Array<Guard>)
     {
         guards.forEach(b => b.execute());
     }
 
     @profile
-    private static assign(): Vector<Guard>
+    private static assign(): Array<Guard>
     {
-        const result: Vector<Guard> = new Vector();
+        const result: Array<Guard> = new Array();
 
         if (Markers.guardMarkerCount == 0) return result;
 
@@ -142,7 +142,7 @@ export class Guards
 
             guard.sentry = nearestMarker.pos;
             nearestMarker.assignee = guard.creep;
-            result.add(guard);
+            result.push(guard);
             break;
         }
 
