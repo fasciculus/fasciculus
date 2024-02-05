@@ -74,7 +74,7 @@ export class Spawns
     private static _spawns: Map<SpawnId, Spawn> = new Map();
 
     static get all(): Array<Spawn> { return Spawns._spawns.vs(); }
-    static get idle(): Vector<Spawn> { return Vector.from(Spawns.all.filter(s => s.idle)); }
+    static get idle(): Array<Spawn> { return Spawns.all.filter(s => s.idle); }
     static get best(): Spawn | undefined { return Spawns.idle.max(s => s.roomEnergyAvailable); }
 
     @profile

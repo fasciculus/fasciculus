@@ -273,7 +273,7 @@ export class Builders
     private static assignEmpty(builders: Vector<Builder>): Vector<Builder>
     {
         const result: Vector<Builder> = new Vector();
-        const spawns: Vector<BuilderSupply> = Spawns.idle.filter(s => s.energy > 0).map(s => s.spawn);
+        const spawns: Vector<BuilderSupply> = Vector.from(Spawns.idle.filter(s => s.energy > 0).map(s => s.spawn));
 
         if (spawns.length == 0) return result;
 
