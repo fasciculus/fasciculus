@@ -90,9 +90,9 @@ class BodyTemplate
         return new BodyTemplate(minCost).add(parts, times);
     }
 
-    add(parts: BodyPartConstant[], times: number = 1): BodyTemplate
+    add(parts: Array<BodyPartConstant>, times: number = 1): BodyTemplate
     {
-        let chunk: BodyPartChunk | undefined = BodyTemplate.createChunk(Vector.from(parts));
+        let chunk: BodyPartChunk | undefined = BodyTemplate.createChunk(parts);
 
         if (!chunk) return this;
 
@@ -129,14 +129,14 @@ class BodyTemplate
         return result;
     }
 
-    private static createChunk(parts: Vector<BodyPartConstant>): BodyPartChunk | undefined
+    private static createChunk(parts: Array<BodyPartConstant>): BodyPartChunk | undefined
     {
         if (parts.length == 0) return undefined;
 
-        const cost = BodyParts.costOf(parts.toArray());
-        const counts = new BodyPartCounts(parts.toArray());
+        const cost = BodyParts.costOf(parts);
+        const counts = new BodyPartCounts(parts);
 
-        return { cost, parts: parts.toArray(), counts };
+        return { cost, parts, counts };
     }
 }
 
