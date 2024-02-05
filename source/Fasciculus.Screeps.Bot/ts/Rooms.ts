@@ -1,4 +1,4 @@
-import { Dictionaries, Dictionary, Vector, Vectors } from "./Common";
+import { Vector, Vectors } from "./Common";
 import { profile } from "./Profiling";
 
 export class Finder
@@ -7,27 +7,35 @@ export class Finder
         STRUCTURE_TOWER, STRUCTURE_OBSERVER, STRUCTURE_POWER_SPAWN, STRUCTURE_POWER_BANK, STRUCTURE_LAB, STRUCTURE_TERMINAL, STRUCTURE_NUKER,
         STRUCTURE_FACTORY, STRUCTURE_INVADER_CORE]);
 
-    static structures<T extends AnyStructure>(room: Room, type: string): Vector<T>
+    static structures<T extends AnyStructure>(room: Room, type: string): Array<T>
     {
         const opts: FilterOptions<FIND_STRUCTURES> = { filter: { structureType: type } };
+        const result: Array<T> | undefined | null = room.find<T>(FIND_STRUCTURES, opts);
 
-        return Vector.from(room.find<T>(FIND_STRUCTURES, opts));
+        return result || new Array();
     }
 
-    static allStructures(room: Room, types: Set<string>): Vector<AnyStructure>
+    static allStructures(room: Room, types: Set<string>): Array<AnyStructure>
     {
-        return Vector.from(room.find<AnyStructure>(FIND_STRUCTURES)).filter(s => types.has(s.structureType));
+        return room.find<AnyStructure>(FIND_STRUCTURES).filter(s => types.has(s.structureType));
     }
 
-    private static ids<T extends _HasId>(values: Vector<T>): Set<Id<T>>
+    private static ids<T extends _HasId>(values: Array<T>): Set<Id<T>>
     {
         return values.map(v => v.id).toSet();
     }
 
-    static walls(room: Room) { return Finder.structures<StructureWall>(room, STRUCTURE_WALL); }
-    static wallIds(room: Room): Set<WallId> { return Finder.ids(Finder.walls(room)); }
+    static walls(room: Room): Array<StructureWall>
+    {
+        return Finder.structures<StructureWall>(room, STRUCTURE_WALL);
+    }
 
-    static obstacles(room: Room):  Vector<AnyStructure>
+    static wallIds(room: Room): Set<WallId>
+    {
+        return Finder.ids(Finder.walls(room));
+    }
+
+    static obstacles(room: Room): Array<AnyStructure>
     {
         return Finder.allStructures(room, Finder.obstacleTypes);
     }
