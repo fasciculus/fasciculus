@@ -14,6 +14,37 @@ declare global
     type Repairable = StructureRoad | StructureWall;
 }
 
+export class Cached<V>
+{
+    readonly key: string;
+    readonly fetch: (k: string) => V;
+
+    private _time: number;
+    private _value?: V;
+
+    constructor(key: string, fetch: (k: string) => V)
+    {
+        this.key = key;
+        this.fetch = fetch;
+
+        this._time = -1;
+        this._value = undefined;
+    }
+
+    get value(): V
+    {
+        const time: number = Game.time;
+
+        if (this._time != time || this._value === undefined)
+        {
+            this._time = time;
+            this._value = this.fetch(this.key);
+        }
+
+        return this._value;
+    }
+}
+
 declare global
 {
     interface Game
