@@ -832,27 +832,24 @@ const FIND_CLOSEST_WELL_OPTS: FindPathOpts =
 export class Wellers
 {
     private static _wellers: Map<string, Weller> = new Map();
+    private static _all: Array<Weller> = new Array();
 
-    private static _all: Vector<Weller> = new Vector();
     private static _maxEnergyPerTick: number = 0;
-    private static _maxEnergyCapacity: number = 0;
 
     static get(name?: string): Weller | undefined { return name ? Wellers._wellers.get(name) : undefined; }
 
-    static get count(): number { return Wellers._all.length; }
-    static get all(): Vector<Weller> { return Wellers._all.clone(); }
+    static get count(): number { return Wellers._wellers.size; }
+    static get all(): Array<Weller> { return Array.from(Wellers._all); }
 
     static get maxEnergyPerTick(): number { return Wellers._maxEnergyPerTick; }
-    static get maxEnergyCapacity(): number { return Wellers._maxEnergyCapacity; }
 
     @profile
     static initialize()
     {
         if (Creeps.update(Wellers._wellers, CreepType.Weller, name => new Weller(name)))
         {
-            Wellers._all = new Vector(Wellers._wellers.vs());
+            Wellers._all = Wellers._wellers.vs();
             Wellers._maxEnergyPerTick = Wellers._all.sum(w => w.maxEnergyPerTick);
-            Wellers._maxEnergyCapacity = Wellers._all.max(w => w.energyCapacity)?.energyCapacity || 0;
         }
     }
 
@@ -864,22 +861,22 @@ export class Wellers
     }
 
     @profile
-    private static prepare(wellers: Vector<Weller>)
+    private static prepare(wellers: Array<Weller>)
     {
         wellers.forEach(w => w.prepare());
         wellers.filter(w => w.state == CreepState.Harvest).forEach(w => Paths.block(w.creep));
     }
 
-    private static execute(wellers: Vector<Weller>)
+    private static execute(wellers: Array<Weller>)
     {
         wellers.forEach(w => w.execute());
     }
 
     @profile
-    private static assign(): Vector<Weller>
+    private static assign(): Array<Weller>
     {
-        var result: Vector<Weller> = new Vector();
-        let unassignedWellers: Vector<Weller> = Wellers.all.filter(w => !w.well);
+        var result: Array<Weller> = new Array();
+        let unassignedWellers: Array<Weller> = Wellers._all.filter(w => !w.well);
 
         for (let weller of unassignedWellers)
         {
@@ -890,7 +887,7 @@ export class Wellers
 
             weller.well = nearestWell;
             nearestWell.assignee = weller.creep;
-            result.add(weller);
+            result.push(weller);
             break;
         }
 

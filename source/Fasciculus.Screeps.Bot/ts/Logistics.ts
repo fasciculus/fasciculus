@@ -211,11 +211,11 @@ export class Tankers
 
         if (empty.length > 0)
         {
-            var wellers: Vector<Weller> = Wellers.all;
+            var wellers: Array<Weller> = Wellers.all;
 
             if (wellers.length > 0)
             {
-                const weller: Weller = wellers.sort(Tankers.compareWellers).at(0)!;
+                const weller: Weller = wellers.sort(Tankers.compareWellers)[0];
                 const tanker: Tanker | undefined = Paths.closest(weller, empty, 1);
 
                 if (tanker)
