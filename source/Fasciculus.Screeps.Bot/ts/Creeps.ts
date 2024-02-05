@@ -56,10 +56,7 @@ class BodyParts
 
     static countsOf(creep: Creep): BodyPartCounts
     {
-        const definitions: Vector<BodyPartDefinition> = Vector.from(creep.body);
-        const parts: Array<BodyPartConstant> = definitions.map(d => d.type).toArray();
-
-        return new BodyPartCounts(parts);
+        return new BodyPartCounts(creep.body.map(d => d.type));
     }
 
     static workOf(creep: Creep): number
