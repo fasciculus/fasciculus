@@ -228,7 +228,7 @@ export class Tankers
 
         if (full.length > 0)
         {
-            var customers: Vector<Spawn> = Spawns.all.filter(s => s.freeEnergyCapacity > 0);
+            var customers: Vector<Spawn> = Vector.from(Spawns.all.filter(s => s.freeEnergyCapacity > 0));
 
             if (customers.length > 0)
             {

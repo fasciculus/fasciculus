@@ -121,11 +121,6 @@ export class Vector<T> implements Iterable<T>
         return new Vector(this.array);
     }
 
-    call<R = void>(fn: (vakues: Array<T>) => R): R
-    {
-        return fn(this.copyValues());
-    }
-
     find(fn: (vakues: Array<T>) => T | undefined): T | undefined
     {
         if (this.length == 0) return undefined;
