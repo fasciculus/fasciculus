@@ -49,7 +49,7 @@ class BodyParts
         return pa - pb;
     }
 
-    static costOf(parts: Vector<BodyPartConstant>): number
+    static costOf(parts: Array<BodyPartConstant>): number
     {
         return parts.sum(p => BODYPART_COST[p]);
     }
@@ -86,9 +86,9 @@ class BodyTemplate
         this.minCost = minCost;
     }
 
-    static create(parts: BodyPartConstant[], times: number = 1): BodyTemplate
+    static create(parts: Array<BodyPartConstant>, times: number = 1): BodyTemplate
     {
-        const minCost: number = BodyParts.costOf(Vector.from(parts));
+        const minCost: number = BodyParts.costOf(parts);
 
         return new BodyTemplate(minCost).add(parts, times);
     }
@@ -135,7 +135,7 @@ class BodyTemplate
     {
         if (parts.length == 0) return undefined;
 
-        const cost = BodyParts.costOf(parts);
+        const cost = BodyParts.costOf(parts.toArray());
         const counts = new BodyPartCounts(parts.toArray());
 
         return { cost, parts, counts };
