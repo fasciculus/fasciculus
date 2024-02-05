@@ -74,7 +74,7 @@ interface BodyPartChunk
 
 class BodyTemplate
 {
-    private chunks: Vector<BodyPartChunk> = new Vector();
+    private chunks: Array<BodyPartChunk> = new Array();
 
     readonly minCost: number;
 
@@ -98,7 +98,7 @@ class BodyTemplate
 
         for (let i = 0; i < times; ++i)
         {
-            this.chunks.add(chunk);
+            this.chunks.push(chunk);
         }
 
         return this;
@@ -110,7 +110,8 @@ class BodyTemplate
 
         if (chunkCount == 0) return undefined;
 
-        return Vectors.flatten(this.chunks.take(chunkCount).map(c => Vector.from(c.parts))).sort(BodyParts.comparePriority);
+        return Vector.from(Array.flatten(this.chunks.take(chunkCount).map(c => c.parts)).sort(BodyParts.comparePriority));
+
     }
 
     private chunkCount(energy: number): number
