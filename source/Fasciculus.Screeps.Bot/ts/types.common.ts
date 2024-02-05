@@ -61,6 +61,7 @@ declare global
 
     interface ArrayConstructor
     {
+        defined<T>(array: Iterable<T | undefined>): Array<T>;
         flatten<T>(arrays: Iterable<Iterable<T>>): Array<T>;
     }
 }
@@ -174,6 +175,21 @@ class Arrays
         return new Set(this);
     }
 
+    static defined<T>(values: Iterable<T | undefined>): Array<T>
+    {
+        var result: Array<T> = new Array();
+
+        for (const value of values)
+        {
+            if (value !== undefined)
+            {
+                result.push(value);
+            }
+        }
+
+        return result;
+    }
+
     static flatten<T>(arrays: Iterable<Iterable<T>>): Array<T>
     {
         const result: Array<T> = new Array();
@@ -196,6 +212,7 @@ Objects.setFunction(Array.prototype, "avg", Arrays.avg);
 Objects.setFunction(Array.prototype, "indexBy", Arrays.indexBy);
 Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
 
+Objects.setFunction(Array, "defined", Arrays.defined);
 Objects.setFunction(Array, "flatten", Arrays.flatten);
 
 declare global
