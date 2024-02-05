@@ -69,8 +69,6 @@ export class Vector<T> implements Iterable<T>
     get length(): number { return this.array.length; }
     get values(): T[] { return Array.from(this.array); }
 
-    private copyValues(): Array<T> { return Array.from(this.values); }
-
     toSet(): Set<T> { return new Set(this.array); }
     toArray(): Array<T> { return Array.from(this.values); }
 
@@ -119,13 +117,6 @@ export class Vector<T> implements Iterable<T>
     clone(): Vector<T>
     {
         return new Vector(this.array);
-    }
-
-    find(fn: (vakues: Array<T>) => T | undefined): T | undefined
-    {
-        if (this.length == 0) return undefined;
-
-        return fn(this.copyValues());
     }
 
     sort(compare: (left: T, right: T) => number): Vector<T>
@@ -186,11 +177,6 @@ export class Vector<T> implements Iterable<T>
         return result;
     }
 
-    avg(fn: (value: T) => number): number
-    {
-        return this.sum(fn) / Math.max(1, this.array.length);
-    }
-
     indexBy(toIndex: (value: T) => string): Dictionary<T>
     {
         let result: Dictionary<T> = {};
@@ -198,22 +184,6 @@ export class Vector<T> implements Iterable<T>
         this.forEach(value => result[toIndex(value)] = value);
 
         return result;
-    }
-
-    groupBy(toKey: (value: T) => string): Dictionary<Vector<T>>
-    {
-        let result: Dictionary<Vector<T>> = {};
-
-        for (let value of this.array)
-        {
-            let key: string = toKey(value);
-            let entry: Vector<T> = result[key] || new Vector();
-
-            entry.add(value);
-            result[key] = entry;
-        }
-
-        return result
     }
 
     max(fn: (value: T) => number): T | undefined

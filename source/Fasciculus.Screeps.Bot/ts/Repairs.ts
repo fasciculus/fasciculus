@@ -30,7 +30,7 @@ export class Repairs
 
         if (walls.length == 0)
         {
-            walls = Walls.my;
+            walls = Vector.from(Walls.my);
         }
 
         return walls.map(w => w.wall);
