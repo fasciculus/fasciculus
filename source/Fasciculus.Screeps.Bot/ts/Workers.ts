@@ -487,10 +487,11 @@ export class Repairers
 
     private static assign(): Vector<Repairer>
     {
-        var result: Vector<Repairer> = new Vector();
-        var unassigned: Dictionary<Repairer> = Repairers.unassignedRepairers;
+        const result: Vector<Repairer> = new Vector();
+        const unassigned: Dictionary<Repairer> = Repairers.unassignedRepairers;
+        const repairables: Array<Repairable> = Repairs.all.map(Repairers.toDamageInfo).sort(Repairers.compareDamage).map(d => d.repairable);
 
-        for (let repairable of Repairers.repairables)
+        for (let repairable of repairables)
         {
             let assignables: Vector<Repairer> = Dictionaries.values(unassigned);
             let repairer: Repairer | undefined = assignables.at(0); // Positions.closestByPath(repairable, assignables);
@@ -508,11 +509,6 @@ export class Repairers
     private static get unassignedRepairers(): Dictionary<Repairer>
     {
         return Repairers._all.filter(r => !r.repairable).indexBy(r => r.name);
-    }
-
-    private static get repairables(): Vector<Repairable>
-    {
-        return Repairs.all.map(Repairers.toDamageInfo).sort(Repairers.compareDamage).map(d => d.repairable);
     }
 
     private static toDamageInfo(repairable: Repairable): DamageInfo

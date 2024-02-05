@@ -12,7 +12,7 @@ export class Repairs
         return id ? Repairs._byId.get(id) : undefined;
     }
 
-    static get all(): Vector<Repairable> { return Vector.from(Repairs._all); }
+    static get all(): Array<Repairable> { return Array.from(Repairs._all); }
     static get count(): number { return Repairs._all.length; }
 
     @profile
