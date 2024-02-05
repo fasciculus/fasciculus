@@ -2,6 +2,7 @@ import { CreepState, CreepType, Dictionaries, Dictionary, Positions, SerializedP
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
 import { Markers } from "./Markers";
 import { profile } from "./Profiling";
+import { Paths } from "./Travelling";
 
 interface GuardMemory extends CreepBaseMemory
 {
@@ -42,6 +43,7 @@ export class Guard extends CreepBase<GuardMemory>
         if (this.pos.isEqualTo(sentry))
         {
             this.guarding = true;
+            Paths.block(this.creep);
             return CreepState.Idle;
         }
 
@@ -57,6 +59,7 @@ export class Guard extends CreepBase<GuardMemory>
         if (this.pos.isEqualTo(sentry))
         {
             this.guarding = true;
+            Paths.block(this.creep);
             return CreepState.Idle;
         }
 
