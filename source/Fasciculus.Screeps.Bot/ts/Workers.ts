@@ -279,7 +279,7 @@ export class Builders
 
     private static get focus(): Site | undefined
     {
-        return Builders.assignedSites.filter(s => s.remaining > 1).at(0);
+        return Builders.assignedSites.filter(s => s.remaining > 1)[0];
     }
 
     private static findSite(builder: Builder): Site | undefined
@@ -305,9 +305,9 @@ export class Builders
         return result;
     }
 
-    private static get assignedSites(): Vector<Site>
+    private static get assignedSites(): Array<Site>
     {
-        return Vectors.defined(Vector.from(Builders._all.map(b => b.site)));
+        return Array.defined(Vector.from(Builders._all.map(b => b.site)));
     }
 
     private static compareSites(a: Site, b: Site): number
