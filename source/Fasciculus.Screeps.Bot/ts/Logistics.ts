@@ -200,7 +200,7 @@ export class Tankers
     private static assign(): Array<Tanker>
     {
         const result: Array<Tanker> = new Array();
-        const unassigned: Vector<Tanker> = Vector.from(Tankers._all.filter(t => !t.spawning && t.state == CreepState.Idle));
+        const unassigned: Array<Tanker> = Tankers._all.filter(t => !t.spawning && t.state == CreepState.Idle);
 
         if (unassigned.length == 0) return result;
 
@@ -248,7 +248,7 @@ export class Tankers
         return result;
     }
 
-    private static categorize(tankers: Vector<Tanker>, empty: Vector<Tanker>, full: Vector<Tanker>)
+    private static categorize(tankers: Array<Tanker>, empty: Vector<Tanker>, full: Vector<Tanker>)
     {
         for (const tanker of tankers)
         {
