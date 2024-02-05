@@ -28,7 +28,7 @@ export class Sites
 
     static get(id: SiteId | undefined): Site | undefined { return id ? Sites._sites.get(id) : undefined; }
 
-    static get all(): Vector<Site> { return Vector.from(Sites._sites.vs()); }
+    static get all(): Array<Site> { return Sites._sites.vs(); }
     static get count(): number { return Sites._sites.size; }
 
     @profile

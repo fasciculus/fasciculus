@@ -309,20 +309,20 @@ export class Builders
     {
         let result: Site | undefined = undefined;
         let assigned: Set<SiteId> = Builders.assignedSites.map(s => s.id).toSet();
-        let unassigned: Vector<Site> = Sites.all.filter(s => !assigned.has(s.id));
+        let unassigned: Array<Site> = Sites.all.filter(s => !assigned.has(s.id));
 
         if (unassigned.length == 0) return result;
 
-        let smallSites: Vector<Site> = unassigned.filter(s => s.remaining < 10);
+        let smallSites: Array<Site> = unassigned.filter(s => s.remaining < 10);
 
         if (smallSites.length > 0)
         {
-            result = smallSites.at(0); // Positions.closestByPath(builder, smallSites);
+            result = Paths.closest(builder, smallSites, 1);
         }
 
         if (!result)
         {
-            result = unassigned.sort(Builders.compareSites).at(0);
+            result = unassigned.sort(Builders.compareSites)[0];
         }
 
         return result;
@@ -338,14 +338,6 @@ export class Builders
         return a.remaining - b.remaining;
     }
 }
-
-const REPAIRER_MOVE_TO_OPTS: MoveToOpts =
-{
-    visualizePathStyle:
-    {
-        stroke: "#0f0"
-    }
-};
 
 class DamageHelper
 {
