@@ -307,7 +307,7 @@ export class Builders
 
     private static get assignedSites(): Array<Site>
     {
-        return Array.defined(Vector.from(Builders._all.map(b => b.site)));
+        return Array.defined(Builders._all.map(b => b.site));
     }
 
     private static compareSites(a: Site, b: Site): number
