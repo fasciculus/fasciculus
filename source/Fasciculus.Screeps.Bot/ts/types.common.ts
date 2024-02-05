@@ -54,7 +54,7 @@ declare global
         sum(fn: (value: T) => number): number;
         avg(fn: (value: T) => number): number
 
-        indexBy<K>(fnKey: (value: T) => K): Map<K, Array<T>>;
+        indexBy<K>(fnKey: (value: T) => K): Map<K, T>;
 
         toSet(): Set<T>;
     }
@@ -157,18 +157,13 @@ class Arrays
         return this.sum(fn) / Math.max(1, this.length);
     }
 
-    static indexBy<T, K>(this: Array<T>, fnKey: (value: T) => K): Map<K, Array<T>>
+    static indexBy<T, K>(this: Array<T>, fnKey: (value: T) => K): Map<K, T>
     {
-        const result: Map<K, Array<T>> = new Map();
+        const result: Map<K, T> = new Map();
 
         for (const value of this)
         {
-            const key: K = fnKey(value);
-            var values: Array<T> | undefined = result.get(key);
-
-            if (!values) result.set(key, values = new Array());
-
-            values.push(value);
+            result.set(fnKey(value), value);
         }
 
         return result;
