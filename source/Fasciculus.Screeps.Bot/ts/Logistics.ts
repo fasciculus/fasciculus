@@ -216,7 +216,7 @@ export class Tankers
             if (wellers.length > 0)
             {
                 const weller: Weller = wellers.sort(Tankers.compareWellers).at(0)!;
-                const tanker: Tanker | undefined = Paths.closest(weller, empty, 1);
+                const tanker: Tanker | undefined = Paths.closest(weller, empty.toArray(), 1);
 
                 if (tanker)
                 {

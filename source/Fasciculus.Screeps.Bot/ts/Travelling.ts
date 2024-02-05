@@ -177,7 +177,7 @@ export class Paths
     }
 
     @profile
-    static closest<T extends Positioned>(start: Positioned, goals: Vector<T>, range: number): T | undefined
+    static closest<T extends Positioned>(start: Positioned, goals: Array<T>, range: number): T | undefined
     {
         const startPos = PositionHelper.positionOf(start);
 
