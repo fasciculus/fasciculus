@@ -204,8 +204,8 @@ export class Tankers
 
         if (unassigned.length == 0) return result;
 
-        const empty: Vector<Tanker> = new Vector();
-        const full: Vector<Tanker> = new Vector();
+        const empty: Array<Tanker> = new Array();
+        const full: Array<Tanker> = new Array();
 
         Tankers.categorize(unassigned, empty, full);
 
@@ -216,7 +216,7 @@ export class Tankers
             if (wellers.length > 0)
             {
                 const weller: Weller = wellers.sort(Tankers.compareWellers).at(0)!;
-                const tanker: Tanker | undefined = Paths.closest(weller, empty.toArray(), 1);
+                const tanker: Tanker | undefined = Paths.closest(weller, empty, 1);
 
                 if (tanker)
                 {
@@ -235,7 +235,7 @@ export class Tankers
                 customers = customers.sort(Tankers.compareCustomers).take(3);
 
                 const customer: Spawn = customers.at(Random.nextInt(customers.length))!;
-                const tanker: Tanker | undefined = full.at(0); // Positions.closestByRange(customer, full);
+                const tanker: Tanker | undefined = Paths.closest(customer, full, 1);
 
                 if (tanker)
                 {
@@ -248,17 +248,17 @@ export class Tankers
         return result;
     }
 
-    private static categorize(tankers: Array<Tanker>, empty: Vector<Tanker>, full: Vector<Tanker>)
+    private static categorize(tankers: Array<Tanker>, empty: Array<Tanker>, full: Array<Tanker>)
     {
         for (const tanker of tankers)
         {
             if (tanker.energy == 0)
             {
-                empty.add(tanker);
+                empty.push(tanker);
             }
             else
             {
-                full.add(tanker);
+                full.push(tanker);
             }
         }
     }
