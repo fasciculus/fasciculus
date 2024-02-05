@@ -18,19 +18,19 @@ export class Repairs
     @profile
     static initialize()
     {
-        let repairables: Array<Repairable> = Repairs.findWalls().toArray();
+        let repairables: Array<Repairable> = Repairs.findWalls();
 
         Repairs._all = repairables;
         Repairs._byId = Repairs._all.indexBy(r => r.id);
     }
 
-    private static findWalls(): Vector<Repairable>
+    private static findWalls(): Array<Repairable>
     {
-        let walls: Vector<Wall> = Vector.from(Walls.newest);
+        let walls: Array<Wall> = Walls.newest;
 
         if (walls.length == 0)
         {
-            walls = Vector.from(Walls.my);
+            walls = Walls.my;
         }
 
         return walls.map(w => w.wall);
