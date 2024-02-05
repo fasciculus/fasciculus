@@ -691,7 +691,7 @@ export class Upgraders
 
     private static getControllerWorks(): Vector<ControllerWork>
     {
-        let result: Vector<ControllerWork> = Controllers.my.map(Upgraders.createControllerWork);
+        let result: Vector<ControllerWork> = Vector.from(Controllers.my.map(Upgraders.createControllerWork));
         let byId: Dictionary<ControllerWork> = result.indexBy(cw => cw.controller.id);
 
         for (let upgrader of Upgraders._all)

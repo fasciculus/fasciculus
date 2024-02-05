@@ -24,8 +24,8 @@ export class Controllers
 
     static get(id: ControllerId | undefined): Controller | undefined { return id ? Controllers._allControllers.get(id) : undefined; }
 
-    static get all(): Vector<Controller> { return new Vector(Controllers._allControllers.vs()); }
-    static get my(): Vector<Controller> { return Controllers.all.filter(c => c.my); }
+    static get all(): Array<Controller> { return Controllers._allControllers.vs(); }
+    static get my(): Array<Controller> { return Controllers.all.filter(c => c.my); }
     static get myCount(): number { return Controllers.my.length; }
 
     @profile
