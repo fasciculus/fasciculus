@@ -228,13 +228,13 @@ export class Tankers
 
         if (full.length > 0)
         {
-            var customers: Vector<Spawn> = Vector.from(Spawns.all.filter(s => s.freeEnergyCapacity > 0));
+            var customers: Array<Spawn> = Spawns.all.filter(s => s.freeEnergyCapacity > 0);
 
             if (customers.length > 0)
             {
                 customers = customers.sort(Tankers.compareCustomers).take(3);
 
-                const customer: Spawn = customers.at(Random.nextInt(customers.length))!;
+                const customer: Spawn = customers[Random.nextInt(customers.length)];
                 const tanker: Tanker | undefined = Paths.closest(customer, full, 1);
 
                 if (tanker)
