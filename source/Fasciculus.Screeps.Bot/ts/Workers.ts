@@ -876,8 +876,8 @@ export class Wellers
 
         for (let weller of unassignedWellers)
         {
-            let assignableWells: Vector<Well> = Wells.assignable;
-            let nearestWell: Well | undefined = Paths.closest(weller, assignableWells.toArray(), 1);
+            let assignableWells: Array<Well> = Wells.assignable;
+            let nearestWell: Well | undefined = Paths.closest(weller, assignableWells, 1);
 
             if (!nearestWell) continue;
 
