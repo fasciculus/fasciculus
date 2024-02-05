@@ -180,26 +180,26 @@ export class Tankers
 
     static run()
     {
-        Tankers.prepare(Vector.from(Tankers._all));
+        Tankers.prepare(Tankers._all);
         Tankers.prepare(Tankers.assign());
-        Tankers.execute(Vector.from(Tankers._all));
+        Tankers.execute(Tankers._all);
     }
 
     @profile
-    private static prepare(tankers: Vector<Tanker>)
+    private static prepare(tankers: Array<Tanker>)
     {
         tankers.forEach(t => t.prepare());
     }
 
-    private static execute(tankers: Vector<Tanker>)
+    private static execute(tankers: Array<Tanker>)
     {
         tankers.forEach(t => t.execute());
     }
 
     @profile
-    private static assign(): Vector<Tanker>
+    private static assign(): Array<Tanker>
     {
-        const result: Vector<Tanker> = new Vector();
+        const result: Array<Tanker> = new Array();
         const unassigned: Vector<Tanker> = Vector.from(Tankers._all.filter(t => !t.spawning && t.state == CreepState.Idle));
 
         if (unassigned.length == 0) return result;
@@ -221,7 +221,7 @@ export class Tankers
                 if (tanker)
                 {
                     tanker.weller = weller;
-                    result.add(tanker);
+                    result.push(tanker);
                 }
             }
         }
@@ -240,7 +240,7 @@ export class Tankers
                 if (tanker)
                 {
                     tanker.customer = customer;
-                    result.add(tanker);
+                    result.push(tanker);
                 }
             }
         }
