@@ -50,7 +50,7 @@ export class Builder extends CreepBase<BuilderMemory>
 
         if (!site) return;
 
-        this.moveTo(site, 2);
+        this.moveTo(site, 2, false);
     }
 
     @profile
@@ -60,7 +60,7 @@ export class Builder extends CreepBase<BuilderMemory>
 
         if (!supply) return;
 
-        this.moveTo(supply, 1);
+        this.moveTo(supply, 1, false);
     }
 
     @profile
@@ -178,7 +178,7 @@ export class Builder extends CreepBase<BuilderMemory>
 export class Builders
 {
     private static _builders: Map<string, Builder> = new Map();
-    private static _all: Vector<Builder> = new Vector();
+    private static _all: Array<Builder> = new Array();
     private static _maxEnergyPerTick: number = 0;
 
     static get maxEnergyPerTick(): number { return Builders._maxEnergyPerTick; }
@@ -188,7 +188,7 @@ export class Builders
     {
         if (Creeps.update(Builders._builders, CreepType.Builder, name => new Builder(name)))
         {
-            Builders._all = new Vector(Builders._builders.vs());
+            Builders._all = Builders._builders.vs();
             Builders._maxEnergyPerTick = Builders._all.sum(b => b.maxEnergyPerTick);
         }
     }
@@ -201,101 +201,78 @@ export class Builders
     }
 
     @profile
-    private static prepare(builders: Vector<Builder>)
+    private static prepare(builders: Array<Builder>)
     {
         builders.forEach(b => b.prepare());
         builders.filter(b => b.state == CreepState.Build).forEach(b => Paths.block(b.creep));
     }
 
     @profile
-    private static execute(builders: Vector<Builder>)
+    private static execute(builders: Array<Builder>)
     {
         builders.forEach(b => b.execute());
     }
 
     @profile
-    private static assign(): Vector<Builder>
+    private static assign(): Array<Builder>
     {
-        var result: Vector<Builder> = new Vector();
-        const unassigned: Vector<Builder> = Builders._all.filter(t => !t.spawning && t.state == CreepState.Idle);
+        var result: Array<Builder> = new Array();
+        const unassigned: Array<Builder> = Builders._all.filter(t => !t.spawning && t.state == CreepState.Idle);
 
         if (unassigned.length == 0) return result;
 
-        const empty: Vector<Builder> = new Vector();
-        const full: Vector<Builder> = new Vector();
+        const empty: Array<Builder> = new Array();
+        const full: Array<Builder> = new Array();
 
         Builders.categorize(unassigned, empty, full);
 
         if (empty.length > 0) result = Builders.assignEmpty(empty);
         if (full.length > 0) result = result.concat(Builders.assignFull(full));
 
-        //let unassigned: Vector<Builder> = Builders._all.filter(b => !b.site);
-
-        //for (let builder of unassigned)
-        //{
-        //    let focus: Site | undefined = Builders.focus;
-
-        //    if (focus)
-        //    {
-        //        builder.site = focus;
-        //        result.add(builder);
-        //    }
-        //    else
-        //    {
-        //        let site: Site | undefined = Builders.findSite(builder)
-
-        //        if (site)
-        //        {
-        //            builder.site = site;
-        //            result.add(builder);
-        //        }
-        //    }
-        //}
-
         return result;
     }
 
-    private static categorize(builders: Vector<Builder>, empty: Vector<Builder>, full: Vector<Builder>)
+    private static categorize(builders: Array<Builder>, empty: Array<Builder>, full: Array<Builder>)
     {
         for (const builder of builders)
         {
             if (builder.energy < builder.energyCapacity)
             {
-                empty.add(builder);
+                empty.push(builder);
             }
             else
             {
-                full.add(builder);
+                full.push(builder);
             }
         }
     }
 
-    private static assignEmpty(builders: Vector<Builder>): Vector<Builder>
+    private static assignEmpty(builders: Array<Builder>): Array<Builder>
     {
-        const result: Vector<Builder> = new Vector();
-        const spawns: Vector<BuilderSupply> = Vector.from(Spawns.idle.filter(s => s.energy > 0).map(s => s.spawn));
+        const result: Array<Builder> = new Array();
+        const spawns: Array<BuilderSupply> = Spawns.idle.filter(s => s.energy > 0).map(s => s.spawn);
 
         if (spawns.length == 0) return result;
 
-        const builder = builders.at(0)!;
-        const supply = spawns.at(0)!;
+        const builder = builders[0];
+        const supply = spawns[0];
 
         builder.supply = supply;
-        result.add(builder);
+        result.push(builder);
 
         return result;
     }
 
-    private static assignFull(builders: Vector<Builder>): Vector<Builder>
+    private static assignFull(builders: Array<Builder>): Array<Builder>
     {
-        const result: Vector<Builder> = new Vector();
-        const builder = builders.at(0)!;
+        const result: Array<Builder> = new Array();
+        const builder = builders[0];
         var site: Site | undefined = Builders.focus || Builders.findSite(builder);
 
         if (!site) return result;
 
         builder.site = site;
-        result.add(builder);
+        result.push(builder);
 
         return result;
     }
@@ -330,7 +307,7 @@ export class Builders
 
     private static get assignedSites(): Vector<Site>
     {
-        return Vectors.defined(Builders._all.map(b => b.site));
+        return Vectors.defined(Vector.from(Builders._all.map(b => b.site)));
     }
 
     private static compareSites(a: Site, b: Site): number
