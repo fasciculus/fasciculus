@@ -56,6 +56,7 @@ declare global
 
         indexBy<K>(fnKey: (value: T) => K): Map<K, T>;
 
+        clone(): Array<T>;
         toSet(): Set<T>;
     }
 
@@ -170,6 +171,11 @@ class Arrays
         return result;
     }
 
+    static clone<T>(this: Array<T>): Array<T>
+    {
+        return Array.from(this);
+    }
+
     static toSet<T>(this: Array<T>): Set<T>
     {
         return new Set(this);
@@ -210,6 +216,7 @@ Objects.setFunction(Array.prototype, "max", Arrays.max);
 Objects.setFunction(Array.prototype, "sum", Arrays.sum);
 Objects.setFunction(Array.prototype, "avg", Arrays.avg);
 Objects.setFunction(Array.prototype, "indexBy", Arrays.indexBy);
+Objects.setFunction(Array.prototype, "clone", Arrays.clone);
 Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
 
 Objects.setFunction(Array, "defined", Arrays.defined);
