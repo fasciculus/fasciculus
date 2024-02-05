@@ -15,7 +15,6 @@ export class Scheduler
 {
     static initialize()
     {
-        Chambers.initialize();
         Sites.initialize();
         Spawns.initialize();
         Walls.initialize();

@@ -1,4 +1,5 @@
 import { profile } from "./Profiling";
+import { Cached } from "./types.screeps";
 
 export class Finder
 {
@@ -82,45 +83,63 @@ export class Chamber
 
 export class Chambers
 {
-    private static _allChambers: Map<string, Chamber> = new Map();
-    private static _allControllers: Set<ControllerId> = new Set();
-    private static _allSources: Set<SourceId> = new Set();
+    private static _allChambers: Cached<Map<string, Chamber>> = new Cached(Chambers.fetchAllChambers);
+    private static _allControllers: Cached<Set<ControllerId>> = new Cached(Chambers.fetchAllControllers, false);
+    private static _allSources: Cached<Set<SourceId>> = new Cached(Chambers.fetchAllSources, false);
 
-    private static _myWalls: Set<WallId> = new Set();
+    private static _myChambers: Cached<Array<Chamber>> = new Cached(Chambers.fetchMyChambers);
+    private static _myWalls: Cached<Set<WallId>> = new Cached(Chambers.fetchMyWalls);
 
-    private static _reset: boolean = false;
+    static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers.value.get(name) : undefined; }
 
-    static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers.get(name) : undefined; }
+    static get all(): Array<Chamber> { return Chambers._allChambers.value.vs(); }
+    static get allControllers(): Set<ControllerId> { return Chambers._allControllers.value.clone(); }
+    static get allSources(): Set<SourceId> { return Chambers._allSources.value.clone(); }
 
-    static get all(): Array<Chamber> { return Chambers._allChambers.vs(); }
-    static get my(): Array<Chamber> { return Chambers.all.filter(c => c.my); }
-
-    static get allControllers(): Set<ControllerId> { return Chambers._allControllers.clone(); }
-    static get allSources(): Set<SourceId> { return Chambers._allSources.clone(); }
-
-    static get myWalls(): Set<WallId> { return Chambers._myWalls.clone(); }
+    static get my(): Array<Chamber> { return Chambers._myChambers.value.clone(); }
+    static get myWalls(): Set<WallId> { return Chambers._myWalls.value.clone(); }
 
     @profile
-    static initialize()
+    static fetchAllChambers(value: Map<string, Chamber> | undefined): Map<string, Chamber>
     {
-        if (Chambers._allChambers.update(Game.knownRoomNames, name => new Chamber(name)))
+        const result: Map<string, Chamber> = value || new Map();
+
+        if (result.update(Game.knownRoomNames, name => new Chamber(name)))
         {
-            Chambers._allControllers = Array.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
-            Chambers._allSources = Set.flatten(Chambers.all.map(c => c.sources));
+            Chambers._allControllers.reset();
+            Chambers._allSources.reset();
         }
 
-        Chambers._reset = false;
+        return result;
+    }
+
+    @profile
+    static fetchAllControllers(value: Set<ControllerId> | undefined): Set<ControllerId>
+    {
+        return Array.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
+    }
+
+    @profile
+    static fetchAllSources(): Set<SourceId>
+    {
+        return Set.flatten(Chambers.all.map(c => c.sources));
+    }
+
+    @profile
+    static fetchMyChambers(): Array<Chamber>
+    {
+        return Chambers.all.filter(c => c.my);
+    }
+
+    @profile
+    static fetchMyWalls(): Set<WallId>
+    {
+        return Set.flatten(Chambers.my.map(c => c.walls));
     }
 
     @profile
     static reset()
     {
-        if (Chambers._reset) return;
-
-        Chambers._myWalls = Set.flatten(Chambers.my.map(c => c.walls));
-
         Chambers.all.forEach(c => c.reset());
-
-        Chambers._reset = true;
     }
 }

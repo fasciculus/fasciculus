@@ -16,16 +16,18 @@ declare global
 
 export class Cached<V>
 {
-    readonly key: string;
-    readonly fetch: (k: string) => V;
+    private fetch: (value: V | undefined, key: string) => V;
+    private key: string;
+    private ticked: boolean;
 
     private _time: number;
     private _value?: V;
 
-    constructor(key: string, fetch: (k: string) => V)
+    constructor(fetch: (value: V | undefined, key: string) => V, ticked: boolean = true, key: string = "")
     {
         this.key = key;
         this.fetch = fetch;
+        this.ticked = ticked;
 
         this._time = -1;
         this._value = undefined;
@@ -35,13 +37,19 @@ export class Cached<V>
     {
         const time: number = Game.time;
 
-        if (this._time != time || this._value === undefined)
+        if (this._value === undefined || (this.ticked && this._time != time))
         {
             this._time = time;
-            this._value = this.fetch(this.key);
+            this._value = this.fetch(this._value, this.key);
         }
 
         return this._value;
+    }
+
+    reset()
+    {
+        this._time = -1;
+        this._value = undefined;
     }
 }
 
