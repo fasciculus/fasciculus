@@ -46,6 +46,8 @@ declare global
     {
         append(values: Iterable<T>): number;
 
+        take(count: number): Array<T>;
+
         sum(fn: (value: T) => number): number;
         min(fn: (value: T) => number): T | undefined;
 
@@ -68,6 +70,15 @@ class Arrays
         }
 
         return this.length;
+    }
+
+    static take<T>(this: Array<T>, count: number): Array<T>
+    {
+        count = Math.max(0, Math.min(this.length, Math.round(count)));
+
+        if (count == 0) return new Array();
+
+        return this.slice(0, count)
     }
 
     static sum<T>(this: Array<T>, fn: (value: T) => number): number
@@ -128,8 +139,9 @@ class Arrays
 }
 
 Objects.setFunction(Array.prototype, "append", Arrays.append);
-Objects.setFunction(Array.prototype, "min", Arrays.min);
+Objects.setFunction(Array.prototype, "take", Arrays.take);
 Objects.setFunction(Array.prototype, "sum", Arrays.sum);
+Objects.setFunction(Array.prototype, "min", Arrays.min);
 Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
 
 Objects.setFunction(Array, "flatten", Arrays.flatten);
