@@ -68,7 +68,7 @@ class BodyParts
 interface BodyPartChunk
 {
     cost: number;
-    parts: Vector<BodyPartConstant>;
+    parts: Array<BodyPartConstant>;
     counts: BodyPartCounts;
 }
 
@@ -110,7 +110,7 @@ class BodyTemplate
 
         if (chunkCount == 0) return undefined;
 
-        return Vectors.flatten(this.chunks.take(chunkCount).map(c => c.parts)).sort(BodyParts.comparePriority);
+        return Vectors.flatten(this.chunks.take(chunkCount).map(c => Vector.from(c.parts))).sort(BodyParts.comparePriority);
     }
 
     private chunkCount(energy: number): number
@@ -135,7 +135,7 @@ class BodyTemplate
         const cost = BodyParts.costOf(parts.toArray());
         const counts = new BodyPartCounts(parts.toArray());
 
-        return { cost, parts, counts };
+        return { cost, parts: parts.toArray(), counts };
     }
 }
 
