@@ -51,6 +51,8 @@ declare global
         sum(fn: (value: T) => number): number;
         min(fn: (value: T) => number): T | undefined;
 
+        indexBy<K>(fnKey: (value: T) => K): Map<K, Array<T>>;
+
         toSet(): Set<T>;
     }
 
@@ -120,6 +122,23 @@ class Arrays
         return result;
     }
 
+    static indexBy<T, K>(this: Array<T>, fnKey: (value: T) => K): Map<K, Array<T>>
+    {
+        const result: Map<K, Array<T>> = new Map();
+
+        for (const value of this)
+        {
+            const key: K = fnKey(value);
+            var values: Array<T> | undefined = result.get(key);
+
+            if (!values) result.set(key, values = new Array());
+
+            values.push(value);
+        }
+
+        return result;
+    }
+
     static toSet<T>(this: Array<T>): Set<T>
     {
         return new Set(this);
@@ -142,6 +161,7 @@ Objects.setFunction(Array.prototype, "append", Arrays.append);
 Objects.setFunction(Array.prototype, "take", Arrays.take);
 Objects.setFunction(Array.prototype, "sum", Arrays.sum);
 Objects.setFunction(Array.prototype, "min", Arrays.min);
+Objects.setFunction(Array.prototype, "indexBy", Arrays.indexBy);
 Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
 
 Objects.setFunction(Array, "flatten", Arrays.flatten);
