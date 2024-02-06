@@ -34,8 +34,11 @@ class PathPart
 
 export class Paths
 {
-    private static paths: Map<string, PathPart> = new Map();
-    private static blocks: Map<string, RoomPosition> = new Map();
+    private static _paths: Map<string, PathPart> = new Map();
+    private static _blocks: Map<string, RoomPosition> = new Map();
+
+    static get paths(): number { return Paths._paths.size; }
+    static get blocks(): number { return Paths._blocks.size; }
 
     private static posKey(p: RoomPosition): string
     {
@@ -70,7 +73,7 @@ export class Paths
     {
         const chamber: Chamber | undefined = Chambers.get(roomName);
         var costMatrix: CostMatrix = chamber ? chamber.costMatrix : new PathFinder.CostMatrix();
-        const blocks: Map<string, RoomPosition> = Paths.blocks;
+        const blocks: Map<string, RoomPosition> = Paths._blocks;
 
         if (blocks.size > 0)
         {
@@ -124,10 +127,10 @@ export class Paths
         }
 
         const pathKey = Paths.pathKey(start, goal, range);
-        const paths = Paths.paths;
+        const paths = Paths._paths;
         var result: PathPart | undefined = paths.get(pathKey);
 
-        if (result && Paths.blocks.has(result.key))
+        if (result && Paths._blocks.has(result.key))
         {
             paths.delete(pathKey);
             result = undefined;
@@ -185,20 +188,18 @@ export class Paths
 
     static block(creep: Creep)
     {
-        Paths.blocks.set(creep.name, creep.pos);
+        Paths._blocks.set(creep.name, creep.pos);
     }
 
     @profile
     static cleanup()
     {
-        const paths = Paths.paths;
-        const blocks = Paths.blocks;
+        const paths = Paths._paths;
+        const blocks = Paths._blocks;
         const threshold = Game.time - 1500;
 
         paths.keep(paths.find(pp => pp.accessed > threshold));
         blocks.keep(Game.myCreepNames);
-
-        console.log(`Path cache has ${Paths.paths.size} entries and ${Paths.blocks.size} blocks.`);
     }
 }
 
