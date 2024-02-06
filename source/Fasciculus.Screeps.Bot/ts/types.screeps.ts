@@ -32,6 +32,9 @@ declare global
         get myCreeps(): Array<Creep>;
         get myCreepNames(): Set<string>;
 
+        myCreepsOfType(type: string): Array<Creep>;
+        myCreepNamesOfType(type: string): Set<string>;
+
         get username(): string;
     }
 

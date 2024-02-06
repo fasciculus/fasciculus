@@ -113,6 +113,18 @@ export class ScreepsGame
         return Objects.keys(Game.creeps);
     }
 
+    private static _myCreepsOfType: Cached<Map<string, Array<Creep>>> = Cached.simple(ScreepsGame.fetchMyCreepsOfType);
+
+    private static fetchMyCreepsOfType(): Map<string, Array<Creep>>
+    {
+        return ScreepsGame.myCreeps().groupBy(c => c.type);
+    }
+
+    private static myCreepsOfType(type: string): Array<Creep>
+    {
+        return ScreepsGame._myCreepsOfType.value.get(type) || new Array<Creep>();
+    }
+
     private static _unknownUsername: string = "unknown";
     private static _username: Cached<string> = Cached.simple(ScreepsGame.fetchUsername);
 
@@ -151,6 +163,7 @@ export class ScreepsGame
         Objects.setFunction(Game, "myCreep", ScreepsGame.myCreep);
         Objects.setGetter(Game, "myCreeps", ScreepsGame.myCreeps);
         Objects.setGetter(Game, "myCreepNames", ScreepsGame.myCreepNames);
+        Objects.setFunction(Game, "myCreepsOfType", ScreepsGame.myCreepsOfType);
         Objects.setGetter(Game, "username", ScreepsGame.username);
     }
 }

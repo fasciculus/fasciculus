@@ -10,7 +10,7 @@ class Experiments
     @profile
     static run()
     {
-        console.log(Game.myCreeps.map(c => `${c.name}: ${c.type}`));
+        console.log(Game.myCreepsOfType("T"));
     }
 }
 

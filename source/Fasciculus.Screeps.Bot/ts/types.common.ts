@@ -15,6 +15,7 @@ declare global
         avg(fn: (value: T) => number): number
 
         indexBy<K>(fnKey: (value: T) => K): Map<K, T>;
+        groupBy<K>(fnKey: (value: T) => K): Map<K, Array<T>>;
 
         clone(): Array<T>;
         toSet(): Set<T>;
@@ -133,6 +134,18 @@ class Arrays
         return result;
     }
 
+    static groupBy<T, K>(this: Array<T>, fnKey: (value: T) => K): Map<K, Array<T>>
+    {
+        const result: Map<K, Array<T>> = new Map<K, Array<T>>();
+
+        for (const value of this)
+        {
+            result.ensure(fnKey(value), () => new Array<T>()).push(value);
+        }
+
+        return result;
+    }
+
     static clone<T>(this: Array<T>): Array<T>
     {
         return Array.from(this);
@@ -183,6 +196,7 @@ Objects.setFunction(Array.prototype, "max", Arrays.max);
 Objects.setFunction(Array.prototype, "sum", Arrays.sum);
 Objects.setFunction(Array.prototype, "avg", Arrays.avg);
 Objects.setFunction(Array.prototype, "indexBy", Arrays.indexBy);
+Objects.setFunction(Array.prototype, "groupBy", Arrays.groupBy);
 Objects.setFunction(Array.prototype, "clone", Arrays.clone);
 Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
 
