@@ -321,18 +321,7 @@ export class Creeps
         const creeps: Map<string, Set<string>> = Creeps._creeps;
 
         creeps.clear();
-
-        Creeps._types.forEach((type, name) =>
-        {
-            var names: Set<string> | undefined = creeps.get(type);
-
-            if (!names)
-            {
-                creeps.set(type, names = new Set());
-            }
-
-            names.add(name);
-        });
+        Creeps._types.forEach((type, name) => creeps.ensure(type, t => new Set()).add(name));
     }
 
     static update<T>(creeps: Map<string, T>, type: CreepType, fnCreate: (name: string) => T): boolean

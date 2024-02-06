@@ -269,6 +269,8 @@ declare global
         ks(): Set<K>;
         vs(): Array<V>;
 
+        ensure(key: K, create: (key: K) => V): V
+
         find(predicate: (value: V) => boolean): Set<K>;
         keep(keys: Set<K>): Map<K, V>
 
@@ -288,6 +290,18 @@ class Maps
     static vs<K, V>(this: Map<K, V>): Array<V>
     {
         return Array.from(this.values());
+    }
+
+    static ensure<K, V>(this: Map<K, V>, key: K, create: (key: K) => V): V
+    {
+        var result: V | undefined = this.get(key);
+
+        if (!result)
+        {
+            this.set(key, result = create(key));
+        }
+
+        return result;
     }
 
     static find<K, V>(this: Map<K, V>, predicate: (value: V) => boolean): Set<K>
@@ -333,6 +347,7 @@ class Maps
 
 Objects.setFunction(Map.prototype, "ks", Maps.ks);
 Objects.setFunction(Map.prototype, "vs", Maps.vs);
+Objects.setFunction(Map.prototype, "ensure", Maps.ensure);
 Objects.setFunction(Map.prototype, "find", Maps.find);
 Objects.setFunction(Map.prototype, "keep", Maps.keep);
 Objects.setFunction(Map.prototype, "update", Maps.update);
