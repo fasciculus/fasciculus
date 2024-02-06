@@ -8,16 +8,20 @@ interface ProfilerCLI
     reset(): void;
 }
 
+interface RouterCLI
+{
+    log(): void;
+}
+
 export class CLI
 {
-    static profiler: ProfilerCLI =
-    {
-        log: Logger.logProfiler,
-        reset: Profiler.reset
-    };
+    static profilerCLI: ProfilerCLI = { log: Logger.logProfiler, reset: Profiler.reset };
+
+    static routerCLI: RouterCLI = { log: Logger.logRouter };
 
     static setup()
     {
-        Objects.setValue(Game, "profiler", CLI.profiler);
+        Objects.setValue(Game, "profiler", CLI.profilerCLI);
+        Objects.setValue(Game, "router", CLI.routerCLI);
     }
 }
