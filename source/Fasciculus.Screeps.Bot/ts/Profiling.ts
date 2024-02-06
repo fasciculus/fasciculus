@@ -54,28 +54,17 @@ export class Profiler
     static get warmup(): number { return Profiler._warmup; }
     static get ticks(): number { return Math.max(1, Game.time - Profiler._startTime + 1); }
 
+    private static createEntry(key: string): ProfilerEntry { return { key, calls: 0, duration: 0 }; }
+
     static record(type: string, name: string, duration: number): void
     {
         if (Profiler._warmup > 0) return;
 
         const key: string = `${type}:${name}`;
-        const entry: ProfilerEntry = Profiler.getEntry(key);
+        const entry: ProfilerEntry = Profiler._entries.ensure(key, Profiler.createEntry);
 
         ++entry.calls;
         entry.duration += duration;
-    }
-
-    private static getEntry(key: string): ProfilerEntry
-    {
-        var result: ProfilerEntry | undefined = Profiler._entries.get(key);
-
-        if (!result)
-        {
-            result = { key, calls: 0, duration: 0 };
-            Profiler._entries.set(key, result)
-        }
-
-        return result;
     }
 
     static start(): void

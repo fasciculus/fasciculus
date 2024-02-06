@@ -187,21 +187,13 @@ export class Bodies
 
     static createBody(type: CreepType, rcl: number, energy: number): Array<BodyPartConstant> | undefined
     {
-        const templates: Map<string, BodyTemplate> | undefined = Bodies._templates[rcl];
-
-        if (!templates) return undefined;
-
-        const template: BodyTemplate | undefined = templates.get(type);
-
-        if (!template) return undefined;
-
-        return template.createBody(energy);
+        return Bodies._templates[rcl].get(type)?.createBody(energy);
     }
 }
 
 export interface CreepBaseMemory extends CreepMemory
 {
-    type: string; // CreepType;
+    type: string;
     state: CreepState;
 }
 
@@ -321,7 +313,7 @@ export class Creeps
         const creeps: Map<string, Set<string>> = Creeps._creeps;
 
         creeps.clear();
-        Creeps._types.forEach((type, name) => creeps.ensure(type, t => new Set()).add(name));
+        Creeps._types.forEach((type, name) => creeps.ensure(type, Set.empty).add(name));
     }
 
     static update<T>(creeps: Map<string, T>, type: CreepType, fnCreate: (name: string) => T): boolean
