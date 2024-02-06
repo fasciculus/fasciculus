@@ -10,7 +10,7 @@ class Experiments
     @profile
     static run()
     {
-        console.log(Game.myCreepsOfType("T"));
+        console.log(Game.myCreepNamesOfType("T").toArray());
     }
 }
 

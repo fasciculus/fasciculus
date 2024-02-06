@@ -3,7 +3,7 @@ import { Objects } from "./types";
 
 export class ScreepsGame
 {
-    static get<T extends _HasId>(id: Id<T> | undefined): T | undefined
+    private static get<T extends _HasId>(id: Id<T> | undefined): T | undefined
     {
         let result: T | null = id ? Game.getObjectById(id) : null;
 
@@ -21,17 +21,17 @@ export class ScreepsGame
         return result;
     }
 
-    static knownRooms(): Array<Room>
+    private static knownRooms(): Array<Room>
     {
         return ScreepsGame._knownRooms.value.vs();
     }
 
-    static knownRoomNames(): Set<string>
+    private static knownRoomNames(): Set<string>
     {
         return ScreepsGame._knownRooms.value.ks();
     }
 
-    static knownRoom(roomName: string): Room | undefined
+    private static knownRoom(roomName: string): Room | undefined
     {
         return ScreepsGame._knownRooms.value.get(roomName);
     }
@@ -43,7 +43,7 @@ export class ScreepsGame
         return Objects.keys(Game.flags);
     }
 
-    static myFlagNames(): Set<string>
+    private static myFlagNames(): Set<string>
     {
         return ScreepsGame._myFlagNames.value;
     }
@@ -55,7 +55,7 @@ export class ScreepsGame
         return Objects.values(Game.spawns);
     }
 
-    static mySpawns(): Array<StructureSpawn>
+    private static mySpawns(): Array<StructureSpawn>
     {
         return ScreepsGame._mySpawns.value;
     }
@@ -67,7 +67,7 @@ export class ScreepsGame
         return Ids.get(ScreepsGame.mySpawns());
     }
 
-    static mySpawnIds(): Set<SpawnId>
+    private static mySpawnIds(): Set<SpawnId>
     {
         return ScreepsGame._mySpawnIds.value;
     }
@@ -79,7 +79,7 @@ export class ScreepsGame
         return Objects.values(Game.constructionSites);
     }
 
-    static mySites(): Array<ConstructionSite>
+    private static mySites(): Array<ConstructionSite>
     {
         return ScreepsGame._mySites.value;
     }
@@ -91,38 +91,49 @@ export class ScreepsGame
         return Ids.get(ScreepsGame.mySites());
     }
 
-    static mySiteIds(): Set<SiteId>
+    private static mySiteIds(): Set<SiteId>
     {
         return ScreepsGame._mySiteIds.value;
     }
 
-    static myCreep(name: string | undefined): Creep | undefined
+    private static myCreep(name: string | undefined): Creep | undefined
     {
         if (!name || !Game.creeps) return undefined;
 
         return Game.creeps[name] || undefined;
     }
 
-    static myCreeps(): Array<Creep>
+    private static myCreeps(): Array<Creep>
     {
         return Objects.values(Game.creeps);;
     }
 
-    static myCreepNames(): Set<string>
+    private static myCreepNames(): Set<string>
     {
         return Objects.keys(Game.creeps);
     }
 
     private static _myCreepsOfType: Cached<Map<string, Array<Creep>>> = Cached.simple(ScreepsGame.fetchMyCreepsOfType);
+    private static _myCreepNamesOfType: Cached<Map<string, Set<string>>> = Cached.simple(ScreepsGame.fetchMyCreepNamesOfType);
 
     private static fetchMyCreepsOfType(): Map<string, Array<Creep>>
     {
         return ScreepsGame.myCreeps().groupBy(c => c.type);
     }
 
+    private static fetchMyCreepNamesOfType(): Map<string, Set<string>>
+    {
+        return ScreepsGame._myCreepsOfType.value.map(cs => cs.map(c => c.name).toSet());
+    }
+
     private static myCreepsOfType(type: string): Array<Creep>
     {
-        return ScreepsGame._myCreepsOfType.value.get(type) || new Array<Creep>();
+        return ScreepsGame._myCreepsOfType.value.get(type)?.clone() || new Array<Creep>();
+    }
+
+    private static myCreepNamesOfType(type: string): Set<string>
+    {
+        return ScreepsGame._myCreepNamesOfType.value.get(type)?.clone() || new Set<string>();
     }
 
     private static _unknownUsername: string = "unknown";
@@ -137,7 +148,7 @@ export class ScreepsGame
         return spawns[0].owner.username;
     }
 
-    static username(): string
+    private static username(): string
     {
         const result: string = ScreepsGame._username.value;
 
@@ -164,6 +175,7 @@ export class ScreepsGame
         Objects.setGetter(Game, "myCreeps", ScreepsGame.myCreeps);
         Objects.setGetter(Game, "myCreepNames", ScreepsGame.myCreepNames);
         Objects.setFunction(Game, "myCreepsOfType", ScreepsGame.myCreepsOfType);
+        Objects.setFunction(Game, "myCreepNamesOfType", ScreepsGame.myCreepNamesOfType);
         Objects.setGetter(Game, "username", ScreepsGame.username);
     }
 }

@@ -303,6 +303,8 @@ declare global
         find(predicate: (value: V) => boolean): Set<K>;
         keep(keys: Set<K>): Map<K, V>
 
+        map<U>(fn: (value: V) => U): Map<K, U>;
+
         update(keys: Set<K>, fnCreate: (key: K) => V): boolean;
 
         clone(): Map<K, V>;
@@ -357,6 +359,15 @@ class Maps
         return this;
     }
 
+    static map<K, V, U>(this: Map<K, V>, fn: (value: V) => U): Map<K, U>
+    {
+        const result: Map<K, U> = new Map<K, U>();
+
+        this.forEach((v, k) => result.set(k, fn(v)));
+
+        return result;
+    }
+
     static update<K, V>(this: Map<K, V>, keys: Set<K>, fnCreate: (key: K) => V): boolean
     {
         const existing: Set<K> = this.ks();
@@ -389,6 +400,7 @@ Objects.setFunction(Map.prototype, "vs", Maps.vs);
 Objects.setFunction(Map.prototype, "ensure", Maps.ensure);
 Objects.setFunction(Map.prototype, "find", Maps.find);
 Objects.setFunction(Map.prototype, "keep", Maps.keep);
+Objects.setFunction(Map.prototype, "map", Maps.map);
 Objects.setFunction(Map.prototype, "update", Maps.update);
 
 Objects.setFunction(Map, "empty", Maps.empty);
