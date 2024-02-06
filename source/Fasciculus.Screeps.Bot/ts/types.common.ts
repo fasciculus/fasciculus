@@ -301,6 +301,8 @@ declare global
         ensure(key: K, create: (key: K) => V): V
 
         find(predicate: (value: V) => boolean): Set<K>;
+        filter(predicate: (key: K, value: V) => boolean): Map<K, V>;
+
         keep(keys: Set<K>): Map<K, V>
 
         map<U>(fn: (value: V) => U): Map<K, U>;
@@ -347,6 +349,15 @@ class Maps
         this.forEach((v, k) => { if (predicate(v)) array.push(k); });
 
         return new Set(array);
+    }
+
+    static filter<K, V>(this: Map<K, V>, predicate: (key: K, value: V) => boolean): Map<K, V>
+    {
+        const result: Map<K, V> = new Map<K, V>();
+
+        this.forEach((v, k) => { if (predicate(k, v)) result.set(k, v); })
+
+        return result;
     }
 
     static keep<K, V>(this: Map<K, V>, keys: Set<K>): Map<K, V>
@@ -399,6 +410,7 @@ Objects.setFunction(Map.prototype, "ks", Maps.ks);
 Objects.setFunction(Map.prototype, "vs", Maps.vs);
 Objects.setFunction(Map.prototype, "ensure", Maps.ensure);
 Objects.setFunction(Map.prototype, "find", Maps.find);
+Objects.setFunction(Map.prototype, "filter", Maps.filter);
 Objects.setFunction(Map.prototype, "keep", Maps.keep);
 Objects.setFunction(Map.prototype, "map", Maps.map);
 Objects.setFunction(Map.prototype, "update", Maps.update);

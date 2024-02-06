@@ -25,6 +25,13 @@ export class ScreepsRoom
 {
     private static _sources: Map<string, Set<SourceId>> = new Map();
 
+    private static safe(this: Room): boolean
+    {
+        const controller: StructureController | undefined = this.controller;
+
+        return controller ? controller.safe : true;
+    }
+
     private static level(this: Room): number
     {
         return this.controller?.level || 0;
@@ -66,13 +73,33 @@ export class ScreepsRoom
         return ScreepsRoom._all.value.get(name);
     }
 
+    private static _safe: Cached<Map<string, Room>> = Cached.simple(ScreepsRoom.fetchSafe);
+
+    private static fetchSafe(): Map<string, Room>
+    {
+        return ScreepsRoom._all.value.filter((k, v) => v.safe);
+    }
+
+    private static safeRooms(): Array<Room>
+    {
+        return ScreepsRoom._safe.value.vs();
+    }
+
+    private static safeNames(): Set<string>
+    {
+        return ScreepsRoom._safe.value.ks();
+    }
+
     static setup()
     {
+        Objects.setGetter(Room.prototype, "safe", ScreepsRoom.safe);
         Objects.setGetter(Room.prototype, "level", ScreepsRoom.level);
         Objects.setGetter(Room.prototype, "sourceIds", ScreepsRoom.sourceIds);
 
         Objects.setGetter(Room, "all", ScreepsRoom.all);
         Objects.setGetter(Room, "names", ScreepsRoom.names);
+        Objects.setGetter(Room, "safe", ScreepsRoom.safeRooms);
+        Objects.setGetter(Room, "safeNames", ScreepsRoom.safeNames);
         Objects.setFunction(Room, "get", ScreepsRoom.get);
     }
 }

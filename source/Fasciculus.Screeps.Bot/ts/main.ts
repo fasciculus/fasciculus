@@ -10,7 +10,7 @@ class Experiments
     @profile
     static run()
     {
-        console.log(Game.myCreepNamesOfType("T").toArray());
+        console.log(Room.safeNames.toArray());
     }
 }
 

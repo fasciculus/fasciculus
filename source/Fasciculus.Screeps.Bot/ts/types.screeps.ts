@@ -44,6 +44,7 @@ declare global
 
     interface Room
     {
+        get safe(): boolean;
         get level(): number;
 
         get sourceIds(): Set<SourceId>;
@@ -53,6 +54,9 @@ declare global
     {
         get all(): Array<Room>;
         get names(): Set<string>;
+
+        get safe(): Array<Room>;
+        get safeNames(): Set<string>;
 
         get(name: string): Room | undefined;
     }
@@ -65,6 +69,11 @@ declare global
     interface StructureSpawn
     {
         get level(): number;
+    }
+
+    interface StructureController
+    {
+        get safe(): boolean;
     }
 
     interface Creep
