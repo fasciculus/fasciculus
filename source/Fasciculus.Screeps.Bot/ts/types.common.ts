@@ -22,6 +22,8 @@ declare global
 
     interface ArrayConstructor
     {
+        empty<T>(): Array<T>;
+
         defined<T>(array: Iterable<T | undefined>): Array<T>;
         flatten<T>(arrays: Iterable<Iterable<T>>): Array<T>;
     }
@@ -43,7 +45,7 @@ class Arrays
     {
         count = Math.max(0, Math.min(this.length, Math.round(count)));
 
-        if (count == 0) return new Array();
+        if (count == 0) return new Array<T>();
 
         return this.slice(0, count)
     }
@@ -121,7 +123,7 @@ class Arrays
 
     static indexBy<T, K>(this: Array<T>, fnKey: (value: T) => K): Map<K, T>
     {
-        const result: Map<K, T> = new Map();
+        const result: Map<K, T> = new Map<K, T>();
 
         for (const value of this)
         {
@@ -138,12 +140,17 @@ class Arrays
 
     static toSet<T>(this: Array<T>): Set<T>
     {
-        return new Set(this);
+        return new Set<T>(this);
+    }
+
+    static empty<T>(): Array<T>
+    {
+        return new Array<T>();
     }
 
     static defined<T>(values: Iterable<T | undefined>): Array<T>
     {
-        var result: Array<T> = new Array();
+        var result: Array<T> = new Array<T>();
 
         for (const value of values)
         {
@@ -158,7 +165,7 @@ class Arrays
 
     static flatten<T>(arrays: Iterable<Iterable<T>>): Array<T>
     {
-        const result: Array<T> = new Array();
+        const result: Array<T> = new Array<T>();
 
         for (const array of arrays)
         {
@@ -179,6 +186,7 @@ Objects.setFunction(Array.prototype, "indexBy", Arrays.indexBy);
 Objects.setFunction(Array.prototype, "clone", Arrays.clone);
 Objects.setFunction(Array.prototype, "toSet", Arrays.toSet);
 
+Objects.setFunction(Array, "empty", Arrays.empty);
 Objects.setFunction(Array, "defined", Arrays.defined);
 Objects.setFunction(Array, "flatten", Arrays.flatten);
 
@@ -285,6 +293,11 @@ declare global
 
         clone(): Map<K, V>;
     }
+
+    interface MapConstructor
+    {
+        empty<K, V>(): Map<K, V>;
+    }
 }
 
 class Maps
@@ -350,6 +363,11 @@ class Maps
 
         return result;
     }
+
+    static empty<K, V>(): Map<K, V>
+    {
+        return new Map<K, V>();
+    }
 }
 
 Objects.setFunction(Map.prototype, "ks", Maps.ks);
@@ -358,5 +376,7 @@ Objects.setFunction(Map.prototype, "ensure", Maps.ensure);
 Objects.setFunction(Map.prototype, "find", Maps.find);
 Objects.setFunction(Map.prototype, "keep", Maps.keep);
 Objects.setFunction(Map.prototype, "update", Maps.update);
+
+Objects.setFunction(Map, "empty", Maps.empty);
 
 export { };
