@@ -59,6 +59,11 @@ declare global
     {
         get rcl(): number;
     }
+
+    interface CreepMemory
+    {
+        type: string;
+    }
 }
 
 export { };

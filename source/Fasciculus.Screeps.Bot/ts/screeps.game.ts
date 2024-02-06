@@ -114,7 +114,7 @@ export class ScreepsGame
     }
 
     private static _unknownUsername: string = "unknown";
-    private static _username: Cached<string> = Cached.simple(ScreepsGame.fetchUsername, false);
+    private static _username: Cached<string> = Cached.simple(ScreepsGame.fetchUsername);
 
     private static fetchUsername(): string
     {

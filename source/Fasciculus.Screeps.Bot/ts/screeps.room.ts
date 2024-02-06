@@ -15,7 +15,7 @@ class ScreepsFinder
         return result || new Array();
     }
 
-    static sources(room: Room | undefined): Set<SourceId>
+    static sourceIds(room: Room | undefined): Set<SourceId>
     {
         return room ? Ids.get(room.find<FIND_SOURCES, Source>(FIND_SOURCES)) : new Set<SourceId>();
     }
@@ -23,24 +23,15 @@ class ScreepsFinder
 
 class ScreepsRoomData
 {
-    private _sourceIds: Cached<Set<SourceId>>;
-
-    get sourceIds(): Set<SourceId> { return this._sourceIds.value.clone(); }
-
     constructor(name: string)
     {
-        this._sourceIds = Cached.withKey(ScreepsRoomData.fetchSourceIds, name, false);
-    }
-
-    private static fetchSourceIds(name: string): Set<SourceId>
-    {
-        return ScreepsFinder.sources(Game.knownRoom(name))
     }
 }
 
 export class ScreepsRoom
 {
     private static _data: Map<string, ScreepsRoomData> = new Map();
+    private static _sources: Map<string, Set<SourceId>> = new Map();
 
     private static createData(roomName: string): ScreepsRoomData
     {
@@ -57,9 +48,14 @@ export class ScreepsRoom
         return this.controller?.level || 0;
     }
 
+    private static ensureSourceIds(roomName: string): Set<SourceId>
+    {
+        return ScreepsFinder.sourceIds(Game.knownRoom(roomName));
+    }
+
     static sourceIds(this: Room): Set<SourceId>
     {
-        return ScreepsRoom.getData(this.name).sourceIds;
+        return ScreepsRoom._sources.ensure(this.name, ScreepsRoom.ensureSourceIds);
     }
 
     static setup()

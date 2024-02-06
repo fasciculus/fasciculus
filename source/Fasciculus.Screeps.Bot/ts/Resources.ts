@@ -36,6 +36,8 @@ export class Wells
     @profile
     static initialize()
     {
-        Wells._wells.update(Chambers.allSourceIds, id => new Well(id));
+        const sourceIds = Set.flatten(Game.knownRooms.map(r => r.sourceIds));
+
+        Wells._wells.update(sourceIds, id => new Well(id));
     }
 }

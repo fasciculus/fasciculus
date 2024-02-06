@@ -193,7 +193,6 @@ export class Bodies
 
 export interface CreepBaseMemory extends CreepMemory
 {
-    type: string;
     state: CreepState;
 }
 

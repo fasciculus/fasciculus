@@ -80,8 +80,7 @@ export class Chamber
 export class Chambers
 {
     private static _allChambers: Cached<Map<string, Chamber>> = Cached.withValue(Chambers.fetchAllChambers);
-    private static _allControllers: Cached<Set<ControllerId>> = Cached.simple(Chambers.fetchAllControllers, false);
-    private static _allSourceIds: Cached<Set<SourceId>> = Cached.simple(Chambers.fetchAllSourceIds, false);
+    private static _allControllers: Cached<Set<ControllerId>> = Cached.simple(Chambers.fetchAllControllers);
 
     private static _myChambers: Cached<Array<Chamber>> = Cached.simple(Chambers.fetchMyChambers);
     private static _myWalls: Cached<Set<WallId>> = Cached.simple(Chambers.fetchMyWalls);
@@ -90,45 +89,36 @@ export class Chambers
 
     static get all(): Array<Chamber> { return Chambers._allChambers.value.vs(); }
     static get allControllers(): Set<ControllerId> { return Chambers._allControllers.value.clone(); }
-    static get allSourceIds(): Set<SourceId> { return Chambers._allSourceIds.value.clone(); }
 
     static get my(): Array<Chamber> { return Chambers._myChambers.value.clone(); }
     static get myWalls(): Set<WallId> { return Chambers._myWalls.value.clone(); }
 
     @profile
-    static fetchAllChambers(value: Map<string, Chamber> | undefined): Map<string, Chamber>
+    private static fetchAllChambers(value: Map<string, Chamber> | undefined): Map<string, Chamber>
     {
         const result: Map<string, Chamber> = value || new Map();
 
         if (result.update(Game.knownRoomNames, name => new Chamber(name)))
         {
             Chambers._allControllers.reset();
-            Chambers._allSourceIds.reset();
         }
 
         return result;
     }
 
-    @profile
-    static fetchAllControllers(): Set<ControllerId>
+    private static fetchAllControllers(): Set<ControllerId>
     {
-        return Ids.get(Array.defined(Chambers.all.map(c => c.controller)));
+        return Array.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
     }
 
     @profile
-    static fetchAllSourceIds(): Set<SourceId>
-    {
-        return Set.flatten(Chambers.all.map(c => c.sourceIds));
-    }
-
-    @profile
-    static fetchMyChambers(): Array<Chamber>
+    private static fetchMyChambers(): Array<Chamber>
     {
         return Chambers.all.filter(c => c.my);
     }
 
     @profile
-    static fetchMyWalls(): Set<WallId>
+    private static fetchMyWalls(): Set<WallId>
     {
         return Set.flatten(Chambers.my.map(c => c.walls));
     }

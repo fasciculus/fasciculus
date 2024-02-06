@@ -27,7 +27,7 @@ export const loop = function ()
     Scheduler.initialize();
     Scheduler.run();
 
-    Experiments.slots();
+    //Experiments.slots();
 
     Profiler.stop();
 

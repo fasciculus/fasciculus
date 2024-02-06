@@ -16,25 +16,18 @@ export class Ids
 
 abstract class CachedBase
 {
-    protected ticked: boolean;
-
-    constructor(ticked: boolean)
+    protected constructor()
     {
-        this.ticked = ticked;
-
-        if (ticked)
-        {
-            CachedBase._ticked.push(this);
-        }
+        CachedBase._caches.push(this);
     }
 
     abstract reset(): void;
 
-    private static _ticked: Array<CachedBase> = new Array<CachedBase>();
+    private static _caches: Array<CachedBase> = new Array<CachedBase>();
 
-    protected static resetTicked(): void
+    static cleanup(): void
     {
-        CachedBase._ticked.forEach(c => c.reset());
+        CachedBase._caches.forEach(c => c.reset());
     }
 }
 
@@ -51,9 +44,9 @@ export class Cached<V> extends CachedBase
     private _time: number;
     private _value?: V;
 
-    private constructor(ticked: boolean, fetch: ComplexCacheFetch<V>, key: string)
+    private constructor(fetch: ComplexCacheFetch<V>, key: string)
     {
-        super(ticked);
+        super();
 
         this.key = key;
         this.fetch = fetch;
@@ -62,31 +55,31 @@ export class Cached<V> extends CachedBase
         this._value = undefined;
     }
 
-    static complex<V>(fetch: ComplexCacheFetch<V>, key: string, ticked: boolean = true): Cached<V>
+    static complex<V>(fetch: ComplexCacheFetch<V>, key: string): Cached<V>
     {
-        return new Cached<V>(ticked, fetch, key);
+        return new Cached<V>(fetch, key);
     }
 
-    static withKey<V>(fetch: WithKeyCacheFetch<V>, key: string, ticked: boolean = true): Cached<V>
+    static withKey<V>(fetch: WithKeyCacheFetch<V>, key: string): Cached<V>
     {
-        return new Cached<V>(ticked, (value: V | undefined, key: string) => fetch(key), key);
+        return new Cached<V>((value: V | undefined, key: string) => fetch(key), key);
     }
 
-    static withValue<V>(fetch: WithValueCacheFetch<V>, ticked: boolean = true): Cached<V>
+    static withValue<V>(fetch: WithValueCacheFetch<V>): Cached<V>
     {
-        return new Cached<V>(ticked, (value: V | undefined, key: string) => fetch(value), "");
+        return new Cached<V>((value: V | undefined, key: string) => fetch(value), "");
     }
 
-    static simple<V>(fetch: SimpleCacheFetch<V>, ticked: boolean = true): Cached<V>
+    static simple<V>(fetch: SimpleCacheFetch<V>): Cached<V>
     {
-        return new Cached<V>(ticked, (value: V | undefined, key: string) => fetch(), "");
+        return new Cached<V>((value: V | undefined, key: string) => fetch(), "");
     }
 
     get value(): V
     {
         const time: number = Game.time;
 
-        if (this._value === undefined || (this.ticked && this._time != time))
+        if (this._value === undefined || this._time != time)
         {
             this._time = time;
             this._value = this.fetch(this._value, this.key);
@@ -99,10 +92,5 @@ export class Cached<V> extends CachedBase
     {
         this._time = -1;
         this._value = undefined;
-    }
-
-    static cleanup(): void
-    {
-        CachedBase.resetTicked();
     }
 }
