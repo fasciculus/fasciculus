@@ -1,5 +1,5 @@
 import { profile } from "./Profiling";
-import { Cached } from "./screeps";
+import { Cached, Ids } from "./screeps";
 
 export class Finder
 {
@@ -20,11 +20,6 @@ export class Finder
         return room.find<AnyStructure>(FIND_STRUCTURES).filter(s => types.has(s.structureType));
     }
 
-    private static ids<T extends _HasId>(values: Array<T>): Set<Id<T>>
-    {
-        return values.map(v => v.id).toSet();
-    }
-
     static walls(room: Room): Array<StructureWall>
     {
         return Finder.structures<StructureWall>(room, STRUCTURE_WALL);
@@ -32,7 +27,7 @@ export class Finder
 
     static wallIds(room: Room): Set<WallId>
     {
-        return Finder.ids(Finder.walls(room));
+        return Ids.get(Finder.walls(room));
     }
 
     static obstacles(room: Room): Array<AnyStructure>
@@ -56,7 +51,7 @@ export class Chamber
     constructor(name: string)
     {
         this.name = name;
-        this.sources = Game.rooms[name].find<FIND_SOURCES, Source>(FIND_SOURCES).map(s => s.id).toSet();
+        this.sources = Ids.get(Game.rooms[name].find<FIND_SOURCES, Source>(FIND_SOURCES));
     }
 
     reset()
@@ -114,9 +109,9 @@ export class Chambers
     }
 
     @profile
-    static fetchAllControllers(value: Set<ControllerId> | undefined): Set<ControllerId>
+    static fetchAllControllers(): Set<ControllerId>
     {
-        return Array.defined(Chambers.all.map(c => c.controller)).map(c => c.id).toSet();
+        return Ids.get(Array.defined(Chambers.all.map(c => c.controller)));
     }
 
     @profile

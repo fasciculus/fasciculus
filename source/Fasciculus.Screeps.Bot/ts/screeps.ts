@@ -99,11 +99,7 @@ class ScreepsGame
 
     static mySpawnIds(): Set<SpawnId>
     {
-        const spawns = ScreepsGame.mySpawns();
-
-        if (spawns.length == 0) return new Set();
-
-        return spawns.map(s => s.id).toSet();
+        return Ids.get(ScreepsGame.mySpawns());
     }
 
     static mySites(): Array<ConstructionSite>
@@ -119,11 +115,7 @@ class ScreepsGame
 
     static mySiteIds(): Set<SiteId>
     {
-        const sites = ScreepsGame.mySites();
-
-        if (sites.length == 0) return new Set();
-
-        return sites.map(s => s.id).toSet();
+        return Ids.get(ScreepsGame.mySites());
     }
 
     static myCreep(name: string | undefined): Creep | undefined
