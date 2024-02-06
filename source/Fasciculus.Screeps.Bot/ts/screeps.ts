@@ -2,6 +2,21 @@
 import { Objects } from "./types";
 import "./types.screeps";
 
+export class Ids
+{
+    static get<T extends _HasId>(values: Iterable<T>): Set<Id<T>>
+    {
+        const result: Set<Id<T>> = Set.empty();
+
+        for (const value of values)
+        {
+            result.add(value.id);
+        }
+
+        return result;
+    }
+}
+
 export class Cached<V>
 {
     private fetch: (value: V | undefined, key: string) => V;
@@ -63,24 +78,12 @@ class ScreepsGame
 
     static knownRoomNames(): Set<string>
     {
-        if (!Game.rooms) return new Set();
-
-        const names = Object.keys(Game.rooms);
-
-        if (!names || !Array.isArray(names) || names.length == 0) return new Set();
-
-        return names.toSet();
+        return Objects.keys(Game.rooms);
     }
 
     static myFlagNames(): Set<string>
     {
-        if (!Game.flags) return new Set();
-
-        const names = Object.keys(Game.flags);
-
-        if (!names || !Array.isArray(names) || names.length == 0) return new Set();
-
-        return names.toSet();
+        return Objects.keys(Game.flags);
     }
 
     static mySpawns(): Array<StructureSpawn>
@@ -143,13 +146,7 @@ class ScreepsGame
 
     static myCreepNames(): Set<string>
     {
-        if (!Game.creeps) return new Set();
-
-        const names = Object.keys(Game.creeps);
-
-        if (!names || !Array.isArray(names) || names.length == 0) return new Set();
-
-        return Set.from(names);
+        return Objects.keys(Game.creeps);
     }
 
     private static _username?: string = undefined;

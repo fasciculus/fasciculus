@@ -1,6 +1,17 @@
 
 export class Objects
 {
+    static keys(o: {} | object | undefined | null): Set<string>
+    {
+        if (o === undefined || o === null) return new Set<string>();
+
+        const keys = Object.keys(o);
+
+        if (!keys || !Array.isArray(keys) || keys.length == 0) return new Set<string>()
+
+        return new Set<string>(keys);;
+    }
+
     static setFunction<T>(target: T, key: PropertyKey, fn: Function): T
     {
         const attributes: PropertyDescriptor & ThisType<any> =
