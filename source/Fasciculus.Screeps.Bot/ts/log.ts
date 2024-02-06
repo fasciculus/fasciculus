@@ -1,5 +1,6 @@
 import { PROFILER_IGNORED_KEYS, PROFILER_MAX_ENTRIES } from "./Config";
 import { Profiler, ProfilerEntry } from "./Profiling";
+import { Paths } from "./Travelling";
 
 export class Logger
 {
@@ -16,7 +17,7 @@ export class Logger
         const ticks: number = Profiler.ticks;
         const entries: Array<ProfilerEntry> = Profiler.entries(PROFILER_IGNORED_KEYS, PROFILER_MAX_ENTRIES);
 
-        Logger.profilerHeader(ticks);
+        Logger.logProfilerHeader(ticks);
         entries.forEach(e => Logger.logProfilerEntry(e, ticks));
     }
 
@@ -30,7 +31,7 @@ export class Logger
         console.log(`${label}${duration}${calls}${cpuPerCall}`);
     }
 
-    private static profilerHeader(ticks: number): void
+    private static logProfilerHeader(ticks: number): void
     {
         let label: string = "method".padEnd(40);
         let duration: string = "cpu".padStart(6);
@@ -40,6 +41,13 @@ export class Logger
         console.log(Logger._divider);
         console.log(`Profile after ${ticks} ticks.`);
         console.log(`${label}${duration}${calls}${cpuPerCall}`);
+        console.log(Logger._divider);
+    }
+
+    static logRouter()
+    {
+        console.log(Logger._divider);
+        console.log(`Path cache has ${Paths.paths} entries and ${Paths.blocks} blocks.`);
         console.log(Logger._divider);
     }
 }
