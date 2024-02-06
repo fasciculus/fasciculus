@@ -44,6 +44,7 @@ export class Builder extends CreepBase<BuilderMemory>
         }
     }
 
+    @profile
     private executeToSite()
     {
         let site = this.site;
@@ -73,6 +74,7 @@ export class Builder extends CreepBase<BuilderMemory>
         this.withdraw(supply, RESOURCE_ENERGY);
     }
 
+    @profile
     private executeBuild()
     {
         let site = this.site;
@@ -207,7 +209,6 @@ export class Builders
         builders.filter(b => b.state == CreepState.Build).forEach(b => Paths.block(b.creep));
     }
 
-    @profile
     private static execute(builders: Array<Builder>)
     {
         builders.forEach(b => b.execute());
