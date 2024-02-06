@@ -1,5 +1,5 @@
 import { profile } from "./Profiling";
-import { Cached, Ids } from "./screeps";
+import { Cached, Ids } from "./screeps.util";
 
 export class OldFinder
 {

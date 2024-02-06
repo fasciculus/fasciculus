@@ -6,7 +6,6 @@ import { Repairs } from "./Repairs";
 import { Well, Wells } from "./Resources";
 import { Site, Sites } from "./Sites";
 import { Paths } from "./Travelling";
-import { Ids } from "./screeps";
 
 type BuilderSupply = StructureSpawn | StructureContainer;
 type BuilderSupplyId = Id<StructureSpawn | StructureContainer>;
