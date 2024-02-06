@@ -39,11 +39,12 @@ export class OldFinder
 export class Chamber
 {
     readonly name: string;
-    readonly sources: Set<SourceId>;
+    // readonly sources: Set<SourceId>;
 
     get room(): Room { return Game.rooms[this.name]; }
     get controller(): StructureController | undefined { return this.room.controller; }
     get my(): boolean { return this.controller?.my || false; }
+    get sourceIds(): Set<SourceId> { return this.room.sourceIds; }
 
     get energyAvailable(): number { return this.room.energyAvailable || 0; }
     get energyCapacityAvailable(): number { return this.room.energyCapacityAvailable || 0; }
@@ -51,7 +52,7 @@ export class Chamber
     constructor(name: string)
     {
         this.name = name;
-        this.sources = Ids.get(Game.rooms[name].find<FIND_SOURCES, Source>(FIND_SOURCES));
+        // this.sources = Ids.get(Game.rooms[name].find<FIND_SOURCES, Source>(FIND_SOURCES));
     }
 
     reset()
@@ -80,7 +81,7 @@ export class Chambers
 {
     private static _allChambers: Cached<Map<string, Chamber>> = new Cached(Chambers.fetchAllChambers);
     private static _allControllers: Cached<Set<ControllerId>> = new Cached(Chambers.fetchAllControllers, false);
-    private static _allSources: Cached<Set<SourceId>> = new Cached(Chambers.fetchAllSources, false);
+    private static _allSourceIds: Cached<Set<SourceId>> = new Cached(Chambers.fetchAllSourceIds, false);
 
     private static _myChambers: Cached<Array<Chamber>> = new Cached(Chambers.fetchMyChambers);
     private static _myWalls: Cached<Set<WallId>> = new Cached(Chambers.fetchMyWalls);
@@ -89,7 +90,7 @@ export class Chambers
 
     static get all(): Array<Chamber> { return Chambers._allChambers.value.vs(); }
     static get allControllers(): Set<ControllerId> { return Chambers._allControllers.value.clone(); }
-    static get allSources(): Set<SourceId> { return Chambers._allSources.value.clone(); }
+    static get allSourceIds(): Set<SourceId> { return Chambers._allSourceIds.value.clone(); }
 
     static get my(): Array<Chamber> { return Chambers._myChambers.value.clone(); }
     static get myWalls(): Set<WallId> { return Chambers._myWalls.value.clone(); }
@@ -102,7 +103,7 @@ export class Chambers
         if (result.update(Game.knownRoomNames, name => new Chamber(name)))
         {
             Chambers._allControllers.reset();
-            Chambers._allSources.reset();
+            Chambers._allSourceIds.reset();
         }
 
         return result;
@@ -115,9 +116,9 @@ export class Chambers
     }
 
     @profile
-    static fetchAllSources(): Set<SourceId>
+    static fetchAllSourceIds(): Set<SourceId>
     {
-        return Set.flatten(Chambers.all.map(c => c.sources));
+        return Set.flatten(Chambers.all.map(c => c.sourceIds));
     }
 
     @profile

@@ -36,6 +36,6 @@ export class Wells
     @profile
     static initialize()
     {
-        Wells._wells.update(Chambers.allSources, id => new Well(id));
+        Wells._wells.update(Chambers.allSourceIds, id => new Well(id));
     }
 }
