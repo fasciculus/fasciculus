@@ -7,6 +7,7 @@ import { ScreepsRoom } from "./screeps.room";
 import { ScreepsSource } from "./screeps.source";
 import { ScreepsSpawn } from "./screeps.spawn";
 import { Cached } from "./screeps.util";
+import { ScreepsCreep } from "./screeps.creep";
 
 export class Screeps
 {
@@ -17,6 +18,7 @@ export class Screeps
         ScreepsRoom.setup();
         ScreepsSource.setup();
         ScreepsSpawn.setup();
+        ScreepsCreep.setup();
     }
 
     static cleanup(): void

@@ -8,13 +8,9 @@ import { Screeps } from "./screeps";
 class Experiments
 {
     @profile
-    static slots()
+    static run()
     {
-        const sourceIds = Set.flatten(Game.knownRooms.map(r => r.sourceIds));
-        const sources = Array.defined(sourceIds.toArray().map(id => Game.get(id)));
-        const infos = sources.map(s => ` ${s.id}: ${s.slots}`);
-
-        console.log(infos);
+        console.log(Game.myCreeps.map(c => `${c.name}: ${c.type}`));
     }
 }
 
@@ -27,7 +23,7 @@ export const loop = function ()
     Scheduler.initialize();
     Scheduler.run();
 
-    //Experiments.slots();
+    Experiments.run();
 
     Profiler.stop();
 

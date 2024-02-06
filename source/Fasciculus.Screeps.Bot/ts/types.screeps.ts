@@ -64,6 +64,11 @@ declare global
     {
         type: string;
     }
+
+    interface Creep
+    {
+        get type(): string;
+    }
 }
 
 export { };
