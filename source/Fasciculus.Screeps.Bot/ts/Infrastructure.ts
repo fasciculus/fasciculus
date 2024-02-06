@@ -80,7 +80,7 @@ export class Spawns
     @profile
     static initialize()
     {
-        Spawns._spawns.update(Game.mySpawnIds, id => new Spawn(id))
+        Spawns._spawns.update(StructureSpawn.myIds, id => new Spawn(id));
     }
 }
 

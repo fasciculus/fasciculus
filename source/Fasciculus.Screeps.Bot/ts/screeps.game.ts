@@ -10,30 +10,6 @@ export class ScreepsGame
         return result || undefined;
     }
 
-    private static _mySpawns: Cached<Array<StructureSpawn>> = Cached.simple(ScreepsGame.fetchMySpawns);
-
-    private static fetchMySpawns(): Array<StructureSpawn>
-    {
-        return Objects.values(Game.spawns);
-    }
-
-    private static mySpawns(): Array<StructureSpawn>
-    {
-        return ScreepsGame._mySpawns.value;
-    }
-
-    private static _mySpawnIds: Cached<Set<SpawnId>> = Cached.simple(ScreepsGame.fetchMySpawnIds);
-
-    private static fetchMySpawnIds(): Set<SpawnId>
-    {
-        return Ids.get(ScreepsGame.mySpawns());
-    }
-
-    private static mySpawnIds(): Set<SpawnId>
-    {
-        return ScreepsGame._mySpawnIds.value;
-    }
-
     private static _mySites: Cached<Array<ConstructionSite>> = Cached.simple(ScreepsGame.fetchMySites);
 
     private static fetchMySites(): Array<ConstructionSite>
@@ -103,11 +79,9 @@ export class ScreepsGame
 
     private static fetchUsername(): string
     {
-        const spawns = ScreepsGame.mySpawns();
+        const spawns = StructureSpawn.my;
 
-        if (spawns.length == 0) return ScreepsGame._unknownUsername;
-
-        return spawns[0].owner.username;
+        return spawns.length == 0 ? ScreepsGame._unknownUsername : spawns[0].owner.username;
     }
 
     private static username(): string
@@ -125,8 +99,6 @@ export class ScreepsGame
     static setup()
     {
         Objects.setFunction(Game, "get", ScreepsGame.get);
-        Objects.setGetter(Game, "mySpawns", ScreepsGame.mySpawns);
-        Objects.setGetter(Game, "mySpawnIds", ScreepsGame.mySpawnIds);
         Objects.setGetter(Game, "mySites", ScreepsGame.mySites);
         Objects.setGetter(Game, "mySiteIds", ScreepsGame.mySiteIds);
         Objects.setFunction(Game, "myCreep", ScreepsGame.myCreep);

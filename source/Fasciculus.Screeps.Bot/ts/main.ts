@@ -10,7 +10,7 @@ class Experiments
     @profile
     static run()
     {
-        console.log(Room.safeNames.toArray());
+    //    console.log(Room.safeNames.toArray());
     }
 }
 

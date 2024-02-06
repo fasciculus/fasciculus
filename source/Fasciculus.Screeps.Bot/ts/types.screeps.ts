@@ -16,9 +16,6 @@ declare global
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
 
-        get mySpawns(): Array<StructureSpawn>;
-        get mySpawnIds(): Set<SpawnId>;
-
         get mySites(): Array<ConstructionSite>;
         get mySiteIds(): Set<SiteId>;
 
@@ -79,6 +76,12 @@ declare global
     interface StructureSpawn
     {
         get level(): number;
+    }
+
+    interface StructureSpawnConstructor
+    {
+        get my(): Array<StructureSpawn>;
+        get myIds(): Set<SpawnId>;
     }
 
     interface StructureController
