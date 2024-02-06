@@ -1,6 +1,4 @@
 
-import "./types.common";
-
 declare global
 {
     type ContainerId = Id<StructureContainer>;
@@ -13,10 +11,7 @@ declare global
 
     type RepairableId = Id<StructureRoad | StructureWall>;
     type Repairable = StructureRoad | StructureWall;
-}
 
-declare global
-{
     interface Game
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
@@ -39,10 +34,7 @@ declare global
 
         get username(): string;
     }
-}
 
-declare global
-{
     interface Memory
     {
         [index: string]: any;
@@ -50,20 +42,19 @@ declare global
         get<T>(key: string, initial: T): T;
         sub<T>(root: string, key: string, initial: T): T;
     }
-}
 
-declare global
-{
     interface Room
     {
         get rcl(): number;
 
         get sourceIds(): Set<SourceId>;
     }
-}
 
-declare global
-{
+    interface Source
+    {
+        get slots(): number;
+    }
+
     interface StructureSpawn
     {
         get rcl(): number;
