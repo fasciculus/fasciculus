@@ -10,7 +10,7 @@ export class ScreepsGame
         return result || undefined;
     }
 
-    private static _knownRooms: Cached<Map<string, Room>> = new Cached(ScreepsGame.fetchKnownRooms);
+    private static _knownRooms: Cached<Map<string, Room>> = Cached.simple(ScreepsGame.fetchKnownRooms);
 
     private static fetchKnownRooms(): Map<string, Room>
     {
@@ -36,7 +36,7 @@ export class ScreepsGame
         return ScreepsGame._knownRooms.value.get(roomName);
     }
 
-    private static _myFlagNames: Cached<Set<string>> = new Cached(ScreepsGame.fetchMyFlagNames);
+    private static _myFlagNames: Cached<Set<string>> = Cached.simple(ScreepsGame.fetchMyFlagNames);
 
     private static fetchMyFlagNames(): Set<string>
     {
@@ -48,7 +48,7 @@ export class ScreepsGame
         return ScreepsGame._myFlagNames.value;
     }
 
-    private static _mySpawns: Cached<Array<StructureSpawn>> = new Cached(ScreepsGame.fetchMySpawns);
+    private static _mySpawns: Cached<Array<StructureSpawn>> = Cached.simple(ScreepsGame.fetchMySpawns);
 
     private static fetchMySpawns(): Array<StructureSpawn>
     {
@@ -60,7 +60,7 @@ export class ScreepsGame
         return ScreepsGame._mySpawns.value;
     }
 
-    private static _mySpawnIds: Cached<Set<SpawnId>> = new Cached(ScreepsGame.fetchMySpawnIds);
+    private static _mySpawnIds: Cached<Set<SpawnId>> = Cached.simple(ScreepsGame.fetchMySpawnIds);
 
     private static fetchMySpawnIds(): Set<SpawnId>
     {
@@ -72,7 +72,7 @@ export class ScreepsGame
         return ScreepsGame._mySpawnIds.value;
     }
 
-    private static _mySites: Cached<Array<ConstructionSite>> = new Cached(ScreepsGame.fetchMySites);
+    private static _mySites: Cached<Array<ConstructionSite>> = Cached.simple(ScreepsGame.fetchMySites);
 
     private static fetchMySites(): Array<ConstructionSite>
     {
@@ -84,7 +84,7 @@ export class ScreepsGame
         return ScreepsGame._mySites.value;
     }
 
-    private static _mySiteIds: Cached<Set<SiteId>> = new Cached(ScreepsGame.fetchMySiteIds);
+    private static _mySiteIds: Cached<Set<SiteId>> = Cached.simple(ScreepsGame.fetchMySiteIds);
 
     private static fetchMySiteIds(): Set<SiteId>
     {
@@ -114,7 +114,7 @@ export class ScreepsGame
     }
 
     private static _unknownUsername: string = "unknown";
-    private static _username: Cached<string> = new Cached(ScreepsGame.fetchUsername, false);
+    private static _username: Cached<string> = Cached.simple(ScreepsGame.fetchUsername, false);
 
     private static fetchUsername(): string
     {

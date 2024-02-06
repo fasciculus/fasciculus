@@ -29,10 +29,10 @@ class ScreepsRoomData
 
     constructor(name: string)
     {
-        this._sourceIds = new Cached<Set<SourceId>>(ScreepsRoomData.fetchSourceIds, false, name);
+        this._sourceIds = Cached.withKey(ScreepsRoomData.fetchSourceIds, name, false);
     }
 
-    private static fetchSourceIds(value: Set<SourceId> | undefined, name: string): Set<SourceId>
+    private static fetchSourceIds(name: string): Set<SourceId>
     {
         return ScreepsFinder.sources(Game.knownRoom(name))
     }

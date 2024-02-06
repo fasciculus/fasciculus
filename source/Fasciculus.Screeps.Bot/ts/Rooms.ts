@@ -79,12 +79,12 @@ export class Chamber
 
 export class Chambers
 {
-    private static _allChambers: Cached<Map<string, Chamber>> = new Cached(Chambers.fetchAllChambers);
-    private static _allControllers: Cached<Set<ControllerId>> = new Cached(Chambers.fetchAllControllers, false);
-    private static _allSourceIds: Cached<Set<SourceId>> = new Cached(Chambers.fetchAllSourceIds, false);
+    private static _allChambers: Cached<Map<string, Chamber>> = Cached.withValue(Chambers.fetchAllChambers);
+    private static _allControllers: Cached<Set<ControllerId>> = Cached.simple(Chambers.fetchAllControllers, false);
+    private static _allSourceIds: Cached<Set<SourceId>> = Cached.simple(Chambers.fetchAllSourceIds, false);
 
-    private static _myChambers: Cached<Array<Chamber>> = new Cached(Chambers.fetchMyChambers);
-    private static _myWalls: Cached<Set<WallId>> = new Cached(Chambers.fetchMyWalls);
+    private static _myChambers: Cached<Array<Chamber>> = Cached.simple(Chambers.fetchMyChambers);
+    private static _myWalls: Cached<Set<WallId>> = Cached.simple(Chambers.fetchMyWalls);
 
     static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers.value.get(name) : undefined; }
 

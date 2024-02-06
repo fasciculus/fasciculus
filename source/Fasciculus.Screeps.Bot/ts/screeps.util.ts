@@ -38,15 +38,20 @@ abstract class CachedBase
     }
 }
 
+export type ComplexCacheFetch<V> = (value: V | undefined, key: string) => V;
+export type WithKeyCacheFetch<V> = (key: string) => V;
+export type WithValueCacheFetch<V> = (value: V | undefined) => V;
+export type SimpleCacheFetch<V> = () => V;
+
 export class Cached<V> extends CachedBase
 {
-    private fetch: (value: V | undefined, key: string) => V;
+    private fetch: ComplexCacheFetch<V>;
     private key: string;
 
     private _time: number;
     private _value?: V;
 
-    constructor(fetch: (value: V | undefined, key: string) => V, ticked: boolean = true, key: string = "")
+    private constructor(ticked: boolean, fetch: ComplexCacheFetch<V>, key: string)
     {
         super(ticked);
 
@@ -55,6 +60,26 @@ export class Cached<V> extends CachedBase
 
         this._time = -1;
         this._value = undefined;
+    }
+
+    static complex<V>(fetch: ComplexCacheFetch<V>, key: string, ticked: boolean = true): Cached<V>
+    {
+        return new Cached<V>(ticked, fetch, key);
+    }
+
+    static withKey<V>(fetch: WithKeyCacheFetch<V>, key: string, ticked: boolean = true): Cached<V>
+    {
+        return new Cached<V>(ticked, (value: V | undefined, key: string) => fetch(key), key);
+    }
+
+    static withValue<V>(fetch: WithValueCacheFetch<V>, ticked: boolean = true): Cached<V>
+    {
+        return new Cached<V>(ticked, (value: V | undefined, key: string) => fetch(value), "");
+    }
+
+    static simple<V>(fetch: SimpleCacheFetch<V>, ticked: boolean = true): Cached<V>
+    {
+        return new Cached<V>(ticked, (value: V | undefined, key: string) => fetch(), "");
     }
 
     get value(): V

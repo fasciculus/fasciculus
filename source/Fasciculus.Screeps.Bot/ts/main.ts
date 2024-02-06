@@ -1,4 +1,6 @@
 
+import "types.common";
+
 import { Profiler } from "./Profiling";
 import { Scheduler } from "./Scheduler";
 import { Screeps } from "./screeps";
