@@ -9,14 +9,18 @@ import { ScreepsSpawn } from "./screeps.spawn";
 import { Cached } from "./screeps.util";
 import { ScreepsCreep } from "./screeps.creep";
 import { ScreepsController } from "./screeps.controller";
+import { ScreepsFlag } from "./screeps.flag";
+import { profile } from "./Profiling";
 
 export class Screeps
 {
+    @profile
     static setup()
     {
         ScreepsGame.setup();
         ScreepsMemory.setup();
         ScreepsRoom.setup();
+        ScreepsFlag.setup();
         ScreepsSource.setup();
         ScreepsSpawn.setup();
         ScreepsController.setup();

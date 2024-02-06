@@ -16,8 +16,6 @@ declare global
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
 
-        get myFlagNames(): Set<string>;
-
         get mySpawns(): Array<StructureSpawn>;
         get mySpawnIds(): Set<SpawnId>;
 
@@ -62,6 +60,15 @@ declare global
         get safeNames(): Set<string>;
 
         get(name: string): Room | undefined;
+    }
+
+    interface Flag
+    {
+    }
+
+    interface FlagConstructor
+    {
+        get names(): Set<string>;
     }
 
     interface Source

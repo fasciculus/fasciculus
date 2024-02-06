@@ -10,18 +10,6 @@ export class ScreepsGame
         return result || undefined;
     }
 
-    private static _myFlagNames: Cached<Set<string>> = Cached.simple(ScreepsGame.fetchMyFlagNames);
-
-    private static fetchMyFlagNames(): Set<string>
-    {
-        return Objects.keys(Game.flags);
-    }
-
-    private static myFlagNames(): Set<string>
-    {
-        return ScreepsGame._myFlagNames.value;
-    }
-
     private static _mySpawns: Cached<Array<StructureSpawn>> = Cached.simple(ScreepsGame.fetchMySpawns);
 
     private static fetchMySpawns(): Array<StructureSpawn>
@@ -137,7 +125,6 @@ export class ScreepsGame
     static setup()
     {
         Objects.setFunction(Game, "get", ScreepsGame.get);
-        Objects.setGetter(Game, "myFlagNames", ScreepsGame.myFlagNames);
         Objects.setGetter(Game, "mySpawns", ScreepsGame.mySpawns);
         Objects.setGetter(Game, "mySpawnIds", ScreepsGame.mySpawnIds);
         Objects.setGetter(Game, "mySites", ScreepsGame.mySites);

@@ -108,7 +108,7 @@ export class Markers
     @profile
     static initialize()
     {
-        if (Markers._markers.update(Game.myFlagNames, Markers.create))
+        if (Markers._markers.update(Flag.names, Markers.create))
         {
             Markers._guardMarkers = Markers._markers.vs().filter(m => m.type == MarkerType.Guard) as Array<GuardMarker>;
         }
