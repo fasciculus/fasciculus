@@ -1,4 +1,6 @@
 
+import "./types.common";
+
 declare global
 {
     type ContainerId = Id<StructureContainer>;

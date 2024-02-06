@@ -1,5 +1,5 @@
 
-import { Objects } from "./types.common";
+import { Objects } from "./types";
 import "./types.screeps";
 
 export class Cached<V>

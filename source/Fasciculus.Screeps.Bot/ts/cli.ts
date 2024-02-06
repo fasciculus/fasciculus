@@ -1,6 +1,6 @@
 import { Profiler } from "./Profiling";
 import { Logger } from "./log";
-import { Objects } from "./types.common";
+import { Objects } from "./types";
 
 interface ProfilerCLI
 {
