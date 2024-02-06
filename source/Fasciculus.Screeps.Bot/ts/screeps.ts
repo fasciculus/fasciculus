@@ -65,39 +65,88 @@ class ScreepsGame
         return result || undefined;
     }
 
-    static knownRooms(): Array<Room>
+    private static _knownRooms: Cached<Array<Room>> = new Cached(ScreepsGame.fetchKnownRooms);
+
+    private static fetchKnownRooms(): Array<Room>
     {
         return Objects.values(Game.rooms);
     }
 
-    static knownRoomNames(): Set<string>
+    static knownRooms(): Array<Room>
+    {
+        return ScreepsGame._knownRooms.value;
+    }
+
+    private static _knownRoomNames: Cached<Set<string>> = new Cached(ScreepsGame.fetchKnownRoomNames);
+
+    private static fetchKnownRoomNames(): Set<string>
     {
         return Objects.keys(Game.rooms);
     }
 
-    static myFlagNames(): Set<string>
+    static knownRoomNames(): Set<string>
+    {
+        return ScreepsGame._knownRoomNames.value;
+    }
+
+    private static _myFlagNames: Cached<Set<string>> = new Cached(ScreepsGame.fetchMyFlagNames);
+
+    private static fetchMyFlagNames(): Set<string>
     {
         return Objects.keys(Game.flags);
     }
 
-    static mySpawns(): Array<StructureSpawn>
+    static myFlagNames(): Set<string>
+    {
+        return ScreepsGame._myFlagNames.value;
+    }
+
+    private static _mySpawns: Cached<Array<StructureSpawn>> = new Cached(ScreepsGame.fetchMySpawns);
+
+    private static fetchMySpawns(): Array<StructureSpawn>
     {
         return Objects.values(Game.spawns);
     }
 
-    static mySpawnIds(): Set<SpawnId>
+    static mySpawns(): Array<StructureSpawn>
+    {
+        return ScreepsGame._mySpawns.value;
+    }
+
+    private static _mySpawnIds: Cached<Set<SpawnId>> = new Cached(ScreepsGame.fetchMySpawnIds);
+
+    private static fetchMySpawnIds(): Set<SpawnId>
     {
         return Ids.get(ScreepsGame.mySpawns());
     }
 
-    static mySites(): Array<ConstructionSite>
+    static mySpawnIds(): Set<SpawnId>
+    {
+        return ScreepsGame._mySpawnIds.value;
+    }
+
+    private static _mySites: Cached<Array<ConstructionSite>> = new Cached(ScreepsGame.fetchMySites);
+
+    private static fetchMySites(): Array<ConstructionSite>
     {
         return Objects.values(Game.constructionSites);
     }
 
-    static mySiteIds(): Set<SiteId>
+    static mySites(): Array<ConstructionSite>
+    {
+        return ScreepsGame._mySites.value;
+    }
+
+    private static _mySiteIds: Cached<Set<SiteId>> = new Cached(ScreepsGame.fetchMySiteIds);
+
+    private static fetchMySiteIds(): Set<SiteId>
     {
         return Ids.get(ScreepsGame.mySites());
+    }
+
+    static mySiteIds(): Set<SiteId>
+    {
+        return ScreepsGame._mySiteIds.value;
     }
 
     static myCreep(name: string | undefined): Creep | undefined
@@ -117,20 +166,28 @@ class ScreepsGame
         return Objects.keys(Game.creeps);
     }
 
-    private static _username?: string = undefined;
+    private static _unknownUsername: string = "unknown";
+    private static _username: Cached<string> = new Cached(ScreepsGame.fetchUsername, false);
+
+    private static fetchUsername(): string
+    {
+        const spawns = ScreepsGame.mySpawns();
+
+        if (spawns.length == 0) return ScreepsGame._unknownUsername;
+
+        return spawns[0].owner.username;
+    }
 
     static username(): string
     {
-        if (!ScreepsGame._username)
+        const result: string = ScreepsGame._username.value;
+
+        if (result == ScreepsGame._unknownUsername)
         {
-            const spawns = ScreepsGame.mySpawns();
-
-            if (spawns.length == 0) return "unknown";
-
-            ScreepsGame._username = spawns[0].owner.username;
+            ScreepsGame._username.reset();
         }
 
-        return ScreepsGame._username;
+        return result;
     }
 
     static setup()
