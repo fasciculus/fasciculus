@@ -39,20 +39,14 @@ export class OldFinder
 export class Chamber
 {
     readonly name: string;
-    // readonly sources: Set<SourceId>;
 
     get room(): Room | undefined { return Room.get(this.name); }
     get controller(): StructureController | undefined { return this.room?.controller; }
     get my(): boolean { return this.controller?.my || false; }
-    get sourceIds(): Set<SourceId> { return this.room?.sourceIds || new Set<SourceId>(); }
-
-    get energyAvailable(): number { return this.room?.energyAvailable || 0; }
-    get energyCapacityAvailable(): number { return this.room?.energyCapacityAvailable || 0; }
 
     constructor(name: string)
     {
         this.name = name;
-        // this.sources = Ids.get(Game.rooms[name].find<FIND_SOURCES, Source>(FIND_SOURCES));
     }
 
     reset()

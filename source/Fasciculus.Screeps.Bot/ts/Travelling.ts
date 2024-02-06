@@ -93,13 +93,13 @@ export class Paths
 
     private static findWithCreeps(start: RoomPosition, goal: RoomPosition, range: number): PathPart | undefined
     {
-        const chamber: Chamber | undefined = Chambers.get(start.roomName);
+        const room: Room | undefined = Room.get(start.roomName);
 
-        if (!chamber) return undefined;
+        if (!room) return undefined;
 
         if (start.roomName != goal.roomName)
         {
-            const direction = chamber.room?.findExitTo(goal.roomName) || 0;
+            const direction = room.findExitTo(goal.roomName) || 0;
 
             if (direction != FIND_EXIT_TOP && direction != FIND_EXIT_RIGHT && direction !== FIND_EXIT_BOTTOM && direction != FIND_EXIT_LEFT) return undefined;
 
@@ -111,7 +111,7 @@ export class Paths
         }
 
         const opts: FindPathOpts = { range };
-        const steps: PathStep[] | undefined = chamber.room?.findPath(start, goal, opts);
+        const steps: PathStep[] | undefined = room.findPath(start, goal, opts);
 
         if (!steps || steps.length == 0) return undefined;
 

@@ -41,7 +41,7 @@ export class Spawn
     readonly pos: RoomPosition;
 
     get spawn(): StructureSpawn { return Game.get<StructureSpawn>(this.id)!; }
-    get chamber(): Chamber { return Chambers.get(this.spawn.room.name)!; }
+    get room(): Room { return this.spawn.room; }
 
     get idle(): boolean { return !this.spawn.spawning; }
 
@@ -50,8 +50,8 @@ export class Spawn
     get energy(): number { return Stores.energy(this.spawn); }
     get freeEnergyCapacity(): number { return Stores.freeEnergyCapacity(this.spawn); }
 
-    get roomEnergyAvailable(): number { return this.chamber.energyAvailable; }
-    get roomEnergyCapacity(): number { return this.chamber.energyCapacityAvailable; }
+    get roomEnergyAvailable(): number { return this.room.energy; }
+    get roomEnergyCapacity(): number { return this.room.energyCapacity; }
 
     constructor(id: SpawnId)
     {

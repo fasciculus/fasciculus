@@ -37,6 +37,16 @@ export class ScreepsRoom
         return this.controller?.level || 0;
     }
 
+    private static energy(this: Room): number
+    {
+        return this.energyAvailable || 0;
+    }
+
+    private static energyCapacity(this: Room): number
+    {
+        return this.energyCapacityAvailable || 0;
+    }
+
     private static ensureSourceIds(roomName: string): Set<SourceId>
     {
         return ScreepsFinder.sourceIds(Room.get(roomName));
@@ -94,6 +104,8 @@ export class ScreepsRoom
     {
         Objects.setGetter(Room.prototype, "safe", ScreepsRoom.safe);
         Objects.setGetter(Room.prototype, "level", ScreepsRoom.level);
+        Objects.setGetter(Room.prototype, "energy", ScreepsRoom.energy);
+        Objects.setGetter(Room.prototype, "energyCapacity", ScreepsRoom.energyCapacity);
         Objects.setGetter(Room.prototype, "sourceIds", ScreepsRoom.sourceIds);
 
         Objects.setGetter(Room, "all", ScreepsRoom.all);

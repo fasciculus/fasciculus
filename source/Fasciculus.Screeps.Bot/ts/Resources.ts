@@ -36,7 +36,7 @@ export class Wells
     @profile
     static initialize()
     {
-        const sourceIds = Set.flatten(Room.all.map(r => r.sourceIds));
+        const sourceIds = Set.flatten(Room.safe.map(r => r.sourceIds));
 
         Wells._wells.update(sourceIds, id => new Well(id));
     }

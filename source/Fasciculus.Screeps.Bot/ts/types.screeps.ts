@@ -47,6 +47,9 @@ declare global
         get safe(): boolean;
         get level(): number;
 
+        get energy(): number;
+        get energyCapacity(): number;
+
         get sourceIds(): Set<SourceId>;
     }
 
