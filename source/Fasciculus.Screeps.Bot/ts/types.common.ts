@@ -192,6 +192,7 @@ declare global
 
     interface SetConstructor
     {
+        empty<T>(): Set<T>;
         from<T>(iterable?: Iterable<T> | null): Set<T>
 
         union<T>(a: Set<T>, b: Set<T>): Set<T>;
@@ -206,7 +207,7 @@ class Sets
 {
     static clone<T>(this: Set<T>): Set<T>
     {
-        return new Set(this);
+        return new Set<T>(this);
     }
 
     static toArray<T>(this: Set<T>): Array<T>
@@ -214,9 +215,14 @@ class Sets
         return Array.from(this);
     }
 
+    static empty<T>(): Set<T>
+    {
+        return new Set<T>();
+    }
+
     static from<T>(iterable?: Iterable<T> | null): Set<T>
     {
-        return iterable ? new Set(iterable) : new Set();
+        return iterable ? new Set(iterable) : new Set<T>();
     }
 
     static union<T>(a: Set<T>, b: Set<T>): Set<T>
@@ -226,36 +232,37 @@ class Sets
 
     static intersect<T>(a: Set<T>, b: Set<T>): Set<T>
     {
-        if (a.size == 0) return new Set(b);
-        if (b.size == 0) return new Set(a);
+        if (a.size == 0) return new Set<T>(b);
+        if (b.size == 0) return new Set<T>(a);
 
         return new Set(Array.from(a).filter(x => b.has(x)));
     }
 
     static difference<T>(a: Set<T>, b: Set<T>): Set<T>
     {
-        if (a.size == 0) return new Set();
-        if (b.size == 0) return new Set(a);
+        if (a.size == 0) return new Set<T>();
+        if (b.size == 0) return new Set<T>(a);
 
         return new Set(Array.from(a).filter(x => !b.has(x)));
     }
 
     static flatten<T>(sets: Iterable<Set<T>>): Set<T>
     {
-        const array: Array<T> = new Array();
+        const array: Array<T> = new Array<T>();
 
         for (const set of sets)
         {
             array.append(set);
         }
 
-        return new Set(array);
+        return new Set<T>(array);
     }
 }
 
 Objects.setFunction(Set.prototype, "clone", Sets.clone);
 Objects.setFunction(Set.prototype, "toArray", Sets.toArray);
 
+Objects.setFunction(Set, "empty", Sets.empty);
 Objects.setFunction(Set, "from", Sets.from);
 Objects.setFunction(Set, "union", Sets.union);
 Objects.setFunction(Set, "intersect", Sets.intersect);
