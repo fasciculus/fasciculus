@@ -40,12 +40,12 @@ export class Spawning
 
     private static createBody(spawn: Spawn, type: CreepType): Array<BodyPartConstant> | undefined
     {
-        const rcl = spawn.rcl;
-        let body1: Array<BodyPartConstant> | undefined = Bodies.createBody(type, rcl, spawn.roomEnergyAvailable);
+        const level = spawn.level;
+        let body1: Array<BodyPartConstant> | undefined = Bodies.createBody(type, level, spawn.roomEnergyAvailable);
 
         if (!body1) return undefined;
 
-        let body2: Array<BodyPartConstant> | undefined = Bodies.createBody(type, rcl, spawn.roomEnergyCapacity);
+        let body2: Array<BodyPartConstant> | undefined = Bodies.createBody(type, level, spawn.roomEnergyCapacity);
 
         if (!body2) return undefined;
         if (body2.length > body1.length) return undefined;

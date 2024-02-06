@@ -2,13 +2,13 @@ import { Objects } from "./types";
 
 export class ScreepsSpawn
 {
-    static rcl(this: StructureSpawn): number
+    static level(this: StructureSpawn): number
     {
-        return this.room.rcl;
+        return this.room.level;
     }
 
     static setup()
     {
-        Objects.setGetter(StructureSpawn.prototype, "rcl", ScreepsSpawn.rcl);
+        Objects.setGetter(StructureSpawn.prototype, "level", ScreepsSpawn.level);
     }
 }

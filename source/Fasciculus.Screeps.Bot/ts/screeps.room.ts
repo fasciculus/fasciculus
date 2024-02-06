@@ -25,7 +25,7 @@ export class ScreepsRoom
 {
     private static _sources: Map<string, Set<SourceId>> = new Map();
 
-    private static rcl(this: Room): number
+    private static level(this: Room): number
     {
         return this.controller?.level || 0;
     }
@@ -68,7 +68,7 @@ export class ScreepsRoom
 
     static setup()
     {
-        Objects.setGetter(Room.prototype, "rcl", ScreepsRoom.rcl);
+        Objects.setGetter(Room.prototype, "level", ScreepsRoom.level);
         Objects.setGetter(Room.prototype, "sourceIds", ScreepsRoom.sourceIds);
 
         Objects.setGetter(Room, "all", ScreepsRoom.all);

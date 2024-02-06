@@ -44,7 +44,7 @@ declare global
 
     interface Room
     {
-        get rcl(): number;
+        get level(): number;
 
         get sourceIds(): Set<SourceId>;
     }
@@ -64,7 +64,7 @@ declare global
 
     interface StructureSpawn
     {
-        get rcl(): number;
+        get level(): number;
     }
 
     interface Creep

@@ -157,22 +157,22 @@ export class Bodies
     private static smallTankerTemplate = BodyTemplate.create([CARRY, MOVE]);
     private static largeTankerTemplate = BodyTemplate.create([CARRY, MOVE], 2);
 
-    private static createTankerTemplate(rcl: number): BodyTemplate
+    private static createTankerTemplate(level: number): BodyTemplate
     {
-        return rcl < 3 ? Bodies.smallTankerTemplate : Bodies.largeTankerTemplate;
+        return level < 3 ? Bodies.smallTankerTemplate : Bodies.largeTankerTemplate;
     }
 
     static initialize()
     {
         if (Bodies._templates.length == 0)
         {
-            for (var rcl = 0; rcl < 9; ++rcl)
+            for (var level = 0; level < 9; ++level)
             {
                 const templates: Map<string, BodyTemplate> = new Map();
 
                 templates.set(CreepType.Builder, Bodies.defaultBuilderTemplate);
                 templates.set(CreepType.Repairer, Bodies.defaultRepairerTemplate);
-                templates.set(CreepType.Tanker, Bodies.createTankerTemplate(rcl));
+                templates.set(CreepType.Tanker, Bodies.createTankerTemplate(level));
                 templates.set(CreepType.Upgrader, Bodies.defaultUpgraderTemplate);
                 templates.set(CreepType.Weller, Bodies.defaultWellerTemplate);
 
@@ -185,9 +185,9 @@ export class Bodies
         }
     }
 
-    static createBody(type: CreepType, rcl: number, energy: number): Array<BodyPartConstant> | undefined
+    static createBody(type: CreepType, level: number, energy: number): Array<BodyPartConstant> | undefined
     {
-        return Bodies._templates[rcl].get(type)?.createBody(energy);
+        return Bodies._templates[level].get(type)?.createBody(energy);
     }
 }
 
