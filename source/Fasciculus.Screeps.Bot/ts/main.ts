@@ -13,4 +13,6 @@ export const loop = function ()
     Scheduler.run();
 
     Profiler.stop();
+
+    Screeps.cleanup();
 }
