@@ -67,13 +67,7 @@ class ScreepsGame
 
     static knownRooms(): Array<Room>
     {
-        if (!Game.rooms) return new Array();
-
-        const rooms = Object.values(Game.rooms);
-
-        if (!rooms || !Array.isArray(rooms) || rooms.length == 0) return new Array();
-
-        return rooms;
+        return Objects.values(Game.rooms);
     }
 
     static knownRoomNames(): Set<string>
@@ -88,13 +82,7 @@ class ScreepsGame
 
     static mySpawns(): Array<StructureSpawn>
     {
-        if (!Game.spawns) return new Array();
-
-        const spawns = Object.values(Game.spawns);
-
-        if (!spawns || !Array.isArray(spawns) || spawns.length == 0) return new Array();
-
-        return spawns;
+        return Objects.values(Game.spawns);
     }
 
     static mySpawnIds(): Set<SpawnId>
@@ -104,13 +92,7 @@ class ScreepsGame
 
     static mySites(): Array<ConstructionSite>
     {
-        if (!Game.constructionSites) return new Array();
-
-        const sites = Object.values(Game.constructionSites);
-
-        if (!sites || !Array.isArray(sites) || sites.length == 0) return new Array();
-
-        return sites;
+        return Objects.values(Game.constructionSites);
     }
 
     static mySiteIds(): Set<SiteId>
@@ -127,13 +109,7 @@ class ScreepsGame
 
     static myCreeps(): Array<Creep>
     {
-        if (!Game.creeps) return new Array();
-
-        const creeps = Object.values(Game.creeps);
-
-        if (!creeps || !Array.isArray(creeps) || creeps.length == 0) return new Array();
-
-        return creeps;
+        return Objects.values(Game.creeps);;
     }
 
     static myCreepNames(): Set<string>

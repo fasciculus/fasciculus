@@ -12,6 +12,17 @@ export class Objects
         return new Set<string>(keys);;
     }
 
+    static values<T>(o: { [s: string]: T; } | ArrayLike<T> | undefined | null): Array<T>
+    {
+        if (o === undefined || o === null) return new Array<T>();
+
+        const values = Object.values(o);
+
+        if (!values || !Array.isArray(values) || values.length == 0) return new Array<T>();
+
+        return values;
+    }
+
     static setFunction<T>(target: T, key: PropertyKey, fn: Function): T
     {
         const attributes: PropertyDescriptor & ThisType<any> =
