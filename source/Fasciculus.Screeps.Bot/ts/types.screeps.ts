@@ -16,10 +16,6 @@ declare global
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
 
-        get knownRooms(): Array<Room>;
-        get knownRoomNames(): Set<string>;
-        knownRoom(roomName: string): Room | undefined;
-
         get myFlagNames(): Set<string>;
 
         get mySpawns(): Array<StructureSpawn>;
@@ -53,6 +49,14 @@ declare global
         get sourceIds(): Set<SourceId>;
     }
 
+    interface RoomConstructor
+    {
+        get all(): Array<Room>;
+        get names(): Set<string>;
+
+        get(name: string): Room | undefined;
+    }
+
     interface Source
     {
         get slots(): number;
@@ -61,11 +65,6 @@ declare global
     interface StructureSpawn
     {
         get rcl(): number;
-    }
-
-    interface CreepMemory
-    {
-        type: string;
     }
 
     interface Creep

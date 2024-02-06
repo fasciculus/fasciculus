@@ -25,14 +25,14 @@ export class OldFinder
         return OldFinder.structures<StructureWall>(room, STRUCTURE_WALL);
     }
 
-    static wallIds(room: Room): Set<WallId>
+    static wallIds(room: Room | undefined): Set<WallId>
     {
-        return Ids.get(OldFinder.walls(room));
+        return room ? Ids.get(OldFinder.walls(room)) : new Set<WallId>();
     }
 
-    static obstacles(room: Room): Array<AnyStructure>
+    static obstacles(room: Room | undefined): Array<AnyStructure>
     {
-        return OldFinder.allStructures(room, OldFinder.obstacleTypes);
+        return room ? OldFinder.allStructures(room, OldFinder.obstacleTypes) : new Array<AnyStructure>();
     }
 }
 
@@ -41,13 +41,13 @@ export class Chamber
     readonly name: string;
     // readonly sources: Set<SourceId>;
 
-    get room(): Room { return Game.rooms[this.name]; }
-    get controller(): StructureController | undefined { return this.room.controller; }
+    get room(): Room | undefined { return Room.get(this.name); }
+    get controller(): StructureController | undefined { return this.room?.controller; }
     get my(): boolean { return this.controller?.my || false; }
-    get sourceIds(): Set<SourceId> { return this.room.sourceIds; }
+    get sourceIds(): Set<SourceId> { return this.room?.sourceIds || new Set<SourceId>(); }
 
-    get energyAvailable(): number { return this.room.energyAvailable || 0; }
-    get energyCapacityAvailable(): number { return this.room.energyCapacityAvailable || 0; }
+    get energyAvailable(): number { return this.room?.energyAvailable || 0; }
+    get energyCapacityAvailable(): number { return this.room?.energyCapacityAvailable || 0; }
 
     constructor(name: string)
     {
@@ -98,7 +98,7 @@ export class Chambers
     {
         const result: Map<string, Chamber> = value || new Map();
 
-        if (result.update(Game.knownRoomNames, name => new Chamber(name)))
+        if (result.update(Room.names, name => new Chamber(name)))
         {
             Chambers._allControllers.reset();
         }

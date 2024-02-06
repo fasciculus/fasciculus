@@ -10,32 +10,6 @@ export class ScreepsGame
         return result || undefined;
     }
 
-    private static _knownRooms: Cached<Map<string, Room>> = Cached.simple(ScreepsGame.fetchKnownRooms);
-
-    private static fetchKnownRooms(): Map<string, Room>
-    {
-        const result: Map<string, Room> = new Map<string, Room>();
-
-        Objects.keys(Game.rooms).forEach(k => result.set(k, Game.rooms[k]));
-
-        return result;
-    }
-
-    private static knownRooms(): Array<Room>
-    {
-        return ScreepsGame._knownRooms.value.vs();
-    }
-
-    private static knownRoomNames(): Set<string>
-    {
-        return ScreepsGame._knownRooms.value.ks();
-    }
-
-    private static knownRoom(roomName: string): Room | undefined
-    {
-        return ScreepsGame._knownRooms.value.get(roomName);
-    }
-
     private static _myFlagNames: Cached<Set<string>> = Cached.simple(ScreepsGame.fetchMyFlagNames);
 
     private static fetchMyFlagNames(): Set<string>
@@ -163,9 +137,6 @@ export class ScreepsGame
     static setup()
     {
         Objects.setFunction(Game, "get", ScreepsGame.get);
-        Objects.setGetter(Game, "knownRooms", ScreepsGame.knownRooms);
-        Objects.setGetter(Game, "knownRoomNames", ScreepsGame.knownRoomNames);
-        Objects.setFunction(Game, "knownRoom", ScreepsGame.knownRoom);
         Objects.setGetter(Game, "myFlagNames", ScreepsGame.myFlagNames);
         Objects.setGetter(Game, "mySpawns", ScreepsGame.mySpawns);
         Objects.setGetter(Game, "mySpawnIds", ScreepsGame.mySpawnIds);

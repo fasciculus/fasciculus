@@ -21,46 +21,58 @@ class ScreepsFinder
     }
 }
 
-class ScreepsRoomData
-{
-    constructor(name: string)
-    {
-    }
-}
-
 export class ScreepsRoom
 {
-    private static _data: Map<string, ScreepsRoomData> = new Map();
     private static _sources: Map<string, Set<SourceId>> = new Map();
 
-    private static createData(roomName: string): ScreepsRoomData
-    {
-        return new ScreepsRoomData(roomName);
-    }
-
-    private static getData(roomName: string): ScreepsRoomData
-    {
-        return ScreepsRoom._data.ensure(roomName, ScreepsRoom.createData);
-    }
-
-    static rcl(this: Room): number
+    private static rcl(this: Room): number
     {
         return this.controller?.level || 0;
     }
 
     private static ensureSourceIds(roomName: string): Set<SourceId>
     {
-        return ScreepsFinder.sourceIds(Game.knownRoom(roomName));
+        return ScreepsFinder.sourceIds(Room.get(roomName));
     }
 
-    static sourceIds(this: Room): Set<SourceId>
+    private static sourceIds(this: Room): Set<SourceId>
     {
         return ScreepsRoom._sources.ensure(this.name, ScreepsRoom.ensureSourceIds);
+    }
+
+    private static _all: Cached<Map<string, Room>> = Cached.simple(ScreepsRoom.fetchAll);
+
+    private static fetchAll(): Map<string, Room>
+    {
+        const result: Map<string, Room> = new Map<string, Room>();
+
+        Objects.keys(Game.rooms).forEach(k => result.set(k, Game.rooms[k]));
+
+        return result;
+    }
+
+    private static all(): Array<Room>
+    {
+        return ScreepsRoom._all.value.vs();
+    }
+
+    private static names(): Set<string>
+    {
+        return ScreepsRoom._all.value.ks();
+    }
+
+    private static get(name: string): Room | undefined
+    {
+        return ScreepsRoom._all.value.get(name);
     }
 
     static setup()
     {
         Objects.setGetter(Room.prototype, "rcl", ScreepsRoom.rcl);
         Objects.setGetter(Room.prototype, "sourceIds", ScreepsRoom.sourceIds);
+
+        Objects.setGetter(Room, "all", ScreepsRoom.all);
+        Objects.setGetter(Room, "names", ScreepsRoom.names);
+        Objects.setFunction(Room, "get", ScreepsRoom.get);
     }
 }

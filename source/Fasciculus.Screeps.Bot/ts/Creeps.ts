@@ -302,9 +302,7 @@ export class Creeps
 
     private static typeOf(name: string): CreepType
     {
-        let memory = Game.creeps[name].memory as CreepBaseMemory;
-
-        return memory.type as CreepType;
+        return name.charAt(0) as CreepType;
     }
 
     private static updateCreeps()

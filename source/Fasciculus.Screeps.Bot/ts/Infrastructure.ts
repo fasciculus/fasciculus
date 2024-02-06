@@ -62,7 +62,7 @@ export class Spawn
     spawnCreep(type: CreepType, body: Array<BodyPartConstant>)
     {
         let name = Names.next(type);
-        let memory: CreepBaseMemory = { type, state: CreepState.Idle };
+        let memory: CreepBaseMemory = { state: CreepState.Idle };
         let opts: SpawnOptions = { memory };
 
         this.spawn.spawnCreep(body, name, opts);

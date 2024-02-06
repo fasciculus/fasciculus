@@ -99,7 +99,7 @@ export class Paths
 
         if (start.roomName != goal.roomName)
         {
-            const direction = chamber.room.findExitTo(goal.roomName);
+            const direction = chamber.room?.findExitTo(goal.roomName) || 0;
 
             if (direction != FIND_EXIT_TOP && direction != FIND_EXIT_RIGHT && direction !== FIND_EXIT_BOTTOM && direction != FIND_EXIT_LEFT) return undefined;
 
@@ -111,7 +111,7 @@ export class Paths
         }
 
         const opts: FindPathOpts = { range };
-        const steps: PathStep[] = chamber.room.findPath(start, goal, opts);
+        const steps: PathStep[] | undefined = chamber.room?.findPath(start, goal, opts);
 
         if (!steps || steps.length == 0) return undefined;
 
