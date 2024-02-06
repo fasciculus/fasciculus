@@ -17,20 +17,44 @@ export class Ids
     }
 }
 
-export class Cached<V>
+abstract class CachedBase
+{
+    protected ticked: boolean;
+
+    constructor(ticked: boolean)
+    {
+        this.ticked = ticked;
+
+        if (ticked)
+        {
+            CachedBase._ticked.push(this);
+        }
+    }
+
+    abstract reset(): void;
+
+    private static _ticked: Array<CachedBase> = new Array<CachedBase>();
+
+    protected static resetTicked(): void
+    {
+        CachedBase._ticked.forEach(c => c.reset());
+    }
+}
+
+export class Cached<V> extends CachedBase
 {
     private fetch: (value: V | undefined, key: string) => V;
     private key: string;
-    private ticked: boolean;
 
     private _time: number;
     private _value?: V;
 
     constructor(fetch: (value: V | undefined, key: string) => V, ticked: boolean = true, key: string = "")
     {
+        super(ticked);
+
         this.key = key;
         this.fetch = fetch;
-        this.ticked = ticked;
 
         this._time = -1;
         this._value = undefined;
@@ -54,6 +78,11 @@ export class Cached<V>
         this._time = -1;
         this._value = undefined;
     }
+
+    static cleanup(): void
+    {
+        CachedBase.resetTicked();
+    }
 }
 
 class ScreepsGame
@@ -65,28 +94,30 @@ class ScreepsGame
         return result || undefined;
     }
 
-    private static _knownRooms: Cached<Array<Room>> = new Cached(ScreepsGame.fetchKnownRooms);
+    private static _knownRooms: Cached<Map<string, Room>> = new Cached(ScreepsGame.fetchKnownRooms);
 
-    private static fetchKnownRooms(): Array<Room>
+    private static fetchKnownRooms(): Map<string, Room>
     {
-        return Objects.values(Game.rooms);
+        const result: Map<string, Room> = new Map<string, Room>();
+
+        Objects.keys(Game.rooms).forEach(k => result.set(k, Game.rooms[k]));
+
+        return result;
     }
 
     static knownRooms(): Array<Room>
     {
-        return ScreepsGame._knownRooms.value;
-    }
-
-    private static _knownRoomNames: Cached<Set<string>> = new Cached(ScreepsGame.fetchKnownRoomNames);
-
-    private static fetchKnownRoomNames(): Set<string>
-    {
-        return Objects.keys(Game.rooms);
+        return ScreepsGame._knownRooms.value.vs();
     }
 
     static knownRoomNames(): Set<string>
     {
-        return ScreepsGame._knownRoomNames.value;
+        return ScreepsGame._knownRooms.value.ks();
+    }
+
+    static knownRoom(roomName: string): Room | undefined
+    {
+        return ScreepsGame._knownRooms.value.get(roomName);
     }
 
     private static _myFlagNames: Cached<Set<string>> = new Cached(ScreepsGame.fetchMyFlagNames);
@@ -195,6 +226,7 @@ class ScreepsGame
         Objects.setFunction(Game, "get", ScreepsGame.get);
         Objects.setGetter(Game, "knownRooms", ScreepsGame.knownRooms);
         Objects.setGetter(Game, "knownRoomNames", ScreepsGame.knownRoomNames);
+        Objects.setFunction(Game, "knownRoom", ScreepsGame.knownRoom);
         Objects.setGetter(Game, "myFlagNames", ScreepsGame.myFlagNames);
         Objects.setGetter(Game, "mySpawns", ScreepsGame.mySpawns);
         Objects.setGetter(Game, "mySpawnIds", ScreepsGame.mySpawnIds);
@@ -241,16 +273,71 @@ class ScreepsMemory
     }
 }
 
+class RoomFinder
+{
+    private static obstacleTypes: Set<string> = new Set([STRUCTURE_SPAWN, STRUCTURE_WALL, STRUCTURE_EXTENSION, STRUCTURE_LINK, STRUCTURE_STORAGE,
+        STRUCTURE_TOWER, STRUCTURE_OBSERVER, STRUCTURE_POWER_SPAWN, STRUCTURE_POWER_BANK, STRUCTURE_LAB, STRUCTURE_TERMINAL, STRUCTURE_NUKER,
+        STRUCTURE_FACTORY, STRUCTURE_INVADER_CORE]);
+
+    static structures<T extends AnyStructure>(room: Room, type: string): Array<T>
+    {
+        const opts: FilterOptions<FIND_STRUCTURES> = { filter: { structureType: type } };
+        const result: Array<T> | undefined | null = room.find<T>(FIND_STRUCTURES, opts);
+
+        return result || new Array();
+    }
+
+    static sources(room: Room | undefined): Set<SourceId>
+    {
+        return room ? Ids.get(room.find<FIND_SOURCES, Source>(FIND_SOURCES)) : new Set<SourceId>();
+    }
+}
+
+class RoomData
+{
+    private _sourceIds: Cached<Set<SourceId>>;
+
+    get sourceIds(): Set<SourceId> { return this._sourceIds.value.clone(); }
+
+    constructor(name: string)
+    {
+        this._sourceIds = new Cached<Set<SourceId>>(RoomData.fetchSourceIds, false, name);
+    }
+
+    private static fetchSourceIds(value: Set<SourceId> | undefined, name: string): Set<SourceId>
+    {
+        return RoomFinder.sources(Game.knownRoom(name))
+    }
+}
+
 class ScreepsRoom
 {
+    private static _data: Map<string, RoomData> = new Map();
+
+    private static createData(roomName: string): RoomData
+    {
+        return new RoomData(roomName);
+    }
+
+    private static getData(roomName: string): RoomData
+    {
+        return ScreepsRoom._data.ensure(roomName, ScreepsRoom.createData);
+    }
+
     static rcl(this: Room): number
     {
         return this.controller?.level || 0;
     }
 
+    static sourceIds(this: Room): Set<SourceId>
+    {
+        return ScreepsRoom.getData(this.name).sourceIds;
+    }
+
     static setup()
     {
         Objects.setGetter(Room.prototype, "rcl", ScreepsRoom.rcl);
+        Objects.setGetter(Room.prototype, "sourceIds", ScreepsRoom.sourceIds);
     }
 }
 
@@ -275,5 +362,10 @@ export class Screeps
         ScreepsMemory.setup();
         ScreepsRoom.setup();
         ScreepsSpawn.setup();
+    }
+
+    static cleanup(): void
+    {
+        Cached.cleanup();
     }
 }

@@ -23,6 +23,7 @@ declare global
 
         get knownRooms(): Array<Room>;
         get knownRoomNames(): Set<string>;
+        knownRoom(roomName: string): Room | undefined;
 
         get myFlagNames(): Set<string>;
 
@@ -56,6 +57,8 @@ declare global
     interface Room
     {
         get rcl(): number;
+
+        get sourceIds(): Set<SourceId>;
     }
 }
 

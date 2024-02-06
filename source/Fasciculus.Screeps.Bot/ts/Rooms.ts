@@ -1,7 +1,7 @@
 import { profile } from "./Profiling";
 import { Cached, Ids } from "./screeps";
 
-export class Finder
+export class OldFinder
 {
     private static obstacleTypes: Set<string> = new Set([STRUCTURE_SPAWN, STRUCTURE_WALL, STRUCTURE_EXTENSION, STRUCTURE_LINK, STRUCTURE_STORAGE,
         STRUCTURE_TOWER, STRUCTURE_OBSERVER, STRUCTURE_POWER_SPAWN, STRUCTURE_POWER_BANK, STRUCTURE_LAB, STRUCTURE_TERMINAL, STRUCTURE_NUKER,
@@ -22,17 +22,17 @@ export class Finder
 
     static walls(room: Room): Array<StructureWall>
     {
-        return Finder.structures<StructureWall>(room, STRUCTURE_WALL);
+        return OldFinder.structures<StructureWall>(room, STRUCTURE_WALL);
     }
 
     static wallIds(room: Room): Set<WallId>
     {
-        return Ids.get(Finder.walls(room));
+        return Ids.get(OldFinder.walls(room));
     }
 
     static obstacles(room: Room): Array<AnyStructure>
     {
-        return Finder.allStructures(room, Finder.obstacleTypes);
+        return OldFinder.allStructures(room, OldFinder.obstacleTypes);
     }
 }
 
@@ -64,13 +64,13 @@ export class Chamber
     private _walls?: Set<WallId> = undefined;
 
     get costMatrix(): CostMatrix { return this._costMatrix || (this._costMatrix = this.createCostMatrix()); }
-    get walls(): Set<WallId> { return this._walls || (this._walls = Finder.wallIds(this.room)); }
+    get walls(): Set<WallId> { return this._walls || (this._walls = OldFinder.wallIds(this.room)); }
 
     private createCostMatrix(): CostMatrix
     {
         const cm = new PathFinder.CostMatrix();
 
-        Finder.obstacles(this.room).map(o => o.pos).forEach(p => cm.set(p.x, p.y, 255));
+        OldFinder.obstacles(this.room).map(o => o.pos).forEach(p => cm.set(p.x, p.y, 255));
 
         return cm;
     }
