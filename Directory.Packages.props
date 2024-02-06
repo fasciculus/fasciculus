@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-
-    <PropertyGroup>
-        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    </PropertyGroup>
-  
-    <ItemGroup>
-      <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.4" />
-      <PackageVersion Include="Statiq.Web" Version="1.0.0-beta.54" />
-    </ItemGroup>
-
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.4" />
+    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.8.3" />
+    <PackageVersion Include="Statiq.Web" Version="1.0.0-beta.54" />
+  </ItemGroup>
 </Project>

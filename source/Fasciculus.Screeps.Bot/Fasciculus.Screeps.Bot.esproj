@@ -1,10 +1,17 @@
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.425631-alpha">
+  
   <PropertyGroup>
     <Version>0.1.2</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />
+  </ItemGroup>
+
   <PropertyGroup>
     <PrepareForBuildDependsOn>$(PrepareForBuildDependsOn);CreateConfig</PrepareForBuildDependsOn>
   </PropertyGroup>
+  
   <Target Name="CommitToLocalhost" AfterTargets="Build">
     <PropertyGroup>
       <TargetDir>C:\Users\$(USERNAME)\AppData\Local\Screeps\scripts\127_0_0_1___21025\default</TargetDir>
@@ -18,6 +25,7 @@
     <Delete Files="@(FilesToDelete)" />
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(TargetDir)" />
   </Target>
+  
   <Target Name="DeleteJavaScripts" AfterTargets="Clean">
     <ItemGroup>
       <FilesToDelete Include="js/*.js" />
@@ -26,32 +34,21 @@
     </ItemGroup>
     <Delete Files="@(FilesToDelete)" />
   </Target>
+  
   <Target Name="CreateConfig" BeforeTargets="Build">
     <Message Importance="high" Text="Creating Config.ts" />
     <CreateConfig />
   </Target>
-  <UsingTask TaskName="CreateConfig" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+  
+  <UsingTask TaskName="CreateConfig" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup />
     <Task>
-      <Reference Include="System.Xml" />
       <Using Namespace="System" />
       <Using Namespace="System.Collections.Generic" />
       <Using Namespace="System.IO" />
       <Using Namespace="System.Xml" />
-      <Code Type="Fragment" Language="cs"><![CDATA[
-XmlDocument doc = new XmlDocument();
-doc.Load("Config.xml");
-XmlNodeList adds = doc.GetElementsByTagName("Add");
-List<string> lines = new List<string>();
-foreach (var add in adds)
-{
-  XmlElement element = (XmlElement)add;
-  string key = element.GetAttribute("key");
-  string value = element.InnerText;
-  lines.Add("export const " + key + " = " + value + ";");
-}
-File.WriteAllLines("ts/Config.ts", lines);
-        ]]></Code>
+      <Code Type="Class" Language="cs" Source="build/CreateConfig.cs" />
     </Task>
   </UsingTask>
+  
 </Project>

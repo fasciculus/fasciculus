@@ -13,6 +13,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />
+  </ItemGroup>
+
   <Target Name="EchoUser" BeforeTargets="Build">
     <PropertyGroup>
       <UserName>$(USERNAME)</UserName>
@@ -28,11 +32,11 @@
   <UsingTask TaskName="CreateConfig" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup />
     <Task>
-      <Reference Include="System.Xml"/>
-      <Using Namespace="System"/>
-      <Using Namespace="System.Collections.Generic"/>
-      <Using Namespace="System.IO"/>
-      <Using Namespace="System.Xml"/>
+      <Reference Include="System.Xml" />
+      <Using Namespace="System" />
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Xml" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[
 XmlDocument doc = new XmlDocument();

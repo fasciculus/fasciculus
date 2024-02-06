@@ -1,6 +1,6 @@
 <Config>
-  <Add key="PROFILER_WARMUP">10</Add>
-  <Add key="PROFILER_MAX_ENTRIES">10</Add>
-  <Add key="PROFILER_IGNORED_KEYS">[""]</Add>
-  <Add key="UPGRADER_MAX_COUNT">6</Add>
+  <Add key="PROFILER_WARMUP" type="number">10</Add>
+  <Add key="PROFILER_MAX_ENTRIES" type="number">10</Add>
+  <Add key="PROFILER_IGNORED_KEYS" type="Array&lt;string&gt;">[""]</Add>
+  <Add key="UPGRADER_MAX_COUNT" type="number">6</Add>
 </Config>
