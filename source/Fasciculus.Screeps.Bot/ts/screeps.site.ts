@@ -3,6 +3,11 @@ import { Objects } from "./types.util";
 
 export class ScreepsSite
 {
+    private static progressRemaining(this: ConstructionSite): number
+    {
+        return this.progressTotal - this.progress;
+    }
+
     private static _my: Cached<Map<SiteId, ConstructionSite>> = Cached.simple(ScreepsSite.fetchMy);
 
     private static fetchMy(): Map<SiteId, ConstructionSite>
@@ -22,6 +27,8 @@ export class ScreepsSite
 
     static setup()
     {
+        Objects.setGetter(ConstructionSite.prototype, "progressRemaining", ScreepsSite.progressRemaining);
+
         Objects.setGetter(ConstructionSite, "my", ScreepsSite.my);
         Objects.setGetter(ConstructionSite, "myIds", ScreepsSite.myIds);
     }

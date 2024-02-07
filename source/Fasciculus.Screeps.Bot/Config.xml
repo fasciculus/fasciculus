@@ -1,5 +1,5 @@
 <Config>
-  <Add key="PROFILER_DISABLED" type="boolean">true</Add>
+  <Add key="PROFILER_DISABLED" type="boolean">false</Add>
   <Add key="PROFILER_WARMUP" type="number">10</Add>
   <Add key="PROFILER_MAX_ENTRIES" type="number">10</Add>
   <Add key="PROFILER_IGNORED_KEYS" type="Array&lt;string&gt;">[""]</Add>

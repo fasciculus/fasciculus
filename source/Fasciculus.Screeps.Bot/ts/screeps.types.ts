@@ -92,6 +92,11 @@ declare global
         get my(): Array<StructureWall>;
     }
 
+    interface ConstructionSite
+    {
+        get progressRemaining(): number;
+    }
+
     interface ConstructionSiteConstructor
     {
         get my(): Array<ConstructionSite>;

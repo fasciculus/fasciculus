@@ -1,6 +1,5 @@
 
 import { profile } from "./Profiling";
-import { Chambers } from "./Rooms";
 
 export class Site
 {
@@ -8,12 +7,9 @@ export class Site
 
     get site(): ConstructionSite { return Game.get<ConstructionSite>(this.id)!; }
 
-    get type(): BuildableStructureConstant { return this.site.structureType; }
     get pos(): RoomPosition { return this.site.pos; }
 
-    get progress(): number { return this.site.progress; }
-    get total(): number { return this.site.progressTotal; }
-    get remaining(): number { return this.total - this.progress; }
+    get remaining(): number { return this.site.progressRemaining; }
 
     constructor(id: SiteId)
     {
