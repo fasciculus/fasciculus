@@ -25,6 +25,30 @@ export class ScreepsCreep
         return ScreepsCreep._my.value.ks();
     }
 
+    private static _ofType: Cached<Map<string, Array<Creep>>> = Cached.simple(ScreepsCreep.fetchOfType);
+
+    private static fetchOfType(): Map<string, Array<Creep>>
+    {
+        return ScreepsCreep.my().groupBy(c => c.type);
+    }
+
+    private static ofType(type: string): Array<Creep>
+    {
+        return ScreepsCreep._ofType.value.get(type) || new Array<Creep>();
+    }
+
+    private static _namesOfType: Cached<Map<string, Set<string>>> = Cached.simple(ScreepsCreep.fetchNamesOfType);
+
+    private static fetchNamesOfType(): Map<string, Set<string>>
+    {
+        return ScreepsCreep._ofType.value.map(cs => cs.map(c => c.name).toSet());
+    }
+
+    private static namesOfType(type: string): Set<string>
+    {
+        return ScreepsCreep._namesOfType.value.get(type) || new Set<string>();
+    }
+
     private static get(name: string): Creep | undefined
     {
         return ScreepsCreep._my.value.get(name);
@@ -36,6 +60,8 @@ export class ScreepsCreep
 
         Objects.setGetter(Creep, "my", ScreepsCreep.my);
         Objects.setGetter(Creep, "myNames", ScreepsCreep.myNames);
+        Objects.setFunction(Creep, "ofType", ScreepsCreep.ofType);
+        Objects.setFunction(Creep, "namesOfType", ScreepsCreep.namesOfType);
         Objects.setFunction(Creep, "get", ScreepsCreep.get);
     }
 }

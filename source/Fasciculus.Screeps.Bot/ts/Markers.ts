@@ -68,7 +68,7 @@ export class InfoMarker extends Marker<FlagMemory>
         let wellable = Wellers.maxEnergyPerTick.toFixed(1);
         let performance = "n/a";
         let supplierCount = "n/a";
-        let oldest: Creep | undefined = Creeps.oldest;
+        let oldest: Creep | undefined = Creep.my.min(c => c.ticksToLive || CREEP_LIFE_TIME);
         let oldestText = oldest ? `${oldest.name} (${oldest.ticksToLive || CREEP_LIFE_TIME})` : "no creeps";
 
         visual.text(`E: ${energyAvailable} / ${energyCapacity}`, x, y, INFO_MARKER_TEXT_STYLE);

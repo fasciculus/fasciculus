@@ -281,41 +281,9 @@ export class CreepBase<M extends CreepBaseMemory>
 
 export class Creeps
 {
-    private static _types: Map<string, CreepType> = new Map();
-    private static _creeps: Map<CreepType, Set<string>> = new Map();
-
-    static get oldest(): Creep | undefined { return Creep.my.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
-
-    @profile
-    static initialize()
-    {
-        if (Creeps.updateTypes())
-        {
-            Creeps.updateCreeps();
-        }
-    }
-
-    private static updateTypes(): boolean
-    {
-        return Creeps._types.update(Creep.myNames, Creeps.typeOf);
-    }
-
-    private static typeOf(name: string): CreepType
-    {
-        return name.charAt(0) as CreepType;
-    }
-
-    private static updateCreeps()
-    {
-        const creeps: Map<string, Set<string>> = Creeps._creeps;
-
-        creeps.clear();
-        Creeps._types.forEach((type, name) => creeps.ensure(type, Set.empty).add(name));
-    }
-
     static update<T>(creeps: Map<string, T>, type: CreepType, fnCreate: (name: string) => T): boolean
     {
-        const names: Set<string> = Creeps._creeps.get(type) || new Set();
+        const names: Set<string> = Creep.namesOfType(type);
 
         return creeps.update(names, fnCreate);
     }

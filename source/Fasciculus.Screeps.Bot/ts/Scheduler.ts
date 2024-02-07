@@ -28,7 +28,6 @@ export class Scheduler
         Controllers.initialize();
 
         Bodies.initialize();
-        Creeps.initialize();
         Wellers.initialize();
         Upgraders.initialize();
         Builders.initialize();
