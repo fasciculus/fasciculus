@@ -104,6 +104,8 @@ declare global
 
         get(name: string): Creep | undefined;
 
+        newName(type: string): string;
+
         cleanup(): void;
     }
 }

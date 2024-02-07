@@ -18,6 +18,8 @@ export class Scheduler
     {
         CLI.setup();
 
+        Creep.cleanup();
+
         Sites.initialize();
         Spawns.initialize();
         Walls.initialize();
@@ -41,8 +43,7 @@ export class Scheduler
     {
         switch (Game.time % 10)
         {
-            case 1: Creep.cleanup(); break;
-            case 2: Paths.cleanup(); break;
+            case 1: Paths.cleanup(); break;
         }
 
         Wellers.run();

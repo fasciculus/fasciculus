@@ -54,6 +54,28 @@ export class ScreepsCreep
         return ScreepsCreep._my.value.get(name);
     }
 
+    private static _lastName: Cached<Map<string, number>> = Cached.simple(ScreepsCreep.fetchLastName);
+
+    private static fetchLastName(): Map<string, number>
+    {
+        const unparsed: Map<string, Array<string>> = ScreepsCreep._ofType.value.map(cs => cs.map(c => c.name.substring(1)));
+        const parsed: Map<string, Array<number>> = unparsed.map(ss => ss.map(s => Number.parseInt(s)));
+
+        return parsed.map(vs => vs.max(v => v) || 0);
+    }
+
+    private static ensureLastName(key: string): number { return 0; }
+
+    private static newName(type: string)
+    {
+        const lastNames: Map<string, number> = ScreepsCreep._lastName.value;
+        const newName: number = lastNames.ensure(type, ScreepsCreep.ensureLastName) + 1;
+
+        lastNames.set(type, newName);
+
+        return type + newName;
+    }
+
     private static cleanup(): void
     {
         const existing: Set<string> = ScreepsCreep.myNames();
@@ -76,6 +98,7 @@ export class ScreepsCreep
         Objects.setFunction(Creep, "ofType", ScreepsCreep.ofType);
         Objects.setFunction(Creep, "namesOfType", ScreepsCreep.namesOfType);
         Objects.setFunction(Creep, "get", ScreepsCreep.get);
+        Objects.setFunction(Creep, "newName", ScreepsCreep.newName);
         Objects.setFunction(Creep, "cleanup", ScreepsCreep.cleanup);
     }
 }

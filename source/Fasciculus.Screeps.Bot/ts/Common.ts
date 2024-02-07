@@ -37,11 +37,6 @@ export enum MarkerType
     Unknown = "U"
 }
 
-interface ExtendedMemory extends Memory
-{
-    [index: string]: any;
-}
-
 export class Random
 {
     static nextInt(lessThan: number): number
@@ -86,33 +81,6 @@ export class Stores
     static energyRatio(target: { store: StoreDefinition }): number
     {
         return Stores.energy(target) / Math.max(1, Stores.energyCapacity(target));
-    }
-}
-
-interface NamesMemory
-{
-    creeps: Dictionary<number>;
-    flags: Dictionary<number>;
-}
-
-const InitialNamesMemory: NamesMemory =
-{
-    creeps: {},
-    flags: {}
-};
-
-export class Names
-{
-    private static get memory(): NamesMemory { return Memory.get("names", InitialNamesMemory); }
-
-    static next(prefix: string)
-    {
-        var memory = Names.memory;
-        var id = (memory.creeps[prefix] || 0) + 1;
-
-        memory.creeps[prefix] = id;
-
-        return `${prefix}${id}`;
     }
 }
 

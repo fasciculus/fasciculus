@@ -1,7 +1,7 @@
-import { CreepState, CreepType, Names, Stores } from "./Common";
+import { CreepState, CreepType, Stores } from "./Common";
 import { CreepBaseMemory } from "./Creeps";
 import { profile } from "./Profiling";
-import { Chamber, Chambers } from "./Rooms";
+import { Chambers } from "./Rooms";
 
 export class Controller
 {
@@ -61,7 +61,7 @@ export class Spawn
 
     spawnCreep(type: CreepType, body: Array<BodyPartConstant>)
     {
-        let name = Names.next(type);
+        let name = Creep.newName(type);
         let memory: CreepBaseMemory = { state: CreepState.Idle };
         let opts: SpawnOptions = { memory };
 
