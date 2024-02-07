@@ -7,11 +7,7 @@ export class ScreepsFlag
 
     private static fetchAll(): Map<string, Flag>
     {
-        const result: Map<string, Flag> = new Map<string, Flag>();
-
-        Objects.keys(Game.flags).forEach(k => result.set(k, Game.flags[k]));
-
-        return result;
+        return Objects.values(Game.flags).indexBy(r => r.name);
     }
 
     static names(): Set<string>

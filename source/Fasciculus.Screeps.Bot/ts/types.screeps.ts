@@ -16,9 +16,6 @@ declare global
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
 
-        get mySites(): Array<ConstructionSite>;
-        get mySiteIds(): Set<SiteId>;
-
         myCreep(name: string | undefined): Creep | undefined;
         get myCreeps(): Array<Creep>;
         get myCreepNames(): Set<string>;
@@ -87,6 +84,16 @@ declare global
     interface StructureController
     {
         get safe(): boolean;
+    }
+
+    interface ConstructionSite
+    {
+    }
+
+    interface ConstructionSiteConstructor
+    {
+        get my(): Array<ConstructionSite>;
+        get myIds(): Set<SiteId>;
     }
 
     interface Creep

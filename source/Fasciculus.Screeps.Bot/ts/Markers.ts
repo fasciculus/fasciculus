@@ -75,6 +75,18 @@ export class InfoMarker extends Marker<FlagMemory>
         visual.text(`W / P: ${wellable} / ${performance} (${supplierCount})`, x, y + 1, INFO_MARKER_TEXT_STYLE);
         visual.text(`C: ${oldestText}`, x, y + 2, INFO_MARKER_TEXT_STYLE);
         visual.text(`B: ${Game.cpu.bucket}`, x, y + 3, INFO_MARKER_TEXT_STYLE);
+
+        if (Game.cpu.getHeapStatistics)
+        {
+            const mega = 1024 * 1024;
+            const stats = Game.cpu.getHeapStatistics();
+            const used = (stats.used_heap_size + stats.externally_allocated_size) / mega;
+            const limit = stats.heap_size_limit / mega;
+            const percentage = 100 * used / limit;
+            const text = `M: ${used.toFixed(1)} / ${limit.toFixed(1)} (${percentage.toFixed(1)} %)`;
+
+            visual.text(text, x, y + 4, INFO_MARKER_TEXT_STYLE);
+        }
     }
 }
 

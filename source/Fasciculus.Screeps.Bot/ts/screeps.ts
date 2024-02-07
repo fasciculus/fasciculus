@@ -11,6 +11,7 @@ import { ScreepsCreep } from "./screeps.creep";
 import { ScreepsController } from "./screeps.controller";
 import { ScreepsFlag } from "./screeps.flag";
 import { profile } from "./Profiling";
+import { ScreepsSite } from "./screeps.site";
 
 export class Screeps
 {
@@ -24,6 +25,7 @@ export class Screeps
         ScreepsSource.setup();
         ScreepsSpawn.setup();
         ScreepsController.setup();
+        ScreepsSite.setup();
         ScreepsCreep.setup();
     }
 

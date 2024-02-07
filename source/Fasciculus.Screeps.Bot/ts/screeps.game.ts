@@ -10,30 +10,6 @@ export class ScreepsGame
         return result || undefined;
     }
 
-    private static _mySites: Cached<Array<ConstructionSite>> = Cached.simple(ScreepsGame.fetchMySites);
-
-    private static fetchMySites(): Array<ConstructionSite>
-    {
-        return Objects.values(Game.constructionSites);
-    }
-
-    private static mySites(): Array<ConstructionSite>
-    {
-        return ScreepsGame._mySites.value;
-    }
-
-    private static _mySiteIds: Cached<Set<SiteId>> = Cached.simple(ScreepsGame.fetchMySiteIds);
-
-    private static fetchMySiteIds(): Set<SiteId>
-    {
-        return Ids.get(ScreepsGame.mySites());
-    }
-
-    private static mySiteIds(): Set<SiteId>
-    {
-        return ScreepsGame._mySiteIds.value;
-    }
-
     private static myCreep(name: string | undefined): Creep | undefined
     {
         if (!name || !Game.creeps) return undefined;
@@ -99,8 +75,6 @@ export class ScreepsGame
     static setup()
     {
         Objects.setFunction(Game, "get", ScreepsGame.get);
-        Objects.setGetter(Game, "mySites", ScreepsGame.mySites);
-        Objects.setGetter(Game, "mySiteIds", ScreepsGame.mySiteIds);
         Objects.setFunction(Game, "myCreep", ScreepsGame.myCreep);
         Objects.setGetter(Game, "myCreeps", ScreepsGame.myCreeps);
         Objects.setGetter(Game, "myCreepNames", ScreepsGame.myCreepNames);

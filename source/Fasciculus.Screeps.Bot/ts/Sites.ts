@@ -33,7 +33,7 @@ export class Sites
     @profile
     static initialize()
     {
-        if (Sites._sites.update(Game.mySiteIds, id => new Site(id)))
+        if (Sites._sites.update(ConstructionSite.myIds, id => new Site(id)))
         {
             Chambers.reset();
         }

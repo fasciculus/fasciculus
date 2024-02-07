@@ -1,7 +1,7 @@
 import { Cached, Ids } from "./screeps.util";
 import { Objects } from "./types";
 
-class ScreepsFinder
+class ScreepsFind
 {
     private static obstacleTypes: Set<string> = new Set([STRUCTURE_SPAWN, STRUCTURE_WALL, STRUCTURE_EXTENSION, STRUCTURE_LINK, STRUCTURE_STORAGE,
         STRUCTURE_TOWER, STRUCTURE_OBSERVER, STRUCTURE_POWER_SPAWN, STRUCTURE_POWER_BANK, STRUCTURE_LAB, STRUCTURE_TERMINAL, STRUCTURE_NUKER,
@@ -49,7 +49,7 @@ export class ScreepsRoom
 
     private static ensureSourceIds(roomName: string): Set<SourceId>
     {
-        return ScreepsFinder.sourceIds(Room.get(roomName));
+        return ScreepsFind.sourceIds(Room.get(roomName));
     }
 
     private static sourceIds(this: Room): Set<SourceId>
@@ -61,11 +61,7 @@ export class ScreepsRoom
 
     private static fetchAll(): Map<string, Room>
     {
-        const result: Map<string, Room> = new Map<string, Room>();
-
-        Objects.keys(Game.rooms).forEach(k => result.set(k, Game.rooms[k]));
-
-        return result;
+        return Objects.values(Game.rooms).indexBy(r => r.name);
     }
 
     private static all(): Array<Room>
