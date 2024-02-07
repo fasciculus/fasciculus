@@ -33,9 +33,6 @@ export class Sites
     @profile
     static initialize()
     {
-        if (Sites._sites.update(ConstructionSite.myIds, id => new Site(id)))
-        {
-            Chambers.reset();
-        }
+        Sites._sites.update(ConstructionSite.myIds, id => new Site(id));
     }
 }
