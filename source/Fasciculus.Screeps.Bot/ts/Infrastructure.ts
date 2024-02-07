@@ -97,31 +97,3 @@ export class Wall
         this.id = id;
     }
 }
-
-export class Walls
-{
-    private static _myWalls: Map<WallId, Wall> = new Map();
-
-    static get my(): Array<Wall> { return Walls._myWalls.vs(); }
-    static get avg(): number { return Walls.my.avg(w => w.hits); }
-
-    static get newest(): Array<Wall> { return Walls.my.filter(w => w.hits == 1); }
-
-    @profile
-    static initialize()
-    {
-        Walls._myWalls.update(Chambers.myWalls, id => new Wall(id));
-    }
-
-    static get myWeakest(): Wall | undefined
-    {
-        var result: Wall | undefined = Walls.my.min(w => w.hits);
-
-        if (result && result.hits == WALL_HITS_MAX)
-        {
-            result = undefined;
-        }
-
-        return result;
-    }
-}

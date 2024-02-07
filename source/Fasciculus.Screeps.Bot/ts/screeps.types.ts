@@ -29,19 +29,25 @@ declare global
 
     interface Room
     {
-        get safe(): boolean;
         get level(): number;
+
+        get my(): boolean;
+        get safe(): boolean;
 
         get energy(): number;
         get energyCapacity(): number;
 
         get sourceIds(): Set<SourceId>;
+        get walls(): Array<StructureWall>;
     }
 
     interface RoomConstructor
     {
         get all(): Array<Room>;
         get names(): Set<string>;
+
+        get my(): Array<Room>;
+        get myNames(): Set<string>;
 
         get safe(): Array<Room>;
         get safeNames(): Set<string>;
@@ -79,8 +85,9 @@ declare global
         get safe(): boolean;
     }
 
-    interface ConstructionSite
+    interface StructureWallConstructor
     {
+        get my(): Array<StructureWall>;
     }
 
     interface ConstructionSiteConstructor

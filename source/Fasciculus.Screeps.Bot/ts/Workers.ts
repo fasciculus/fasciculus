@@ -1,6 +1,6 @@
 import { CreepState, CreepType, Stores } from "./Common";
 import { CreepBase, CreepBaseMemory, Creeps } from "./Creeps";
-import { Controller, Controllers, Spawns, Walls } from "./Infrastructure";
+import { Controller, Controllers, Spawns } from "./Infrastructure";
 import { profile } from "./Profiling";
 import { Repairs } from "./Repairs";
 import { Well, Wells } from "./Resources";
@@ -321,7 +321,8 @@ class DamageHelper
 {
     static damageOf(repairable: Repairable): number
     {
-        let hitsMax = repairable instanceof StructureWall ? Walls.avg + 2000 : repairable.hitsMax;
+        const avg: number = StructureWall.my.avg(w => w.hits);
+        let hitsMax = repairable instanceof StructureWall ? avg + 2000 : repairable.hitsMax;
 
         return Math.max(0, hitsMax - repairable.hits);
     }

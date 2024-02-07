@@ -4,7 +4,7 @@ declare global
 {
     interface Array<T>
     {
-        append(values: Iterable<T>): number;
+        append(values: Array<T>): number;
 
         take(count: number): Array<T>;
 
@@ -25,14 +25,14 @@ declare global
     {
         empty<T>(): Array<T>;
 
-        defined<T>(array: Iterable<T | undefined>): Array<T>;
-        flatten<T>(arrays: Iterable<Iterable<T>>): Array<T>;
+        defined<T>(array: Array<T | undefined>): Array<T>;
+        flatten<T>(arrays: Array<Array<T>>): Array<T>;
     }
 }
 
 class Arrays
 {
-    static append<T>(this: Array<T>, values: Iterable<T>): number
+    static append<T>(this: Array<T>, values: Array<T>): number
     {
         for (const value of values)
         {
@@ -161,7 +161,7 @@ class Arrays
         return new Array<T>();
     }
 
-    static defined<T>(values: Iterable<T | undefined>): Array<T>
+    static defined<T>(values: Array<T | undefined>): Array<T>
     {
         var result: Array<T> = new Array<T>();
 
@@ -176,7 +176,7 @@ class Arrays
         return result;
     }
 
-    static flatten<T>(arrays: Iterable<Iterable<T>>): Array<T>
+    static flatten<T>(arrays: Array<Array<T>>): Array<T>
     {
         const result: Array<T> = new Array<T>();
 
@@ -221,7 +221,7 @@ declare global
         intersect<T>(a: Set<T>, b: Set<T>): Set<T>;
         difference<T>(a: Set<T>, b: Set<T>): Set<T>;
 
-        flatten<T>(sets: Iterable<Set<T>>): Set<T>;
+        flatten<T>(sets: Array<Set<T>>): Set<T>;
     }
 }
 
@@ -268,13 +268,13 @@ class Sets
         return new Set(Array.from(a).filter(x => !b.has(x)));
     }
 
-    static flatten<T>(sets: Iterable<Set<T>>): Set<T>
+    static flatten<T>(sets: Array<Set<T>>): Set<T>
     {
         const array: Array<T> = new Array<T>();
 
         for (const set of sets)
         {
-            array.append(set);
+            array.append(set.toArray());
         }
 
         return new Set<T>(array);

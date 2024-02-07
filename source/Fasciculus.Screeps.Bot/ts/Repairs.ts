@@ -1,4 +1,3 @@
-import { Wall, Walls } from "./Infrastructure";
 import { profile } from "./Profiling";
 
 export class Repairs
@@ -25,13 +24,6 @@ export class Repairs
 
     private static findWalls(): Array<Repairable>
     {
-        let walls: Array<Wall> = Walls.newest;
-
-        if (walls.length == 0)
-        {
-            walls = Walls.my;
-        }
-
-        return walls.map(w => w.wall);
+        return StructureWall.my
     }
 }

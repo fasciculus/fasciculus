@@ -1,11 +1,10 @@
-import { Bodies, Creeps } from "./Creeps";
+import { Bodies } from "./Creeps";
 import { Guards } from "./Forces";
-import { Controllers, Spawns, Walls } from "./Infrastructure";
+import { Controllers, Spawns } from "./Infrastructure";
 import { Tankers } from "./Logistics";
 import { Markers } from "./Markers";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";
-import { Chambers } from "./Rooms";
 import { Sites } from "./Sites";
 import { Spawning } from "./Spawning";
 import { Paths } from "./Travelling";
@@ -22,7 +21,6 @@ export class Scheduler
 
         Sites.initialize();
         Spawns.initialize();
-        Walls.initialize();
         Repairs.initialize();
         Markers.initialize();
 

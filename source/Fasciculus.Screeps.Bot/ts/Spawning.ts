@@ -131,6 +131,7 @@ export class Spawning
 
     private static get moreGuards(): boolean
     {
-        return Guards.count < Markers.guardMarkerCount;
+        // return Guards.count < Markers.guardMarkerCount;
+        return false;
     }
 }
