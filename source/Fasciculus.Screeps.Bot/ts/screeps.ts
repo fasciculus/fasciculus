@@ -6,7 +6,7 @@ import { ScreepsMemory } from "./screeps.memory";
 import { Rooms } from "./screeps.room";
 import { ScreepsSource } from "./screeps.source";
 import { ScreepsSpawn } from "./screeps.spawn";
-import { Cached } from "./screeps.util";
+import { Assignees, Cached } from "./screeps.util";
 import { ScreepsCreep } from "./screeps.creep";
 import { ScreepsController } from "./screeps.controller";
 import { ScreepsFlag } from "./screeps.flag";
@@ -31,8 +31,10 @@ export class Screeps
         ScreepsCreep.setup();
     }
 
+    @profile
     static cleanup(): void
     {
         Cached.cleanup();
+        Assignees.cleanup();
     }
 }

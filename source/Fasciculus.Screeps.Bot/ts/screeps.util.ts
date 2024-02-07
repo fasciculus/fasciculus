@@ -94,3 +94,42 @@ export class Cached<V> extends CachedBase
         this._value = undefined;
     }
 }
+
+export class Assignees
+{
+    private static _assignees: Map<AssignableId, Set<CreepId>> = new Map<AssignableId, Set<CreepId>>();
+
+    private static createAssignees(): Set<CreepId> { return new Set<CreepId>(); }
+
+    private static getIds(targetId: AssignableId): Set<CreepId>
+    {
+        return Assignees._assignees.ensure(targetId, Assignees.createAssignees);
+    }
+
+    static get(target: Assignable): Array<Creep>
+    {
+        return Array.defined(Assignees.getIds(target.id).map(Game.get));
+    }
+
+    static assign(target: Assignable, creep: Creep): void
+    {
+        Assignees.getIds(target.id).add(creep.id);
+    }
+
+    static unassign(target: Assignable, creep: Creep): void
+    {
+        Assignees.getIds(target.id).delete(creep.id);
+    }
+
+    static cleanup()
+    {
+        const assignees: Map<AssignableId, Set<CreepId>> = Assignees._assignees;
+
+        assignees.keep(Game.existing(assignees.ks()));
+
+        for (const targetId of assignees.ks())
+        {
+            assignees.set(targetId, Game.existing(Assignees.getIds(targetId)));
+        }
+    }
+}

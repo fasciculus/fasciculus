@@ -3,11 +3,15 @@ declare global
 {
     type ContainerId = Id<StructureContainer>;
     type ControllerId = Id<StructureController>;
+    type CreepId = Id<Creep>;
     type ExtensionId = Id<StructureExtension>;
     type SpawnId = Id<StructureSpawn>;
     type SiteId = Id<ConstructionSite>;
     type SourceId = Id<Source>;
     type WallId = Id<StructureWall>;
+
+    type Assignable = Source | Creep;
+    type AssignableId = Id<Source | Creep>
 
     type RepairableId = Id<StructureRoad | StructureWall>;
     type Repairable = StructureRoad | StructureWall;
@@ -15,6 +19,9 @@ declare global
     interface Game
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
+        all<T extends _HasId>(ids: Set<Id<T>>): Array<T>;
+
+        existing<T extends _HasId>(ids: Set<Id<T>>): Set<Id<T>>;
 
         get username(): string;
     }

@@ -10,6 +10,16 @@ export class ScreepsGame
         return result || undefined;
     }
 
+    private static all<T extends _HasId>(ids: Set<Id<T>>): Array<T>
+    {
+        return Array.defined(ids.map(ScreepsGame.get));
+    }
+
+    private static existing<T extends _HasId>(ids: Set<Id<T>>): Set<Id<T>>
+    {
+        return ids.filter(id => ScreepsGame.get(id) !== undefined);
+    }
+
     private static _unknownUsername: string = "unknown";
     private static _username: Cached<string> = Cached.simple(ScreepsGame.fetchUsername);
 
@@ -35,6 +45,8 @@ export class ScreepsGame
     static setup()
     {
         Objects.setFunction(Game, "get", ScreepsGame.get);
+        Objects.setFunction(Game, "all", ScreepsGame.all);
+        Objects.setFunction(Game, "existing", ScreepsGame.existing);
         Objects.setGetter(Game, "username", ScreepsGame.username);
     }
 }

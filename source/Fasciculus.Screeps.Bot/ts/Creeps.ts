@@ -1,6 +1,5 @@
 
 import { CreepState, CreepType, Stores } from "./Common";
-import { profile } from "./Profiling";
 import { Mover, Positioned } from "./Travelling";
 
 const BodyPartPriorities =

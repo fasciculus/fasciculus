@@ -208,6 +208,9 @@ declare global
 {
     interface Set<T>
     {
+        filter(predicate: (value: T) => boolean): Set<T>;
+        map<U>(fn: (value: T) => U): Array<U>;
+
         clone(): Set<T>;
         toArray(): Array<T>;
     }
@@ -227,6 +230,33 @@ declare global
 
 class Sets
 {
+    static filter<T>(this: Set<T>, predicate: (value: T) => boolean): Set<T>
+    {
+        const result: Set<T> = new Set<T>();
+
+        for (const value of this)
+        {
+            if (predicate(value))
+            {
+                result.add(value);
+            }
+        }
+
+        return result;
+    }
+
+    static map<T, U>(this: Set<T>, fn: (value: T) => U): Array<U>
+    {
+        const result: Array<U> = new Array<U>();
+
+        for (const value of this)
+        {
+            result.push(fn(value))
+        }
+
+        return result;
+    }
+
     static clone<T>(this: Set<T>): Set<T>
     {
         return new Set<T>(this);
@@ -281,6 +311,8 @@ class Sets
     }
 }
 
+Objects.setFunction(Set.prototype, "filter", Sets.filter);
+Objects.setFunction(Set.prototype, "map", Sets.map);
 Objects.setFunction(Set.prototype, "clone", Sets.clone);
 Objects.setFunction(Set.prototype, "toArray", Sets.toArray);
 
