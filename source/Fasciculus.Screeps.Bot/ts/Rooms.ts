@@ -1,7 +1,7 @@
 import { profile } from "./Profiling";
 import { Cached, Ids } from "./screeps.util";
 
-export class OldFinder
+class OldFinder
 {
     private static obstacleTypes: Set<string> = new Set([STRUCTURE_SPAWN, STRUCTURE_WALL, STRUCTURE_EXTENSION, STRUCTURE_LINK, STRUCTURE_STORAGE,
         STRUCTURE_TOWER, STRUCTURE_OBSERVER, STRUCTURE_POWER_SPAWN, STRUCTURE_POWER_BANK, STRUCTURE_LAB, STRUCTURE_TERMINAL, STRUCTURE_NUKER,
@@ -77,7 +77,6 @@ export class Chambers
     private static _allControllers: Cached<Set<ControllerId>> = Cached.simple(Chambers.fetchAllControllers);
 
     private static _myChambers: Cached<Array<Chamber>> = Cached.simple(Chambers.fetchMyChambers);
-    private static _myWalls: Cached<Set<WallId>> = Cached.simple(Chambers.fetchMyWalls);
 
     static get(name: string | undefined): Chamber | undefined { return name ? Chambers._allChambers.value.get(name) : undefined; }
 
@@ -85,7 +84,6 @@ export class Chambers
     static get allControllers(): Set<ControllerId> { return Chambers._allControllers.value.clone(); }
 
     static get my(): Array<Chamber> { return Chambers._myChambers.value.clone(); }
-    static get myWalls(): Set<WallId> { return Chambers._myWalls.value.clone(); }
 
     @profile
     private static fetchAllChambers(value: Map<string, Chamber> | undefined): Map<string, Chamber>
@@ -109,12 +107,6 @@ export class Chambers
     private static fetchMyChambers(): Array<Chamber>
     {
         return Chambers.all.filter(c => c.my);
-    }
-
-    @profile
-    private static fetchMyWalls(): Set<WallId>
-    {
-        return Set.flatten(Chambers.my.map(c => c.walls));
     }
 
     @profile

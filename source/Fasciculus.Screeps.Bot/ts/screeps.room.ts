@@ -17,6 +17,13 @@ class Finder
         return result || new Array();
     }
 
+    static allStructuresOfTypes(room: Room | undefined, types: Set<string>): Array<AnyStructure>
+    {
+        if (!room) return new Array();
+
+        return room.find<AnyStructure>(FIND_STRUCTURES).filter(s => types.has(s.structureType));
+    }
+
     static sources(room: Room | undefined): Array<Source>
     {
         return room ? room.find<FIND_SOURCES, Source>(FIND_SOURCES) : new Array<Source>();
