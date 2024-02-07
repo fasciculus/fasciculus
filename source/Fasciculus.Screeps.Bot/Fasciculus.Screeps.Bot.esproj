@@ -26,11 +26,12 @@
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(TargetDir)" />
   </Target>
   
-  <Target Name="DeleteJavaScripts" AfterTargets="Clean">
+  <Target Name="DeleteGenerated" AfterTargets="Clean">
     <ItemGroup>
       <FilesToDelete Include="js/*.js" />
       <FilesToDelete Include="js/*.map" />
       <FilesToDelete Include="js/tsconfig.tsbuildinfo" />
+      <FilesToDelete Include="ts/Config.ts" />
     </ItemGroup>
     <Delete Files="@(FilesToDelete)" />
   </Target>
