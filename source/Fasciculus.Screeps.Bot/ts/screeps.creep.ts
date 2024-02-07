@@ -25,11 +25,17 @@ export class ScreepsCreep
         return ScreepsCreep._my.value.ks();
     }
 
+    private static get(name: string): Creep | undefined
+    {
+        return ScreepsCreep._my.value.get(name);
+    }
+
     static setup()
     {
         Objects.setGetter(Creep.prototype, "type", ScreepsCreep.type);
 
         Objects.setGetter(Creep, "my", ScreepsCreep.my);
         Objects.setGetter(Creep, "myNames", ScreepsCreep.myNames);
+        Objects.setFunction(Creep, "get", ScreepsCreep.get);
     }
 }

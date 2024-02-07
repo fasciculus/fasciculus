@@ -16,8 +16,6 @@ declare global
     {
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
 
-        myCreep(name: string | undefined): Creep | undefined;
-
         myCreepsOfType(type: string): Array<Creep>;
         myCreepNamesOfType(type: string): Set<string>;
 
@@ -103,6 +101,8 @@ declare global
     {
         get my(): Array<Creep>;
         get myNames(): Set<string>;
+
+        get(name: string): Creep | undefined;
     }
 }
 

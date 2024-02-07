@@ -10,21 +10,9 @@ export class ScreepsGame
         return result || undefined;
     }
 
-    private static myCreep(name: string | undefined): Creep | undefined
-    {
-        if (!name || !Game.creeps) return undefined;
-
-        return Game.creeps[name] || undefined;
-    }
-
     private static myCreeps(): Array<Creep>
     {
         return Objects.values(Game.creeps);;
-    }
-
-    private static myCreepNames(): Set<string>
-    {
-        return Objects.keys(Game.creeps);
     }
 
     private static _myCreepsOfType: Cached<Map<string, Array<Creep>>> = Cached.simple(ScreepsGame.fetchMyCreepsOfType);
@@ -75,9 +63,6 @@ export class ScreepsGame
     static setup()
     {
         Objects.setFunction(Game, "get", ScreepsGame.get);
-        Objects.setFunction(Game, "myCreep", ScreepsGame.myCreep);
-        Objects.setGetter(Game, "myCreeps", ScreepsGame.myCreeps);
-        Objects.setGetter(Game, "myCreepNames", ScreepsGame.myCreepNames);
         Objects.setFunction(Game, "myCreepsOfType", ScreepsGame.myCreepsOfType);
         Objects.setFunction(Game, "myCreepNamesOfType", ScreepsGame.myCreepNamesOfType);
         Objects.setGetter(Game, "username", ScreepsGame.username);
