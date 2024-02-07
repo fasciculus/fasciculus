@@ -199,7 +199,7 @@ export class Paths
         const threshold = Game.time - 1500;
 
         paths.keep(paths.find(pp => pp.accessed > threshold));
-        blocks.keep(Game.myCreepNames);
+        blocks.keep(Creep.myNames);
     }
 }
 

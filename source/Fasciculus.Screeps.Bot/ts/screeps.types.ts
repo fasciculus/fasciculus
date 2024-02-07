@@ -17,8 +17,6 @@ declare global
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
 
         myCreep(name: string | undefined): Creep | undefined;
-        get myCreeps(): Array<Creep>;
-        get myCreepNames(): Set<string>;
 
         myCreepsOfType(type: string): Array<Creep>;
         myCreepNamesOfType(type: string): Set<string>;
@@ -99,6 +97,12 @@ declare global
     interface Creep
     {
         get type(): string;
+    }
+
+    interface CreepConstructor
+    {
+        get my(): Array<Creep>;
+        get myNames(): Set<string>;
     }
 }
 

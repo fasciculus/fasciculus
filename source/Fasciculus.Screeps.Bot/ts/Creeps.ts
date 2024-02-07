@@ -284,7 +284,7 @@ export class Creeps
     private static _types: Map<string, CreepType> = new Map();
     private static _creeps: Map<CreepType, Set<string>> = new Map();
 
-    static get oldest(): Creep | undefined { return Game.myCreeps.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
+    static get oldest(): Creep | undefined { return Creep.my.min(c => c.ticksToLive || CREEP_LIFE_TIME); }
 
     @profile
     static initialize()
@@ -297,7 +297,7 @@ export class Creeps
 
     private static updateTypes(): boolean
     {
-        return Creeps._types.update(Game.myCreepNames, Creeps.typeOf);
+        return Creeps._types.update(Creep.myNames, Creeps.typeOf);
     }
 
     private static typeOf(name: string): CreepType
@@ -323,7 +323,7 @@ export class Creeps
     @profile
     static cleanup()
     {
-        const existing: Set<string> = Game.myCreepNames;
+        const existing: Set<string> = Creep.myNames;
 
         for (const name in Memory.creeps)
         {
