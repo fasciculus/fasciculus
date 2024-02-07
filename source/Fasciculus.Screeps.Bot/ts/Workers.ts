@@ -726,7 +726,7 @@ export class Weller extends CreepBase<WellerMemory>
 
         if (!well) return;
 
-        this.moveTo(well, 1);
+        this.moveTo(well, 1, false);
     }
 
     @profile

@@ -95,7 +95,7 @@ export class Spawning
 
     private static get moreTankers(): boolean
     {
-        return Tankers.count < (Wellers.count * 2);
+        return Tankers.count < (Wellers.count * 1.5);
     }
 
     private static get moreWellers(): boolean

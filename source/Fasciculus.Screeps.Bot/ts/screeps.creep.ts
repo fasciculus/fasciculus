@@ -3,9 +3,23 @@ import { Objects } from "./types.util";
 
 export class ScreepsCreep
 {
+    private static _workParts: Map<CreepId, number> = new Map<CreepId, number>();
+
     private static type(this: Creep): string
     {
         return this.name.charAt(0);
+    }
+
+    private static countWorkParts(id: CreepId): number
+    {
+        const creep: Creep | undefined = Game.get(id);
+
+        return creep ? creep.body.sum(d => d.type == WORK ? 1 : 0) : 0;
+    }
+
+    private static workParts(this: Creep): number
+    {
+        return ScreepsCreep._workParts.ensure(this.id, ScreepsCreep.countWorkParts);
     }
 
     private static _my: Cached<Map<string, Creep>> = Cached.simple(ScreepsCreep.fetchMy);
@@ -22,7 +36,7 @@ export class ScreepsCreep
 
     private static myNames(): Set<string>
     {
-        return ScreepsCreep._my.value.ks();
+        return Objects.keys(Game.creeps);
     }
 
     private static _ofType: Cached<Map<string, Array<Creep>>> = Cached.simple(ScreepsCreep.fetchOfType);
@@ -76,7 +90,7 @@ export class ScreepsCreep
         return type + newName;
     }
 
-    private static cleanup(): void
+    private static cleanupMemory()
     {
         const existing: Set<string> = ScreepsCreep.myNames();
 
@@ -89,9 +103,16 @@ export class ScreepsCreep
         }
     }
 
+    private static cleanup(): void
+    {
+        ScreepsCreep.cleanupMemory();
+        ScreepsCreep._workParts.keep(Game.existing(ScreepsCreep._workParts.ks()));
+    }
+
     static setup()
     {
         Objects.setGetter(Creep.prototype, "type", ScreepsCreep.type);
+        Objects.setGetter(Creep.prototype, "workParts", ScreepsCreep.workParts);
 
         Objects.setGetter(Creep, "my", ScreepsCreep.my);
         Objects.setGetter(Creep, "myNames", ScreepsCreep.myNames);
