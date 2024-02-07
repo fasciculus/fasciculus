@@ -1,5 +1,5 @@
 
-import "./types.screeps";
+import "./screeps.types";
 
 import { ScreepsGame } from "./screeps.game";
 import { ScreepsMemory } from "./screeps.memory";
