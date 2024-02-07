@@ -26,7 +26,7 @@ namespace Fasciculus.Screeps.Bot
                 lines.Add($"export const {key}: {type} = {value}" + ";");
             }
 
-            File.WriteAllLines("ts/Config.ts", lines);
+            File.WriteAllLines("ts/config.ts", lines);
 
             return true;
         }

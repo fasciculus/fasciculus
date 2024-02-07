@@ -1,4 +1,4 @@
 node_modules/
 js/
 package-lock.json
-ts/Config.ts
+ts/config.ts

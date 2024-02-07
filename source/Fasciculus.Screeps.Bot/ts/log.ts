@@ -1,4 +1,4 @@
-import { PROFILER_IGNORED_KEYS, PROFILER_MAX_ENTRIES } from "./Config";
+import { PROFILER_IGNORED_KEYS, PROFILER_MAX_ENTRIES } from "./config";
 import { Profiler, ProfilerEntry } from "./Profiling";
 import { Paths } from "./Travelling";
 

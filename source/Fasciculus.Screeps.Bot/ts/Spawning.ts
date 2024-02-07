@@ -1,11 +1,9 @@
 
 import { CreepType } from "./Common";
-import { UPGRADER_MAX_COUNT } from "./Config";
+import { UPGRADER_MAX_COUNT } from "./config";
 import { Bodies } from "./Creeps";
-import { Guards } from "./Forces";
 import { Controllers, Spawn, Spawns } from "./Infrastructure";
 import { Tankers } from "./Logistics";
-import { Markers } from "./Markers";
 import { profile } from "./Profiling";
 import { Repairs } from "./Repairs";
 import { Wells } from "./Resources";

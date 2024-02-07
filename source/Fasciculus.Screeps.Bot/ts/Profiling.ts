@@ -1,4 +1,4 @@
-import { PROFILER_DISABLED, PROFILER_WARMUP } from "./Config";
+import { PROFILER_DISABLED, PROFILER_WARMUP } from "./config";
 
 export function profile<T extends new (...args: any[]) => any, A extends any[], R>(target: (this: T, ...args: A) => R,
     context: ClassMemberDecoratorContext)
