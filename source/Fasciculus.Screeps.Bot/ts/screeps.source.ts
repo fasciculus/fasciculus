@@ -1,6 +1,7 @@
+import { Assignees } from "./screeps.util";
 import { Objects } from "./types.util";
 
-export class ScreepsSource
+export class Sources
 {
     private static _slots: Map<SourceId, number> = new Map();
 
@@ -29,13 +30,31 @@ export class ScreepsSource
         return result;
     }
 
-    static slots(this: Source): number
+    private static slots(this: Source): number
     {
-        return ScreepsSource._slots.ensure(this.id, ScreepsSource.countSlots);
+        return Sources._slots.ensure(this.id, Sources.countSlots);
+    }
+
+    private static assignees(this: Source): Array<Creep>
+    {
+        return Assignees.get(this);
+    }
+
+    private static assign(this: Source, creep: Creep): void
+    {
+        Assignees.assign(this, creep);
+    }
+
+    private static unassign(this: Source, creep: Creep): void
+    {
+        Assignees.unassign(this, creep);
     }
 
     static setup()
     {
-        Objects.setGetter(Source.prototype, "slots", ScreepsSource.slots);
+        Objects.setGetter(Source.prototype, "slots", Sources.slots);
+        Objects.setGetter(Source.prototype, "assignees", Sources.assignees);
+        Objects.setFunction(Source.prototype, "assign", Sources.assign);
+        Objects.setFunction(Source.prototype, "unassign", Sources.unassign);
     }
 }

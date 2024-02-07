@@ -4,7 +4,7 @@ import "./screeps.types";
 import { ScreepsGame } from "./screeps.game";
 import { ScreepsMemory } from "./screeps.memory";
 import { Rooms } from "./screeps.room";
-import { ScreepsSource } from "./screeps.source";
+import { Sources } from "./screeps.source";
 import { ScreepsSpawn } from "./screeps.spawn";
 import { Assignees, Cached } from "./screeps.util";
 import { ScreepsCreep } from "./screeps.creep";
@@ -23,7 +23,7 @@ export class Screeps
         ScreepsMemory.setup();
         Rooms.setup();
         ScreepsFlag.setup();
-        ScreepsSource.setup();
+        Sources.setup();
         ScreepsSpawn.setup();
         ScreepsController.setup();
         ScreepsWall.setup();

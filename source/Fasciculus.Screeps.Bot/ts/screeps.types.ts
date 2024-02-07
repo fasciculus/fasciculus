@@ -76,6 +76,10 @@ declare global
     interface Source
     {
         get slots(): number;
+
+        get assignees(): Array<Creep>;
+        assign(creep: Creep): void;
+        unassign(creep: Creep): void;
     }
 
     interface StructureSpawn

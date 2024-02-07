@@ -1,22 +1,14 @@
 import { profile } from "./Profiling";
-import { Chambers } from "./Rooms";
-
-interface WellMemory
-{
-    assignee?: string;
-}
 
 export class Well
 {
     readonly id: SourceId;
 
-    get memory(): WellMemory { return Memory.sub("wells", this.id, {}); }
-
     get source(): Source { return Game.get<Source>(this.id)!; }
     get pos(): RoomPosition { return this.source.pos; }
 
-    get assignee(): Creep | undefined { return Creep.get(this.memory.assignee || ""); }
-    set assignee(value: Creep) { this.memory.assignee = value.name; }
+    get assignee(): Creep | undefined { return this.source.assignees[0]; }
+    set assignee(value: Creep) { this.source.assign(value); }
 
     constructor(id: SourceId)
     {
