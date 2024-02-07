@@ -83,17 +83,3 @@ export class Spawns
         Spawns._spawns.update(StructureSpawn.myIds, id => new Spawn(id));
     }
 }
-
-export class Wall
-{
-    readonly id: WallId;
-
-    get wall(): StructureWall { return Game.get<StructureWall>(this.id)!; }
-
-    get hits(): number { return this.wall.hits; }
-
-    constructor(id: WallId)
-    {
-        this.id = id;
-    }
-}
