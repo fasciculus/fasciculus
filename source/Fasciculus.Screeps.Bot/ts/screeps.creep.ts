@@ -54,6 +54,19 @@ export class ScreepsCreep
         return ScreepsCreep._my.value.get(name);
     }
 
+    private static cleanup(): void
+    {
+        const existing: Set<string> = ScreepsCreep.myNames();
+
+        for (const name in Memory.creeps)
+        {
+            if (!existing.has(name))
+            {
+                delete Memory.creeps[name];
+            }
+        }
+    }
+
     static setup()
     {
         Objects.setGetter(Creep.prototype, "type", ScreepsCreep.type);
@@ -63,5 +76,6 @@ export class ScreepsCreep
         Objects.setFunction(Creep, "ofType", ScreepsCreep.ofType);
         Objects.setFunction(Creep, "namesOfType", ScreepsCreep.namesOfType);
         Objects.setFunction(Creep, "get", ScreepsCreep.get);
+        Objects.setFunction(Creep, "cleanup", ScreepsCreep.cleanup);
     }
 }

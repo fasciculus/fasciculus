@@ -103,6 +103,8 @@ declare global
         namesOfType(type: string): Set<string>;
 
         get(name: string): Creep | undefined;
+
+        cleanup(): void;
     }
 }
 

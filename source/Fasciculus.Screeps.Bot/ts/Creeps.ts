@@ -287,18 +287,4 @@ export class Creeps
 
         return creeps.update(names, fnCreate);
     }
-
-    @profile
-    static cleanup()
-    {
-        const existing: Set<string> = Creep.myNames;
-
-        for (const name in Memory.creeps)
-        {
-            if (!existing.has(name))
-            {
-                delete Memory.creeps[name];
-            }
-        }
-    }
 }

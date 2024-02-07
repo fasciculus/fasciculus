@@ -41,7 +41,7 @@ export class Scheduler
     {
         switch (Game.time % 10)
         {
-            case 1: Creeps.cleanup(); break;
+            case 1: Creep.cleanup(); break;
             case 2: Paths.cleanup(); break;
         }
 
