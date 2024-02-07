@@ -1,4 +1,4 @@
-import { Objects } from "./types";
+import { Objects } from "./types.util";
 
 export class ScreepsCreep
 {

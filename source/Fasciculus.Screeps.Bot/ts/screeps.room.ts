@@ -1,5 +1,5 @@
 import { Cached, Ids } from "./screeps.util";
-import { Objects } from "./types";
+import { Objects } from "./types.util";
 
 class ScreepsFind
 {

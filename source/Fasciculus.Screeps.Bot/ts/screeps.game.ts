@@ -1,5 +1,5 @@
-import { Cached, Ids } from "./screeps.util";
-import { Objects } from "./types";
+import { Cached } from "./screeps.util";
+import { Objects } from "./types.util";
 
 export class ScreepsGame
 {
