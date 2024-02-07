@@ -1,8 +1,10 @@
-import { PROFILER_WARMUP } from "./Config";
+import { PROFILER_DISABLED, PROFILER_WARMUP } from "./Config";
 
 export function profile<T extends new (...args: any[]) => any, A extends any[], R>(target: (this: T, ...args: A) => R,
     context: ClassMemberDecoratorContext)
 {
+    if (PROFILER_DISABLED) return target;
+
     const name: string = String(context.name);
 
     function replacement(this: T, ...args: A)
@@ -58,6 +60,7 @@ export class Profiler
 
     static record(type: string, name: string, duration: number): void
     {
+        if (PROFILER_DISABLED) return;
         if (Profiler._warmup > 0) return;
 
         const key: string = `${type}:${name}`;
@@ -69,6 +72,8 @@ export class Profiler
 
     static start(): void
     {
+        if (PROFILER_DISABLED) return;
+
         if (Profiler._resetRequested)
         {
             Profiler._entries.clear();
@@ -85,6 +90,8 @@ export class Profiler
 
     static stop(): void
     {
+        if (PROFILER_DISABLED) return;
+
         if (Profiler._warmup > 0)
         {
             --Profiler._warmup;
@@ -98,6 +105,8 @@ export class Profiler
 
     static reset(): void
     {
+        if (PROFILER_DISABLED) return;
+
         Profiler._resetRequested = true;
     }
 
