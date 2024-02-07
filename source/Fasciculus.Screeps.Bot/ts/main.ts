@@ -15,16 +15,13 @@ class Experiments
 
 export const loop = function ()
 {
-    Screeps.setup();
-
     Profiler.start();
 
+    Screeps.setup();
     Scheduler.initialize();
     Scheduler.run();
-
     Experiments.run();
+    Screeps.cleanup();
 
     Profiler.stop();
-
-    Screeps.cleanup();
 }
