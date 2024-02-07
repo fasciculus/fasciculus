@@ -1,13 +1,13 @@
 import { Cached, Ids } from "./screeps.util";
 import { Objects } from "./types.util";
 
-class ScreepsFind
+class Finder
 {
     private static obstacleTypes: Set<string> = new Set([STRUCTURE_SPAWN, STRUCTURE_WALL, STRUCTURE_EXTENSION, STRUCTURE_LINK, STRUCTURE_STORAGE,
         STRUCTURE_TOWER, STRUCTURE_OBSERVER, STRUCTURE_POWER_SPAWN, STRUCTURE_POWER_BANK, STRUCTURE_LAB, STRUCTURE_TERMINAL, STRUCTURE_NUKER,
         STRUCTURE_FACTORY, STRUCTURE_INVADER_CORE]);
 
-    static structures<T extends AnyStructure>(room: Room | undefined, type: string): Array<T>
+    static structuresOfType<T extends AnyStructure>(room: Room | undefined, type: string): Array<T>
     {
         if (!room) return new Array();
 
@@ -24,16 +24,16 @@ class ScreepsFind
 
     static sourceIds(room: Room | undefined): Set<SourceId>
     {
-        return Ids.get(ScreepsFind.sources(room));
+        return Ids.get(Finder.sources(room));
     }
 
     static walls(room: Room | undefined): Array<StructureWall>
     {
-        return ScreepsFind.structures(room, STRUCTURE_WALL);
+        return Finder.structuresOfType(room, STRUCTURE_WALL);
     }
 }
 
-export class ScreepsRoom
+export class Rooms
 {
     private static my(this: Room): boolean
     {
@@ -68,15 +68,15 @@ export class ScreepsRoom
 
     private static ensureSourceIds(name: string): Set<SourceId>
     {
-        return ScreepsFind.sourceIds(Room.get(name));
+        return Finder.sourceIds(Room.get(name));
     }
 
     private static sourceIds(this: Room): Set<SourceId>
     {
-        return ScreepsRoom._sources.ensure(this.name, ScreepsRoom.ensureSourceIds);
+        return Rooms._sources.ensure(this.name, Rooms.ensureSourceIds);
     }
 
-    private static _walls: Cached<Map<string, Array<StructureWall>>> = Cached.simple(ScreepsRoom.fetchWalls);
+    private static _walls: Cached<Map<string, Array<StructureWall>>> = Cached.simple(Rooms.fetchWalls);
 
     private static fetchWalls(): Map<string, Array<StructureWall>>
     {
@@ -85,15 +85,15 @@ export class ScreepsRoom
 
     private static ensureWalls(name: string): Array<StructureWall>
     {
-        return ScreepsFind.walls(Room.get(name));
+        return Finder.walls(Room.get(name));
     }
 
     private static walls(this: Room): Array<StructureWall>
     {
-        return ScreepsRoom._walls.value.ensure(this.name, ScreepsRoom.ensureWalls);
+        return Rooms._walls.value.ensure(this.name, Rooms.ensureWalls);
     }
 
-    private static _all: Cached<Map<string, Room>> = Cached.simple(ScreepsRoom.fetchAll);
+    private static _all: Cached<Map<string, Room>> = Cached.simple(Rooms.fetchAll);
 
     private static fetchAll(): Map<string, Room>
     {
@@ -102,69 +102,69 @@ export class ScreepsRoom
 
     private static all(): Array<Room>
     {
-        return ScreepsRoom._all.value.vs();
+        return Rooms._all.value.vs();
     }
 
     private static names(): Set<string>
     {
-        return ScreepsRoom._all.value.ks();
+        return Rooms._all.value.ks();
     }
 
     private static get(name: string): Room | undefined
     {
-        return ScreepsRoom._all.value.get(name);
+        return Rooms._all.value.get(name);
     }
 
-    private static _my: Cached<Map<string, Room>> = Cached.simple(ScreepsRoom.fetchMy);
+    private static _my: Cached<Map<string, Room>> = Cached.simple(Rooms.fetchMy);
 
     private static fetchMy(): Map<string, Room>
     {
-        return ScreepsRoom._all.value.filter((k, v) => v.my);
+        return Rooms._all.value.filter((k, v) => v.my);
     }
 
     private static myRooms(): Array<Room>
     {
-        return ScreepsRoom._my.value.vs();
+        return Rooms._my.value.vs();
     }
 
     private static myNames(): Set<string>
     {
-        return ScreepsRoom._my.value.ks();
+        return Rooms._my.value.ks();
     }
 
-    private static _safe: Cached<Map<string, Room>> = Cached.simple(ScreepsRoom.fetchSafe);
+    private static _safe: Cached<Map<string, Room>> = Cached.simple(Rooms.fetchSafe);
 
     private static fetchSafe(): Map<string, Room>
     {
-        return ScreepsRoom._all.value.filter((k, v) => v.safe);
+        return Rooms._all.value.filter((k, v) => v.safe);
     }
 
     private static safeRooms(): Array<Room>
     {
-        return ScreepsRoom._safe.value.vs();
+        return Rooms._safe.value.vs();
     }
 
     private static safeNames(): Set<string>
     {
-        return ScreepsRoom._safe.value.ks();
+        return Rooms._safe.value.ks();
     }
 
     static setup()
     {
-        Objects.setGetter(Room.prototype, "my", ScreepsRoom.my);
-        Objects.setGetter(Room.prototype, "safe", ScreepsRoom.safe);
-        Objects.setGetter(Room.prototype, "level", ScreepsRoom.level);
-        Objects.setGetter(Room.prototype, "energy", ScreepsRoom.energy);
-        Objects.setGetter(Room.prototype, "energyCapacity", ScreepsRoom.energyCapacity);
-        Objects.setGetter(Room.prototype, "sourceIds", ScreepsRoom.sourceIds);
-        Objects.setGetter(Room.prototype, "walls", ScreepsRoom.walls);
+        Objects.setGetter(Room.prototype, "my", Rooms.my);
+        Objects.setGetter(Room.prototype, "safe", Rooms.safe);
+        Objects.setGetter(Room.prototype, "level", Rooms.level);
+        Objects.setGetter(Room.prototype, "energy", Rooms.energy);
+        Objects.setGetter(Room.prototype, "energyCapacity", Rooms.energyCapacity);
+        Objects.setGetter(Room.prototype, "sourceIds", Rooms.sourceIds);
+        Objects.setGetter(Room.prototype, "walls", Rooms.walls);
 
-        Objects.setGetter(Room, "all", ScreepsRoom.all);
-        Objects.setGetter(Room, "names", ScreepsRoom.names);
-        Objects.setGetter(Room, "my", ScreepsRoom.myRooms);
-        Objects.setGetter(Room, "myNames", ScreepsRoom.myNames);
-        Objects.setGetter(Room, "safe", ScreepsRoom.safeRooms);
-        Objects.setGetter(Room, "safeNames", ScreepsRoom.safeNames);
-        Objects.setFunction(Room, "get", ScreepsRoom.get);
+        Objects.setGetter(Room, "all", Rooms.all);
+        Objects.setGetter(Room, "names", Rooms.names);
+        Objects.setGetter(Room, "my", Rooms.myRooms);
+        Objects.setGetter(Room, "myNames", Rooms.myNames);
+        Objects.setGetter(Room, "safe", Rooms.safeRooms);
+        Objects.setGetter(Room, "safeNames", Rooms.safeNames);
+        Objects.setFunction(Room, "get", Rooms.get);
     }
 }
