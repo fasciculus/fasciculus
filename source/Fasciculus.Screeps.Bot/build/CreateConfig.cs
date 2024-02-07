@@ -11,7 +11,7 @@ namespace Fasciculus.Screeps.Bot
         {
             XmlDocument doc = new XmlDocument();
 
-            doc.Load("Config.xml");
+            doc.Load("config.xml");
 
             XmlNodeList adds = doc.GetElementsByTagName("Add");
             List<string> lines = new List<string>();

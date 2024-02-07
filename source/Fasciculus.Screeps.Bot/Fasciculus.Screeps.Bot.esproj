@@ -37,7 +37,7 @@
   </Target>
   
   <Target Name="CreateConfig" BeforeTargets="Build">
-    <Message Importance="high" Text="Creating Config.ts" />
+    <Message Importance="high" Text="Creating config.ts" />
     <CreateConfig />
   </Target>
   
