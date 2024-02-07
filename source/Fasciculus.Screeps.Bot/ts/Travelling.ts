@@ -71,24 +71,22 @@ export class Paths
 
     private static callback(roomName: string | undefined): boolean | CostMatrix
     {
-        const chamber: Chamber | undefined = Chambers.get(roomName);
-        var costMatrix: CostMatrix = chamber ? chamber.costMatrix : new PathFinder.CostMatrix();
+        const room: Room | undefined = roomName ? Room.get(roomName) : undefined;
+        const matrix: CostMatrix = room?.costMatrix || new PathFinder.CostMatrix();
         const blocks: Map<string, RoomPosition> = Paths._blocks;
 
         if (blocks.size > 0)
         {
-            costMatrix = costMatrix.clone();
-
             for (const block of blocks.values())
             {
                 if (block.roomName == roomName)
                 {
-                    costMatrix.set(block.x, block.y, 255);
+                    matrix.set(block.x, block.y, 255);
                 }
             }
         }
 
-        return costMatrix;
+        return matrix;
     }
 
     private static findWithCreeps(start: RoomPosition, goal: RoomPosition, range: number): PathPart | undefined

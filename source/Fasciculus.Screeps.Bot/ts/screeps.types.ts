@@ -39,6 +39,8 @@ declare global
 
         get sourceIds(): Set<SourceId>;
         get walls(): Array<StructureWall>;
+
+        get costMatrix(): CostMatrix;
     }
 
     interface RoomConstructor
