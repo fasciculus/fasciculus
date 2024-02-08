@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-grunt-deploy", "source\fasciculus-grunt-deploy\fasciculus-grunt-deploy.esproj", "{9A19F05F-3E69-4538-AC66-6E2F14914B61}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-package", "source\fasciculus-package\fasciculus-package.esproj", "{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-es5-types", "source\fasciculus-es5-types\fasciculus-es5-types.esproj", "{DD5DBD0A-6C72-45C7-B89F-513531D2A613}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +13,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9A19F05F-3E69-4538-AC66-6E2F14914B61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A19F05F-3E69-4538-AC66-6E2F14914B61}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A19F05F-3E69-4538-AC66-6E2F14914B61}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{9A19F05F-3E69-4538-AC66-6E2F14914B61}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A19F05F-3E69-4538-AC66-6E2F14914B61}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9A19F05F-3E69-4538-AC66-6E2F14914B61}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{DD5DBD0A-6C72-45C7-B89F-513531D2A613}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD5DBD0A-6C72-45C7-B89F-513531D2A613}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD5DBD0A-6C72-45C7-B89F-513531D2A613}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DD5DBD0A-6C72-45C7-B89F-513531D2A613}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD5DBD0A-6C72-45C7-B89F-513531D2A613}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD5DBD0A-6C72-45C7-B89F-513531D2A613}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1EFED6E5-6C55-401A-BB40-8DC7F09023E2}
 	EndGlobalSection
 EndGlobal
