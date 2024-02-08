@@ -10,3 +10,5 @@ declare global
         defined<T>(array: Array<T | undefined>): Array<T>;
     }
 }
+
+export { }
