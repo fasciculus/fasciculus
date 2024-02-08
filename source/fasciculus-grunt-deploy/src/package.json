@@ -1,0 +1,18 @@
+{
+  "author": {
+    "name": "fasciculus",
+    "url": "https://github.com/fasciculus/fasciculus"
+  },
+  "dependencies": {},
+  "description": "Deploys package to local repository.",
+  "devDependencies": {},
+  "license": "MIT",
+  "main": "tasks/deploy.js",
+  "name": "fasciculus-grunt-deploy",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fasciculus/fasciculus.git"
+  },
+  "scripts": {},
+  "version": "0.1.1"
+}

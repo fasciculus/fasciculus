@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.476373-alpha">
   <ItemGroup>
-    <Folder Include="build\" />
-    <Folder Include="src\%40types\fasciculus-es5-extensions\" />
+    <Folder Include="src\tasks\" />
   </ItemGroup>
 </Project>

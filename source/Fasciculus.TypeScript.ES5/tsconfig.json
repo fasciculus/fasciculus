@@ -2,19 +2,18 @@
   "compileOnSave": true,
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": "ts/",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "NodeNext", // "module": "NodeNext",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "newLine": "crlf",
     "noImplicitReturns": true,
-    "outDir": "js",
+    "outDir": "dist/fasciculus-es5-extensions",
     "skipLibCheck": true,
-    "lib": [ "ES6" ],
+    "lib": [ "ES5" ],
     "sourceMap": false,
     "strict": true,
-    "target": "ES6"
+    "target": "ES5"
   },
-  "include": [ "ts/" ]
+  "include": [ "build/fasciculus-es5-extensions/" ]
 }
