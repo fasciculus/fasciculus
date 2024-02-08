@@ -1,0 +1,18 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "CommonJS",
+    "newLine": "crlf",
+    "noImplicitReturns": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "lib": [ "ES5" ],
+    "sourceMap": false,
+    "strict": true,
+    "target": "ES5"
+  },
+  "include": [ "./src/*.ts" ]
+}

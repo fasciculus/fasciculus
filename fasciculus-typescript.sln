@@ -9,6 +9,8 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-es5-types", "sou
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-es5", "source\fasciculus-es5\fasciculus-es5.esproj", "{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-es5-test", "source\fasciculus-es5-test\fasciculus-es5-test.esproj", "{89EB047E-DC86-443F-8BDA-E592A47B5214}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,12 @@ Global
 		{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{89EB047E-DC86-443F-8BDA-E592A47B5214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89EB047E-DC86-443F-8BDA-E592A47B5214}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89EB047E-DC86-443F-8BDA-E592A47B5214}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{89EB047E-DC86-443F-8BDA-E592A47B5214}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89EB047E-DC86-443F-8BDA-E592A47B5214}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89EB047E-DC86-443F-8BDA-E592A47B5214}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
