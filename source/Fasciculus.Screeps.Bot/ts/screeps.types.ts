@@ -10,8 +10,8 @@ declare global
     type SourceId = Id<Source>;
     type WallId = Id<StructureWall>;
 
-    type Assignable = Source | Creep;
-    type AssignableId = Id<Source | Creep>
+    type Assignable = Source;
+    type AssignableId = Id<Source>
 
     type RepairableId = Id<StructureRoad | StructureWall>;
     type Repairable = StructureRoad | StructureWall;
@@ -76,8 +76,10 @@ declare global
     interface Source
     {
         get slots(): number;
+        get freeSlots(): number;
 
         get assignees(): Array<Creep>;
+        get assignedWorkParts(): number;
         assign(creep: Creep): void;
         unassign(creep: Creep): void;
     }

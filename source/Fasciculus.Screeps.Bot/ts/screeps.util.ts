@@ -111,6 +111,22 @@ export class Assignees
         return Array.defined(Assignees.getIds(target.id).map(Game.get));
     }
 
+    private static _assignedWorkParts: Cached<Map<AssignableId, number>> = Cached.simple(Assignees.fetchAssignedWorkParts);
+
+    private static fetchAssignedWorkParts(): Map<AssignableId, number> { return new Map(); }
+
+    private static countAssignedWorkParts(id: AssignableId): number
+    {
+        const assignable: Assignable | undefined = Game.get(id);
+
+        return assignable ? assignable.assignees.sum(c => c.workParts) : 0;
+    }
+
+    static assignedWorkParts(target: Assignable): number
+    {
+        return Assignees._assignedWorkParts.value.ensure(target.id, Assignees.countAssignedWorkParts);
+    }
+
     static assign(target: Assignable, creep: Creep): void
     {
         Assignees.getIds(target.id).add(creep.id);

@@ -1,4 +1,4 @@
-import { Assignees } from "./screeps.util";
+import { Assignees, Cached } from "./screeps.util";
 import { Objects } from "./types.util";
 
 export class Sources
@@ -35,9 +35,30 @@ export class Sources
         return Sources._slots.ensure(this.id, Sources.countSlots);
     }
 
+    private static _freeSlots: Cached<Map<SourceId, number>> = Cached.simple(Sources.fetchFreeSlots);
+
+    private static fetchFreeSlots(): Map<SourceId, number> { return new Map<SourceId, number>(); }
+
+    private static countFreeSlots(id: SourceId): number
+    {
+        const source: Source | undefined = Game.get(id);
+
+        return source ? (source.slots - source.assignees.length): 0;
+    }
+
+    private static freeSlots(this: Source): number
+    {
+        return Sources._freeSlots.value.ensure(this.id, Sources.countFreeSlots);
+    }
+
     private static assignees(this: Source): Array<Creep>
     {
         return Assignees.get(this);
+    }
+
+    private static assignedWorkParts(this: Source): number
+    {
+        return Assignees.assignedWorkParts(this);
     }
 
     private static assign(this: Source, creep: Creep): void
@@ -53,7 +74,9 @@ export class Sources
     static setup()
     {
         Objects.setGetter(Source.prototype, "slots", Sources.slots);
+        Objects.setGetter(Source.prototype, "freeSlots", Sources.freeSlots);
         Objects.setGetter(Source.prototype, "assignees", Sources.assignees);
+        Objects.setGetter(Source.prototype, "assignedWorkParts", Sources.assignedWorkParts);
         Objects.setFunction(Source.prototype, "assign", Sources.assign);
         Objects.setFunction(Source.prototype, "unassign", Sources.unassign);
     }
