@@ -1,0 +1,15 @@
+{
+    "author": { "name": "rhjoerg" },
+    "dependencies": {},
+    "description": "TypeScript ES5 extensions",
+    "devDependencies": {
+    "grunt" : "1.6.1"
+  },
+    "license": "MIT",
+    "name": "fasciculus-es5-extensions",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/fasciculus/fasciculus.git"
+    },
+    "version": "0.1.1"
+}
