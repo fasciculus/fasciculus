@@ -6,7 +6,7 @@ module.exports = function (grunt)
     grunt.config.init(
         {
             pkg: pkg,
-            package: { dest: "dist", main: "tasks/package.js" },
+            package: { default: { dest: "dist", main: "tasks/package.js" } },
             copy:
             {
                 dist: { files: [{ expand: true, cwd: "src", src: ["**", "!package-lock.json"], dest: "dist" }] },
@@ -17,5 +17,5 @@ module.exports = function (grunt)
     grunt.task.loadTasks("src/tasks");
     grunt.task.loadNpmTasks("grunt-contrib-copy");
 
-    grunt.task.registerTask("default", ["copy:dist", "package", "copy:install"]);
+    grunt.task.registerTask("default", ["package", "copy"]);
 }

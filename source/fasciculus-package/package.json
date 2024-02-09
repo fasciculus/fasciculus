@@ -3,13 +3,16 @@
     "name": "fasciculus",
     "url": "https://github.com/fasciculus/fasciculus"
   },
-  "dependencies": {},
+  "dependencies": {
+    "path": "0.12.7"
+  },
   "description": "Creates distribution package.json",
   "devDependencies": {
     "grunt": "1.6.1",
     "grunt-contrib-copy": "1.0.0"
   },
   "license": "MIT",
+  "main": "",
   "name": "fasciculus-package",
   "peerDependencies": {
     "grunt": "1.6.1"

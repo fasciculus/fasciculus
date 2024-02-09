@@ -1,23 +1,38 @@
 
 module.exports = function (grunt)
 {
-    grunt.task.registerTask("package", function () { package(grunt); });
-}
+    var path = require("path");
 
-function package(grunt)
-{
-    var cfg = grunt.config.get("package");
-    var dest = (cfg.dest || "dist") + "/package.json";
-    var main = cfg.main;
+    grunt.task.registerMultiTask("package", "Creating package.json", function ()
+    {
+        var dest = this.data.dest;
+        var destValid = dest !== undefined;
 
-    var pkg = grunt.file.readJSON("package.json");
+        if (destValid && grunt.file.exists(dest))
+        {
+            destValid = grunt.file.isDir(dest);
+        }
 
-    delete pkg["devDependencies"];
-    delete pkg["scripts"];
+        if (!destValid)
+        {
+            grunt.fail.fatal("dest is missing or not a directory")
+            return;
+        }
 
-    if (main) pkg.main = main;
+        dest = path.join(dest, "package.json");
 
-    var json = JSON.stringify(pkg, null, 2);
+        var pkg = grunt.file.readJSON("package.json");
+        var name = this.data.name;
+        var main = this.data.main;
 
-    grunt.file.write(dest, json)
+        delete pkg["devDependencies"];
+        delete pkg["scripts"];
+
+        if (name) pkg.name = name;
+        if (main) pkg.main = main;
+
+        var json = JSON.stringify(pkg, null, 2);
+
+        grunt.file.write(dest, json);
+    });
 }
