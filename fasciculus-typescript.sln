@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-package", "source\fasciculus-package\fasciculus-package.esproj", "{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-es5", "source\fasciculus-es5\fasciculus-es5.esproj", "{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}"
-EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-es5-test", "source\fasciculus-es5-test\fasciculus-es5-test.esproj", "{89EB047E-DC86-443F-8BDA-E592A47B5214}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-utils", "source\fasciculus-utils\fasciculus-utils.esproj", "{4A2C2531-7BD5-497A-8607-B3CF78C1FE73}"
@@ -14,6 +12,8 @@ EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-utils-types", "source\fasciculus-utils-types\fasciculus-utils-types.esproj", "{61EC8B2B-4CC4-4B42-A39E-1EDAFD5B77D2}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-es2015-types", "source\fasciculus-es2015-types\fasciculus-es2015-types.esproj", "{58CBDE48-A922-4E98-A811-B9BBC1E929F3}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "fasciculus-es2015", "source\fasciculus-es2015\fasciculus-es2015.esproj", "{427859DB-F62B-410E-8253-B25F7D3F705C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,12 +27,6 @@ Global
 		{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8FCC6078-E4DE-403B-8603-8DE5F39C42EE}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E67052D-F8C9-48BD-AADC-0CEB3A9FEFAF}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{89EB047E-DC86-443F-8BDA-E592A47B5214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{89EB047E-DC86-443F-8BDA-E592A47B5214}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89EB047E-DC86-443F-8BDA-E592A47B5214}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
@@ -57,6 +51,12 @@ Global
 		{58CBDE48-A922-4E98-A811-B9BBC1E929F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58CBDE48-A922-4E98-A811-B9BBC1E929F3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{58CBDE48-A922-4E98-A811-B9BBC1E929F3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{427859DB-F62B-410E-8253-B25F7D3F705C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{427859DB-F62B-410E-8253-B25F7D3F705C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{427859DB-F62B-410E-8253-B25F7D3F705C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{427859DB-F62B-410E-8253-B25F7D3F705C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{427859DB-F62B-410E-8253-B25F7D3F705C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{427859DB-F62B-410E-8253-B25F7D3F705C}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

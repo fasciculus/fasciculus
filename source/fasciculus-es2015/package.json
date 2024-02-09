@@ -3,11 +3,14 @@
     "name": "fasciculus",
     "url": "https://github.com/fasciculus/fasciculus"
   },
-  "dependencies": {},
-  "description": "javascript es5 extensions",
+  "dependencies": {
+    "fasciculus-utils": "file:../../npm_modules/fasciculus-utils"
+  },
+  "description": "javascript es2015 extensions",
   "devDependencies": {
     "@types/node": "20.11.16",
-    "@types/fasciculus-es5": "file:../../npm_modules/@types/fasciculus-es5",
+    "@types/fasciculus-es2015": "file:../../npm_modules/@types/fasciculus-es2015",
+    "@types/fasciculus-utils": "file:../../npm_modules/@types/fasciculus-utils",
     "fasciculus-package": "file:../../npm_modules/fasciculus-package",
     "grunt": "1.6.1",
     "grunt-contrib-concat": "2.1.0",
@@ -16,7 +19,8 @@
     "typescript": "5.3.3"
   },
   "license": "MIT",
-  "name": "fasciculus-es5",
+  "main": "fasciculus-es2015.js",
+  "name": "fasciculus-es2015",
   "repository": {
     "type": "git",
     "url": "git://github.com/fasciculus/fasciculus.git"
