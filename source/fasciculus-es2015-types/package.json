@@ -4,14 +4,15 @@
     "url": "https://github.com/fasciculus/fasciculus"
   },
   "dependencies": {},
-  "description": "javascript es5 extensions",
+  "description": "javascript es2015 extensions",
   "devDependencies": {
     "fasciculus-package": "file:../../npm_modules/fasciculus-package",
     "grunt": "1.6.1",
     "grunt-contrib-copy": "1.0.0"
   },
   "license": "MIT",
-  "name": "@types/fasciculus-es5",
+  "main": "fasciculus-es2015.d.ts",
+  "name": "@types/fasciculus-es2015",
   "repository": {
     "type": "git",
     "url": "git://github.com/fasciculus/fasciculus.git"
