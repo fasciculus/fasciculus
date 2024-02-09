@@ -1,0 +1,18 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "CommonJS",
+    "newLine": "crlf",
+    "noImplicitReturns": true,
+    "rootDir": "build",
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "lib": [ "ES2015" ],
+    "sourceMap": false,
+    "strict": true,
+    "target": "ES2015"
+  },
+  "include": [ "./build/*.ts" ]
+}
