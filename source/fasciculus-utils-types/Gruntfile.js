@@ -13,7 +13,8 @@ module.exports = function (grunt)
                 package: { files: [{ cwd: "dist", src: ["package.json"], dest, expand: true }] },
                 types: { files: [{ cwd: "src", src: ["*.ts"], dest, expand: true }] }
             }
-        });
+        }
+    );
 
     grunt.task.loadNpmTasks("fasciculus-package");
     grunt.task.loadNpmTasks("grunt-contrib-copy");
