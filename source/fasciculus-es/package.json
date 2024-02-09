@@ -6,10 +6,9 @@
   "dependencies": {
     "fasciculus-utils": "file:../../npm_modules/fasciculus-utils"
   },
-  "description": "javascript es2015 extensions",
+  "description": "javascript extensions",
   "devDependencies": {
     "@types/node": "20.11.16",
-    "@types/fasciculus-es2015": "file:../../npm_modules/@types/fasciculus-es2015",
     "@types/fasciculus-utils": "file:../../npm_modules/@types/fasciculus-utils",
     "fasciculus-package": "file:../../npm_modules/fasciculus-package",
     "grunt": "1.6.1",
@@ -19,8 +18,8 @@
     "typescript": "5.3.3"
   },
   "license": "MIT",
-  "main": "fasciculus-es2015.js",
-  "name": "fasciculus-es2015",
+  "main": "fasciculus-es.js",
+  "name": "fasciculus-es",
   "repository": {
     "type": "git",
     "url": "git://github.com/fasciculus/fasciculus.git"

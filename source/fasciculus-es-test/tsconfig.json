@@ -1,18 +1,27 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": true,
+    "baseUrl": "src/",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "module": "CommonJS",
+    "moduleResolution": "Node",
     "newLine": "crlf",
     "noImplicitReturns": true,
-    "rootDir": "build",
+    "noImplicitThis": false,
+    "removeComments": false,
+    "rootDir": "src",
     "outDir": "dist",
     "skipLibCheck": true,
     "lib": [ "ES2015" ],
     "sourceMap": false,
     "strict": true,
+    "strictPropertyInitialization": true,
     "target": "ES2015"
   },
-  "include": [ "./build/*.ts" ]
+  "include": [ "./src/*.ts" ]
 }

@@ -1,5 +1,5 @@
 
-interface Objects
+interface IObjects
 {
     keys(o: {} | object | undefined | null): Set<string>;
     values<T>(o: { [s: string]: T; } | undefined | null): Array<T>;
@@ -9,4 +9,4 @@ interface Objects
     setValue<T>(target: T, key: PropertyKey, value: any | undefined): T
 }
 
-declare var Objects: Objects;
+declare var Objects: IObjects;

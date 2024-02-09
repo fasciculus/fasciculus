@@ -3,14 +3,15 @@ module.exports = function (grunt)
 {
     var pkg = grunt.file.readJSON("package.json");
     var dest = "../../npm_modules/" + pkg["name"];
+    var banner = grunt.util.linefeed;
 
     grunt.config.init(
         {
             pkg: pkg,
-            concat: { default: { src: "src/*.ts", dest: "build/fasciculus-es2015.ts" } },
+            concat: { default: { src: "src/*.ts", dest: "build/fasciculus-es.ts" }, options: { banner } },
             ts: { default: { tsconfig: './tsconfig.json' } },
-            package: { default: { dest: "dist/" } },
-            copy: { default: { files: [{ cwd: "dist", src: ["package.json", "*.js"], dest, expand: true }] } },
+            package: { default: { dest: "dist/build/" } },
+            copy: { default: { files: [{ cwd: "dist/build/", src: ["package.json", "*.js"], dest, expand: true }] } },
         }
     );
 

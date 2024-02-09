@@ -1,94 +1,110 @@
 
-Object.defineProperty(Objects, "keys",
+export class Objects implements IObjects
+{
+    setFunction<T>(target: T, key: PropertyKey, fn: Function): T
     {
-        configurable: true,
-        enumerable: false,
-        writable: false,
-        value: function (o: {} | object | undefined | null): Set<string>
+        const attributes: PropertyDescriptor & ThisType<any> =
         {
-            if (o === undefined || o === null) return new Set();
+            configurable: true,
+            enumerable: false,
+            writable: false,
+            value: fn
+        };
 
-            const keys = Object.keys(o);
+        return Object.defineProperty(target, key, attributes);
+    }
+}
 
-            if (!keys || !Array.isArray(keys) || keys.length == 0) return new Set();
+//Object.defineProperty(Objects, "keys",
+//    {
+//        configurable: true,
+//        enumerable: false,
+//        writable: false,
+//        value: function (o: {} | object | undefined | null): Set<string>
+//        {
+//            if (o === undefined || o === null) return new Set();
 
-            return new Set<string>(keys);
-        }
-    });
+//            const keys = Object.keys(o);
 
-Object.defineProperty(Objects, "values",
-    {
-        configurable: true,
-        enumerable: false,
-        writable: false,
-        value: function <T>(o: { [s: string]: T; } | undefined | null): Array<T>
-        {
-            if (o === undefined || o === null) return new Array();
+//            if (!keys || !Array.isArray(keys) || keys.length == 0) return new Set();
 
-            const keys = Objects.keys(o);
-            const values: Array<T> = new Array();
+//            return new Set<string>(keys);
+//        }
+//    });
 
-            for (const key of keys)
-            {
-                values.push(o[key]);
-            }
+//Object.defineProperty(Objects, "values",
+//    {
+//        configurable: true,
+//        enumerable: false,
+//        writable: false,
+//        value: function <T>(o: { [s: string]: T; } | undefined | null): Array<T>
+//        {
+//            if (o === undefined || o === null) return new Array();
 
-            return values;
-        }
-    });
+//            const keys = Objects.keys(o);
+//            const values: Array<T> = new Array();
 
-Object.defineProperty(Objects, "setFunction",
-    {
-        configurable: true,
-        enumerable: false,
-        writable: false,
-        value: function <T>(target: T, key: PropertyKey, fn: Function): T
-        {
-            const attributes: PropertyDescriptor & ThisType<any> =
-            {
-                configurable: true,
-                enumerable: false,
-                writable: false,
-                value: fn
-            };
+//            for (const key of keys)
+//            {
+//                values.push(o[key]);
+//            }
 
-            return Object.defineProperty(target, key, attributes);
-        }
-    });
+//            return values;
+//        }
+//    });
 
-Object.defineProperty(Objects, "setGetter",
-    {
-        configurable: true,
-        enumerable: false,
-        writable: false,
-        value: function <T>(target: T, key: PropertyKey, fn: () => any): T
-        {
-            const attributes: PropertyDescriptor & ThisType<any> =
-            {
-                configurable: true,
-                enumerable: true,
-                get: fn
-            };
+//Object.defineProperty(Objects, "setFunction",
+//    {
+//        configurable: true,
+//        enumerable: false,
+//        writable: false,
+//        value: function <T>(target: T, key: PropertyKey, fn: Function): T
+//        {
+//            const attributes: PropertyDescriptor & ThisType<any> =
+//            {
+//                configurable: true,
+//                enumerable: false,
+//                writable: false,
+//                value: fn
+//            };
 
-            return Object.defineProperty(target, key, attributes);
-        }
-    });
+//            return Object.defineProperty(target, key, attributes);
+//        }
+//    });
 
-Object.defineProperty(Objects, "setValue",
-    {
-        configurable: true,
-        enumerable: false,
-        writable: false,
-        value: function <T>(target: T, key: PropertyKey, value: any | undefined): T
-        {
-            const attributes: PropertyDescriptor & ThisType<any> =
-            {
-                configurable: true,
-                enumerable: true,
-                writable: true,
-                value: value
-            };
+//Object.defineProperty(Objects, "setGetter",
+//    {
+//        configurable: true,
+//        enumerable: false,
+//        writable: false,
+//        value: function <T>(target: T, key: PropertyKey, fn: () => any): T
+//        {
+//            const attributes: PropertyDescriptor & ThisType<any> =
+//            {
+//                configurable: true,
+//                enumerable: true,
+//                get: fn
+//            };
 
-            return Object.defineProperty(target, key, attributes);
-        }
-    });
+//            return Object.defineProperty(target, key, attributes);
+//        }
+//    });
+
+//Object.defineProperty(Objects, "setValue",
+//    {
+//        configurable: true,
+//        enumerable: false,
+//        writable: false,
+//        value: function <T>(target: T, key: PropertyKey, value: any | undefined): T
+//        {
+//            const attributes: PropertyDescriptor & ThisType<any> =
+//            {
+//                configurable: true,
+//                enumerable: true,
+//                writable: true,
+//                value: value
+//            };
+
+//            return Object.defineProperty(target, key, attributes);
+//        }
+//    });
