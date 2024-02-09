@@ -11,7 +11,8 @@ module.exports = function (grunt)
             ts: { default: { tsconfig: './tsconfig.json' } },
             package: { default: { dest: "dist/" } },
             copy: { default: { files: [{ cwd: "dist", src: ["package.json", "*.js"], dest, expand: true } ] } },
-        });
+        }
+    );
 
     grunt.task.loadNpmTasks("grunt-contrib-concat");
     grunt.task.loadNpmTasks("grunt-ts");
