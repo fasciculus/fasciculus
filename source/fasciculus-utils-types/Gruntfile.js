@@ -7,10 +7,7 @@ module.exports = function (grunt)
     grunt.config.init(
         {
             pkg: pkg,
-            package:
-            {
-                default: { dest: "dist/" },
-            },
+            package: { default: { dest: "dist/" } },
             copy:
             {
                 package: { files: [{ cwd: "dist", src: ["package.json"], dest, expand: true }] },
