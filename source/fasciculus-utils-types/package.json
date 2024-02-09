@@ -1,0 +1,24 @@
+{
+  "author": {
+    "name": "fasciculus",
+    "url": "https://github.com/fasciculus/fasciculus"
+  },
+  "dependencies": {},
+  "description": "utilities",
+  "devDependencies": {
+    "fasciculus-package": "file:../../npm_modules/fasciculus-package",
+    "grunt": "1.6.1",
+    "grunt-contrib-copy": "1.0.0"
+  },
+  "license": "MIT",
+  "main": "fasciculus-utils.d.ts",
+  "name": "@types/fasciculus-utils",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fasciculus/fasciculus.git"
+  },
+  "scripts": {
+    "build": "npx grunt"
+  },
+  "version": "0.1.1"
+}
