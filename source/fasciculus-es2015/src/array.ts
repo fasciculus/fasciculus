@@ -1,30 +1,15 @@
 
-class Arrays
+Objects.setFunction(Array, "defined", function <T>(values: Array<T | undefined>): Array<T>
 {
-    private static defined<T>(values: Array<T | undefined>): Array<T>
-    {
-        var result: Array<T> = new Array<T>();
+    var result: Array<T> = new Array<T>();
 
-        for (const value of values)
+    for (const value of values)
+    {
+        if (value !== undefined)
         {
-            if (value !== undefined)
-            {
-                result.push(value);
-            }
+            result.push(value);
         }
-
-        return result;
     }
 
-    static get descriptors(): PropertyDescriptorMap
-    {
-        const descriptors: PropertyDescriptorMap =
-        {
-            "defined": { configurable: true, enumerable: false, writable: false, value: Arrays.defined }
-        };
-
-        return descriptors;
-    }
-}
-
-Object.defineProperties(Array, Arrays.descriptors);
+    return result;
+});
