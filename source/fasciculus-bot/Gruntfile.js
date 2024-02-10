@@ -9,6 +9,7 @@ function getFiles()
 
     result.push("screeps/cache");
     result.push("screeps/memory");
+    result.push("screeps/name");
     result.push("screeps/game");
     result.push("screeps/screeps");
 
@@ -36,6 +37,21 @@ function processSource(src, filepath)
     return lines.join("\r\n");
 }
 
+const tsOptions =
+{
+    default:
+    {
+        tsconfig: "tsconfig.concat.json",
+
+        options:
+        {
+            passThrough: true,
+            fast: "never",
+            additionalFlags: '--showConfig'
+        }
+    }
+};
+
 module.exports = function (grunt)
 {
     const pkg = grunt.file.readJSON("package.json");
@@ -47,7 +63,7 @@ module.exports = function (grunt)
         {
             pkg: pkg,
             concat: { default: { src: files, dest: "build/main.ts" }, options: { process: processSource } },
-            ts: { default: { tsconfig: './tsconfig.json' } },
+            ts: tsOptions,
             copy: { default: { files: [{ cwd: "dist/", src: ["main.js"], dest, expand: true }] } }
         }
     );
