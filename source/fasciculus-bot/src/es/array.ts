@@ -8,7 +8,7 @@ declare global
     }
 }
 
-export class Arrays
+export class ArrayExt
 {
     private static defined<T>(values: Array<T | undefined>): Array<T>
     {
@@ -27,6 +27,6 @@ export class Arrays
 
     static setup()
     {
-        Objects.setFunction(Array, "defined", Arrays.defined)
+        Objects.setFunction(Array, "defined", ArrayExt.defined)
     }
 }

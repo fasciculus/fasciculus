@@ -4,11 +4,11 @@
     "url": "https://github.com/fasciculus/fasciculus"
   },
   "dependencies": {
-    "@types/screeps": "3.3.7"
   },
   "description": "fasciculus bot",
   "devDependencies": {
     "@types/node": "20.11.16",
+    "@types/screeps": "3.3.7",
     "grunt": "1.6.1",
     "grunt-contrib-concat": "2.1.0",
     "grunt-contrib-copy": "1.0.0",

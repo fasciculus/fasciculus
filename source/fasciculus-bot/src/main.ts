@@ -1,4 +1,4 @@
-
+﻿
 import { ES } from "./es/es";
 import { Screeps } from "./screeps/screeps";
 
@@ -6,12 +6,10 @@ ES.setup();
 
 export const loop = function ()
 {
+    const emojis: Array<string> = ["🚛", "🏹", "🔰", "⚕️", "⛏️", "👷", "⚔️", "⚜️", "😈"];
+    const infos: Array<string> = emojis.map(e => `${e}(${e.length})`);
+
     Screeps.setup();
+    console.log(infos);
     Screeps.cleanup();
-
-    const a1: Array<number | undefined> = [1, 2, undefined, 3];
-    const a2: Array<number> = Array.defined(a1);
-
-    console.log(`a1 = [${a1}]`);
-    console.log(`a2 = [${a2}]`);
 }

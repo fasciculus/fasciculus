@@ -1,9 +1,9 @@
-import { Arrays } from "./array";
+import { ArrayExt } from "./array";
 
 export class ES
 {
     static setup(): void
     {
-        Arrays.setup();
+        ArrayExt.setup();
     }
 }

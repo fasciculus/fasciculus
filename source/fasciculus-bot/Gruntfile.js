@@ -46,10 +46,11 @@ function getFiles()
     const result = new Array();
 
     result.push("es/object");
-
     result.push("es/array");
-
     result.push("es/es");
+
+    result.push("screeps/cache");
+    result.push("screeps/game");
     result.push("screeps/screeps");
 
     result.push("main");
