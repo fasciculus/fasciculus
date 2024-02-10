@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.476373-alpha">
+
+  <Target Name="Install" AfterTargets="Build">
+    <PropertyGroup>
+      <InstallDirectory>$([System.IO.Path]::Combine($(FasciculusModulesDirectory), 'fasciculus-concat'))</InstallDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+      <FilesToCopy Include="main.js" />
+      <FilesToCopy Include="package.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(InstallDirectory)" />
+  </Target>
+  
+</Project>
