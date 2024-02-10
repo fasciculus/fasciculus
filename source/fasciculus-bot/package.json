@@ -3,7 +3,9 @@
     "name": "fasciculus",
     "url": "https://github.com/fasciculus/fasciculus"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@types/screeps": "3.3.7"
+  },
   "description": "fasciculus bot",
   "devDependencies": {
     "@types/node": "20.11.16",
@@ -11,14 +13,11 @@
     "grunt-contrib-concat": "2.1.0",
     "grunt-contrib-copy": "1.0.0",
     "grunt-ts": "6.0.0-beta.22",
-    "grunt-webpack": "6.0.0",
-    "typescript": "5.3.3",
-    "webpack": "5.90.1",
-    "webpack-cli": "5.1.4"
+    "typescript": "5.3.3"
   },
   "license": "MIT",
-  "main": "fasciculus-es.js",
-  "name": "fasciculus-es",
+  "main": "main.js",
+  "name": "fasciculus-bot",
   "repository": {
     "type": "git",
     "url": "git://github.com/fasciculus/fasciculus.git"

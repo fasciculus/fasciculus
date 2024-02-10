@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": true,
-    "baseUrl": "src/",
+    "baseUrl": "build/",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "module": "CommonJS",
@@ -14,8 +14,8 @@
     "noImplicitReturns": true,
     "noImplicitThis": false,
     "removeComments": false,
-    "outDir": "build/",
-    "rootDir": "src/",
+    "outDir": "dist/",
+    "rootDir": "build/",
     "skipLibCheck": true,
     "lib": [ "ES2015" ],
     "sourceMap": false,
@@ -23,5 +23,5 @@
     "strictPropertyInitialization": true,
     "target": "ES2015"
   },
-  "include": [ "src/**/*.ts" ]
+  "include": [ "build/main.ts" ]
 }
