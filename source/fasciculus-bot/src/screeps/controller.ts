@@ -1,24 +1,27 @@
 import { Objects } from "../es/object";
-
-declare global
-{
-    interface StructureController
-    {
-        get safe(): boolean;
-    }
-}
+import { Cached } from "./cache";
 
 export class ControllerExt
 {
-    private static safe(this: StructureController): boolean
-    {
-        if (this.my) return true;
+    private static _safe: Cached<Map<ControllerId, boolean>> = Cached.simple(() => new Map());
 
-        const reservation: ReservationDefinition | undefined = this.reservation;
+    private static getSafe(id: ControllerId): boolean
+    {
+        const controller: StructureController | undefined = Game.get(id);
+
+        if (!controller) return false;
+        if (controller.my) return true;
+
+        const reservation: ReservationDefinition | undefined = controller.reservation;
 
         if (!reservation) return true;
 
-        return reservation.username == "rhjoerg"; // Game.username;
+        return reservation.username == Game.username;
+    }
+
+    private static safe(this: StructureController): boolean
+    {
+        return ControllerExt._safe.value.ensure(this.id, ControllerExt.getSafe);
     }
 
     static setup()

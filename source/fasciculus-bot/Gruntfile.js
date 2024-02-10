@@ -4,9 +4,13 @@ function getFiles()
     const result = new Array();
 
     result.push("es/object");
+    result.push("es/types");
     result.push("es/array");
+    result.push("es/set");
+    result.push("es/map");
     result.push("es/es");
 
+    result.push("screeps/types");
     result.push("screeps/cache");
     result.push("screeps/memory");
     result.push("screeps/name");

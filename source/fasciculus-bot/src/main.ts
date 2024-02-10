@@ -7,6 +7,5 @@ ES.setup();
 export const loop = function ()
 {
     Screeps.setup();
-
     Screeps.cleanup();
 }
