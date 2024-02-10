@@ -8,8 +8,8 @@
     "baseUrl": "src/",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "newLine": "crlf",
     "noImplicitReturns": true,
     "noImplicitThis": false,
@@ -17,11 +17,11 @@
     "outDir": "build/",
     "rootDir": "src/",
     "skipLibCheck": true,
-    "lib": [ "ES2015" ],
+    "lib": [ "ESNext" ],
     "sourceMap": false,
     "strict": true,
     "strictPropertyInitialization": true,
-    "target": "ES2015"
+    "target": "ESNext"
   },
   "include": [ "src/**/*.ts" ]
 }
