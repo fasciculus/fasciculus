@@ -10,6 +10,7 @@ function getFiles()
     result.push("screeps/cache");
     result.push("screeps/memory");
     result.push("screeps/name");
+    result.push("screeps/spawn");
     result.push("screeps/game");
     result.push("screeps/screeps");
 
@@ -46,8 +47,7 @@ const tsOptions =
         options:
         {
             passThrough: true,
-            fast: "never",
-            additionalFlags: '--showConfig'
+            fast: "never"
         }
     }
 };
