@@ -1,17 +1,7 @@
 
 import { Objects } from "../es/object";
 
-declare global
-{
-    interface Memory
-    {
-        [index: string]: any;
-
-        get<T>(key: string, initial: T): T;
-    }
-}
-
-export class MemoryExt
+export class Memories
 {
     private static get<T>(key: string, initial: T): T
     {
@@ -27,6 +17,6 @@ export class MemoryExt
 
     static setup()
     {
-        Objects.setFunction(Memory, "get", MemoryExt.get);
+        Objects.setFunction(Memory, "get", Memories.get);
     }
 }

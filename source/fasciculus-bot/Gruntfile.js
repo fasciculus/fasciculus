@@ -12,11 +12,13 @@ function getFiles()
 
     result.push("screeps/types");
     result.push("screeps/cache");
+    result.push("screeps/game");
     result.push("screeps/memory");
     result.push("screeps/name");
     result.push("screeps/controller");
+    result.push("screeps/room");
+    result.push("screeps/source");
     result.push("screeps/spawn");
-    result.push("screeps/game");
     result.push("screeps/screeps");
 
     result.push("main");

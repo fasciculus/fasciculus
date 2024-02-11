@@ -12,6 +12,15 @@ export class Maps
         return Array.from(this.values());
     }
 
+    private static filter<K, V>(this: Map<K, V>, predicate: (key: K, value: V) => boolean): Map<K, V>
+    {
+        const result: Map<K, V> = new Map();
+
+        this.forEach((v, k) => { if (predicate(k, v)) result.set(k, v); })
+
+        return result;
+    }
+
     private static ensure<K, V>(this: Map<K, V>, key: K, create: (key: K) => V): V
     {
         var result: V | undefined = this.get(key);
@@ -40,6 +49,7 @@ export class Maps
     {
         Objects.setGetter(Map.prototype, "ids", Maps.ids);
         Objects.setGetter(Map.prototype, "data", Maps.data);
+        Objects.setFunction(Map.prototype, "filter", Maps.filter);
         Objects.setFunction(Map.prototype, "ensure", Maps.ensure);
 
         Objects.setFunction(Map, "from", Maps.from);

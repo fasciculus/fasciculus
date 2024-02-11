@@ -2,9 +2,9 @@ import { Objects } from "../es/object";
 import { Cached } from "./cache";
 import { Names } from "./name";
 
-export class SpawnExt
+export class Spawns
 {
-    private static _my: Cached<Map<SpawnId, StructureSpawn>> = Cached.simple(SpawnExt.fetchMy);
+    private static _my: Cached<Map<SpawnId, StructureSpawn>> = Cached.simple(Spawns.fetchMy);
 
     private static fetchMy(): Map<SpawnId, StructureSpawn>
     {
@@ -20,13 +20,13 @@ export class SpawnExt
 
     private static my(): Array<StructureSpawn>
     {
-        return SpawnExt._my.value.data;
+        return Spawns._my.value.data;
     }
 
     static setup()
     {
-        Objects.setFunction(Spawn.prototype, "spawn", SpawnExt.spawn);
+        Objects.setFunction(Spawn.prototype, "spawn", Spawns.spawn);
 
-        Objects.setGetter(Spawn, "my", SpawnExt.my);
+        Objects.setGetter(Spawn, "my", Spawns.my);
     }
 }

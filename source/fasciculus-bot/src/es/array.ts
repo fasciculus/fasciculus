@@ -2,6 +2,16 @@ import { Objects } from "./object";
 
 export class Arrays
 {
+    private static append<T>(this: Array<T>, values: Array<T>): number
+    {
+        for (const value of values)
+        {
+            this.push(value);
+        }
+
+        return this.length;
+    }
+
     private static indexBy<K, T>(this: Array<T>, toKey: (value: T) => K): Map<K, T>
     {
         const result: Map<K, T> = new Map();
@@ -10,6 +20,15 @@ export class Arrays
         {
             result.set(toKey(value), value);
         }
+
+        return result;
+    }
+
+    private static flatten<T>(arrays: Array<Array<T>>): Array<T>
+    {
+        const result: Array<T> = new Array();
+
+        arrays.forEach(a => result.append(a));
 
         return result;
     }
@@ -31,8 +50,10 @@ export class Arrays
 
     static setup()
     {
+        Objects.setFunction(Array.prototype, "append", Arrays.append);
         Objects.setFunction(Array.prototype, "indexBy", Arrays.indexBy);
 
+        Objects.setFunction(Array, "flatten", Arrays.flatten);
         Objects.setFunction(Array, "defined", Arrays.defined);
     }
 }

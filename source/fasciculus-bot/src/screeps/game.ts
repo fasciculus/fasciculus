@@ -25,9 +25,15 @@ export class GameExt
         return result || undefined;
     }
 
+    private static all<T extends _HasId>(ids: Set<Id<T>> | undefined): Array<T>
+    {
+        return ids ? Array.defined(ids.map(GameExt.get)) : new Array();
+    }
+
     static setup()
     {
         Objects.setGetter(Game, "username", GameExt.username);
         Objects.setFunction(Game, "get", GameExt.get)
+        Objects.setFunction(Game, "all", GameExt.all)
     }
 }
