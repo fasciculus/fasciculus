@@ -8,7 +8,7 @@ export const loop = function ()
 {
     Screeps.setup();
 
-    console.log(`free slots = ${Source.safeFreeSlots}, free work ${Source.safeFreeWork}`);
+    console.log(`idle spawns ${StructureSpawn.idle}`);
 
     Screeps.cleanup();
 }

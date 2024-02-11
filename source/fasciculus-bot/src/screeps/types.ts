@@ -95,6 +95,7 @@ declare global
     interface StructureSpawnConstructor
     {
         get my(): Array<StructureSpawn>;
+        get idle(): Array<StructureSpawn>;
     }
 
     type BodyInfo = { work: number };
