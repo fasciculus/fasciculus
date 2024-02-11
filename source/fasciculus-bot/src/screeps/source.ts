@@ -29,6 +29,11 @@ export class Sources
         return Math.max(0, this.slots.length - this.assignees.size);
     }
 
+    private static assignedWork(this: Source): number
+    {
+        return this.assignedCreeps.sum(c => c.workParts);
+    }
+
     private static getKnown(): Map<SourceId, Source>
     {
         return Array.flatten(Room.known.map(r => r.sources)).indexBy(s => s.id);
@@ -55,6 +60,7 @@ export class Sources
     }
 
     private static assignees(this: Source): Set<CreepId> { return Assigns.assignees(this.id); }
+    private static assignedCreeps(this: Source): Array<Creep> { return Game.all(this.assignees); }
     private static assign(this: Source, creep: CreepId): void { Assigns.assign(this.id, creep); }
     private static unassign(this: Source, creep: CreepId): void { Assigns.unassign(this.id, creep); }
     private static unassignAll(this: Source): void { Assigns.unassignAll(this.id); }
@@ -63,7 +69,9 @@ export class Sources
     {
         Objects.setGetter(Source.prototype, "slots", Sources.slots);
         Objects.setGetter(Source.prototype, "freeSlots", Sources.freeSlots);
+        Objects.setGetter(Source.prototype, "assignedWork", Sources.assignedWork);
         Objects.setGetter(Source.prototype, "assignees", Sources.assignees);
+        Objects.setGetter(Source.prototype, "assignedCreeps", Sources.assignedCreeps);
         Objects.setFunction(Source.prototype, "assign", Sources.assign);
         Objects.setFunction(Source.prototype, "unassign", Sources.unassign);
         Objects.setFunction(Source.prototype, "unassignAll", Sources.unassignAll);

@@ -24,6 +24,15 @@ export class Arrays
         return result;
     }
 
+    private static sum<T>(this: Array<T>, toNumber: (value: T) => number): number
+    {
+        var result: number = 0;
+
+        this.forEach(v => { result += toNumber(v); });
+
+        return result;
+    }
+
     private static flatten<T>(arrays: Array<Array<T>>): Array<T>
     {
         const result: Array<T> = new Array();
@@ -52,6 +61,7 @@ export class Arrays
     {
         Objects.setFunction(Array.prototype, "append", Arrays.append);
         Objects.setFunction(Array.prototype, "indexBy", Arrays.indexBy);
+        Objects.setFunction(Array.prototype, "sum", Arrays.sum);
 
         Objects.setFunction(Array, "flatten", Arrays.flatten);
         Objects.setFunction(Array, "defined", Arrays.defined);

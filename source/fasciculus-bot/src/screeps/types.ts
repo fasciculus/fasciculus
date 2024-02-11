@@ -10,6 +10,7 @@ declare global
     interface _Assignable
     {
         get assignees(): Set<CreepId>;
+        get assignedCreeps(): Array<Creep>;
 
         assign(creep: CreepId): void;
         unassign(creep: CreepId): void;
@@ -74,6 +75,8 @@ declare global
 
         get slots(): Array<RoomPosition>;
         get freeSlots(): number;
+
+        get assignedWork(): number;
     }
 
     interface SourceConstructor

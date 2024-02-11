@@ -6,6 +6,8 @@ declare global
         append(values: Array<T>): number;
 
         indexBy<K>(toKey: (value: T) => K): Map<K, T>;
+
+        sum(toNumber: (value: T) => number): number;
     }
 
     interface ArrayConstructor
