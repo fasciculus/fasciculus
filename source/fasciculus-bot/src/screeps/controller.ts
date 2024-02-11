@@ -5,9 +5,9 @@ export class Controllers
 {
     private static _safe: Cached<Map<ControllerId, boolean>> = Cached.simple(() => new Map());
 
-    private static getSafe(id: ControllerId): boolean
+    private static getSafe(id: ControllerId, hint?: StructureController): boolean
     {
-        const controller: StructureController | undefined = Game.get(id);
+        const controller: StructureController | undefined = hint || Game.get(id);
 
         if (!controller) return false;
         if (controller.my) return true;
@@ -21,7 +21,7 @@ export class Controllers
 
     private static safe(this: StructureController): boolean
     {
-        return Controllers._safe.value.ensure(this.id, Controllers.getSafe);
+        return Controllers._safe.value.ensure(this.id, Controllers.getSafe, this);
     }
 
     static setup()

@@ -36,7 +36,7 @@ declare global
 
         filter(predicate: (key: K, value: V) => boolean): Map<K, V>;
 
-        ensure(key: K, create: (key: K) => V): V;
+        ensure<H>(key: K, create: (key: K, hint?: H) => V, hint?: H): V;
     }
 
     interface MapConstructor

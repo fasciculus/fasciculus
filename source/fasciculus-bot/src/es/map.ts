@@ -30,13 +30,13 @@ export class Maps
         return result;
     }
 
-    private static ensure<K, V>(this: Map<K, V>, key: K, create: (key: K) => V): V
+    private static ensure<K, V, H>(this: Map<K, V>, key: K, create: (key: K, hint?: H) => V, hint?: H): V
     {
         var result: V | undefined = this.get(key);
 
         if (!result)
         {
-            this.set(key, result = create(key));
+            this.set(key, result = create(key, hint));
         }
 
         return result;

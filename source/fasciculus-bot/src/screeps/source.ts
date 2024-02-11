@@ -8,9 +8,9 @@ export class Sources
     private static _safe: Cached<Map<SourceId, Source>> = Cached.simple(Sources.getSafe);
     private static _slots: Map<SourceId, Array<RoomPosition>> = new Map();
 
-    private static getSlots(id: SourceId): Array<RoomPosition>
+    private static getSlots(id: SourceId, hint?: Source): Array<RoomPosition>
     {
-        const source: Source | undefined = Game.get(id);
+        const source: Source | undefined = hint || Game.get(id);
 
         if (!source) return new Array();
 
@@ -21,7 +21,7 @@ export class Sources
 
     private static slots(this: Source): Array<RoomPosition>
     {
-        return Sources._slots.ensure(this.id, Sources.getSlots);
+        return Sources._slots.ensure(this.id, Sources.getSlots, this);
     }
 
     private static freeSlots(this: Source): number

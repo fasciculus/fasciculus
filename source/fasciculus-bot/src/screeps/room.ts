@@ -27,14 +27,16 @@ export class Rooms
         return Terrains.ofRoom(this);
     }
 
-    private static getSources(name: string): Set<SourceId>
+    private static getSources(name: string, hint?: Room): Set<SourceId>
     {
-        return Set.from(Finder.sources(Rooms.get(name)).map(s => s.id));
+        const room: Room | undefined = hint || Rooms.get(name);
+
+        return Set.from(Finder.sources(room).map(s => s.id));
     }
 
     private static sources(this: Room): Array<Source>
     {
-        return Game.all(Rooms._sources.ensure(this.name, Rooms.getSources));
+        return Game.all(Rooms._sources.ensure(this.name, Rooms.getSources, this));
     }
 
     private static getKnown(): Map<string, Room>
