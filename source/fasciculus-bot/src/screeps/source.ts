@@ -6,6 +6,18 @@ export class Sources
 {
     private static _known: Cached<Map<SourceId, Source>> = Cached.simple(Sources.getKnown);
     private static _safe: Cached<Map<SourceId, Source>> = Cached.simple(Sources.getSafe);
+    private static _slots: Map<SourceId, Array<RoomPosition>> = new Map();
+
+    private static getSlots(id: SourceId): Array<RoomPosition>
+    {
+        return new Array();
+    }
+
+    private static slots(this: Source): Array<RoomPosition>
+    {
+        return Sources._slots.ensure(this.id, Sources.getSlots);
+    }
+
 
     private static getKnown(): Map<SourceId, Source>
     {
@@ -39,6 +51,7 @@ export class Sources
 
     static setup()
     {
+        Objects.setGetter(Source.prototype, "slots", Sources.slots);
         Objects.setGetter(Source.prototype, "assignees", Sources.assignees);
         Objects.setFunction(Source.prototype, "assign", Sources.assign);
         Objects.setFunction(Source.prototype, "unassign", Sources.unassign);

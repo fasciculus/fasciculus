@@ -52,6 +52,8 @@ declare global
     interface Source extends _Assignable
     {
         get safe(): boolean;
+
+        get slots(): Array<RoomPosition>;
     }
 
     interface SourceConstructor
