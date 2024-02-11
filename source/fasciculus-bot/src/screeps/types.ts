@@ -98,12 +98,16 @@ declare global
 
     interface Creep
     {
+        get type(): string;
+
         get workParts(): number;
     }
 
     interface CreepConstructor
     {
         get my(): Array<Creep>;
+
+        ofType(type: string): Array<Creep>;
     }
 }
 

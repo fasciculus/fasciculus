@@ -8,7 +8,9 @@ export const loop = function ()
 {
     Screeps.setup();
 
-    console.log(Source.safe.map(s => ` ${s.id}: ${s.freeWork}`));
+    Creep.ofType("W").map(c => c.name)
+
+    console.log(Creep.ofType("W").map(c => c.name));
 
     Screeps.cleanup();
 }

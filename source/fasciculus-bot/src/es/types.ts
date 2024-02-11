@@ -7,6 +7,7 @@ declare global
         take(count: number): Array<T>;
 
         indexBy<K>(toKey: (value: T) => K): Map<K, T>;
+        groupBy<K>(toKey: (value: T) => K): Map<K, Array<T>>;
 
         sum(toNumber: (value: T) => number): number;
     }
