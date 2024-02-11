@@ -15,11 +15,18 @@ export class BodyTemplate
         "claim": 8
     };
 
+    private static _templates: Map<string, BodyTemplate> = new Map();
+
     private _chunks: Array<BodyChunk> = new Array();
+
+    constructor(type: string)
+    {
+        BodyTemplate._templates.set(type, this);
+    }
 
     add(times: number, ...parts: Array<BodyPartConstant>): BodyTemplate
     {
-        const cost = BodyTemplate.cost(...parts);
+        const cost = parts.sum(p => BODYPART_COST[p]);
         const chunk: BodyChunk = { cost, parts };
 
         for (var i = 0; i < times; ++i)
@@ -28,16 +35,6 @@ export class BodyTemplate
         }
 
         return this;
-    }
-
-    static createTemplate(times: number, ...parts: Array<BodyPartConstant>): BodyTemplate
-    {
-        return new BodyTemplate().add(times, ...parts);
-    }
-
-    static cost(...parts: Array<BodyPartConstant>): number
-    {
-        return parts.sum(p => BODYPART_COST[p]);
     }
 
     createBody(energy: number): Array<BodyPartConstant> | undefined
@@ -70,6 +67,16 @@ export class BodyTemplate
         let pb: number = BodyTemplate._priorities[b] || 99;
 
         return pa - pb;
+    }
+
+    static createTemplate(type: string, times: number, ...parts: Array<BodyPartConstant>): BodyTemplate
+    {
+        return new BodyTemplate(type).add(times, ...parts);
+    }
+
+    static get(type: string): BodyTemplate | undefined
+    {
+        return BodyTemplate._templates.get(type);
     }
 }
 
