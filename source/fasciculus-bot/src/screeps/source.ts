@@ -62,6 +62,16 @@ export class Sources
         return Sources._safe.value.data;
     }
 
+    private static safeFreeSlots(): number
+    {
+        return Sources.safe().sum(s => s.freeSlots);
+    }
+
+    private static safeFreeWork(): number
+    {
+        return Sources.safe().sum(s => s.freeWork);
+    }
+
     private static assignees(this: Source): Set<CreepId> { return Assigns.assignees(this.id); }
     private static assignedCreeps(this: Source): Array<Creep> { return Game.all(this.assignees); }
     private static assign(this: Source, creep: CreepId): void { Assigns.assign(this.id, creep); }
@@ -81,5 +91,7 @@ export class Sources
 
         Objects.setGetter(Source, "known", Sources.known);
         Objects.setGetter(Source, "safe", Sources.safe);
+        Objects.setGetter(Source, "safeFreeSlots", Sources.safeFreeSlots);
+        Objects.setGetter(Source, "safeFreeWork", Sources.safeFreeWork);
     }
 }

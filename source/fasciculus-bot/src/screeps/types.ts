@@ -82,6 +82,9 @@ declare global
     {
         get known(): Array<Source>;
         get safe(): Array<Source>;
+
+        get safeFreeSlots(): number;
+        get safeFreeWork(): number;
     }
 
     interface StructureSpawn

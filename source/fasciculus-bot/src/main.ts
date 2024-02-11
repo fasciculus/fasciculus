@@ -7,5 +7,8 @@ ES.setup();
 export const loop = function ()
 {
     Screeps.setup();
+
+    console.log(`free slots = ${Source.safeFreeSlots}, free work ${Source.safeFreeWork}`);
+
     Screeps.cleanup();
 }
