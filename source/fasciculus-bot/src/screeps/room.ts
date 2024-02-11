@@ -27,6 +27,11 @@ export class Rooms
         return this.energyAvailable || 0;
     }
 
+    private static energyCapacity(this: Room): number
+    {
+        return this.energyCapacityAvailable || 0;
+    }
+
     private static terrain(this: Room): RoomTerrain
     {
         return Terrains.ofRoom(this);
@@ -80,6 +85,7 @@ export class Rooms
     {
         Objects.setGetter(Room.prototype, "safe", Rooms.safe);
         Objects.setGetter(Room.prototype, "energy", Rooms.energy);
+        Objects.setGetter(Room.prototype, "energyCapacity", Rooms.energyCapacity);
         Objects.setGetter(Room.prototype, "terrain", Rooms.terrain);
         Objects.setGetter(Room.prototype, "sources", Rooms.sources);
 

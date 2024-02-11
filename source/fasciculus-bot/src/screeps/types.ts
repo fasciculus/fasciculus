@@ -58,6 +58,7 @@ declare global
         get safe(): boolean;
 
         get energy(): number;
+        get energyCapacity(): number;
 
         get terrain(): RoomTerrain;
         get sources(): Array<Source>;

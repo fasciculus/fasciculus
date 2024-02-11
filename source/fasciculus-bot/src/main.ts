@@ -8,7 +8,7 @@ export const loop = function ()
 {
     Screeps.setup();
 
-    console.log(Room.safe.map(r => ` ${r.name}: ${r.energy}`));
+    console.log(Room.safe.map(r => ` ${r.name}: ${r.energy}/${r.energyCapacity}`));
 
     Screeps.cleanup();
 }
