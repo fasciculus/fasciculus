@@ -1,4 +1,5 @@
 import { Objects } from "../es/object";
+import { Assigns } from "./assign";
 import { Cached } from "./cache";
 
 export class Sources
@@ -31,8 +32,18 @@ export class Sources
         return Sources._safe.value.data;
     }
 
+    private static assignees(this: Source): Set<CreepId> { return Assigns.assignees(this.id); }
+    private static assign(this: Source, creep: CreepId): void { Assigns.assign(this.id, creep); }
+    private static unassign(this: Source, creep: CreepId): void { Assigns.unassign(this.id, creep); }
+    private static unassignAll(this: Source): void { Assigns.unassignAll(this.id); }
+
     static setup()
     {
+        Objects.setGetter(Source.prototype, "assignees", Sources.assignees);
+        Objects.setFunction(Source.prototype, "assign", Sources.assign);
+        Objects.setFunction(Source.prototype, "unassign", Sources.unassign);
+        Objects.setFunction(Source.prototype, "unassignAll", Sources.unassignAll);
+
         Objects.setGetter(Source, "known", Sources.known);
         Objects.setGetter(Source, "safe", Sources.safe);
     }

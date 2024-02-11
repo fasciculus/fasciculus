@@ -11,8 +11,8 @@ declare global
     {
         get assignees(): Set<CreepId>;
 
-        assign(id: CreepId): void;
-        unassign(id: CreepId): void;
+        assign(creep: CreepId): void;
+        unassign(creep: CreepId): void;
         unassignAll(): void;
     }
 
