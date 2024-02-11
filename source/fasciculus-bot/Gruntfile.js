@@ -23,6 +23,7 @@ function getFiles()
     result.push("screeps/room");
     result.push("screeps/source");
     result.push("screeps/spawn");
+    result.push("screeps/creep");
 
     result.push("screeps/screeps");
 

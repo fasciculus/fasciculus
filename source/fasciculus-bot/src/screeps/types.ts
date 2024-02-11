@@ -91,6 +91,15 @@ declare global
     {
         get my(): Array<StructureSpawn>;
     }
+
+    interface Creep
+    {
+    }
+
+    interface CreepConstructor
+    {
+        get my(): Array<Creep>;
+    }
 }
 
 export { }

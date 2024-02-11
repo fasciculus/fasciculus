@@ -1,6 +1,7 @@
 import { Assigns } from "./assign";
 import { Cached } from "./cache";
 import { Controllers } from "./controller";
+import { Creeps } from "./creep";
 import { GameExt } from "./game";
 import { Memories } from "./memory";
 import { Positions } from "./pos";
@@ -22,6 +23,7 @@ export class Screeps
         Rooms.setup();
         Sources.setup();
         Spawns.setup();
+        Creeps.setup();
     }
 
     static cleanup()
