@@ -1,12 +1,12 @@
 import { Objects } from "../es/object";
-import { Bodies } from "./body";
+import { BodyInfos } from "./body";
 import { Cached } from "./cache";
 
 export class Creeps
 {
     private static _my: Cached<Map<CreepId, Creep>> = Cached.simple(Creeps.fetchMy);
 
-    private static workParts(this: Creep) { return Bodies.workParts(this); }
+    private static workParts(this: Creep) { return BodyInfos.workParts(this); }
 
     private static fetchMy(): Map<CreepId, Creep>
     {

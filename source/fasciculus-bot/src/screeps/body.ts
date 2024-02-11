@@ -83,7 +83,7 @@ export class BodyTemplate
     static get minCost(): number { return BodyTemplate._minCost; }
 }
 
-export class Bodies
+export class BodyInfos
 {
     private static _infos: Map<CreepId, BodyInfo> = new Map();
 
@@ -108,11 +108,11 @@ export class Bodies
 
     static workParts(creep: Creep)
     {
-        return Bodies._infos.ensure(creep.id, Bodies.createInfo, creep).work;
+        return BodyInfos._infos.ensure(creep.id, BodyInfos.createInfo, creep).work;
     }
 
     static cleanup()
     {
-        Bodies._infos.keep(Game.existing(Bodies._infos.ids));
+        BodyInfos._infos.keep(Game.existing(BodyInfos._infos.ids));
     }
 }
