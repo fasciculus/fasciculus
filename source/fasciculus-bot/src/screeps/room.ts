@@ -1,5 +1,6 @@
 import { Objects } from "../es/object";
 import { Cached } from "./cache";
+import { Terrains } from "./terrain";
 
 export class Finder
 {
@@ -19,6 +20,11 @@ export class Rooms
     private static safe(this: Room): boolean
     {
         return Rooms._safe.value.has(this.name);
+    }
+
+    private static terrain(this: Room): RoomTerrain
+    {
+        return Terrains.ofRoom(this);
     }
 
     private static getSources(name: string): Set<SourceId>
@@ -66,6 +72,7 @@ export class Rooms
     static setup()
     {
         Objects.setGetter(Room.prototype, "safe", Rooms.safe);
+        Objects.setGetter(Room.prototype, "terrain", Rooms.terrain);
         Objects.setGetter(Room.prototype, "sources", Rooms.sources);
 
         Objects.setFunction(Room, "get", Rooms.get);

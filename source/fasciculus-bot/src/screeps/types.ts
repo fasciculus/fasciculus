@@ -37,6 +37,7 @@ declare global
     {
         get safe(): boolean;
 
+        get terrain(): RoomTerrain;
         get sources(): Array<Source>;
     }
 

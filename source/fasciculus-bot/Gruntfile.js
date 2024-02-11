@@ -17,6 +17,7 @@ function getFiles()
     result.push("screeps/memory");
     result.push("screeps/name");
     result.push("screeps/controller");
+    result.push("screeps/terrain");
     result.push("screeps/room");
     result.push("screeps/source");
     result.push("screeps/spawn");
