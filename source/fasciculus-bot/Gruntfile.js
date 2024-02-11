@@ -13,14 +13,17 @@ function getFiles()
     result.push("screeps/types");
     result.push("screeps/cache");
     result.push("screeps/assign");
+    result.push("screeps/name");
+
     result.push("screeps/game");
     result.push("screeps/memory");
-    result.push("screeps/name");
-    result.push("screeps/controller");
     result.push("screeps/terrain");
+    result.push("screeps/pos");
+    result.push("screeps/controller");
     result.push("screeps/room");
     result.push("screeps/source");
     result.push("screeps/spawn");
+
     result.push("screeps/screeps");
 
     result.push("main");
@@ -30,7 +33,13 @@ function getFiles()
 
 function removeExport(line)
 {
-    return line.startsWith("export") ? line.substring(6).trim() : line;
+    if (!line.startsWith("export")) return line;
+
+    line = line.substring(6).trim();
+
+    if (line == "{}" || line == "{ }") return "";
+
+    return line;
 }
 
 function processSource(src, filepath)

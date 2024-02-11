@@ -16,13 +16,6 @@ declare global
         unassignAll(): void;
     }
 
-    interface Memory
-    {
-        [index: string]: any;
-
-        get<T>(key: string, initial: T): T;
-    }
-
     interface Game
     {
         get username(): string;
@@ -31,6 +24,32 @@ declare global
         all<T extends _HasId>(ids: Set<Id<T>> | undefined): Array<T>;
 
         existing<T extends _HasId>(ids: Set<Id<T>>): Set<Id<T>>;
+    }
+
+    interface Memory
+    {
+        [index: string]: any;
+
+        get<T>(key: string, initial: T): T;
+    }
+
+    type TerrainMask = 0 | 1 | 2;
+    type TerrainInfo = { pos: RoomPosition, mask: TerrainMask };
+
+    interface RoomTerrain
+    {
+        info(pos: RoomPosition): TerrainInfo;
+        around(pos: RoomPosition, range?: number): Array<TerrainInfo>;
+    }
+
+    interface RoomPosition
+    {
+        around(range?: number): Array<RoomPosition>;
+    }
+
+    interface StructureController
+    {
+        get safe(): boolean;
     }
 
     interface Room
@@ -70,11 +89,6 @@ declare global
     interface StructureSpawnConstructor
     {
         get my(): Array<StructureSpawn>;
-    }
-
-    interface StructureController
-    {
-        get safe(): boolean;
     }
 }
 
