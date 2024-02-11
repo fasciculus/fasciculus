@@ -12,6 +12,7 @@ function getFiles()
 
     result.push("screeps/types");
     result.push("screeps/cache");
+    result.push("screeps/assign");
     result.push("screeps/game");
     result.push("screeps/memory");
     result.push("screeps/name");

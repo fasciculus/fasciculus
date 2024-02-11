@@ -12,6 +12,15 @@ export class Maps
         return Array.from(this.values());
     }
 
+    private static keep<K, V>(this: Map<K, V>, keys: Set<K>): Map<K, V>
+    {
+        const toDelete: Set<K> = this.ids.filter(id => !keys.has(id));
+
+        toDelete.forEach(id => this.delete(id));
+
+        return this;
+    }
+
     private static filter<K, V>(this: Map<K, V>, predicate: (key: K, value: V) => boolean): Map<K, V>
     {
         const result: Map<K, V> = new Map();
@@ -49,6 +58,7 @@ export class Maps
     {
         Objects.setGetter(Map.prototype, "ids", Maps.ids);
         Objects.setGetter(Map.prototype, "data", Maps.data);
+        Objects.setFunction(Map.prototype, "keep", Maps.keep);
         Objects.setFunction(Map.prototype, "filter", Maps.filter);
         Objects.setFunction(Map.prototype, "ensure", Maps.ensure);
 

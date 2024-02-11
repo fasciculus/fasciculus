@@ -16,6 +16,9 @@ declare global
 
     interface Set<T>
     {
+        keep(values: Set<T>): Set<T>;
+
+        filter(predicate: (value: T) => boolean): Set<T>;
         map<U>(fn: (key: T) => U): Array<U>;
     }
 
@@ -28,6 +31,8 @@ declare global
     {
         get ids(): Set<K>;
         get data(): Array<V>;
+
+        keep(keys: Set<K>): Map<K, V>;
 
         filter(predicate: (key: K, value: V) => boolean): Map<K, V>;
 

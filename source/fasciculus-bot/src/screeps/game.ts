@@ -30,10 +30,16 @@ export class GameExt
         return ids ? Array.defined(ids.map(GameExt.get)) : new Array();
     }
 
+    private static existing<T extends _HasId>(ids: Set<Id<T>>): Set<Id<T>>
+    {
+        return ids.filter(id => GameExt.get(id) !== undefined);
+    }
+
     static setup()
     {
         Objects.setGetter(Game, "username", GameExt.username);
         Objects.setFunction(Game, "get", GameExt.get)
         Objects.setFunction(Game, "all", GameExt.all)
+        Objects.setFunction(Game, "existing", GameExt.existing)
     }
 }

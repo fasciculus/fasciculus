@@ -1,3 +1,4 @@
+import { Assigns } from "./assign";
 import { Cached } from "./cache";
 import { Controllers } from "./controller";
 import { GameExt } from "./game";
@@ -22,5 +23,6 @@ export class Screeps
     static cleanup()
     {
         Cached.cleanup();
+        Assigns.cleanup();
     }
 }

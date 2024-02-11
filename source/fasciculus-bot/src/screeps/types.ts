@@ -29,6 +29,8 @@ declare global
 
         get<T extends _HasId>(id: Id<T> | undefined): T | undefined;
         all<T extends _HasId>(ids: Set<Id<T>> | undefined): Array<T>;
+
+        existing<T extends _HasId>(ids: Set<Id<T>>): Set<Id<T>>;
     }
 
     interface Room
