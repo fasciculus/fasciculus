@@ -8,7 +8,7 @@ export const loop = function ()
 {
     Screeps.setup();
 
-    console.log(`idle spawns ${StructureSpawn.idle}`);
+    console.log(Room.safe.map(r => ` ${r.name}: ${r.energy}`));
 
     Screeps.cleanup();
 }
