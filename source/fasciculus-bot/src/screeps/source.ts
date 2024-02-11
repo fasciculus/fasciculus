@@ -29,9 +29,12 @@ export class Sources
         return Math.max(0, this.slots.length - this.assignees.size);
     }
 
-    private static assignedWork(this: Source): number
+    private static freeWork(this: Source): number
     {
-        return this.assignedCreeps.sum(c => c.workParts);
+        const maxWork: number = this.energyCapacity / 600;
+        const assignedWork: number = this.assignedCreeps.sum(c => c.workParts);
+
+        return Math.max(0, maxWork - assignedWork);
     }
 
     private static getKnown(): Map<SourceId, Source>
@@ -69,7 +72,7 @@ export class Sources
     {
         Objects.setGetter(Source.prototype, "slots", Sources.slots);
         Objects.setGetter(Source.prototype, "freeSlots", Sources.freeSlots);
-        Objects.setGetter(Source.prototype, "assignedWork", Sources.assignedWork);
+        Objects.setGetter(Source.prototype, "freeWork", Sources.freeWork);
         Objects.setGetter(Source.prototype, "assignees", Sources.assignees);
         Objects.setGetter(Source.prototype, "assignedCreeps", Sources.assignedCreeps);
         Objects.setFunction(Source.prototype, "assign", Sources.assign);

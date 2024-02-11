@@ -75,8 +75,7 @@ declare global
 
         get slots(): Array<RoomPosition>;
         get freeSlots(): number;
-
-        get assignedWork(): number;
+        get freeWork(): number;
     }
 
     interface SourceConstructor

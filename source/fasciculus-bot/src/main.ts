@@ -8,7 +8,7 @@ export const loop = function ()
 {
     Screeps.setup();
 
-    console.log(Source.safe.map(s => ` ${s.id}: ${s.assignedWork}`));
+    console.log(Source.safe.map(s => ` ${s.id}: ${s.freeWork}`));
 
     Screeps.cleanup();
 }
