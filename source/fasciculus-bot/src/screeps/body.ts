@@ -3,26 +3,10 @@ type BodyChunk = { cost: number; parts: Array<BodyPartConstant>; };
 
 export class BodyTemplate
 {
-    private static _priorities: {[part: string]: number} =
-    {
-        "tough": 1,
-        "work": 2,
-        "attack": 3,
-        "ranged_attack": 4,
-        "carry": 5,
-        "move": 6,
-        "heal": 7,
-        "claim": 8
-    };
-
     private static _templates: Map<string, BodyTemplate> = new Map();
+    private static _minCost: number = 999999;
 
     private _chunks: Array<BodyChunk> = new Array();
-
-    constructor(type: string)
-    {
-        BodyTemplate._templates.set(type, this);
-    }
 
     add(times: number, ...parts: Array<BodyPartConstant>): BodyTemplate
     {
@@ -61,6 +45,18 @@ export class BodyTemplate
         return result;
     }
 
+    private static _priorities: { [part: string]: number } =
+        {
+            "tough": 1,
+            "work": 2,
+            "attack": 3,
+            "ranged_attack": 4,
+            "carry": 5,
+            "move": 6,
+            "heal": 7,
+            "claim": 8
+        };
+
     private static compare(a: BodyPartConstant, b: BodyPartConstant)
     {
         let pa: number = BodyTemplate._priorities[a] || 99;
@@ -71,13 +67,20 @@ export class BodyTemplate
 
     static createTemplate(type: string, times: number, ...parts: Array<BodyPartConstant>): BodyTemplate
     {
-        return new BodyTemplate(type).add(times, ...parts);
+        const template = new BodyTemplate().add(times, ...parts);
+
+        BodyTemplate._templates.set(type, template);
+        BodyTemplate._minCost = Math.min(BodyTemplate._minCost, template._chunks[0].cost);
+
+        return template;
     }
 
     static get(type: string): BodyTemplate | undefined
     {
         return BodyTemplate._templates.get(type);
     }
+
+    static get minCost(): number { return BodyTemplate._minCost; }
 }
 
 export class Bodies
