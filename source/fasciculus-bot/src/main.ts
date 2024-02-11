@@ -8,7 +8,7 @@ export const loop = function ()
 {
     Screeps.setup();
 
-    console.log(Room.safe.map(r => r.name));
+    console.log(Creep.my.map(c => ` ${c.name}: ${c.workParts}`));
 
     Screeps.cleanup();
 }

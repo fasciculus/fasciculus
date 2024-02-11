@@ -1,4 +1,5 @@
 import { Assigns } from "./assign";
+import { Bodies } from "./body";
 import { Cached } from "./cache";
 import { Controllers } from "./controller";
 import { Creeps } from "./creep";
@@ -30,5 +31,6 @@ export class Screeps
     {
         Cached.cleanup();
         Assigns.cleanup();
+        Bodies.cleanup();
     }
 }

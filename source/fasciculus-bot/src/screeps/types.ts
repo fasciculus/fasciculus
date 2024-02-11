@@ -92,8 +92,11 @@ declare global
         get my(): Array<StructureSpawn>;
     }
 
+    type BodyInfo = { work: number };
+
     interface Creep
     {
+        get workParts(): number;
     }
 
     interface CreepConstructor
