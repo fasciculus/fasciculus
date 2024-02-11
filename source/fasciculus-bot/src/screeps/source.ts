@@ -10,7 +10,13 @@ export class Sources
 
     private static getSlots(id: SourceId): Array<RoomPosition>
     {
-        return new Array();
+        const source: Source | undefined = Game.get(id);
+
+        if (!source) return new Array();
+
+        const terrain: RoomTerrain = source.room.terrain;
+
+        return terrain.around(source.pos, 1).filter(i => i.mask == 0 || i.mask == TERRAIN_MASK_SWAMP).map(i => i.pos);
     }
 
     private static slots(this: Source): Array<RoomPosition>
