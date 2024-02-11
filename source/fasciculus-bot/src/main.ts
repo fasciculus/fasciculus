@@ -9,11 +9,11 @@ export const loop = function ()
     Screeps.setup();
 
     const sources: Array<Source> = Source.safe;
-    const slots: Array<Array<RoomPosition>> = sources.map(s => s.slots);
+    const freeSlots: Array<number> = sources.map(s => s.freeSlots);
 
     for (let i = 0, n = sources.length; i < n; ++i)
     {
-        console.log(`${sources[i].id}: ${slots[i]}`);
+        console.log(`${sources[i].id}: ${freeSlots[i]}`);
     }
 
     Screeps.cleanup();

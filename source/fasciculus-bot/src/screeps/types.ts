@@ -73,6 +73,7 @@ declare global
         get safe(): boolean;
 
         get slots(): Array<RoomPosition>;
+        get freeSlots(): number;
     }
 
     interface SourceConstructor

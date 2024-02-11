@@ -24,6 +24,10 @@ export class Sources
         return Sources._slots.ensure(this.id, Sources.getSlots);
     }
 
+    private static freeSlots(this: Source): number
+    {
+        return Math.max(0, this.slots.length - this.assignees.size);
+    }
 
     private static getKnown(): Map<SourceId, Source>
     {
@@ -58,6 +62,7 @@ export class Sources
     static setup()
     {
         Objects.setGetter(Source.prototype, "slots", Sources.slots);
+        Objects.setGetter(Source.prototype, "freeSlots", Sources.freeSlots);
         Objects.setGetter(Source.prototype, "assignees", Sources.assignees);
         Objects.setFunction(Source.prototype, "assign", Sources.assign);
         Objects.setFunction(Source.prototype, "unassign", Sources.unassign);
