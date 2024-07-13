@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Site", "source\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve", "source\Fasciculus.Eve\Fasciculus.Eve.csproj", "{D8C4CC49-D88D-4574-AD85-3905479CC249}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Core", "source\Fasciculus.Core\Fasciculus.Core.csproj", "{EF1D8263-BF0A-4BFA-98B4-EF78A826B595}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +23,15 @@ Global
 		{D8C4CC49-D88D-4574-AD85-3905479CC249}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8C4CC49-D88D-4574-AD85-3905479CC249}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8C4CC49-D88D-4574-AD85-3905479CC249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF1D8263-BF0A-4BFA-98B4-EF78A826B595}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF1D8263-BF0A-4BFA-98B4-EF78A826B595}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF1D8263-BF0A-4BFA-98B4-EF78A826B595}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF1D8263-BF0A-4BFA-98B4-EF78A826B595}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {792A3CA0-656F-4B08-A937-422559A917B1}
 	EndGlobalSection
 EndGlobal
