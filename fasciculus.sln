@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Site", "source\Fasciculus.Site\Fasciculus.Site.csproj", "{A52D30A0-80A7-4508-AF55-400DB6D3593D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve", "source\Fasciculus.Eve\Fasciculus.Eve.csproj", "{D8C4CC49-D88D-4574-AD85-3905479CC249}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A52D30A0-80A7-4508-AF55-400DB6D3593D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A52D30A0-80A7-4508-AF55-400DB6D3593D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A52D30A0-80A7-4508-AF55-400DB6D3593D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8C4CC49-D88D-4574-AD85-3905479CC249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8C4CC49-D88D-4574-AD85-3905479CC249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8C4CC49-D88D-4574-AD85-3905479CC249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8C4CC49-D88D-4574-AD85-3905479CC249}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
