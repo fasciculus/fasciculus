@@ -1,0 +1,10 @@
+﻿using Fasciculus.IO;
+using System.IO;
+
+namespace Fasciculus.Eve.IO
+{
+    public static class EveDirectories
+    {
+        public static DirectoryInfo Documents => Directories.Documents.Combine("Fasciculus", "Eve");
+    }
+}
