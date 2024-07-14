@@ -7,5 +7,6 @@ namespace Fasciculus.Eve.IO
     {
         public static DirectoryInfo Documents => Directories.Documents.Combine("Fasciculus", "Eve").Make();
         public static DirectoryInfo Downloads => Documents.Combine("Downloads").Make();
+        public static DirectoryInfo Data => Documents.Combine("Data").Make();
     }
 }
