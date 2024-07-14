@@ -15,5 +15,12 @@ namespace Fasciculus.IO
 
             return new DirectoryInfo(result);
         }
+
+        public static DirectoryInfo Make(this DirectoryInfo directory)
+        {
+            directory.Create();
+
+            return new(directory.FullName);
+        }
     }
 }
