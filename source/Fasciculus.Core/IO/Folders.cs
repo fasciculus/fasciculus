@@ -1,22 +1,12 @@
-﻿using System;
+﻿using Fasciculus.Interop;
 using System.IO;
-using System.Runtime.InteropServices;
+using static System.Environment;
 
 namespace Fasciculus.IO
 {
     public static class Folders
     {
-        public static DirectoryInfo Documents
-        {
-            get
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    return new(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-                }
-
-                throw new NotImplementedException();
-            }
-        }
+        public static DirectoryInfo Personal => new(GetFolderPath(SpecialFolder.Personal));
+        public static DirectoryInfo Documents => new(GetFolderPath(OSTypes.IsWindows ? SpecialFolder.MyDocuments : SpecialFolder.Personal));
     }
 }
