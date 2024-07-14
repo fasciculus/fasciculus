@@ -7,7 +7,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine(EveDirectories.Documents);
+        Console.WriteLine(EveDirectories.Downloads);
 
         SdeExtractor.Run();
     }
