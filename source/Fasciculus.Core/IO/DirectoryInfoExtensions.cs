@@ -16,6 +16,11 @@ namespace Fasciculus.IO
             return new DirectoryInfo(result);
         }
 
+        public static FileInfo File(this DirectoryInfo directory, string name)
+        {
+            return new(Path.Combine(directory.FullName, name));
+        }
+
         public static DirectoryInfo Make(this DirectoryInfo directory)
         {
             directory.Create();
