@@ -8,5 +8,6 @@ public class Program
     public static async Task Main(string[] args)
     {
         await ExtractSDE.RunAsync();
+        await LoadNames.RunAsync();
     }
 }

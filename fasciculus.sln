@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Site", "source\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve", "source\Fasciculus.Eve\Fasciculus.Eve.csproj", "{D8C4CC49-D88D-4574-AD85-3905479CC249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Core", "source\Fasciculus.Core\Fasciculus.Core.csproj", "{EF1D8263-BF0A-4BFA-98B4-EF78A826B595}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Core", "source\Fasciculus.Core\Fasciculus.Core.csproj", "{EF1D8263-BF0A-4BFA-98B4-EF78A826B595}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{A537FA0E-9860-4F04-A3A7-7E60F0C22E87}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
