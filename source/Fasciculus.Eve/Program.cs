@@ -1,9 +1,12 @@
-﻿namespace Fasciculus.Eve;
+﻿using Fasciculus.Eve.Actions;
+using System.Threading.Tasks;
 
-class Program
+namespace Fasciculus.Eve;
+
+public class Program
 {
-    static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        SDE.Extract();
+        await ExtractSDE.RunAsync();
     }
 }
