@@ -21,11 +21,24 @@ namespace Fasciculus.IO
             return new(Path.Combine(directory.FullName, name));
         }
 
-        public static DirectoryInfo Make(this DirectoryInfo directory)
+        public static DirectoryInfo Existing(this DirectoryInfo directory, bool create = true)
         {
-            directory.Create();
+            DirectoryInfo result = new(directory.FullName);
 
-            return new(directory.FullName);
+            if (!result.Exists)
+            {
+                if (create)
+                {
+                    result.Create();
+                    result = new(directory.FullName);
+                }
+                else
+                {
+                    throw new DirectoryNotFoundException(directory.FullName);
+                }
+            }
+
+            return result;
         }
     }
 }
