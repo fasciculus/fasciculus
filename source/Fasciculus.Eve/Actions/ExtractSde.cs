@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Actions
 {
-    public static class ExtractSde1
+    public static class ExtractSde
     {
         public static async Task RunAsync()
         {
