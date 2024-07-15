@@ -7,7 +7,7 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        await ExtractSDE.RunAsync();
+        await ExtractSde1.RunAsync();
         await LoadNames.RunAsync();
     }
 }

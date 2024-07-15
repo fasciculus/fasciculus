@@ -1,5 +1,4 @@
-﻿using Fasciculus.Eve.IO;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -9,7 +8,7 @@ namespace Fasciculus.Eve.Actions
     {
         public static async Task RunAsync()
         {
-            FileInfo file = EveDirectories.Data.Combine("SDE", "bsd").File("invNames.yaml");
+            FileInfo file = Constants.BsdDirectory.File("invNames.yaml");
 
             Console.WriteLine(file.Exists);
             await Task.Delay(0);

@@ -1,16 +1,15 @@
-﻿using Fasciculus.Eve.IO;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Actions
 {
-    public static class ExtractSDE
+    public static class ExtractSde1
     {
         public static async Task RunAsync()
         {
-            FileInfo zipFile = EveDirectories.Downloads.File("sde.zip");
-            DirectoryInfo outDirectory = EveDirectories.Data.Combine("SDE").Existing();
+            FileInfo zipFile = Constants.DownloadsDirectory.File("sde.zip");
+            DirectoryInfo outDirectory = Constants.SdeDirectory;
 
             using Stream zipStream = new FileStream(zipFile.FullName, FileMode.Open, FileAccess.Read);
             using ZipArchive zip = new(zipStream);
