@@ -1,5 +1,4 @@
 ﻿using Fasciculus.Eve.IO;
-using Fasciculus.IO;
 using System;
 using System.IO;
 using System.Threading.Tasks;
