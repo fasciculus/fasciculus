@@ -1,4 +1,6 @@
 ﻿using Fasciculus.Eve.Actions;
+using Fasciculus.Eve.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Eve;
@@ -9,5 +11,7 @@ public class Program
     {
         await ExtractSde.RunAsync();
         await LoadNames.RunAsync();
+
+        Console.WriteLine(Names.Get(30000142));
     }
 }
