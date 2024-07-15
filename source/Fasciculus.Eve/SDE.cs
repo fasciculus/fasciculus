@@ -9,7 +9,7 @@ namespace Fasciculus.Eve
     public static class SDE
     {
         public static FileInfo Compressed => EveDirectories.Downloads.File("sde.zip");
-        public static DirectoryInfo Extracted => EveDirectories.Data.Combine("SDE").Make();
+        public static DirectoryInfo Extracted => EveDirectories.Data.Combine("SDE").Existing();
 
         public static void Extract()
         {
