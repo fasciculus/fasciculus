@@ -2,6 +2,9 @@
 {
     public static class DirectoryInfoExtensions
     {
+        public static FileInfo File(this DirectoryInfo directory, string name)
+            => new(Path.Combine(directory.FullName, name));
+
         public static DirectoryInfo Existing(this DirectoryInfo directory, bool create = true)
         {
             DirectoryInfo result = new(directory.FullName);
@@ -32,11 +35,6 @@
             }
 
             return new DirectoryInfo(result);
-        }
-
-        public static FileInfo File(this DirectoryInfo directory, string name)
-        {
-            return new(Path.Combine(directory.FullName, name));
         }
     }
 }
