@@ -11,9 +11,7 @@ public class Program
     {
         try
         {
-            await ExtractSde.RunAsync();
-            await LoadNames.LoadAsync();
-            await LoadRegions.LoadAsync();
+            await LoadSde.LoadAsync();
 
             // Console.WriteLine(Names.Get(30000142));
             Region region = Regions.Get(10000016);
