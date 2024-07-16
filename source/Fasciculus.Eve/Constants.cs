@@ -10,5 +10,6 @@ namespace Fasciculus.Eve
         public static DirectoryInfo DataDirectory => DocumentsDirectory.Combine("Data").Existing();
         public static DirectoryInfo SdeDirectory => DataDirectory.Combine("sde").Existing();
         public static DirectoryInfo BsdDirectory => SdeDirectory.Combine("bsd").Existing();
+        public static DirectoryInfo UniverseDirectory => SdeDirectory.Combine("universe").Existing();
     }
 }

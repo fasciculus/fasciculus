@@ -1,5 +1,7 @@
 ﻿using Fasciculus.Eve.IO;
 using Fasciculus.Eve.Models;
+using Fasciculus.Eve.Models.Sde;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using YamlDotNet.RepresentationModel;
@@ -11,23 +13,15 @@ namespace Fasciculus.Eve.Actions
         private static readonly YamlScalarNode idKey = new YamlScalarNode("itemID");
         private static readonly YamlScalarNode nameKey = new YamlScalarNode("itemName");
 
-        public static async Task RunAsync()
+        public static async Task LoadAsync()
         {
-            YamlDocument document = Yaml.Load(Constants.BsdDirectory.File("invNames.yaml"));
-            YamlSequenceNode root = (YamlSequenceNode)document.RootNode;
+            FileInfo file = Constants.BsdDirectory.File("invNames.yaml");
+            List<SdeName> names = await Yaml.DeserializeAsync<List<SdeName>>(file);
 
-            foreach (YamlMappingNode entry in root.Children)
+            foreach (var name in names)
             {
-                string? id = entry.Children[idKey]?.ToString();
-                string? name = entry.Children[nameKey]?.ToString();
-
-                if (id is null) continue;
-                if (name is null) continue;
-
-                Names.Set(int.Parse(id), name);
+                Names.Set(name.itemID, name.itemName);
             }
-
-            await Task.Delay(0);
         }
     }
 }

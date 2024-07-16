@@ -9,9 +9,20 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        await ExtractSde.RunAsync();
-        await LoadNames.RunAsync();
+        try
+        {
+            await ExtractSde.RunAsync();
+            await LoadNames.LoadAsync();
+            await LoadRegions.LoadAsync();
 
-        Console.WriteLine(Names.Get(30000142));
+            // Console.WriteLine(Names.Get(30000142));
+            Region region = Regions.Get(10000016);
+
+            Console.WriteLine(region.Name);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 }

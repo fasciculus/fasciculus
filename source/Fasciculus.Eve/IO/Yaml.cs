@@ -1,23 +1,19 @@
 ﻿using System.IO;
-using System.Text;
-using YamlDotNet.RepresentationModel;
+using System.Threading.Tasks;
+using YamlDotNet.Serialization;
 
 namespace Fasciculus.Eve.IO
 {
     public static class Yaml
     {
-        public static YamlDocument Load(string filename)
+        public static async Task<T> DeserializeAsync<T>(string input)
         {
-            using Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            using TextReader reader = new StreamReader(stream, Encoding.UTF8);
-            YamlStream yaml = new();
+            await Task.Delay(0);
 
-            yaml.Load(reader);
-
-            return yaml.Documents[0];
+            return new DeserializerBuilder().IgnoreUnmatchedProperties().Build().Deserialize<T>(input);
         }
 
-        public static YamlDocument Load(FileInfo file)
-            => Load(file.FullName);
+        public static async Task<T> DeserializeAsync<T>(FileInfo file)
+            => await DeserializeAsync<T>(file.ReadAllText());
     }
 }
