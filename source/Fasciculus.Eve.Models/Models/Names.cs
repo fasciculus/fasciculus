@@ -31,5 +31,18 @@ namespace Fasciculus.Eve.Models
                 Set(id, name);
             }
         }
+
+        public static void Save(Stream stream)
+        {
+            Data data = new(stream);
+
+            data.WriteInt(names.Count);
+
+            foreach (var entry in names)
+            {
+                data.WriteInt(entry.Key);
+                data.WriteString(entry.Value);
+            }
+        }
     }
 }
