@@ -7,5 +7,6 @@ namespace Fasciculus.IO
         public static DirectoryInfo Personal => new(Paths.Personal);
         public static DirectoryInfo Documents => new(Paths.Documents);
         public static DirectoryInfo Downloads => new(Paths.Downloads);
+        public static DirectoryInfo BaseDirectory => new(Paths.BaseDirectory);
     }
 }
