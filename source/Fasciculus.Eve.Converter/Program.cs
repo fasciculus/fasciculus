@@ -1,5 +1,4 @@
-﻿using Fasciculus.IO;
-using System;
+﻿using System;
 
 namespace Fasciculus.Eve
 {
@@ -7,7 +6,7 @@ namespace Fasciculus.Eve
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine(Directories.Downloads);
+            Console.WriteLine(Constants.ResourcesDirectory.FullName);
         }
     }
 }
