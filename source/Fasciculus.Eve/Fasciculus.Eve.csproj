@@ -15,4 +15,10 @@
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Resources/names.dat">
+      <LogicalName>Names</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  
 </Project>
