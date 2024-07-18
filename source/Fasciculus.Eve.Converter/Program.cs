@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fasciculus.Eve.Operations;
+using System;
 
 namespace Fasciculus.Eve
 {
@@ -6,7 +7,8 @@ namespace Fasciculus.Eve
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine(Constants.ResourcesDirectory.FullName);
+            Console.WriteLine("ExtractSde");
+            ExtractSde.Run();
         }
     }
 }
