@@ -9,6 +9,8 @@ namespace Fasciculus.Eve
         {
             Console.WriteLine("ExtractSde");
             ExtractSde.Run();
+
+            ConvertNames.Run();
         }
     }
 }
