@@ -3,10 +3,9 @@
 
 #pragma warning disable IDE1006 // Naming Styles
 
-    public class SdeName
+    public class SdeSolarSystem
     {
-        public int itemID { get; set; }
-        public string itemName { get; set; } = string.Empty;
+        public int solarSystemID { get; set; }
     }
 
 #pragma warning restore IDE1006 // Naming Styles

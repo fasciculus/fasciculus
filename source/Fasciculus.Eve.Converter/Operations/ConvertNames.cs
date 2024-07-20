@@ -18,12 +18,12 @@ namespace Fasciculus.Eve.Operations
 
         public static void Convert()
         {
-            if (SourceFile.IsNewerThan(TargetFile))
-            {
-                Console.WriteLine("ConvertNames");
-                Yaml.Deserialize<List<SdeName>>(SourceFile).ForEach(name => { Names.Set(name.itemID, name.itemName); });
-                TargetFile.Write(stream => Names.Write(new Data(stream)));
-            }
+            Console.WriteLine("ConvertNames Started");
+
+            Yaml.Deserialize<List<SdeName>>(SourceFile).ForEach(name => { Names.Set(name.itemID, name.itemName); });
+            TargetFile.Write(stream => Names.Write(new Data(stream)));
+
+            Console.WriteLine("ConvertNames Done");
         }
     }
 }
