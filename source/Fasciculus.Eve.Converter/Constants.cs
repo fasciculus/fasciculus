@@ -5,13 +5,19 @@ namespace Fasciculus.Eve
 {
     public static class Constants
     {
-        public static DirectoryInfo DataDirectory
+        public static DirectoryInfo DocumentsDirectory
             => Directories.Documents.Combine("Fasciculus", "Eve.Converter").Existing();
 
+        public static DirectoryInfo DownloadsDirectory
+            => DocumentsDirectory.Combine("Downloads").Existing();
+
+        public static DirectoryInfo SdeDirectory
+            => DocumentsDirectory.Combine("Sde").Existing();
+
         public static DirectoryInfo BsdDirectory
-            => DataDirectory.Combine("bsd");
+            => SdeDirectory.Combine("bsd");
 
         public static DirectoryInfo ResourcesDirectory
-            => Directories.BaseDirectory.Combine("..", "..", "..", "..", "Fasciculus.Eve", "Resources").Existing();
+            => DocumentsDirectory.Combine("Resources").Existing();
     }
 }

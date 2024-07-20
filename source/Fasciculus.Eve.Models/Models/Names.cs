@@ -1,6 +1,5 @@
 ﻿using Fasciculus.IO;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
@@ -18,9 +17,8 @@ namespace Fasciculus.Eve.Models
             names[id] = name;
         }
 
-        public static void Load(Stream stream)
+        public static void Load(Data data)
         {
-            Data data = new(stream);
             int count = data.ReadInt();
 
             for (int i = 0; i < count; i++)
@@ -32,10 +30,8 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        public static void Save(Stream stream)
+        public static void Save(Data data)
         {
-            Data data = new(stream);
-
             data.WriteInt(names.Count);
 
             foreach (var entry in names)

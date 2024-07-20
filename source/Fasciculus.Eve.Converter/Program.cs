@@ -7,10 +7,18 @@ namespace Fasciculus.Eve
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("ExtractSde");
-            ExtractSde.Run();
+            try
+            {
+                Console.WriteLine("ExtractSde");
+                ExtractSde.Run();
 
-            ConvertNames.Run();
+                ConvertNames.Run();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
         }
     }
 }

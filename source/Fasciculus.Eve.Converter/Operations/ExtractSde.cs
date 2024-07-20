@@ -1,5 +1,4 @@
-﻿using Fasciculus.IO;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 
 namespace Fasciculus.Eve.Operations
@@ -7,10 +6,10 @@ namespace Fasciculus.Eve.Operations
     public static class ExtractSde
     {
         public static FileInfo SdeFile
-            => Directories.Downloads.File("sde.zip");
+            => Constants.DownloadsDirectory.File("sde.zip");
 
         public static DirectoryInfo TargetDirectory
-            => Constants.DataDirectory;
+            => Constants.SdeDirectory;
 
         public static void Run()
         {

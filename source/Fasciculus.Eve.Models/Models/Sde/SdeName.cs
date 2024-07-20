@@ -1,4 +1,4 @@
-﻿namespace Fasciculus.Eve.Models
+﻿namespace Fasciculus.Eve.Models.Sde
 {
 #pragma warning disable IDE1006 // Naming Styles
 
