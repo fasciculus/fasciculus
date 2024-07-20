@@ -9,10 +9,10 @@ namespace Fasciculus.Eve
         {
             try
             {
-                Console.WriteLine("ExtractSde");
-                ExtractSde.Run();
+                ExtractSde.Extract();
 
-                ConvertNames.Run();
+                ConvertNames.Convert();
+                ConvertRegions.Convert();
             }
             catch (Exception e)
             {

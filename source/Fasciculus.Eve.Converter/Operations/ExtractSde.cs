@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 
 namespace Fasciculus.Eve.Operations
@@ -11,8 +12,10 @@ namespace Fasciculus.Eve.Operations
         public static DirectoryInfo TargetDirectory
             => Constants.SdeDirectory;
 
-        public static void Run()
+        public static void Extract()
         {
+            Console.WriteLine("ExtractSde");
+
             using Stream zipStream = new FileStream(SdeFile.FullName, FileMode.Open, FileAccess.Read);
             using ZipArchive zip = new(zipStream);
 

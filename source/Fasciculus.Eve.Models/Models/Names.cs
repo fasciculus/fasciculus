@@ -17,8 +17,10 @@ namespace Fasciculus.Eve.Models
             names[id] = name;
         }
 
-        public static void Load(Data data)
+        public static void Read(Data data)
         {
+            names.Clear();
+
             int count = data.ReadInt();
 
             for (int i = 0; i < count; i++)
@@ -30,7 +32,7 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        public static void Save(Data data)
+        public static void Write(Data data)
         {
             data.WriteInt(names.Count);
 

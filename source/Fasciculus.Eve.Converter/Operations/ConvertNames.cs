@@ -16,13 +16,13 @@ namespace Fasciculus.Eve.Operations
         public static FileInfo TargetFile
             => Constants.ResourcesDirectory.File("Names.dat");
 
-        public static void Run()
+        public static void Convert()
         {
             if (SourceFile.IsNewerThan(TargetFile))
             {
                 Console.WriteLine("ConvertNames");
                 Yaml.Deserialize<List<SdeName>>(SourceFile).ForEach(name => { Names.Set(name.itemID, name.itemName); });
-                TargetFile.Write(stream => Names.Save(new Data(stream)));
+                TargetFile.Write(stream => Names.Write(new Data(stream)));
             }
         }
     }
