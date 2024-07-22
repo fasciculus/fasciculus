@@ -1,4 +1,5 @@
-﻿using Fasciculus.Eve.Operations;
+﻿using Fasciculus.Eve.Models;
+using Fasciculus.Eve.Operations;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +23,9 @@ namespace Fasciculus.Eve
                 Task[] tasks = actions.Select(a => Task.Run(a)).ToArray();
 
                 Task.WaitAll(tasks);
+
+                Console.WriteLine($"{SolarSystems.All.Count} solar systems");
+                Console.WriteLine($"{SolarSystems.Safe.Count} safe solar systems");
             }
             catch (Exception e)
             {
