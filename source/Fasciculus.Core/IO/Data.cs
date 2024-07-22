@@ -29,6 +29,20 @@ namespace Fasciculus.IO
             WriteBytes(bytes, 4);
         }
 
+        public double ReadDouble()
+        {
+            ReadBytes(buffer, 8);
+
+            return BitConverter.ToDouble(buffer, 0);
+        }
+
+        public void WriteDouble(double value)
+        {
+            byte[] bytes = BitConverter.GetBytes(value);
+
+            WriteBytes(bytes, 8);
+        }
+
         public string ReadString()
         {
             int length = ReadInt();
