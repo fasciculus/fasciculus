@@ -26,6 +26,13 @@ namespace Fasciculus.Eve
 
                 Console.WriteLine($"{SolarSystems.All.Count} solar systems");
                 Console.WriteLine($"{SolarSystems.Safe.Count} safe solar systems");
+
+                SolarSystem? solarSystem = SolarSystems.Get("Jita");
+
+                if (solarSystem != null)
+                {
+                    Console.WriteLine(solarSystem.Name);
+                }
             }
             catch (Exception e)
             {

@@ -15,6 +15,9 @@ namespace Fasciculus.Eve.Models
         public static IReadOnlyList<SolarSystem> All => all.Value;
         public static IReadOnlyList<SolarSystem> Safe => safe.Value;
 
+        public static SolarSystem? Get(string name)
+            => solarSystems.Values.First(s => s.Name == name);
+
         public static void Add(SolarSystem solarSystem)
         {
             solarSystems[solarSystem.Id] = solarSystem;
