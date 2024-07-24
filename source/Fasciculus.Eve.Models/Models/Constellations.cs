@@ -14,7 +14,10 @@ namespace Fasciculus.Eve.Models
 
         public static void Add(Constellation constellation)
         {
-            constellations[constellation.Id] = constellation;
+            lock (constellations)
+            {
+                constellations[constellation.Id] = constellation;
+            }
         }
 
         public static void Write(Data data)

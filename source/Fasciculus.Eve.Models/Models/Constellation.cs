@@ -14,6 +14,8 @@ namespace Fasciculus.Eve.Models
         {
             Id = sde.constellationID;
             region = regionId;
+
+            Constellations.Add(this);
         }
 
         public void Write(Data data)

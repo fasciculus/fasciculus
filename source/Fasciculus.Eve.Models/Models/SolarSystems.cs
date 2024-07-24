@@ -20,7 +20,11 @@ namespace Fasciculus.Eve.Models
 
         public static void Add(SolarSystem solarSystem)
         {
-            solarSystems[solarSystem.Id] = solarSystem;
+            lock (solarSystems)
+            {
+                solarSystems[solarSystem.Id] = solarSystem;
+            }
+
         }
 
         public static void Write(Data data)

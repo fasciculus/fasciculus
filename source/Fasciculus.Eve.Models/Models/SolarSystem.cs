@@ -27,6 +27,8 @@ namespace Fasciculus.Eve.Models
             Security = sde.security;
             SecurityClass = sde.securityClass;
             neighbours = sde.stargates.Values.Select(sg => sg.destination).Order().ToList();
+
+            SolarSystems.Add(this);
         }
 
         public void Write(Data data)

@@ -11,6 +11,8 @@ namespace Fasciculus.Eve.Models
         public Region(SdeRegion region)
         {
             Id = region.regionID;
+
+            Regions.Add(this);
         }
 
         public void Write(Data data)

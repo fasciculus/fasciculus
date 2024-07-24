@@ -9,7 +9,10 @@ namespace Fasciculus.Eve.Models
 
         public static void Add(Region region)
         {
-            regions[region.Id] = region;
+            lock (regions)
+            {
+                regions[region.Id] = region;
+            }
         }
 
         public static Region Get(int id)
