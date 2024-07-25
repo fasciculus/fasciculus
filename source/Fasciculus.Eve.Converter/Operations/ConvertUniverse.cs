@@ -24,12 +24,10 @@ namespace Fasciculus.Eve.Operations
         {
             Console.WriteLine("ConvertUniverse Started");
 
-            Task[] tasks = Constants.UniverseEveDirectory
+            Constants.UniverseEveDirectory
                 .GetDirectories()
                 .Select(d => Task.Run(() => ConvertRegion(d)))
-                .ToArray();
-
-            Task.WaitAll(tasks);
+                .WaitAll();
 
             RegionsFile.Write(stream => Regions.Write(new Data(stream)));
             ConstellationsFile.Write(stream => Constellations.Write(new Data(stream)));
@@ -42,12 +40,10 @@ namespace Fasciculus.Eve.Operations
         {
             Region region = new(Yaml.Deserialize<SdeRegion>(directory.File("region.yaml")));
 
-            Task[] tasks = directory
+            directory
                 .GetDirectories()
                 .Select(d => Task.Run(() => ConvertConstellation(d, region.Id)))
-                .ToArray();
-
-            Task.WaitAll(tasks);
+                .WaitAll();
 
             Console.WriteLine($"Region '{directory.Name}' converted");
         }
@@ -56,12 +52,10 @@ namespace Fasciculus.Eve.Operations
         {
             Constellation constellation = new(Yaml.Deserialize<SdeConstellation>(directory.File("constellation.yaml")), regionId);
 
-            Task[] tasks = directory
+            directory
                 .GetDirectories()
                 .Select(d => Task.Run(() => ConvertSolarSystem(d, constellation.Id)))
-                .ToArray();
-
-            Task.WaitAll(tasks);
+                .WaitAll();
         }
 
         private static void ConvertSolarSystem(DirectoryInfo directory, int constellationId)
