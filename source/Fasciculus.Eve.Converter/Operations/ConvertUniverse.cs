@@ -20,6 +20,9 @@ namespace Fasciculus.Eve.Operations
         public static FileInfo SolarSystemsFile
             => Constants.ResourcesDirectory.File("SolarSystems.dat");
 
+        public static FileInfo StargatesFile
+            => Constants.ResourcesDirectory.File("Stargates.dat");
+
         public static void Convert()
         {
             Console.WriteLine("ConvertUniverse Started");
@@ -32,6 +35,7 @@ namespace Fasciculus.Eve.Operations
             RegionsFile.Write(stream => Regions.Write(new Data(stream)));
             ConstellationsFile.Write(stream => Constellations.Write(new Data(stream)));
             SolarSystemsFile.Write(stream => SolarSystems.Write(new Data(stream)));
+            StargatesFile.Write(stream => Stargates.Write(new Data(stream)));
 
             Console.WriteLine("ConvertUniverse Done");
         }
@@ -60,7 +64,7 @@ namespace Fasciculus.Eve.Operations
 
         private static void ConvertSolarSystem(DirectoryInfo directory, int constellationId)
         {
-            new SolarSystem(Yaml.Deserialize<SdeSolarSystem>(directory.File("solarsystem.yaml")), constellationId);
+            SolarSystem.Create(Yaml.Deserialize<SdeSolarSystem>(directory.File("solarsystem.yaml")), constellationId);
         }
     }
 }

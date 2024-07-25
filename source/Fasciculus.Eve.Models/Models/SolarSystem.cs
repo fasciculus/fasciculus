@@ -1,7 +1,5 @@
 ﻿using Fasciculus.Eve.Models.Sde;
 using Fasciculus.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
@@ -18,18 +16,23 @@ namespace Fasciculus.Eve.Models
 
         public readonly string SecurityClass;
 
-        private readonly List<int> neighbours;
-
         public SolarSystem(SdeSolarSystem sde, int constellationId)
         {
             Id = sde.solarSystemID;
             constellation = constellationId;
             Security = sde.security;
             SecurityClass = sde.securityClass;
-            neighbours = sde.stargates.Values.Select(sg => sg.destination).Order().ToList();
+
+            foreach (var entry in sde.stargates)
+            {
+                Stargate.Create(entry.Key, entry.Value, Id);
+            }
 
             SolarSystems.Add(this);
         }
+
+        public static SolarSystem Create(SdeSolarSystem sde, int constellationId)
+            => new(sde, constellationId);
 
         public void Write(Data data)
         {
