@@ -27,6 +27,7 @@ namespace Fasciculus.Eve.Models
         {
             data.WriteInt(Id);
             data.WriteInt(destination);
+            data.WriteInt(solarSystem);
         }
     }
 }
