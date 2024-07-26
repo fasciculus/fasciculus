@@ -8,15 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="YamlDotNet" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <EmbeddedResource Include = "Resources/Constellations.dat" >
+      <LogicalName >Sde.Constellations</LogicalName >
+    </EmbeddedResource>
+    <EmbeddedResource Include = "Resources/Names.dat" >
+      <LogicalName >Sde.Names</LogicalName >
+    </EmbeddedResource>
+    <EmbeddedResource Include = "Resources/Regions.dat" >
+      <LogicalName >Sde.Regions</LogicalName >
+    </EmbeddedResource>
+    <EmbeddedResource Include = "Resources/SolarSystems.dat" >
+      <LogicalName >Sde.SolarSystems</LogicalName >
+    </EmbeddedResource>
+    <EmbeddedResource Include = "Resources/Stargates.dat" >
+      <LogicalName >Sde.Stargates</LogicalName >
+    </EmbeddedResource>
   </ItemGroup>
   
 </Project>
