@@ -1,22 +1,13 @@
-﻿using Fasciculus.Eve.Actions;
-using Fasciculus.Eve.Models;
-using System;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Fasciculus.Eve;
 
 public class Program
 {
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
         try
         {
-            await LoadSde.LoadAsync();
-
-            // Console.WriteLine(Names.Get(30000142));
-            Region region = Regions.Get(10000016);
-
-            Console.WriteLine(region.Name);
         }
         catch (Exception e)
         {
@@ -24,3 +15,7 @@ public class Program
         }
     }
 }
+
+//<EmbeddedResource Include = "Resources/names.dat" >
+//  < LogicalName > Names </ LogicalName >
+//</ EmbeddedResource >
