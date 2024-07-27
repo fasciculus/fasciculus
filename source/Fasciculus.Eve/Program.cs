@@ -1,5 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using Fasciculus.Eve.Models;
+using Fasciculus.Eve.Operations;
+using System;
 
 namespace Fasciculus.Eve;
 
@@ -9,19 +10,9 @@ public class Program
     {
         try
         {
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            ReadResources.Read();
 
-            foreach (Assembly assembly in assemblies)
-            {
-                string[] names = assembly.GetManifestResourceNames();
-
-                Console.WriteLine($"{assembly}");
-
-                foreach (string name in names)
-                {
-                    Console.WriteLine($"- {name}");
-                }
-            }
+            Console.WriteLine(SolarSystems.Get("Jita")?.Name);
         }
         catch (Exception e)
         {

@@ -18,6 +18,17 @@ namespace Fasciculus.Eve.Models
             Constellations.Add(this);
         }
 
+        public Constellation(Data data)
+        {
+            Id = data.ReadInt();
+            region = data.ReadInt();
+
+            Constellations.Add(this);
+        }
+
+        public static void Read(Data data)
+            => new Constellation(data);
+
         public void Write(Data data)
         {
             data.WriteInt(Id);

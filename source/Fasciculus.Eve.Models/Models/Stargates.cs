@@ -15,6 +15,16 @@ namespace Fasciculus.Eve.Models
             }
         }
 
+        public static void Read(Data data)
+        {
+            int count = data.ReadInt();
+
+            for (int i = 0; i < count; i++)
+            {
+                Stargate.Read(data);
+            }
+        }
+
         public static void Write(Data data)
         {
             data.WriteInt(stargates.Count);

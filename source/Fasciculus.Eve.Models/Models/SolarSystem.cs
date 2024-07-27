@@ -31,8 +31,15 @@ namespace Fasciculus.Eve.Models
             SolarSystems.Add(this);
         }
 
-        public static SolarSystem Create(SdeSolarSystem sde, int constellationId)
-            => new(sde, constellationId);
+        public SolarSystem(Data data)
+        {
+            Id = data.ReadInt();
+            constellation = data.ReadInt();
+            Security = data.ReadDouble();
+            SecurityClass = data.ReadString();
+
+            SolarSystems.Add(this);
+        }
 
         public void Write(Data data)
         {
@@ -41,5 +48,11 @@ namespace Fasciculus.Eve.Models
             data.WriteDouble(Security);
             data.WriteString(SecurityClass);
         }
+
+        public static SolarSystem Create(SdeSolarSystem sde, int constellationId)
+            => new(sde, constellationId);
+
+        public static void Read(Data data)
+            => new SolarSystem(data);
     }
 }

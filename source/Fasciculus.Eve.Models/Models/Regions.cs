@@ -20,6 +20,16 @@ namespace Fasciculus.Eve.Models
             return regions[id];
         }
 
+        public static void Read(Data data)
+        {
+            int count = data.ReadInt();
+
+            for (int i = 0; i < count; i++)
+            {
+                Region.Read(data);
+            }
+        }
+
         public static void Write(Data data)
         {
             data.WriteInt(regions.Count);

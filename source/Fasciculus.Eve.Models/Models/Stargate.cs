@@ -20,8 +20,14 @@ namespace Fasciculus.Eve.Models
             Stargates.Add(this);
         }
 
-        public static Stargate Create(int id, SdeStargate sde, int solarSystem)
-            => new(id, sde, solarSystem);
+        public Stargate(Data data)
+        {
+            Id = data.ReadInt();
+            destination = data.ReadInt();
+            solarSystem = data.ReadInt();
+
+            Stargates.Add(this);
+        }
 
         public void Write(Data data)
         {
@@ -29,5 +35,11 @@ namespace Fasciculus.Eve.Models
             data.WriteInt(destination);
             data.WriteInt(solarSystem);
         }
+
+        public static Stargate Create(int id, SdeStargate sde, int solarSystem)
+            => new(id, sde, solarSystem);
+
+        public static void Read(Data data)
+            => new Stargate(data);
     }
 }

@@ -15,6 +15,16 @@ namespace Fasciculus.Eve.Models
             Regions.Add(this);
         }
 
+        public Region(Data data)
+        {
+            Id = data.ReadInt();
+
+            Regions.Add(this);
+        }
+
+        public static void Read(Data data)
+            => new Region(data);
+
         public void Write(Data data)
         {
             data.WriteInt(Id);
