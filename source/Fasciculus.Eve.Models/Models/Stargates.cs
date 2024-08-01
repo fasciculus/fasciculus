@@ -1,11 +1,18 @@
 ﻿using Fasciculus.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
     public static class Stargates
     {
         private static readonly Dictionary<int, Stargate> stargates = new();
+
+        public static Stargate Get(int id)
+            => stargates[id];
+
+        public static Stargate[] Get(SolarSystem solarSystem)
+            => stargates.Values.Where(sg => sg.SolarSystem.Id == solarSystem.Id).ToArray();
 
         public static void Add(Stargate stargate)
         {

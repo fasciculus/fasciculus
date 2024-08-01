@@ -41,6 +41,9 @@ namespace Fasciculus.Eve.Models
             SolarSystems.Add(this);
         }
 
+        public Stargate[] GetStargates()
+            => Stargates.Get(this);
+
         public void Write(Data data)
         {
             data.WriteInt(Id);

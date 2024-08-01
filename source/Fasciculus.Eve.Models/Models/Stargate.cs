@@ -11,6 +11,9 @@ namespace Fasciculus.Eve.Models
 
         private readonly int solarSystem;
 
+        public Stargate Destination => Stargates.Get(destination);
+        public SolarSystem SolarSystem => SolarSystems.Get(solarSystem);
+
         public Stargate(int id, SdeStargate sde, int solarSystem)
         {
             Id = id;

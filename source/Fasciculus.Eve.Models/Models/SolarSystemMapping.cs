@@ -8,6 +8,8 @@ namespace Fasciculus.Eve.Models
         private readonly SolarSystem[] solarSystems;
         private readonly Dictionary<int, int> mapping = new();
 
+        public int Count => solarSystems.Length;
+
         public SolarSystemMapping(IEnumerable<SolarSystem> solarSystems)
         {
             this.solarSystems = solarSystems.ToArray();
@@ -17,6 +19,9 @@ namespace Fasciculus.Eve.Models
                 mapping[this.solarSystems[i].Id] = i;
             }
         }
+
+        public bool Contains(SolarSystem solarSystem)
+            => mapping.ContainsKey(solarSystem.Id);
 
         public SolarSystem this[int index]
         {
