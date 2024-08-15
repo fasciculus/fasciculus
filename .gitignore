@@ -1,6 +1,4 @@
 .vs/
 .repository/
-npm_modules/
 source/**/bin/
 source/**/obj/
-/source/Fasciculus.Screeps.Bot/ts/Config.ts
