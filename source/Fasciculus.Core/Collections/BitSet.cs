@@ -1,98 +1,91 @@
-﻿using Fasciculus.Mathematics;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Collections
 {
-    public class BitSet : IEnumerable<int>
+    public abstract class BitSet : IEnumerable<ulong>
     {
-        protected readonly Dictionary<int, byte> chunks;
-
-        protected BitSet(Dictionary<int, byte> chunks)
-        {
-            this.chunks = chunks;
-        }
-
-        public int Count => Bits.Count(chunks.Values);
-
-        public bool this[int index] => Contains(index);
-
-        public bool Contains(int index)
-        {
-            int id = index >> 3;
-
-            if (chunks.TryGetValue(id, out byte chunk))
-            {
-                byte mask = (byte)(1 << (index & 0x7));
-
-                return ((chunk & mask) != 0);
-            }
-
-            return false;
-        }
-
-        public IEnumerator<int> GetEnumerator()
+        public IEnumerator<ulong> GetEnumerator()
             => Enumerate();
 
         IEnumerator IEnumerable.GetEnumerator()
             => Enumerate();
 
-        protected IEnumerator<int> Enumerate()
-        {
-            foreach (var entry in chunks.OrderBy(e => e.Key))
-            {
-                int id = entry.Key;
-                byte chunk = entry.Value;
-                byte mask = 1;
+        protected abstract IEnumerator<ulong> Enumerate();
 
-                for (int i = 0; i < 8; ++i, mask <<= 1)
+        public static Factory Create()
+            => new();
+
+        public class Immutable : BitSet
+        {
+            private readonly ulong[] ids;
+            private readonly byte[] data;
+
+            internal Immutable(SortedSet<ulong> bits)
+            {
+                var groups = bits.GroupBy(index => index & 0xffff_ffff_ffff_fff8);
+
+                int count = groups.Count();
+                ids = new ulong[count];
+                data = new byte[count];
+            }
+
+            protected override IEnumerator<ulong> Enumerate()
+            {
+                for (int i = 0, n = ids.Length; i < n; ++i)
                 {
-                    if ((chunk & mask) != 0)
+                    ulong id = ids[i];
+                    byte bits = data[i];
+                    byte mask = 1;
+
+                    for (ulong j = 0; j < 8; ++j, mask <<= 1)
                     {
-                        yield return id << 3 + i;
+                        if ((bits & mask) != 0)
+                        {
+                            yield return id + j;
+                        }
                     }
                 }
             }
         }
 
-        public static Factory Create()
-            => new();
-
         public class Mutable : BitSet
         {
-            public Mutable() : base(new()) { }
+            protected readonly SortedSet<ulong> bits = new();
 
-            public void Add(int index)
+            public void Set(ulong index, bool value = true)
             {
-                int id = index >> 3;
-                byte mask = (byte)(1 << (index & 0x7));
-
-                if (chunks.TryGetValue(id, out byte chunk))
+                if (value)
                 {
-                    chunk |= mask;
-                    chunks.Replace(id, chunk);
+                    bits.Add(index);
                 }
                 else
                 {
-                    chunks.Add(id, chunk);
+                    bits.Remove(index);
                 }
             }
+
+            public Immutable ToImmutable()
+                => new(bits);
+
+            protected override IEnumerator<ulong> Enumerate()
+                => bits.GetEnumerator();
         }
 
         public class Factory
         {
-            private Mutable result = new();
+            private readonly Mutable result = new();
 
-            public Factory Add(int index)
+            public Factory Set(ulong index, bool value = true)
             {
-                result.Add(index);
+                result.Set(index, value);
 
                 return this;
             }
 
-            public BitSet Build()
-                => new(result.chunks);
+            public Immutable Build()
+                => result.ToImmutable();
         }
     }
 }
