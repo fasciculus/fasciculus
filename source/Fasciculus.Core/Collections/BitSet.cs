@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Fasciculus.Mathematics;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,32 +20,44 @@ namespace Fasciculus.Collections
 
         public class Immutable : BitSet
         {
-            private readonly ulong[] ids;
-            private readonly byte[] data;
-
-            internal Immutable(SortedSet<ulong> bits)
+            public readonly struct Entry
             {
-                var groups = bits.GroupBy(index => index & 0xffff_ffff_ffff_fff8);
+                public readonly ulong Id;
+                public readonly byte Mask;
 
-                int count = groups.Count();
-                ids = new ulong[count];
-                data = new byte[count];
+                public Entry(ulong id, byte mask)
+                {
+                    Id = id;
+                    Mask = mask;
+                }
+
+                public static ulong ToId(ulong index)
+                    => index & 0xffff_ffff_ffff_fff8ul;
+
+                public static byte ToMask(IEnumerable<ulong> indices)
+                    => Bits.IndicesToByte(indices.Select(index => index & 0x7ul));
+
+                public static Entry Create(IGrouping<ulong, ulong> group)
+                    => new(group.Key, ToMask(group));
+            }
+
+            private readonly Entry[] entries;
+
+            internal Immutable(SortedSet<ulong> values)
+            {
+                entries = values.GroupBy(Entry.ToId).Select(Entry.Create).ToArray();
             }
 
             protected override IEnumerator<ulong> Enumerate()
             {
-                for (int i = 0, n = ids.Length; i < n; ++i)
+                foreach (Entry entry in entries)
                 {
-                    ulong id = ids[i];
-                    byte bits = data[i];
-                    byte mask = 1;
+                    ulong id = entry.Id;
+                    IEnumerator<uint> indices = Bits.Indices(entry.Mask);
 
-                    for (ulong j = 0; j < 8; ++j, mask <<= 1)
+                    while (indices.MoveNext())
                     {
-                        if ((bits & mask) != 0)
-                        {
-                            yield return id + j;
-                        }
+                        yield return id + indices.Current;
                     }
                 }
             }

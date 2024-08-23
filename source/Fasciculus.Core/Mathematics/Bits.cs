@@ -26,11 +26,11 @@ namespace Fasciculus.Mathematics
         public static int Count(IEnumerable<byte> values)
             => values.Select(Count).Sum();
 
-        public static IEnumerator<int> Indices(byte value)
+        public static IEnumerator<uint> Indices(byte value)
         {
             byte mask = 1;
 
-            for (int i = 0; i < 8; ++i, mask <<= 1)
+            for (uint i = 0; i < 8; ++i, mask <<= 1)
             {
                 if ((value & mask) != 0)
                 {
@@ -39,14 +39,13 @@ namespace Fasciculus.Mathematics
             }
         }
 
-        public static byte IndicesToByte(IEnumerable<int> indices)
+        public static byte IndicesToByte(IEnumerable<ulong> indices)
         {
             byte result = 0;
-            byte mask = 1;
 
             foreach (int i in indices)
             {
-                result |= (byte)(mask << i);
+                result |= (byte)(1 << i);
             }
 
             return result;
