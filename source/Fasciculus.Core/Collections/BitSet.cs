@@ -20,7 +20,7 @@ namespace Fasciculus.Collections
 
         public class Immutable : BitSet
         {
-            public readonly struct Entry
+            public class Entry : IEnumerable<ulong>
             {
                 public readonly ulong Id;
                 public readonly byte Mask;
@@ -31,6 +31,15 @@ namespace Fasciculus.Collections
                     Mask = mask;
                 }
 
+                public IEnumerator<ulong> GetEnumerator()
+                    => Enumerate();
+
+                IEnumerator IEnumerable.GetEnumerator()
+                    => Enumerate();
+
+                public IEnumerator<ulong> Enumerate()
+                    => Bits.Indices(Mask).Select(i => i + Id).GetEnumerator();
+
                 public static ulong ToId(ulong index)
                     => index & 0xffff_ffff_ffff_fff8ul;
 
@@ -39,6 +48,7 @@ namespace Fasciculus.Collections
 
                 public static Entry Create(IGrouping<ulong, ulong> group)
                     => new(group.Key, ToMask(group));
+
             }
 
             private readonly Entry[] entries;
@@ -49,18 +59,7 @@ namespace Fasciculus.Collections
             }
 
             protected override IEnumerator<ulong> Enumerate()
-            {
-                foreach (Entry entry in entries)
-                {
-                    ulong id = entry.Id;
-                    IEnumerator<uint> indices = Bits.Indices(entry.Mask);
-
-                    while (indices.MoveNext())
-                    {
-                        yield return id + indices.Current;
-                    }
-                }
-            }
+                => entries.SelectMany(e => e).GetEnumerator();
         }
 
         public class Mutable : BitSet

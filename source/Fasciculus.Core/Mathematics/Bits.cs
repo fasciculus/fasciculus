@@ -5,7 +5,7 @@ namespace Fasciculus.Mathematics
 {
     public static class Bits
     {
-        public static int Count(byte value)
+        public static int CountOnes(byte value)
         {
             int x = (value & 0xAA) >> 1;
             int y = value & 0x55;
@@ -23,10 +23,10 @@ namespace Fasciculus.Mathematics
             return z;
         }
 
-        public static int Count(IEnumerable<byte> values)
-            => values.Select(Count).Sum();
+        public static int CountOnes(IEnumerable<byte> values)
+            => values.Select(CountOnes).Sum();
 
-        public static IEnumerator<uint> Indices(byte value)
+        public static IEnumerable<uint> Indices(byte value)
         {
             byte mask = 1;
 
