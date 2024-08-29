@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Fasciculus.Mathematics
 {
@@ -22,9 +21,6 @@ namespace Fasciculus.Mathematics
 
             return z;
         }
-
-        public static int CountOnes(IEnumerable<byte> values)
-            => values.Select(CountOnes).Sum();
 
         public static IEnumerable<uint> Indices(byte value)
         {
