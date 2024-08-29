@@ -12,12 +12,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{A537FA0E-9860-4F04-A3A7-7E60F0C22E87}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Models", "source\Fasciculus.Eve.Models\Fasciculus.Eve.Models.csproj", "{5BCCD8D3-3665-48DF-B737-D5E532E26DD1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Converter", "source\Fasciculus.Eve.Converter\Fasciculus.Eve.Converter.csproj", "{C9B31CE6-5DE6-4FF6-856B-58AD87C865D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Testing", "source\Fasciculus.Testing\Fasciculus.Testing.csproj", "{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +48,10 @@ Global
 		{C9B31CE6-5DE6-4FF6-856B-58AD87C865D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9B31CE6-5DE6-4FF6-856B-58AD87C865D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9B31CE6-5DE6-4FF6-856B-58AD87C865D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
