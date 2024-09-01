@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{A5
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
@@ -20,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Models", "so
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Converter", "source\Fasciculus.Eve.Converter\Fasciculus.Eve.Converter.csproj", "{C9B31CE6-5DE6-4FF6-856B-58AD87C865D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Testing", "source\Fasciculus.Testing\Fasciculus.Testing.csproj", "{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Testing", "source\Fasciculus.Testing\Fasciculus.Testing.csproj", "{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Experiments.MAUI", "source\Fasciculus.Experiments.MAUI\Fasciculus.Experiments.MAUI.csproj", "{D27C20FE-3FF3-45FD-A001-817613ADE010}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +55,12 @@ Global
 		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
