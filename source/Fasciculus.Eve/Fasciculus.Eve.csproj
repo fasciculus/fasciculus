@@ -11,6 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources/EveData.dat">
+      <LogicalName>EveData</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources/Constellations.dat">
       <LogicalName>Sde.Constellations</LogicalName>
     </EmbeddedResource>

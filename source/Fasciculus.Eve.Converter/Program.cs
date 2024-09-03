@@ -1,38 +1,35 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Operations;
+using Fasciculus.IO;
 using System;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Fasciculus.Eve
 {
     public class Program
     {
+        public static FileInfo EveDataFile
+            => Constants.ResourcesDirectory.File("EveData.dat");
+
         public static void Main(string[] args)
         {
             try
             {
                 ExtractSde.Extract();
 
-                Action[] actions =
-                {
-                    ConvertNames.Convert,
-                    ConvertUniverse.Convert
-                };
+                EveData eveData = new EveData();
 
-                Task[] tasks = actions.Select(a => Task.Run(a)).ToArray();
+                EveDataFile.Write(stream => eveData.Write(new Data(stream)));
 
-                Task.WaitAll(tasks);
+                //Action[] actions =
+                //{
+                //    ConvertNames.Convert,
+                //    ConvertUniverse.Convert
+                //};
 
-                Console.WriteLine($"{SolarSystems.All.Count} solar systems");
-                Console.WriteLine($"{SolarSystems.Safe.Count} safe solar systems");
+                //Task[] tasks = actions.Select(a => Task.Run(a)).ToArray();
 
-                SolarSystem? solarSystem = SolarSystems.Get("Jita");
-
-                if (solarSystem != null)
-                {
-                    Console.WriteLine(solarSystem.Name);
-                }
+                //Task.WaitAll(tasks);
             }
             catch (Exception e)
             {

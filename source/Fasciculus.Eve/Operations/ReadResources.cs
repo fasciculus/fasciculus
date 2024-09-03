@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Eve.Models;
+using Fasciculus.IO;
 using Fasciculus.Reflection;
 using System;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Fasciculus.Eve.Operations
         {
             Action[] actions =
             {
+                ReadEveData,
                 ReadConstellations,
                 ReadNames,
                 ReadRegions,
@@ -20,6 +22,11 @@ namespace Fasciculus.Eve.Operations
             };
 
             actions.Select(Task.Run).WaitAll();
+        }
+
+        private static void ReadEveData()
+        {
+            EmbeddedResources.Read("EveData", stream => EveData.Read(new Data(stream)));
         }
 
         private static void ReadConstellations()
