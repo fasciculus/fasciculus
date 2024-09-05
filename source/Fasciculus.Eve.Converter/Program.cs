@@ -1,6 +1,5 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Operations;
-using Fasciculus.IO;
 using System;
 using System.IO;
 
@@ -8,8 +7,8 @@ namespace Fasciculus.Eve
 {
     public class Program
     {
-        public static FileInfo EveDataFile
-            => Constants.ResourcesDirectory.File("EveData.dat");
+        public static FileInfo EveUniverseFile
+            => Constants.ResourcesDirectory.File("EveUniverse.dat");
 
         public static void Main(string[] args)
         {
@@ -17,9 +16,7 @@ namespace Fasciculus.Eve
             {
                 ExtractSde.Extract();
 
-                EveData eveData = new EveData();
-
-                EveDataFile.Write(stream => eveData.Write(new Data(stream)));
+                EveUniverseFile.Write(EveUniverse.Write);
 
                 //Action[] actions =
                 //{

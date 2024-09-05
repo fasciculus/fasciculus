@@ -14,6 +14,9 @@
     <EmbeddedResource Include="Resources/EveData.dat">
       <LogicalName>EveData</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources/EveUniverse.dat">
+      <LogicalName>EveUniverse</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources/Constellations.dat">
       <LogicalName>Sde.Constellations</LogicalName>
     </EmbeddedResource>
