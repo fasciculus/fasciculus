@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Converter", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Testing", "source\Fasciculus.Testing\Fasciculus.Testing.csproj", "{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Experiments.MAUI", "source\Fasciculus.Experiments.MAUI\Fasciculus.Experiments.MAUI.csproj", "{D27C20FE-3FF3-45FD-A001-817613ADE010}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Experiments.MAUI", "source\Fasciculus.Experiments.MAUI\Fasciculus.Experiments.MAUI.csproj", "{D27C20FE-3FF3-45FD-A001-817613ADE010}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Core", "source\Fasciculus.Eve.Core\Fasciculus.Eve.Core.csproj", "{60FE9444-CF82-4AB3-BD48-A12E01654532}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,10 @@ Global
 		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
