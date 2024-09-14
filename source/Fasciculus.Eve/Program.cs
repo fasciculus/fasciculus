@@ -1,6 +1,4 @@
-﻿using Fasciculus.Eve.Models;
-using Fasciculus.Eve.Operations;
-using System;
+﻿using System;
 
 namespace Fasciculus.Eve;
 
@@ -10,11 +8,6 @@ public class Program
     {
         try
         {
-            ReadResources.Read();
-
-            Console.WriteLine(SolarSystems.Get("Jita")?.Name);
-
-            Adjacencies.Create(SolarSystems.Safe);
         }
         catch (Exception e)
         {
