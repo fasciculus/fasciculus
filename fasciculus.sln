@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Experiments.MAUI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Core", "source\Fasciculus.Eve.Core\Fasciculus.Eve.Core.csproj", "{60FE9444-CF82-4AB3-BD48-A12E01654532}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Eve.Assets", "source\Fasciculus.Eve.Assets\Fasciculus.Eve.Assets.csproj", "{DED4F950-1061-4BE9-98AA-69C53A6B41A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DED4F950-1061-4BE9-98AA-69C53A6B41A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DED4F950-1061-4BE9-98AA-69C53A6B41A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DED4F950-1061-4BE9-98AA-69C53A6B41A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DED4F950-1061-4BE9-98AA-69C53A6B41A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
