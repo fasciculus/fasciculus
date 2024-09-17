@@ -1,6 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Win32;
-using System;
 using System.Runtime.Versioning;
 
 namespace Fasciculus.Steam.Tests
@@ -10,25 +8,17 @@ namespace Fasciculus.Steam.Tests
     {
         [TestMethod]
         [SupportedOSPlatform("windows")]
-        public void Test()
+        public void TestAll()
         {
-            using RegistryKey? software = Registry.CurrentUser.OpenSubKey("SOFTWARE", false);
-            using RegistryKey? valve = software?.OpenSubKey("Valve", false);
-            using RegistryKey? steam = valve?.OpenSubKey("Steam", false);
-            using RegistryKey? apps = steam?.OpenSubKey("Apps", false);
-
-            string[] ids = apps?.GetSubKeyNames() ?? [];
-
-            foreach (string id in ids)
-            {
-                using RegistryKey? app = apps?.OpenSubKey(id, false);
-                string? name = app?.GetValue("Name")?.ToString();
-
-                if (name is not null)
-                {
-                    Console.WriteLine(name);
-                }
-            }
+            SteamApp[] apps = SteamApps.All;
         }
+
+        [TestMethod]
+        [SupportedOSPlatform("windows")]
+        public void TestInstalled()
+        {
+            SteamApp[] apps = SteamApps.Installed;
+        }
+
     }
 }
