@@ -8,7 +8,8 @@ namespace Fasciculus.Windows
         private readonly string[] names;
 
         public RegistryHive Hive { get; }
-        public IEnumerable<string> Names { get { return names; } }
+        public IEnumerable<string> Names => names;
+        public string Name => names.Length > 0 ? names[names.Length - 1] : string.Empty;
 
         public RegistryPath(RegistryHive hive, params string[] names)
         {
