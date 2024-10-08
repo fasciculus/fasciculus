@@ -16,5 +16,10 @@ namespace Fasciculus.Windows
             Hive = hive;
             this.names = [.. names];
         }
+
+        public static RegistryPath Combine(RegistryPath path, string name)
+        {
+            return new(path.Hive, [.. path.names, name]);
+        }
     }
 }
