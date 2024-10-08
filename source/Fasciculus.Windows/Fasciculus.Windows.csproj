@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.Win32.Registry" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
+  </ItemGroup>
+
 </Project>
