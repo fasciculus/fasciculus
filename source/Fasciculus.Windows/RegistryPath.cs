@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Win32;
+using System.Collections.Generic;
 
-namespace Microsoft.Win32
+namespace Fasciculus.Windows
 {
     public class RegistryPath
     {
