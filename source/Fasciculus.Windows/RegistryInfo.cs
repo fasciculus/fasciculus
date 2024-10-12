@@ -8,13 +8,13 @@ namespace Fasciculus.Windows
     public class RegistryInfo
     {
         private readonly RegistryPath[] children;
-        private readonly Dictionary<string, RegistryValue> values;
+        private readonly RegistryValues values;
 
         public RegistryPath Path { get; }
         public bool Exists { get; }
 
         public IEnumerable<RegistryPath> Children => children;
-        public IReadOnlyDictionary<string, RegistryValue> Values => values;
+        public RegistryValues Values => values;
 
         public RegistryInfo(RegistryPath path)
         {
@@ -44,12 +44,12 @@ namespace Fasciculus.Windows
             if (exists)
             {
                 children = parent.GetSubKeyNames().Select(name => RegistryPath.Combine(path, name)).ToArray();
-                values = parent.GetValueNames().Select(name => RegistryValue.Create(parent, name)).ToDictionary(rk => rk.Name);
+                values = RegistryValues.Read(parent);
             }
             else
             {
                 children = [];
-                values = [];
+                values = RegistryValues.Empty;
             }
         }
     }
