@@ -19,7 +19,7 @@ namespace Fasciculus.Windows
         public RegistryInfo(RegistryPath path)
         {
             using DisposableStack<RegistryKey> keys = new();
-            RegistryKey parent = RegistryHelper.GetBaseKey(path.Hive);
+            RegistryKey parent = RegistryHives.GetRegistryKey(path.Hive);
             bool exists = true;
 
             foreach (string name in path.Names)

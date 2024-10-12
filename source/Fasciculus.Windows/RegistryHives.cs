@@ -3,9 +3,9 @@ using System;
 
 namespace Fasciculus.Windows
 {
-    public static class RegistryHelper
+    public static class RegistryHives
     {
-        public static RegistryKey GetBaseKey(RegistryHive hive)
+        public static RegistryKey GetRegistryKey(RegistryHive hive)
         {
             return hive switch
             {
