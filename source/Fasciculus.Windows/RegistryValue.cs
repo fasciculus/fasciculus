@@ -7,22 +7,28 @@ namespace Fasciculus.Windows
     {
         public string Name { get; }
         public RegistryValueKind Kind { get; }
+        public bool IsValid { get; }
 
         private string? stringValue;
         private uint? uintValue;
+        private ulong? ulongValue;
 
         public string StringValue => stringValue ?? string.Empty;
+        public uint UIntValue => uintValue ?? 0;
+        public ulong ULongValue => ulongValue ?? 0;
 
         protected RegistryValue(string name, RegistryValueKind kind)
         {
             Name = name;
             Kind = kind;
+            IsValid = false;
         }
 
         protected RegistryValue(string name, RegistryValueKind kind, string value)
         {
             Name = name;
             Kind = kind;
+            IsValid = true;
             stringValue = value;
         }
 
@@ -30,7 +36,16 @@ namespace Fasciculus.Windows
         {
             Name = name;
             Kind = kind;
+            IsValid = true;
             uintValue = value;
+        }
+
+        protected RegistryValue(string name, RegistryValueKind kind, ulong value)
+        {
+            Name = name;
+            Kind = kind;
+            IsValid = true;
+            ulongValue = value;
         }
 
         public static RegistryValue Create(RegistryKey key, string name)
@@ -47,7 +62,7 @@ namespace Fasciculus.Windows
                 case RegistryValueKind.Binary: return new(name, kind);
                 case RegistryValueKind.DWord: return new(name, kind, Convert.ToUInt32(value));
                 case RegistryValueKind.MultiString: return new(name, kind);
-                case RegistryValueKind.QWord: return new(name, kind);
+                case RegistryValueKind.QWord: return new(name, kind, Convert.ToUInt64(value));
             }
 
             return new(name, kind);
