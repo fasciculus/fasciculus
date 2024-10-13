@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Fasciculus.Windows;
+using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,50 +10,27 @@ namespace Fasciculus.Steam
         public static SteamApp[] All => GetAll();
         public static SteamApp[] Installed => GetInstalled();
 
+        private static readonly RegistryPath AppsPath = new(RegistryHive.CurrentUser, "SOFTWARE", "Valve", "Steam", "Apps");
+
         private static SteamApp[] GetAll()
-        {
-            using RegistryKey? software = Registry.CurrentUser.OpenSubKey("SOFTWARE", false);
-            using RegistryKey? valve = software?.OpenSubKey("Valve", false);
-            using RegistryKey? steam = valve?.OpenSubKey("Steam", false);
-            using RegistryKey? apps = steam?.OpenSubKey("Apps", false);
-
-            if (apps is null) return [];
-
-            string[] idStrings = apps.GetSubKeyNames();
-            List<SteamApp> result = new();
-
-            foreach (string idString in idStrings)
-            {
-                if (!int.TryParse(idString, out int id)) continue;
-
-                using RegistryKey? app = apps.OpenSubKey(idString, false);
-
-                if (app is null) continue;
-
-                string? name = app.GetValue("Name")?.ToString();
-
-                if (name is null) continue;
-
-                bool installed = false;
-                string? installedString = app.GetValue("Installed")?.ToString();
-
-                if (installedString is not null)
-                {
-                    if (uint.TryParse(installedString, out uint installedValue))
-                    {
-                        installed = installedValue != 0;
-                    }
-                }
-
-                SteamApp steamApp = new(id, name, installed, null);
-
-                result.Add(steamApp);
-            }
-
-            return result.ToArray();
-        }
+            => RegistryInfo.Read(AppsPath).Children.Select(GetApp).NotNull().ToArray();
 
         private static SteamApp[] GetInstalled()
             => GetAll().Where(a => a.Installed).ToArray();
+
+        private static SteamApp? GetApp(RegistryPath path)
+        {
+            if (int.TryParse(path.Name, out var id))
+            {
+                RegistryValues values = RegistryInfo.Read(path).Values;
+
+                string name = values.GetString("Name");
+                bool installed = values.GetUInt("Installed") != 0;
+
+                return new(id, name, installed, null);
+            }
+
+            return null;
+        }
     }
 }
