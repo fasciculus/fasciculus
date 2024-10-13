@@ -48,6 +48,9 @@ namespace Fasciculus.Windows
             ulongValue = value;
         }
 
+        public static RegistryValue Empty(string name)
+            => new(name, RegistryValueKind.None);
+
         public static RegistryValue Read(RegistryKey key, string name)
         {
             RegistryValueKind kind = key.GetValueKind(name);
