@@ -52,5 +52,8 @@ namespace Fasciculus.Windows
                 values = RegistryValues.Empty;
             }
         }
+
+        public static RegistryInfo Read(RegistryPath path)
+            => new(path);
     }
 }
