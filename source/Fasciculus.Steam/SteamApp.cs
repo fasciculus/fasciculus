@@ -4,16 +4,16 @@ namespace Fasciculus.Steam
 {
     public class SteamApp
     {
-        public readonly int Id;
-        public readonly string Name;
-        public readonly bool Installed;
+        public int Id { get; }
+        public string Name { get; }
         public readonly DirectoryInfo? InstallationDirectory;
 
-        public SteamApp(int id, string name, bool installed, DirectoryInfo? installationDirectory)
+        public bool IsInstalled => InstallationDirectory is not null;
+
+        public SteamApp(int id, string name, DirectoryInfo? installationDirectory)
         {
             Id = id;
             Name = name;
-            Installed = installed;
             InstallationDirectory = installationDirectory;
         }
 
