@@ -17,6 +17,9 @@ namespace Fasciculus.Windows
             this.names = [.. names];
         }
 
+        public RegistryPath Combine(string name)
+            => Combine(this, name);
+
         public static RegistryPath Combine(RegistryPath path, string name)
         {
             return new(path.Hive, [.. path.names, name]);
