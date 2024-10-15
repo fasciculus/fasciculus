@@ -21,6 +21,9 @@ namespace System.IO
         public static string ReadAllText(this FileInfo file)
             => File.ReadAllText(file.FullName, Encoding.UTF8);
 
+        public static void WriteAllBytes(this FileInfo file, byte[] bytes)
+            => File.WriteAllBytes(file.FullName, bytes);
+
         public static FileInfo Write(this FileInfo file, Action<Stream> write)
         {
             file.DeleteIfExists();
