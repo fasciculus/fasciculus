@@ -24,6 +24,13 @@ namespace System.IO
         public static void WriteAllBytes(this FileInfo file, byte[] bytes)
             => File.WriteAllBytes(file.FullName, bytes);
 
+        public static void Read(this FileInfo file, Action<Stream> read)
+        {
+            using Stream stream = file.OpenRead();
+
+            read(stream);
+        }
+
         public static FileInfo Write(this FileInfo file, Action<Stream> write)
         {
             file.DeleteIfExists();
