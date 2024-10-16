@@ -11,6 +11,7 @@ namespace Fasciculus.Eve
             try
             {
                 await DownloadSdeZip.Execute();
+                await ExtractSdeZip.Execute();
             }
             catch (Exception e)
             {
