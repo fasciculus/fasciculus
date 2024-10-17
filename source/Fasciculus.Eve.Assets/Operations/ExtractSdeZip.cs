@@ -7,7 +7,7 @@ namespace Fasciculus.Eve.Operations
     {
         public static async Task Execute()
         {
-            await Zip.Extract(EveAssetsFiles.SdeZipFile, EveAssetsDirectories.Sde);
+            await Zip.Extract(EveAssetsFiles.SdeZipFile, EveAssetsDirectories.Sde, Zip.Overwrite.Changed);
         }
     }
 }
