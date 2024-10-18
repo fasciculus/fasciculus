@@ -9,13 +9,19 @@ namespace Fasciculus.Eve.Operations
     {
         public static readonly Uri SdeZipUri = new("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/sde.zip");
 
-        public static async Task Execute()
+        public static async Task Execute(IProgress<string> progress)
         {
             using HttpClient httpClient = new();
 
             if (await IsDownloadRequired(httpClient))
             {
+                progress.Report("downloading sde.zip");
                 await Download(httpClient);
+                progress.Report("downloading sde.zip done");
+            }
+            else
+            {
+                progress.Report("sde.zip is up to date");
             }
         }
 
