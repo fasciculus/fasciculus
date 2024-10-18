@@ -9,7 +9,7 @@ namespace Fasciculus.Eve.Operations
         public static async Task Execute(IProgress<string> progress)
         {
             progress.Report("extracting sde.zip");
-            await Zip.Extract(EveAssetsFiles.SdeZipFile, EveAssetsDirectories.Sde, Zip.Overwrite.Changed);
+            await Zip.Extract(EveAssetsFiles.SdeZipFile, EveAssetsDirectories.SdeDirectory, Zip.Overwrite.Changed);
             progress.Report("extracting sde.zip done");
         }
     }

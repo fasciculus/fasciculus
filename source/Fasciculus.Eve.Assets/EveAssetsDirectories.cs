@@ -5,8 +5,9 @@ namespace Fasciculus.Eve
 {
     public static class EveAssetsDirectories
     {
-        public static DirectoryInfo Documents => Directories.Documents.Combine("Fasciculus", "Eve.Assets").Existing();
-        public static DirectoryInfo Downloads => Documents.Combine("Downloads").Existing();
-        public static DirectoryInfo Sde => Documents.Combine("Sde").Existing();
+        public static DirectoryInfo DocumentsDirectory => Directories.Documents.Combine("Fasciculus", "Eve.Assets").Existing();
+        public static DirectoryInfo DownloadsDirectory => DocumentsDirectory.Combine("Downloads").Existing();
+        public static DirectoryInfo SdeDirectory => DocumentsDirectory.Combine("Sde").Existing();
+        public static DirectoryInfo BsdDirectory => SdeDirectory.Combine("bsd").Existing();
     }
 }

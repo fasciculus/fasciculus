@@ -4,6 +4,6 @@ namespace Fasciculus.Eve
 {
     public static class EveAssetsFiles
     {
-        public static FileInfo SdeZipFile => EveAssetsDirectories.Downloads.File("sde.zip");
+        public static FileInfo SdeZipFile => EveAssetsDirectories.DownloadsDirectory.File("sde.zip");
     }
 }
