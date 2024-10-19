@@ -15,7 +15,7 @@ namespace Fasciculus.Eve.Operations
         {
             progress.Report("parsing data");
 
-            Task<SdeNames> parseNames = ParseNames(progress);
+            Task<SdeNames> parseNames = Task.Run(() => ParseNames(progress));
 
             Task[] tasks = [parseNames];
 
@@ -28,17 +28,15 @@ namespace Fasciculus.Eve.Operations
             return new(names);
         }
 
-        private static async Task<SdeNames> ParseNames(IProgress<string> progress)
+        private static SdeNames ParseNames(IProgress<string> progress)
         {
-            await Task.CompletedTask;
-
             progress.Report("  parsing names");
 
-            List<SdeName> result = Yaml.Deserialize<List<SdeName>>(NamesFile);
+            SdeNames result = new(Yaml.Deserialize<List<SdeName>>(NamesFile));
 
             progress.Report("  parsing names done");
 
-            return new(result);
+            return result;
         }
     }
 }
