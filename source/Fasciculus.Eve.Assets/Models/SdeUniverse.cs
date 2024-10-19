@@ -1,17 +1,19 @@
-﻿namespace Fasciculus.Eve.Models
+﻿using System.Collections.Generic;
+
+namespace Fasciculus.Eve.Models
 {
     public class SdeUniverse
     {
-        public SdeRegions Regions { get; }
+        public List<SdeRegion> Regions { get; } = [];
 
-        public SdeUniverse(SdeRegions regions)
+        public SdeUniverse(IEnumerable<SdeRegion> regions)
         {
-            Regions = regions;
+            regions.Apply(Regions.Add);
         }
 
         public void Populate(SdeData data)
         {
-            Regions.Populate(data);
+            Regions.Apply(region => { region.Populate(data); });
         }
     }
 }

@@ -13,27 +13,42 @@ namespace Fasciculus.Eve.Operations
         {
             progress.Report("parsing universe");
 
-            SdeRegions regions = ParseRegions(progress);
+            IEnumerable<SdeRegion> regions = ParseRegions(progress);
 
             progress.Report("parsing universe done");
 
             return new(regions);
         }
 
-        private static SdeRegions ParseRegions(IProgress<string> progress)
+        private static IEnumerable<SdeRegion> ParseRegions(IProgress<string> progress)
         {
-            IEnumerable<SdeRegion> regions = EveAssetsDirectories.RegionsDirectory.GetDirectories()
+            return EveAssetsDirectories.RegionsDirectory.GetDirectories()
                 .Select(directory => Task.Run(() => ParseRegion(directory, progress)))
                 .WaitAll();
-
-            return new(regions);
         }
 
         private static SdeRegion ParseRegion(DirectoryInfo directory, IProgress<string> progress)
         {
             FileInfo file = directory.File("region.yaml");
+            SdeRegion region = Yaml.Deserialize<SdeRegion>(file);
 
-            return Yaml.Deserialize<SdeRegion>(file);
+            region.Constellations = ParseConstellations(directory).ToList();
+
+            progress.Report($"  parsed {directory.Name}");
+
+            return region;
+        }
+
+        private static IEnumerable<SdeConstellation> ParseConstellations(DirectoryInfo directory)
+        {
+            return directory.GetDirectories().Select(d => Task.Run(() => ParseConstellation(d))).WaitAll();
+        }
+
+        private static SdeConstellation ParseConstellation(DirectoryInfo directory)
+        {
+            FileInfo file = directory.File("constellation.yaml");
+
+            return Yaml.Deserialize<SdeConstellation>(file);
         }
     }
 }

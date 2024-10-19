@@ -1,14 +1,19 @@
-﻿namespace Fasciculus.Eve.Models
+﻿using System.Collections.Generic;
+
+namespace Fasciculus.Eve.Models
 {
     public class SdeRegion
     {
         public int RegionID { get; set; }
+        public List<SdeConstellation> Constellations { get; set; } = [];
 
         public string Name { get; set; } = string.Empty;
 
         public void Populate(SdeData data)
         {
             Name = data.Names[RegionID];
+
+            Constellations.Apply(c => c.Populate(data));
         }
     }
 }
