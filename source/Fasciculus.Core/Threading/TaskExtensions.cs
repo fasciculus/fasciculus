@@ -9,5 +9,12 @@ namespace System.Threading.Tasks
         {
             Task.WaitAll(tasks.ToArray());
         }
+
+        public static IEnumerable<Task<T>> WaitAll<T>(this IEnumerable<Task<T>> tasks)
+        {
+            Task.WaitAll(tasks.ToArray());
+
+            return tasks;
+        }
     }
 }
