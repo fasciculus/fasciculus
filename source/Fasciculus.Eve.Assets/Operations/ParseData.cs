@@ -11,10 +11,8 @@ namespace Fasciculus.Eve.Operations
         private static FileInfo NamesFile
             => EveAssetsDirectories.BsdDirectory.File("invNames.yaml");
 
-        public static async Task<SdeData> Execute(IProgress<string> progress)
+        public static SdeData Execute(IProgress<string> progress)
         {
-            await Task.CompletedTask;
-
             progress.Report("parsing data");
 
             Task<SdeNames> parseNames = ParseNames(progress);
@@ -27,7 +25,7 @@ namespace Fasciculus.Eve.Operations
 
             SdeNames names = parseNames.Result;
 
-            return new SdeData(names);
+            return new(names);
         }
 
         private static async Task<SdeNames> ParseNames(IProgress<string> progress)
