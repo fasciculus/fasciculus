@@ -13,14 +13,20 @@ namespace Fasciculus.Eve.Operations
         {
             progress.Report("parsing universe");
 
-            IEnumerable<Task<SdeRegion>> tasks = EveAssetsDirectories.RegionsDirectory.GetDirectories()
-                .Select(directory => Task.Run(() => ParseRegion(directory, progress)));
-
-            tasks.WaitAll();
+            SdeRegions regions = ParseRegions(progress);
 
             progress.Report("parsing universe done");
 
-            return new();
+            return new(regions);
+        }
+
+        private static SdeRegions ParseRegions(IProgress<string> progress)
+        {
+            IEnumerable<SdeRegion> regions = EveAssetsDirectories.RegionsDirectory.GetDirectories()
+                .Select(directory => Task.Run(() => ParseRegion(directory, progress)))
+                .WaitAll();
+
+            return new(regions);
         }
 
         private static SdeRegion ParseRegion(DirectoryInfo directory, IProgress<string> progress)

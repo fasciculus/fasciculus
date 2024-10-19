@@ -30,6 +30,11 @@ namespace Fasciculus.Eve
                 Task[] tasks = [parseUniverse, parseData];
 
                 tasks.WaitAll();
+
+                SdeUniverse universe = parseUniverse.Result;
+                SdeData data = parseData.Result;
+
+                universe.Populate(data);
             }
             catch (Exception e)
             {
