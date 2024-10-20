@@ -1,9 +1,7 @@
 ﻿using Fasciculus.Eve.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Operations
 {
@@ -13,18 +11,17 @@ namespace Fasciculus.Eve.Operations
         {
             progress.Report("parsing universe");
 
-            IEnumerable<SdeRegion> regions = ParseRegions(progress);
+            SdeRegion[] regions = ParseRegions(progress);
 
             progress.Report("parsing universe done");
 
             return new(regions);
         }
 
-        private static IEnumerable<SdeRegion> ParseRegions(IProgress<string> progress)
+        private static SdeRegion[] ParseRegions(IProgress<string> progress)
         {
-            return EveAssetsDirectories.RegionsDirectory.GetDirectories()
-                .Select(directory => Task.Run(() => ParseRegion(directory, progress)))
-                .WaitAll();
+            return EveAssetsDirectories.RegionsDirectory.GetDirectories().AsParallel()
+                .Select(directory => ParseRegion(directory, progress)).ToArray();
         }
 
         private static SdeRegion ParseRegion(DirectoryInfo directory, IProgress<string> progress)
@@ -32,23 +29,39 @@ namespace Fasciculus.Eve.Operations
             FileInfo file = directory.File("region.yaml");
             SdeRegion region = Yaml.Deserialize<SdeRegion>(file);
 
-            region.Constellations = ParseConstellations(directory).ToList();
+            region.Constellations = ParseConstellations(directory);
 
             progress.Report($"  parsed {directory.Name}");
 
             return region;
         }
 
-        private static IEnumerable<SdeConstellation> ParseConstellations(DirectoryInfo directory)
+        private static SdeConstellation[] ParseConstellations(DirectoryInfo directory)
         {
-            return directory.GetDirectories().Select(d => Task.Run(() => ParseConstellation(d))).WaitAll();
+            return directory.GetDirectories().Select(ParseConstellation).ToArray();
         }
 
         private static SdeConstellation ParseConstellation(DirectoryInfo directory)
         {
             FileInfo file = directory.File("constellation.yaml");
+            SdeConstellation constellation = Yaml.Deserialize<SdeConstellation>(file);
 
-            return Yaml.Deserialize<SdeConstellation>(file);
+            constellation.SolarSystems = ParseSolarSystems(directory);
+
+            return constellation;
+        }
+
+        private static SdeSolarSystem[] ParseSolarSystems(DirectoryInfo directory)
+        {
+            return directory.GetDirectories().Select(ParseSolarSystem).ToArray();
+        }
+
+        private static SdeSolarSystem ParseSolarSystem(DirectoryInfo directory)
+        {
+            FileInfo file = directory.File("solarsystem.yaml");
+            SdeSolarSystem solarSystem = Yaml.Deserialize<SdeSolarSystem>(file);
+
+            return solarSystem;
         }
     }
 }

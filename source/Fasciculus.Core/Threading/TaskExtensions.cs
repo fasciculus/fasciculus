@@ -5,16 +5,10 @@ namespace System.Threading.Tasks
 {
     public static class TaskExtensions
     {
-        public static void WaitAll(this IEnumerable<Task> tasks)
+        public static async Task WaitAll(this IEnumerable<Task> tasks)
         {
             Task.WaitAll(tasks.ToArray());
-        }
-
-        public static IEnumerable<T> WaitAll<T>(this IEnumerable<Task<T>> tasks)
-        {
-            Task.WaitAll(tasks.ToArray());
-
-            return tasks.Select(task => task.Result);
+            await Task.CompletedTask;
         }
     }
 }

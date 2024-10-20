@@ -24,15 +24,8 @@ namespace Fasciculus.Eve
                 await DownloadSdeZip.Execute(progress);
                 await ExtractSdeZip.Execute(progress);
 
-                Task<SdeUniverse> parseUniverse = Task.Run(() => ParseUniverse.Execute(progress));
-                Task<SdeData> parseData = Task.Run(() => ParseData.Execute(progress));
-
-                Task[] tasks = [parseUniverse, parseData];
-
-                tasks.WaitAll();
-
-                SdeUniverse universe = parseUniverse.Result;
-                SdeData data = parseData.Result;
+                SdeData data = ParseData.Execute(progress);
+                SdeUniverse universe = ParseUniverse.Execute(progress);
 
                 universe.Populate(data);
             }
