@@ -19,7 +19,7 @@ namespace Fasciculus.Eve.Operations
 
         private static EveRegion ConvertRegion(SdeRegion region)
         {
-            int id = region.RegionID;
+            EveId id = region.RegionID;
             string name = region.Name;
 
             return new(id, name);
