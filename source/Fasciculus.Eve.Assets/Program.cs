@@ -8,6 +8,9 @@ namespace Fasciculus.Eve
 {
     public class Program
     {
+        private static FileInfo UniverseFile
+            => EveAssetsDirectories.ResourcesDirectory.File("EveUniverse.dat");
+
         private class Progress : IProgress<string>
         {
             public void Report(string message)
@@ -33,8 +36,10 @@ namespace Fasciculus.Eve
                 EveUniverse eveUniverse = ConvertUniverse.Execute(sdeUniverse);
                 FileInfo universeFile = EveAssetsDirectories.ResourcesDirectory.File("EveUniverse.dat");
 
-                universeFile.DeleteIfExists();
-                universeFile.Write(stream => eveUniverse.Write(new(stream)));
+                UniverseFile.DeleteIfExists();
+                UniverseFile.Write(stream => eveUniverse.Write(new(stream)));
+
+                Console.WriteLine($"EveUniverse.dat: {UniverseFile.Length} bytes");
             }
             catch (Exception e)
             {

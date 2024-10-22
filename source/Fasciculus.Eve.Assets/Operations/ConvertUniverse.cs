@@ -21,6 +21,15 @@ namespace Fasciculus.Eve.Operations
         {
             EveId id = region.RegionID;
             string name = region.Name;
+            EveConstellation[] constellations = region.Constellations.Select(ConvertConstellation).ToArray();
+
+            return new(id, name, constellations);
+        }
+
+        private static EveConstellation ConvertConstellation(SdeConstellation constellation)
+        {
+            EveId id = constellation.ConstellationID;
+            string name = constellation.Name;
 
             return new(id, name);
         }

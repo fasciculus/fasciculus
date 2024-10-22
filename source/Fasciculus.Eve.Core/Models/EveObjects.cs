@@ -1,10 +1,11 @@
 ﻿using Fasciculus.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
-    public class EveObjects<T>
+    public class EveObjects<T> : IEnumerable<T>
         where T : notnull, EveObject
     {
         protected readonly T[] objectsByIndex;
@@ -28,5 +29,14 @@ namespace Fasciculus.Eve.Models
             data.WriteInt(objectsByIndex.Length);
             objectsByIndex.Apply(o => o.Write(data));
         }
+
+        private IEnumerable<T> AsEnumerable()
+            => objectsByIndex;
+
+        public IEnumerator<T> GetEnumerator()
+            => AsEnumerable().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => AsEnumerable().GetEnumerator();
     }
 }
