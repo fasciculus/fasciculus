@@ -10,10 +10,14 @@ namespace Fasciculus.Eve.Models
         protected readonly T[] objectsByIndex;
         protected readonly Dictionary<EveId, T> objectsById;
 
+        public int Count => objectsByIndex.Length;
+
         public EveObjects(IEnumerable<T> objects)
         {
             objectsByIndex = [.. objects.OrderBy(o => o.Id)];
             objectsById = objects.ToDictionary(o => o.Id);
+
+            Enumerable.Range(0, objectsByIndex.Length).Apply(index => objectsByIndex[index].Index = index);
         }
 
         public T this[int index] => objectsByIndex[index];

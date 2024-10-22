@@ -6,6 +6,8 @@ namespace Fasciculus.Eve.Models
     {
         public EveId Id { get; }
 
+        public int Index { get; internal set; }
+
         public EveObject(EveId id)
         {
             Id = id;
