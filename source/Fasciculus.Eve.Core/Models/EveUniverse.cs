@@ -7,11 +7,13 @@ namespace Fasciculus.Eve.Models
     {
         public EveRegions Regions { get; }
         public EveConstellations Constellations { get; }
+        public EveSolarSystems SolarSystems { get; }
 
         public EveUniverse(EveRegions regions)
         {
             Regions = regions;
             Constellations = new(Regions.SelectMany(r => r.Constellations));
+            SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems));
         }
 
         public void Write(Data data)

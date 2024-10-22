@@ -30,8 +30,25 @@ namespace Fasciculus.Eve.Operations
         {
             EveId id = constellation.ConstellationID;
             string name = constellation.Name;
+            EveSolarSystem[] solarSystems = constellation.SolarSystems.Select(ConvertSolarSystem).ToArray();
 
-            return new(id, name);
+            return new(id, name, solarSystems);
+        }
+
+        private static EveSolarSystem ConvertSolarSystem(SdeSolarSystem solarSystem)
+        {
+            EveId id = solarSystem.SolarSystemID;
+            string name = solarSystem.Name;
+            EveStargate[] stargates = solarSystem.Stargates.Select(kvp => ConvertStargate(kvp.Key, kvp.Value)).ToArray();
+
+            return new(id, name, stargates);
+        }
+
+        private static EveStargate ConvertStargate(int id, SdeStargate stargate)
+        {
+            int destinationId = stargate.Destination;
+
+            return new(id, destinationId);
         }
     }
 }
