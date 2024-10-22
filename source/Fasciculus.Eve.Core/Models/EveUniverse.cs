@@ -20,5 +20,12 @@ namespace Fasciculus.Eve.Models
         {
             Regions.Write(data);
         }
+
+        public static EveUniverse Read(Data data)
+        {
+            EveRegions regions = EveRegions.Read(data);
+
+            return new(regions);
+        }
     }
 }

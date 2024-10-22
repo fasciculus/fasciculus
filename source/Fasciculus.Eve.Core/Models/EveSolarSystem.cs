@@ -22,5 +22,14 @@ namespace Fasciculus.Eve.Models
 
             data.WriteArray(stargates, stargate => stargate.Write(data));
         }
+
+        public static EveSolarSystem Read(Data data)
+        {
+            EveId id = EveId.Read(data);
+            string name = data.ReadString();
+            EveStargate[] stargates = data.ReadArray(EveStargate.Read);
+
+            return new(id, name, stargates);
+        }
     }
 }

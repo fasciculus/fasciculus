@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Fasciculus.IO;
+using System.Collections.Generic;
 
 namespace Fasciculus.Eve.Models
 {
@@ -6,5 +7,17 @@ namespace Fasciculus.Eve.Models
     {
         public EveRegions(IEnumerable<EveRegion> regions)
             : base(regions) { }
+
+        public void Write(Data data)
+        {
+            data.WriteArray(objectsByIndex, o => o.Write(data));
+        }
+
+        public static EveRegions Read(Data data)
+        {
+            EveRegion[] regions = data.ReadArray(EveRegion.Read);
+
+            return new(regions);
+        }
     }
 }

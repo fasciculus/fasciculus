@@ -65,7 +65,7 @@ namespace Fasciculus.IO
         }
 
         public T[] ReadArray<T>(Func<Data, T> read)
-            where T : struct
+            where T : notnull
         {
             int length = ReadInt();
 
@@ -73,6 +73,7 @@ namespace Fasciculus.IO
         }
 
         public void WriteArray<T>(T[] values, Action<T> write)
+            where T : notnull
         {
             WriteInt(values.Length);
 

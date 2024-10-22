@@ -1,5 +1,4 @@
-﻿using Fasciculus.IO;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,11 +25,6 @@ namespace Fasciculus.Eve.Models
 
         public T this[int index] => objectsByIndex[index];
         public T this[EveId id] => objectsById[id];
-
-        public void Write(Data data)
-        {
-            data.WriteArray(objectsByIndex, o => o.Write(data));
-        }
 
         public IEnumerator<T> GetEnumerator()
             => Objects.GetEnumerator();

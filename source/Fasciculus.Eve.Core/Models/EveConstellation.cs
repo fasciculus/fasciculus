@@ -23,5 +23,13 @@ namespace Fasciculus.Eve.Models
             data.WriteArray(solarSystems, solarSystem => solarSystem.Write(data));
         }
 
+        public static EveConstellation Read(Data data)
+        {
+            EveId id = EveId.Read(data);
+            string name = data.ReadString();
+            EveSolarSystem[] solarSystems = data.ReadArray(EveSolarSystem.Read);
+
+            return new(id, name, solarSystems);
+        }
     }
 }
