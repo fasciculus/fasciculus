@@ -20,8 +20,7 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(data);
 
-            data.WriteInt(stargates.Length);
-            stargates.Apply(stargate => stargate.Write(data));
+            data.WriteArray(stargates, stargate => stargate.Write(data));
         }
     }
 }

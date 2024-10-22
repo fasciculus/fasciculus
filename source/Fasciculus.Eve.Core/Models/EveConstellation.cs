@@ -20,8 +20,7 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(data);
 
-            data.WriteInt(solarSystems.Length);
-            solarSystems.Apply(solarSystem => solarSystem.Write(data));
+            data.WriteArray(solarSystems, solarSystem => solarSystem.Write(data));
         }
 
     }

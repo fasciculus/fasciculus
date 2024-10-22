@@ -13,6 +13,9 @@ namespace Fasciculus.Eve.Models
 
         public int Count => objectsByIndex.Length;
 
+        public IEnumerable<T> Objects
+            => objectsByIndex;
+
         public EveObjects(IEnumerable<T> objects)
         {
             objectsByIndex = [.. objects.OrderBy(o => o.Id)];
@@ -26,17 +29,13 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Data data)
         {
-            data.WriteInt(objectsByIndex.Length);
-            objectsByIndex.Apply(o => o.Write(data));
+            data.WriteArray(objectsByIndex, o => o.Write(data));
         }
 
-        private IEnumerable<T> AsEnumerable()
-            => objectsByIndex;
-
         public IEnumerator<T> GetEnumerator()
-            => AsEnumerable().GetEnumerator();
+            => Objects.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => AsEnumerable().GetEnumerator();
+            => Objects.GetEnumerator();
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Fasciculus.IO
@@ -60,6 +62,21 @@ namespace Fasciculus.IO
 
             WriteInt(length);
             WriteBytes(bytes, length);
+        }
+
+        public T[] ReadArray<T>(Func<Data, T> read)
+            where T : struct
+        {
+            int length = ReadInt();
+
+            return Enumerable.Range(0, length).Select(i => read(this)).ToArray();
+        }
+
+        public void WriteArray<T>(T[] values, Action<T> write)
+        {
+            WriteInt(values.Length);
+
+            values.Apply(value => write(value));
         }
 
         private void ReadBytes(byte[] bytes, int length)

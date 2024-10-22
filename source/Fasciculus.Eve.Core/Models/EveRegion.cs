@@ -20,8 +20,7 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(data);
 
-            data.WriteInt(constellations.Length);
-            constellations.Apply(constellation => constellation.Write(data));
+            data.WriteArray(constellations, constellation => constellation.Write(data));
         }
     }
 }
