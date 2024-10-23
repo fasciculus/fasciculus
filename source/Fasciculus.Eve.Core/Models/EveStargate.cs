@@ -1,4 +1,5 @@
 ﻿using Fasciculus.IO;
+using Fasciculus.Validating;
 
 namespace Fasciculus.Eve.Models
 {
@@ -8,6 +9,9 @@ namespace Fasciculus.Eve.Models
 
         private EveSolarSystem? solarSystem;
         private EveStargate? destination;
+
+        public EveSolarSystem SolarSystem => Cond.NotNull(solarSystem);
+        public EveStargate Destination => Cond.NotNull(destination);
 
         public EveStargate(EveId id, EveId destinationId)
             : base(id)
