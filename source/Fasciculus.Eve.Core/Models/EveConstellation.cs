@@ -16,6 +16,11 @@ namespace Fasciculus.Eve.Models
             this.solarSystems = solarSystems;
         }
 
+        internal void Link(IEveUniverse universe)
+        {
+            solarSystems.Apply(solarSystem => solarSystem.Link(universe));
+        }
+
         public override void Write(Data data)
         {
             base.Write(data);

@@ -6,10 +6,19 @@ namespace Fasciculus.Eve.Models
     {
         private readonly EveId destinationId;
 
+        private EveSolarSystem? solarSystem;
+        private EveStargate? destination;
+
         public EveStargate(EveId id, EveId destinationId)
             : base(id)
         {
             this.destinationId = destinationId;
+        }
+
+        public void Link(EveSolarSystem solarSystem, IEveUniverse universe)
+        {
+            this.solarSystem = solarSystem;
+            destination = universe.Stargates[destinationId];
         }
 
         public override void Write(Data data)

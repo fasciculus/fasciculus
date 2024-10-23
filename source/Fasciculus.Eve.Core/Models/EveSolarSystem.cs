@@ -16,6 +16,11 @@ namespace Fasciculus.Eve.Models
             this.stargates = stargates;
         }
 
+        public void Link(IEveUniverse universe)
+        {
+            stargates.Apply(stargate => stargate.Link(this, universe));
+        }
+
         public override void Write(Data data)
         {
             base.Write(data);

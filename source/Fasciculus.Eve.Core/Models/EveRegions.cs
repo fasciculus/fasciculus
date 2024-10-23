@@ -8,6 +8,11 @@ namespace Fasciculus.Eve.Models
         public EveRegions(IEnumerable<EveRegion> regions)
             : base(regions) { }
 
+        internal void Link(IEveUniverse universe)
+        {
+            this.Apply(region => region.Link(universe));
+        }
+
         public void Write(Data data)
         {
             data.WriteArray(objectsByIndex, o => o.Write(data));

@@ -16,6 +16,11 @@ namespace Fasciculus.Eve.Models
             this.constellations = constellations;
         }
 
+        internal void Link(IEveUniverse universe)
+        {
+            constellations.Apply(constellation => constellation.Link(universe));
+        }
+
         public override void Write(Data data)
         {
             base.Write(data);
