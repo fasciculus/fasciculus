@@ -36,5 +36,10 @@ namespace Fasciculus.Eve.Models
 
             return new(id, name, stargates);
         }
+
+        public override string ToString()
+        {
+            return $"{Name}";
+        }
     }
 }
