@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fasciculus.Validating;
+using System;
 using System.Collections.Generic;
 
 namespace Fasciculus.Mathematics
@@ -69,6 +70,8 @@ namespace Fasciculus.Mathematics
         where T : notnull
     {
         public void Set(int row, int col, T value);
+
+        public IMatrix<T> ToMatrix();
     }
 
     public abstract class Matrix<T> : IMatrix<T>
@@ -100,32 +103,26 @@ namespace Fasciculus.Mathematics
 
         public override bool Get(int row, int column)
         {
-            int left = offsets[row];
-            int right = offsets[row + 1];
+            int lo = offsets[row];
+            int hi = offsets[row + 1] - 1;
 
-            while (left < right)
+            while (lo <= hi)
             {
-                int med = (left + right) >> 1;
-                int col = columns[med];
+                int mid = lo + ((hi - lo) >> 1);
+                int value = columns[mid];
 
-                if (col == column)
+                if (value == column)
                 {
                     return true;
                 }
 
-                if (col < column)
+                if (value < column)
                 {
-                    right = med;
+                    lo = mid + 1;
                 }
                 else
                 {
-                    left = med + 1;
-                    col = columns[left];
-
-                    if (col == column)
-                    {
-                        return true;
-                    }
+                    hi = mid - 1;
                 }
             }
 
@@ -137,23 +134,23 @@ namespace Fasciculus.Mathematics
             int[] columns = new int[entries.Count];
             int[] offsets = new int[rowCount + 1];
             int offset = 0;
-            int row = 0;
+            int lastRow = -1;
 
             foreach (MatrixKey entry in entries)
             {
                 int currentRow = entry.Row;
 
-                while (row < currentRow)
+                while (lastRow < currentRow)
                 {
-                    offsets[row++] = offset;
+                    offsets[++lastRow] = offset;
                 }
 
                 columns[offset++] = entry.Column;
             }
 
-            while (row < rowCount)
+            while (lastRow < rowCount)
             {
-                offsets[++row] = offset;
+                offsets[++lastRow] = offset;
             }
 
             return new(rowCount, columnCount, columns, offsets);
@@ -181,6 +178,9 @@ namespace Fasciculus.Mathematics
                 entries.Remove(MatrixKey.Create(row, col));
             }
         }
+
+        public IMatrix<bool> ToMatrix()
+            => SparseBoolMatrix.Create(RowCount, ColumnCount, entries);
     }
 
     public class MutableDenseIntMatrix : Matrix<int>, IMutableMatrix<int>
@@ -203,6 +203,9 @@ namespace Fasciculus.Mathematics
         {
             values[row * ColumnCount + column] = value;
         }
+
+        public IMatrix<int> ToMatrix()
+            => throw Ex.NotImplemented();
     }
 
     public static class Matrices
