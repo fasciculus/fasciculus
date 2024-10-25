@@ -15,13 +15,13 @@ namespace Fasciculus.Eve.Models
 
         public static EveDistances Create(IEveUniverse universe, double minSecurity)
         {
-            IMatrix<bool> connections = CreateConnections(universe, minSecurity);
+            IMatrix<bool> connections = CollectConnections(universe, minSecurity);
             IMutableMatrix<int> distances = InitializeDistances(universe);
 
             return new(distances);
         }
 
-        private static IMatrix<bool> CreateConnections(IEveUniverse universe, double minSecurity)
+        private static IMatrix<bool> CollectConnections(IEveUniverse universe, double minSecurity)
         {
             EveSolarSystems solarSystems = universe.SolarSystems;
             IMutableMatrix<bool> connections = Matrices.CreateMutableSparseBool(solarSystems.Count, solarSystems.Count);
