@@ -39,9 +39,10 @@ namespace Fasciculus.Eve.Operations
         {
             EveId id = solarSystem.SolarSystemID;
             string name = solarSystem.Name;
+            double security = solarSystem.Security;
             EveStargate[] stargates = solarSystem.Stargates.Select(kvp => ConvertStargate(kvp.Key, kvp.Value)).ToArray();
 
-            return new(id, name, stargates);
+            return new(id, name, security, stargates);
         }
 
         private static EveStargate ConvertStargate(int id, SdeStargate stargate)

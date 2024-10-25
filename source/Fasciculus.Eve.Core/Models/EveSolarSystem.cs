@@ -5,14 +5,17 @@ namespace Fasciculus.Eve.Models
 {
     public class EveSolarSystem : EveNamedObject
     {
+        public double Security { get; }
+
         private readonly EveStargate[] stargates;
 
         public IEnumerable<EveStargate> Stargates
             => stargates;
 
-        public EveSolarSystem(EveId id, string name, EveStargate[] stargates)
+        public EveSolarSystem(EveId id, string name, double security, EveStargate[] stargates)
             : base(id, name)
         {
+            Security = security;
             this.stargates = stargates;
         }
 
@@ -25,6 +28,7 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(data);
 
+            data.WriteDouble(Security);
             data.WriteArray(stargates, stargate => stargate.Write(data));
         }
 
@@ -32,9 +36,10 @@ namespace Fasciculus.Eve.Models
         {
             EveId id = EveId.Read(data);
             string name = data.ReadString();
+            double security = data.ReadDouble();
             EveStargate[] stargates = data.ReadArray(EveStargate.Read);
 
-            return new(id, name, stargates);
+            return new(id, name, security, stargates);
         }
 
         public override string ToString()
