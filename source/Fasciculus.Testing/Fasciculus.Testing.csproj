@@ -9,4 +9,8 @@
     <PackageReference Include="MSTest.TestFramework" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
+  </ItemGroup>
+
 </Project>
