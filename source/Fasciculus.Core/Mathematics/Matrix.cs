@@ -62,7 +62,7 @@ namespace Fasciculus.Mathematics
         public int RowCount { get; }
         public int ColumnCount { get; }
 
-        public T Get(int row, int col);
+        public T Get(int row, int column);
     }
 
     public interface IMutableMatrix<T> : IMatrix<T>
@@ -83,28 +83,102 @@ namespace Fasciculus.Mathematics
             ColumnCount = columnCount;
         }
 
-        public abstract T Get(int row, int col);
+        public abstract T Get(int row, int column);
+    }
+
+    public class SparseBoolMatrix : Matrix<bool>
+    {
+        private readonly int[] columns;
+        private readonly int[] offsets;
+
+        private SparseBoolMatrix(int rowCount, int columnCount, int[] columns, int[] offsets)
+            : base(rowCount, columnCount)
+        {
+            this.columns = columns;
+            this.offsets = offsets;
+        }
+
+        public override bool Get(int row, int column)
+        {
+            int left = offsets[row];
+            int right = offsets[row + 1];
+
+            while (left < right)
+            {
+                int med = (left + right) >> 1;
+                int col = columns[med];
+
+                if (col == column)
+                {
+                    return true;
+                }
+
+                if (col < column)
+                {
+                    right = med;
+                }
+                else
+                {
+                    left = med + 1;
+                    col = columns[left];
+
+                    if (col == column)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public static SparseBoolMatrix Create(int rowCount, int columnCount, SortedSet<MatrixKey> entries)
+        {
+            int[] columns = new int[entries.Count];
+            int[] offsets = new int[rowCount + 1];
+            int offset = 0;
+            int row = 0;
+
+            foreach (MatrixKey entry in entries)
+            {
+                int currentRow = entry.Row;
+
+                while (row < currentRow)
+                {
+                    offsets[row++] = offset;
+                }
+
+                columns[offset++] = entry.Column;
+            }
+
+            while (row < rowCount)
+            {
+                offsets[++row] = offset;
+            }
+
+            return new(rowCount, columnCount, columns, offsets);
+        }
     }
 
     public class MutableSparseBoolMatrix : Matrix<bool>, IMutableMatrix<bool>
     {
-        private readonly SortedSet<MatrixKey> keys = [];
+        private readonly SortedSet<MatrixKey> entries = [];
 
         public MutableSparseBoolMatrix(int rowCount, int columnCount)
             : base(rowCount, columnCount) { }
 
-        public override bool Get(int row, int col)
-            => keys.Contains(MatrixKey.Create(row, col));
+        public override bool Get(int row, int column)
+            => entries.Contains(MatrixKey.Create(row, column));
 
         public void Set(int row, int col, bool value)
         {
             if (value)
             {
-                keys.Add(MatrixKey.Create(row, col));
+                entries.Add(MatrixKey.Create(row, col));
             }
             else
             {
-                keys.Remove(MatrixKey.Create(row, col));
+                entries.Remove(MatrixKey.Create(row, col));
             }
         }
     }
@@ -119,15 +193,15 @@ namespace Fasciculus.Mathematics
             values = new int[rowCount * columnCount];
         }
 
-        public override int Get(int row, int col)
+        public override int Get(int row, int column)
         {
-            return values[row * ColumnCount + col];
+            return values[row * ColumnCount + column];
         }
 
 
-        public void Set(int row, int col, int value)
+        public void Set(int row, int column, int value)
         {
-            values[row * ColumnCount + col] = value;
+            values[row * ColumnCount + column] = value;
         }
     }
 
