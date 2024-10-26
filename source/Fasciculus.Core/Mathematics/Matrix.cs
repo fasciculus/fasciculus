@@ -1,4 +1,5 @@
-﻿using Fasciculus.Validating;
+﻿using Fasciculus.Collections;
+using Fasciculus.Validating;
 using System;
 using System.Collections.Generic;
 
@@ -107,30 +108,10 @@ namespace Fasciculus.Mathematics
 
         public override bool Get(int row, int column)
         {
-            int lo = offsets[row];
-            int hi = offsets[row + 1] - 1;
+            int index = offsets[row];
+            int count = offsets[row + 1] - index;
 
-            while (lo <= hi)
-            {
-                int mid = lo + ((hi - lo) >> 1);
-                int value = columns[mid];
-
-                if (value == column)
-                {
-                    return true;
-                }
-
-                if (value < column)
-                {
-                    lo = mid + 1;
-                }
-                else
-                {
-                    hi = mid - 1;
-                }
-            }
-
-            return false;
+            return Arrays.BinarySearch(columns, index, count, column) >= 0;
         }
 
         public override IVector<bool> Mul(IVector<bool> vector)
