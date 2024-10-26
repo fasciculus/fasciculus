@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Mathematics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +17,7 @@ namespace Fasciculus.Eve.Models
         public static EveDistances Create(IEveUniverse universe, double minSecurity)
         {
             IMatrix<bool> connections = CollectConnections(universe, minSecurity);
-            IMutableMatrix<int> distances = InitializeDistances(universe);
+            IMatrix<int> distances = CalculateDistances(connections);
 
             return new(distances);
         }
@@ -38,10 +39,8 @@ namespace Fasciculus.Eve.Models
             return connections.ToMatrix();
         }
 
-        private static IMutableMatrix<int> InitializeDistances(IEveUniverse universe)
+        private static IMutableMatrix<int> InitializeDistances(int count)
         {
-            int count = universe.SolarSystems.Count;
-
             IMutableMatrix<int> distances = Matrices.CreateMutableDenseInt(count, count);
 
             for (int row = 0; row < count; ++row)
@@ -53,6 +52,33 @@ namespace Fasciculus.Eve.Models
             }
 
             return distances;
+        }
+
+        private static IMatrix<int> CalculateDistances(IMatrix<bool> connections)
+        {
+            int rowCount = connections.RowCount;
+            IMutableMatrix<int> distances = InitializeDistances(rowCount);
+
+            for (int row = 0; row < rowCount; ++row)
+            {
+                IVector<bool> visited = Vectors.CreateSparseBool([]);
+                IVector<bool> front = Vectors.CreateSparseBool([row]);
+                int distance = 0;
+
+                while (front.Length())
+                {
+                    ++distance;
+                    front = connections.Mul(front);
+                    front = front.Sub(visited);
+
+                    front.Where(e => e.Value).Select(e => e.Index)
+                        .Apply(col => distances.Set(row, col, Math.Min(distances.Get(row, col), distance)));
+
+                    visited = visited.Add(front);
+                }
+            }
+
+            return distances.ToMatrix();
         }
     }
 }

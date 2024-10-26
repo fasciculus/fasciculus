@@ -64,6 +64,8 @@ namespace Fasciculus.Mathematics
         public int ColumnCount { get; }
 
         public T Get(int row, int column);
+
+        public IVector<T> Mul(IVector<T> vector);
     }
 
     public interface IMutableMatrix<T> : IMatrix<T>
@@ -87,6 +89,8 @@ namespace Fasciculus.Mathematics
         }
 
         public abstract T Get(int row, int column);
+
+        public abstract IVector<T> Mul(IVector<T> vector);
     }
 
     public class SparseBoolMatrix : Matrix<bool>
@@ -127,6 +131,30 @@ namespace Fasciculus.Mathematics
             }
 
             return false;
+        }
+
+        public override IVector<bool> Mul(IVector<bool> vector)
+        {
+            List<int> result = [];
+
+            for (int row = 0; row < RowCount; ++row)
+            {
+                int lo = offsets[row];
+                int hi = offsets[row + 1];
+
+                for (int offset = lo; offset < hi; ++offset)
+                {
+                    int col = columns[offset];
+
+                    if (vector[col])
+                    {
+                        result.Add(row);
+                        break;
+                    }
+                }
+            }
+
+            return Vectors.CreateSparseBool(result);
         }
 
         public static SparseBoolMatrix Create(int rowCount, int columnCount, SortedSet<MatrixKey> entries)
@@ -179,8 +207,37 @@ namespace Fasciculus.Mathematics
             }
         }
 
+        public override IVector<bool> Mul(IVector<bool> vector)
+        {
+            throw Ex.NotImplemented();
+        }
+
         public IMatrix<bool> ToMatrix()
             => SparseBoolMatrix.Create(RowCount, ColumnCount, entries);
+    }
+
+    public class DenseIntMatrix : Matrix<int>
+    {
+        private readonly int[] values;
+
+        private DenseIntMatrix(int rowCount, int columnCount, int[] values)
+            : base(rowCount, columnCount)
+        {
+            this.values = values;
+        }
+
+        public override int Get(int row, int column)
+        {
+            return values[row * ColumnCount + column];
+        }
+
+        public override IVector<int> Mul(IVector<int> vector)
+        {
+            throw Ex.NotImplemented();
+        }
+
+        internal static DenseIntMatrix Create(int rowCount, int columnCount, int[] values)
+            => new(rowCount, columnCount, values.ShallowCopy());
     }
 
     public class MutableDenseIntMatrix : Matrix<int>, IMutableMatrix<int>
@@ -204,8 +261,13 @@ namespace Fasciculus.Mathematics
             values[row * ColumnCount + column] = value;
         }
 
+        public override IVector<int> Mul(IVector<int> vector)
+        {
+            throw Ex.NotImplemented();
+        }
+
         public IMatrix<int> ToMatrix()
-            => throw Ex.NotImplemented();
+            => DenseIntMatrix.Create(RowCount, ColumnCount, values);
     }
 
     public static class Matrices
