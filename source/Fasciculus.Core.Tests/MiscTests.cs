@@ -7,11 +7,17 @@ namespace Fasciculus.Core.Tests
     public class MiscTests
     {
         [TestMethod]
-        public void TestBinarySearch()
+        public void TestArraySlice()
         {
-            int[] values = { 1, 3, 5, 7 };
+            int[] input = { 1, 3, 5, 7 };
+            int[] output1 = input[0..2];
+            int[] output2 = input[0..0];
 
-            Assert.AreEqual(0, Array.BinarySearch(values, 0, 4, 1));
+            Assert.AreEqual(2, output1.Length);
+            Assert.AreEqual(1, output1[0]);
+            Assert.AreEqual(3, output1[1]);
+
+            Assert.AreEqual(0, output2.Length);
         }
 
         [TestMethod]
