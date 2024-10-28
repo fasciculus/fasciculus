@@ -8,22 +8,22 @@ namespace Fasciculus.Eve.Models
 {
     public class EveDistances
     {
-        private readonly IMatrix<int> distances;
+        private readonly DenseIntMatrix distances;
 
-        private EveDistances(IMatrix<int> distances)
+        private EveDistances(DenseIntMatrix distances)
         {
             this.distances = distances;
         }
 
         public static EveDistances Create(IEveUniverse universe, double minSecurity)
         {
-            IMatrix<bool> connections = CollectConnections(universe, minSecurity);
-            IMatrix<int> distances = CalculateDistances(connections);
+            SparseBoolMatrix connections = CollectConnections(universe, minSecurity);
+            DenseIntMatrix distances = CalculateDistances(connections);
 
             return new(distances);
         }
 
-        private static IMatrix<bool> CollectConnections(IEveUniverse universe, double minSecurity)
+        private static SparseBoolMatrix CollectConnections(IEveUniverse universe, double minSecurity)
         {
             EveSolarSystems solarSystems = universe.SolarSystems;
             MutableSparseBoolMatrix connections = MutableSparseBoolMatrix.Create(solarSystems.Count, solarSystems.Count);
@@ -55,7 +55,7 @@ namespace Fasciculus.Eve.Models
             return distances;
         }
 
-        private static IMatrix<int> CalculateDistances(IMatrix<bool> connections)
+        private static DenseIntMatrix CalculateDistances(SparseBoolMatrix connections)
         {
             int rowCount = connections.RowCount;
             MutableDenseIntMatrix distances = InitializeDistances(rowCount);

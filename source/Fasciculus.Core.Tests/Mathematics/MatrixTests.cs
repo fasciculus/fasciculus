@@ -27,7 +27,7 @@ namespace Fasciculus.Core.Tests.Mathematics
             Assert.IsFalse(m1.Get(2, 1));
             Assert.IsTrue(m1.Get(2, 2));
 
-            IMatrix<bool> m2 = m1.ToMatrix();
+            SparseBoolMatrix m2 = m1.ToMatrix();
 
             Assert.IsTrue(m2.Get(0, 0));
             Assert.IsFalse(m2.Get(0, 1));

@@ -58,26 +58,7 @@ namespace Fasciculus.Mathematics
             => left.CompareTo(right) >= 0;
     }
 
-    public interface IMatrix<T>
-        where T : notnull
-    {
-        public int RowCount { get; }
-        public int ColumnCount { get; }
-
-        public T Get(int row, int column);
-
-        public Vector<T> Mul(Vector<T> vector);
-    }
-
-    public interface IMutableMatrix<T> : IMatrix<T>
-        where T : notnull
-    {
-        public void Set(int row, int col, T value);
-
-        public IMatrix<T> ToMatrix();
-    }
-
-    public abstract class Matrix<T> : IMatrix<T>
+    public abstract class Matrix<T>
         where T : notnull
     {
         public int RowCount { get; }
@@ -92,6 +73,15 @@ namespace Fasciculus.Mathematics
         public abstract T Get(int row, int column);
 
         public abstract Vector<T> Mul(Vector<T> vector);
+    }
+
+    public abstract class MutableMatrix<T> : Matrix<T>
+        where T : notnull
+    {
+        protected MutableMatrix(int rowCount, int columnCount)
+            : base(rowCount, columnCount)
+        {
+        }
     }
 
     public class SparseBoolMatrix : Matrix<bool>
@@ -166,7 +156,7 @@ namespace Fasciculus.Mathematics
         }
     }
 
-    public class MutableSparseBoolMatrix : Matrix<bool>, IMutableMatrix<bool>
+    public class MutableSparseBoolMatrix : MutableMatrix<bool>
     {
         private readonly SortedSet<MatrixKey> entries = [];
 
@@ -193,7 +183,7 @@ namespace Fasciculus.Mathematics
             throw Ex.NotImplemented();
         }
 
-        public IMatrix<bool> ToMatrix()
+        public SparseBoolMatrix ToMatrix()
             => SparseBoolMatrix.Create(RowCount, ColumnCount, entries);
 
         public static MutableSparseBoolMatrix Create(int rowCount, int columnCount)
@@ -224,7 +214,7 @@ namespace Fasciculus.Mathematics
             => new(rowCount, columnCount, values.ShallowCopy());
     }
 
-    public class MutableDenseIntMatrix : Matrix<int>, IMutableMatrix<int>
+    public class MutableDenseIntMatrix : MutableMatrix<int>
     {
         private readonly int[] values;
 
@@ -250,8 +240,8 @@ namespace Fasciculus.Mathematics
             throw Ex.NotImplemented();
         }
 
-        public IMatrix<int> ToMatrix()
-            => DenseIntMatrix.Create(RowCount, ColumnCount, values);
+        public DenseIntMatrix ToMatrix()
+            => DenseIntMatrix.Create(RowCount, ColumnCount, values.ShallowCopy());
 
         public static MutableDenseIntMatrix Create(int rowCount, int columnCount)
             => new(rowCount, columnCount);
