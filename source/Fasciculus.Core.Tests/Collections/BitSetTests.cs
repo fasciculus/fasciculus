@@ -21,6 +21,8 @@ namespace Fasciculus.Core.Tests.Collections
             Assert.IsFalse(b[2]);
             Assert.IsTrue(b[3]);
             Assert.IsFalse(b[4]);
+
+            Assert.IsFalse(a.Intersects(b));
         }
 
         [TestMethod]
@@ -40,6 +42,10 @@ namespace Fasciculus.Core.Tests.Collections
             BitSet e = a * b;
 
             AssertEqual(BitSet.Create(3), e);
+
+            Assert.IsTrue(a.Intersects(b));
+            Assert.IsTrue(a.Intersects(c));
+            Assert.IsTrue(b.Intersects(c));
         }
 
         [TestMethod]

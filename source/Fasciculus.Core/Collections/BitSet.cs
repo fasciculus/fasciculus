@@ -35,6 +35,9 @@ namespace Fasciculus.Collections
         public bool this[int index]
             => Arrays.BinarySearch(entries, index) >= 0;
 
+        public bool Intersects(BitSet other)
+            => Intersects(entries, other.entries);
+
         public IEnumerator<int> GetEnumerator()
             => entries.AsEnumerable().GetEnumerator();
 
@@ -146,6 +149,38 @@ namespace Fasciculus.Collections
             }
 
             return k < c.Length ? Arrays.SubArray(c, 0, k) : c;
+        }
+
+        private static bool Intersects(int[] a, int[] b)
+        {
+            int n = a.Length;
+            int m = b.Length;
+            int i = 0;
+            int j = 0;
+
+            while (i < n && j < m)
+            {
+                int x = a[i];
+                int y = b[j];
+
+                if (x == y)
+                {
+                    return true;
+                }
+                else
+                {
+                    if (x < y)
+                    {
+                        ++i;
+                    }
+                    else
+                    {
+                        ++j;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static int[] Intersection(int[] a, int[] b)
