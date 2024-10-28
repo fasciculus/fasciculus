@@ -47,7 +47,7 @@ namespace Fasciculus.Mathematics
 
     public class SparseBoolVector : Vector<bool>
     {
-        internal readonly BitSet entries;
+        private readonly BitSet entries;
 
         private SparseBoolVector(BitSet entries)
         {
