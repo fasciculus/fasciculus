@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Fasciculus.Collections;
+using Fasciculus.Validating;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,59 +21,64 @@ namespace Fasciculus.Mathematics
             => new(index, value);
     }
 
-    public interface IVector<T> : IEnumerable<VectorEntry<T>>
-        where T : notnull
+    public abstract class Vector<T> : IEnumerable<VectorEntry<T>>
     {
-        public T this[int index] { get; }
+        public abstract T this[int index] { get; }
 
-        public T Length();
+        public abstract T Length();
 
-        public IVector<T> Add(IVector<T> vector);
-        public IVector<T> Sub(IVector<T> vector);
-    }
+        public abstract Vector<T> Add(Vector<T> vector);
+        public abstract Vector<T> Sub(Vector<T> vector);
 
-    public interface IMutableVector<T> : IVector<T>
-        where T : notnull
-    {
-    }
+        protected abstract IEnumerable<VectorEntry<T>> GetVectorEntries();
 
-    public class SparseBoolVector : IVector<bool>
-    {
-        private readonly SortedSet<int> indices;
-
-        private SparseBoolVector(SortedSet<int> indices)
-        {
-            this.indices = indices;
-        }
-
-        public bool this[int index]
-            => indices.Contains(index);
-
-        public bool Length()
-            => indices.Count > 0;
-
-        public IVector<bool> Add(IVector<bool> vector)
-            => Create(indices.Concat(vector.Select(e => e.Index)));
-
-        public IVector<bool> Sub(IVector<bool> vector)
-            => Create(indices.Where(index => !vector[index]));
-
-        private IEnumerable<VectorEntry<bool>> Entries()
-            => indices.Select(index => VectorEntry<bool>.Create(index, true));
-
-        public IEnumerator<VectorEntry<bool>> GetEnumerator()
-            => Entries().GetEnumerator();
+        public IEnumerator<VectorEntry<T>> GetEnumerator()
+            => GetVectorEntries().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => Entries().GetEnumerator();
+            => GetVectorEntries().GetEnumerator();
 
-        public static SparseBoolVector Create(IEnumerable<int> indices)
-            => new(new(indices));
+        public static Vector<T> operator +(Vector<T> a, Vector<T> b)
+            => a.Add(b);
+
+        public static Vector<T> operator -(Vector<T> a, Vector<T> b)
+            => a.Sub(b);
     }
 
-    public static class Vectors
+    public class SparseBoolVector : Vector<bool>
     {
-        public static IVector<bool> CreateSparseBool(IEnumerable<int> indices)
-            => SparseBoolVector.Create(indices);
+        internal readonly BitSet entries;
+
+        private SparseBoolVector(BitSet entries)
+        {
+            this.entries = entries;
+        }
+
+        public override bool this[int index]
+            => entries[index];
+
+        public override bool Length()
+            => entries.Count > 0;
+
+        public override Vector<bool> Add(Vector<bool> vector)
+            => throw Ex.NotImplemented();
+
+        public override Vector<bool> Sub(Vector<bool> vector)
+            => throw Ex.NotImplemented();
+
+        protected override IEnumerable<VectorEntry<bool>> GetVectorEntries()
+            => entries.Select(index => VectorEntry<bool>.Create(index, true));
+
+        public static SparseBoolVector Create(BitSet entries)
+            => new(entries);
+
+        public static SparseBoolVector Create(IEnumerable<int> entries)
+            => Create(BitSet.Create(entries));
+
+        public static SparseBoolVector operator +(SparseBoolVector a, SparseBoolVector b)
+            => throw Ex.NotImplemented();
+
+        public static SparseBoolVector operator -(SparseBoolVector a, SparseBoolVector b)
+            => throw Ex.NotImplemented();
     }
 }

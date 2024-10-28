@@ -1,4 +1,5 @@
-﻿using Fasciculus.Mathematics;
+﻿using Fasciculus.Collections;
+using Fasciculus.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +40,9 @@ namespace Fasciculus.Eve.Models
             return connections.ToMatrix();
         }
 
-        private static IMutableMatrix<int> InitializeDistances(int count)
+        private static MutableDenseIntMatrix InitializeDistances(int count)
         {
-            IMutableMatrix<int> distances = Matrices.CreateMutableDenseInt(count, count);
+            MutableDenseIntMatrix distances = MutableDenseIntMatrix.Create(count, count);
 
             for (int row = 0; row < count; ++row)
             {
@@ -57,24 +58,23 @@ namespace Fasciculus.Eve.Models
         private static IMatrix<int> CalculateDistances(IMatrix<bool> connections)
         {
             int rowCount = connections.RowCount;
-            IMutableMatrix<int> distances = InitializeDistances(rowCount);
+            MutableDenseIntMatrix distances = InitializeDistances(rowCount);
 
             for (int row = 0; row < rowCount; ++row)
             {
-                IVector<bool> visited = Vectors.CreateSparseBool([]);
-                IVector<bool> front = Vectors.CreateSparseBool([row]);
+                BitSet visited = BitSet.Create();
+                BitSet front = BitSet.Create(row);
                 int distance = 0;
 
-                while (front.Length())
+                while (front.Count > 0)
                 {
                     ++distance;
-                    front = connections.Mul(front);
-                    front = front.Sub(visited);
+                    front = BitSet.Create(connections.Mul(SparseBoolVector.Create(front)).Select(e => e.Index));
+                    front -= visited;
 
-                    front.Where(e => e.Value).Select(e => e.Index)
-                        .Apply(col => distances.Set(row, col, Math.Min(distances.Get(row, col), distance)));
+                    front.Apply(col => distances.Set(row, col, Math.Min(distances.Get(row, col), distance)));
 
-                    visited = visited.Add(front);
+                    visited += front;
                 }
             }
 
