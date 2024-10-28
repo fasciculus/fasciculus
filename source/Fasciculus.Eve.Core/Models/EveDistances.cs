@@ -26,7 +26,7 @@ namespace Fasciculus.Eve.Models
         private static IMatrix<bool> CollectConnections(IEveUniverse universe, double minSecurity)
         {
             EveSolarSystems solarSystems = universe.SolarSystems;
-            IMutableMatrix<bool> connections = Matrices.CreateMutableSparseBool(solarSystems.Count, solarSystems.Count);
+            MutableSparseBoolMatrix connections = MutableSparseBoolMatrix.Create(solarSystems.Count, solarSystems.Count);
 
             foreach (EveSolarSystem origin in solarSystems)
             {

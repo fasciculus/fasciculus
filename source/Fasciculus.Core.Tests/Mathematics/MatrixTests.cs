@@ -9,7 +9,7 @@ namespace Fasciculus.Core.Tests.Mathematics
         [TestMethod]
         public void TestBoolMatrix()
         {
-            IMutableMatrix<bool> m1 = Matrices.CreateMutableSparseBool(3, 3);
+            MutableSparseBoolMatrix m1 = MutableSparseBoolMatrix.Create(3, 3);
 
             m1.Set(0, 0, true);
             m1.Set(1, 1, true);

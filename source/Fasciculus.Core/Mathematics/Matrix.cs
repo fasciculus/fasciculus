@@ -195,6 +195,9 @@ namespace Fasciculus.Mathematics
 
         public IMatrix<bool> ToMatrix()
             => SparseBoolMatrix.Create(RowCount, ColumnCount, entries);
+
+        public static MutableSparseBoolMatrix Create(int rowCount, int columnCount)
+            => new(rowCount, columnCount);
     }
 
     public class DenseIntMatrix : Matrix<int>
@@ -252,11 +255,5 @@ namespace Fasciculus.Mathematics
 
         public static MutableDenseIntMatrix Create(int rowCount, int columnCount)
             => new(rowCount, columnCount);
-    }
-
-    public static class Matrices
-    {
-        public static IMutableMatrix<bool> CreateMutableSparseBool(int rowCount, int columnCount)
-            => new MutableSparseBoolMatrix(rowCount, columnCount);
     }
 }
