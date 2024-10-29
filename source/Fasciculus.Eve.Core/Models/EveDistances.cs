@@ -1,6 +1,5 @@
 ﻿using Fasciculus.Collections;
 using Fasciculus.Mathematics;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -60,25 +59,29 @@ namespace Fasciculus.Eve.Models
             int rowCount = connections.RowCount;
             MutableDenseIntMatrix distances = InitializeDistances(rowCount);
 
-            for (int row = 0; row < rowCount; ++row)
-            {
-                BitSet visited = BitSet.Create();
-                BitSet front = BitSet.Create(row);
-                int distance = 0;
-
-                while (front.Count > 0)
-                {
-                    ++distance;
-                    front = BitSet.Create(connections.Mul(SparseBoolVector.Create(front)).Select(e => e.Index));
-                    front -= visited;
-
-                    front.Apply(col => distances.Set(row, col, Math.Min(distances.Get(row, col), distance)));
-
-                    visited += front;
-                }
-            }
+            Enumerable.Range(0, rowCount).AsParallel().Select(row => CalculateDistances(connections, row, distances)).ToArray();
 
             return distances.ToMatrix();
+        }
+
+        private static bool CalculateDistances(SparseBoolMatrix connections, int row, MutableDenseIntMatrix distances)
+        {
+            BitSet visited = BitSet.Create();
+            BitSet front = BitSet.Create(row);
+            int distance = 0;
+
+            while (front.Count > 0)
+            {
+                ++distance;
+                front = connections * front;
+                front -= visited;
+
+                front.Apply(col => distances.Set(row, col, distance));
+
+                visited += front;
+            }
+
+            return true;
         }
     }
 }

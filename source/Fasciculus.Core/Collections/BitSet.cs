@@ -49,11 +49,11 @@ namespace Fasciculus.Collections
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator<int> GetEnumerator()
-            => entries.AsEnumerable().GetEnumerator();
+            => entries.Skip(index).Take(Count).GetEnumerator();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IEnumerator IEnumerable.GetEnumerator()
-            => entries.AsEnumerable().GetEnumerator();
+            => entries.Skip(index).Take(Count).GetEnumerator();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BitSet Union(BitSet a, BitSet b)

@@ -73,6 +73,9 @@ namespace Fasciculus.Mathematics
         public abstract T Get(int row, int column);
 
         public abstract Vector<T> Mul(Vector<T> vector);
+
+        public static Vector<T> operator *(Matrix<T> matrix, Vector<T> vector)
+            => matrix.Mul(vector);
     }
 
     public abstract class MutableMatrix<T> : Matrix<T>
@@ -127,6 +130,28 @@ namespace Fasciculus.Mathematics
 
             return SparseBoolVector.Create(result);
         }
+
+        public BitSet Mul(BitSet vector)
+        {
+            List<int> result = [];
+
+            for (int row = 0; row < RowCount; ++row)
+            {
+                int index = offsets[row];
+                int count = offsets[row + 1] - index;
+                BitSet bs = new(columns, index, count);
+
+                if (bs.Intersects(vector))
+                {
+                    result.Add(row);
+                }
+            }
+
+            return new BitSet([.. result], 0, result.Count);
+        }
+
+        public static BitSet operator *(SparseBoolMatrix matrix, BitSet vector)
+            => matrix.Mul(vector);
 
         public static SparseBoolMatrix Create(int rowCount, int columnCount, SortedSet<MatrixKey> entries)
         {
