@@ -1,4 +1,5 @@
-﻿using Fasciculus.Collections;
+﻿using Fasciculus.Algorithms;
+using Fasciculus.Collections;
 using Fasciculus.Validating;
 using System;
 using System.Collections.Generic;
@@ -104,7 +105,7 @@ namespace Fasciculus.Mathematics
             int index = offsets[row];
             int count = offsets[row + 1] - index;
 
-            return Arrays.BinarySearch(columns, index, count, column) >= 0;
+            return BinarySearch.IndexOf(columns, index, count, column) >= 0;
         }
 
         public override Vector<bool> Mul(Vector<bool> vector)

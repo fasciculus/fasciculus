@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fasciculus.Algorithms;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace Fasciculus.Collections
             => new(entries);
 
         public bool this[int value]
-            => Arrays.BinarySearch(entries, index, Count, value) >= 0;
+            => BinarySearch.IndexOf(entries, index, Count, value) >= 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Intersects(BitSet other)
