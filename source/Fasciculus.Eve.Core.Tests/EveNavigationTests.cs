@@ -11,5 +11,11 @@ namespace Fasciculus.Eve.Core.Tests
         {
             EveNavigation navigation = EveNavigation.Create(universe);
         }
+
+        [TestMethod]
+        public void TestCreateDistances()
+        {
+            EveDistances.Create(universe, 0.5);
+        }
     }
 }
