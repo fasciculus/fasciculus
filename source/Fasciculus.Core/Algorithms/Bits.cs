@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Fasciculus.Algorithms
 {
@@ -62,9 +63,11 @@ namespace Fasciculus.Algorithms
             return count;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Log2(uint value)
             => 31 - CountLeadingZeros(value);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Log2(int value)
             => 31 - CountLeadingZeros((uint)Math.Abs(value));
     }

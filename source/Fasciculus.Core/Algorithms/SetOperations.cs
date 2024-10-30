@@ -9,14 +9,29 @@ namespace Fasciculus.Algorithms
             int na = a.Length;
             int nb = b.Length;
 
-            if (na == 0 || nb == 0)
+            if (na == 0)
+            {
+                return false;
+            }
+
+            if (nb == 0)
+            {
+                return false;
+            }
+
+            if (a[0] > b[nb - 1])
+            {
+                return false;
+            }
+
+            if (b[0] > a[na - 1])
             {
                 return false;
             }
 
             if (na < nb)
             {
-                if (na < (nb >> 3))
+                if (na <= nb >> 2)
                 {
                     return IntersectsBinary(a, b);
                 }
@@ -27,7 +42,7 @@ namespace Fasciculus.Algorithms
             }
             else
             {
-                if (nb < (na >> 3))
+                if (nb <= na >> 2)
                 {
                     return IntersectsBinary(b, a);
                 }
