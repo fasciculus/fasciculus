@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Fasciculus.Mathematics
+namespace Fasciculus.Algorithms
 {
     public static class Bits
     {
@@ -46,5 +47,25 @@ namespace Fasciculus.Mathematics
 
             return result;
         }
+
+        public static int CountLeadingZeros(uint value)
+        {
+            if (value == 0) return 32;
+
+            int count = 0;
+            if ((value & 0xFFFF0000) == 0) { count += 16; value <<= 16; }
+            if ((value & 0xFF000000) == 0) { count += 8; value <<= 8; }
+            if ((value & 0xF0000000) == 0) { count += 4; value <<= 4; }
+            if ((value & 0xC0000000) == 0) { count += 2; value <<= 2; }
+            if ((value & 0x80000000) == 0) { count += 1; }
+
+            return count;
+        }
+
+        public static int Log2(uint value)
+            => 31 - CountLeadingZeros(value);
+
+        public static int Log2(int value)
+            => 31 - CountLeadingZeros((uint)Math.Abs(value));
     }
 }
