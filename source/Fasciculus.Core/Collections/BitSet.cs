@@ -46,7 +46,8 @@ namespace Fasciculus.Collections
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Intersects(BitSet other)
-            => Intersects(entries, index, Count, other.entries, other.index, other.Count);
+            // => Intersects(entries, index, Count, other.entries, other.index, other.Count);
+            => SetOperations.Intersects(new ReadOnlySpan<int>(entries, index, Count), new ReadOnlySpan<int>(other.entries, other.index, other.Count));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator<int> GetEnumerator()

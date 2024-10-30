@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Fasciculus.Algorithms
 {
@@ -32,9 +33,11 @@ namespace Fasciculus.Algorithms
             return -1;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int IndexOf(int[] sorted, int start, int count, int value)
             => IndexOf(new ReadOnlySpan<int>(sorted, start, count), value);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int IndexOf(int[] sorted, int value)
             => IndexOf(new ReadOnlySpan<int>(sorted, 0, sorted.Length), value);
     }
