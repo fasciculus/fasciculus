@@ -1,35 +1,31 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fasciculus.Core.Tests
 {
     [TestClass]
     public class MiscTests
     {
-        [TestMethod]
-        public void TestArraySlice()
+        private static readonly Random random = new(0);
+
+        private static int Work(int index)
         {
-            int[] input = { 1, 3, 5, 7 };
-            int[] output1 = input[0..2];
-            int[] output2 = input[0..0];
+            int delay = random.Next(100);
 
-            Assert.AreEqual(2, output1.Length);
-            Assert.AreEqual(1, output1[0]);
-            Assert.AreEqual(3, output1[1]);
+            Task.Delay(delay).Wait();
 
-            Assert.AreEqual(0, output2.Length);
+            return index;
         }
 
         [TestMethod]
-        public void TestArraySort()
+        public void Test()
         {
-            int[] values = { 4, 2, 3, 1 };
+            int[] expected = Enumerable.Range(0, 100).ToArray();
+            int[] actual = expected.AsParallel().Select(Work).ToArray();
 
-            Array.Sort(values);
-
-            Assert.IsTrue(values[0] < values[1]);
-            Assert.IsTrue(values[1] < values[2]);
-            Assert.IsTrue(values[2] < values[3]);
+            CollectionAssert.AreEqual(expected, actual);
         }
     }
 }
