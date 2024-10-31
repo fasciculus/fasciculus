@@ -29,6 +29,9 @@ namespace Fasciculus.Collections
         public BitSet(IEnumerable<int> entries)
             : this(new SortedSet<int>(entries)) { }
 
+        internal static BitSet Create(int[] entries, int index, int count)
+            => new(entries, index, count);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BitSet Create(SortedSet<int> entries)
             => new(entries);

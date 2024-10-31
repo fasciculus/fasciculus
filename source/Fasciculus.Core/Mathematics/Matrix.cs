@@ -1,8 +1,8 @@
-﻿using Fasciculus.Algorithms;
-using Fasciculus.Collections;
+﻿using Fasciculus.Collections;
 using Fasciculus.Validating;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.Mathematics
 {
@@ -93,20 +93,21 @@ namespace Fasciculus.Mathematics
         private readonly int[] columns;
         private readonly int[] offsets;
 
+        private readonly SparseBoolVector[] rows;
+
         private SparseBoolMatrix(int rowCount, int columnCount, int[] columns, int[] offsets)
             : base(rowCount, columnCount)
         {
             this.columns = columns;
             this.offsets = offsets;
+
+            rows = Enumerable.Range(0, rowCount)
+                .Select(row => SparseBoolVector.Create(BitSet.Create(columns, offsets[row], offsets[row + 1] - offsets[row])))
+                .ToArray();
         }
 
         public override bool Get(int row, int column)
-        {
-            int index = offsets[row];
-            int count = offsets[row + 1] - index;
-
-            return BinarySearch.IndexOf(columns, index, count, column) >= 0;
-        }
+            => rows[row][column];
 
         public override Vector<bool> Mul(Vector<bool> vector)
         {
