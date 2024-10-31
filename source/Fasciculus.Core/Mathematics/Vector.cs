@@ -3,6 +3,7 @@ using Fasciculus.Validating;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Fasciculus.Mathematics
 {
@@ -17,6 +18,7 @@ namespace Fasciculus.Mathematics
             Value = value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static VectorEntry<T> Create(int index, T value)
             => new(index, value);
     }
@@ -33,18 +35,23 @@ namespace Fasciculus.Mathematics
 
         protected abstract IEnumerable<VectorEntry<T>> GetVectorEntries();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator<VectorEntry<T>> GetEnumerator()
             => GetVectorEntries().GetEnumerator();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IEnumerator IEnumerable.GetEnumerator()
             => GetVectorEntries().GetEnumerator();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector<T> operator +(Vector<T> a, Vector<T> b)
             => a.Add(b);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector<T> operator -(Vector<T> a, Vector<T> b)
             => a.Sub(b);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T operator *(Vector<T> a, Vector<T> b)
             => a.Dot(b);
     }
@@ -61,45 +68,56 @@ namespace Fasciculus.Mathematics
         public override bool this[int index]
             => entries[index];
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Length()
             => entries.Count > 0;
 
         public override Vector<bool> Add(Vector<bool> vector)
             => throw Ex.NotImplemented();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public SparseBoolVector Add(SparseBoolVector vector)
             => new(entries + vector.entries);
 
         public override Vector<bool> Sub(Vector<bool> vector)
             => throw Ex.NotImplemented();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public SparseBoolVector Sub(SparseBoolVector vector)
             => new(entries - vector.entries);
 
         public override bool Dot(Vector<bool> vector)
             => throw Ex.NotImplemented();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Dot(SparseBoolVector vector)
             => entries.Intersects(vector.entries);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override IEnumerable<VectorEntry<bool>> GetVectorEntries()
             => entries.Select(index => VectorEntry<bool>.Create(index, true));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static SparseBoolVector Create(BitSet entries)
             => new(entries);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SparseBoolVector Create(IEnumerable<int> entries)
             => Create(BitSet.Create(entries));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SparseBoolVector Create(params int[] entries)
             => Create(BitSet.Create(entries));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SparseBoolVector operator +(SparseBoolVector a, SparseBoolVector b)
             => a.Add(b);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SparseBoolVector operator -(SparseBoolVector a, SparseBoolVector b)
             => a.Sub(b);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator *(SparseBoolVector a, SparseBoolVector b)
             => a.Dot(b);
     }

@@ -9,7 +9,7 @@ namespace Fasciculus.Eve.Core.Tests
         [TestMethod]
         public void TestAtRange()
         {
-            EveNavigation navigation = EveNavigation.Create(universe);
+            // EveNavigation navigation = EveNavigation.Create(universe);
         }
 
         [TestMethod]

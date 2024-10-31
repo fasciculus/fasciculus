@@ -3,6 +3,7 @@ using Fasciculus.Validating;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Fasciculus.Mathematics
 {
@@ -17,11 +18,11 @@ namespace Fasciculus.Mathematics
             Column = column;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MatrixKey Create(int row, int column)
-        {
-            return new MatrixKey(row, column);
-        }
+            => new MatrixKey(row, column);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(MatrixKey other)
             => Row == other.Row && Column == other.Column;
 
@@ -37,24 +38,35 @@ namespace Fasciculus.Mathematics
             return result;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object obj)
             => obj is MatrixKey mk && Equals(mk);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int GetHashCode()
             => Row.GetHashCode() + Column.GetHashCode();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(MatrixKey left, MatrixKey right)
             => left.Equals(right);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(MatrixKey left, MatrixKey right)
             => !left.Equals(right);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <(MatrixKey left, MatrixKey right)
             => left.CompareTo(right) < 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator >(MatrixKey left, MatrixKey right)
             => left.CompareTo(right) > 0;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <=(MatrixKey left, MatrixKey right)
             => left.CompareTo(right) <= 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator >=(MatrixKey left, MatrixKey right)
             => left.CompareTo(right) >= 0;
     }
@@ -75,6 +87,7 @@ namespace Fasciculus.Mathematics
 
         public abstract Vector<T> Mul(Vector<T> vector);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector<T> operator *(Matrix<T> matrix, Vector<T> vector)
             => matrix.Mul(vector);
     }
@@ -106,6 +119,7 @@ namespace Fasciculus.Mathematics
                 .ToArray();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Get(int row, int column)
             => rows[row][column];
 
@@ -133,28 +147,11 @@ namespace Fasciculus.Mathematics
             return SparseBoolVector.Create(result);
         }
 
-        public BitSet Mul(BitSet vector)
-        {
-            List<int> result = [];
-
-            for (int row = 0; row < RowCount; ++row)
-            {
-                int index = offsets[row];
-                int count = offsets[row + 1] - index;
-                BitSet bs = new(columns, index, count);
-
-                if (bs.Intersects(vector))
-                {
-                    result.Add(row);
-                }
-            }
-
-            return new BitSet([.. result], 0, result.Count);
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public SparseBoolVector Mul(SparseBoolVector vector)
             => SparseBoolVector.Create(Enumerable.Range(0, RowCount).Where(index => rows[index] * vector));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SparseBoolVector operator *(SparseBoolMatrix matrix, SparseBoolVector vector)
             => matrix.Mul(vector);
 
@@ -193,6 +190,7 @@ namespace Fasciculus.Mathematics
         public MutableSparseBoolMatrix(int rowCount, int columnCount)
             : base(rowCount, columnCount) { }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Get(int row, int column)
             => entries.Contains(MatrixKey.Create(row, column));
 
@@ -213,9 +211,11 @@ namespace Fasciculus.Mathematics
             throw Ex.NotImplemented();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public SparseBoolMatrix ToMatrix()
             => SparseBoolMatrix.Create(RowCount, ColumnCount, entries);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MutableSparseBoolMatrix Create(int rowCount, int columnCount)
             => new(rowCount, columnCount);
     }
@@ -230,16 +230,16 @@ namespace Fasciculus.Mathematics
             this.values = values;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Get(int row, int column)
-        {
-            return values[row * ColumnCount + column];
-        }
+            => values[row * ColumnCount + column];
 
         public override Vector<int> Mul(Vector<int> vector)
         {
             throw Ex.NotImplemented();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static DenseIntMatrix Create(int rowCount, int columnCount, int[] values)
             => new(rowCount, columnCount, values.ShallowCopy());
     }
@@ -254,25 +254,24 @@ namespace Fasciculus.Mathematics
             values = new int[rowCount * columnCount];
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Get(int row, int column)
-        {
-            return values[row * ColumnCount + column];
-        }
+            => values[row * ColumnCount + column];
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Set(int row, int column, int value)
-        {
-            values[row * ColumnCount + column] = value;
-        }
+            => values[row * ColumnCount + column] = value;
 
         public override Vector<int> Mul(Vector<int> vector)
         {
             throw Ex.NotImplemented();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public DenseIntMatrix ToMatrix()
             => DenseIntMatrix.Create(RowCount, ColumnCount, values.ShallowCopy());
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MutableDenseIntMatrix Create(int rowCount, int columnCount)
             => new(rowCount, columnCount);
     }
