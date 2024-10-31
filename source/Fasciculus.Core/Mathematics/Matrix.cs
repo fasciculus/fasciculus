@@ -152,7 +152,10 @@ namespace Fasciculus.Mathematics
             return new BitSet([.. result], 0, result.Count);
         }
 
-        public static BitSet operator *(SparseBoolMatrix matrix, BitSet vector)
+        public SparseBoolVector Mul(SparseBoolVector vector)
+            => SparseBoolVector.Create(Enumerable.Range(0, RowCount).Where(index => rows[index] * vector));
+
+        public static SparseBoolVector operator *(SparseBoolMatrix matrix, SparseBoolVector vector)
             => matrix.Mul(vector);
 
         public static SparseBoolMatrix Create(int rowCount, int columnCount, SortedSet<MatrixKey> entries)

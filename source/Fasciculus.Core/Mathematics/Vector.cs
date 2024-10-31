@@ -67,25 +67,40 @@ namespace Fasciculus.Mathematics
         public override Vector<bool> Add(Vector<bool> vector)
             => throw Ex.NotImplemented();
 
+        public SparseBoolVector Add(SparseBoolVector vector)
+            => new(entries + vector.entries);
+
         public override Vector<bool> Sub(Vector<bool> vector)
             => throw Ex.NotImplemented();
+
+        public SparseBoolVector Sub(SparseBoolVector vector)
+            => new(entries - vector.entries);
 
         public override bool Dot(Vector<bool> vector)
             => throw Ex.NotImplemented();
 
+        public bool Dot(SparseBoolVector vector)
+            => entries.Intersects(vector.entries);
+
         protected override IEnumerable<VectorEntry<bool>> GetVectorEntries()
             => entries.Select(index => VectorEntry<bool>.Create(index, true));
 
-        public static SparseBoolVector Create(BitSet entries)
+        private static SparseBoolVector Create(BitSet entries)
             => new(entries);
 
         public static SparseBoolVector Create(IEnumerable<int> entries)
             => Create(BitSet.Create(entries));
 
+        public static SparseBoolVector Create(params int[] entries)
+            => Create(BitSet.Create(entries));
+
         public static SparseBoolVector operator +(SparseBoolVector a, SparseBoolVector b)
-            => throw Ex.NotImplemented();
+            => a.Add(b);
 
         public static SparseBoolVector operator -(SparseBoolVector a, SparseBoolVector b)
-            => throw Ex.NotImplemented();
+            => a.Sub(b);
+
+        public static bool operator *(SparseBoolVector a, SparseBoolVector b)
+            => a.Dot(b);
     }
 }
