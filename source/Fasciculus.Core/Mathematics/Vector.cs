@@ -29,6 +29,7 @@ namespace Fasciculus.Mathematics
 
         public abstract Vector<T> Add(Vector<T> vector);
         public abstract Vector<T> Sub(Vector<T> vector);
+        public abstract T Dot(Vector<T> vector);
 
         protected abstract IEnumerable<VectorEntry<T>> GetVectorEntries();
 
@@ -43,6 +44,9 @@ namespace Fasciculus.Mathematics
 
         public static Vector<T> operator -(Vector<T> a, Vector<T> b)
             => a.Sub(b);
+
+        public static T operator *(Vector<T> a, Vector<T> b)
+            => a.Dot(b);
     }
 
     public class SparseBoolVector : Vector<bool>
@@ -64,6 +68,9 @@ namespace Fasciculus.Mathematics
             => throw Ex.NotImplemented();
 
         public override Vector<bool> Sub(Vector<bool> vector)
+            => throw Ex.NotImplemented();
+
+        public override bool Dot(Vector<bool> vector)
             => throw Ex.NotImplemented();
 
         protected override IEnumerable<VectorEntry<bool>> GetVectorEntries()
