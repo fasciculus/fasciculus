@@ -25,6 +25,9 @@ namespace Fasciculus.Mathematics
 
     public abstract class Vector<T> : IEnumerable<VectorEntry<T>>
     {
+        public abstract int Count { get; }
+        public abstract IEnumerable<int> Indices { get; }
+
         public abstract T this[int index] { get; }
 
         public abstract T Length();
@@ -56,9 +59,46 @@ namespace Fasciculus.Mathematics
             => a.Dot(b);
     }
 
+    public class DenseIntVector : Vector<int>
+    {
+        internal DenseIntVector(int[] values)
+        {
+        }
+
+        public override int Count
+            => throw Ex.NotImplemented();
+
+        public override IEnumerable<int> Indices
+            => throw Ex.NotImplemented();
+
+        public override int this[int index]
+            => throw Ex.NotImplemented();
+
+        public override int Length()
+            => throw Ex.NotImplemented();
+
+        public override Vector<int> Add(Vector<int> vector)
+            => throw Ex.NotImplemented();
+
+        public override Vector<int> Sub(Vector<int> vector)
+            => throw Ex.NotImplemented();
+
+        public override int Dot(Vector<int> vector)
+            => throw Ex.NotImplemented();
+
+        protected override IEnumerable<VectorEntry<int>> GetVectorEntries()
+            => throw Ex.NotImplemented();
+    }
+
     public class SparseBoolVector : Vector<bool>
     {
         private readonly BitSet entries;
+
+        public override int Count
+            => throw Ex.NotImplemented();
+
+        public override IEnumerable<int> Indices
+            => entries;
 
         private SparseBoolVector(BitSet entries)
         {
