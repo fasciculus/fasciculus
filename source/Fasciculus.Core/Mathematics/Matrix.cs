@@ -20,7 +20,7 @@ namespace Fasciculus.Mathematics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MatrixKey Create(int row, int column)
-            => new MatrixKey(row, column);
+            => new(row, column);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(MatrixKey other)
@@ -71,8 +71,10 @@ namespace Fasciculus.Mathematics
             => left.CompareTo(right) >= 0;
     }
 
-    public abstract class Matrix<T>
+    public abstract class Matrix<T, M, V>
         where T : notnull
+        where M : Matrix<T, M, V>
+        where V : Vector<T, V>
     {
         public int RowCount { get; }
         public int ColumnCount { get; }
@@ -85,23 +87,21 @@ namespace Fasciculus.Mathematics
 
         public abstract T Get(int row, int column);
 
-        public abstract Vector<T> Mul(Vector<T> vector);
+        public abstract M Add(M rhs);
+
+        public static M operator +(Matrix<T, M, V> lhs, Matrix<T, M, V> rhs)
+            => lhs.Add((M)rhs);
+
+        public abstract V Mul(V vector);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector<T> operator *(Matrix<T> matrix, Vector<T> vector)
-            => matrix.Mul(vector);
+        public static V operator *(Matrix<T, M, V> lhs, V rhs)
+            => lhs.Mul(rhs);
+
+        public abstract M Transpose();
     }
 
-    public abstract class MutableMatrix<T> : Matrix<T>
-        where T : notnull
-    {
-        protected MutableMatrix(int rowCount, int columnCount)
-            : base(rowCount, columnCount)
-        {
-        }
-    }
-
-    public class SparseBoolMatrix : Matrix<bool>
+    public class SparseBoolMatrix : Matrix<bool, SparseBoolMatrix, SparseBoolVector>
     {
         private readonly int[] columns;
         private readonly int[] offsets;
@@ -123,37 +123,23 @@ namespace Fasciculus.Mathematics
         public override bool Get(int row, int column)
             => rows[row][column];
 
-        public override Vector<bool> Mul(Vector<bool> vector)
+        public override SparseBoolMatrix Add(SparseBoolMatrix matrix)
         {
-            List<int> result = [];
-
-            for (int row = 0; row < RowCount; ++row)
-            {
-                int lo = offsets[row];
-                int hi = offsets[row + 1];
-
-                for (int offset = lo; offset < hi; ++offset)
-                {
-                    int col = columns[offset];
-
-                    if (vector[col])
-                    {
-                        result.Add(row);
-                        break;
-                    }
-                }
-            }
-
-            return SparseBoolVector.Create(result);
+            throw Ex.NotImplemented();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public SparseBoolVector Mul(SparseBoolVector vector)
+        public override SparseBoolVector Mul(SparseBoolVector vector)
             => SparseBoolVector.Create(Enumerable.Range(0, RowCount).Where(index => rows[index] * vector));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SparseBoolVector operator *(SparseBoolMatrix matrix, SparseBoolVector vector)
             => matrix.Mul(vector);
+
+        public override SparseBoolMatrix Transpose()
+        {
+            throw Ex.NotImplemented();
+        }
 
         public static SparseBoolMatrix Create(int rowCount, int columnCount, SortedSet<MatrixKey> entries)
         {
@@ -183,96 +169,32 @@ namespace Fasciculus.Mathematics
         }
     }
 
-    public class MutableSparseBoolMatrix : MutableMatrix<bool>
+    public class DenseIntMatrix : Matrix<int, DenseIntMatrix, DenseIntVector>
     {
-        private readonly SortedSet<MatrixKey> entries = [];
+        private readonly DenseIntVector[] rows;
 
-        public MutableSparseBoolMatrix(int rowCount, int columnCount)
-            : base(rowCount, columnCount) { }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Get(int row, int column)
-            => entries.Contains(MatrixKey.Create(row, column));
-
-        public void Set(int row, int col, bool value)
+        public DenseIntMatrix(int columnCount, DenseIntVector[] rows)
+            : base(rows.Length, columnCount)
         {
-            if (value)
-            {
-                entries.Add(MatrixKey.Create(row, col));
-            }
-            else
-            {
-                entries.Remove(MatrixKey.Create(row, col));
-            }
-        }
-
-        public override Vector<bool> Mul(Vector<bool> vector)
-        {
-            throw Ex.NotImplemented();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public SparseBoolMatrix ToMatrix()
-            => SparseBoolMatrix.Create(RowCount, ColumnCount, entries);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static MutableSparseBoolMatrix Create(int rowCount, int columnCount)
-            => new(rowCount, columnCount);
-    }
-
-    public class DenseIntMatrix : Matrix<int>
-    {
-        private readonly int[] values;
-
-        private DenseIntMatrix(int rowCount, int columnCount, int[] values)
-            : base(rowCount, columnCount)
-        {
-            this.values = values;
+            this.rows = rows.ShallowCopy();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Get(int row, int column)
-            => values[row * ColumnCount + column];
+            => rows[row][column];
 
-        public override Vector<int> Mul(Vector<int> vector)
+        public override DenseIntMatrix Add(DenseIntMatrix rhs)
+            => new(ColumnCount, Enumerable.Range(0, RowCount).Select(row => rows[row] + rhs.rows[row]).ToArray());
+
+        public override DenseIntVector Mul(DenseIntVector vector)
         {
             throw Ex.NotImplemented();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static DenseIntMatrix Create(int rowCount, int columnCount, int[] values)
-            => new(rowCount, columnCount, values.ShallowCopy());
-    }
+        public override DenseIntMatrix Transpose()
+            => new(RowCount, Enumerable.Range(0, ColumnCount).Select(Transpose).ToArray());
 
-    public class MutableDenseIntMatrix : MutableMatrix<int>
-    {
-        private readonly int[] values;
-
-        public MutableDenseIntMatrix(int rowCount, int columnCount)
-            : base(rowCount, columnCount)
-        {
-            values = new int[rowCount * columnCount];
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override int Get(int row, int column)
-            => values[row * ColumnCount + column];
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Set(int row, int column, int value)
-            => values[row * ColumnCount + column] = value;
-
-        public override Vector<int> Mul(Vector<int> vector)
-        {
-            throw Ex.NotImplemented();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public DenseIntMatrix ToMatrix()
-            => DenseIntMatrix.Create(RowCount, ColumnCount, values.ShallowCopy());
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static MutableDenseIntMatrix Create(int rowCount, int columnCount)
-            => new(rowCount, columnCount);
+        private DenseIntVector Transpose(int col)
+            => new(Enumerable.Range(0, RowCount).Select(row => rows[row][col]).ToArray());
     }
 }
