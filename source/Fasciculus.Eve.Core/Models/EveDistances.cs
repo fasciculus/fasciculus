@@ -23,18 +23,21 @@ namespace Fasciculus.Eve.Models
 
         private static SparseBoolMatrix CreateConnections(IEveUniverse universe, double minSecurity)
         {
-            EveSolarSystems solarSystems = universe.SolarSystems;
+            int count = universe.SolarSystems.Count;
 
-            foreach (EveSolarSystem origin in solarSystems)
-            {
-                IEnumerable<EveSolarSystem> destinations = origin.Stargates
-                    .Select(stargate => stargate.Destination.SolarSystem)
-                    .Where(destination => destination.Security >= minSecurity);
+            IEnumerable<MatrixKey> entries = universe.SolarSystems
+                .Where(ss => ss.Security >= minSecurity)
+                .SelectMany(origin => CreateConnections(origin, minSecurity));
 
-                // destinations.Apply(destination => connections.Set(origin.Index, destination.Index, true));
-            }
+            return SparseBoolMatrix.Create(count, count, entries);
+        }
 
-            return SparseBoolMatrix.Create(1, 1, []);
+        private static IEnumerable<MatrixKey> CreateConnections(EveSolarSystem origin, double minSecurity)
+        {
+            return origin.Stargates
+                .Select(sg => sg.Destination.SolarSystem)
+                .Where(d => d.Security >= minSecurity)
+                .Select(ss => MatrixKey.Create(origin.Index, ss.Index));
         }
 
         private static DenseIntMatrix CreateDistances(SparseBoolMatrix connections)
@@ -46,7 +49,7 @@ namespace Fasciculus.Eve.Models
         }
 
         private static DenseIntVector[] CreateDistancesRows(SparseBoolMatrix connections)
-            => Enumerable.Range(0, connections.RowCount).Select(row => CreateDistancesRow(connections, row)).ToArray();
+            => Enumerable.Range(0, connections.RowCount).AsParallel().Select(row => CreateDistancesRow(connections, row)).ToArray();
 
         private static DenseIntVector CreateDistancesRow(SparseBoolMatrix connections, int row)
         {

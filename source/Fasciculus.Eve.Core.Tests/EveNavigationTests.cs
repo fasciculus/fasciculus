@@ -15,8 +15,7 @@ namespace Fasciculus.Eve.Core.Tests
         [TestMethod]
         public void TestCreateDistances()
         {
-            EveDistances.Create(universe, 0.5);
-            // EveDistances.Create(universe, 0.0);
+            EveDistances.Create(universe, -10.0);
         }
     }
 }

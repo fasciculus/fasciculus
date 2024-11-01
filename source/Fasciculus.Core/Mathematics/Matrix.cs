@@ -141,6 +141,9 @@ namespace Fasciculus.Mathematics
             throw Ex.NotImplemented();
         }
 
+        public static SparseBoolMatrix Create(int rowCount, int columnCount, IEnumerable<MatrixKey> entries)
+            => Create(rowCount, columnCount, new SortedSet<MatrixKey>(entries));
+
         public static SparseBoolMatrix Create(int rowCount, int columnCount, SortedSet<MatrixKey> entries)
         {
             int[] columns = new int[entries.Count];
