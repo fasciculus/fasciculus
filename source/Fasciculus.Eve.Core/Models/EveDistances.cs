@@ -15,16 +15,15 @@ namespace Fasciculus.Eve.Models
 
         public static EveDistances Create(IEveUniverse universe, double minSecurity)
         {
-            SparseBoolMatrix connections = CollectConnections(universe, minSecurity);
-            DenseIntMatrix distances = CalculateDistances(connections);
+            SparseBoolMatrix connections = CreateConnections(universe, minSecurity);
+            DenseIntMatrix distances = CreateDistances(connections);
 
             return new(distances);
         }
 
-        private static SparseBoolMatrix CollectConnections(IEveUniverse universe, double minSecurity)
+        private static SparseBoolMatrix CreateConnections(IEveUniverse universe, double minSecurity)
         {
             EveSolarSystems solarSystems = universe.SolarSystems;
-            MutableSparseBoolMatrix connections = MutableSparseBoolMatrix.Create(solarSystems.Count, solarSystems.Count);
 
             foreach (EveSolarSystem origin in solarSystems)
             {
@@ -32,40 +31,27 @@ namespace Fasciculus.Eve.Models
                     .Select(stargate => stargate.Destination.SolarSystem)
                     .Where(destination => destination.Security >= minSecurity);
 
-                destinations.Apply(destination => connections.Set(origin.Index, destination.Index, true));
+                // destinations.Apply(destination => connections.Set(origin.Index, destination.Index, true));
             }
 
-            return connections.ToMatrix();
+            return SparseBoolMatrix.Create(1, 1, []);
         }
 
-        private static MutableDenseIntMatrix InitializeDistances(int count)
+        private static DenseIntMatrix CreateDistances(SparseBoolMatrix connections)
         {
-            MutableDenseIntMatrix distances = MutableDenseIntMatrix.Create(count, count);
+            int columnCount = connections.ColumnCount;
+            DenseIntMatrix matrix = new(columnCount, CreateDistancesRows(connections));
 
-            for (int row = 0; row < count; ++row)
-            {
-                for (int col = 0; col < count; ++col)
-                {
-                    distances.Set(row, col, row == col ? 0 : int.MaxValue);
-                }
-            }
-
-            return distances;
+            return matrix + matrix.Transpose();
         }
 
-        private static DenseIntMatrix CalculateDistances(SparseBoolMatrix connections)
+        private static DenseIntVector[] CreateDistancesRows(SparseBoolMatrix connections)
+            => Enumerable.Range(0, connections.RowCount).Select(row => CreateDistancesRow(connections, row)).ToArray();
+
+        private static DenseIntVector CreateDistancesRow(SparseBoolMatrix connections, int row)
         {
-            int rowCount = connections.RowCount;
-            MutableDenseIntMatrix distances = InitializeDistances(rowCount);
-
-            Enumerable.Range(0, rowCount).Apply(row => CalculateDistances(connections, row, distances));
-
-            return distances.ToMatrix();
-        }
-
-        private static void CalculateDistances(SparseBoolMatrix connections, int row, MutableDenseIntMatrix distances)
-        {
-            SparseBoolVector visited = SparseBoolVector.Create();
+            int[] result = new int[connections.ColumnCount];
+            SparseBoolVector visited = SparseBoolVector.Create(Enumerable.Range(0, row));
             SparseBoolVector front = SparseBoolVector.Create(row);
             int distance = 0;
 
@@ -74,11 +60,11 @@ namespace Fasciculus.Eve.Models
                 ++distance;
                 front = connections * front;
                 front -= visited;
-
-                front.Apply(entry => distances.Set(row, entry.Index, distance));
-
+                front.Indices.Apply(col => result[col] = distance);
                 visited += front;
             }
+
+            return new(result);
         }
     }
 }
