@@ -186,6 +186,7 @@ namespace Fasciculus.Mathematics
         public override int Get(int row, int column)
             => rows[row][column];
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override DenseIntMatrix Add(DenseIntMatrix rhs)
             => new(ColumnCount, Enumerable.Range(0, RowCount).Select(row => rows[row] + rhs.rows[row]).ToArray());
 
@@ -194,9 +195,11 @@ namespace Fasciculus.Mathematics
             throw Ex.NotImplemented();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override DenseIntMatrix Transpose()
             => new(RowCount, Enumerable.Range(0, ColumnCount).Select(Transpose).ToArray());
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private DenseIntVector Transpose(int col)
             => new(Enumerable.Range(0, RowCount).Select(row => rows[row][col]).ToArray());
     }
