@@ -15,7 +15,11 @@ namespace Fasciculus.Eve.Core.Tests
         [TestMethod]
         public void TestCreateDistances()
         {
-            EveDistances.Create(universe, -10.0);
+            EveDistances distances = EveDistances.Create(universe, 0.5);
+
+            Assert.AreEqual(41, distances.GetMaxDistance()); // highsec
+            //Assert.AreEqual(69, distances.GetMaxDistance()); // lowsec
+            // Assert.AreEqual(172, distances.GetMaxDistance()); // nullsec
         }
     }
 }

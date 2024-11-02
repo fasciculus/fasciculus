@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Mathematics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,21 @@ namespace Fasciculus.Eve.Models
         private EveDistances(DenseIntMatrix distances)
         {
             this.distances = distances;
+        }
+
+        public int GetMaxDistance()
+        {
+            int maxDistance = 0;
+
+            for (int row = 0; row < distances.RowCount; ++row)
+            {
+                for (int col = 0; col < distances.ColumnCount; ++col)
+                {
+                    maxDistance = Math.Max(maxDistance, distances[row][col]);
+                }
+            }
+
+            return maxDistance;
         }
 
         public static EveDistances Create(IEveUniverse universe, double minSecurity)
