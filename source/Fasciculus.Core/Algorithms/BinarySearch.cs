@@ -1,19 +1,26 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Fasciculus.Algorithms
 {
     public static class BinarySearch
     {
-        public static int IndexOf(ReadOnlySpan<int> sorted, int value)
+        public static unsafe int IndexOf(ReadOnlySpan<int> sorted, int value)
+        {
+            fixed (int* a = sorted)
+            {
+                return IndexOf(a, sorted.Length, value);
+            }
+        }
+
+        internal static unsafe int IndexOf(int* pa, int na, int value)
         {
             int lo = 0;
-            int hi = sorted.Length - 1;
+            int hi = na - 1;
 
             while (lo <= hi)
             {
                 int i = lo + ((hi - lo) >> 1);
-                int x = sorted[i];
+                int x = pa[i];
 
                 if (x == value)
                 {
@@ -32,13 +39,5 @@ namespace Fasciculus.Algorithms
 
             return -1;
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int IndexOf(int[] sorted, int start, int count, int value)
-            => IndexOf(new ReadOnlySpan<int>(sorted, start, count), value);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int IndexOf(int[] sorted, int value)
-            => IndexOf(new ReadOnlySpan<int>(sorted, 0, sorted.Length), value);
     }
 }
