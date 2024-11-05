@@ -1,5 +1,4 @@
 ﻿using Fasciculus.Mathematics;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -13,31 +12,16 @@ namespace Fasciculus.Eve.Models
             this.solarSystemMatrices = solarSystemMatrices;
         }
 
-        public SparseBoolMatrix GetSolarSystemMatrix(EveSecurityLevel securityLevel)
-            => solarSystemMatrices[securityLevel.Index];
+        public SparseBoolMatrix GetSolarSystemMatrix(EveSecurity security)
+            => solarSystemMatrices[security.Index];
 
-        public static EveConnections Create(EveUniverse universe)
-        {
-            SparseBoolMatrix[] solarSystemMatrices = EveSecurityLevel.Levels.Select(sl => CreateMatrix(universe.SolarSystems, sl)).ToArray();
+        public static EveConnections Create(IEveUniverse universe)
+            => new(EveSecurity.Levels.Select(sl => CreateMatrix(universe.SolarSystems, sl)).ToArray());
 
-            return new(solarSystemMatrices);
-        }
+        private static SparseBoolMatrix CreateMatrix(EveSolarSystems solarSystems, EveSecurity security)
+            => new(solarSystems.Count, solarSystems.Select(origin => CreateMatrixRow(origin, security)).ToArray());
 
-        private static SparseBoolMatrix CreateMatrix(EveSolarSystems solarSystems, EveSecurityLevel securityLevel)
-        {
-            SparseBoolVector[] rows = solarSystems.Select(origin => CreateMatrixRow(origin, securityLevel)).ToArray();
-
-            return new(solarSystems.Count, rows);
-        }
-
-        private static SparseBoolVector CreateMatrixRow(EveSolarSystem origin, EveSecurityLevel securityLevel)
-        {
-            IEnumerable<int> indices = origin.Stargates
-                .Select(sg => sg.Destination.SolarSystem)
-                .Where(securityLevel.Filter)
-                .Select(ss => ss.Index);
-
-            return SparseBoolVector.Create(indices);
-        }
+        private static SparseBoolVector CreateMatrixRow(EveSolarSystem origin, EveSecurity security)
+            => SparseBoolVector.Create(origin.GetNeighbours(security).Select(ss => ss.Index));
     }
 }

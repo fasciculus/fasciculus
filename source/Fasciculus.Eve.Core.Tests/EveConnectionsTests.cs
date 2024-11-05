@@ -14,7 +14,7 @@ namespace Fasciculus.Eve.Core.Tests
 
             EveSolarSystem urlen = universe.SolarSystems["Urlen"];
             EveSolarSystem kusomonmon = universe.SolarSystems["Kusomonmon"];
-            SparseBoolMatrix matrix = connections.GetSolarSystemMatrix(EveSecurityLevel.High);
+            SparseBoolMatrix matrix = connections.GetSolarSystemMatrix(EveSecurity.High);
             bool connected = matrix[urlen.Index][kusomonmon.Index];
 
             Assert.IsTrue(connected);
