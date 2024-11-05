@@ -3,27 +3,27 @@ using System.Collections.Generic;
 
 namespace Fasciculus.Eve.Models
 {
-    public class EveSecurityLevel
+    public class EveSecurity
     {
         public int Index { get; }
         public Func<EveSolarSystem, bool> Filter { get; }
 
-        public EveSecurityLevel(int index, Func<EveSolarSystem, bool> filter)
+        public EveSecurity(int index, Func<EveSolarSystem, bool> filter)
         {
             Index = index;
             Filter = filter;
         }
 
-        public static readonly EveSecurityLevel All
+        public static readonly EveSecurity All
             = new(0, (ss) => true);
 
-        public static readonly EveSecurityLevel LowAndHigh
+        public static readonly EveSecurity LowAndHigh
             = new(0, (ss) => ss.Security >= 0.0);
 
-        public static readonly EveSecurityLevel High
+        public static readonly EveSecurity High
             = new(0, (ss) => ss.Security >= 0.5);
 
-        public static IEnumerable<EveSecurityLevel> Levels
+        public static IEnumerable<EveSecurity> Levels
             => [All, LowAndHigh, High];
     }
 }

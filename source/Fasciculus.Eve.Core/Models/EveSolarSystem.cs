@@ -1,5 +1,6 @@
 ﻿using Fasciculus.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
@@ -17,6 +18,11 @@ namespace Fasciculus.Eve.Models
         {
             Security = security;
             this.stargates = stargates;
+        }
+
+        public IEnumerable<EveSolarSystem> GetNeighbours(EveSecurity security)
+        {
+            return stargates.Select(sg => sg.Destination.SolarSystem).Where(security.Filter);
         }
 
         public void Link(IEveUniverse universe)
