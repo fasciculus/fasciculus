@@ -17,6 +17,20 @@ namespace Fasciculus.IO
             this.stream = stream;
         }
 
+        public short ReadShort()
+        {
+            ReadBytes(buffer, 2);
+
+            return BitConverter.ToInt16(buffer, 0);
+        }
+
+        public void WriteShort(short value)
+        {
+            byte[] bytes = BitConverter.GetBytes(value);
+
+            WriteBytes(bytes, 2);
+        }
+
         public int ReadInt()
         {
             ReadBytes(buffer, 4);
@@ -62,6 +76,19 @@ namespace Fasciculus.IO
 
             WriteInt(length);
             WriteBytes(bytes, length);
+        }
+
+        public short[] ReadShortArray()
+        {
+            int length = ReadInt();
+
+            return Enumerable.Range(0, length).Select(_ => ReadShort()).ToArray();
+        }
+
+        public void WriteShortArray(short[] values)
+        {
+            WriteInt(values.Length);
+            values.Apply(WriteShort);
         }
 
         public T[] ReadArray<T>(Func<Data, T> read)

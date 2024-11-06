@@ -1,5 +1,6 @@
 ﻿using Fasciculus.Algorithms;
 using Fasciculus.Collections;
+using Fasciculus.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,18 @@ namespace Fasciculus.Mathematics
         public DenseShortVector(short[] entries)
         {
             this.entries = entries.ShallowCopy();
+        }
+
+        public void Write(Data data)
+        {
+            data.WriteShortArray(entries);
+        }
+
+        public static DenseShortVector Read(Data data)
+        {
+            short[] entries = data.ReadShortArray();
+
+            return new(entries);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

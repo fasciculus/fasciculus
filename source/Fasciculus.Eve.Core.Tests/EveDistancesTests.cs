@@ -1,5 +1,9 @@
 ﻿using Fasciculus.Eve.Models;
+using Fasciculus.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 
 namespace Fasciculus.Eve.Core.Tests
@@ -16,6 +20,19 @@ namespace Fasciculus.Eve.Core.Tests
             Assert.AreEqual(84, distances.GetMaxDistance()); // highsec
             //Assert.AreEqual(69, distances.GetMaxDistance()); // lowsec
             // Assert.AreEqual(172, distances.GetMaxDistance()); // nullsec
+
+            MemoryStream uncompressed = new();
+            distances.Write(new Data(uncompressed));
+
+            Debug.WriteLine($"{uncompressed.Length} bytes for uncompressed matrix");
+
+            MemoryStream compressed = new();
+            using GZipStream zipStream = new(compressed, CompressionMode.Compress);
+
+            uncompressed.Position = 0;
+            uncompressed.CopyTo(zipStream);
+
+            Debug.WriteLine($"{compressed.Length} bytes for compressed matrix");
         }
 
         [TestMethod]
