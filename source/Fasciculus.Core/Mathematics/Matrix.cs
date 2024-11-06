@@ -98,6 +98,23 @@ namespace Fasciculus.Mathematics
             => SparseBoolVector.Create(entries.Where(e => e.Row == row).Select(e => e.Column));
     }
 
+    public class SparseShortMatrix
+    {
+        public int RowCount => rows.Length;
+        public int ColumnCount { get; }
+
+        private readonly SparseShortVector[] rows;
+
+        public SparseShortVector this[int row]
+            => rows[row];
+
+        public SparseShortMatrix(int columnCount, SparseShortVector[] rows)
+        {
+            ColumnCount = columnCount;
+            this.rows = rows.ShallowCopy();
+        }
+    }
+
     public class DenseShortMatrix
     {
         public int RowCount => rows.Length;
@@ -113,6 +130,9 @@ namespace Fasciculus.Mathematics
             ColumnCount = columnCount;
             this.rows = rows.ShallowCopy();
         }
+
+        public SparseShortMatrix ToSparse()
+            => new(ColumnCount, rows.Select(row => row.ToSparse()).ToArray());
 
         public static DenseShortMatrix operator +(DenseShortMatrix lhs, DenseShortMatrix rhs)
             => new(lhs.ColumnCount, Enumerable.Range(0, lhs.RowCount).Select(row => lhs.rows[row] + rhs.rows[row]).ToArray());

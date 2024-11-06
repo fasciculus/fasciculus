@@ -8,9 +8,9 @@ namespace Fasciculus.Eve.Models
     public class EveDistances
     {
         private readonly EveSolarSystems solarSystems;
-        private readonly DenseShortMatrix distances;
+        private readonly SparseShortMatrix distances;
 
-        public EveDistances(EveSolarSystems solarSystems, DenseShortMatrix distances)
+        public EveDistances(EveSolarSystems solarSystems, SparseShortMatrix distances)
         {
             this.solarSystems = solarSystems;
             this.distances = distances;
@@ -38,9 +38,9 @@ namespace Fasciculus.Eve.Models
                 return [];
             }
 
-            DenseShortVector row = distances[origin.Index];
+            SparseShortVector row = distances[origin.Index];
 
-            return Enumerable.Range(0, row.Count).Where(i => row[i] == distance).Select(i => solarSystems[i]);
+            return Enumerable.Range(0, distances.ColumnCount).Where(i => row[i] == distance).Select(i => solarSystems[i]);
         }
 
         public int GetMaxDistance()
@@ -67,7 +67,7 @@ namespace Fasciculus.Eve.Models
             SparseBoolMatrix connectionMatrix = connections.GetSolarSystemMatrix(security);
             DenseShortMatrix distances = CreateDistances(connectionMatrix);
 
-            return new(solarSystems, distances);
+            return new(solarSystems, distances.ToSparse());
         }
 
         private static DenseShortMatrix CreateDistances(SparseBoolMatrix connections)

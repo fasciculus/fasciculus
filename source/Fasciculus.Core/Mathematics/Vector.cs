@@ -1,4 +1,5 @@
-﻿using Fasciculus.Collections;
+﻿using Fasciculus.Algorithms;
+using Fasciculus.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,51 @@ using System.Runtime.CompilerServices;
 
 namespace Fasciculus.Mathematics
 {
+    public class SparseShortVector
+    {
+        private readonly int[] indices;
+        private readonly short[] values;
+
+        public int Count
+            => indices.Length;
+
+        public short this[int index]
+        {
+            get
+            {
+                index = BinarySearch.IndexOf(indices, index);
+
+                return index >= 0 ? values[index] : default;
+            }
+        }
+
+        private SparseShortVector(int[] indices, short[] values)
+        {
+            this.indices = indices;
+            this.values = values;
+        }
+
+        public static SparseShortVector Create(short[] source)
+        {
+            int n = source.Length;
+            int[] indices = new int[n];
+            short[] values = new short[n];
+            int k = 0;
+
+            for (int i = 0; i < n; ++i)
+            {
+                if (source[i] != 0)
+                {
+                    indices[k] = i;
+                    values[k] = source[i];
+                    ++k;
+                }
+            }
+
+            return new(new Span<int>(indices, 0, k).ToArray(), new Span<short>(values, 0, k).ToArray());
+        }
+    }
+
     public class DenseShortVector
     {
         private readonly short[] entries;
@@ -20,6 +66,10 @@ namespace Fasciculus.Mathematics
         {
             this.entries = entries.ShallowCopy();
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public SparseShortVector ToSparse()
+            => SparseShortVector.Create(entries);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DenseShortVector operator +(DenseShortVector lhs, DenseShortVector rhs)
