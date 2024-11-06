@@ -98,6 +98,26 @@ namespace Fasciculus.Mathematics
             => SparseBoolVector.Create(entries.Where(e => e.Row == row).Select(e => e.Column));
     }
 
+    public class DenseShortMatrix
+    {
+        public int RowCount => rows.Length;
+        public int ColumnCount { get; }
+
+        private readonly DenseShortVector[] rows;
+
+        public DenseShortVector this[int row]
+            => rows[row];
+
+        public DenseShortMatrix(int columnCount, DenseShortVector[] rows)
+        {
+            ColumnCount = columnCount;
+            this.rows = rows.ShallowCopy();
+        }
+
+        public static DenseShortMatrix operator +(DenseShortMatrix lhs, DenseShortMatrix rhs)
+            => new(lhs.ColumnCount, Enumerable.Range(0, lhs.RowCount).Select(row => lhs.rows[row] + rhs.rows[row]).ToArray());
+    }
+
     public class DenseIntMatrix
     {
         public int RowCount => rows.Length;
@@ -105,24 +125,17 @@ namespace Fasciculus.Mathematics
 
         private readonly DenseIntVector[] rows;
 
+        public DenseIntVector this[int row]
+            => rows[row];
+
         public DenseIntMatrix(int columnCount, DenseIntVector[] rows)
         {
             ColumnCount = columnCount;
             this.rows = rows.ShallowCopy();
         }
 
-        public DenseIntVector this[int row]
-            => rows[row];
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DenseIntMatrix operator +(DenseIntMatrix lhs, DenseIntMatrix rhs)
             => new(lhs.ColumnCount, Enumerable.Range(0, lhs.RowCount).Select(row => lhs.rows[row] + rhs.rows[row]).ToArray());
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public DenseIntMatrix Transpose()
-            => new(RowCount, Enumerable.Range(0, ColumnCount).Select(Transpose).ToArray());
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private DenseIntVector Transpose(int col)
-            => new(Enumerable.Range(0, RowCount).Select(row => rows[row][col]).ToArray());
     }
 }

@@ -5,6 +5,6 @@ namespace Fasciculus.Eve.Core.Tests
 {
     public class EveCoreTests
     {
-        protected readonly IEveUniverse universe = EmbeddedResources.Read("EveUniverse", EveUniverse.Read);
+        protected readonly EveUniverse universe = EmbeddedResources.Read("EveUniverse", EveUniverse.Read);
     }
 }

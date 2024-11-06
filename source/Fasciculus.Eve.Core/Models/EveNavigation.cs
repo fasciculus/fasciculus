@@ -15,9 +15,10 @@
 
         public static EveNavigation Create(IEveUniverse universe)
         {
-            EveDistances highSecDistances = EveDistances.Create(universe, 0.5);
-            EveDistances highAndLowSecDistances = EveDistances.Create(universe, 0.0);
-            EveDistances allDistances = EveDistances.Create(universe, -10.0);
+            EveConnections connections = EveConnections.Create(universe);
+            EveDistances highSecDistances = EveDistancesFactory.Create(universe, connections, EveSecurity.High);
+            EveDistances highAndLowSecDistances = EveDistancesFactory.Create(universe, connections, EveSecurity.LowAndHigh);
+            EveDistances allDistances = EveDistancesFactory.Create(universe, connections, EveSecurity.All);
 
             return new(highSecDistances, highAndLowSecDistances, allDistances);
         }

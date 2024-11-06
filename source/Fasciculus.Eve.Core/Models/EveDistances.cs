@@ -7,11 +7,40 @@ namespace Fasciculus.Eve.Models
 {
     public class EveDistances
     {
-        private readonly DenseIntMatrix distances;
+        private readonly EveSolarSystems solarSystems;
+        private readonly DenseShortMatrix distances;
 
-        private EveDistances(DenseIntMatrix distances)
+        public EveDistances(EveSolarSystems solarSystems, DenseShortMatrix distances)
         {
+            this.solarSystems = solarSystems;
             this.distances = distances;
+        }
+
+        public int GetDistance(EveSolarSystem origin, EveSolarSystem destination)
+        {
+            int row = origin.Index;
+            int column = destination.Index;
+
+            if (row == column)
+            {
+                return 0;
+            }
+
+            int distance = distances[row][column];
+
+            return distance > 0 ? distance : int.MaxValue;
+        }
+
+        public IEnumerable<EveSolarSystem> AtRange(EveSolarSystem origin, int distance)
+        {
+            if (distance < 1)
+            {
+                return [];
+            }
+
+            DenseShortVector row = distances[origin.Index];
+
+            return Enumerable.Range(0, row.Count).Where(i => row[i] == distance).Select(i => solarSystems[i]);
         }
 
         public int GetMaxDistance()
@@ -28,62 +57,59 @@ namespace Fasciculus.Eve.Models
 
             return maxDistance;
         }
+    }
 
-        public static EveDistances Create(IEveUniverse universe, double minSecurity)
+    public static class EveDistancesFactory
+    {
+        public static EveDistances Create(IEveUniverse universe, EveConnections connections, EveSecurity security)
         {
-            SparseBoolMatrix connections = CreateConnections(universe, minSecurity);
-            DenseIntMatrix distances = CreateDistances(connections);
+            EveSolarSystems solarSystems = universe.SolarSystems;
+            SparseBoolMatrix connectionMatrix = connections.GetSolarSystemMatrix(security);
+            DenseShortMatrix distances = CreateDistances(connectionMatrix);
 
-            return new(distances);
+            return new(solarSystems, distances);
         }
 
-        private static SparseBoolMatrix CreateConnections(IEveUniverse universe, double minSecurity)
-        {
-            int count = universe.SolarSystems.Count;
-
-            IEnumerable<MatrixKey> entries = universe.SolarSystems
-                .Where(ss => ss.Security >= minSecurity)
-                .SelectMany(origin => CreateConnections(origin, minSecurity));
-
-            return SparseBoolMatrix.Create(count, count, entries);
-        }
-
-        private static IEnumerable<MatrixKey> CreateConnections(EveSolarSystem origin, double minSecurity)
-        {
-            return origin.Stargates
-                .Select(sg => sg.Destination.SolarSystem)
-                .Where(d => d.Security >= minSecurity)
-                .Select(ss => MatrixKey.Create(origin.Index, ss.Index));
-        }
-
-        private static DenseIntMatrix CreateDistances(SparseBoolMatrix connections)
+        private static DenseShortMatrix CreateDistances(SparseBoolMatrix connections)
         {
             int columnCount = connections.ColumnCount;
-            DenseIntMatrix matrix = new(columnCount, CreateDistancesRows(connections));
 
-            return matrix + matrix.Transpose();
+            return new(columnCount, CreateDistancesRows(connections));
         }
 
-        private static DenseIntVector[] CreateDistancesRows(SparseBoolMatrix connections)
+        private static DenseShortVector[] CreateDistancesRows(SparseBoolMatrix connections)
             => Enumerable.Range(0, connections.RowCount).AsParallel().Select(row => CreateDistancesRow(connections, row)).ToArray();
 
-        private static DenseIntVector CreateDistancesRow(SparseBoolMatrix connections, int row)
+        private static DenseShortVector CreateDistancesRow(SparseBoolMatrix connections, int row)
         {
-            int[] result = new int[connections.ColumnCount];
-            SparseBoolVector visited = SparseBoolVector.Create(Enumerable.Range(0, row));
+            short[] result = new short[connections.ColumnCount];
+            SparseBoolVector visited = SparseBoolVector.Create();
             SparseBoolVector front = SparseBoolVector.Create(row);
-            int distance = 0;
+            short distance = 0;
 
             while (front.Length())
             {
                 ++distance;
+                visited += front;
                 front = connections * front;
                 front -= visited;
-                front.Indices.Apply(col => result[col] = distance);
-                visited += front;
+                ApplyDistances(front, distance, result);
             }
 
             return new(result);
+        }
+
+        private static void ApplyDistances(SparseBoolVector front, short distance, short[] result)
+        {
+            foreach (int index in front.Indices)
+            {
+                int existing = result[index];
+
+                if (existing == 0 || existing > distance)
+                {
+                    result[index] = distance;
+                }
+            }
         }
     }
 }
