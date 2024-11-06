@@ -103,6 +103,9 @@ namespace Fasciculus.Mathematics
         public int RowCount => rows.Length;
         public int ColumnCount { get; }
 
+        public int Count
+            => rows.Select(row => row.Count).Sum();
+
         private readonly SparseShortVector[] rows;
 
         public SparseShortVector this[int row]
