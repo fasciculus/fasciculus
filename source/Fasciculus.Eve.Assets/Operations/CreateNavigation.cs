@@ -1,6 +1,7 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Mathematics;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -27,15 +28,20 @@ namespace Fasciculus.Eve.Operations
 
                 if (current % step == 0)
                 {
-                    progress.Report($"distances {current / step} %");
+                    progress.Report($"  distances {current / step} %");
                 }
             }
         }
 
         public static EveNavigation Execute(IEveUniverse universe, IProgress<string> progress)
         {
+            progress.Report("Creating Navigation");
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
             SubProgress subProgress = new(universe, progress);
             EveDistances[] solarSystemDistances = CreateSolarSystemDistances(universe.SolarSystems, subProgress);
+
+            progress.Report($"Creating Navigation done {stopwatch.Elapsed}");
 
             return new(solarSystemDistances);
         }
