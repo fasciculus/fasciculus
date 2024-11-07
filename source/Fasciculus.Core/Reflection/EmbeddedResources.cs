@@ -8,7 +8,7 @@ namespace Fasciculus.Reflection
 {
     public static class EmbeddedResources
     {
-        public static T Read<T>(string name, Func<Stream, T> read)
+        public static T Read<T>(string name, Func<Data, T> read)
         {
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -23,11 +23,6 @@ namespace Fasciculus.Reflection
             }
 
             throw new FileNotFoundException(name);
-        }
-
-        public static T Read<T>(string name, Func<Data, T> read)
-        {
-            return Read(name, (stream) => read(new Data(stream)));
         }
     }
 }

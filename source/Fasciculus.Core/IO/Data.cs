@@ -116,5 +116,8 @@ namespace Fasciculus.IO
         {
             stream.Write(bytes, 0, length);
         }
+
+        public static implicit operator Data(Stream stream)
+            => new(stream);
     }
 }
