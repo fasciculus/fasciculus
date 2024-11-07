@@ -1,15 +1,14 @@
 ﻿using Fasciculus.IO;
 using System;
-using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Operations
 {
     public static class ExtractSdeZip
     {
-        public static async Task Execute(IProgress<string> progress)
+        public static void Execute(IProgress<string> progress)
         {
             progress.Report("extracting sde.zip");
-            await Zip.Extract(EveAssetsFiles.SdeZipFile, EveAssetsDirectories.SdeDirectory, Zip.Overwrite.Changed);
+            Zip.Extract(EveAssetsFiles.SdeZipFile, EveAssetsDirectories.SdeDirectory, Zip.Overwrite.Changed);
             progress.Report("extracting sde.zip done");
         }
     }
