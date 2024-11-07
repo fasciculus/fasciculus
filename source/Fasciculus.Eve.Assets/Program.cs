@@ -1,8 +1,8 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Operations;
+using Fasciculus.IO;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace Fasciculus.Eve
 {
@@ -10,6 +10,9 @@ namespace Fasciculus.Eve
     {
         private static FileInfo UniverseFile
             => EveAssetsDirectories.ResourcesDirectory.File("EveUniverse.dat");
+
+        private static FileInfo NavigationFile
+            => EveAssetsDirectories.ResourcesDirectory.File("Navigation.dat.gz");
 
         private class Progress : IProgress<string>
         {
@@ -19,34 +22,56 @@ namespace Fasciculus.Eve
             }
         }
 
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             try
             {
                 Progress progress = new();
 
-                DownloadSdeZip.Execute(progress);
-                await ExtractSdeZip.Execute(progress);
+                SdeData sdeData = CreateSde(progress);
+                EveUniverse eveUniverse = CreateUniverseFile(sdeData, progress);
 
-                SdeData sdeData = ParseData.Execute(progress);
-                SdeUniverse sdeUniverse = ParseUniverse.Execute(progress);
+                CreateNavigationFile(eveUniverse, progress);
 
-                sdeUniverse.Populate(sdeData);
 
-                EveUniverse eveUniverse = ConvertUniverse.Execute(sdeUniverse);
-                FileInfo universeFile = EveAssetsDirectories.ResourcesDirectory.File("EveUniverse.dat");
-
-                UniverseFile.DeleteIfExists();
-                UniverseFile.Write(stream => eveUniverse.Write(new(stream)));
-
-                Console.WriteLine($"EveUniverse.dat: {UniverseFile.Length} bytes");
-
-                EveNavigation navigation = CreateNavigation.Execute(eveUniverse, progress);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        private static SdeData CreateSde(IProgress<string> progress)
+        {
+            DownloadSdeZip.Execute(progress);
+            ExtractSdeZip.Execute(progress);
+
+            return ParseData.Execute(progress);
+        }
+
+        private static EveUniverse CreateUniverseFile(SdeData sdeData, IProgress<string> progress)
+        {
+            SdeUniverse sdeUniverse = ParseUniverse.Execute(progress);
+
+            sdeUniverse.Populate(sdeData);
+
+            EveUniverse eveUniverse = ConvertUniverse.Execute(sdeUniverse);
+
+            UniverseFile.DeleteIfExists();
+            UniverseFile.Write(stream => eveUniverse.Write(new(stream)));
+
+            return eveUniverse;
+        }
+
+        private static void CreateNavigationFile(IEveUniverse eveUniverse, IProgress<string> progress)
+        {
+            EveNavigation navigation = CreateNavigation.Execute(eveUniverse, progress);
+
+            using MemoryStream uncompressed = new MemoryStream();
+
+            navigation.Write(uncompressed);
+            uncompressed.Position = 0;
+            GZip.Compress(uncompressed, NavigationFile);
         }
     }
 }
