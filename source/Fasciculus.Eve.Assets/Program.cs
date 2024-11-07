@@ -40,6 +40,8 @@ namespace Fasciculus.Eve
                 UniverseFile.Write(stream => eveUniverse.Write(new(stream)));
 
                 Console.WriteLine($"EveUniverse.dat: {UniverseFile.Length} bytes");
+
+                EveNavigation navigation = CreateNavigation.Execute(eveUniverse, progress);
             }
             catch (Exception e)
             {

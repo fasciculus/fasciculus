@@ -7,7 +7,7 @@ namespace Fasciculus.Eve.Models
     {
         private readonly SparseBoolMatrix[] solarSystemMatrices;
 
-        private EveConnections(SparseBoolMatrix[] solarSystemMatrices)
+        public EveConnections(SparseBoolMatrix[] solarSystemMatrices)
         {
             this.solarSystemMatrices = solarSystemMatrices;
         }
