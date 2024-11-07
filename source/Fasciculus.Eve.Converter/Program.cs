@@ -1,6 +1,4 @@
-﻿using Fasciculus.Eve.Models;
-using Fasciculus.Eve.Operations;
-using System;
+﻿using System;
 using System.IO;
 
 namespace Fasciculus.Eve
@@ -14,19 +12,6 @@ namespace Fasciculus.Eve
         {
             try
             {
-                ExtractSde.Extract();
-
-                EveUniverseFile.Write(EveUniverse.Write);
-
-                //Action[] actions =
-                //{
-                //    ConvertNames.Convert,
-                //    ConvertUniverse.Convert
-                //};
-
-                //Task[] tasks = actions.Select(a => Task.Run(a)).ToArray();
-
-                //Task.WaitAll(tasks);
             }
             catch (Exception e)
             {

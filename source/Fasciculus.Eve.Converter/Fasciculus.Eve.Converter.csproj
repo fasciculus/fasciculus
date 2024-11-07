@@ -15,4 +15,8 @@
     <ProjectReference Include="../Fasciculus.Eve.Models/Fasciculus.Eve.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Operations\" />
+  </ItemGroup>
+
 </Project>
