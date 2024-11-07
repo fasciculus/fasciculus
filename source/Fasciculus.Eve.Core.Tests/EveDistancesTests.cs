@@ -1,5 +1,4 @@
 ﻿using Fasciculus.Eve.Models;
-using Fasciculus.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using System.IO;
@@ -22,7 +21,7 @@ namespace Fasciculus.Eve.Core.Tests
             // Assert.AreEqual(172, distances.GetMaxDistance()); // nullsec
 
             MemoryStream uncompressed = new();
-            distances.Write(new Data(uncompressed));
+            distances.Write(uncompressed);
 
             Debug.WriteLine($"{uncompressed.Length} bytes for uncompressed matrix");
 
