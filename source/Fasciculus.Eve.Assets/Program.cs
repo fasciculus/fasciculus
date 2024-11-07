@@ -25,7 +25,7 @@ namespace Fasciculus.Eve
             {
                 Progress progress = new();
 
-                await DownloadSdeZip.Execute(progress);
+                DownloadSdeZip.Execute(progress);
                 await ExtractSdeZip.Execute(progress);
 
                 SdeData sdeData = ParseData.Execute(progress);

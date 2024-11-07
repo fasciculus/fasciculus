@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Operations
 {
@@ -9,14 +8,14 @@ namespace Fasciculus.Eve.Operations
     {
         public static readonly Uri SdeZipUri = new("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/sde.zip");
 
-        public static async Task Execute(IProgress<string> progress)
+        public static void Execute(IProgress<string> progress)
         {
             using HttpClient httpClient = new();
 
-            if (await IsDownloadRequired(httpClient))
+            if (IsDownloadRequired(httpClient))
             {
                 progress.Report("downloading sde.zip");
-                await Download(httpClient);
+                Download(httpClient);
                 progress.Report("downloading sde.zip done");
             }
             else
@@ -25,20 +24,13 @@ namespace Fasciculus.Eve.Operations
             }
         }
 
-        private static async Task<bool> IsDownloadRequired(HttpClient httpClient)
+        private static bool IsDownloadRequired(HttpClient httpClient)
         {
             FileInfo file = EveAssetsFiles.SdeZipFile;
 
             if (file.Exists)
             {
-                using HttpRequestMessage request = new(HttpMethod.Head, SdeZipUri);
-                using HttpResponseMessage response = await httpClient.SendAsync(request);
-
-                response.EnsureSuccessStatusCode();
-
-                long contentLength = response.Content.Headers.ContentLength ?? 0;
-
-                return contentLength != file.Length;
+                return (httpClient.Head(SdeZipUri).ContentLength ?? 0) != file.Length;
             }
             else
             {
@@ -46,9 +38,9 @@ namespace Fasciculus.Eve.Operations
             }
         }
 
-        private static async Task Download(HttpClient httpClient)
+        private static void Download(HttpClient httpClient)
         {
-            byte[] bytes = await httpClient.GetByteArrayAsync(SdeZipUri);
+            byte[] bytes = httpClient.GetByteArray(SdeZipUri);
 
             EveAssetsFiles.SdeZipFile.WriteAllBytes(bytes);
         }
