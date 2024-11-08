@@ -1,5 +1,6 @@
 ﻿using Fasciculus.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
@@ -16,9 +17,18 @@ namespace Fasciculus.Eve.Models
             this.solarSystems = solarSystems;
         }
 
+        public IEnumerable<EveConstellation> GetNeighbours(EveSecurity security)
+        {
+            return solarSystems
+                .SelectMany(ss => ss.GetNeighbours(security))
+                .Select(ss => ss.Constellation)
+                .DistinctBy(c => c.Index)
+                .Where(c => c.Index != Index);
+        }
+
         internal void Link(IEveUniverse universe)
         {
-            solarSystems.Apply(solarSystem => solarSystem.Link(universe));
+            solarSystems.Apply(solarSystem => solarSystem.Link(this, universe));
         }
 
         public override void Write(Data data)

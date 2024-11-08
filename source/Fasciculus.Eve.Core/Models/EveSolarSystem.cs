@@ -1,4 +1,5 @@
 ﻿using Fasciculus.IO;
+using Fasciculus.Validating;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +9,11 @@ namespace Fasciculus.Eve.Models
     {
         public double Security { get; }
 
+        private EveConstellation? constellation;
         private readonly EveStargate[] stargates;
+
+        public EveConstellation Constellation
+            => Cond.NotNull(constellation);
 
         public IEnumerable<EveStargate> Stargates
             => stargates;
@@ -25,8 +30,9 @@ namespace Fasciculus.Eve.Models
             return stargates.Select(sg => sg.Destination.SolarSystem).Where(security.Filter);
         }
 
-        public void Link(IEveUniverse universe)
+        public void Link(EveConstellation constellation, IEveUniverse universe)
         {
+            this.constellation = constellation;
             stargates.Apply(stargate => stargate.Link(this, universe));
         }
 
