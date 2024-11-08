@@ -56,7 +56,7 @@ namespace Fasciculus.Eve.Models
 
         public override string ToString()
         {
-            return $"{Name} (${EveSecurity.Format(Security)})";
+            return $"{Name} ({EveSecurity.Format(Security)}) {Constellation.Region.Name}";
         }
     }
 }
