@@ -44,9 +44,9 @@ namespace Fasciculus.Eve.Models
             return Enumerable.Range(0, distances.ColumnCount).Where(i => row[i] == distance).Select(i => solarSystems[i]);
         }
 
-        public int GetMaxDistance()
+        public short GetMaxDistance()
         {
-            int maxDistance = 0;
+            short maxDistance = 0;
 
             for (int row = 0; row < distances.RowCount; ++row)
             {
@@ -83,7 +83,7 @@ namespace Fasciculus.Eve.Models
             {
                 short[] values = new short[n];
 
-                for (int c = 0; c < n; ++c)
+                for (int c = r + 1; c < n; ++c)
                 {
                     values[c] = data.ReadShort();
                 }

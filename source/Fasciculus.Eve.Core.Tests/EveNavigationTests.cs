@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Fasciculus.Eve.Resources;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fasciculus.Eve.Core.Tests
 {
@@ -8,7 +9,7 @@ namespace Fasciculus.Eve.Core.Tests
         [TestMethod]
         public void TestAtRange()
         {
-            // EveNavigation navigation = EveNavigation.Create(universe);
+            EveResources.ReadNavigation(universe);
         }
     }
 }

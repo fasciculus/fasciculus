@@ -86,7 +86,7 @@ namespace Fasciculus.Mathematics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DenseShortVector operator +(DenseShortVector lhs, DenseShortVector rhs)
-            => new(Enumerable.Range(0, lhs.Count).Select(index => lhs.entries[index] + rhs.entries[index]).Cast<short>().ToArray());
+            => new(Enumerable.Range(0, lhs.Count).Select(index => (short)(lhs.entries[index] + rhs.entries[index])).ToArray());
     }
 
     public class DenseIntVector
