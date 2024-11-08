@@ -72,5 +72,12 @@ namespace Fasciculus.IO
         {
             compressedFile.Write(stream => Compress(uncompressed, stream));
         }
+
+        public static void Extract(Stream compressed, Stream uncompressed)
+        {
+            using GZipStream gzStream = new(compressed, CompressionMode.Decompress);
+
+            gzStream.CopyTo(uncompressed);
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Fasciculus.Reflection
 {
     public static class EmbeddedResources
     {
-        public static T Read<T>(string name, Func<Data, T> read)
+        public static Assembly? Find(string name)
         {
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -16,13 +16,31 @@ namespace Fasciculus.Reflection
 
                 if (names.Contains(name))
                 {
-                    using Stream stream = assembly.GetManifestResourceStream(name);
-
-                    return read(stream);
+                    return assembly;
                 }
             }
 
-            throw new FileNotFoundException(name);
+            return null;
+        }
+
+        public static T Read<T>(string name, Func<Stream, T> read)
+        {
+            Assembly assembly = Find(name) ?? throw new FileNotFoundException(name);
+            using Stream stream = assembly.GetManifestResourceStream(name);
+
+            return read(stream);
+        }
+
+        public static T ReadCompressed<T>(string name, Func<Stream, T> read)
+        {
+            Assembly assembly = Find(name) ?? throw new FileNotFoundException(name);
+            using Stream compressed = assembly.GetManifestResourceStream(name);
+            using Stream uncompressed = new MemoryStream();
+
+            GZip.Extract(compressed, uncompressed);
+            uncompressed.Position = 0;
+
+            return read(uncompressed);
         }
     }
 }

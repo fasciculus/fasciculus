@@ -15,5 +15,12 @@ namespace Fasciculus.Eve.Models
         {
             data.WriteArray(solarSystemDistances, d => d.Write(data));
         }
+
+        public static EveNavigation Read(EveSolarSystems solarSystems, Data data)
+        {
+            EveDistances[] solarSystemDistances = data.ReadArray(d => EveDistances.Read(solarSystems, d));
+
+            return new(solarSystemDistances);
+        }
     }
 }
