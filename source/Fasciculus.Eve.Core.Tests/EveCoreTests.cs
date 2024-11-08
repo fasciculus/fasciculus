@@ -7,6 +7,6 @@ namespace Fasciculus.Eve.Core.Tests
     {
         protected readonly static EveUniverse universe = EveResources.ReadUniverse();
 
-        // protected readonly static EveNavigation navigation = EveResources.ReadNavigation(universe);
+        protected readonly static EveNavigation navigation = EveResources.ReadNavigation(universe);
     }
 }

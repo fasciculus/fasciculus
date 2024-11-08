@@ -8,14 +8,6 @@ namespace Fasciculus.Eve.Core.Tests
     public class EveDistancesTests : EveCoreTests
     {
         [TestMethod]
-        public void TestCreateDistances()
-        {
-            // Assert.AreEqual(84, navigation.GetMaxDistance(EveSecurity.High)); // highsec
-            //Assert.AreEqual(69, distances.GetMaxDistance()); // lowsec
-            // Assert.AreEqual(172, distances.GetMaxDistance()); // nullsec
-        }
-
-        [TestMethod]
         public void TestHighSecDistance()
         {
             EveSolarSystems solarSystems = universe.SolarSystems;

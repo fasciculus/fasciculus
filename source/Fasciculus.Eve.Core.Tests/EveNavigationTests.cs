@@ -1,4 +1,4 @@
-﻿using Fasciculus.Eve.Resources;
+﻿using Fasciculus.Eve.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fasciculus.Eve.Core.Tests
@@ -7,9 +7,11 @@ namespace Fasciculus.Eve.Core.Tests
     public class EveNavigationTests : EveCoreTests
     {
         [TestMethod]
-        public void TestAtRange()
+        public void TestGetMaxDistance()
         {
-            EveResources.ReadNavigation(universe);
+            Assert.AreEqual(84, navigation.GetMaxDistance(EveSecurity.High));
+            Assert.AreEqual(84, navigation.GetMaxDistance(EveSecurity.LowAndHigh));
+            Assert.AreEqual(84, navigation.GetMaxDistance(EveSecurity.All));
         }
     }
 }
