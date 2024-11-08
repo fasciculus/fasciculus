@@ -27,7 +27,7 @@ namespace Fasciculus.Eve.Models
 
         public IEnumerable<EveSolarSystem> GetNeighbours(EveSecurity security)
         {
-            return stargates.Select(sg => sg.Destination.SolarSystem).Where(security.Filter);
+            return stargates.Select(sg => sg.Destination.SolarSystem).Where(security.Filter).OrderBy(ss => ss.Index);
         }
 
         public void Link(EveConstellation constellation, IEveUniverse universe)

@@ -28,7 +28,8 @@ namespace Fasciculus.Eve.Models
                 .SelectMany(ss => ss.GetNeighbours(security))
                 .Select(ss => ss.Constellation)
                 .DistinctBy(c => c.Index)
-                .Where(c => c.Index != Index);
+                .Where(c => c.Index != Index)
+                .OrderBy(c => c.Index);
         }
 
         internal void Link(EveRegion region, IEveUniverse universe)
