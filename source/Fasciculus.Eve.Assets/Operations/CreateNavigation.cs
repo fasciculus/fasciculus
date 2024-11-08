@@ -48,14 +48,7 @@ namespace Fasciculus.Eve.Operations
 
         private static EveDistances[] CreateSolarSystemDistances(EveSolarSystems solarSystems, IProgress<int> progress)
         {
-            EveConnections connections = CreateConnections(solarSystems);
-
-            return EveSecurity.Levels.Select(security => CreateSolarSystemDistances(solarSystems, connections, security, progress)).ToArray();
-        }
-
-        private static EveConnections CreateConnections(EveSolarSystems solarSystems)
-        {
-            return new(EveSecurity.Levels.Select(security => CreateConnections(solarSystems, security)).ToArray());
+            return EveSecurity.Levels.Select(security => CreateSolarSystemDistances(solarSystems, security, progress)).ToArray();
         }
 
         private static SparseBoolMatrix CreateConnections(EveSolarSystems solarSystems, EveSecurity security)
@@ -68,10 +61,10 @@ namespace Fasciculus.Eve.Operations
             return SparseBoolVector.Create(origin.GetNeighbours(security).Select(ss => ss.Index));
         }
 
-        private static EveDistances CreateSolarSystemDistances(EveSolarSystems solarSystems, EveConnections connections, EveSecurity security, IProgress<int> progress)
+        private static EveDistances CreateSolarSystemDistances(EveSolarSystems solarSystems, EveSecurity security, IProgress<int> progress)
         {
-            SparseBoolMatrix connectionMatrix = connections.GetSolarSystemMatrix(security);
-            DenseShortMatrix distances = CreateSolarSystemDistances(connectionMatrix, progress);
+            SparseBoolMatrix connections = CreateConnections(solarSystems, security);
+            DenseShortMatrix distances = CreateSolarSystemDistances(connections, progress);
 
             return new(solarSystems, distances);
         }
