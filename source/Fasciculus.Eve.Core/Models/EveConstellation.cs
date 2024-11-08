@@ -1,4 +1,5 @@
 ﻿using Fasciculus.IO;
+using Fasciculus.Validating;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,11 @@ namespace Fasciculus.Eve.Models
 {
     public class EveConstellation : EveNamedObject
     {
+        private EveRegion? region;
         private readonly EveSolarSystem[] solarSystems;
+
+        public EveRegion Region
+            => Cond.NotNull(region);
 
         public IEnumerable<EveSolarSystem> SolarSystems
             => solarSystems;
@@ -26,8 +31,9 @@ namespace Fasciculus.Eve.Models
                 .Where(c => c.Index != Index);
         }
 
-        internal void Link(IEveUniverse universe)
+        internal void Link(EveRegion region, IEveUniverse universe)
         {
+            this.region = region;
             solarSystems.Apply(solarSystem => solarSystem.Link(this, universe));
         }
 
