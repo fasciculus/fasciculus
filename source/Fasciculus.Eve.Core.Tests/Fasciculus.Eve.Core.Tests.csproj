@@ -16,10 +16,4 @@
     <ProjectReference Include="../Fasciculus.Testing/Fasciculus.Testing.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Resources/EveUniverse.dat">
-      <LogicalName>EveUniverse</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  </Project>
+</Project>

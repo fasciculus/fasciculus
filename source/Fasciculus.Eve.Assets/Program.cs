@@ -12,7 +12,7 @@ namespace Fasciculus.Eve
             => EveAssetsDirectories.ResourcesDirectory.File("EveUniverse.dat");
 
         private static FileInfo NavigationFile
-            => EveAssetsDirectories.ResourcesDirectory.File("Navigation.dat.gz");
+            => EveAssetsDirectories.ResourcesDirectory.File("EveNavigation.dat.gz");
 
         private class Progress : IProgress<string>
         {

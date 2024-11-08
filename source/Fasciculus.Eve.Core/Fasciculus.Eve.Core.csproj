@@ -9,4 +9,13 @@
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Resources/EveUniverse.dat">
+      <LogicalName>EveUniverse</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources/EveNavigation.dat.gz">
+      <LogicalName>EveNavigation</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
