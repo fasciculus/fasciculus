@@ -25,5 +25,12 @@ namespace Fasciculus.Eve.Models
 
         public static IEnumerable<EveSecurity> Levels
             => [All, LowAndHigh, High];
+
+        public static string Format(double security)
+        {
+            security = Math.Floor(security * 10.0) / 10.0;
+
+            return $"{security:0.0}";
+        }
     }
 }
