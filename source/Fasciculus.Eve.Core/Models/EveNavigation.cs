@@ -1,4 +1,5 @@
 ﻿using Fasciculus.IO;
+using System.Collections.Generic;
 
 namespace Fasciculus.Eve.Models
 {
@@ -14,6 +15,16 @@ namespace Fasciculus.Eve.Models
         public short GetMaxDistance(EveSecurity security)
         {
             return distances[security.Index].GetMaxDistance();
+        }
+
+        public short GetDistance(EveSolarSystem origin, EveSolarSystem destination, EveSecurity security)
+        {
+            return distances[security.Index].GetDistance(origin, destination);
+        }
+
+        public IEnumerable<EveSolarSystem> AtRange(EveSolarSystem origin, int distance, EveSecurity security)
+        {
+            return distances[security.Index].AtRange(origin, distance);
         }
 
         public void Write(Data data)

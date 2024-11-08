@@ -17,7 +17,7 @@ namespace Fasciculus.Eve.Models
             this.distances = distances;
         }
 
-        public int GetDistance(EveSolarSystem origin, EveSolarSystem destination)
+        public short GetDistance(EveSolarSystem origin, EveSolarSystem destination)
         {
             int row = origin.Index;
             int column = destination.Index;
@@ -27,9 +27,9 @@ namespace Fasciculus.Eve.Models
                 return 0;
             }
 
-            int distance = distances[row][column];
+            short distance = distances[row][column];
 
-            return distance > 0 ? distance : int.MaxValue;
+            return distance > 0 ? distance : short.MaxValue;
         }
 
         public IEnumerable<EveSolarSystem> AtRange(EveSolarSystem origin, int distance)
