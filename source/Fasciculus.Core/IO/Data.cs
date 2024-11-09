@@ -17,6 +17,20 @@ namespace Fasciculus.IO
             this.stream = stream;
         }
 
+        public bool ReadBool()
+        {
+            ReadBytes(buffer, 1);
+
+            return BitConverter.ToBoolean(buffer, 0);
+        }
+
+        public void WriteBool(bool value)
+        {
+            byte[] bytes = BitConverter.GetBytes(value);
+
+            WriteBytes(bytes, 1);
+        }
+
         public short ReadShort()
         {
             ReadBytes(buffer, 2);
