@@ -62,6 +62,13 @@ namespace Fasciculus.Eve.Operations
 
         private static EvePlanet ConvertPlanet(int id, SdePlanet planet)
         {
+            EveMoon[] moons = planet.Moons.Select(kvp => ConvertMoon(kvp.Key, kvp.Value)).ToArray();
+
+            return new(id, moons);
+        }
+
+        private static EveMoon ConvertMoon(int id, SdeMoon moon)
+        {
             return new(id);
         }
     }

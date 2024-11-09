@@ -22,6 +22,8 @@ namespace Fasciculus.Eve.Models
         public EveSolarSystem Ice => Cond.NotNull(ice);
         public short IceDistance { get; internal set; }
 
+        public int AsteroidBelts { get; internal set; }
+
         public int Rating { get; internal set; }
 
         public EveHomeCandidate(EveSolarSystem solarSystem)
@@ -50,6 +52,7 @@ namespace Fasciculus.Eve.Models
 
         public int DangerDistanceReward { get; set; } = 5;
         public int IceDistancePenalty { get; set; } = 20;
+        public int AsteroidBeltReward { get; set; } = 1;
 
         public EveHomeRating(IEveUniverse universe, EveNavigation navigation)
         {
@@ -87,6 +90,8 @@ namespace Fasciculus.Eve.Models
             candidate.ice = navigation.Nearest(solarSystem, EveSecurity.All, ss => ss.HasIce);
             candidate.IceDistance = navigation.GetDistance(solarSystem, candidate.Ice, EveSecurity.All);
 
+            candidate.AsteroidBelts = solarSystem.Planets.SelectMany(p => p.Moons).Count();
+
             candidate.Rating = Rate(candidate);
 
             return candidate;
@@ -100,6 +105,7 @@ namespace Fasciculus.Eve.Models
             rating -= (int)Math.Round(Math.Abs(candidate.SolarSystem.Security - DesiredSecurity) * DesiredSecurityPenalty);
             rating += candidate.DangerDistance * DangerDistanceReward;
             rating -= candidate.IceDistance * IceDistancePenalty;
+            rating += candidate.AsteroidBelts * AsteroidBeltReward;
 
             return rating;
         }

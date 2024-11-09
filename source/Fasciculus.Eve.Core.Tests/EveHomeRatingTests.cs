@@ -21,9 +21,10 @@ namespace Fasciculus.Eve.Core.Tests
         private static void Log(EveHomeCandidate candidate)
         {
             Debug.WriteLine(candidate);
-            Debug.WriteLine($"  TradeHub = {candidate.TradeHub} @ {candidate.TradeHubDistance} jumps");
-            Debug.WriteLine($"  Danger   = {candidate.Danger} @ {candidate.DangerDistance} jumps");
-            Debug.WriteLine($"  Ice      = {candidate.Ice} @ {candidate.IceDistance} jumps");
+            Debug.WriteLine($"  TradeHub  = {candidate.TradeHub} @ {candidate.TradeHubDistance} jumps");
+            Debug.WriteLine($"  Danger    = {candidate.Danger} @ {candidate.DangerDistance} jumps");
+            Debug.WriteLine($"  Ice       = {candidate.Ice} @ {candidate.IceDistance} jumps");
+            Debug.WriteLine($"  Asteroids = {candidate.AsteroidBelts}");
         }
     }
 }

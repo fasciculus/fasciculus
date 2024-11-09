@@ -9,7 +9,7 @@ namespace Fasciculus.Eve
     public class Program
     {
         private static FileInfo UniverseFile
-            => EveAssetsDirectories.ResourcesDirectory.File("EveUniverse.dat");
+            => EveAssetsDirectories.ResourcesDirectory.File("EveUniverse.dat.gz");
 
         private static FileInfo NavigationFile
             => EveAssetsDirectories.ResourcesDirectory.File("EveNavigation.dat.gz");
@@ -56,9 +56,11 @@ namespace Fasciculus.Eve
             sdeUniverse.Populate(sdeData);
 
             EveUniverse eveUniverse = ConvertUniverse.Execute(sdeUniverse);
+            using MemoryStream uncompressed = new MemoryStream();
 
-            UniverseFile.DeleteIfExists();
-            UniverseFile.Write(stream => eveUniverse.Write(new(stream)));
+            eveUniverse.Write(uncompressed);
+            uncompressed.Position = 0;
+            GZip.Compress(uncompressed, UniverseFile);
 
             return eveUniverse;
         }
