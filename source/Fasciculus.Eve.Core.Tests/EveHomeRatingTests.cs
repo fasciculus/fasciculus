@@ -23,6 +23,7 @@ namespace Fasciculus.Eve.Core.Tests
             Debug.WriteLine(candidate);
             Debug.WriteLine($"  TradeHub = {candidate.TradeHub} @ {candidate.TradeHubDistance} jumps");
             Debug.WriteLine($"  Danger   = {candidate.Danger} @ {candidate.DangerDistance} jumps");
+            Debug.WriteLine($"  Ice      = {candidate.Ice} @ {candidate.IceDistance} jumps");
         }
     }
 }

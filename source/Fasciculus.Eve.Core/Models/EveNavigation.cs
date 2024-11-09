@@ -34,7 +34,7 @@ namespace Fasciculus.Eve.Models
         {
             EveSolarSystem? nearest = null;
 
-            for (short distance = 1; distance < 1000 && nearest is null; ++distance)
+            for (short distance = 0; distance < 1000 && nearest is null; ++distance)
             {
                 nearest = AtRange(origin, distance, security).FirstOrDefault(predicate);
             }

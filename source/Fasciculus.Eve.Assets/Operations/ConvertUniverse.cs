@@ -1,10 +1,16 @@
 ﻿using Fasciculus.Eve.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Eve.Operations
 {
     public static class ConvertUniverse
     {
+        private static readonly SortedSet<string> IceSystemNames =
+            [
+            "Ahtulaima", "Fuskunen", "Gekutami", "Hentogaira", "Hurtoken", "Mitsolen", "Obe", "Osmon", "Outuni", "Silen", "Sirseshin", "Vattuolen", "Wuos",
+            ];
+
         public static EveUniverse Execute(SdeUniverse sdeUniverse)
         {
             EveRegions regions = ConvertRegions(sdeUniverse);
@@ -41,8 +47,9 @@ namespace Fasciculus.Eve.Operations
             string name = solarSystem.Name;
             double security = solarSystem.Security;
             EveStargate[] stargates = solarSystem.Stargates.Select(kvp => ConvertStargate(kvp.Key, kvp.Value)).ToArray();
+            bool hasIce = IceSystemNames.Contains(name);
 
-            return new(id, name, security, stargates);
+            return new(id, name, security, stargates, hasIce);
         }
 
         private static EveStargate ConvertStargate(int id, SdeStargate stargate)

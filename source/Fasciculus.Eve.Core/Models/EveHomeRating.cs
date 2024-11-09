@@ -9,6 +9,7 @@ namespace Fasciculus.Eve.Models
     {
         internal EveSolarSystem? tradeHub;
         internal EveSolarSystem? danger;
+        internal EveSolarSystem? ice;
 
         public EveSolarSystem SolarSystem { get; }
 
@@ -17,6 +18,9 @@ namespace Fasciculus.Eve.Models
 
         public EveSolarSystem Danger => Cond.NotNull(danger);
         public short DangerDistance { get; internal set; }
+
+        public EveSolarSystem Ice => Cond.NotNull(ice);
+        public short IceDistance { get; internal set; }
 
         public int Rating { get; internal set; }
 
@@ -45,6 +49,7 @@ namespace Fasciculus.Eve.Models
         public int DesiredSecurityPenalty { get; set; } = 200;
 
         public int DangerDistanceReward { get; set; } = 5;
+        public int IceDistancePenalty { get; set; } = 20;
 
         public EveHomeRating(IEveUniverse universe, EveNavigation navigation)
         {
@@ -79,6 +84,9 @@ namespace Fasciculus.Eve.Models
             candidate.danger = navigation.Nearest(solarSystem, EveSecurity.All, ss => ss.Security < 0.5);
             candidate.DangerDistance = navigation.GetDistance(solarSystem, candidate.Danger, EveSecurity.All);
 
+            candidate.ice = navigation.Nearest(solarSystem, EveSecurity.All, ss => ss.HasIce);
+            candidate.IceDistance = navigation.GetDistance(solarSystem, candidate.Ice, EveSecurity.All);
+
             candidate.Rating = Rate(candidate);
 
             return candidate;
@@ -91,6 +99,7 @@ namespace Fasciculus.Eve.Models
             rating -= (candidate.TradeHubDistance - TradeHubMinDistance) * TradeHubDistancePenalty;
             rating -= (int)Math.Round(Math.Abs(candidate.SolarSystem.Security - DesiredSecurity) * DesiredSecurityPenalty);
             rating += candidate.DangerDistance * DangerDistanceReward;
+            rating -= candidate.IceDistance * IceDistancePenalty;
 
             return rating;
         }

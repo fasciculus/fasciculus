@@ -36,7 +36,7 @@ namespace Fasciculus.Eve.Models
         {
             if (distance < 1)
             {
-                return [];
+                return [origin];
             }
 
             DenseShortVector row = distances[origin.Index];
