@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace Fasciculus.Core.Tests
 {
     [TestClass]
-    public class MiscTests
+    public class MiscTests : TestsBase
     {
         [TestMethod]
         public unsafe void Test()
@@ -34,8 +34,8 @@ namespace Fasciculus.Core.Tests
 
             sw2.Stop();
 
-            Debug.WriteLine($"spn: {sw1.Elapsed}");
-            Debug.WriteLine($"ptr: {sw2.Elapsed}");
+            Log($"spn: {sw1.Elapsed}");
+            Log($"ptr: {sw2.Elapsed}");
         }
 
         private static unsafe int IndexOf(int[] sorted, int value)
