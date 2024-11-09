@@ -10,6 +10,7 @@ namespace Fasciculus.Eve
 
         public static DirectoryInfo SdeDirectory => DocumentsDirectory.Combine("Sde").Existing();
         public static DirectoryInfo BsdDirectory => SdeDirectory.Combine("bsd").Existing();
+        public static DirectoryInfo FsdDirectory => SdeDirectory.Combine("fsd").Existing();
         public static DirectoryInfo UniverseDirectory => SdeDirectory.Combine("universe").Existing();
         public static DirectoryInfo RegionsDirectory => UniverseDirectory.Combine("eve").Existing();
 

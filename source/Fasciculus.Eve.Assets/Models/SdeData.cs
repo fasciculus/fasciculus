@@ -2,6 +2,21 @@
 
 namespace Fasciculus.Eve.Models
 {
+    public class SdeStationOperation
+    {
+        public int[] Services { get; set; } = [];
+    }
+
+    public class SdeStationOperations
+    {
+        private Dictionary<int, SdeStationOperation> stationOperations;
+
+        public SdeStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
+        {
+            this.stationOperations = stationOperations;
+        }
+    }
+
     public class SdeName
     {
         public int ItemID { get; set; }
