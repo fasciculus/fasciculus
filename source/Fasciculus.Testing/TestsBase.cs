@@ -9,8 +9,10 @@ namespace Fasciculus
 {
     public class TestsBase
     {
-        protected void Log(string message)
+        protected void Log(string? message)
         {
+            message ??= "";
+
 #if DEBUG
             Debug.WriteLine(message);
 #else

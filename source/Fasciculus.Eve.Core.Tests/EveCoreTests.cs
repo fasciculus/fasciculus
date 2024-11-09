@@ -3,7 +3,7 @@ using Fasciculus.Eve.Resources;
 
 namespace Fasciculus.Eve.Core.Tests
 {
-    public class EveCoreTests
+    public class EveCoreTests : TestsBase
     {
         protected readonly static EveUniverse universe = EveResources.ReadUniverse();
 

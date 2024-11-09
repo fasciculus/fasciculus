@@ -1,7 +1,6 @@
 ﻿using Fasciculus.Eve.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Fasciculus.Eve.Core.Tests
@@ -15,16 +14,16 @@ namespace Fasciculus.Eve.Core.Tests
             EveHomeRating homeRating = new(universe, navigation);
             EveHomeCandidate[] candidates = homeRating.Find(3).ToArray();
 
-            candidates.Apply(Log);
+            candidates.Apply(LogCandidate);
         }
 
-        private static void Log(EveHomeCandidate candidate)
+        private void LogCandidate(EveHomeCandidate candidate)
         {
-            Debug.WriteLine(candidate);
-            Debug.WriteLine($"  TradeHub  = {candidate.TradeHub} @ {candidate.TradeHubDistance} jumps");
-            Debug.WriteLine($"  Danger    = {candidate.Danger} @ {candidate.DangerDistance} jumps");
-            Debug.WriteLine($"  Ice       = {candidate.Ice} @ {candidate.IceDistance} jumps");
-            Debug.WriteLine($"  Asteroids = {candidate.AsteroidBelts}");
+            Log(candidate.ToString());
+            Log($"  TradeHub  = {candidate.TradeHub} @ {candidate.TradeHubDistance} jumps");
+            Log($"  Danger    = {candidate.Danger} @ {candidate.DangerDistance} jumps");
+            Log($"  Ice       = {candidate.Ice} @ {candidate.IceDistance} jumps");
+            Log($"  Asteroids = {candidate.AsteroidBelts}");
         }
     }
 }

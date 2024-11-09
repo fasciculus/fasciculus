@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Fasciculus.Eve.Core.Tests
@@ -19,7 +18,7 @@ namespace Fasciculus.Eve.Core.Tests
 
             Assert.IsTrue(names.Contains("The Citadel"));
 
-            names.Apply(n => Debug.WriteLine(n));
+            names.Apply(Log);
         }
     }
 }
