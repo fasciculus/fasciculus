@@ -1,5 +1,8 @@
 ﻿using Fasciculus.IO;
+using Fasciculus.Validating;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
@@ -25,6 +28,18 @@ namespace Fasciculus.Eve.Models
         public IEnumerable<EveSolarSystem> AtRange(EveSolarSystem origin, int distance, EveSecurity security)
         {
             return distances[security.Index].AtRange(origin, distance);
+        }
+
+        public EveSolarSystem Nearest(EveSolarSystem origin, EveSecurity security, Func<EveSolarSystem, bool> predicate)
+        {
+            EveSolarSystem? nearest = null;
+
+            for (short distance = 1; distance < 1000 && nearest is null; ++distance)
+            {
+                nearest = AtRange(origin, distance, security).FirstOrDefault(predicate);
+            }
+
+            return Cond.NotNull(nearest);
         }
 
         public void Write(Data data)
