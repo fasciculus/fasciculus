@@ -8,6 +8,7 @@ namespace Fasciculus.Eve.Models
         public double Security { get; set; }
         public string SecurityClass { get; set; } = string.Empty;
         public Dictionary<int, SdeStargate> Stargates { get; set; } = [];
+        public Dictionary<int, SdePlanet> Planets { get; set; } = [];
 
         public string Name { get; set; } = string.Empty;
 

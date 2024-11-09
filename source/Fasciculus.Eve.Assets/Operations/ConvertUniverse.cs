@@ -47,9 +47,10 @@ namespace Fasciculus.Eve.Operations
             string name = solarSystem.Name;
             double security = solarSystem.Security;
             EveStargate[] stargates = solarSystem.Stargates.Select(kvp => ConvertStargate(kvp.Key, kvp.Value)).ToArray();
+            EvePlanet[] planets = solarSystem.Planets.Select(kvp => ConvertPlanet(kvp.Key, kvp.Value)).ToArray();
             bool hasIce = IceSystemNames.Contains(name);
 
-            return new(id, name, security, stargates, hasIce);
+            return new(id, name, security, stargates, planets, hasIce);
         }
 
         private static EveStargate ConvertStargate(int id, SdeStargate stargate)
@@ -57,6 +58,11 @@ namespace Fasciculus.Eve.Operations
             int destinationId = stargate.Destination;
 
             return new(id, destinationId);
+        }
+
+        private static EvePlanet ConvertPlanet(int id, SdePlanet planet)
+        {
+            return new(id);
         }
     }
 }

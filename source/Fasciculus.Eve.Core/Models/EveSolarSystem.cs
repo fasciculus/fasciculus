@@ -11,6 +11,7 @@ namespace Fasciculus.Eve.Models
 
         private EveConstellation? constellation;
         private readonly EveStargate[] stargates;
+        private readonly EvePlanet[] planets;
 
         public EveConstellation Constellation
             => Cond.NotNull(constellation);
@@ -18,13 +19,17 @@ namespace Fasciculus.Eve.Models
         public IEnumerable<EveStargate> Stargates
             => stargates;
 
+        public IEnumerable<EvePlanet> Planets
+            => planets;
+
         public bool HasIce { get; private set; }
 
-        public EveSolarSystem(EveId id, string name, double security, EveStargate[] stargates, bool hasIce)
+        public EveSolarSystem(EveId id, string name, double security, EveStargate[] stargates, EvePlanet[] planets, bool hasIce)
             : base(id, name)
         {
             Security = security;
             this.stargates = stargates;
+            this.planets = planets;
             HasIce = hasIce;
         }
 
@@ -45,6 +50,7 @@ namespace Fasciculus.Eve.Models
 
             data.WriteDouble(Security);
             data.WriteArray(stargates, stargate => stargate.Write(data));
+            data.WriteArray(planets, planet => planet.Write(data));
             data.WriteBool(HasIce);
         }
 
@@ -54,9 +60,10 @@ namespace Fasciculus.Eve.Models
             string name = data.ReadString();
             double security = data.ReadDouble();
             EveStargate[] stargates = data.ReadArray(EveStargate.Read);
+            EvePlanet[] planets = data.ReadArray(EvePlanet.Read);
             bool hasIce = data.ReadBool();
 
-            return new(id, name, security, stargates, hasIce);
+            return new(id, name, security, stargates, planets, hasIce);
         }
 
         public override string ToString()
