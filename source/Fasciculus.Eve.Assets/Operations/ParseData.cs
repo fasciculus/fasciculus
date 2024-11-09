@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Operations
 {
@@ -14,15 +15,21 @@ namespace Fasciculus.Eve.Operations
         {
             progress.Report("parsing data");
 
-            SdeNames names = ParseNames(progress);
+            Task<SdeNames> parseNames = ParseNames(progress);
+
+            Task.WaitAll([parseNames]);
+
+            SdeNames names = parseNames.Result;
 
             progress.Report("parsing data done");
 
             return new(names);
         }
 
-        private static SdeNames ParseNames(IProgress<string> progress)
+        private static async Task<SdeNames> ParseNames(IProgress<string> progress)
         {
+            await Task.CompletedTask;
+
             progress.Report("  parsing names");
 
             SdeNames result = new(Yaml.Deserialize<List<SdeName>>(NamesFile));
