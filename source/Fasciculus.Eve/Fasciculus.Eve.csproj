@@ -1,34 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationTitle>Fasciculus.Eve</ApplicationTitle>
+    <ApplicationId>ch.rhjoerg.fasciculus.eve</ApplicationId>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">false</PublishTrimmed>
+    <PublishTrimmed Condition="'$(Configuration)' == 'Release'">true</PublishTrimmed>
+    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">false</PublishReadyToRun>
+    <PublishReadyToRun Condition="'$(Configuration)' == 'Release'">true</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
-    <ProjectReference Include="../Fasciculus.Eve.Models/Fasciculus.Eve.Models.csproj" />
+    <PackageReference Include="Microsoft.Maui.Controls" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources/EveUniverse.dat">
-      <LogicalName>EveUniverse</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources/Constellations.dat">
-      <LogicalName>Sde.Constellations</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources/Names.dat">
-      <LogicalName>Sde.Names</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources/Regions.dat">
-      <LogicalName>Sde.Regions</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources/SolarSystems.dat">
-      <LogicalName>Sde.SolarSystems</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources/Stargates.dat">
-      <LogicalName>Sde.Stargates</LogicalName>
-    </EmbeddedResource>
+    <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
+    <ProjectReference Include="../Fasciculus.Eve.Core/Fasciculus.Eve.Core.csproj" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+    <MauiImage Include="Resources\Images\*" />
+    <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+    <MauiFont Include="Resources\Fonts\*" />
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="AppShell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+  </ItemGroup>
+
 </Project>
