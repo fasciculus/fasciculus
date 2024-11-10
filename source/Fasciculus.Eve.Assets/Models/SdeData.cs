@@ -41,10 +41,12 @@ namespace Fasciculus.Eve.Models
     public class SdeData
     {
         public readonly SdeNames Names;
+        public readonly SdeStationOperations StationOperations;
 
-        public SdeData(SdeNames names)
+        public SdeData(SdeNames names, SdeStationOperations stationOperations)
         {
             Names = names;
+            StationOperations = stationOperations;
         }
     }
 }

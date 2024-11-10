@@ -24,10 +24,11 @@ namespace Fasciculus.Eve.Operations
             Task.WaitAll([parseNames, parseStationOperations]);
 
             SdeNames names = parseNames.Result;
+            SdeStationOperations stationOperations = parseStationOperations.Result;
 
             progress.Report("parsing data done");
 
-            return new(names);
+            return new(names, stationOperations);
         }
 
         private static SdeNames ParseNames(IProgress<string> progress)
