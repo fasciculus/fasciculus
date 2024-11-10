@@ -2,19 +2,11 @@
 
 namespace Fasciculus.Eve.Models
 {
-    public class SdeStationOperation
+    public class LocalizedName
     {
-        public int[] Services { get; set; } = [];
-    }
+        public string En { get; set; } = string.Empty;
 
-    public class SdeStationOperations
-    {
-        private Dictionary<int, SdeStationOperation> stationOperations;
-
-        public SdeStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
-        {
-            this.stationOperations = stationOperations;
-        }
+        public static readonly LocalizedName Empty = new() { En = string.Empty };
     }
 
     public class SdeName
@@ -38,15 +30,46 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    public class SdeType
+    {
+        public int GroupId { get; set; }
+        public int MarketGroupID { get; set; }
+        public double Mass { get; set; }
+        public LocalizedName Name { get; set; } = LocalizedName.Empty;
+        public int PortionSize { get; set; }
+        public bool Published { get; set; }
+        public double Volume { get; set; } = double.MaxValue;
+    }
+
+    public class SdeTypes
+    {
+        private Dictionary<int, SdeType> types;
+
+        public SdeTypes(Dictionary<int, SdeType> types)
+        {
+            this.types = types;
+        }
+    }
+
+    public class SdeStationOperation
+    {
+        public int[] Services { get; set; } = [];
+    }
+
+    public class SdeStationOperations
+    {
+        private Dictionary<int, SdeStationOperation> stationOperations;
+
+        public SdeStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
+        {
+            this.stationOperations = stationOperations;
+        }
+    }
+
     public class SdeData
     {
-        public readonly SdeNames Names;
-        public readonly SdeStationOperations StationOperations;
-
-        public SdeData(SdeNames names, SdeStationOperations stationOperations)
-        {
-            Names = names;
-            StationOperations = stationOperations;
-        }
+        public required SdeNames Names { get; init; }
+        public required SdeTypes Types { get; set; }
+        public required SdeStationOperations StationOperations { get; init; }
     }
 }
