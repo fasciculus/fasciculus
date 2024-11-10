@@ -22,18 +22,18 @@ namespace Fasciculus.Eve.Operations
             progress.Report("parsing data");
 
             Task<SdeNames> names = Task.Run(() => ParseNames(progress));
-            Task<SdeTypes> types = Task.Run(() => ParseTypes(progress));
             Task<SdeStationOperations> stationOperations = Task.Run(() => ParseStationOperations(progress));
+            Task<SdeTypes> types = Task.Run(() => ParseTypes(progress));
 
-            Task.WaitAll([names, types, stationOperations]);
+            Task.WaitAll([names, stationOperations, types]);
 
             progress.Report("parsing data done");
 
             return new()
             {
                 Names = names.Result,
+                StationOperations = stationOperations.Result,
                 Types = types.Result,
-                StationOperations = stationOperations.Result
             };
         }
 
@@ -48,17 +48,6 @@ namespace Fasciculus.Eve.Operations
             return result;
         }
 
-        private static SdeTypes ParseTypes(IProgress<string> progress)
-        {
-            progress.Report("  parsing types");
-
-            SdeTypes result = new(Yaml.Deserialize<Dictionary<int, SdeType>>(TypesFile));
-
-            progress.Report("  parsing types done");
-
-            return result;
-        }
-
         private static SdeStationOperations ParseStationOperations(IProgress<string> progress)
         {
             progress.Report("  parsing station operations");
@@ -66,6 +55,17 @@ namespace Fasciculus.Eve.Operations
             SdeStationOperations result = new(Yaml.Deserialize<Dictionary<int, SdeStationOperation>>(StationOperationsFile));
 
             progress.Report("  parsing station operations done");
+
+            return result;
+        }
+
+        private static SdeTypes ParseTypes(IProgress<string> progress)
+        {
+            progress.Report("  parsing types");
+
+            SdeTypes result = new(Yaml.Deserialize<Dictionary<int, SdeType>>(TypesFile));
+
+            progress.Report("  parsing types done");
 
             return result;
         }

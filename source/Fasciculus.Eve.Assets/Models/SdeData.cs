@@ -69,7 +69,7 @@ namespace Fasciculus.Eve.Models
     public class SdeData
     {
         public required SdeNames Names { get; init; }
-        public required SdeTypes Types { get; set; }
         public required SdeStationOperations StationOperations { get; init; }
+        public required SdeTypes Types { get; set; }
     }
 }
