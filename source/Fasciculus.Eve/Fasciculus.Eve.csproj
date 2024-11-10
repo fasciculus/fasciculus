@@ -12,11 +12,12 @@
     <ApplicationVersion>1</ApplicationVersion>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <PropertyGroup>
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">false</PublishTrimmed>
-    <PublishTrimmed Condition="'$(Configuration)' == 'Release'">true</PublishTrimmed>
+    <PublishTrimmed Condition="'$(Configuration)' == 'Release'">false</PublishTrimmed>
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">false</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(Configuration)' == 'Release'">true</PublishReadyToRun>
   </PropertyGroup>
