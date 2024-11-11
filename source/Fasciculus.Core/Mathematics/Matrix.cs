@@ -141,18 +141,14 @@ namespace Fasciculus.Mathematics
 
         public void Write(Stream stream)
         {
-            Data data = stream;
-
-            data.WriteInt(ColumnCount);
-            data.WriteArray(rows, row => row.Write(data));
+            stream.WriteInt(ColumnCount);
+            stream.WriteArray(rows, row => row.Write(stream));
         }
 
         public static DenseShortMatrix Read(Stream stream)
         {
-            Data data = stream;
-
-            int columnCount = data.ReadInt();
-            DenseShortVector[] rows = data.ReadArray(DenseShortVector.Read);
+            int columnCount = stream.ReadInt();
+            DenseShortVector[] rows = stream.ReadArray(DenseShortVector.Read);
 
             return new(columnCount, rows);
         }

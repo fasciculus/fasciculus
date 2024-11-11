@@ -16,16 +16,12 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            Data data = stream;
-
-            data.WriteArray(objectsByIndex, o => o.Write(data));
+            stream.WriteArray(objectsByIndex, o => o.Write(stream));
         }
 
         public static EveRegions Read(Stream stream)
         {
-            Data data = stream;
-
-            EveRegion[] regions = data.ReadArray(EveRegion.Read);
+            EveRegion[] regions = stream.ReadArray(EveRegion.Read);
 
             return new(regions);
         }

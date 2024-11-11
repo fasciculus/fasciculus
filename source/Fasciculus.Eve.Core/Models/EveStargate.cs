@@ -1,5 +1,4 @@
-﻿using Fasciculus.IO;
-using Fasciculus.Validating;
+﻿using Fasciculus.Validating;
 using System.IO;
 
 namespace Fasciculus.Eve.Models
@@ -30,17 +29,13 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
-            Data data = stream;
-
-            destinationId.Write(data);
+            destinationId.Write(stream);
         }
 
         public static EveStargate Read(Stream stream)
         {
-            Data data = stream;
-
-            EveId id = EveId.Read(data);
-            EveId destinationId = EveId.Read(data);
+            EveId id = BaseRead(stream);
+            EveId destinationId = EveId.Read(stream);
 
             return new EveStargate(id, destinationId);
         }

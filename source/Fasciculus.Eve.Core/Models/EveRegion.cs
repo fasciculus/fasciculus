@@ -37,18 +37,13 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
-            Data data = stream;
-
-            data.WriteArray(constellations, constellation => constellation.Write(data));
+            stream.WriteArray(constellations, constellation => constellation.Write(stream));
         }
 
         public static EveRegion Read(Stream stream)
         {
-            Data data = stream;
-
-            EveId id = EveId.Read(data);
-            string name = data.ReadString();
-            EveConstellation[] constellations = data.ReadArray(EveConstellation.Read);
+            (EveId id, string name) = BaseRead(stream);
+            EveConstellation[] constellations = stream.ReadArray(EveConstellation.Read);
 
             return new EveRegion(id, name, constellations);
         }

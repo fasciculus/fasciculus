@@ -62,8 +62,6 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            Data data = stream;
-
             int n = solarSystems.Count;
 
             for (int r = 0; r < n; ++r)
@@ -72,15 +70,13 @@ namespace Fasciculus.Eve.Models
 
                 for (int c = r + 1; c < n; ++c)
                 {
-                    data.WriteShort(row[c]);
+                    stream.WriteShort(row[c]);
                 }
             }
         }
 
         public static EveDistances Read(EveSolarSystems solarSystems, Stream stream)
         {
-            Data data = stream;
-
             int n = solarSystems.Count;
             List<DenseShortVector> rows = new();
 
@@ -90,7 +86,7 @@ namespace Fasciculus.Eve.Models
 
                 for (int c = r + 1; c < n; ++c)
                 {
-                    values[c] = data.ReadShort();
+                    values[c] = stream.ReadShort();
                 }
 
                 rows.Add(new DenseShortVector(values));

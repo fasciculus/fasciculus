@@ -19,16 +19,12 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            Data data = stream;
-
-            data.WriteInt(Value);
+            stream.WriteInt(Value);
         }
 
         public static EveId Read(Stream stream)
         {
-            Data data = stream;
-
-            return data.ReadInt();
+            return stream.ReadInt();
         }
 
         public override bool Equals([NotNullWhen(true)] object? obj)

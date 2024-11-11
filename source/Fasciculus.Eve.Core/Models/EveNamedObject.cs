@@ -17,9 +17,15 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
-            Data data = stream;
+            stream.WriteString(Name);
+        }
 
-            data.WriteString(Name);
+        protected static new (EveId id, string name) BaseRead(Stream stream)
+        {
+            EveId id = EveObject.BaseRead(stream);
+            string name = stream.ReadString();
+
+            return (id, name);
         }
     }
 }

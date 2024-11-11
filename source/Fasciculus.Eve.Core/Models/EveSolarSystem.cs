@@ -49,24 +49,19 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
-            Data data = stream;
-
-            data.WriteDouble(Security);
-            data.WriteArray(stargates, stargate => stargate.Write(data));
-            data.WriteArray(planets, planet => planet.Write(data));
-            data.WriteBool(HasIce);
+            stream.WriteDouble(Security);
+            stream.WriteArray(stargates, stargate => stargate.Write(stream));
+            stream.WriteArray(planets, planet => planet.Write(stream));
+            stream.WriteBool(HasIce);
         }
 
         public static EveSolarSystem Read(Stream stream)
         {
-            Data data = stream;
-
-            EveId id = EveId.Read(data);
-            string name = data.ReadString();
-            double security = data.ReadDouble();
-            EveStargate[] stargates = data.ReadArray(EveStargate.Read);
-            EvePlanet[] planets = data.ReadArray(EvePlanet.Read);
-            bool hasIce = data.ReadBool();
+            (EveId id, string name) = BaseRead(stream);
+            double security = stream.ReadDouble();
+            EveStargate[] stargates = stream.ReadArray(EveStargate.Read);
+            EvePlanet[] planets = stream.ReadArray(EvePlanet.Read);
+            bool hasIce = stream.ReadBool();
 
             return new(id, name, security, stargates, planets, hasIce);
         }

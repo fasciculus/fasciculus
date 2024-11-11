@@ -45,16 +45,12 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            Data data = stream;
-
-            data.WriteArray(distances, d => d.Write(data));
+            stream.WriteArray(distances, distance => distance.Write(stream));
         }
 
         public static EveNavigation Read(IEveUniverse universe, Stream stream)
         {
-            Data data = stream;
-
-            EveDistances[] distances = data.ReadArray(d => EveDistances.Read(universe.SolarSystems, d));
+            EveDistances[] distances = stream.ReadArray(_ => EveDistances.Read(universe.SolarSystems, stream));
 
             return new(distances);
         }

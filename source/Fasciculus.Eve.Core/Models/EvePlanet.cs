@@ -21,17 +21,13 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
-            Data data = stream;
-
-            data.WriteArray(moons, moon => moon.Write(data));
+            stream.WriteArray(moons, moon => moon.Write(stream));
         }
 
         public static EvePlanet Read(Stream stream)
         {
-            Data data = stream;
-
-            EveId id = EveId.Read(data);
-            EveMoon[] moons = data.ReadArray(EveMoon.Read);
+            EveId id = BaseRead(stream);
+            EveMoon[] moons = stream.ReadArray(EveMoon.Read);
 
             return new(id, moons);
         }

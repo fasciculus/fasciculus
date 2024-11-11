@@ -1,5 +1,4 @@
-﻿using Fasciculus.IO;
-using System.IO;
+﻿using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
@@ -15,9 +14,7 @@ namespace Fasciculus.Eve.Models
 
         public static EveMoon Read(Stream stream)
         {
-            Data data = stream;
-
-            EveId id = EveId.Read(data);
+            EveId id = BaseRead(stream);
 
             return new(id);
         }

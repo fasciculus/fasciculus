@@ -43,18 +43,13 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
-            Data data = stream;
-
-            data.WriteArray(solarSystems, solarSystem => solarSystem.Write(data));
+            stream.WriteArray(solarSystems, solarSystem => solarSystem.Write(stream));
         }
 
         public static EveConstellation Read(Stream stream)
         {
-            Data data = stream;
-
-            EveId id = EveId.Read(data);
-            string name = data.ReadString();
-            EveSolarSystem[] solarSystems = data.ReadArray(EveSolarSystem.Read);
+            (EveId id, string name) = BaseRead(stream);
+            EveSolarSystem[] solarSystems = stream.ReadArray(EveSolarSystem.Read);
 
             return new(id, name, solarSystems);
         }

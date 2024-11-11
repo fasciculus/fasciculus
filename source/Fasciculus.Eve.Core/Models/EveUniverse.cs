@@ -1,5 +1,4 @@
-﻿using Fasciculus.IO;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -23,16 +22,12 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            Data data = stream;
-
-            Regions.Write(data);
+            Regions.Write(stream);
         }
 
         public static EveUniverse Read(Stream stream)
         {
-            Data data = stream;
-
-            EveRegions regions = EveRegions.Read(data);
+            EveRegions regions = EveRegions.Read(stream);
 
             return new(regions);
         }

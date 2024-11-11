@@ -71,16 +71,12 @@ namespace Fasciculus.Mathematics
 
         public void Write(Stream stream)
         {
-            Data data = stream;
-
-            data.WriteShortArray(entries);
+            stream.WriteShortArray(entries);
         }
 
         public static DenseShortVector Read(Stream stream)
         {
-            Data data = stream;
-
-            short[] entries = data.ReadShortArray();
+            short[] entries = stream.ReadShortArray();
 
             return new(entries);
         }
