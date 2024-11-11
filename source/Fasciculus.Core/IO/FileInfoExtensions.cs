@@ -15,11 +15,11 @@ namespace System.IO
         public static bool IsNewerThan(this FileInfo file, FileInfo target)
             => !target.Exists || file.LastWriteTimeUtc > target.LastWriteTimeUtc;
 
-        public static string ReadAllText(this FileInfo file, Encoding encoding)
-            => File.ReadAllText(file.FullName, Encoding.UTF8);
+        public static string ReadAllText(this FileInfo file, Encoding? encoding = null)
+            => File.ReadAllText(file.FullName, encoding ?? Encoding.UTF8);
 
-        public static string ReadAllText(this FileInfo file)
-            => File.ReadAllText(file.FullName, Encoding.UTF8);
+        public static byte[] ReadAllBytes(this FileInfo file)
+            => File.ReadAllBytes(file.FullName);
 
         public static void WriteAllBytes(this FileInfo file, byte[] bytes)
             => File.WriteAllBytes(file.FullName, bytes);

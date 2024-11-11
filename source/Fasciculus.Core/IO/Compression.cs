@@ -79,5 +79,21 @@ namespace Fasciculus.IO
 
             gzStream.CopyTo(uncompressed);
         }
+
+        public static void Extract(FileInfo compressedFile, Stream uncompressed)
+        {
+            using Stream compressed = compressedFile.OpenRead();
+
+            Extract(compressed, uncompressed);
+        }
+
+        public static byte[] Extract(FileInfo compressedFile)
+        {
+            MemoryStream uncompressed = new();
+
+            Extract(compressedFile, uncompressed);
+
+            return uncompressed.ToArray();
+        }
     }
 }

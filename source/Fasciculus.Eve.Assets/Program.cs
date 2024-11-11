@@ -1,4 +1,5 @@
-﻿using Fasciculus.Eve.Models;
+﻿using Fasciculus.Algorithms;
+using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Operations;
 using Fasciculus.IO;
 using System;
@@ -56,11 +57,10 @@ namespace Fasciculus.Eve
             sdeUniverse.Populate(sdeData);
 
             EveUniverse eveUniverse = ConvertUniverse.Execute(sdeUniverse);
-            using MemoryStream uncompressed = new MemoryStream();
+            using MemoryStream uncompressed = new();
 
             eveUniverse.Write(uncompressed);
-            uncompressed.Position = 0;
-            GZip.Compress(uncompressed, UniverseFile);
+            CreateFile(uncompressed, UniverseFile, progress);
 
             return eveUniverse;
         }
@@ -69,11 +69,34 @@ namespace Fasciculus.Eve
         {
             EveNavigation navigation = CreateNavigation.Execute(eveUniverse, progress);
 
-            using MemoryStream uncompressed = new MemoryStream();
+            using MemoryStream uncompressed = new();
 
             navigation.Write(uncompressed);
-            uncompressed.Position = 0;
-            GZip.Compress(uncompressed, NavigationFile);
+            CreateFile(uncompressed, NavigationFile, progress);
+        }
+
+        private static void CreateFile(MemoryStream uncompressed, FileInfo file, IProgress<string> progress)
+        {
+            bool done = false;
+
+            progress.Report($"compressing {file.Name}");
+
+            if (file.Exists)
+            {
+                if (Equality.AreEqual(uncompressed.ToArray(), GZip.Extract(file)))
+                {
+                    progress.Report($"  no changes for {file.Name}");
+                    done = true;
+                }
+            }
+
+            if (!done)
+            {
+                uncompressed.Position = 0;
+                GZip.Compress(uncompressed, file);
+            }
+
+            progress.Report($"compressing {file.Name} done");
         }
     }
 }
