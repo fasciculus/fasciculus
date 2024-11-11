@@ -12,6 +12,7 @@
     <ApplicationVersion>1</ApplicationVersion>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <SelfContained>true</SelfContained>
   </PropertyGroup>
 
