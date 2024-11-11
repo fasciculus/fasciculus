@@ -3,6 +3,7 @@ using Fasciculus.Collections;
 using Fasciculus.IO;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -68,13 +69,17 @@ namespace Fasciculus.Mathematics
             this.entries = entries.ShallowCopy();
         }
 
-        public void Write(Data data)
+        public void Write(Stream stream)
         {
+            Data data = stream;
+
             data.WriteShortArray(entries);
         }
 
-        public static DenseShortVector Read(Data data)
+        public static DenseShortVector Read(Stream stream)
         {
+            Data data = stream;
+
             short[] entries = data.ReadShortArray();
 
             return new(entries);

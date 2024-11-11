@@ -105,7 +105,7 @@ namespace Fasciculus.IO
             values.Apply(WriteShort);
         }
 
-        public T[] ReadArray<T>(Func<Data, T> read)
+        public T[] ReadArray<T>(Func<Stream, T> read)
             where T : notnull
         {
             int length = ReadInt();
@@ -133,5 +133,8 @@ namespace Fasciculus.IO
 
         public static implicit operator Data(Stream stream)
             => new(stream);
+
+        public static implicit operator Stream(Data data)
+            => data.stream;
     }
 }

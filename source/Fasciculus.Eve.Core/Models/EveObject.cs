@@ -1,4 +1,5 @@
 ﻿using Fasciculus.IO;
+using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
@@ -13,13 +14,10 @@ namespace Fasciculus.Eve.Models
             Id = id;
         }
 
-        public EveObject(Data data)
+        public virtual void Write(Stream stream)
         {
-            Id = EveId.Read(data);
-        }
+            Data data = stream;
 
-        public virtual void Write(Data data)
-        {
             Id.Write(data);
         }
     }

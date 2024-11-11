@@ -2,6 +2,7 @@
 using Fasciculus.Mathematics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -59,8 +60,10 @@ namespace Fasciculus.Eve.Models
             return maxDistance;
         }
 
-        public void Write(Data data)
+        public void Write(Stream stream)
         {
+            Data data = stream;
+
             int n = solarSystems.Count;
 
             for (int r = 0; r < n; ++r)
@@ -74,8 +77,10 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        public static EveDistances Read(EveSolarSystems solarSystems, Data data)
+        public static EveDistances Read(EveSolarSystems solarSystems, Stream stream)
         {
+            Data data = stream;
+
             int n = solarSystems.Count;
             List<DenseShortVector> rows = new();
 

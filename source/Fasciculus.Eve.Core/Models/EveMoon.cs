@@ -1,4 +1,5 @@
 ﻿using Fasciculus.IO;
+using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
@@ -7,13 +8,15 @@ namespace Fasciculus.Eve.Models
         public EveMoon(EveId id)
             : base(id) { }
 
-        public override void Write(Data data)
+        public override void Write(Stream stream)
         {
-            base.Write(data);
+            base.Write(stream);
         }
 
-        public static EveMoon Read(Data data)
+        public static EveMoon Read(Stream stream)
         {
+            Data data = stream;
+
             EveId id = EveId.Read(data);
 
             return new(id);

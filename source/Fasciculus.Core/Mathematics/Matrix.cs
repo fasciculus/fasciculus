@@ -1,6 +1,7 @@
 ﻿using Fasciculus.IO;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -138,14 +139,18 @@ namespace Fasciculus.Mathematics
         public SparseShortMatrix ToSparse()
             => new(ColumnCount, rows.Select(row => row.ToSparse()).ToArray());
 
-        public void Write(Data data)
+        public void Write(Stream stream)
         {
+            Data data = stream;
+
             data.WriteInt(ColumnCount);
             data.WriteArray(rows, row => row.Write(data));
         }
 
-        public static DenseShortMatrix Read(Data data)
+        public static DenseShortMatrix Read(Stream stream)
         {
+            Data data = stream;
+
             int columnCount = data.ReadInt();
             DenseShortVector[] rows = data.ReadArray(DenseShortVector.Read);
 

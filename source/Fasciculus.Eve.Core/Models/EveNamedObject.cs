@@ -1,4 +1,5 @@
 ﻿using Fasciculus.IO;
+using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
@@ -12,15 +13,11 @@ namespace Fasciculus.Eve.Models
             Name = name;
         }
 
-        public EveNamedObject(Data data)
-            : base(data)
+        public override void Write(Stream stream)
         {
-            Name = data.ReadString();
-        }
+            base.Write(stream);
 
-        public override void Write(Data data)
-        {
-            base.Write(data);
+            Data data = stream;
 
             data.WriteString(Name);
         }

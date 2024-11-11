@@ -1,5 +1,6 @@
 ﻿using Fasciculus.IO;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
@@ -13,13 +14,17 @@ namespace Fasciculus.Eve.Models
             this.Apply(region => region.Link(universe));
         }
 
-        public void Write(Data data)
+        public void Write(Stream stream)
         {
+            Data data = stream;
+
             data.WriteArray(objectsByIndex, o => o.Write(data));
         }
 
-        public static EveRegions Read(Data data)
+        public static EveRegions Read(Stream stream)
         {
+            Data data = stream;
+
             EveRegion[] regions = data.ReadArray(EveRegion.Read);
 
             return new(regions);

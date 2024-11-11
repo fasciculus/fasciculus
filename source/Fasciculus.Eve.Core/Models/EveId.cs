@@ -1,6 +1,7 @@
 ﻿using Fasciculus.IO;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
@@ -16,11 +17,19 @@ namespace Fasciculus.Eve.Models
         public static implicit operator EveId(int value)
             => new(value);
 
-        public void Write(Data data)
-            => data.WriteInt(Value);
+        public void Write(Stream stream)
+        {
+            Data data = stream;
 
-        public static EveId Read(Data data)
-            => data.ReadInt();
+            data.WriteInt(Value);
+        }
+
+        public static EveId Read(Stream stream)
+        {
+            Data data = stream;
+
+            return data.ReadInt();
+        }
 
         public override bool Equals([NotNullWhen(true)] object? obj)
             => obj is EveId id && Value == id.Value;

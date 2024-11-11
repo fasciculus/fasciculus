@@ -1,5 +1,6 @@
 ﻿using Fasciculus.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -32,15 +33,19 @@ namespace Fasciculus.Eve.Models
             constellations.Apply(constellation => constellation.Link(this, universe));
         }
 
-        public override void Write(Data data)
+        public override void Write(Stream stream)
         {
-            base.Write(data);
+            base.Write(stream);
+
+            Data data = stream;
 
             data.WriteArray(constellations, constellation => constellation.Write(data));
         }
 
-        public static EveRegion Read(Data data)
+        public static EveRegion Read(Stream stream)
         {
+            Data data = stream;
+
             EveId id = EveId.Read(data);
             string name = data.ReadString();
             EveConstellation[] constellations = data.ReadArray(EveConstellation.Read);

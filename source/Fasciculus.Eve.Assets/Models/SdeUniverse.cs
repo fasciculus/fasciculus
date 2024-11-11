@@ -2,9 +2,16 @@
 
 namespace Fasciculus.Eve.Models
 {
+    public class SdeMoonStation
+    {
+        public int OperationID { get; set; }
+        public int TypeID { get; set; }
+    }
+
     public class SdeMoon
     {
         public int TypeId { get; set; }
+        public Dictionary<int, SdeMoonStation> NpcStations { get; set; } = [];
     }
 
     public class SdeAsteroidBelt

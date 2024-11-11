@@ -2,6 +2,7 @@
 using Fasciculus.Validating;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -42,13 +43,17 @@ namespace Fasciculus.Eve.Models
             return Cond.NotNull(nearest);
         }
 
-        public void Write(Data data)
+        public void Write(Stream stream)
         {
+            Data data = stream;
+
             data.WriteArray(distances, d => d.Write(data));
         }
 
-        public static EveNavigation Read(IEveUniverse universe, Data data)
+        public static EveNavigation Read(IEveUniverse universe, Stream stream)
         {
+            Data data = stream;
+
             EveDistances[] distances = data.ReadArray(d => EveDistances.Read(universe.SolarSystems, d));
 
             return new(distances);

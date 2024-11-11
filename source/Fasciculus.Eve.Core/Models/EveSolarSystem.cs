@@ -1,6 +1,7 @@
 ﻿using Fasciculus.IO;
 using Fasciculus.Validating;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -44,9 +45,11 @@ namespace Fasciculus.Eve.Models
             stargates.Apply(stargate => stargate.Link(this, universe));
         }
 
-        public override void Write(Data data)
+        public override void Write(Stream stream)
         {
-            base.Write(data);
+            base.Write(stream);
+
+            Data data = stream;
 
             data.WriteDouble(Security);
             data.WriteArray(stargates, stargate => stargate.Write(data));
@@ -54,8 +57,10 @@ namespace Fasciculus.Eve.Models
             data.WriteBool(HasIce);
         }
 
-        public static EveSolarSystem Read(Data data)
+        public static EveSolarSystem Read(Stream stream)
         {
+            Data data = stream;
+
             EveId id = EveId.Read(data);
             string name = data.ReadString();
             double security = data.ReadDouble();

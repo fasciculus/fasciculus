@@ -1,5 +1,6 @@
 ﻿using Fasciculus.IO;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
@@ -16,15 +17,19 @@ namespace Fasciculus.Eve.Models
             this.moons = moons;
         }
 
-        public override void Write(Data data)
+        public override void Write(Stream stream)
         {
-            base.Write(data);
+            base.Write(stream);
+
+            Data data = stream;
 
             data.WriteArray(moons, moon => moon.Write(data));
         }
 
-        public static EvePlanet Read(Data data)
+        public static EvePlanet Read(Stream stream)
         {
+            Data data = stream;
+
             EveId id = EveId.Read(data);
             EveMoon[] moons = data.ReadArray(EveMoon.Read);
 
