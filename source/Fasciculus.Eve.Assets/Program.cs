@@ -3,6 +3,7 @@ using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Operations;
 using Fasciculus.IO;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Fasciculus.Eve
@@ -27,14 +28,17 @@ namespace Fasciculus.Eve
         {
             try
             {
+                List<string> changes = [];
                 Progress progress = new();
 
                 SdeData sdeData = CreateSde(progress);
-                EveUniverse eveUniverse = CreateUniverseFile(sdeData, progress);
 
-                CreateNavigationFile(eveUniverse, progress);
+                EveUniverse eveUniverse = CreateUniverseFile(sdeData, changes, progress);
 
+                CreateNavigationFile(eveUniverse, changes, progress);
 
+                Console.WriteLine("changes");
+                changes.ForEach(change => Console.WriteLine($"  {change}"));
             }
             catch (Exception e)
             {
@@ -50,7 +54,7 @@ namespace Fasciculus.Eve
             return ParseData.Execute(progress);
         }
 
-        private static EveUniverse CreateUniverseFile(SdeData sdeData, IProgress<string> progress)
+        private static EveUniverse CreateUniverseFile(SdeData sdeData, List<string> changes, IProgress<string> progress)
         {
             SdeUniverse sdeUniverse = ParseUniverse.Execute(progress);
 
@@ -60,22 +64,22 @@ namespace Fasciculus.Eve
             using MemoryStream uncompressed = new();
 
             eveUniverse.Write(uncompressed);
-            CreateFile(uncompressed, UniverseFile, progress);
+            CreateFile(uncompressed, UniverseFile, changes, progress);
 
             return eveUniverse;
         }
 
-        private static void CreateNavigationFile(IEveUniverse eveUniverse, IProgress<string> progress)
+        private static void CreateNavigationFile(IEveUniverse eveUniverse, List<string> changes, IProgress<string> progress)
         {
             EveNavigation navigation = CreateNavigation.Execute(eveUniverse, progress);
 
             using MemoryStream uncompressed = new();
 
             navigation.Write(uncompressed);
-            CreateFile(uncompressed, NavigationFile, progress);
+            CreateFile(uncompressed, NavigationFile, changes, progress);
         }
 
-        private static void CreateFile(MemoryStream uncompressed, FileInfo file, IProgress<string> progress)
+        private static void CreateFile(MemoryStream uncompressed, FileInfo file, List<string> changes, IProgress<string> progress)
         {
             bool done = false;
 
@@ -94,6 +98,7 @@ namespace Fasciculus.Eve
             {
                 uncompressed.Position = 0;
                 GZip.Compress(uncompressed, file);
+                changes.Add(file.Name);
             }
 
             progress.Report($"compressing {file.Name} done");

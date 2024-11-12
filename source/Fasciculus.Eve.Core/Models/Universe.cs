@@ -5,21 +5,59 @@ using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
-    public class EveMoon : EveObject
+    public class EveNpcStation : EveObject
     {
-        public EveMoon(EveId id)
-            : base(id) { }
+        private readonly EveId operationId;
+        private readonly EveId typeId;
+
+        public EveNpcStation(EveId id, EveId operationId, EveId typeId)
+            : base(id)
+        {
+            this.operationId = operationId;
+            this.typeId = typeId;
+        }
 
         public override void Write(Stream stream)
         {
             base.Write(stream);
+
+            operationId.Write(stream);
+            typeId.Write(stream);
+        }
+
+        public static EveNpcStation Read(Stream stream)
+        {
+            EveId id = BaseRead(stream);
+            EveId operationId = EveId.Read(stream);
+            EveId typeId = EveId.Read(stream);
+
+            return new(id, operationId, typeId);
+        }
+    }
+
+    public class EveMoon : EveObject
+    {
+        private readonly EveNpcStation[] npcStations;
+
+        public EveMoon(EveId id, EveNpcStation[] npcStations)
+            : base(id)
+        {
+            this.npcStations = npcStations;
+        }
+
+        public override void Write(Stream stream)
+        {
+            base.Write(stream);
+
+            stream.WriteArray(npcStations, npcStation => npcStation.Write(stream));
         }
 
         public static EveMoon Read(Stream stream)
         {
             EveId id = BaseRead(stream);
+            EveNpcStation[] npcStations = stream.ReadArray(EveNpcStation.Read);
 
-            return new(id);
+            return new(id, npcStations);
         }
     }
 

@@ -16,8 +16,8 @@ namespace Fasciculus.Eve.Models
             Value = value;
         }
 
-        public static implicit operator EveId(int value)
-            => new(value);
+        public static EveId Create(int id)
+            => new(id);
 
         public void Write(Stream stream)
         {
@@ -26,7 +26,7 @@ namespace Fasciculus.Eve.Models
 
         public static EveId Read(Stream stream)
         {
-            return stream.ReadInt();
+            return new(stream.ReadInt());
         }
 
         public override bool Equals([NotNullWhen(true)] object? obj)

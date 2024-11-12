@@ -25,7 +25,7 @@ namespace Fasciculus.Eve.Operations
 
         private static EveRegion ConvertRegion(SdeRegion region)
         {
-            EveId id = region.RegionID;
+            EveId id = new(region.RegionID);
             string name = region.Name;
             EveConstellation[] constellations = region.Constellations.Select(ConvertConstellation).ToArray();
 
@@ -34,7 +34,7 @@ namespace Fasciculus.Eve.Operations
 
         private static EveConstellation ConvertConstellation(SdeConstellation constellation)
         {
-            EveId id = constellation.ConstellationID;
+            EveId id = new(constellation.ConstellationID);
             string name = constellation.Name;
             EveSolarSystem[] solarSystems = constellation.SolarSystems.Select(ConvertSolarSystem).ToArray();
 
@@ -43,7 +43,7 @@ namespace Fasciculus.Eve.Operations
 
         private static EveSolarSystem ConvertSolarSystem(SdeSolarSystem solarSystem)
         {
-            EveId id = solarSystem.SolarSystemID;
+            EveId id = new(solarSystem.SolarSystemID);
             string name = solarSystem.Name;
             double security = solarSystem.Security;
             EveStargate[] stargates = solarSystem.Stargates.Select(kvp => ConvertStargate(kvp.Key, kvp.Value)).ToArray();
@@ -53,24 +53,38 @@ namespace Fasciculus.Eve.Operations
             return new(id, name, security, stargates, planets, hasIce);
         }
 
-        private static EveStargate ConvertStargate(int id, SdeStargate stargate)
+        private static EveStargate ConvertStargate(int rawId, SdeStargate stargate)
         {
-            int destinationId = stargate.Destination;
+            EveId id = new(rawId);
+            EveId destinationId = new(stargate.Destination);
 
             return new(id, destinationId);
         }
 
-        private static EvePlanet ConvertPlanet(int id, SdePlanet planet)
+        private static EvePlanet ConvertPlanet(int rawId, SdePlanet planet)
         {
+            EveId id = new(rawId);
             int celestialIndex = planet.CelestialIndex;
             EveMoon[] moons = planet.Moons.Select(kvp => ConvertMoon(kvp.Key, kvp.Value)).ToArray();
 
             return new(id, celestialIndex, moons);
         }
 
-        private static EveMoon ConvertMoon(int id, SdeMoon moon)
+        private static EveMoon ConvertMoon(int rawId, SdeMoon moon)
         {
-            return new(id);
+            EveId id = new(rawId);
+            EveNpcStation[] npcStations = moon.NpcStations.Select(kvp => ConvertNpcStation(kvp.Key, kvp.Value)).ToArray();
+
+            return new(id, npcStations);
+        }
+
+        private static EveNpcStation ConvertNpcStation(int rawId, SdeMoonStation moonStation)
+        {
+            EveId id = new(rawId);
+            EveId operationId = new(moonStation.OperationID);
+            EveId typeId = new(moonStation.TypeID);
+
+            return new(id, operationId, typeId);
         }
     }
 }
