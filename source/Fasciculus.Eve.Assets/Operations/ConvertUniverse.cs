@@ -65,17 +65,21 @@ namespace Fasciculus.Eve.Operations
         {
             EveId id = new(rawId);
             int celestialIndex = planet.CelestialIndex;
-            EveMoon[] moons = planet.Moons.Select(kvp => ConvertMoon(kvp.Key, kvp.Value)).ToArray();
+            IEnumerator<int> celestialIndices = Enumerable.Range(1, planet.Moons.Count).GetEnumerator();
+            EveMoon[] moons = planet.Moons.Select(kvp => ConvertMoon(kvp.Key, celestialIndices, kvp.Value)).ToArray();
 
             return new(id, celestialIndex, moons);
         }
 
-        private static EveMoon ConvertMoon(int rawId, SdeMoon moon)
+        private static EveMoon ConvertMoon(int rawId, IEnumerator<int> celestialIndices, SdeMoon moon)
         {
+            celestialIndices.MoveNext();
+
             EveId id = new(rawId);
+            int celestialIndex = celestialIndices.Current;
             EveNpcStation[] npcStations = moon.NpcStations.Select(kvp => ConvertNpcStation(kvp.Key, kvp.Value)).ToArray();
 
-            return new(id, npcStations);
+            return new(id, celestialIndex, npcStations);
         }
 
         private static EveNpcStation ConvertNpcStation(int rawId, SdeMoonStation moonStation)

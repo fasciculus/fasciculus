@@ -38,11 +38,14 @@ namespace Fasciculus.Eve.Models
 
     public class EveMoon : EveObject
     {
+        public int CelestialIndex { get; }
+
         private readonly EveNpcStation[] npcStations;
 
-        public EveMoon(EveId id, EveNpcStation[] npcStations)
+        public EveMoon(EveId id, int celestialIndex, EveNpcStation[] npcStations)
             : base(id)
         {
+            CelestialIndex = celestialIndex;
             this.npcStations = npcStations;
         }
 
@@ -50,15 +53,17 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
+            stream.WriteInt(CelestialIndex);
             stream.WriteArray(npcStations, npcStation => npcStation.Write(stream));
         }
 
         public static EveMoon Read(Stream stream)
         {
             EveId id = BaseRead(stream);
+            int celestialIndex = stream.ReadInt();
             EveNpcStation[] npcStations = stream.ReadArray(EveNpcStation.Read);
 
-            return new(id, npcStations);
+            return new(id, celestialIndex, npcStations);
         }
     }
 
