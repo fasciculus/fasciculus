@@ -1,4 +1,5 @@
-﻿using Fasciculus.Validating;
+﻿using Fasciculus.Algorithms;
+using Fasciculus.Validating;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,6 +64,8 @@ namespace Fasciculus.Eve.Models
 
     public class EvePlanet : EveObject
     {
+        private EveSolarSystem? solarSystem;
+
         private readonly EveMoon[] moons;
 
         public int CelestialIndex { get; }
@@ -70,11 +73,22 @@ namespace Fasciculus.Eve.Models
         public IEnumerable<EveMoon> Moons
             => moons;
 
+        public EveSolarSystem SolarSystem
+            => Cond.NotNull(solarSystem);
+
+        public string Name
+            => $"{SolarSystem.Name} {RomanNumbers.Format(CelestialIndex)}";
+
         public EvePlanet(EveId id, int celestialIndex, EveMoon[] moons)
             : base(id)
         {
             CelestialIndex = celestialIndex;
             this.moons = moons;
+        }
+
+        internal void Link(EveSolarSystem solarSystem)
+        {
+            this.solarSystem = solarSystem;
         }
 
         public override void Write(Stream stream)
@@ -92,6 +106,11 @@ namespace Fasciculus.Eve.Models
             EveMoon[] moons = stream.ReadArray(EveMoon.Read);
 
             return new(id, celestialIndex, moons);
+        }
+
+        public override string? ToString()
+        {
+            return Name;
         }
     }
 
@@ -176,6 +195,7 @@ namespace Fasciculus.Eve.Models
         {
             this.constellation = constellation;
             stargates.Apply(stargate => stargate.Link(this, universe));
+            planets.Apply(planet => planet.Link(this));
         }
 
         public override void Write(Stream stream)
