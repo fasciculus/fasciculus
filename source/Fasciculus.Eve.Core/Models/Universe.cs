@@ -27,12 +27,15 @@ namespace Fasciculus.Eve.Models
     {
         private readonly EveMoon[] moons;
 
+        public int CelestialIndex { get; }
+
         public IEnumerable<EveMoon> Moons
             => moons;
 
-        public EvePlanet(EveId id, EveMoon[] moons)
+        public EvePlanet(EveId id, int celestialIndex, EveMoon[] moons)
             : base(id)
         {
+            CelestialIndex = celestialIndex;
             this.moons = moons;
         }
 
@@ -40,15 +43,17 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
+            stream.WriteInt(CelestialIndex);
             stream.WriteArray(moons, moon => moon.Write(stream));
         }
 
         public static EvePlanet Read(Stream stream)
         {
             EveId id = BaseRead(stream);
+            int celestialIndex = stream.ReadInt();
             EveMoon[] moons = stream.ReadArray(EveMoon.Read);
 
-            return new(id, moons);
+            return new(id, celestialIndex, moons);
         }
     }
 
