@@ -146,7 +146,7 @@ namespace Fasciculus.Eve.Models
     {
         private readonly Dictionary<EveCelestialIndex, EveMoon> moons;
 
-        public EveMoons(IEnumerable<EveMoon> moons)
+        public EveMoons(EveMoon[] moons)
             : base(moons)
         {
             this.moons = moons.ToDictionary(moon => moon.CelestialIndex, moon => moon);
@@ -219,7 +219,7 @@ namespace Fasciculus.Eve.Models
     {
         private readonly Dictionary<EveCelestialIndex, EvePlanet> planets;
 
-        public EvePlanets(IEnumerable<EvePlanet> planets)
+        public EvePlanets(EvePlanet[] planets)
             : base(planets)
         {
             this.planets = planets.ToDictionary(planet => planet.CelestialIndex, planet => planet);
