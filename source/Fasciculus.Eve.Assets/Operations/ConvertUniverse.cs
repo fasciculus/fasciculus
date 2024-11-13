@@ -64,7 +64,7 @@ namespace Fasciculus.Eve.Operations
         private static EvePlanet ConvertPlanet(int rawId, SdePlanet planet)
         {
             EveId id = new(rawId);
-            int celestialIndex = planet.CelestialIndex;
+            EveCelestialIndex celestialIndex = new(planet.CelestialIndex);
             IEnumerator<int> celestialIndices = Enumerable.Range(1, planet.Moons.Count).GetEnumerator();
             EveMoon[] moons = planet.Moons.Select(kvp => ConvertMoon(kvp.Key, celestialIndices, kvp.Value)).ToArray();
 
@@ -76,7 +76,7 @@ namespace Fasciculus.Eve.Operations
             celestialIndices.MoveNext();
 
             EveId id = new(rawId);
-            int celestialIndex = celestialIndices.Current;
+            EveCelestialIndex celestialIndex = new(celestialIndices.Current);
             EveNpcStation[] npcStations = moon.NpcStations.Select(kvp => ConvertNpcStation(kvp.Key, kvp.Value)).ToArray();
 
             return new(id, celestialIndex, npcStations);

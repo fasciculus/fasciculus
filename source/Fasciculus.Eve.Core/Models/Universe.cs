@@ -1,11 +1,73 @@
 ﻿using Fasciculus.Algorithms;
 using Fasciculus.Validating;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
+    public class EveCelestialIndex : IEquatable<EveCelestialIndex>, IComparable<EveCelestialIndex>
+    {
+        public readonly int Value;
+
+        public EveCelestialIndex(int value)
+        {
+            Value = value;
+        }
+
+        public static EveCelestialIndex Create(int id)
+            => new(id);
+
+        public void Write(Stream stream)
+        {
+            stream.WriteInt(Value);
+        }
+
+        public static EveCelestialIndex Read(Stream stream)
+        {
+            return new(stream.ReadInt());
+        }
+
+        public override bool Equals([NotNullWhen(true)] object? obj)
+            => obj is EveCelestialIndex id && Value == id.Value;
+
+        public bool Equals(EveCelestialIndex? other)
+            => other is not null && Value == other.Value;
+
+        public int CompareTo(EveCelestialIndex? other)
+            => other is not null ? Value.CompareTo(other.Value) : -1;
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
+        public override string? ToString()
+        {
+            return Value.ToString();
+        }
+
+        public static bool operator ==(EveCelestialIndex a, EveCelestialIndex b)
+            => a.Value == b.Value;
+
+        public static bool operator !=(EveCelestialIndex a, EveCelestialIndex b)
+            => a.Value == b.Value;
+
+        public static bool operator <(EveCelestialIndex a, EveCelestialIndex b)
+            => a.Value < b.Value;
+
+        public static bool operator >(EveCelestialIndex a, EveCelestialIndex b)
+            => a.Value > b.Value;
+
+        public static bool operator <=(EveCelestialIndex a, EveCelestialIndex b)
+            => a.Value <= b.Value;
+
+        public static bool operator >=(EveCelestialIndex a, EveCelestialIndex b)
+            => a.Value >= b.Value;
+    }
+
     public class EveNpcStation : EveObject
     {
         private readonly EveId operationId;
@@ -38,11 +100,11 @@ namespace Fasciculus.Eve.Models
 
     public class EveMoon : EveObject
     {
-        public int CelestialIndex { get; }
+        public EveCelestialIndex CelestialIndex { get; }
 
         private readonly EveNpcStation[] npcStations;
 
-        public EveMoon(EveId id, int celestialIndex, EveNpcStation[] npcStations)
+        public EveMoon(EveId id, EveCelestialIndex celestialIndex, EveNpcStation[] npcStations)
             : base(id)
         {
             CelestialIndex = celestialIndex;
@@ -53,14 +115,14 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
-            stream.WriteInt(CelestialIndex);
+            CelestialIndex.Write(stream);
             stream.WriteArray(npcStations, npcStation => npcStation.Write(stream));
         }
 
         public static EveMoon Read(Stream stream)
         {
             EveId id = BaseRead(stream);
-            int celestialIndex = stream.ReadInt();
+            EveCelestialIndex celestialIndex = EveCelestialIndex.Read(stream);
             EveNpcStation[] npcStations = stream.ReadArray(EveNpcStation.Read);
 
             return new(id, celestialIndex, npcStations);
@@ -73,7 +135,7 @@ namespace Fasciculus.Eve.Models
 
         private readonly EveMoon[] moons;
 
-        public int CelestialIndex { get; }
+        public EveCelestialIndex CelestialIndex { get; }
 
         public IEnumerable<EveMoon> Moons
             => moons;
@@ -82,9 +144,9 @@ namespace Fasciculus.Eve.Models
             => Cond.NotNull(solarSystem);
 
         public string Name
-            => $"{SolarSystem.Name} {RomanNumbers.Format(CelestialIndex)}";
+            => $"{SolarSystem.Name} {RomanNumbers.Format(CelestialIndex.Value)}";
 
-        public EvePlanet(EveId id, int celestialIndex, EveMoon[] moons)
+        public EvePlanet(EveId id, EveCelestialIndex celestialIndex, EveMoon[] moons)
             : base(id)
         {
             CelestialIndex = celestialIndex;
@@ -100,14 +162,14 @@ namespace Fasciculus.Eve.Models
         {
             base.Write(stream);
 
-            stream.WriteInt(CelestialIndex);
+            CelestialIndex.Write(stream);
             stream.WriteArray(moons, moon => moon.Write(stream));
         }
 
         public static EvePlanet Read(Stream stream)
         {
             EveId id = BaseRead(stream);
-            int celestialIndex = stream.ReadInt();
+            EveCelestialIndex celestialIndex = EveCelestialIndex.Read(stream);
             EveMoon[] moons = stream.ReadArray(EveMoon.Read);
 
             return new(id, celestialIndex, moons);
