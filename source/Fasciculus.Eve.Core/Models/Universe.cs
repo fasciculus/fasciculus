@@ -278,7 +278,7 @@ namespace Fasciculus.Eve.Models
 
     public class EveStargates : EveObjects<EveStargate>
     {
-        public EveStargates(IEnumerable<EveStargate> stargates)
+        public EveStargates(EveStargate[] stargates)
             : base(stargates) { }
     }
 
@@ -349,7 +349,7 @@ namespace Fasciculus.Eve.Models
 
     public class EveSolarSystems : EveNamedObjects<EveSolarSystem>
     {
-        public EveSolarSystems(IEnumerable<EveSolarSystem> solarSystems)
+        public EveSolarSystems(EveSolarSystem[] solarSystems)
             : base(solarSystems)
         {
         }
@@ -406,7 +406,7 @@ namespace Fasciculus.Eve.Models
 
     public class EveConstellations : EveNamedObjects<EveConstellation>
     {
-        public EveConstellations(IEnumerable<EveConstellation> constellations)
+        public EveConstellations(EveConstellation[] constellations)
             : base(constellations) { }
     }
 
@@ -456,7 +456,7 @@ namespace Fasciculus.Eve.Models
 
     public class EveRegions : EveNamedObjects<EveRegion>
     {
-        public EveRegions(IEnumerable<EveRegion> regions)
+        public EveRegions(EveRegion[] regions)
             : base(regions) { }
 
         internal void Link(IEveUniverse universe)
@@ -494,9 +494,9 @@ namespace Fasciculus.Eve.Models
         public EveUniverse(EveRegions regions)
         {
             Regions = regions;
-            Constellations = new(Regions.SelectMany(r => r.Constellations));
-            SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems));
-            Stargates = new(SolarSystems.SelectMany(s => s.Stargates));
+            Constellations = new(Regions.SelectMany(r => r.Constellations).ToArray());
+            SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems).ToArray());
+            Stargates = new(SolarSystems.SelectMany(s => s.Stargates).ToArray());
 
             Regions.Link(this);
         }

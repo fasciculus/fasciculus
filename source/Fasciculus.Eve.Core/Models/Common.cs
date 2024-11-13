@@ -100,7 +100,7 @@ namespace Fasciculus.Eve.Models
         public IEnumerable<T> Objects
             => objectsByIndex;
 
-        public EveObjects(IEnumerable<T> objects)
+        public EveObjects(T[] objects)
         {
             objectsByIndex = [.. objects.OrderBy(o => o.Id)];
             objectsById = objects.ToDictionary(o => o.Id);
@@ -148,7 +148,7 @@ namespace Fasciculus.Eve.Models
     {
         private readonly Dictionary<string, T> objectsByName;
 
-        public EveNamedObjects(IEnumerable<T> objects)
+        public EveNamedObjects(T[] objects)
             : base(objects)
         {
             objectsByName = objects.ToDictionary(o => o.Name);

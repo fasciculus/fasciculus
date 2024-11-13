@@ -20,7 +20,7 @@ namespace Fasciculus.Eve.Operations
 
         private static EveRegions ConvertRegions(SdeUniverse sdeUniverse)
         {
-            return new(sdeUniverse.Regions.Select(ConvertRegion));
+            return new(sdeUniverse.Regions.Select(ConvertRegion).ToArray());
         }
 
         private static EveRegion ConvertRegion(SdeRegion region)
