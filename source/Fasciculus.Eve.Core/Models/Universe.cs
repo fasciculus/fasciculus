@@ -100,15 +100,28 @@ namespace Fasciculus.Eve.Models
 
     public class EveMoon : EveObject
     {
+        private EvePlanet? planet;
+
+        public EvePlanet Planet
+            => Cond.NotNull(planet);
+
         public EveCelestialIndex CelestialIndex { get; }
 
         private readonly EveNpcStation[] npcStations;
+
+        public string Name
+            => $"{Planet.Name} Moon {CelestialIndex.Value}";
 
         public EveMoon(EveId id, EveCelestialIndex celestialIndex, EveNpcStation[] npcStations)
             : base(id)
         {
             CelestialIndex = celestialIndex;
             this.npcStations = npcStations;
+        }
+
+        public void Link(EvePlanet planet)
+        {
+            this.planet = planet;
         }
 
         public override void Write(Stream stream)
@@ -176,6 +189,7 @@ namespace Fasciculus.Eve.Models
         internal void Link(EveSolarSystem solarSystem)
         {
             this.solarSystem = solarSystem;
+            Moons.Apply(moon => moon.Link(this));
         }
 
         public override void Write(Stream stream)
