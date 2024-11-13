@@ -19,8 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{A5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Testing", "source\Fasciculus.Testing\Fasciculus.Testing.csproj", "{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Experiments.MAUI", "source\Fasciculus.Experiments.MAUI\Fasciculus.Experiments.MAUI.csproj", "{D27C20FE-3FF3-45FD-A001-817613ADE010}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Core", "source\Fasciculus.Eve.Core\Fasciculus.Eve.Core.csproj", "{60FE9444-CF82-4AB3-BD48-A12E01654532}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Assets", "source\Fasciculus.Eve.Assets\Fasciculus.Eve.Assets.csproj", "{DED4F950-1061-4BE9-98AA-69C53A6B41A8}"
@@ -57,12 +55,6 @@ Global
 		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D27C20FE-3FF3-45FD-A001-817613ADE010}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60FE9444-CF82-4AB3-BD48-A12E01654532}.Release|Any CPU.ActiveCfg = Release|Any CPU
