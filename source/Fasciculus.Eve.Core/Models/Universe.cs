@@ -1,21 +1,16 @@
 ﻿using Fasciculus.Algorithms;
+using Fasciculus.Models;
 using Fasciculus.Validating;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
-    public class EveCelestialIndex : IEquatable<EveCelestialIndex>, IComparable<EveCelestialIndex>
+    public class EveCelestialIndex : Id<int>
     {
-        public readonly int Value;
-
         public EveCelestialIndex(int value)
-        {
-            Value = value;
-        }
+            : base(value) { }
 
         public static EveCelestialIndex Create(int id)
             => new(id);
@@ -29,43 +24,6 @@ namespace Fasciculus.Eve.Models
         {
             return new(stream.ReadInt());
         }
-
-        public override bool Equals([NotNullWhen(true)] object? obj)
-            => obj is EveCelestialIndex id && Value == id.Value;
-
-        public bool Equals(EveCelestialIndex? other)
-            => other is not null && Value == other.Value;
-
-        public int CompareTo(EveCelestialIndex? other)
-            => other is not null ? Value.CompareTo(other.Value) : -1;
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
-
-        public override string? ToString()
-        {
-            return Value.ToString();
-        }
-
-        public static bool operator ==(EveCelestialIndex a, EveCelestialIndex b)
-            => a.Value == b.Value;
-
-        public static bool operator !=(EveCelestialIndex a, EveCelestialIndex b)
-            => a.Value == b.Value;
-
-        public static bool operator <(EveCelestialIndex a, EveCelestialIndex b)
-            => a.Value < b.Value;
-
-        public static bool operator >(EveCelestialIndex a, EveCelestialIndex b)
-            => a.Value > b.Value;
-
-        public static bool operator <=(EveCelestialIndex a, EveCelestialIndex b)
-            => a.Value <= b.Value;
-
-        public static bool operator >=(EveCelestialIndex a, EveCelestialIndex b)
-            => a.Value >= b.Value;
     }
 
     public class EveNpcStation : EveObject

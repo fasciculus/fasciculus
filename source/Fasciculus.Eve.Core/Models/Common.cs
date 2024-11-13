@@ -1,20 +1,16 @@
-﻿using System;
+﻿using Fasciculus.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
-    public readonly struct EveId : IEquatable<EveId>, IComparable<EveId>
+    public class EveId : Id<int>
     {
-        public readonly int Value;
-
         public EveId(int value)
-        {
-            Value = value;
-        }
+            : base(value) { }
 
         public static EveId Create(int id)
             => new(id);
@@ -28,43 +24,6 @@ namespace Fasciculus.Eve.Models
         {
             return new(stream.ReadInt());
         }
-
-        public override bool Equals([NotNullWhen(true)] object? obj)
-            => obj is EveId id && Value == id.Value;
-
-        public bool Equals(EveId other)
-            => Value == other.Value;
-
-        public int CompareTo(EveId other)
-            => Value.CompareTo(other.Value);
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
-
-        public override string? ToString()
-        {
-            return Value.ToString();
-        }
-
-        public static bool operator ==(EveId a, EveId b)
-            => a.Value == b.Value;
-
-        public static bool operator !=(EveId a, EveId b)
-            => a.Value == b.Value;
-
-        public static bool operator <(EveId a, EveId b)
-            => a.Value < b.Value;
-
-        public static bool operator >(EveId a, EveId b)
-            => a.Value > b.Value;
-
-        public static bool operator <=(EveId a, EveId b)
-            => a.Value <= b.Value;
-
-        public static bool operator >=(EveId a, EveId b)
-            => a.Value >= b.Value;
     }
 
     public class EveObject
