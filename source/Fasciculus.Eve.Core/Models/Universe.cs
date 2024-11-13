@@ -181,6 +181,29 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    public class EvePlanets : EveObjects<EvePlanet>
+    {
+        private readonly Dictionary<EveCelestialIndex, EvePlanet> planets;
+
+        public EvePlanets(IEnumerable<EvePlanet> planets)
+            : base(planets)
+        {
+            this.planets = planets.ToDictionary(planet => planet.CelestialIndex, planet => planet);
+        }
+
+        public EvePlanet this[EveCelestialIndex index] => planets[index];
+
+        public void Write(Stream stream)
+        {
+            stream.WriteArray(objectsByIndex, planet => planet.Write(stream));
+        }
+
+        public static EvePlanets Read(Stream stream)
+        {
+            return new(stream.ReadArray(EvePlanet.Read));
+        }
+    }
+
     public class EveStargate : EveObject
     {
         private readonly EveId destinationId;
@@ -231,7 +254,7 @@ namespace Fasciculus.Eve.Models
 
         private EveConstellation? constellation;
         private readonly EveStargate[] stargates;
-        private readonly EvePlanet[] planets;
+        private readonly EvePlanets planets;
 
         public EveConstellation Constellation
             => Cond.NotNull(constellation);
@@ -244,7 +267,7 @@ namespace Fasciculus.Eve.Models
 
         public bool HasIce { get; private set; }
 
-        public EveSolarSystem(EveId id, string name, double security, EveStargate[] stargates, EvePlanet[] planets, bool hasIce)
+        public EveSolarSystem(EveId id, string name, double security, EveStargate[] stargates, EvePlanets planets, bool hasIce)
             : base(id, name)
         {
             Security = security;
@@ -271,7 +294,7 @@ namespace Fasciculus.Eve.Models
 
             stream.WriteDouble(Security);
             stream.WriteArray(stargates, stargate => stargate.Write(stream));
-            stream.WriteArray(planets, planet => planet.Write(stream));
+            planets.Write(stream);
             stream.WriteBool(HasIce);
         }
 
@@ -280,7 +303,7 @@ namespace Fasciculus.Eve.Models
             (EveId id, string name) = BaseRead(stream);
             double security = stream.ReadDouble();
             EveStargate[] stargates = stream.ReadArray(EveStargate.Read);
-            EvePlanet[] planets = stream.ReadArray(EvePlanet.Read);
+            EvePlanets planets = EvePlanets.Read(stream);
             bool hasIce = stream.ReadBool();
 
             return new(id, name, security, stargates, planets, hasIce);
