@@ -12,7 +12,7 @@ namespace Fasciculus.Eve.Operations
         {
             using HttpClient httpClient = new();
 
-            if (IsDownloadRequired(httpClient))
+            if (IsDownloadRequired(httpClient, progress))
             {
                 progress.Report("downloading sde.zip");
                 Download(httpClient);
@@ -24,9 +24,11 @@ namespace Fasciculus.Eve.Operations
             }
         }
 
-        private static bool IsDownloadRequired(HttpClient httpClient)
+        private static bool IsDownloadRequired(HttpClient httpClient, IProgress<string> progress)
         {
             FileInfo file = EveAssetsFiles.SdeZipFile;
+
+            progress.Report($"checking sde.zip");
 
             if (file.Exists)
             {

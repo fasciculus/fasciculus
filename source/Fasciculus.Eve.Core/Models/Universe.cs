@@ -129,16 +129,36 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    public class EveMoons : EveObjects<EveMoon>
+    {
+        private readonly Dictionary<EveCelestialIndex, EveMoon> moons;
+
+        public EveMoons(IEnumerable<EveMoon> moons)
+            : base(moons)
+        {
+            this.moons = moons.ToDictionary(moon => moon.CelestialIndex, moon => moon);
+        }
+
+        public EveMoon this[EveCelestialIndex index] => moons[index];
+
+        public void Write(Stream stream)
+        {
+            stream.WriteArray(objectsByIndex, moon => moon.Write(stream));
+        }
+
+        public static EveMoons Read(Stream stream)
+        {
+            return new(stream.ReadArray(EveMoon.Read));
+        }
+    }
+
     public class EvePlanet : EveObject
     {
         private EveSolarSystem? solarSystem;
 
-        private readonly EveMoon[] moons;
-
         public EveCelestialIndex CelestialIndex { get; }
 
-        public IEnumerable<EveMoon> Moons
-            => moons;
+        public EveMoons Moons { get; }
 
         public EveSolarSystem SolarSystem
             => Cond.NotNull(solarSystem);
@@ -146,11 +166,11 @@ namespace Fasciculus.Eve.Models
         public string Name
             => $"{SolarSystem.Name} {RomanNumbers.Format(CelestialIndex.Value)}";
 
-        public EvePlanet(EveId id, EveCelestialIndex celestialIndex, EveMoon[] moons)
+        public EvePlanet(EveId id, EveCelestialIndex celestialIndex, EveMoons moons)
             : base(id)
         {
             CelestialIndex = celestialIndex;
-            this.moons = moons;
+            Moons = moons;
         }
 
         internal void Link(EveSolarSystem solarSystem)
@@ -163,14 +183,14 @@ namespace Fasciculus.Eve.Models
             base.Write(stream);
 
             CelestialIndex.Write(stream);
-            stream.WriteArray(moons, moon => moon.Write(stream));
+            Moons.Write(stream);
         }
 
         public static EvePlanet Read(Stream stream)
         {
             EveId id = BaseRead(stream);
             EveCelestialIndex celestialIndex = EveCelestialIndex.Read(stream);
-            EveMoon[] moons = stream.ReadArray(EveMoon.Read);
+            EveMoons moons = EveMoons.Read(stream);
 
             return new(id, celestialIndex, moons);
         }
@@ -254,7 +274,6 @@ namespace Fasciculus.Eve.Models
 
         private EveConstellation? constellation;
         private readonly EveStargate[] stargates;
-        private readonly EvePlanets planets;
 
         public EveConstellation Constellation
             => Cond.NotNull(constellation);
@@ -262,8 +281,7 @@ namespace Fasciculus.Eve.Models
         public IEnumerable<EveStargate> Stargates
             => stargates;
 
-        public IEnumerable<EvePlanet> Planets
-            => planets;
+        public EvePlanets Planets { get; }
 
         public bool HasIce { get; private set; }
 
@@ -272,7 +290,7 @@ namespace Fasciculus.Eve.Models
         {
             Security = security;
             this.stargates = stargates;
-            this.planets = planets;
+            Planets = planets;
             HasIce = hasIce;
         }
 
@@ -285,7 +303,7 @@ namespace Fasciculus.Eve.Models
         {
             this.constellation = constellation;
             stargates.Apply(stargate => stargate.Link(this, universe));
-            planets.Apply(planet => planet.Link(this));
+            Planets.Apply(planet => planet.Link(this));
         }
 
         public override void Write(Stream stream)
@@ -294,7 +312,7 @@ namespace Fasciculus.Eve.Models
 
             stream.WriteDouble(Security);
             stream.WriteArray(stargates, stargate => stargate.Write(stream));
-            planets.Write(stream);
+            Planets.Write(stream);
             stream.WriteBool(HasIce);
         }
 
