@@ -86,9 +86,10 @@ namespace Fasciculus.Eve.Operations
         {
             EveId id = new(rawId);
             EveId operationId = new(moonStation.OperationID);
+            EveId ownerId = new(moonStation.OwnerId);
             EveId typeId = new(moonStation.TypeID);
 
-            return new(id, operationId, typeId);
+            return new(id, operationId, ownerId, typeId);
         }
     }
 }

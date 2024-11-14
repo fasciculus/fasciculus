@@ -29,12 +29,14 @@ namespace Fasciculus.Eve.Models
     public class EveNpcStation : EveObject
     {
         private readonly EveId operationId;
+        private readonly EveId ownerId;
         private readonly EveId typeId;
 
-        public EveNpcStation(EveId id, EveId operationId, EveId typeId)
+        public EveNpcStation(EveId id, EveId operationId, EveId ownerId, EveId typeId)
             : base(id)
         {
             this.operationId = operationId;
+            this.ownerId = ownerId;
             this.typeId = typeId;
         }
 
@@ -42,6 +44,7 @@ namespace Fasciculus.Eve.Models
         {
             Id.Write(stream);
             operationId.Write(stream);
+            ownerId.Write(stream);
             typeId.Write(stream);
         }
 
@@ -49,9 +52,10 @@ namespace Fasciculus.Eve.Models
         {
             EveId id = EveId.Read(stream);
             EveId operationId = EveId.Read(stream);
+            EveId ownerId = EveId.Read(stream);
             EveId typeId = EveId.Read(stream);
 
-            return new(id, operationId, typeId);
+            return new(id, operationId, ownerId, typeId);
         }
     }
 

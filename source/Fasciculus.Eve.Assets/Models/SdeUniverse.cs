@@ -5,6 +5,7 @@ namespace Fasciculus.Eve.Models
     public class SdeMoonStation
     {
         public int OperationID { get; set; }
+        public int OwnerId { get; set; }
         public int TypeID { get; set; }
     }
 
