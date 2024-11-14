@@ -36,16 +36,6 @@ namespace Fasciculus.Eve.Models
         {
             Id = id;
         }
-
-        public virtual void Write(Stream stream)
-        {
-            Id.Write(stream);
-        }
-
-        protected static EveId BaseRead(Stream stream)
-        {
-            return EveId.Read(stream);
-        }
     }
 
     public class EveObjects<T> : IEnumerable<T>
@@ -77,29 +67,60 @@ namespace Fasciculus.Eve.Models
             => Objects.GetEnumerator();
     }
 
-    public class EveNamedObject : EveObject
+    public class EveName : EveObject
     {
         public string Name { get; }
 
-        public EveNamedObject(EveId id, string name)
+        public EveName(EveId id, string name)
             : base(id)
         {
             Name = name;
         }
 
-        public override void Write(Stream stream)
+        public static EveName Read(Stream stream)
         {
-            base.Write(stream);
-
-            stream.WriteString(Name);
-        }
-
-        protected static new (EveId id, string name) BaseRead(Stream stream)
-        {
-            EveId id = EveObject.BaseRead(stream);
+            EveId id = EveId.Read(stream);
             string name = stream.ReadString();
 
-            return (id, name);
+            return new(id, name);
+        }
+
+        public void Write(Stream stream)
+        {
+            Id.Write(stream);
+            stream.WriteString(Name);
+        }
+    }
+
+    public class EveNames : EveObjects<EveName>
+    {
+        public EveNames(EveName[] names)
+            : base(names) { }
+
+        public void Write(Stream stream)
+        {
+            stream.WriteArray(objectsByIndex, n => n.Write(stream));
+        }
+
+        public static EveNames Read(Stream stream)
+        {
+            EveName[] names = stream.ReadArray(EveName.Read);
+
+            return new(names);
+        }
+    }
+
+    public class EveNamedObject : EveObject
+    {
+        private readonly EveNames names;
+
+        public string Name
+            => names[Id].Name;
+
+        public EveNamedObject(EveId id, EveNames names)
+            : base(id)
+        {
+            this.names = names;
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Eve.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,48 +10,50 @@ namespace Fasciculus.Eve.Operations
         private static readonly SortedSet<string> IceSystemNames =
             [
             "Ahtulaima", "Fuskunen", "Gekutami", "Hentogaira", "Hurtoken", "Mitsolen", "Obe", "Osmon", "Outuni", "Silen", "Sirseshin", "Vattuolen", "Wuos",
-            ];
+        ];
 
-        public static EveUniverse Execute(SdeUniverse sdeUniverse)
+        public static EveUniverse Execute(SdeUniverse sdeUniverse, EveNames names, IProgress<string> progress)
         {
-            EveRegions regions = ConvertRegions(sdeUniverse);
+            progress.Report("converting universe");
+
+            EveRegions regions = ConvertRegions(sdeUniverse, names);
+
+            progress.Report("converting universe done");
 
             return new(regions);
         }
 
-        private static EveRegions ConvertRegions(SdeUniverse sdeUniverse)
+        private static EveRegions ConvertRegions(SdeUniverse sdeUniverse, EveNames names)
         {
-            return new(sdeUniverse.Regions.Select(ConvertRegion).ToArray());
+            return new(sdeUniverse.Regions.Select(r => ConvertRegion(r, names)).ToArray());
         }
 
-        private static EveRegion ConvertRegion(SdeRegion region)
+        private static EveRegion ConvertRegion(SdeRegion region, EveNames names)
         {
             EveId id = new(region.RegionID);
-            string name = region.Name;
-            EveConstellation[] constellations = region.Constellations.Select(ConvertConstellation).ToArray();
+            EveConstellation[] constellations = region.Constellations.Select(c => ConvertConstellation(c, names)).ToArray();
 
-            return new(id, name, constellations);
+            return new(id, names, constellations);
         }
 
-        private static EveConstellation ConvertConstellation(SdeConstellation constellation)
+        private static EveConstellation ConvertConstellation(SdeConstellation constellation, EveNames names)
         {
             EveId id = new(constellation.ConstellationID);
-            string name = constellation.Name;
-            EveSolarSystem[] solarSystems = constellation.SolarSystems.Select(ConvertSolarSystem).ToArray();
+            EveSolarSystem[] solarSystems = constellation.SolarSystems.Select(s => ConvertSolarSystem(s, names)).ToArray();
 
-            return new(id, name, solarSystems);
+            return new(id, names, solarSystems);
         }
 
-        private static EveSolarSystem ConvertSolarSystem(SdeSolarSystem solarSystem)
+        private static EveSolarSystem ConvertSolarSystem(SdeSolarSystem solarSystem, EveNames names)
         {
             EveId id = new(solarSystem.SolarSystemID);
-            string name = solarSystem.Name;
             double security = solarSystem.Security;
             EveStargate[] stargates = solarSystem.Stargates.Select(kvp => ConvertStargate(kvp.Key, kvp.Value)).ToArray();
             EvePlanets planets = new(solarSystem.Planets.Select(kvp => ConvertPlanet(kvp.Key, kvp.Value)).ToArray());
+            string name = names[id].Name;
             bool hasIce = IceSystemNames.Contains(name);
 
-            return new(id, name, security, stargates, planets, hasIce);
+            return new(id, names, security, stargates, planets, hasIce);
         }
 
         private static EveStargate ConvertStargate(int rawId, SdeStargate stargate)

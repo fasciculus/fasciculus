@@ -39,43 +39,18 @@ namespace Fasciculus.Eve.Models
         public string SecurityClass { get; set; } = string.Empty;
         public Dictionary<int, SdeStargate> Stargates { get; set; } = [];
         public Dictionary<int, SdePlanet> Planets { get; set; } = [];
-
-        public string Name { get; set; } = string.Empty;
-
-        public void Populate(SdeData data)
-        {
-            Name = data.Names[SolarSystemID];
-        }
     }
 
     public class SdeConstellation
     {
         public int ConstellationID { get; set; }
         public SdeSolarSystem[] SolarSystems { get; set; } = [];
-
-        public string Name { get; set; } = string.Empty;
-
-        public void Populate(SdeData data)
-        {
-            Name = data.Names[ConstellationID];
-
-            SolarSystems.Apply(s => { s.Populate(data); });
-        }
     }
 
     public class SdeRegion
     {
         public int RegionID { get; set; }
         public SdeConstellation[] Constellations { get; set; } = [];
-
-        public string Name { get; set; } = string.Empty;
-
-        public void Populate(SdeData data)
-        {
-            Name = data.Names[RegionID];
-
-            Constellations.Apply(c => c.Populate(data));
-        }
     }
 
     public class SdeUniverse
@@ -85,11 +60,6 @@ namespace Fasciculus.Eve.Models
         public SdeUniverse(IEnumerable<SdeRegion> regions)
         {
             regions.Apply(Regions.Add);
-        }
-
-        public void Populate(SdeData data)
-        {
-            Regions.Apply(region => { region.Populate(data); });
         }
     }
 }

@@ -38,17 +38,16 @@ namespace Fasciculus.Eve.Models
             this.typeId = typeId;
         }
 
-        public override void Write(Stream stream)
+        public void Write(Stream stream)
         {
-            base.Write(stream);
-
+            Id.Write(stream);
             operationId.Write(stream);
             typeId.Write(stream);
         }
 
         public static EveNpcStation Read(Stream stream)
         {
-            EveId id = BaseRead(stream);
+            EveId id = EveId.Read(stream);
             EveId operationId = EveId.Read(stream);
             EveId typeId = EveId.Read(stream);
 
@@ -82,17 +81,16 @@ namespace Fasciculus.Eve.Models
             this.planet = planet;
         }
 
-        public override void Write(Stream stream)
+        public void Write(Stream stream)
         {
-            base.Write(stream);
-
+            Id.Write(stream);
             CelestialIndex.Write(stream);
             stream.WriteArray(npcStations, npcStation => npcStation.Write(stream));
         }
 
         public static EveMoon Read(Stream stream)
         {
-            EveId id = BaseRead(stream);
+            EveId id = EveId.Read(stream);
             EveCelestialIndex celestialIndex = EveCelestialIndex.Read(stream);
             EveNpcStation[] npcStations = stream.ReadArray(EveNpcStation.Read);
 
@@ -150,17 +148,16 @@ namespace Fasciculus.Eve.Models
             Moons.Apply(moon => moon.Link(this));
         }
 
-        public override void Write(Stream stream)
+        public void Write(Stream stream)
         {
-            base.Write(stream);
-
+            Id.Write(stream);
             CelestialIndex.Write(stream);
             Moons.Write(stream);
         }
 
         public static EvePlanet Read(Stream stream)
         {
-            EveId id = BaseRead(stream);
+            EveId id = EveId.Read(stream);
             EveCelestialIndex celestialIndex = EveCelestialIndex.Read(stream);
             EveMoons moons = EveMoons.Read(stream);
 
@@ -218,16 +215,15 @@ namespace Fasciculus.Eve.Models
             destination = universe.Stargates[destinationId];
         }
 
-        public override void Write(Stream stream)
+        public void Write(Stream stream)
         {
-            base.Write(stream);
-
+            Id.Write(stream);
             destinationId.Write(stream);
         }
 
         public static EveStargate Read(Stream stream)
         {
-            EveId id = BaseRead(stream);
+            EveId id = EveId.Read(stream);
             EveId destinationId = EveId.Read(stream);
 
             return new EveStargate(id, destinationId);
@@ -257,8 +253,8 @@ namespace Fasciculus.Eve.Models
 
         public bool HasIce { get; private set; }
 
-        public EveSolarSystem(EveId id, string name, double security, EveStargate[] stargates, EvePlanets planets, bool hasIce)
-            : base(id, name)
+        public EveSolarSystem(EveId id, EveNames names, double security, EveStargate[] stargates, EvePlanets planets, bool hasIce)
+            : base(id, names)
         {
             Security = security;
             this.stargates = stargates;
@@ -278,25 +274,24 @@ namespace Fasciculus.Eve.Models
             Planets.Apply(planet => planet.Link(this));
         }
 
-        public override void Write(Stream stream)
+        public void Write(Stream stream)
         {
-            base.Write(stream);
-
+            Id.Write(stream);
             stream.WriteDouble(Security);
             stream.WriteArray(stargates, stargate => stargate.Write(stream));
             Planets.Write(stream);
             stream.WriteBool(HasIce);
         }
 
-        public static EveSolarSystem Read(Stream stream)
+        public static EveSolarSystem Read(Stream stream, EveNames names)
         {
-            (EveId id, string name) = BaseRead(stream);
+            EveId id = EveId.Read(stream);
             double security = stream.ReadDouble();
             EveStargate[] stargates = stream.ReadArray(EveStargate.Read);
             EvePlanets planets = EvePlanets.Read(stream);
             bool hasIce = stream.ReadBool();
 
-            return new(id, name, security, stargates, planets, hasIce);
+            return new(id, names, security, stargates, planets, hasIce);
         }
 
         public override string ToString()
@@ -324,8 +319,8 @@ namespace Fasciculus.Eve.Models
         public IEnumerable<EveSolarSystem> SolarSystems
             => solarSystems;
 
-        public EveConstellation(EveId id, string name, EveSolarSystem[] solarSystems)
-            : base(id, name)
+        public EveConstellation(EveId id, EveNames names, EveSolarSystem[] solarSystems)
+            : base(id, names)
         {
             this.solarSystems = solarSystems;
         }
@@ -346,19 +341,18 @@ namespace Fasciculus.Eve.Models
             solarSystems.Apply(solarSystem => solarSystem.Link(this, universe));
         }
 
-        public override void Write(Stream stream)
+        public void Write(Stream stream)
         {
-            base.Write(stream);
-
+            Id.Write(stream);
             stream.WriteArray(solarSystems, solarSystem => solarSystem.Write(stream));
         }
 
-        public static EveConstellation Read(Stream stream)
+        public static EveConstellation Read(Stream stream, EveNames names)
         {
-            (EveId id, string name) = BaseRead(stream);
-            EveSolarSystem[] solarSystems = stream.ReadArray(EveSolarSystem.Read);
+            EveId id = EveId.Read(stream);
+            EveSolarSystem[] solarSystems = stream.ReadArray(_ => EveSolarSystem.Read(stream, names));
 
-            return new(id, name, solarSystems);
+            return new(id, names, solarSystems);
         }
     }
 
@@ -375,8 +369,8 @@ namespace Fasciculus.Eve.Models
         public IEnumerable<EveConstellation> Constellations
             => constellations;
 
-        public EveRegion(EveId id, string name, EveConstellation[] constellations)
-            : base(id, name)
+        public EveRegion(EveId id, EveNames names, EveConstellation[] constellations)
+            : base(id, names)
         {
             this.constellations = constellations;
         }
@@ -396,19 +390,18 @@ namespace Fasciculus.Eve.Models
             constellations.Apply(constellation => constellation.Link(this, universe));
         }
 
-        public override void Write(Stream stream)
+        public void Write(Stream stream)
         {
-            base.Write(stream);
-
+            Id.Write(stream);
             stream.WriteArray(constellations, constellation => constellation.Write(stream));
         }
 
-        public static EveRegion Read(Stream stream)
+        public static EveRegion Read(Stream stream, EveNames names)
         {
-            (EveId id, string name) = BaseRead(stream);
-            EveConstellation[] constellations = stream.ReadArray(EveConstellation.Read);
+            EveId id = EveId.Read(stream);
+            EveConstellation[] constellations = stream.ReadArray(_ => EveConstellation.Read(stream, names));
 
-            return new EveRegion(id, name, constellations);
+            return new EveRegion(id, names, constellations);
         }
     }
 
@@ -427,9 +420,9 @@ namespace Fasciculus.Eve.Models
             stream.WriteArray(objectsByIndex, o => o.Write(stream));
         }
 
-        public static EveRegions Read(Stream stream)
+        public static EveRegions Read(Stream stream, EveNames names)
         {
-            EveRegion[] regions = stream.ReadArray(EveRegion.Read);
+            EveRegion[] regions = stream.ReadArray(_ => EveRegion.Read(stream, names));
 
             return new(regions);
         }
@@ -464,9 +457,9 @@ namespace Fasciculus.Eve.Models
             Regions.Write(stream);
         }
 
-        public static EveUniverse Read(Stream stream)
+        public static EveUniverse Read(Stream stream, EveNames names)
         {
-            EveRegions regions = EveRegions.Read(stream);
+            EveRegions regions = EveRegions.Read(stream, names);
 
             return new(regions);
         }
