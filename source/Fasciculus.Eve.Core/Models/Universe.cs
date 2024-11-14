@@ -32,12 +32,22 @@ namespace Fasciculus.Eve.Models
         private readonly EveId ownerId;
         private readonly EveId typeId;
 
+        private EveNpcCorporation? owner;
+
+        public EveNpcCorporation Owner
+            => Cond.NotNull(owner);
+
         public EveNpcStation(EveId id, EveId operationId, EveId ownerId, EveId typeId)
             : base(id)
         {
             this.operationId = operationId;
             this.ownerId = ownerId;
             this.typeId = typeId;
+        }
+
+        internal void Link(EveData data)
+        {
+            owner = data.NpcCorporations[ownerId];
         }
 
         public void Write(Stream stream)
@@ -80,9 +90,10 @@ namespace Fasciculus.Eve.Models
             this.npcStations = npcStations;
         }
 
-        public void Link(EvePlanet planet)
+        public void Link(EvePlanet planet, EveData data)
         {
             this.planet = planet;
+            npcStations.Apply(s => s.Link(data));
         }
 
         public void Write(Stream stream)
@@ -146,10 +157,10 @@ namespace Fasciculus.Eve.Models
             Moons = moons;
         }
 
-        internal void Link(EveSolarSystem solarSystem)
+        internal void Link(EveSolarSystem solarSystem, EveData data)
         {
             this.solarSystem = solarSystem;
-            Moons.Apply(moon => moon.Link(this));
+            Moons.Apply(moon => moon.Link(this, data));
         }
 
         public void Write(Stream stream)
@@ -271,11 +282,11 @@ namespace Fasciculus.Eve.Models
             return stargates.Select(sg => sg.Destination.SolarSystem).Where(security.Filter).OrderBy(ss => ss.Index);
         }
 
-        public void Link(EveConstellation constellation, IEveUniverse universe)
+        public void Link(EveConstellation constellation, EveData data, EveUniverse universe)
         {
             this.constellation = constellation;
             stargates.Apply(stargate => stargate.Link(this, universe));
-            Planets.Apply(planet => planet.Link(this));
+            Planets.Apply(planet => planet.Link(this, data));
         }
 
         public void Write(Stream stream)
@@ -339,10 +350,10 @@ namespace Fasciculus.Eve.Models
                 .OrderBy(c => c.Index);
         }
 
-        internal void Link(EveRegion region, IEveUniverse universe)
+        internal void Link(EveRegion region, EveData data, EveUniverse universe)
         {
             this.region = region;
-            solarSystems.Apply(solarSystem => solarSystem.Link(this, universe));
+            solarSystems.Apply(solarSystem => solarSystem.Link(this, data, universe));
         }
 
         public void Write(Stream stream)
@@ -389,9 +400,9 @@ namespace Fasciculus.Eve.Models
                 .OrderBy(r => r.Index);
         }
 
-        internal void Link(IEveUniverse universe)
+        internal void Link(EveData data, EveUniverse universe)
         {
-            constellations.Apply(constellation => constellation.Link(this, universe));
+            constellations.Apply(constellation => constellation.Link(this, data, universe));
         }
 
         public void Write(Stream stream)
@@ -414,9 +425,9 @@ namespace Fasciculus.Eve.Models
         public EveRegions(EveRegion[] regions)
             : base(regions) { }
 
-        internal void Link(IEveUniverse universe)
+        internal void Link(EveData data, EveUniverse universe)
         {
-            this.Apply(region => region.Link(universe));
+            this.Apply(region => region.Link(data, universe));
         }
 
         public void Write(Stream stream)
@@ -446,14 +457,14 @@ namespace Fasciculus.Eve.Models
         public EveSolarSystems SolarSystems { get; }
         public EveStargates Stargates { get; }
 
-        public EveUniverse(EveRegions regions)
+        public EveUniverse(EveData data, EveRegions regions)
         {
             Regions = regions;
             Constellations = new(Regions.SelectMany(r => r.Constellations).ToArray());
             SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems).ToArray());
             Stargates = new(SolarSystems.SelectMany(s => s.Stargates).ToArray());
 
-            Regions.Link(this);
+            Regions.Link(data, this);
         }
 
         public void Write(Stream stream)
@@ -461,11 +472,11 @@ namespace Fasciculus.Eve.Models
             Regions.Write(stream);
         }
 
-        public static EveUniverse Read(Stream stream, EveNames names)
+        public static EveUniverse Read(Stream stream, EveData data)
         {
-            EveRegions regions = EveRegions.Read(stream, names);
+            EveRegions regions = EveRegions.Read(stream, data.Names);
 
-            return new(regions);
+            return new(data, regions);
         }
     }
 }

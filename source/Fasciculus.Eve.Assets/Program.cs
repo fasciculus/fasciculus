@@ -37,7 +37,7 @@ namespace Fasciculus.Eve
                 SdeData sdeData = CreateSde(progress);
 
                 EveData eveData = CreateDataFile(sdeData, changes, progress);
-                EveUniverse eveUniverse = CreateUniverseFile(sdeData, eveData.Names, changes, progress);
+                EveUniverse eveUniverse = CreateUniverseFile(sdeData, eveData, changes, progress);
 
                 CreateNavigationFile(eveUniverse, changes, progress);
 
@@ -68,10 +68,10 @@ namespace Fasciculus.Eve
             return eveData;
         }
 
-        private static EveUniverse CreateUniverseFile(SdeData sdeData, EveNames names, List<string> changes, IProgress<string> progress)
+        private static EveUniverse CreateUniverseFile(SdeData sdeData, EveData data, List<string> changes, IProgress<string> progress)
         {
             SdeUniverse sdeUniverse = ParseUniverse.Execute(progress);
-            EveUniverse eveUniverse = ConvertUniverse.Execute(sdeUniverse, names, progress);
+            EveUniverse eveUniverse = ConvertUniverse.Execute(sdeUniverse, data, progress);
             using MemoryStream uncompressed = new();
 
             eveUniverse.Write(uncompressed);

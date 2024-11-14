@@ -12,15 +12,15 @@ namespace Fasciculus.Eve.Operations
             "Ahtulaima", "Fuskunen", "Gekutami", "Hentogaira", "Hurtoken", "Mitsolen", "Obe", "Osmon", "Outuni", "Silen", "Sirseshin", "Vattuolen", "Wuos",
         ];
 
-        public static EveUniverse Execute(SdeUniverse sdeUniverse, EveNames names, IProgress<string> progress)
+        public static EveUniverse Execute(SdeUniverse sdeUniverse, EveData data, IProgress<string> progress)
         {
             progress.Report("converting universe");
 
-            EveRegions regions = ConvertRegions(sdeUniverse, names);
+            EveRegions regions = ConvertRegions(sdeUniverse, data.Names);
 
             progress.Report("converting universe done");
 
-            return new(regions);
+            return new(data, regions);
         }
 
         private static EveRegions ConvertRegions(SdeUniverse sdeUniverse, EveNames names)
