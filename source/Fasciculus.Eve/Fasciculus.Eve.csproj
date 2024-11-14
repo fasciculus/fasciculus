@@ -1,23 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0-windows10.0.26100.0</TargetFrameworks>
+    <TargetFrameworks>net9.0-windows10.0.19041.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationTitle>Fasciculus.Eve</ApplicationTitle>
-    <ApplicationId>ch.rhjoerg.fasciculus.eve</ApplicationId>
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
+    <NoWarn>$(NoWarn);XC0103</NoWarn>
+    <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <SelfContained>true</SelfContained>
+    <WindowsPackageType>None</WindowsPackageType>
   </PropertyGroup>
 
   <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(RuntimeIdentifierOverride)' != ''">
     <RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ApplicationTitle>Fasciculus.Eve</ApplicationTitle>
+    <ApplicationId>ch.rhjoerg.fasciculus.eve</ApplicationId>
+    <ApplicationVersion>0</ApplicationVersion>
+    <ApplicationDisplayVersion>0.1.100</ApplicationDisplayVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -30,7 +36,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
   </ItemGroup>
 
