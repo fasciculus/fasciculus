@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Eve.Core.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Core.Tests", "source\Fasciculus.Core.Tests\Fasciculus.Core.Tests.csproj", "{5FDF13DC-8774-4DAB-A388-1269F82293FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauiApp1", "source\MauiApp1\MauiApp1.csproj", "{07AAB825-35A7-4C24-8127-D496F1A743A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{5FDF13DC-8774-4DAB-A388-1269F82293FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FDF13DC-8774-4DAB-A388-1269F82293FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FDF13DC-8774-4DAB-A388-1269F82293FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07AAB825-35A7-4C24-8127-D496F1A743A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07AAB825-35A7-4C24-8127-D496F1A743A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07AAB825-35A7-4C24-8127-D496F1A743A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07AAB825-35A7-4C24-8127-D496F1A743A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
