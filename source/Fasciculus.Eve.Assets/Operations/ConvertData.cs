@@ -13,13 +13,15 @@ namespace Fasciculus.Eve.Operations
 
             EveNames names = ConvertNames(sdeData.Names);
             EveNpcCorporations npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
+            EveStationOperations stationOperations = ConvertStationOperations(sdeData.StationOperations);
 
             progress.Report("converting data done");
 
             return new()
             {
                 Names = names,
-                NpcCorporations = npcCorporations
+                NpcCorporations = npcCorporations,
+                StationOperations = stationOperations
             };
         }
 
@@ -33,6 +35,17 @@ namespace Fasciculus.Eve.Operations
         {
             EveId id = EveId.Create(rawId);
             string name = sdeNpcCorporation.NameId.En;
+
+            return new(id, name);
+        }
+
+        private static EveStationOperations ConvertStationOperations(Dictionary<int, SdeStationOperation> sdeStationOperation)
+            => new(sdeStationOperation.Select(kvp => ConvertStationOperation(kvp.Key, kvp.Value)).ToArray());
+
+        private static EveStationOperation ConvertStationOperation(int rawId, SdeStationOperation sdeStationOperation)
+        {
+            EveId id = EveId.Create(rawId);
+            string name = sdeStationOperation.OperationNameID.En;
 
             return new(id, name);
         }

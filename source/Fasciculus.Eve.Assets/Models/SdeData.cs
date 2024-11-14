@@ -63,24 +63,15 @@ namespace Fasciculus.Eve.Models
 
     public class SdeStationOperation
     {
+        public LocalizedName OperationNameID { get; set; } = LocalizedName.Empty;
         public int[] Services { get; set; } = [];
-    }
-
-    public class SdeStationOperations
-    {
-        private Dictionary<int, SdeStationOperation> stationOperations;
-
-        public SdeStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
-        {
-            this.stationOperations = stationOperations;
-        }
     }
 
     public class SdeData
     {
         public required SdeNames Names { get; init; }
         public required Dictionary<int, SdeNpcCorporation> NpcCorporations { get; init; }
-        public required SdeStationOperations StationOperations { get; init; }
+        public required Dictionary<int, SdeStationOperation> StationOperations { get; init; }
         public required SdeTypes Types { get; set; }
     }
 }

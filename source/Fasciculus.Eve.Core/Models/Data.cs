@@ -45,20 +45,66 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    public class EveStationOperation : EveObject
+    {
+        public string Name { get; }
+
+        public EveStationOperation(EveId id, string name)
+            : base(id)
+        {
+            Name = name;
+        }
+
+        public void Write(Stream stream)
+        {
+            Id.Write(stream);
+            stream.WriteString(Name);
+        }
+
+        public static EveStationOperation Read(Stream stream)
+        {
+            EveId id = EveId.Read(stream);
+            string name = stream.ReadString();
+
+            return new(id, name);
+        }
+    }
+
+    public class EveStationOperations : EveObjects<EveStationOperation>
+    {
+        public EveStationOperations(EveStationOperation[] stationOperations)
+            : base(stationOperations) { }
+
+        public void Write(Stream stream)
+        {
+            stream.WriteArray(objectsByIndex, c => c.Write(stream));
+        }
+
+        public static EveStationOperations Read(Stream stream)
+        {
+            EveStationOperation[] stationOperations = stream.ReadArray(EveStationOperation.Read);
+
+            return new(stationOperations);
+        }
+    }
+
     public class EveData
     {
         public required EveNames Names { get; init; }
         public required EveNpcCorporations NpcCorporations { get; init; }
+        public required EveStationOperations StationOperations { get; init; }
 
         public static EveData Read(Stream stream)
         {
             EveNames names = EveNames.Read(stream);
             EveNpcCorporations npcCorporations = EveNpcCorporations.Read(stream);
+            EveStationOperations stationOperations = EveStationOperations.Read(stream);
 
             return new()
             {
                 Names = names,
-                NpcCorporations = npcCorporations
+                NpcCorporations = npcCorporations,
+                StationOperations = stationOperations
             };
         }
 
@@ -66,6 +112,7 @@ namespace Fasciculus.Eve.Models
         {
             Names.Write(stream);
             NpcCorporations.Write(stream);
+            StationOperations.Write(stream);
         }
     }
 }
