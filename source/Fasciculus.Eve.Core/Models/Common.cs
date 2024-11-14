@@ -67,44 +67,26 @@ namespace Fasciculus.Eve.Models
             => Objects.GetEnumerator();
     }
 
-    public class EveName : EveObject
+    public class EveNames
     {
-        public string Name { get; }
+        private readonly Dictionary<EveId, string> names;
 
-        public EveName(EveId id, string name)
-            : base(id)
+        public EveNames(Dictionary<EveId, string> names)
         {
-            Name = name;
+            this.names = names;
         }
 
-        public static EveName Read(Stream stream)
-        {
-            EveId id = EveId.Read(stream);
-            string name = stream.ReadString();
-
-            return new(id, name);
-        }
+        public string this[EveId id]
+            => names[id];
 
         public void Write(Stream stream)
         {
-            Id.Write(stream);
-            stream.WriteString(Name);
-        }
-    }
-
-    public class EveNames : EveObjects<EveName>
-    {
-        public EveNames(EveName[] names)
-            : base(names) { }
-
-        public void Write(Stream stream)
-        {
-            stream.WriteArray(objectsByIndex, n => n.Write(stream));
+            stream.WriteDictionary(names, k => k.Write(stream), v => stream.WriteString(v));
         }
 
         public static EveNames Read(Stream stream)
         {
-            EveName[] names = stream.ReadArray(EveName.Read);
+            Dictionary<EveId, string> names = stream.ReadDictionary(_ => EveId.Read(stream), _ => stream.ReadString());
 
             return new(names);
         }
@@ -115,7 +97,7 @@ namespace Fasciculus.Eve.Models
         private readonly EveNames names;
 
         public string Name
-            => names[Id].Name;
+            => names[Id];
 
         public EveNamedObject(EveId id, EveNames names)
             : base(id)

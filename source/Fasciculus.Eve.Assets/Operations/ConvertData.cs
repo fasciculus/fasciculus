@@ -18,9 +18,6 @@ namespace Fasciculus.Eve.Operations
         }
 
         private static EveNames ConvertNames(SdeNames names)
-            => new(names.Select(ConvertName).ToArray());
-
-        private static EveName ConvertName(SdeName sdeName)
-            => new(EveId.Create(sdeName.ItemID), sdeName.ItemName);
+            => new(names.Names.ToDictionary(kvp => EveId.Create(kvp.Key), kvp => kvp.Value));
     }
 }
