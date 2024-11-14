@@ -32,10 +32,21 @@ namespace Fasciculus.Eve.Models
         private readonly EveId ownerId;
         private readonly EveId typeId;
 
+        private EveMoon? moon;
+        private EveStationOperation? operation;
         private EveNpcCorporation? owner;
+
+        public EveMoon Moon
+            => Cond.NotNull(moon);
+
+        public EveStationOperation Operation
+            => Cond.NotNull(operation);
 
         public EveNpcCorporation Owner
             => Cond.NotNull(owner);
+
+        public string Name
+            => $"{Moon.Name} - {Owner.Name} {Operation.Name}";
 
         public EveNpcStation(EveId id, EveId operationId, EveId ownerId, EveId typeId)
             : base(id)
@@ -45,8 +56,10 @@ namespace Fasciculus.Eve.Models
             this.typeId = typeId;
         }
 
-        internal void Link(EveData data)
+        internal void Link(EveMoon moon, EveData data)
         {
+            this.moon = moon;
+            operation = data.StationOperations[operationId];
             owner = data.NpcCorporations[ownerId];
         }
 
@@ -80,8 +93,11 @@ namespace Fasciculus.Eve.Models
 
         private readonly EveNpcStation[] npcStations;
 
+        public IReadOnlyCollection<EveNpcStation> NpcStations
+            => npcStations;
+
         public string Name
-            => $"{Planet.Name} Moon {CelestialIndex.Value}";
+            => $"{Planet.Name} - Moon {CelestialIndex.Value}";
 
         public EveMoon(EveId id, EveCelestialIndex celestialIndex, EveNpcStation[] npcStations)
             : base(id)
@@ -93,7 +109,7 @@ namespace Fasciculus.Eve.Models
         public void Link(EvePlanet planet, EveData data)
         {
             this.planet = planet;
-            npcStations.Apply(s => s.Link(data));
+            npcStations.Apply(s => s.Link(this, data));
         }
 
         public void Write(Stream stream)

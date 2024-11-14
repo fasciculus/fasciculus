@@ -13,7 +13,7 @@ namespace Fasciculus.Eve.Core.Tests
             EvePlanet planet = jita.Planets[EveCelestialIndex.Create(4)];
             EveMoon moon = planet.Moons[EveCelestialIndex.Create(4)];
 
-            Assert.AreEqual("Jita IV Moon 4", moon.Name);
+            Assert.AreEqual("Jita IV - Moon 4", moon.Name);
         }
     }
 }
