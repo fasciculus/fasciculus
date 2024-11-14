@@ -11,6 +11,9 @@ namespace Fasciculus.Eve.Operations
         private static FileInfo NamesFile
             => EveAssetsDirectories.BsdDirectory.File("invNames.yaml");
 
+        private static FileInfo NpcCorporationsFile
+            => EveAssetsDirectories.FsdDirectory.File("npcCorporations.yaml");
+
         private static FileInfo StationOperationsFile
             => EveAssetsDirectories.FsdDirectory.File("stationOperations.yaml");
 
@@ -22,6 +25,7 @@ namespace Fasciculus.Eve.Operations
             progress.Report("parsing data");
 
             Task<SdeNames> names = Task.Run(() => ParseNames(progress));
+            Task<SdeNpcCorporations> npcCorporations = Task.Run(() => ParseNpcCorporations(progress));
             Task<SdeStationOperations> stationOperations = Task.Run(() => ParseStationOperations(progress));
             Task<SdeTypes> types = Task.Run(() => ParseTypes(progress));
 
@@ -32,6 +36,7 @@ namespace Fasciculus.Eve.Operations
             return new()
             {
                 Names = names.Result,
+                NpcCorporations = npcCorporations.Result,
                 StationOperations = stationOperations.Result,
                 Types = types.Result,
             };
@@ -44,6 +49,17 @@ namespace Fasciculus.Eve.Operations
             SdeNames result = new(Yaml.Deserialize<SdeName[]>(NamesFile));
 
             progress.Report("  parsing names done");
+
+            return result;
+        }
+
+        private static SdeNpcCorporations ParseNpcCorporations(IProgress<string> progress)
+        {
+            progress.Report("  parsing NPC corporations");
+
+            SdeNpcCorporations result = new(Yaml.Deserialize<Dictionary<int, SdeNpcCorporation>>(NpcCorporationsFile));
+
+            progress.Report("  parsing NPC corporations done");
 
             return result;
         }

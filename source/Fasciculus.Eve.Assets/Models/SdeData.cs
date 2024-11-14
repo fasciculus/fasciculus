@@ -35,6 +35,21 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    public class SdeNpcCorporation
+    {
+        public LocalizedName NameId { get; set; } = LocalizedName.Empty;
+    }
+
+    public class SdeNpcCorporations
+    {
+        private Dictionary<int, SdeNpcCorporation> corporations;
+
+        public SdeNpcCorporations(Dictionary<int, SdeNpcCorporation> corporations)
+        {
+            this.corporations = corporations;
+        }
+    }
+
     public class SdeType
     {
         public int GroupId { get; set; }
@@ -74,6 +89,7 @@ namespace Fasciculus.Eve.Models
     public class SdeData
     {
         public required SdeNames Names { get; init; }
+        public required SdeNpcCorporations NpcCorporations { get; init; }
         public required SdeStationOperations StationOperations { get; init; }
         public required SdeTypes Types { get; set; }
     }
