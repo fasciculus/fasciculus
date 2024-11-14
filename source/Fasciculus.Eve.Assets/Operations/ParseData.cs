@@ -25,11 +25,11 @@ namespace Fasciculus.Eve.Operations
             progress.Report("parsing data");
 
             Task<SdeNames> names = Task.Run(() => ParseNames(progress));
-            Task<SdeNpcCorporations> npcCorporations = Task.Run(() => ParseNpcCorporations(progress));
+            Task<Dictionary<int, SdeNpcCorporation>> npcCorporations = Task.Run(() => ParseNpcCorporations(progress));
             Task<SdeStationOperations> stationOperations = Task.Run(() => ParseStationOperations(progress));
             Task<SdeTypes> types = Task.Run(() => ParseTypes(progress));
 
-            Task.WaitAll([names, stationOperations, types]);
+            Task.WaitAll([names, npcCorporations, stationOperations, types]);
 
             progress.Report("parsing data done");
 
@@ -53,11 +53,11 @@ namespace Fasciculus.Eve.Operations
             return result;
         }
 
-        private static SdeNpcCorporations ParseNpcCorporations(IProgress<string> progress)
+        private static Dictionary<int, SdeNpcCorporation> ParseNpcCorporations(IProgress<string> progress)
         {
             progress.Report("  parsing NPC corporations");
 
-            SdeNpcCorporations result = new(Yaml.Deserialize<Dictionary<int, SdeNpcCorporation>>(NpcCorporationsFile));
+            Dictionary<int, SdeNpcCorporation> result = Yaml.Deserialize<Dictionary<int, SdeNpcCorporation>>(NpcCorporationsFile);
 
             progress.Report("  parsing NPC corporations done");
 
