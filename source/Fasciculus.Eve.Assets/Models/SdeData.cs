@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Fasciculus.Eve.Models
 {
@@ -15,19 +16,27 @@ namespace Fasciculus.Eve.Models
         public string ItemName { get; set; } = string.Empty;
     }
 
-    public class SdeNames
+    public class SdeNames : IEnumerable<SdeName>
     {
-        private readonly Dictionary<int, string> names = [];
+        private readonly List<SdeName> names;
+        private readonly Dictionary<int, string> namesById = [];
 
-        public SdeNames(IEnumerable<SdeName> names)
+        public SdeNames(SdeName[] names)
         {
-            names.Apply(name => { this.names[name.ItemID] = name.ItemName; });
+            this.names = new(names);
+            names.Apply(name => { namesById[name.ItemID] = name.ItemName; });
         }
 
         public string this[int id]
         {
-            get { return names.TryGetValue(id, out string? name) ? name : string.Empty; }
+            get { return namesById.TryGetValue(id, out string? name) ? name : string.Empty; }
         }
+
+        public IEnumerator<SdeName> GetEnumerator()
+            => names.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => names.GetEnumerator();
     }
 
     public class SdeType

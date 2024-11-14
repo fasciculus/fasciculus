@@ -41,7 +41,7 @@ namespace Fasciculus.Eve.Operations
         {
             progress.Report("  parsing names");
 
-            SdeNames result = new(Yaml.Deserialize<List<SdeName>>(NamesFile));
+            SdeNames result = new(Yaml.Deserialize<SdeName[]>(NamesFile));
 
             progress.Report("  parsing names done");
 

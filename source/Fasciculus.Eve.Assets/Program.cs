@@ -10,6 +10,9 @@ namespace Fasciculus.Eve
 {
     public class Program
     {
+        private static FileInfo DataFile
+            => EveAssetsDirectories.ResourcesDirectory.File("EveData.dat.gz");
+
         private static FileInfo UniverseFile
             => EveAssetsDirectories.ResourcesDirectory.File("EveUniverse.dat.gz");
 
@@ -33,6 +36,7 @@ namespace Fasciculus.Eve
 
                 SdeData sdeData = CreateSde(progress);
 
+                EveData eveData = CreateDataFile(sdeData, changes, progress);
                 EveUniverse eveUniverse = CreateUniverseFile(sdeData, changes, progress);
 
                 CreateNavigationFile(eveUniverse, changes, progress);
@@ -52,6 +56,17 @@ namespace Fasciculus.Eve
             ExtractSdeZip.Execute(progress);
 
             return ParseData.Execute(progress);
+        }
+
+        private static EveData CreateDataFile(SdeData sdeData, List<string> changes, IProgress<string> progress)
+        {
+            EveData eveData = ConvertData.Execute(sdeData, progress);
+            using MemoryStream uncompressed = new();
+
+            eveData.Write(uncompressed);
+            CreateFile(uncompressed, DataFile, changes, progress);
+
+            return eveData;
         }
 
         private static EveUniverse CreateUniverseFile(SdeData sdeData, List<string> changes, IProgress<string> progress)

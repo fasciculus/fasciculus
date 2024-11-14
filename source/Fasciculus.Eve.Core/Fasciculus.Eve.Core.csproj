@@ -10,6 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources/EveData.dat.gz">
+      <LogicalName>EveData</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources/EveUniverse.dat.gz">
       <LogicalName>EveUniverse</LogicalName>
     </EmbeddedResource>
