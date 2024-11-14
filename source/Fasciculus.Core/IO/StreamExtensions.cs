@@ -113,5 +113,29 @@ namespace System.IO
 
             values.Apply(value => write(value));
         }
+
+        public static Dictionary<K, V> ReadDictionary<K, V>(this Stream stream, Func<Stream, K> readKey, Func<Stream, V> readValue)
+        {
+            int length = stream.ReadInt();
+            Dictionary<K, V> dictionary = [];
+
+            for (int i = 0; i < length; ++i)
+            {
+                K key = readKey(stream);
+                V value = readValue(stream);
+
+                dictionary.Add(key, value);
+            }
+
+            return dictionary;
+        }
+
+        public static void WriteDictionary<K, V>(this Stream stream, Dictionary<K, V> dictionary, Action<K> writeKey, Action<V> writeValue)
+        {
+            K[] keys = dictionary.Keys.OrderBy(k => k).ToArray();
+
+            stream.WriteInt(keys.Length);
+            keys.Apply(k => { writeKey(k); writeValue(dictionary[k]); });
+        }
     }
 }
