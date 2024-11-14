@@ -41,8 +41,7 @@ namespace Fasciculus.Eve
 
                 CreateNavigationFile(eveUniverse, changes, progress);
 
-                Console.WriteLine("changes");
-                changes.ForEach(change => Console.WriteLine($"  {change}"));
+                LogChanges(changes);
             }
             catch (Exception e)
             {
@@ -114,6 +113,20 @@ namespace Fasciculus.Eve
             }
 
             progress.Report($"compressing {file.Name} done");
+        }
+
+        private static void LogChanges(List<string> changes)
+        {
+            Console.WriteLine("changes");
+
+            if (changes.Count > 0)
+            {
+                changes.ForEach(change => Console.WriteLine($"  {change}"));
+            }
+            else
+            {
+                Console.WriteLine("  none");
+            }
         }
     }
 }
