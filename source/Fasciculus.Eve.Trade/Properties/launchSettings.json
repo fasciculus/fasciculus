@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "Jita": {
+      "commandName": "Project",
+      "commandLineArgs": "Jita"
+    }
+  }
+}
