@@ -3,27 +3,38 @@ using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Resources;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Trade
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            Console.WriteLine("Loading Data");
+            try
+            {
+                Console.WriteLine("Loading Data");
 
-            EveData data = EveResources.ReadData();
-            EveUniverse universe = EveResources.ReadUniverse(data);
+                EveData data = EveResources.ReadData();
+                EveUniverse universe = EveResources.ReadUniverse(data);
+                Esi esi = new("rhj1", EveFileSystemInfos.EsiCacheFile);
 
-            GetStations(universe, args, out EveNpcStation origin, out EveNpcStation destination);
-            GetLimits(args, out double volumePerType, out double iskPerType);
+                GetStations(universe, args, out EveNpcStation origin, out EveNpcStation destination);
+                GetLimits(args, out double volumePerType, out double iskPerType);
 
-            Console.WriteLine($"Origin     : {origin.Name}");
-            Console.WriteLine($"Destination: {destination.Name}");
-            Console.WriteLine($"Volume/Type: {volumePerType:0.00} m3");
-            Console.WriteLine($"Volume/Type: {(iskPerType / 1_000_000):0.0} M");
+                Console.WriteLine($"Origin     : {origin.Name} {origin.Moon.Planet.SolarSystem.Constellation.Region.Id.Value}");
+                Console.WriteLine($"Destination: {destination.Name}  {destination.Moon.Planet.SolarSystem.Constellation.Region.Id.Value}");
+                Console.WriteLine($"Volume/Type: {volumePerType:0.00} m3");
+                Console.WriteLine($"Volume/Type: {(iskPerType / 1_000_000):0.0} M");
 
-            TradeOpportunities.Create(data.Types, origin, destination, volumePerType, iskPerType);
+                await TradeOpportunities.CreateAsync(esi, data.Types, origin, destination, volumePerType, iskPerType);
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e);
+            }
+
 
 #if !DEBUG
             Console.ReadLine();

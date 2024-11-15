@@ -54,6 +54,32 @@ namespace System.IO
             stream.Write(bytes, 0, bytes.Length);
         }
 
+        public static long ReadLong(this Stream stream)
+        {
+            byte[] buffer = new byte[8];
+
+            stream.Read(buffer, 0, buffer.Length);
+
+            return BitConverter.ToInt64(buffer, 0);
+        }
+
+        public static void WriteLong(this Stream stream, long value)
+        {
+            byte[] bytes = BitConverter.GetBytes(value);
+
+            stream.Write(bytes, 0, bytes.Length);
+        }
+
+        public static DateTime ReadDateTime(this Stream stream)
+        {
+            return DateTime.FromBinary(stream.ReadLong());
+        }
+
+        public static void WriteDateTime(this Stream stream, DateTime value)
+        {
+            stream.WriteLong(value.ToBinary());
+        }
+
         public static double ReadDouble(this Stream stream)
         {
             byte[] buffer = new byte[8];
