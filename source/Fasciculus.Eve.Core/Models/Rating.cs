@@ -39,7 +39,7 @@ namespace Fasciculus.Eve.Models
 
     public class EveHomeRating
     {
-        private readonly IEveUniverse universe;
+        private readonly EveUniverse universe;
         private readonly EveNavigation navigation;
 
         public EveSolarSystem TradeHub { get; }
@@ -54,7 +54,7 @@ namespace Fasciculus.Eve.Models
         public int IceDistancePenalty { get; set; } = 20;
         public int AsteroidBeltReward { get; set; } = 1;
 
-        public EveHomeRating(IEveUniverse universe, EveNavigation navigation)
+        public EveHomeRating(EveUniverse universe, EveNavigation navigation)
         {
             this.universe = universe;
             this.navigation = navigation;

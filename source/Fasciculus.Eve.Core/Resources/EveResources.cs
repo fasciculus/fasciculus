@@ -11,7 +11,7 @@ namespace Fasciculus.Eve.Resources
         public static EveUniverse ReadUniverse(EveData data)
             => EmbeddedResources.ReadCompressed("EveUniverse", s => EveUniverse.Read(s, data));
 
-        public static EveNavigation ReadNavigation(IEveUniverse universe)
+        public static EveNavigation ReadNavigation(EveUniverse universe)
             => EmbeddedResources.ReadCompressed("EveNavigation", s => EveNavigation.Read(universe, s));
     }
 }

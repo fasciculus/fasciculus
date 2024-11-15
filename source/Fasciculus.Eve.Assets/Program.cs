@@ -80,7 +80,7 @@ namespace Fasciculus.Eve
             return eveUniverse;
         }
 
-        private static void CreateNavigationFile(IEveUniverse eveUniverse, List<string> changes, IProgress<string> progress)
+        private static void CreateNavigationFile(EveUniverse eveUniverse, List<string> changes, IProgress<string> progress)
         {
             EveNavigation navigation = CreateNavigation.Execute(eveUniverse, progress);
 

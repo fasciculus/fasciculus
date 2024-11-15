@@ -141,7 +141,7 @@ namespace Fasciculus.Eve.Models
             stream.WriteArray(distances, distance => distance.Write(stream));
         }
 
-        public static EveNavigation Read(IEveUniverse universe, Stream stream)
+        public static EveNavigation Read(EveUniverse universe, Stream stream)
         {
             EveDistances[] distances = stream.ReadArray(_ => EveDistances.Read(universe.SolarSystems, stream));
 

@@ -16,7 +16,7 @@ namespace Fasciculus.Eve.Operations
 
             private long done = 0;
 
-            public SubProgress(IEveUniverse universe, IProgress<string> progress)
+            public SubProgress(EveUniverse universe, IProgress<string> progress)
             {
                 this.progress = progress;
                 step = (universe.SolarSystems.Count * 3) / 100;
@@ -33,7 +33,7 @@ namespace Fasciculus.Eve.Operations
             }
         }
 
-        public static EveNavigation Execute(IEveUniverse universe, IProgress<string> progress)
+        public static EveNavigation Execute(EveUniverse universe, IProgress<string> progress)
         {
             progress.Report("Creating Navigation");
 

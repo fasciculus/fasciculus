@@ -240,7 +240,7 @@ namespace Fasciculus.Eve.Models
             this.destinationId = destinationId;
         }
 
-        public void Link(EveSolarSystem solarSystem, IEveUniverse universe)
+        public void Link(EveSolarSystem solarSystem, EveUniverse universe)
         {
             this.solarSystem = solarSystem;
             destination = universe.Stargates[destinationId];
@@ -459,14 +459,7 @@ namespace Fasciculus.Eve.Models
         }
     }
 
-    public interface IEveUniverse
-    {
-        public EveRegions Regions { get; }
-        public EveSolarSystems SolarSystems { get; }
-        public EveStargates Stargates { get; }
-    }
-
-    public class EveUniverse : IEveUniverse
+    public class EveUniverse
     {
         public EveRegions Regions { get; }
         public EveConstellations Constellations { get; }
