@@ -44,7 +44,6 @@ namespace Fasciculus.Eve.Models
     {
         public int GroupId { get; set; }
         public int MarketGroupID { get; set; }
-        public double Mass { get; set; }
         public LocalizedName Name { get; set; } = LocalizedName.Empty;
         public int PortionSize { get; set; }
         public bool Published { get; set; }

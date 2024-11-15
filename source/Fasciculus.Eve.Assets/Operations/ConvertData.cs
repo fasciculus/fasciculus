@@ -14,6 +14,7 @@ namespace Fasciculus.Eve.Operations
             EveNames names = ConvertNames(sdeData.Names);
             EveNpcCorporations npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
             EveStationOperations stationOperations = ConvertStationOperations(sdeData.StationOperations);
+            EveTypes types = ConvertTypes(sdeData.Types);
 
             progress.Report("converting data done");
 
@@ -21,7 +22,8 @@ namespace Fasciculus.Eve.Operations
             {
                 Names = names,
                 NpcCorporations = npcCorporations,
-                StationOperations = stationOperations
+                StationOperations = stationOperations,
+                Types = types
             };
         }
 
@@ -48,6 +50,28 @@ namespace Fasciculus.Eve.Operations
             string name = sdeStationOperation.OperationNameID.En;
 
             return new(id, name);
+        }
+
+        private static EveTypes ConvertTypes(Dictionary<int, SdeType> types)
+            => new(types.Select(kvp => ConvertType(kvp.Key, kvp.Value)).ToArray());
+
+        private static EveType ConvertType(int rawId, SdeType sdeType)
+        {
+            EveId id = EveId.Create(rawId);
+            EveId groupId = EveId.Create(sdeType.GroupId);
+            EveId marketGroupId = EveId.Create(sdeType.MarketGroupID);
+            string name = sdeType.Name.En;
+            int portionSize = sdeType.PortionSize;
+            bool published = sdeType.Published;
+            double volume = sdeType.Volume;
+
+            return new EveType(id, groupId, marketGroupId)
+            {
+                Name = name,
+                PortionSize = portionSize,
+                Published = published,
+                Volume = volume
+            };
         }
     }
 }
