@@ -1,7 +1,59 @@
-﻿using System.IO;
+﻿using Fasciculus.Validating;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
+    public class EveMarketGroup : EveObject
+    {
+        private readonly EveId parentId;
+
+        public required string Name { get; init; }
+
+        public EveMarketGroup(EveId id, EveId parentId)
+            : base(id)
+        {
+            this.parentId = parentId;
+        }
+
+        public void Write(Stream stream)
+        {
+            Id.Write(stream);
+            parentId.Write(stream);
+            stream.WriteString(Name);
+        }
+
+        public static EveMarketGroup Read(Stream stream)
+        {
+            EveId id = EveId.Read(stream);
+            EveId parentId = EveId.Read(stream);
+            string name = stream.ReadString();
+
+            return new(id, parentId)
+            {
+                Name = name
+            };
+        }
+    }
+
+    public class EveMarketGroups : EveObjects<EveMarketGroup>
+    {
+        public EveMarketGroups(EveMarketGroup[] marketGroups)
+            : base(marketGroups) { }
+
+        public void Write(Stream stream)
+        {
+            stream.WriteArray(objects, mg => mg.Write(stream));
+        }
+
+        public static EveMarketGroups Read(Stream stream)
+        {
+            EveMarketGroup[] marketGroups = stream.ReadArray(EveMarketGroup.Read);
+
+            return new(marketGroups);
+        }
+    }
+
     public class EveNpcCorporation : EveObject
     {
         public string Name { get; }
@@ -34,7 +86,7 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            stream.WriteArray(objectsByIndex, c => c.Write(stream));
+            stream.WriteArray(objects, c => c.Write(stream));
         }
 
         public static EveNpcCorporations Read(Stream stream)
@@ -77,7 +129,7 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            stream.WriteArray(objectsByIndex, c => c.Write(stream));
+            stream.WriteArray(objects, c => c.Write(stream));
         }
 
         public static EveStationOperations Read(Stream stream)
@@ -98,11 +150,27 @@ namespace Fasciculus.Eve.Models
         public required bool Published { get; init; }
         public required double Volume { get; init; }
 
+        private EveMarketGroup? marketGroup;
+
+        public EveMarketGroup MarketGroup
+            => Cond.NotNull(marketGroup);
+
+        public bool IsTradeable
+            => Published && marketGroup != null;
+
         public EveType(EveId id, EveId groupId, EveId marketGroupId)
             : base(id)
         {
             this.groupId = groupId;
             this.marketGroupId = marketGroupId;
+        }
+
+        internal void Link(EveMarketGroups marketGroups)
+        {
+            if (marketGroups.TryGet(marketGroupId, out EveMarketGroup? marketGroup))
+            {
+                this.marketGroup = marketGroup;
+            }
         }
 
         public void Write(Stream stream)
@@ -141,9 +209,14 @@ namespace Fasciculus.Eve.Models
         public EveTypes(EveType[] types)
             : base(types) { }
 
+        internal void Link(EveMarketGroups marketGroups)
+        {
+            objects.Apply(mg => mg.Link(marketGroups));
+        }
+
         public void Write(Stream stream)
         {
-            stream.WriteArray(objectsByIndex, t => t.Write(stream));
+            stream.WriteArray(objects, t => t.Write(stream));
         }
 
         public static EveTypes Read(Stream stream)
@@ -156,29 +229,38 @@ namespace Fasciculus.Eve.Models
 
     public class EveData
     {
-        public required EveNames Names { get; init; }
-        public required EveNpcCorporations NpcCorporations { get; init; }
-        public required EveStationOperations StationOperations { get; init; }
-        public required EveTypes Types { get; init; }
+        public EveMarketGroups MarketGroups { get; }
+        public EveNames Names { get; }
+        public EveNpcCorporations NpcCorporations { get; }
+        public EveStationOperations StationOperations { get; }
+        public EveTypes Types { get; }
+
+        public EveData(EveMarketGroups marketGroups, EveNames names, EveNpcCorporations npcCorporations, EveStationOperations stationOperations,
+            EveTypes types)
+        {
+            MarketGroups = marketGroups;
+            Names = names;
+            NpcCorporations = npcCorporations;
+            StationOperations = stationOperations;
+            Types = types;
+
+            Types.Link(MarketGroups);
+        }
 
         public static EveData Read(Stream stream)
         {
+            EveMarketGroups marketGroups = EveMarketGroups.Read(stream);
             EveNames names = EveNames.Read(stream);
             EveNpcCorporations npcCorporations = EveNpcCorporations.Read(stream);
             EveStationOperations stationOperations = EveStationOperations.Read(stream);
             EveTypes types = EveTypes.Read(stream);
 
-            return new()
-            {
-                Names = names,
-                NpcCorporations = npcCorporations,
-                StationOperations = stationOperations,
-                Types = types
-            };
+            return new(marketGroups, names, npcCorporations, stationOperations, types);
         }
 
         public void Write(Stream stream)
         {
+            MarketGroups.Write(stream);
             Names.Write(stream);
             NpcCorporations.Write(stream);
             StationOperations.Write(stream);

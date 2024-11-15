@@ -143,7 +143,7 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            stream.WriteArray(objectsByIndex, moon => moon.Write(stream));
+            stream.WriteArray(objects, moon => moon.Write(stream));
         }
 
         public static EveMoons Read(Stream stream)
@@ -215,7 +215,7 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            stream.WriteArray(objectsByIndex, planet => planet.Write(stream));
+            stream.WriteArray(objects, planet => planet.Write(stream));
         }
 
         public static EvePlanets Read(Stream stream)
@@ -448,7 +448,7 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
         {
-            stream.WriteArray(objectsByIndex, o => o.Write(stream));
+            stream.WriteArray(objects, o => o.Write(stream));
         }
 
         public static EveRegions Read(Stream stream, EveNames names)

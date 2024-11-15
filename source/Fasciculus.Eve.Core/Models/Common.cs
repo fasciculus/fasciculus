@@ -41,24 +41,27 @@ namespace Fasciculus.Eve.Models
     public class EveObjects<T> : IEnumerable<T>
         where T : notnull, EveObject
     {
-        protected readonly T[] objectsByIndex;
+        protected readonly T[] objects;
         protected readonly Dictionary<EveId, T> objectsById;
 
-        public int Count => objectsByIndex.Length;
+        public int Count => objects.Length;
 
         public IEnumerable<T> Objects
-            => objectsByIndex;
+            => objects;
 
         public EveObjects(T[] objects)
         {
-            objectsByIndex = [.. objects.OrderBy(o => o.Id)];
+            this.objects = [.. objects.OrderBy(o => o.Id)];
             objectsById = objects.ToDictionary(o => o.Id);
 
-            Enumerable.Range(0, objectsByIndex.Length).Apply(index => objectsByIndex[index].Index = index);
+            Enumerable.Range(0, objects.Length).Apply(index => objects[index].Index = index);
         }
 
-        public T this[int index] => objectsByIndex[index];
+        public T this[int index] => objects[index];
         public T this[EveId id] => objectsById[id];
+
+        public bool TryGet(EveId id, out T? value)
+            => objectsById.TryGetValue(id, out value);
 
         public IEnumerator<T> GetEnumerator()
             => Objects.GetEnumerator();

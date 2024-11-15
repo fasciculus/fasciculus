@@ -11,6 +11,7 @@ namespace Fasciculus.Eve.Operations
         {
             progress.Report("converting data");
 
+            EveMarketGroups marketGroups = ConvertMarketGroups(sdeData.MarketGroups);
             EveNames names = ConvertNames(sdeData.Names);
             EveNpcCorporations npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
             EveStationOperations stationOperations = ConvertStationOperations(sdeData.StationOperations);
@@ -18,12 +19,21 @@ namespace Fasciculus.Eve.Operations
 
             progress.Report("converting data done");
 
-            return new()
+            return new(marketGroups, names, npcCorporations, stationOperations, types);
+        }
+
+        private static EveMarketGroups ConvertMarketGroups(Dictionary<int, SdeMarketGroup> sdeMarketGroups)
+            => new(sdeMarketGroups.Select(kvp => ConvertMarketGroup(kvp.Key, kvp.Value)).ToArray());
+
+        private static EveMarketGroup ConvertMarketGroup(int rawId, SdeMarketGroup sdeMarketGroup)
+        {
+            EveId id = EveId.Create(rawId);
+            EveId parentId = EveId.Create(sdeMarketGroup.ParentGroupID);
+            string name = sdeMarketGroup.NameID.En;
+
+            return new(id, parentId)
             {
-                Names = names,
-                NpcCorporations = npcCorporations,
-                StationOperations = stationOperations,
-                Types = types
+                Name = name
             };
         }
 

@@ -8,6 +8,9 @@ namespace Fasciculus.Eve.Operations
 {
     public static class ParseData
     {
+        private static FileInfo MarketGroupsFile
+            => EveAssetsDirectories.FsdDirectory.File("marketGroups.yaml");
+
         private static FileInfo NamesFile
             => EveAssetsDirectories.BsdDirectory.File("invNames.yaml");
 
@@ -24,6 +27,7 @@ namespace Fasciculus.Eve.Operations
         {
             progress.Report("parsing data");
 
+            Task<Dictionary<int, SdeMarketGroup>> marketGroups = Task.Run(() => ParseMarketGroups(progress));
             Task<SdeNames> names = Task.Run(() => ParseNames(progress));
             Task<Dictionary<int, SdeNpcCorporation>> npcCorporations = Task.Run(() => ParseNpcCorporations(progress));
             Task<Dictionary<int, SdeStationOperation>> stationOperations = Task.Run(() => ParseStationOperations(progress));
@@ -35,11 +39,23 @@ namespace Fasciculus.Eve.Operations
 
             return new()
             {
+                MarketGroups = marketGroups.Result,
                 Names = names.Result,
                 NpcCorporations = npcCorporations.Result,
                 StationOperations = stationOperations.Result,
                 Types = types.Result,
             };
+        }
+
+        private static Dictionary<int, SdeMarketGroup> ParseMarketGroups(IProgress<string> progress)
+        {
+            progress.Report("  parsing market groups");
+
+            Dictionary<int, SdeMarketGroup> result = Yaml.Deserialize<Dictionary<int, SdeMarketGroup>>(MarketGroupsFile);
+
+            progress.Report("  parsing market groups done");
+
+            return result;
         }
 
         private static SdeNames ParseNames(IProgress<string> progress)

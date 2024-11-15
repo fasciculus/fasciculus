@@ -11,6 +11,12 @@ namespace Fasciculus.Eve.Models
         public static readonly LocalizedName Empty = new() { En = string.Empty };
     }
 
+    public class SdeMarketGroup
+    {
+        public LocalizedName NameID { get; set; } = LocalizedName.Empty;
+        public int ParentGroupID { get; set; }
+    }
+
     public class SdeName
     {
         public int ItemID { get; set; }
@@ -58,6 +64,7 @@ namespace Fasciculus.Eve.Models
 
     public class SdeData
     {
+        public required Dictionary<int, SdeMarketGroup> MarketGroups { get; init; }
         public required SdeNames Names { get; init; }
         public required Dictionary<int, SdeNpcCorporation> NpcCorporations { get; init; }
         public required Dictionary<int, SdeStationOperation> StationOperations { get; init; }
