@@ -51,16 +51,6 @@ namespace Fasciculus.Eve.Models
         public double Volume { get; set; } = double.MaxValue;
     }
 
-    public class SdeTypes
-    {
-        private Dictionary<int, SdeType> types;
-
-        public SdeTypes(Dictionary<int, SdeType> types)
-        {
-            this.types = types;
-        }
-    }
-
     public class SdeStationOperation
     {
         public LocalizedName OperationNameID { get; set; } = LocalizedName.Empty;
@@ -72,6 +62,6 @@ namespace Fasciculus.Eve.Models
         public required SdeNames Names { get; init; }
         public required Dictionary<int, SdeNpcCorporation> NpcCorporations { get; init; }
         public required Dictionary<int, SdeStationOperation> StationOperations { get; init; }
-        public required SdeTypes Types { get; set; }
+        public required Dictionary<int, SdeType> Types { get; set; }
     }
 }

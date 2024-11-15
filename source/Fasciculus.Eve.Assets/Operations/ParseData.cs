@@ -27,7 +27,7 @@ namespace Fasciculus.Eve.Operations
             Task<SdeNames> names = Task.Run(() => ParseNames(progress));
             Task<Dictionary<int, SdeNpcCorporation>> npcCorporations = Task.Run(() => ParseNpcCorporations(progress));
             Task<Dictionary<int, SdeStationOperation>> stationOperations = Task.Run(() => ParseStationOperations(progress));
-            Task<SdeTypes> types = Task.Run(() => ParseTypes(progress));
+            Task<Dictionary<int, SdeType>> types = Task.Run(() => ParseTypes(progress));
 
             Task.WaitAll([names, npcCorporations, stationOperations, types]);
 
@@ -75,11 +75,11 @@ namespace Fasciculus.Eve.Operations
             return result;
         }
 
-        private static SdeTypes ParseTypes(IProgress<string> progress)
+        private static Dictionary<int, SdeType> ParseTypes(IProgress<string> progress)
         {
             progress.Report("  parsing types");
 
-            SdeTypes result = new(Yaml.Deserialize<Dictionary<int, SdeType>>(TypesFile));
+            Dictionary<int, SdeType> result = Yaml.Deserialize<Dictionary<int, SdeType>>(TypesFile);
 
             progress.Report("  parsing types done");
 
