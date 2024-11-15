@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Fasciculus.Eve.Models
+﻿namespace Fasciculus.Eve.Models
 {
     public class EveOffer
     {
@@ -40,12 +38,8 @@ namespace Fasciculus.Eve.Models
 
     public class TradeOpportunities
     {
-        public static void Create(EveTypes types, EveNpcStation origin, EveNpcStation destination, double maxVolume)
+        public static void Create(EveTypes types, EveNpcStation origin, EveNpcStation destination, double volumePerType, double iskPerType)
         {
-            EveType[] candidates = types
-                .Where(t => t.IsTradeable)
-                .Where(t => t.Volume <= maxVolume)
-                .ToArray();
         }
     }
 }

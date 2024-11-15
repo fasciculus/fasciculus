@@ -6,7 +6,7 @@
     },
     "Jita": {
       "commandName": "Project",
-      "commandLineArgs": "Jita"
+      "commandLineArgs": "Jita 5000 10000000"
     }
   }
 }
