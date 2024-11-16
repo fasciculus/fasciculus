@@ -20,5 +20,17 @@ namespace Fasciculus.Models
 
             return result;
         }
+
+        public static bool operator >(ComparablePair<T1, T2> lhs, ComparablePair<T1, T2> rhs)
+            => lhs.CompareTo(rhs) > 0;
+
+        public static bool operator <(ComparablePair<T1, T2> lhs, ComparablePair<T1, T2> rhs)
+            => lhs.CompareTo(rhs) < 0;
+
+        public static bool operator >=(ComparablePair<T1, T2> lhs, ComparablePair<T1, T2> rhs)
+            => lhs.CompareTo(rhs) >= 0;
+
+        public static bool operator <=(ComparablePair<T1, T2> lhs, ComparablePair<T1, T2> rhs)
+            => lhs.CompareTo(rhs) <= 0;
     }
 }
