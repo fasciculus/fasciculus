@@ -1,11 +1,13 @@
 ﻿using Fasciculus.Eve.Models;
+using Fasciculus.Models;
+using Fasciculus.Threading;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Eve
@@ -37,10 +39,36 @@ namespace Fasciculus.Eve
 
     public class EsiCache
     {
-        private readonly FileInfo file;
-        private readonly EsiCacheEntry<EsiMarketPrice[]> marketPrices = new(DateTime.UtcNow, []);
+        private class MarketOrderKey : ComparablePair<int, int>
+        {
+            public int Region => First;
+            public int Type => Second;
 
-        private Dictionary<int, Dictionary<int, EsiCacheEntry<EsiMarketOrder[]>>> marketOrders = [];
+            public MarketOrderKey(int region, int type)
+                : base(region, type) { }
+
+            public static MarketOrderKey Read(Stream stream)
+            {
+                int region = stream.ReadInt();
+                int type = stream.ReadInt();
+
+                return new(region, type);
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Region);
+                stream.WriteInt(Type);
+            }
+        }
+
+        private readonly TaskSafeMutex mutex = new();
+
+        private readonly FileInfo file;
+        private bool dirty = false;
+
+        private readonly EsiCacheEntry<EsiMarketPrice[]> marketPrices = new(DateTime.UtcNow, []);
+        private Dictionary<MarketOrderKey, EsiCacheEntry<EsiMarketOrder[]>> marketOrders = [];
 
         public EsiCache(FileInfo file)
         {
@@ -49,48 +77,50 @@ namespace Fasciculus.Eve
 
         public EsiMarketPrice[]? GetMarketPrices()
         {
+            using Locker locker = Locker.Lock(mutex);
+
             return marketPrices.IsExpired ? null : marketPrices.Value;
         }
 
         public EsiMarketPrice[] SetMarketPrices(EsiMarketPrice[]? marketPrices, int duration)
         {
+            using Locker locker = Locker.Lock(mutex);
+
             if (marketPrices is null) return [];
 
             this.marketPrices.Expires = DateTime.UtcNow.AddSeconds(duration);
             this.marketPrices.Value = marketPrices;
-            Write();
+
+            dirty = true;
 
             return marketPrices;
         }
 
         public EsiMarketOrder[]? GetMarketOrders(int region, int type)
         {
-            EsiCacheEntry<EsiMarketOrder[]>? entry = null;
+            using Locker locker = Locker.Lock(mutex);
+            MarketOrderKey key = new(region, type);
 
-            marketOrders.TryGetValue(region, out Dictionary<int, EsiCacheEntry<EsiMarketOrder[]>>? regionOrders);
-            regionOrders?.TryGetValue(type, out entry);
+            marketOrders.TryGetValue(key, out EsiCacheEntry<EsiMarketOrder[]>? entry);
 
             return (entry is null || entry.IsExpired) ? null : entry.Value;
         }
 
         public EsiMarketOrder[] SetMarketOrders(int region, int type, EsiMarketOrder[]? orders, int duration)
         {
+            using Locker locker = Locker.Lock(mutex);
+
             if (orders is null) return [];
 
-            marketOrders.TryGetValue(region, out Dictionary<int, EsiCacheEntry<EsiMarketOrder[]>>? regionOrders);
+            MarketOrderKey key = new(region, type);
 
-            if (regionOrders is null)
-            {
-                marketOrders[region] = regionOrders = [];
-            }
-
-            regionOrders.TryGetValue(type, out EsiCacheEntry<EsiMarketOrder[]>? entry);
+            marketOrders.TryGetValue(key, out EsiCacheEntry<EsiMarketOrder[]>? entry);
 
             DateTime expires = DateTime.UtcNow.AddSeconds(duration);
 
             if (entry is null)
             {
-                regionOrders[type] = new(expires, orders);
+                marketOrders[key] = new(expires, orders);
             }
             else
             {
@@ -98,7 +128,7 @@ namespace Fasciculus.Eve
                 entry.Value = orders;
             }
 
-            Write();
+            dirty = true;
 
             return orders;
         }
@@ -115,9 +145,15 @@ namespace Fasciculus.Eve
             return cache;
         }
 
-        private void Write()
+        public void Flush()
         {
-            file.Write(s => Write(s));
+            using Locker locker = Locker.Lock(mutex);
+
+            if (dirty)
+            {
+                file.Write(Write);
+                dirty = false;
+            }
         }
 
         private static void Read(Stream stream, EsiCache cache)
@@ -125,21 +161,7 @@ namespace Fasciculus.Eve
             cache.marketPrices.Expires = stream.ReadDateTime();
             cache.marketPrices.Value = stream.ReadArray(EsiMarketPrice.Read);
 
-            cache.marketOrders = ReadMarketOrders(stream);
-        }
-
-        private static Dictionary<int, Dictionary<int, EsiCacheEntry<EsiMarketOrder[]>>> ReadMarketOrders(Stream stream)
-            => stream.ReadDictionary(s => s.ReadInt(), ReadRegionOrders);
-
-        private static Dictionary<int, EsiCacheEntry<EsiMarketOrder[]>> ReadRegionOrders(Stream stream)
-            => stream.ReadDictionary(s => s.ReadInt(), ReadRegionOrdersEntry);
-
-        private static EsiCacheEntry<EsiMarketOrder[]> ReadRegionOrdersEntry(Stream stream)
-        {
-            DateTime expires = stream.ReadDateTime();
-            EsiMarketOrder[] orders = stream.ReadArray(EsiMarketOrder.Read);
-
-            return new(expires, orders);
+            cache.marketOrders = stream.ReadDictionary(MarketOrderKey.Read, ReadMarketOrderEntry);
         }
 
         private void Write(Stream stream)
@@ -147,26 +169,42 @@ namespace Fasciculus.Eve
             stream.WriteDateTime(marketPrices.Expires);
             stream.WriteArray(marketPrices.Value, mp => mp.Write(stream));
 
-            WriteMarketOrders(stream, marketOrders);
+            stream.WriteDictionary(marketOrders, k => k.Write(stream), v => WriteMarketOrderEntry(stream, v));
         }
 
-        private static void WriteMarketOrders(Stream stream, Dictionary<int, Dictionary<int, EsiCacheEntry<EsiMarketOrder[]>>> orders)
-            => stream.WriteDictionary(orders, k => stream.WriteInt(k), v => WriteRegionOrders(stream, v));
+        private static EsiCacheEntry<EsiMarketOrder[]> ReadMarketOrderEntry(Stream stream)
+        {
+            DateTime expires = stream.ReadDateTime();
+            EsiMarketOrder[] orders = stream.ReadArray(EsiMarketOrder.Read);
 
-        private static void WriteRegionOrders(Stream stream, Dictionary<int, EsiCacheEntry<EsiMarketOrder[]>> entries)
-            => stream.WriteDictionary(entries, k => stream.WriteInt(k), v => WriteRegionOrdersEntry(stream, v));
+            return new(expires, orders);
+        }
 
-        private static void WriteRegionOrdersEntry(Stream stream, EsiCacheEntry<EsiMarketOrder[]> entry)
+        private static void WriteMarketOrderEntry(Stream stream, EsiCacheEntry<EsiMarketOrder[]> entry)
         {
             stream.WriteDateTime(entry.Expires);
-            stream.WriteArray(entry.Value, mp => mp.Write(stream));
+            stream.WriteArray(entry.Value, v => v.Write(stream));
         }
     }
 
     public class Esi : IDisposable
     {
+        public class EsiErrorEventArgs : EventArgs
+        {
+            public string Uri { get; }
+            public HttpStatusCode StatusCode { get; }
+
+            public EsiErrorEventArgs(string uri, HttpStatusCode statusCode)
+            {
+                Uri = uri;
+                StatusCode = statusCode;
+            }
+        }
+
         private readonly HttpClient client;
         private readonly EsiCache cache;
+
+        public event EventHandler<EsiErrorEventArgs>? OnError;
 
         public Esi(string userAgent, FileInfo cacheFile)
         {
@@ -190,13 +228,21 @@ namespace Fasciculus.Eve
             client.Dispose();
         }
 
+        public void Flush()
+        {
+            cache.Flush();
+        }
+
         public async Task<EsiMarketPrice[]> GetMarketPricesAsync()
         {
+            string uri = "markets/prices/?datasource=tranquility";
+            using Locker locker = NamedTaskSafeMutexes.Lock(uri);
+
             EsiMarketPrice[]? result = cache.GetMarketPrices();
 
             if (result is null)
             {
-                result = await client.GetFromJsonAsync<EsiMarketPrice[]>("markets/prices/?datasource=tranquility");
+                result = await Get(uri, s => JsonSerializer.Deserialize<EsiMarketPrice[]>(s));
                 result = cache.SetMarketPrices(result, 3600);
             }
 
@@ -205,17 +251,33 @@ namespace Fasciculus.Eve
 
         public async Task<EsiMarketOrder[]> GetMarketOrdersAsync(int region, int type)
         {
+            string uri = $"markets/{region}/orders/?datasource=tranquility&order_type=all&page=1&type_id={type}";
+            using Locker locker = NamedTaskSafeMutexes.Lock(uri);
+
             EsiMarketOrder[]? result = cache.GetMarketOrders(region, type);
 
             if (result is null)
             {
-                string uri = $"markets/{region}/orders/?datasource=tranquility&order_type=all&page=1&type_id={type}";
-
-                result = await client.GetFromJsonAsync<EsiMarketOrder[]>(uri);
+                result = await Get(uri, s => JsonSerializer.Deserialize<EsiMarketOrder[]>(s));
                 result = cache.SetMarketOrders(region, type, result, 300);
             }
 
             return result;
+        }
+
+        private async Task<T?> Get<T>(string uri, Func<string, T> deserialize)
+        {
+            HttpResponseMessage response = await client.GetAsync(uri);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                OnError?.Invoke(this, new(uri, response.StatusCode));
+                return default;
+            }
+
+            string serialized = await response.Content.ReadAsStringAsync();
+
+            return deserialize(serialized);
         }
 
         private static HttpClient CreateClient(string userAgent)
@@ -223,10 +285,10 @@ namespace Fasciculus.Eve
             HttpClient client = new(new HttpClientHandler
             {
                 AutomaticDecompression = DecompressionMethods.All,
-            })
-            {
-                BaseAddress = new Uri("https://esi.evetech.net/latest/")
-            };
+                MaxConnectionsPerServer = 32,
+            });
+
+            client.BaseAddress = new Uri("https://esi.evetech.net/latest/");
 
             client.DefaultRequestHeaders.Add("X-User-Agent", userAgent);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

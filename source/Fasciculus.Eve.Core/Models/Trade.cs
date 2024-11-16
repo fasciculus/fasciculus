@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Models
 {
@@ -52,7 +51,7 @@ namespace Fasciculus.Eve.Models
 
                 result.Add(order);
 
-                if (volume > volumePerType * 10 && price > iskPerType * 10)
+                if (volume > volumePerType * 3 && price > iskPerType * 3)
                 {
                     valid = true;
                     break;
@@ -120,78 +119,6 @@ namespace Fasciculus.Eve.Models
             Demand = demand;
             VolumePerType = volumePerType;
             IskPerType = iskPerType;
-        }
-    }
-
-    public class TradeOpportunities
-    {
-        public static async Task<TradeOpportunity[]> CreateAsync(Esi esi, EveTypes types, EveNpcStation origin, EveNpcStation destination,
-            double volumePerType, double iskPerType)
-        {
-            Console.WriteLine($"Searching opportunities");
-
-            int originRegion = origin.Moon.Planet.SolarSystem.Constellation.Region.Id.Value;
-            int destinationRegion = destination.Moon.Planet.SolarSystem.Constellation.Region.Id.Value;
-            EsiMarketPrice[] esiMarketPrices = await esi.GetMarketPricesAsync();
-            EveMarketPrice[] eveMarketPrices = esiMarketPrices.Select(mp => ConvertMarketPrice(types, mp)).ToArray();
-            EveType[] candidates = FilterMarketPrices(eveMarketPrices, volumePerType, iskPerType);
-            List<TradeOpportunity> opportunities = [];
-            int progress = 0;
-            double bestMargin = -1;
-
-            foreach (EveType type in candidates)
-            {
-                ++progress;
-
-                if ((progress % 50) == 0)
-                {
-                    Console.WriteLine($"  progress {progress}/{candidates.Length}");
-                }
-
-                EsiMarketOrder[] originOrders = await esi.GetMarketOrdersAsync(originRegion, type.Id.Value);
-                EveSupply supply = EveSupply.Create(origin, type, originOrders, volumePerType, iskPerType);
-
-                if (!supply.Valid) continue;
-
-                EsiMarketOrder[] destinationOrders = await esi.GetMarketOrdersAsync(destinationRegion, type.Id.Value);
-                EveDemand demand = EveDemand.Create(destination, type, destinationOrders, volumePerType, iskPerType);
-
-                if (!demand.Valid) continue;
-
-                TradeOpportunity opportunity = new(supply, demand, volumePerType, iskPerType);
-
-                if (opportunity.Margin > bestMargin)
-                {
-                    bestMargin = opportunity.Margin;
-                    Console.WriteLine($"  best margin {(bestMargin * 100):0.0} %");
-                }
-
-                if (opportunity.Margin > 0.1)
-                {
-                    opportunities.Add(opportunity);
-
-                    if (opportunities.Count > 9) break;
-                }
-            }
-
-            return opportunities.ToArray();
-        }
-
-        private static EveType[] FilterMarketPrices(EveMarketPrice[] eveMarketPrices, double volumePerType, double iskPerType)
-        {
-            return eveMarketPrices
-                .Where(mp => mp.AveragePrice <= iskPerType)
-                .Where(mp => mp.Type.Volume <= volumePerType)
-                .Select(mp => mp.Type)
-                .ToArray();
-        }
-
-        private static EveMarketPrice ConvertMarketPrice(EveTypes types, EsiMarketPrice esiMarketPrice)
-        {
-            EveId id = EveId.Create(esiMarketPrice.TypeId);
-            EveType type = types[id];
-
-            return new(type, esiMarketPrice.AveragePrice);
         }
     }
 }

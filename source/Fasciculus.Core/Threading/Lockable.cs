@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,12 +22,12 @@ namespace Fasciculus.Threading
             {
                 ctk.ThrowIfCancellationRequested();
 
-                if (Interlocked.CompareExchange(ref locked, 0, 1) == 0)
+                if (Interlocked.CompareExchange(ref locked, 1, 0) == 0)
                 {
                     return;
                 }
 
-                Task.Delay(1).RunSynchronously();
+                Task.Delay(1).GetAwaiter().GetResult();
             }
         }
 
@@ -66,6 +67,26 @@ namespace Fasciculus.Threading
             lockable.Lock(ctk);
 
             return new(lockable);
+        }
+    }
+
+    public static class NamedTaskSafeMutexes
+    {
+        private static readonly TaskSafeMutex mutex = new();
+        private static readonly Dictionary<string, TaskSafeMutex> mutexes = [];
+
+        public static Locker Lock(string name, CancellationToken ctk = default)
+        {
+            using Locker locker = Locker.Lock(mutex, ctk);
+
+            mutexes.TryGetValue(name, out TaskSafeMutex? namedMutex);
+
+            if (namedMutex is null)
+            {
+                mutexes[name] = namedMutex = new();
+            }
+
+            return Locker.Lock(namedMutex, ctk);
         }
     }
 }
