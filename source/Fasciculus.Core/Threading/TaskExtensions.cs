@@ -2,11 +2,10 @@
 {
     public static class TaskExtensions
     {
-        public static T Run<T>(this Task<T> task)
-        {
-            Task.WaitAll([task]);
+        public static void Run(this Task task)
+            => task.GetAwaiter().GetResult();
 
-            return task.Result;
-        }
+        public static T Run<T>(this Task<T> task)
+            => task.GetAwaiter().GetResult();
     }
 }
