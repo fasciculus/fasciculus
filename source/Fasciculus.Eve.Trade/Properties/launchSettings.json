@@ -6,11 +6,7 @@
     },
     "Jita": {
       "commandName": "Project",
-      "commandLineArgs": "Jita 5000 10000000"
-    },
-    "Dodixie": {
-      "commandName": "Project",
-      "commandLineArgs": "Dodixie 5000 10000000"
+      "commandLineArgs": "-v 10000 -i 100000000"
     }
   }
 }
