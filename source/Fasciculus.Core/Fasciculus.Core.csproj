@@ -8,7 +8,7 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" />
-    <PackageReference Include="PolySharp" />
+    <PackageReference Include="PolyFill" />
   </ItemGroup>
 
 </Project>
