@@ -5,21 +5,14 @@
         public static FileInfo File(this DirectoryInfo directory, string name)
             => new(Path.Combine(directory.FullName, name));
 
-        public static DirectoryInfo Existing(this DirectoryInfo directory, bool create = true)
+        public static DirectoryInfo CreateIfNotExists(this DirectoryInfo directory)
         {
             DirectoryInfo result = new(directory.FullName);
 
             if (!result.Exists)
             {
-                if (create)
-                {
-                    result.Create();
-                    result = new(directory.FullName);
-                }
-                else
-                {
-                    throw new DirectoryNotFoundException(directory.FullName);
-                }
+                result.Create();
+                result = new(directory.FullName);
             }
 
             return result;
