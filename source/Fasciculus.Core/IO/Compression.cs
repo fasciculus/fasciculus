@@ -6,6 +6,49 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.IO
 {
+    public interface ICompression
+    {
+        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, bool overwrite);
+    }
+
+    public class Compression : ICompression
+    {
+        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, bool overwrite)
+        {
+            using Stream stream = zipFile.OpenRead();
+            using ZipArchive archive = new(stream, ZipArchiveMode.Read);
+
+            archive.Entries
+                .Select(entry => entry.FullName)
+                .Where(entryFullName => IsUnzipRequired(entryFullName, outputDirectory, overwrite))
+                .AsParallel()
+                .Apply(entryFullName => UnzipEntry(zipFile, entryFullName, outputDirectory));
+        }
+
+        private void UnzipEntry(FileInfo zipFile, string entryFullName, DirectoryInfo outputDirectory)
+        {
+            using Stream stream = zipFile.OpenRead();
+            using ZipArchive archive = new(stream, ZipArchiveMode.Read);
+            ZipArchiveEntry entry = archive.GetEntry(entryFullName);
+            FileInfo outputFile = PrepareUnzipOutputFile(entryFullName, outputDirectory);
+
+            entry.ExtractToFile(outputFile.FullName);
+        }
+
+        private FileInfo PrepareUnzipOutputFile(string entryFullName, DirectoryInfo outputDirectory)
+        {
+            FileInfo outputFile = outputDirectory.File(entryFullName);
+
+            outputFile.Directory.Create();
+            outputFile.DeleteIfExists();
+
+            return outputFile;
+        }
+
+        private bool IsUnzipRequired(string entryFullName, DirectoryInfo outputDirectory, bool overwrite)
+            => overwrite || !outputDirectory.File(entryFullName).Exists;
+    }
+
     public static class Zip
     {
         public enum Overwrite
@@ -37,7 +80,7 @@ namespace Fasciculus.IO
         }
 
         public static void Extract(FileInfo zipFile, DirectoryInfo outputDirectory, Overwrite overwrite)
-            => ExtractAsync(zipFile, outputDirectory, overwrite).GetAwaiter().GetResult();
+            => ExtractAsync(zipFile, outputDirectory, overwrite).Run();
 
         private static bool Filter(ZipArchiveEntry entry, DirectoryInfo outputDirectory, Overwrite overwrite)
         {
