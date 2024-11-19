@@ -26,5 +26,21 @@ namespace Microsoft.Extensions.Hosting
 
             return builder;
         }
+
+        public static IServiceCollection AddSpecialDirectories(this IServiceCollection services)
+        {
+            AddSpecialPaths(services);
+
+            services.TryAdd(ServiceDescriptor.Singleton<ISpecialDirectories, SpecialDirectories>());
+
+            return services;
+        }
+
+        public static HostApplicationBuilder UseSpecialDirectories(this HostApplicationBuilder builder)
+        {
+            builder.Services.AddSpecialDirectories();
+
+            return builder;
+        }
     }
 }

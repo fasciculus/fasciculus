@@ -16,5 +16,14 @@ namespace Fasciculus.Core.Tests
 
             Assert.IsNotNull(service);
         }
+
+        [TestMethod]
+        public void TestSpecialDirectories()
+        {
+            IHost host = DI.CreateEmptyBuilder().UseSpecialDirectories().Build();
+            ISpecialDirectories service = host.Services.GetRequiredService<ISpecialDirectories>();
+
+            Assert.IsNotNull(service);
+        }
     }
 }
