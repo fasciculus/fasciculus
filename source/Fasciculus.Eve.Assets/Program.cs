@@ -3,6 +3,7 @@ using Fasciculus.Eve.IO;
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Operations;
 using Fasciculus.IO;
+using Fasciculus.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -38,6 +39,9 @@ namespace Fasciculus.Eve
                 IHost host = CreateHost();
 
                 await host.StartAsync();
+
+                IDownloader downloader = host.Services.GetRequiredService<IDownloader>();
+
                 await host.StopAsync();
             }
             catch (Exception e)
@@ -48,22 +52,15 @@ namespace Fasciculus.Eve
 
         private static IHost CreateHost()
         {
-            HostApplicationBuilder builder = DI.CreateEmptyBuilder();
+            HostApplicationBuilder builder = ApplicationHost.CreateEmptyBuilder();
 
             builder.UseSpecialDirectories();
+            builder.UseDownloader();
 
-            builder.Services.Add(ServiceDescriptor.Singleton<IAssetDirectories, AssetDirectories>());
-            builder.Services.Add(ServiceDescriptor.Singleton<IAssetFiles, AssetFiles>());
+            builder.Services.Add(ServiceDescriptor.Singleton<IAssetsDirectories, AssetsDirectories>());
+            builder.Services.Add(ServiceDescriptor.Singleton<IAssetsFiles, AssetsFiles>());
 
             return builder.Build();
-        }
-
-        private static SdeData CreateSde(IProgress<string> progress)
-        {
-            DownloadSdeZip.Execute(progress);
-            ExtractSdeZip.Execute(progress);
-
-            return ParseData.Execute(progress);
         }
 
         private static EveData CreateDataFile(SdeData sdeData, List<string> changes, IProgress<string> progress)

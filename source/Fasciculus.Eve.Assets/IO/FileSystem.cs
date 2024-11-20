@@ -3,39 +3,39 @@ using System.IO;
 
 namespace Fasciculus.Eve.IO
 {
-    public interface IAssetDirectories
+    public interface IAssetsDirectories
     {
         public DirectoryInfo Documents { get; }
         public DirectoryInfo Downloads { get; }
     }
 
-    public class AssetDirectories : IAssetDirectories
+    public class AssetsDirectories : IAssetsDirectories
     {
         private readonly ISpecialDirectories specialDirectories;
 
         public DirectoryInfo Documents => specialDirectories.Documents.Combine("Fasciculus", "Eve.Assets").CreateIfNotExists();
         public DirectoryInfo Downloads => Documents.Combine("Downloads").CreateIfNotExists();
 
-        public AssetDirectories(ISpecialDirectories specialDirectories)
+        public AssetsDirectories(ISpecialDirectories specialDirectories)
         {
             this.specialDirectories = specialDirectories;
         }
     }
 
-    public interface IAssetFiles
+    public interface IAssetsFiles
     {
         public FileInfo SdeZip { get; }
     }
 
-    public class AssetFiles : IAssetFiles
+    public class AssetsFiles : IAssetsFiles
     {
-        private readonly IAssetDirectories assetDirectories;
+        private readonly IAssetsDirectories assetsDirectories;
 
-        public FileInfo SdeZip => assetDirectories.Downloads.File("sde.zip");
+        public FileInfo SdeZip => assetsDirectories.Downloads.File("sde.zip");
 
-        public AssetFiles(IAssetDirectories assetDirectories)
+        public AssetsFiles(IAssetsDirectories assetsDirectories)
         {
-            this.assetDirectories = assetDirectories;
+            this.assetsDirectories = assetsDirectories;
         }
     }
 }
