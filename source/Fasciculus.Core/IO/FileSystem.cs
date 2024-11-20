@@ -1,4 +1,7 @@
 ﻿using Fasciculus.Interop;
+using Fasciculus.IO;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.IO;
 using static System.Environment;
@@ -49,6 +52,48 @@ namespace Fasciculus.IO
         public SpecialDirectories(ISpecialPaths specialPaths)
         {
             this.specialPaths = specialPaths;
+        }
+    }
+}
+
+namespace Microsoft.Extensions.DependencyInjection
+{
+    public static class FileSystemExtensions
+    {
+        public static IServiceCollection AddSpecialPaths(this IServiceCollection services)
+        {
+            services.TryAdd(ServiceDescriptor.Singleton<ISpecialPaths, SpecialPaths>());
+
+            return services;
+        }
+
+        public static IServiceCollection AddSpecialDirectories(this IServiceCollection services)
+        {
+            services.AddSpecialPaths();
+
+            services.TryAdd(ServiceDescriptor.Singleton<ISpecialDirectories, SpecialDirectories>());
+
+            return services;
+        }
+    }
+}
+
+namespace Microsoft.Extensions.Hosting
+{
+    public static class FileSystemExtensions
+    {
+        public static HostApplicationBuilder UseSpecialPaths(this HostApplicationBuilder builder)
+        {
+            builder.Services.AddSpecialPaths();
+
+            return builder;
+        }
+
+        public static HostApplicationBuilder UseSpecialDirectories(this HostApplicationBuilder builder)
+        {
+            builder.Services.AddSpecialDirectories();
+
+            return builder;
         }
     }
 }
