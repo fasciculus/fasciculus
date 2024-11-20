@@ -1,10 +1,14 @@
 ﻿using Fasciculus.Algorithms;
+using Fasciculus.Eve.IO;
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Operations;
 using Fasciculus.IO;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Fasciculus.Eve
 {
@@ -27,26 +31,31 @@ namespace Fasciculus.Eve
             }
         }
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
-                List<string> changes = [];
-                Progress progress = new();
+                IHost host = CreateHost();
 
-                SdeData sdeData = CreateSde(progress);
-
-                EveData eveData = CreateDataFile(sdeData, changes, progress);
-                EveUniverse eveUniverse = CreateUniverseFile(sdeData, eveData, changes, progress);
-
-                CreateNavigationFile(eveUniverse, changes, progress);
-
-                LogChanges(changes);
+                await host.StartAsync();
+                await host.StopAsync();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        private static IHost CreateHost()
+        {
+            HostApplicationBuilder builder = DI.CreateEmptyBuilder();
+
+            builder.UseSpecialDirectories();
+
+            builder.Services.Add(ServiceDescriptor.Singleton<IAssetDirectories, AssetDirectories>());
+            builder.Services.Add(ServiceDescriptor.Singleton<IAssetFiles, AssetFiles>());
+
+            return builder.Build();
         }
 
         private static SdeData CreateSde(IProgress<string> progress)
