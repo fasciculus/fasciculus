@@ -11,7 +11,7 @@ namespace Fasciculus.Core.Tests
         [TestMethod]
         public void TestSpecialPaths()
         {
-            IHost host = DI.CreateEmptyBuilder().UseSpecialPaths().Build();
+            IHost host = ApplicationHost.CreateEmptyBuilder().UseSpecialPaths().Build();
             ISpecialPaths service = host.Services.GetRequiredService<ISpecialPaths>();
 
             Assert.IsNotNull(service);
@@ -20,7 +20,7 @@ namespace Fasciculus.Core.Tests
         [TestMethod]
         public void TestSpecialDirectories()
         {
-            IHost host = DI.CreateEmptyBuilder().UseSpecialDirectories().Build();
+            IHost host = ApplicationHost.CreateEmptyBuilder().UseSpecialDirectories().Build();
             ISpecialDirectories service = host.Services.GetRequiredService<ISpecialDirectories>();
 
             Assert.IsNotNull(service);

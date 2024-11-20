@@ -57,7 +57,7 @@ namespace Fasciculus.Eve.Trade
 
         private static IHost CreateHost(string[] args)
         {
-            HostApplicationBuilder builder = DI.CreateEmptyBuilder();
+            HostApplicationBuilder builder = ApplicationHost.CreateEmptyBuilder();
 
             builder.Configuration.AddCommandLine(args, ProgramOptions.Switches);
 
