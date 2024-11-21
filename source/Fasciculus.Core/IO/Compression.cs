@@ -20,7 +20,7 @@ namespace Fasciculus.IO
 
         public interface ICompression
         {
-            public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, bool overwrite, IProgress<UnzipProgressMessage> progress);
+            public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IProgress<UnzipProgressMessage> progress);
         }
 
         public class Compression : ICompression
@@ -77,7 +77,7 @@ namespace Fasciculus.IO
                 }
             }
 
-            public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, bool overwrite, IProgress<UnzipProgressMessage> progress)
+            public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IProgress<UnzipProgressMessage> progress)
             {
                 using Stream stream = zipFile.OpenRead();
                 using ZipArchive archive = new(stream, ZipArchiveMode.Read);
@@ -120,8 +120,13 @@ namespace Fasciculus.IO
                 return outputFile;
             }
 
-            private bool IsUnzipRequired(ZipArchiveEntry entry, DirectoryInfo outputDirectory, bool overwrite)
-                => overwrite || !outputDirectory.File(entry.FullName).Exists;
+            private bool IsUnzipRequired(ZipArchiveEntry entry, DirectoryInfo outputDirectory, FileOverwriteMode overwrite)
+            {
+                FileInfo file = outputDirectory.File(entry.FullName);
+                DateTime dateTime = entry.LastWriteTime.UtcDateTime;
+
+                return file.NeedsOverwrite(dateTime, overwrite);
+            }
         }
     }
 
