@@ -107,6 +107,7 @@ namespace Fasciculus.Net
     public interface IDownloader
     {
         public FileInfo Download(Uri uri, FileInfo target);
+        public FileInfo Download(Uri uri, FileInfo target, out bool notModified);
     }
 
     public class Downloader : IDownloader
@@ -120,8 +121,15 @@ namespace Fasciculus.Net
 
         public FileInfo Download(Uri uri, FileInfo destination)
         {
+            return Download(uri, destination, out bool _);
+        }
+
+        public FileInfo Download(Uri uri, FileInfo destination, out bool notModified)
+        {
             HttpClient httpClient = httpClientPool[uri];
             HttpRequestMessage httpRequest = new(HttpMethod.Get, uri);
+
+            notModified = false;
 
             if (File.Exists(destination.FullName))
             {
@@ -130,8 +138,9 @@ namespace Fasciculus.Net
 
             HttpResponseMessage httpResponse = httpClient.SendAsync(httpRequest).Run();
 
-            if (httpResponse.StatusCode == System.Net.HttpStatusCode.NotModified)
+            if (httpResponse.StatusCode == HttpStatusCode.NotModified)
             {
+                notModified = true;
                 return destination;
             }
 
