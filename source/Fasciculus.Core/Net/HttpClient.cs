@@ -5,7 +5,9 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Net
@@ -31,11 +33,19 @@ namespace Fasciculus.Net
                     return httpClientHandler;
                 }
 
-                httpClientHandler = new();
+                httpClientHandler = CreateHttpClientHandler();
                 httpClientHandlers[uri.Host] = httpClientHandler;
 
                 return httpClientHandler;
             }
+        }
+
+        public HttpClientHandler CreateHttpClientHandler()
+        {
+            return new()
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
         }
     }
 
@@ -69,11 +79,28 @@ namespace Fasciculus.Net
 
                 HttpClientHandler httpClientHandler = httpClientHandlers[uri];
 
-                httpClient = new(httpClientHandler);
+                httpClient = CreateHttpClient(httpClientHandler);
                 httpClients[uri.Host] = httpClient;
 
                 return httpClient;
             }
+        }
+
+        public HttpClient CreateHttpClient(HttpClientHandler httpClientHandler)
+        {
+            HttpClient httpClient = new(httpClientHandler);
+
+            if ((httpClientHandler.AutomaticDecompression & DecompressionMethods.GZip) != 0)
+            {
+                httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+            }
+
+            if ((httpClientHandler.AutomaticDecompression & DecompressionMethods.Deflate) != 0)
+            {
+                httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
+            }
+
+            return httpClient;
         }
     }
 
