@@ -39,7 +39,7 @@ namespace Fasciculus.Eve
 
                 await host.StartAsync();
 
-                host.Services.GetRequiredService<IDownloadSde>().Download();
+                host.Services.GetRequiredService<IExtractSde>().Extract();
 
                 await host.StopAsync();
 

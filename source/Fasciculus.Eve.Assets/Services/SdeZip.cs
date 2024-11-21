@@ -60,6 +60,19 @@ namespace Fasciculus.Eve.Services
         }
     }
 
+    public interface IExtractSde
+    {
+        public bool Extract();
+    }
+
+    public class ExtractSde : IExtractSde
+    {
+        public bool Extract()
+        {
+            return true;
+        }
+    }
+
     public static class SdeZipServices
     {
         public static IServiceCollection AddSdeZip(this IServiceCollection services)
@@ -69,6 +82,7 @@ namespace Fasciculus.Eve.Services
             services.AddAssetsProgress();
 
             services.TryAddSingleton<IDownloadSde, DownloadSde>();
+            services.TryAddSingleton<IExtractSde, ExtractSde>();
 
             return services;
         }
