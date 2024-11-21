@@ -1,9 +1,8 @@
 ﻿using Fasciculus.Algorithms;
-using Fasciculus.Eve.IO;
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Operations;
+using Fasciculus.Eve.Services;
 using Fasciculus.IO;
-using Fasciculus.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -32,7 +31,7 @@ namespace Fasciculus.Eve
             }
         }
 
-        public static async Task Main(string[] args)
+        public static async Task Main(string[] _)
         {
             try
             {
@@ -40,7 +39,7 @@ namespace Fasciculus.Eve
 
                 await host.StartAsync();
 
-                IDownloader downloader = host.Services.GetRequiredService<IDownloader>();
+                host.Services.GetRequiredService<IDownloadSde>().Download();
 
                 await host.StopAsync();
             }
@@ -54,11 +53,7 @@ namespace Fasciculus.Eve
         {
             HostApplicationBuilder builder = ApplicationHost.CreateEmptyBuilder();
 
-            builder.UseSpecialDirectories();
-            builder.UseDownloader();
-
-            builder.Services.Add(ServiceDescriptor.Singleton<IAssetsDirectories, AssetsDirectories>());
-            builder.Services.Add(ServiceDescriptor.Singleton<IAssetsFiles, AssetsFiles>());
+            builder.UseSdeZip();
 
             return builder.Build();
         }
