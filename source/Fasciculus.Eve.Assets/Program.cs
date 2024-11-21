@@ -45,6 +45,11 @@ namespace Fasciculus.Eve
                 await host.StopAsync();
 
                 Console.SetCursorPosition(0, 40);
+
+#if !DEBUG
+                Console.ReadKey();
+#endif
+
             }
             catch (Exception e)
             {

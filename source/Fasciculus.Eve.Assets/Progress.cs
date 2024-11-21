@@ -76,7 +76,7 @@ namespace Fasciculus.Eve
 
             ColorConsoleSnippet valueSnippet = value.Status switch
             {
-                ParseNamesStatus.Pending => ColorConsoleSnippet.Create("Pending"),
+                ParseNamesStatus.Pending => ColorConsoleSnippet.Create("Pending", ConsoleColor.Yellow),
                 ParseNamesStatus.Done => ColorConsoleSnippet.Create("Done   ", ConsoleColor.Green),
                 _ => ColorConsoleSnippet.Create(""),
             };
