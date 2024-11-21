@@ -42,6 +42,8 @@ namespace Fasciculus.Eve
                 host.Services.GetRequiredService<IDownloadSde>().Download();
 
                 await host.StopAsync();
+
+                Console.SetCursorPosition(0, 40);
             }
             catch (Exception e)
             {

@@ -11,6 +11,17 @@ namespace Fasciculus.Eve
     {
         protected override void Process(DownloadSdeMessage value)
         {
+            ColorConsoleSnippet labelSnippet = ColorConsoleSnippet.Create("sde.zip ");
+
+            ColorConsoleSnippet valueSnippet = value.Status switch
+            {
+                DownloadSdeStatus.Downloading => ColorConsoleSnippet.Create("Downloading", ConsoleColor.Yellow),
+                DownloadSdeStatus.NotModified => ColorConsoleSnippet.Create("Not Modified", ConsoleColor.Green),
+                DownloadSdeStatus.Downloaded => ColorConsoleSnippet.Create("Downloaded ", ConsoleColor.Green),
+                _ => ColorConsoleSnippet.Create(""),
+            };
+
+            ColorConsole.Write(0, 0, labelSnippet, valueSnippet);
         }
     }
 
