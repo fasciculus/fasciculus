@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Eve.Services;
+using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -6,9 +7,9 @@ using System;
 
 namespace Fasciculus.Eve
 {
-    public class DownloadSdeProgress : IProgress<DownloadSdeMessage>
+    public class DownloadSdeProgress : TaskSafeProgress<DownloadSdeMessage>
     {
-        public void Report(DownloadSdeMessage value)
+        protected override void Process(DownloadSdeMessage value)
         {
         }
     }
