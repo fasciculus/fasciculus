@@ -1,4 +1,7 @@
 ﻿using Fasciculus.Utilities;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,116 +20,134 @@ namespace Fasciculus.IO
 
         public long CurrentCompressed { get; init; }
         public long CurrentUncompressed { get; init; }
+    }
 
-        public interface ICompression
+    public interface ICompression
+    {
+        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IProgress<UnzipProgressMessage> progress);
+    }
+
+    public class Compression : ICompression
+    {
+        private readonly struct EntryProgressMessage
         {
-            public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IProgress<UnzipProgressMessage> progress);
+            public FileInfo ExtractedFile { get; init; }
+            public ZipArchiveEntry ExtractedEntry { get; init; }
         }
 
-        public class Compression : ICompression
+        private class EntryProgress : TaskSafeProgress<EntryProgressMessage>
         {
-            private readonly struct EntryProgressMessage
+            private readonly IProgress<UnzipProgressMessage> progress;
+
+            private readonly long totalCompressed;
+            private readonly long totalUncompressed;
+
+            private long currentCompressed = 0;
+            private long currentUncompressed = 0;
+
+            public EntryProgress(IProgress<UnzipProgressMessage> progress, long totalCompressed, long totalUncompressed)
             {
-                public FileInfo ExtractedFile { get; init; }
-                public ZipArchiveEntry ExtractedEntry { get; init; }
+                this.progress = progress;
+                this.totalCompressed = totalCompressed;
+                this.totalUncompressed = totalUncompressed;
             }
 
-            private class EntryProgress : TaskSafeProgress<EntryProgressMessage>
+            protected override void Process(EntryProgressMessage value)
             {
-                private readonly IProgress<UnzipProgressMessage> progress;
+                currentCompressed += value.ExtractedEntry.CompressedLength;
+                currentUncompressed += value.ExtractedEntry.Length;
 
-                private readonly long totalCompressed;
-                private readonly long totalUncompressed;
-
-                private long currentCompressed = 0;
-                private long currentUncompressed = 0;
-
-                public EntryProgress(IProgress<UnzipProgressMessage> progress, long totalCompressed, long totalUncompressed)
+                UnzipProgressMessage message = new()
                 {
-                    this.progress = progress;
-                    this.totalCompressed = totalCompressed;
-                    this.totalUncompressed = totalUncompressed;
-                }
-
-                protected override void Process(EntryProgressMessage value)
-                {
-                    currentCompressed += value.ExtractedEntry.CompressedLength;
-                    currentUncompressed += value.ExtractedEntry.Length;
-
-                    UnzipProgressMessage message = new()
-                    {
-                        ExtractedFile = value.ExtractedFile,
-                        TotalCompressed = totalCompressed,
-                        TotalUncompressed = totalUncompressed,
-                        CurrentCompressed = currentCompressed,
-                        CurrentUncompressed = currentUncompressed
-                    };
-
-                    progress.Report(message);
-                }
-
-                public void ReportStart()
-                {
-                    UnzipProgressMessage message = new()
-                    {
-                        TotalCompressed = totalCompressed,
-                        TotalUncompressed = totalUncompressed,
-                    };
-
-                    progress.Report(message);
-                }
-            }
-
-            public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IProgress<UnzipProgressMessage> progress)
-            {
-                using Stream stream = zipFile.OpenRead();
-                using ZipArchive archive = new(stream, ZipArchiveMode.Read);
-
-                ZipArchiveEntry[] entries = archive.Entries.Where(entry => IsUnzipRequired(entry, outputDirectory, overwrite)).ToArray();
-                long totalCompressed = entries.Sum(entry => entry.CompressedLength);
-                long totalUncompressed = entries.Sum(entry => entry.Length);
-                EntryProgress entryProgress = new(progress, totalCompressed, totalUncompressed);
-
-                entryProgress.ReportStart();
-
-                entries.AsParallel().Apply(entry => UnzipEntry(zipFile, entry.FullName, outputDirectory, entryProgress));
-            }
-
-            private void UnzipEntry(FileInfo zipFile, string entryFullName, DirectoryInfo outputDirectory, IProgress<EntryProgressMessage> progress)
-            {
-                using Stream stream = zipFile.OpenRead();
-                using ZipArchive archive = new(stream, ZipArchiveMode.Read);
-                ZipArchiveEntry entry = archive.GetEntry(entryFullName);
-                FileInfo outputFile = PrepareUnzipOutputFile(entryFullName, outputDirectory);
-
-                entry.ExtractToFile(outputFile.FullName);
-
-                EntryProgressMessage message = new()
-                {
-                    ExtractedFile = new(outputFile.FullName),
-                    ExtractedEntry = entry
+                    ExtractedFile = value.ExtractedFile,
+                    TotalCompressed = totalCompressed,
+                    TotalUncompressed = totalUncompressed,
+                    CurrentCompressed = currentCompressed,
+                    CurrentUncompressed = currentUncompressed
                 };
 
                 progress.Report(message);
             }
 
-            private FileInfo PrepareUnzipOutputFile(string entryFullName, DirectoryInfo outputDirectory)
+            public void ReportStart()
             {
-                FileInfo outputFile = outputDirectory.File(entryFullName);
+                UnzipProgressMessage message = new()
+                {
+                    TotalCompressed = totalCompressed,
+                    TotalUncompressed = totalUncompressed,
+                };
 
-                outputFile.Directory.Create();
-                outputFile.DeleteIfExists();
-
-                return outputFile;
+                progress.Report(message);
             }
+        }
 
-            private bool IsUnzipRequired(ZipArchiveEntry entry, DirectoryInfo outputDirectory, FileOverwriteMode overwrite)
+        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IProgress<UnzipProgressMessage> progress)
+        {
+            using Stream stream = zipFile.OpenRead();
+            using ZipArchive archive = new(stream, ZipArchiveMode.Read);
+
+            ZipArchiveEntry[] entries = archive.Entries.Where(entry => IsUnzipRequired(entry, outputDirectory, overwrite)).ToArray();
+            long totalCompressed = entries.Sum(entry => entry.CompressedLength);
+            long totalUncompressed = entries.Sum(entry => entry.Length);
+            EntryProgress entryProgress = new(progress, totalCompressed, totalUncompressed);
+
+            entryProgress.ReportStart();
+
+            entries.Apply(entry => UnzipEntry(archive, entry.FullName, outputDirectory, entryProgress));
+
+            entryProgress.Done();
+        }
+
+        private void UnzipEntry(ZipArchive archive, string entryFullName, DirectoryInfo outputDirectory, IProgress<EntryProgressMessage> progress)
+        {
+            ZipArchiveEntry entry = archive.GetEntry(entryFullName);
+            FileInfo outputFile = PrepareUnzipOutputFile(entryFullName, outputDirectory);
+
+            entry.ExtractToFile(outputFile.FullName);
+            outputFile.CreationTimeUtc = outputFile.LastWriteTimeUtc = entry.LastWriteTime.UtcDateTime;
+
+            EntryProgressMessage message = new()
             {
-                FileInfo file = outputDirectory.File(entry.FullName);
-                DateTime dateTime = entry.LastWriteTime.UtcDateTime;
+                ExtractedFile = new(outputFile.FullName),
+                ExtractedEntry = entry
+            };
 
-                return file.NeedsOverwrite(dateTime, overwrite);
-            }
+            progress.Report(message);
+        }
+
+        private FileInfo PrepareUnzipOutputFile(string entryFullName, DirectoryInfo outputDirectory)
+        {
+            FileInfo outputFile = outputDirectory.File(entryFullName);
+
+            outputFile.Directory.Create();
+            outputFile.DeleteIfExists();
+
+            return outputFile;
+        }
+
+        private bool IsUnzipRequired(ZipArchiveEntry entry, DirectoryInfo outputDirectory, FileOverwriteMode overwrite)
+        {
+            FileInfo file = outputDirectory.File(entry.FullName);
+            DateTime dateTime = entry.LastWriteTime.UtcDateTime;
+
+            return file.NeedsOverwrite(dateTime, overwrite);
+        }
+    }
+
+    public static class CompressionServices
+    {
+        public static IServiceCollection AddCompression(this IServiceCollection services)
+        {
+            services.TryAddSingleton<ICompression, Compression>();
+
+            return services;
+        }
+
+        public static HostApplicationBuilder UseCompression(this HostApplicationBuilder builder)
+        {
+            builder.Services.AddCompression();
+
+            return builder;
         }
     }
 
@@ -220,4 +241,5 @@ namespace Fasciculus.IO
             return uncompressed.ToArray();
         }
     }
+
 }

@@ -17,6 +17,11 @@ namespace Fasciculus.Utilities
             action.Post(value);
         }
 
+        public void Done()
+        {
+            action.Complete();
+        }
+
         protected abstract void Process(T value);
     }
 }

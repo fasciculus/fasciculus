@@ -25,12 +25,15 @@ namespace System.IO
         public static bool IsNewerThan(this FileInfo file, FileInfo target)
             => !target.Exists || file.IsNewerThan(target.LastWriteTimeUtc);
 
+        public static bool IsOlderThan(this FileInfo file, DateTime lastWriteTimeUtc)
+            => file.LastWriteTimeUtc < lastWriteTimeUtc;
+
         public static bool NeedsOverwrite(this FileInfo file, DateTime dateTimeUtc, FileOverwriteMode mode)
         {
             return mode switch
             {
                 FileOverwriteMode.Never => !file.Exists,
-                FileOverwriteMode.IfNewer => !file.Exists || !file.IsNewerThan(dateTimeUtc),
+                FileOverwriteMode.IfNewer => !file.Exists || file.IsOlderThan(dateTimeUtc),
                 FileOverwriteMode.Always => true,
                 _ => false
             };
