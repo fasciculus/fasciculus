@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Eve.IO;
+using Fasciculus.IO;
 using Fasciculus.Net;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,9 +68,35 @@ namespace Fasciculus.Eve.Services
 
     public class ExtractSde : IExtractSde
     {
+        private readonly IDownloadSde downloadSde;
+        private readonly IAssetsDirectories assetsDirectories;
+        private readonly ICompression compression;
+        private readonly IProgress<UnzipProgressMessage> progress;
+
+        private bool result = false;
+        private readonly TaskSafeMutex resultMutex = new();
+
+        public ExtractSde(IDownloadSde downloadSde, IAssetsDirectories assetsDirectories, ICompression compression, IProgress<UnzipProgressMessage> progress)
+        {
+            this.downloadSde = downloadSde;
+            this.assetsDirectories = assetsDirectories;
+            this.compression = compression;
+            this.progress = progress;
+        }
+
         public bool Extract()
         {
-            return true;
+            using Locker locker = Locker.Lock(resultMutex);
+
+            if (!result)
+            {
+                FileInfo file = downloadSde.Download();
+
+                compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress);
+                result = true;
+            }
+
+            return result;
         }
     }
 
@@ -78,6 +105,8 @@ namespace Fasciculus.Eve.Services
         public static IServiceCollection AddSdeZip(this IServiceCollection services)
         {
             services.AddDownloader();
+            services.AddCompression();
+
             services.AddAssetsFileSystem();
             services.AddAssetsProgress();
 

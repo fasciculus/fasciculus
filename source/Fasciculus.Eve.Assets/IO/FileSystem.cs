@@ -10,6 +10,7 @@ namespace Fasciculus.Eve.IO
     {
         public DirectoryInfo Documents { get; }
         public DirectoryInfo Downloads { get; }
+        public DirectoryInfo Sde { get; }
     }
 
     public class AssetsDirectories : IAssetsDirectories
@@ -18,6 +19,7 @@ namespace Fasciculus.Eve.IO
 
         public DirectoryInfo Documents => specialDirectories.Documents.Combine("Fasciculus", "Eve.Assets").CreateIfNotExists();
         public DirectoryInfo Downloads => Documents.Combine("Downloads").CreateIfNotExists();
+        public DirectoryInfo Sde => Documents.Combine("Sde").CreateIfNotExists();
 
         public AssetsDirectories(ISpecialDirectories specialDirectories)
         {
