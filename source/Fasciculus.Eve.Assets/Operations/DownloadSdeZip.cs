@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fasciculus.Eve.IO;
+using System;
 using System.IO;
 using System.Net.Http;
 

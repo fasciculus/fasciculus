@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Fasciculus.Eve
+namespace Fasciculus.Eve.IO
 {
     public static class EveAssetsFiles
     {
