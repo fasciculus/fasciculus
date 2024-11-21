@@ -68,12 +68,30 @@ namespace Fasciculus.Eve
         }
     }
 
+    public class ParseNamesProgress : TaskSafeProgress<ParseNamesMessage>
+    {
+        protected override void Process(ParseNamesMessage value)
+        {
+            ColorConsoleSnippet labelSnippet = ColorConsoleSnippet.Create("Names: ");
+
+            ColorConsoleSnippet valueSnippet = value.Status switch
+            {
+                ParseNamesStatus.Pending => ColorConsoleSnippet.Create("Pending"),
+                ParseNamesStatus.Done => ColorConsoleSnippet.Create("Done   ", ConsoleColor.Green),
+                _ => ColorConsoleSnippet.Create(""),
+            };
+
+            ColorConsole.Write(0, 2, labelSnippet, valueSnippet);
+        }
+    }
+
     public static class ProgressServices
     {
         public static IServiceCollection AddAssetsProgress(this IServiceCollection services)
         {
             services.TryAddSingleton<IProgress<DownloadSdeMessage>, DownloadSdeProgress>();
             services.TryAddSingleton<IProgress<UnzipProgressMessage>, ExtractSdeProgress>();
+            services.TryAddSingleton<IProgress<ParseNamesMessage>, ParseNamesProgress>();
 
             return services;
         }

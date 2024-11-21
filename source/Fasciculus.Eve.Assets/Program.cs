@@ -40,7 +40,7 @@ namespace Fasciculus.Eve
 
                 await host.StartAsync();
 
-                host.Services.GetRequiredService<IExtractSde>().Extract();
+                host.Services.GetRequiredService<IParseNames>().Parse();
 
                 await host.StopAsync();
 
@@ -57,6 +57,7 @@ namespace Fasciculus.Eve
             HostApplicationBuilder builder = ApplicationHost.CreateEmptyBuilder();
 
             builder.UseSdeZip();
+            builder.UseParseNames();
 
             return builder.Build();
         }
