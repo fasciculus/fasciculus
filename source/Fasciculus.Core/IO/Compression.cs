@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Fasciculus.Utilities;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -6,47 +8,121 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.IO
 {
-    public interface ICompression
+    public readonly struct UnzipProgressMessage
     {
-        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, bool overwrite);
-    }
+        public FileInfo? ExtractedFile { get; init; }
 
-    public class Compression : ICompression
-    {
-        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, bool overwrite)
+        public long TotalCompressed { get; init; }
+        public long TotalUncompressed { get; init; }
+
+        public long CurrentCompressed { get; init; }
+        public long CurrentUncompressed { get; init; }
+
+        public interface ICompression
         {
-            using Stream stream = zipFile.OpenRead();
-            using ZipArchive archive = new(stream, ZipArchiveMode.Read);
-
-            archive.Entries
-                .Select(entry => entry.FullName)
-                .Where(entryFullName => IsUnzipRequired(entryFullName, outputDirectory, overwrite))
-                .AsParallel()
-                .Apply(entryFullName => UnzipEntry(zipFile, entryFullName, outputDirectory));
+            public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, bool overwrite, IProgress<UnzipProgressMessage> progress);
         }
 
-        private void UnzipEntry(FileInfo zipFile, string entryFullName, DirectoryInfo outputDirectory)
+        public class Compression : ICompression
         {
-            using Stream stream = zipFile.OpenRead();
-            using ZipArchive archive = new(stream, ZipArchiveMode.Read);
-            ZipArchiveEntry entry = archive.GetEntry(entryFullName);
-            FileInfo outputFile = PrepareUnzipOutputFile(entryFullName, outputDirectory);
+            private readonly struct EntryProgressMessage
+            {
+                public FileInfo ExtractedFile { get; init; }
+                public ZipArchiveEntry ExtractedEntry { get; init; }
+            }
 
-            entry.ExtractToFile(outputFile.FullName);
+            private class EntryProgress : TaskSafeProgress<EntryProgressMessage>
+            {
+                private readonly IProgress<UnzipProgressMessage> progress;
+
+                private readonly long totalCompressed;
+                private readonly long totalUncompressed;
+
+                private long currentCompressed = 0;
+                private long currentUncompressed = 0;
+
+                public EntryProgress(IProgress<UnzipProgressMessage> progress, long totalCompressed, long totalUncompressed)
+                {
+                    this.progress = progress;
+                    this.totalCompressed = totalCompressed;
+                    this.totalUncompressed = totalUncompressed;
+                }
+
+                protected override void Process(EntryProgressMessage value)
+                {
+                    currentCompressed += value.ExtractedEntry.CompressedLength;
+                    currentUncompressed += value.ExtractedEntry.Length;
+
+                    UnzipProgressMessage message = new()
+                    {
+                        ExtractedFile = value.ExtractedFile,
+                        TotalCompressed = totalCompressed,
+                        TotalUncompressed = totalUncompressed,
+                        CurrentCompressed = currentCompressed,
+                        CurrentUncompressed = currentUncompressed
+                    };
+
+                    progress.Report(message);
+                }
+
+                public void ReportStart()
+                {
+                    UnzipProgressMessage message = new()
+                    {
+                        TotalCompressed = totalCompressed,
+                        TotalUncompressed = totalUncompressed,
+                    };
+
+                    progress.Report(message);
+                }
+            }
+
+            public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, bool overwrite, IProgress<UnzipProgressMessage> progress)
+            {
+                using Stream stream = zipFile.OpenRead();
+                using ZipArchive archive = new(stream, ZipArchiveMode.Read);
+
+                ZipArchiveEntry[] entries = archive.Entries.Where(entry => IsUnzipRequired(entry, outputDirectory, overwrite)).ToArray();
+                long totalCompressed = entries.Sum(entry => entry.CompressedLength);
+                long totalUncompressed = entries.Sum(entry => entry.Length);
+                EntryProgress entryProgress = new(progress, totalCompressed, totalUncompressed);
+
+                entryProgress.ReportStart();
+
+                entries.AsParallel().Apply(entry => UnzipEntry(zipFile, entry.FullName, outputDirectory, entryProgress));
+            }
+
+            private void UnzipEntry(FileInfo zipFile, string entryFullName, DirectoryInfo outputDirectory, IProgress<EntryProgressMessage> progress)
+            {
+                using Stream stream = zipFile.OpenRead();
+                using ZipArchive archive = new(stream, ZipArchiveMode.Read);
+                ZipArchiveEntry entry = archive.GetEntry(entryFullName);
+                FileInfo outputFile = PrepareUnzipOutputFile(entryFullName, outputDirectory);
+
+                entry.ExtractToFile(outputFile.FullName);
+
+                EntryProgressMessage message = new()
+                {
+                    ExtractedFile = new(outputFile.FullName),
+                    ExtractedEntry = entry
+                };
+
+                progress.Report(message);
+            }
+
+            private FileInfo PrepareUnzipOutputFile(string entryFullName, DirectoryInfo outputDirectory)
+            {
+                FileInfo outputFile = outputDirectory.File(entryFullName);
+
+                outputFile.Directory.Create();
+                outputFile.DeleteIfExists();
+
+                return outputFile;
+            }
+
+            private bool IsUnzipRequired(ZipArchiveEntry entry, DirectoryInfo outputDirectory, bool overwrite)
+                => overwrite || !outputDirectory.File(entry.FullName).Exists;
         }
-
-        private FileInfo PrepareUnzipOutputFile(string entryFullName, DirectoryInfo outputDirectory)
-        {
-            FileInfo outputFile = outputDirectory.File(entryFullName);
-
-            outputFile.Directory.Create();
-            outputFile.DeleteIfExists();
-
-            return outputFile;
-        }
-
-        private bool IsUnzipRequired(string entryFullName, DirectoryInfo outputDirectory, bool overwrite)
-            => overwrite || !outputDirectory.File(entryFullName).Exists;
     }
 
     public static class Zip
