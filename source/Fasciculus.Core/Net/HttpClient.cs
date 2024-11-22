@@ -164,13 +164,6 @@ namespace Fasciculus.Net
             return services;
         }
 
-        public static HostApplicationBuilder UseHttpClientHandlers(this HostApplicationBuilder builder)
-        {
-            builder.Services.AddHttpClientHandlers();
-
-            return builder;
-        }
-
         public static IServiceCollection AddHttpClientPool(this IServiceCollection services)
         {
             services.AddHttpClientHandlers();
@@ -179,26 +172,12 @@ namespace Fasciculus.Net
             return services;
         }
 
-        public static HostApplicationBuilder UseHttpClientPool(this HostApplicationBuilder builder)
-        {
-            builder.Services.AddHttpClientPool();
-
-            return builder;
-        }
-
         public static IServiceCollection AddDownloader(this IServiceCollection services)
         {
             services.AddHttpClientPool();
             services.TryAddSingleton<IDownloader, Downloader>();
 
             return services;
-        }
-
-        public static HostApplicationBuilder UseDownloader(this HostApplicationBuilder builder)
-        {
-            builder.Services.AddDownloader();
-
-            return builder;
         }
     }
 }

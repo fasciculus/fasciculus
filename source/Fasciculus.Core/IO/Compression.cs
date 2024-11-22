@@ -142,13 +142,6 @@ namespace Fasciculus.IO
 
             return services;
         }
-
-        public static HostApplicationBuilder UseCompression(this HostApplicationBuilder builder)
-        {
-            builder.Services.AddCompression();
-
-            return builder;
-        }
     }
 
     public static class Zip
