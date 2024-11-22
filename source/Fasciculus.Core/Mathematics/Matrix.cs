@@ -1,5 +1,4 @@
-﻿using Fasciculus.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,10 +6,10 @@ using System.Runtime.CompilerServices;
 
 namespace Fasciculus.Mathematics
 {
-    public readonly struct MatrixKey : IEquatable<MatrixKey>, IComparable<MatrixKey>
+    public struct MatrixKey : IEquatable<MatrixKey>, IComparable<MatrixKey>
     {
-        public int Row { get; init; }
-        public int Column { get; init; }
+        public int Row { get; internal set; }
+        public int Column { get; internal set; }
 
         public MatrixKey(int row, int column)
         {

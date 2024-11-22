@@ -3,11 +3,11 @@ using System;
 
 namespace Fasciculus.Utilities
 {
-    public readonly struct ColorConsoleSnippet
+    public struct ColorConsoleSnippet
     {
-        public string Text { get; init; }
-        public ConsoleColor? ForegroundColor { get; init; }
-        public ConsoleColor? BackgroundColor { get; init; }
+        public string Text { get; internal set; }
+        public ConsoleColor? ForegroundColor { get; internal set; }
+        public ConsoleColor? BackgroundColor { get; internal set; }
 
         public static ColorConsoleSnippet Create(string text, ConsoleColor? foregroundColor = null, ConsoleColor? backgroundColor = null)
         {

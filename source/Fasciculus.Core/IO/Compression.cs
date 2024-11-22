@@ -11,15 +11,15 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.IO
 {
-    public readonly struct UnzipProgressMessage
+    public struct UnzipProgressMessage
     {
-        public FileInfo? ExtractedFile { get; init; }
+        public FileInfo? ExtractedFile { get; internal set; }
 
-        public long TotalCompressed { get; init; }
-        public long TotalUncompressed { get; init; }
+        public long TotalCompressed { get; internal set; }
+        public long TotalUncompressed { get; internal set; }
 
-        public long CurrentCompressed { get; init; }
-        public long CurrentUncompressed { get; init; }
+        public long CurrentCompressed { get; internal set; }
+        public long CurrentUncompressed { get; internal set; }
     }
 
     public interface ICompression
@@ -29,10 +29,10 @@ namespace Fasciculus.IO
 
     public class Compression : ICompression
     {
-        private readonly struct EntryProgressMessage
+        private struct EntryProgressMessage
         {
-            public FileInfo ExtractedFile { get; init; }
-            public ZipArchiveEntry ExtractedEntry { get; init; }
+            public FileInfo ExtractedFile { get; internal set; }
+            public ZipArchiveEntry ExtractedEntry { get; internal set; }
         }
 
         private class EntryProgress : TaskSafeProgress<EntryProgressMessage>

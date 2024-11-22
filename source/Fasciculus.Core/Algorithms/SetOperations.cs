@@ -139,7 +139,7 @@ namespace Fasciculus.Algorithms
                 }
             }
 
-            return c[..k].ToArray();
+            return c.Slice(0, k).ToArray();
         }
 
         public static unsafe int[] Difference(ReadOnlySpan<int> a, ReadOnlySpan<int> b)
@@ -186,7 +186,7 @@ namespace Fasciculus.Algorithms
                 }
             }
 
-            return c[..k].ToArray();
+            return c.Slice(0, k).ToArray();
         }
 
         public static unsafe int[] Intersection(ReadOnlySpan<int> a, ReadOnlySpan<int> b)
@@ -228,7 +228,7 @@ namespace Fasciculus.Algorithms
                 }
             }
 
-            return c[..k].ToArray();
+            return c.Slice(0, k).ToArray();
         }
     }
 }
