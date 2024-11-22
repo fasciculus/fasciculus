@@ -3,7 +3,6 @@ using Fasciculus.IO;
 using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics;
 
@@ -94,13 +93,6 @@ namespace Fasciculus.Eve
             services.TryAddSingleton<IProgress<ParseNamesMessage>, ParseNamesProgress>();
 
             return services;
-        }
-
-        public static HostApplicationBuilder UseAssetsProgress(this HostApplicationBuilder builder)
-        {
-            builder.Services.AddAssetsProgress();
-
-            return builder;
         }
     }
 }

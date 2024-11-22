@@ -4,7 +4,6 @@ using Fasciculus.Net;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 
@@ -114,13 +113,6 @@ namespace Fasciculus.Eve.Services
             services.TryAddSingleton<IExtractSde, ExtractSde>();
 
             return services;
-        }
-
-        public static HostApplicationBuilder UseSdeZip(this HostApplicationBuilder builder)
-        {
-            builder.Services.AddSdeZip();
-
-            return builder;
         }
     }
 }

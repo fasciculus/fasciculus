@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using System.IO;
 using YamlDotNet.Serialization;
 
@@ -33,13 +32,6 @@ namespace Fasciculus.Eve.Services
             services.TryAddSingleton<IYaml, Yaml>();
 
             return services;
-        }
-
-        public static HostApplicationBuilder UseYaml(this HostApplicationBuilder builder)
-        {
-            builder.Services.AddYaml();
-
-            return builder;
         }
     }
 }

@@ -3,7 +3,6 @@ using Fasciculus.Eve.Models;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,13 +76,6 @@ namespace Fasciculus.Eve.Services
             services.TryAddSingleton<IParseNames, ParseNames>();
 
             return services;
-        }
-
-        public static HostApplicationBuilder UseParseNames(this HostApplicationBuilder builder)
-        {
-            builder.Services.AddParseNames();
-
-            return builder;
         }
     }
 }

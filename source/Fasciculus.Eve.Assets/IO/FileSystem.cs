@@ -1,7 +1,6 @@
 ﻿using Fasciculus.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using System.IO;
 
 namespace Fasciculus.Eve.IO
@@ -58,13 +57,6 @@ namespace Fasciculus.Eve.IO
             services.TryAddSingleton<IAssetsFiles, AssetsFiles>();
 
             return services;
-        }
-
-        public static HostApplicationBuilder UseAssetsFileSystem(this HostApplicationBuilder builder)
-        {
-            builder.Services.AddAssetsFileSystem();
-
-            return builder;
         }
     }
 }
