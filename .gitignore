@@ -2,3 +2,4 @@
 .repository/
 source/**/bin/
 source/**/obj/
+TestResults/

@@ -1,9 +1,7 @@
 ﻿using Fasciculus.IO;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.IO;
 
-namespace Fasciculus.Eve.IO
+namespace Fasciculus.Eve.Assets.Services
 {
     public interface IAssetsDirectories
     {

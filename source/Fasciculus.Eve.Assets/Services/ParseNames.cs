@@ -1,13 +1,8 @@
-﻿using Fasciculus.Eve.IO;
-using Fasciculus.Eve.Models;
+﻿using Fasciculus.Eve.Assets.Models;
 using Fasciculus.Threading;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Fasciculus.Eve.Services
+namespace Fasciculus.Eve.Assets.Services
 {
     public enum ParseNamesStatus
     {

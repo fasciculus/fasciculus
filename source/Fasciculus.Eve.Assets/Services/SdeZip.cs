@@ -1,5 +1,4 @@
-﻿using Fasciculus.Eve.IO;
-using Fasciculus.IO;
+﻿using Fasciculus.IO;
 using Fasciculus.Net;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.IO;
 
-namespace Fasciculus.Eve.Services
+namespace Fasciculus.Eve.Assets.Services
 {
     public enum DownloadSdeStatus
     {

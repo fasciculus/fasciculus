@@ -1,7 +1,8 @@
-<maui:MauiWinUIApplication
-    x:Class="Fasciculus.Eve.Assets.App"
+﻿<maui:MauiWinUIApplication
+    x:Class="Fasciculus.Eve.Assets.WinUI.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:maui="using:Microsoft.Maui"
-    xmlns:local="using:Fasciculus.Eve.WinUI">
+    xmlns:local="using:Fasciculus.Eve.Assets.WinUI">
+
 </maui:MauiWinUIApplication>

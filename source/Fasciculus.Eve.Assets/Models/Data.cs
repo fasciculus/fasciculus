@@ -1,4 +1,4 @@
-﻿namespace Fasciculus.Eve.Models
+﻿namespace Fasciculus.Eve.Assets.Models
 {
     public class NameSde
     {

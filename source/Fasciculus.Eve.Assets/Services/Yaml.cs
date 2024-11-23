@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.IO;
 using YamlDotNet.Serialization;
 
-namespace Fasciculus.Eve.Services
+namespace Fasciculus.Eve.Assets.Services
 {
     public interface IYaml
     {
