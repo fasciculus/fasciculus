@@ -106,8 +106,10 @@ namespace Fasciculus.Net
 
     public interface IDownloader
     {
-        public FileInfo Download(Uri uri, FileInfo target);
-        public FileInfo Download(Uri uri, FileInfo target, out bool notModified);
+        public FileInfo Download(Uri uri, FileInfo destination);
+        public FileInfo Download(Uri uri, FileInfo destination, out bool notModified);
+
+        public Task<Tuple<FileInfo, bool>> DownloadAsync(Uri uri, FileInfo destination);
     }
 
     public class Downloader : IDownloader
@@ -126,32 +128,42 @@ namespace Fasciculus.Net
 
         public FileInfo Download(Uri uri, FileInfo destination, out bool notModified)
         {
+            Tuple<FileInfo, bool> result = DownloadAsync(uri, destination).Run();
+
+            notModified = result.Item2;
+
+            return result.Item1;
+        }
+
+        public async Task<Tuple<FileInfo, bool>> DownloadAsync(Uri uri, FileInfo destination)
+        {
             HttpClient httpClient = httpClientPool[uri];
             HttpRequestMessage httpRequest = new(HttpMethod.Get, uri);
-
-            notModified = false;
+            bool notModified = false;
 
             if (File.Exists(destination.FullName))
             {
                 httpRequest.Headers.IfModifiedSince = destination.LastWriteTimeUtc;
             }
 
-            HttpResponseMessage httpResponse = httpClient.SendAsync(httpRequest).Run();
+            HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest);
 
             if (httpResponse.StatusCode == HttpStatusCode.NotModified)
             {
                 notModified = true;
-                return destination;
+            }
+            else
+            {
+                httpResponse.EnsureSuccessStatusCode();
+
+                byte[] bytes = await httpResponse.Content.ReadAsByteArrayAsync();
+
+                destination.DeleteIfExists();
+                destination.WriteAllBytes(bytes);
+                destination = new(destination.FullName);
             }
 
-            httpResponse.EnsureSuccessStatusCode();
-
-            byte[] bytes = httpResponse.Content.ReadAsByteArrayAsync().Run();
-
-            destination.DeleteIfExists();
-            destination.WriteAllBytes(bytes);
-
-            return new(destination.FullName);
+            return new(destination, notModified);
         }
     }
 

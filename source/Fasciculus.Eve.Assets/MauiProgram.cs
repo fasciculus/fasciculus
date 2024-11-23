@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Fasciculus.Eve.Assets.Services;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Fasciculus.Eve.Assets
@@ -20,6 +21,9 @@ namespace Fasciculus.Eve.Assets
 
         private static void ConfigureServices(IServiceCollection services)
         {
+            services.AddAssetsProgress();
+            services.AddSdeZip();
+
             services.TryAddSingleton<MainPageModel>();
         }
 

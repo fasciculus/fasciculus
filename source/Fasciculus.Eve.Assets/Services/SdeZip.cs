@@ -1,28 +1,21 @@
 ﻿using Fasciculus.IO;
 using Fasciculus.Net;
 using Fasciculus.Threading;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.IO;
 
 namespace Fasciculus.Eve.Assets.Services
 {
     public enum DownloadSdeStatus
     {
+        Pending,
         Downloading,
-        NotModified,
-        Downloaded
-    }
-
-    public readonly struct DownloadSdeMessage
-    {
-        public DownloadSdeStatus Status { get; init; }
+        Downloaded,
+        NotModified
     }
 
     public interface IDownloadSde
     {
-        public FileInfo Download();
+        public Task<FileInfo> DownloadAsync();
     }
 
     public class DownloadSde : IDownloadSde
@@ -31,31 +24,32 @@ namespace Fasciculus.Eve.Assets.Services
 
         private readonly IDownloader downloader;
         private readonly IAssetsFiles assetFiles;
-        private readonly IProgress<DownloadSdeMessage> progress;
+        private readonly IProgress<DownloadSdeStatus> progress;
 
-        private FileInfo? result;
+        private Tuple<FileInfo, bool>? result;
         private readonly TaskSafeMutex resultMutex = new();
 
-        public DownloadSde(IDownloader downloader, IAssetsFiles assetFiles, IProgress<DownloadSdeMessage> progress)
+        public DownloadSde(IDownloader downloader, IAssetsFiles assetFiles, IProgress<DownloadSdeStatus> progress)
         {
             this.downloader = downloader;
             this.assetFiles = assetFiles;
             this.progress = progress;
         }
 
-        public FileInfo Download()
+        public async Task<FileInfo> DownloadAsync()
         {
             using Locker locker = Locker.Lock(resultMutex);
 
             if (result == null)
             {
-                progress.Report(new() { Status = DownloadSdeStatus.Downloading });
+                progress.Report(DownloadSdeStatus.Downloading);
 
-                result = downloader.Download(new(SdeZipUri), assetFiles.SdeZip, out bool notModified);
-                progress.Report(new() { Status = notModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded });
+                result = await downloader.DownloadAsync(new(SdeZipUri), assetFiles.SdeZip);
+
+                progress.Report(result.Item2 ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
             }
 
-            return result;
+            return result.Item1;
         }
     }
 
@@ -88,7 +82,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (!result)
             {
-                FileInfo file = downloadSde.Download();
+                FileInfo file = downloadSde.DownloadAsync().Run();
 
                 compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress);
                 result = true;

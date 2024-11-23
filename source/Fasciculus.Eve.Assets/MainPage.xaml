@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.Assets.PageModels"
              x:Class="Fasciculus.Eve.Assets.MainPage"
-             x:DataType="pageModels:MainPageModel">
+             x:DataType="pageModels:MainPageModel"
+             Title="" Shell.NavBarIsVisible="False" >
 
     <ScrollView>
         <VerticalStackLayout
@@ -17,12 +18,19 @@
                 Command="{Binding StartCommand}" />
 
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Label Text="SDE" />
+                <Label Text="SDE" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" />
+                <Label Text="File" Grid.Row="1" Grid.Column="0" />
+                <Label Text="{Binding DownloadStatusText}" TextColor="{Binding DownloadStatusColor}" Grid.Row="1" Grid.Column="1" />
             </Grid>
             
         </VerticalStackLayout>
