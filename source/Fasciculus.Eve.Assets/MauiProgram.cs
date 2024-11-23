@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Fasciculus.Eve.Assets
 {
@@ -11,9 +12,15 @@ namespace Fasciculus.Eve.Assets
             builder.UseMauiApp<App>();
 
             ConfigureFonts(builder);
-            ConfigureLogging(builder);
+            ConfigureLogging(builder.Logging);
+            ConfigureServices(builder.Services);
 
             return builder.Build();
+        }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.TryAddSingleton<MainPageModel>();
         }
 
         private static void ConfigureFonts(MauiAppBuilder builder)
@@ -25,10 +32,10 @@ namespace Fasciculus.Eve.Assets
             });
         }
 
-        private static void ConfigureLogging(MauiAppBuilder builder)
+        private static void ConfigureLogging(ILoggingBuilder builder)
         {
 #if DEBUG
-            builder.Logging.AddDebug();
+            builder.AddDebug();
 #endif
         }
     }

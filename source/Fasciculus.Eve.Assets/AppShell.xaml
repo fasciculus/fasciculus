@@ -8,7 +8,6 @@
     Title="Fasciculus.Eve.Assets">
 
     <ShellContent
-        Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 
