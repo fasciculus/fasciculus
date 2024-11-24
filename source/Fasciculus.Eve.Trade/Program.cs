@@ -2,14 +2,9 @@
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Operations;
 using Fasciculus.Eve.Resources;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Trade
@@ -29,21 +24,21 @@ namespace Fasciculus.Eve.Trade
 
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             try
             {
-                IHost host = CreateHost(args);
-                ILogger<Program> logger = host.Services.GetRequiredService<ILogger<Program>>();
-                IConfiguration configuration = host.Services.GetRequiredService<IConfiguration>();
-                ProgramOptions options = configuration.Get<ProgramOptions>() ?? new();
+                //IHost host = CreateHost(args);
+                //ILogger<Program> logger = host.Services.GetRequiredService<ILogger<Program>>();
+                //IConfiguration configuration = host.Services.GetRequiredService<IConfiguration>();
+                //ProgramOptions options = configuration.Get<ProgramOptions>() ?? new();
 
-                await host.StartAsync();
+                //await host.StartAsync();
 
-                logger.LogInformation($"VolumePerType = {options.VolumePerType}");
-                logger.LogInformation($"IskPerType    = {options.IskPerType}");
+                //logger.LogInformation($"VolumePerType = {options.VolumePerType}");
+                //logger.LogInformation($"IskPerType    = {options.IskPerType}");
 
-                await host.StopAsync();
+                //await host.StopAsync();
             }
             catch (Exception e)
             {
@@ -55,32 +50,32 @@ namespace Fasciculus.Eve.Trade
 #endif
         }
 
-        private static IHost CreateHost(string[] args)
-        {
-            HostApplicationBuilder builder = ApplicationHost.CreateEmptyBuilder();
+        //        private static IHost CreateHost(string[] args)
+        //        {
+        //            HostApplicationBuilder builder = ApplicationHost.CreateEmptyBuilder();
 
-            builder.Configuration.AddCommandLine(args, ProgramOptions.Switches);
+        //            builder.Configuration.AddCommandLine(args, ProgramOptions.Switches);
 
-            builder.Logging.AddConsole();
+        //            builder.Logging.AddConsole();
 
-#if DEBUG
-            builder.Logging.AddDebug();
-#endif
+        //#if DEBUG
+        //            builder.Logging.AddDebug();
+        //#endif
 
-            builder.Services.AddSingleton(builder.Services);
+        //            builder.Services.AddSingleton(builder.Services);
 
-            return builder.Build();
-        }
+        //            return builder.Build();
+        //        }
 
-        public static void LogServices(IHost host, ILogger logger)
-        {
-            IServiceCollection serviceCollection = host.Services.GetRequiredService<IServiceCollection>();
-            StringBuilder sb = new StringBuilder();
-            IEnumerable<string> names = serviceCollection.Select(s => s.ServiceType.Name).NotNull();
-            string message = string.Join("\r\n  ", names);
+        //public static void LogServices(IHost host, ILogger logger)
+        //{
+        //    IServiceCollection serviceCollection = host.Services.GetRequiredService<IServiceCollection>();
+        //    StringBuilder sb = new StringBuilder();
+        //    IEnumerable<string> names = serviceCollection.Select(s => s.ServiceType.Name).NotNull();
+        //    string message = string.Join("\r\n  ", names);
 
-            logger.LogInformation($"SERVICES\r\n  {message}");
-        }
+        //    logger.LogInformation($"SERVICES\r\n  {message}");
+        //}
 
         public static async Task OldMain(string[] args)
         {
