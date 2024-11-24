@@ -6,14 +6,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
-    public enum DownloadSdeStatus
-    {
-        Pending,
-        Downloading,
-        Downloaded,
-        NotModified
-    }
-
     public interface IDownloadSde
     {
         public FileInfo Download();
@@ -70,7 +62,7 @@ namespace Fasciculus.Eve.Assets.Services
         private TaskSafeMutex extractedMutex = new();
 
         public ExtractSde(IDownloadSde downloadSde, IAssetsDirectories assetsDirectories, ICompression compression,
-            [FromKeyedServices(nameof(ExtractSde))] ILongProgress progress)
+            [FromKeyedServices(ServiceKeys.ExtractSde)] ILongProgress progress)
         {
             this.downloadSde = downloadSde;
             this.assetsDirectories = assetsDirectories;

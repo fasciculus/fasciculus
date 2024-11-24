@@ -16,7 +16,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         protected override void OnReport(DownloadSdeStatus value)
         {
-            progressCollector.DownloadSdeStatus = value;
+            progressCollector.DownloadSde = value;
         }
     }
 
@@ -32,30 +32,43 @@ namespace Fasciculus.Eve.Assets.Services
 
         protected override void OnProgress()
         {
-            progressCollector.ExtractSdeProgress = Progress;
+            progressCollector.ExtractSde = Progress;
         }
     }
 
-    public class ParseNamesProgress : TaskSafeProgress<ParseNamesMessage>
+    public class ParseNamesProgress : TaskSafeProgress<PendingOrDone>
     {
-        protected override void OnReport(ParseNamesMessage value)
+        private readonly IProgressCollector progressCollector;
+
+        public ParseNamesProgress(IProgressCollector progressCollector)
         {
+            this.progressCollector = progressCollector;
+        }
+
+        protected override void OnReport(PendingOrDone value)
+        {
+            progressCollector.ParseNames = value;
         }
     }
 
     public interface IProgressCollector : INotifyPropertyChanged
     {
-        public DownloadSdeStatus DownloadSdeStatus { get; set; }
-        public double ExtractSdeProgress { get; set; }
+        public DownloadSdeStatus DownloadSde { get; set; }
+        public double ExtractSde { get; set; }
+
+        public PendingOrDone ParseNames { get; set; }
     }
 
     public partial class ProgressCollector : ObservableObject, IProgressCollector
     {
         [ObservableProperty]
-        private DownloadSdeStatus downloadSdeStatus = DownloadSdeStatus.Pending;
+        private DownloadSdeStatus downloadSde = DownloadSdeStatus.Pending;
 
         [ObservableProperty]
-        private double extractSdeProgress;
+        private double extractSde;
+
+        [ObservableProperty]
+        private PendingOrDone parseNames = PendingOrDone.Pending;
     }
 
     public static class ProgressServices
@@ -63,8 +76,8 @@ namespace Fasciculus.Eve.Assets.Services
         public static IServiceCollection AddAssetsProgress(this IServiceCollection services)
         {
             services.TryAddSingleton<IProgress<DownloadSdeStatus>, DownloadSdeProgress>();
-            services.TryAddKeyedSingleton<ILongProgress, ExtractSdeProgress>(nameof(ExtractSde));
-            services.TryAddSingleton<IProgress<ParseNamesMessage>, ParseNamesProgress>();
+            services.TryAddKeyedSingleton<ILongProgress, ExtractSdeProgress>(ServiceKeys.ExtractSde);
+            services.TryAddKeyedSingleton<IProgress<PendingOrDone>, ParseNamesProgress>(ServiceKeys.ParseNames);
 
             services.TryAddSingleton<IProgressCollector, ProgressCollector>();
 

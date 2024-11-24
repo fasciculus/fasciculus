@@ -16,22 +16,15 @@
                 Text="Start" 
                 Command="{Binding StartCommand}" />
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="100,*,100,*,100,*">
                 <Label Text="SDE Download &amp; Extract" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" />
                 <Label Text="File" Grid.Row="1" Grid.Column="0" />
-                <Label x:Name="DownloadSdeStatus" Text="{Binding DownloadSdeStatusText}" TextColor="{Binding DownloadSdeStatusColor}" Grid.Row="1" Grid.Column="1" />
+                <Label Text="{Binding DownloadSdeStatusText}" TextColor="{Binding DownloadSdeStatusColor}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Extract" Grid.Row="1" Grid.Column="2" />
-                <ProgressBar x:Name="ExtractSdeProgress" Progress="{Binding ExtractSdeProgressValue}" ProgressColor="{Binding ExtractSdeProgressColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="1" Grid.Column="3" />
+                <ProgressBar Progress="{Binding ExtractSdeProgressValue}" ProgressColor="{Binding ExtractSdeProgressColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="1" Grid.Column="3" />
+                <Label Text="SDE Parsing" FontAttributes="Bold" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" />
+                <Label Text="Names" Grid.Row="3" Grid.Column="0" />
+                <Label Text="{Binding ParseNamesText}" TextColor="{Binding ParseNamesColor}" Grid.Row="3" Grid.Column="1" />
             </Grid>
             
         </VerticalStackLayout>
