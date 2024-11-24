@@ -8,6 +8,7 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<ApplicationTitle>Fasciculus.Eve.Assets</ApplicationTitle>
 		<ApplicationId>io.github.fasciculus.eve.assets</ApplicationId>

@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Assets.Services;
 using Fasciculus.Maui;
-using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -10,8 +9,6 @@ namespace Fasciculus.Eve.Assets.PageModels
     public partial class MainPageModel : ObservableObject
     {
         private IProgressCollector progressCollector;
-
-        private readonly ILogger logger;
 
         [ObservableProperty]
         private string downloadSdeStatusText = "Pending";
@@ -33,26 +30,21 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         public ICommand StartCommand { get; init; }
 
-        public MainPageModel(IProgressCollector progressCollector, IParseNames parseNames, ILogger<MainPageModel> logger)
+        public MainPageModel(IProgressCollector progressCollector, IParseData parseData)
         {
             this.progressCollector = progressCollector;
             this.progressCollector.PropertyChanged += OnProgressChanged;
 
-            StartCommand = new LongRunningCommand(() => parseNames.Parse());
-
-            this.logger = logger;
+            StartCommand = new LongRunningCommand(() => parseData.Parse());
         }
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            logger.LogInformation($"{MainThread.IsMainThread}");
             MainThread.BeginInvokeOnMainThread(() => OnProgressChanged(ev.PropertyName ?? string.Empty));
         }
 
         private void OnProgressChanged(string name)
         {
-            logger.LogInformation($"{DateTime.UtcNow.Millisecond} {name}");
-
             switch (name)
             {
                 case nameof(IProgressCollector.DownloadSde):

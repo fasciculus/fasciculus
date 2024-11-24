@@ -49,9 +49,34 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
-    public static class ParseNamesServices
+    public interface IParseData
     {
-        public static IServiceCollection AddParseNames(this IServiceCollection services)
+        public void Parse();
+    }
+
+    public class ParseData : IParseData
+    {
+        private readonly IParseNames parseNames;
+
+        public ParseData(IParseNames parseNames)
+        {
+            this.parseNames = parseNames;
+        }
+
+        public void Parse()
+        {
+            Action[] actions =
+            {
+                () => parseNames.Parse(),
+            };
+
+            actions.AsParallel().Apply(a => a());
+        }
+    }
+
+    public static class ParseDataServices
+    {
+        public static IServiceCollection AddParseData(this IServiceCollection services)
         {
             services.AddSdeZip();
             services.AddAssetsFileSystem();
@@ -59,6 +84,7 @@ namespace Fasciculus.Eve.Assets.Services
             services.AddAssetsProgress();
 
             services.TryAddSingleton<IParseNames, ParseNames>();
+            services.TryAddSingleton<IParseData, ParseData>();
 
             return services;
         }
