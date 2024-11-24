@@ -108,8 +108,6 @@ namespace Fasciculus.Net
     {
         public FileInfo Download(Uri uri, FileInfo destination);
         public FileInfo Download(Uri uri, FileInfo destination, out bool notModified);
-
-        public Task<Tuple<FileInfo, bool>> DownloadAsync(Uri uri, FileInfo destination);
     }
 
     public class Downloader : IDownloader
@@ -128,25 +126,17 @@ namespace Fasciculus.Net
 
         public FileInfo Download(Uri uri, FileInfo destination, out bool notModified)
         {
-            Tuple<FileInfo, bool> result = DownloadAsync(uri, destination).Run();
-
-            notModified = result.Item2;
-
-            return result.Item1;
-        }
-
-        public async Task<Tuple<FileInfo, bool>> DownloadAsync(Uri uri, FileInfo destination)
-        {
             HttpClient httpClient = httpClientPool[uri];
             HttpRequestMessage httpRequest = new(HttpMethod.Get, uri);
-            bool notModified = false;
+
+            notModified = false;
 
             if (File.Exists(destination.FullName))
             {
                 httpRequest.Headers.IfModifiedSince = destination.LastWriteTimeUtc;
             }
 
-            HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest);
+            HttpResponseMessage httpResponse = httpClient.SendAsync(httpRequest).Run();
 
             if (httpResponse.StatusCode == HttpStatusCode.NotModified)
             {
@@ -156,14 +146,14 @@ namespace Fasciculus.Net
             {
                 httpResponse.EnsureSuccessStatusCode();
 
-                byte[] bytes = await httpResponse.Content.ReadAsByteArrayAsync();
+                byte[] bytes = httpResponse.Content.ReadAsByteArrayAsync().Run();
 
                 destination.DeleteIfExists();
                 destination.WriteAllBytes(bytes);
                 destination = new(destination.FullName);
             }
 
-            return new(destination, notModified);
+            return destination;
         }
     }
 

@@ -23,6 +23,7 @@ namespace Fasciculus.Eve.Assets
         {
             services.AddAssetsProgress();
             services.AddSdeZip();
+            services.AddCommands();
 
             services.TryAddSingleton<MainPageModel>();
         }

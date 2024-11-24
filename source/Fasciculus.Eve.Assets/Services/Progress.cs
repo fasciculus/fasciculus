@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Fasciculus.IO;
 using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
@@ -15,22 +14,31 @@ namespace Fasciculus.Eve.Assets.Services
             this.progressCollector = progressCollector;
         }
 
-        protected override void Process(DownloadSdeStatus value)
+        protected override void OnReport(DownloadSdeStatus value)
         {
             progressCollector.DownloadSdeStatus = value;
         }
     }
 
-    public class ExtractSdeProgress : TaskSafeProgress<UnzipProgressMessage>
+    public class ExtractSdeProgress : LongProgress
     {
-        protected override void Process(UnzipProgressMessage value)
+        private readonly IProgressCollector progressCollector;
+
+        public ExtractSdeProgress(IProgressCollector progressCollector)
+            : base(500)
         {
+            this.progressCollector = progressCollector;
+        }
+
+        protected override void OnProgress()
+        {
+            progressCollector.ExtractSdeProgress = Progress;
         }
     }
 
     public class ParseNamesProgress : TaskSafeProgress<ParseNamesMessage>
     {
-        protected override void Process(ParseNamesMessage value)
+        protected override void OnReport(ParseNamesMessage value)
         {
         }
     }
@@ -38,12 +46,16 @@ namespace Fasciculus.Eve.Assets.Services
     public interface IProgressCollector : INotifyPropertyChanged
     {
         public DownloadSdeStatus DownloadSdeStatus { get; set; }
+        public double ExtractSdeProgress { get; set; }
     }
 
     public partial class ProgressCollector : ObservableObject, IProgressCollector
     {
         [ObservableProperty]
         private DownloadSdeStatus downloadSdeStatus = DownloadSdeStatus.Pending;
+
+        [ObservableProperty]
+        private double extractSdeProgress;
     }
 
     public static class ProgressServices
@@ -51,7 +63,7 @@ namespace Fasciculus.Eve.Assets.Services
         public static IServiceCollection AddAssetsProgress(this IServiceCollection services)
         {
             services.TryAddSingleton<IProgress<DownloadSdeStatus>, DownloadSdeProgress>();
-            services.TryAddSingleton<IProgress<UnzipProgressMessage>, ExtractSdeProgress>();
+            services.TryAddKeyedSingleton<ILongProgress, ExtractSdeProgress>(nameof(ExtractSde));
             services.TryAddSingleton<IProgress<ParseNamesMessage>, ParseNamesProgress>();
 
             services.TryAddSingleton<IProgressCollector, ProgressCollector>();

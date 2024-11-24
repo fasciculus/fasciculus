@@ -27,7 +27,7 @@ namespace Fasciculus.Threading
                     return;
                 }
 
-                Task.Delay(1).GetAwaiter().GetResult();
+                Task.Delay(0).Run();
             }
         }
 
@@ -67,6 +67,53 @@ namespace Fasciculus.Threading
             lockable.Lock(ctk);
 
             return new(lockable);
+        }
+    }
+
+    public class ReentrantTaskSafeMutex : ILockable
+    {
+        private readonly TaskSafeMutex mutex = new();
+
+        private int? owner = null;
+        private int depth = 0;
+
+        public void Lock(CancellationToken ctk)
+        {
+            while (true)
+            {
+                using Locker locker = Locker.Lock(mutex, ctk);
+
+                ctk.ThrowIfCancellationRequested();
+
+                int newOwner = Task.CurrentId ?? 0;
+
+                if (owner is null)
+                {
+                    owner = newOwner;
+                    depth = 1;
+                    return;
+                }
+
+                if (owner == newOwner)
+                {
+                    ++depth;
+                    return;
+                }
+
+                Task.Delay(0).Run();
+            }
+        }
+
+        public void Unlock()
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            --depth;
+
+            if (depth == 0)
+            {
+                owner = null;
+            }
         }
     }
 
