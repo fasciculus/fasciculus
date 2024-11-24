@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Assets.Services;
+using Fasciculus.Maui;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace Fasciculus.Eve.Assets.PageModels
 {
@@ -23,14 +25,14 @@ namespace Fasciculus.Eve.Assets.PageModels
         [ObservableProperty]
         private Color extractSdeProgressColor = Colors.Orange;
 
-        public IStartCommand StartCommand { get; init; }
+        public ICommand StartCommand { get; init; }
 
-        public MainPageModel(IProgressCollector progressCollector, IStartCommand startCommand, ILogger<MainPageModel> logger)
+        public MainPageModel(IProgressCollector progressCollector, IExtractSde extractSde, ILogger<MainPageModel> logger)
         {
             this.progressCollector = progressCollector;
             this.progressCollector.PropertyChanged += OnProgressChanged;
 
-            StartCommand = startCommand;
+            StartCommand = new LongRunningCommand(() => extractSde.Extract());
 
             this.logger = logger;
         }
@@ -39,7 +41,6 @@ namespace Fasciculus.Eve.Assets.PageModels
         {
             logger.LogInformation($"{MainThread.IsMainThread}");
             MainThread.BeginInvokeOnMainThread(() => OnProgressChanged(ev.PropertyName ?? string.Empty));
-            // OnProgressChanged(ev.PropertyName ?? string.Empty);
         }
 
         private void OnProgressChanged(string name)
