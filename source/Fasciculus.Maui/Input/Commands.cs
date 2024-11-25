@@ -3,7 +3,7 @@ using Microsoft.Maui.ApplicationModel;
 using System;
 using System.Windows.Input;
 
-namespace Fasciculus.Maui
+namespace Fasciculus.Maui.Input
 {
     public class LongRunningCommand : ICommand
     {

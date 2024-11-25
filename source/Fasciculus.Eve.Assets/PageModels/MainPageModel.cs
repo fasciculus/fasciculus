@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Assets.Services;
-using Fasciculus.Maui;
+using Fasciculus.Maui.Input;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Windows.Input;
