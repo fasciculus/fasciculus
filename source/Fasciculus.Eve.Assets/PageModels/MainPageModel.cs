@@ -39,12 +39,12 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private ILogger logger;
 
-        public MainPageModel(IProgressCollector progressCollector, IDataParser dataParser, ILogger<MainPageModel> logger)
+        public MainPageModel(IProgressCollector progressCollector, IResourcesCreator resourcesCreator, ILogger<MainPageModel> logger)
         {
             this.progressCollector = progressCollector;
             this.progressCollector.PropertyChanged += OnProgressChanged;
 
-            StartCommand = new LongRunningCommand(() => dataParser.Parse());
+            StartCommand = new LongRunningCommand(() => resourcesCreator.Create());
 
             this.logger = logger;
         }

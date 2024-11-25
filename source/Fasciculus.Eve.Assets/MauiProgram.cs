@@ -21,9 +21,7 @@ namespace Fasciculus.Eve.Assets
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddAssetsProgress();
-            services.AddSdeZip();
-            services.AddDataParsers();
+            services.AddResourcesCreator();
 
             services.TryAddSingleton<MainPageModel>();
         }

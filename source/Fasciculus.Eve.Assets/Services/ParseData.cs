@@ -121,10 +121,11 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public static IServiceCollection AddDataParsers(this IServiceCollection services)
         {
-            services.AddSdeZip();
             services.AddAssetsFileSystem();
-            services.AddYaml();
             services.AddAssetsProgress();
+
+            services.AddSdeZip();
+            services.AddYaml();
 
             services.TryAddSingleton<INamesParser, NamesParser>();
             services.TryAddSingleton<ITypesParser, TypesParser>();

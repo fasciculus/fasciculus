@@ -88,11 +88,11 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public static IServiceCollection AddSdeZip(this IServiceCollection services)
         {
-            services.AddDownloader();
-            services.AddCompression();
-
             services.AddAssetsFileSystem();
             services.AddAssetsProgress();
+
+            services.AddDownloader();
+            services.AddCompression();
 
             services.TryAddSingleton<IDownloadSde, DownloadSde>();
             services.TryAddSingleton<IExtractSde, ExtractSde>();
