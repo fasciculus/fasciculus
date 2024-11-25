@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Fasciculus.Steam.Models;
+using Fasciculus.Steam.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.Versioning;
 
 namespace Fasciculus.Steam.Tests
@@ -6,19 +8,20 @@ namespace Fasciculus.Steam.Tests
     [TestClass]
     public class SteamTests
     {
+        private ISteamApplications steamApplications = new SteamApplications();
+
         [TestMethod]
         [SupportedOSPlatform("windows")]
         public void TestAll()
         {
-            SteamApp[] apps = SteamApps.All;
+            SteamApplication[] apps = steamApplications.All;
         }
 
         [TestMethod]
         [SupportedOSPlatform("windows")]
         public void TestInstalled()
         {
-            SteamApp[] apps = SteamApps.Installed;
+            SteamApplication[] apps = steamApplications.Installed;
         }
-
     }
 }

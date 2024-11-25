@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 
-namespace Fasciculus.Steam
+namespace Fasciculus.Steam.Models
 {
-    public class SteamApp
+    [DebuggerDisplay("{Name} ({Id})")]
+    public class SteamApplication
     {
         public int Id { get; }
         public string Name { get; }
@@ -10,16 +12,11 @@ namespace Fasciculus.Steam
 
         public bool IsInstalled => InstallationDirectory is not null;
 
-        public SteamApp(int id, string name, DirectoryInfo? installationDirectory)
+        public SteamApplication(int id, string name, DirectoryInfo? installationDirectory)
         {
             Id = id;
             Name = name;
             InstallationDirectory = installationDirectory;
-        }
-
-        public override string ToString()
-        {
-            return $"{Name} ({Id})";
         }
     }
 }
