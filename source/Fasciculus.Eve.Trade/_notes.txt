@@ -1,3 +1,0 @@
-dotnet publish --framework net9.0 --runtime win-x64 -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true
-
-start Fasciculus.Eve.Trade.exe Jita
