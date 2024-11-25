@@ -11,6 +11,9 @@ namespace Fasciculus.Steam.Services
     {
         public SteamApplication[] All { get; }
         public SteamApplication[] Installed { get; }
+
+        public SteamApplication? this[int id] { get; }
+        public SteamApplication? this[string name] { get; }
     }
 
     public class SteamApplications : ISteamApplications
@@ -26,6 +29,12 @@ namespace Fasciculus.Steam.Services
 
         public SteamApplication[] Installed
             => All.Where(a => a.IsInstalled).ToArray();
+
+        public SteamApplication? this[int id]
+            => All.FirstOrDefault(a => a.Id == id);
+
+        public SteamApplication? this[string name]
+            => All.FirstOrDefault(a => a.Name == name);
 
         private static SteamApplication? GetApplication(RegistryPath path)
         {
