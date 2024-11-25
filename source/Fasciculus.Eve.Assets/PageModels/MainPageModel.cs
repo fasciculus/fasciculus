@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Assets.Services;
 using Fasciculus.Maui;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -36,22 +37,23 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         public ICommand StartCommand { get; init; }
 
-        public MainPageModel(IProgressCollector progressCollector, IDataParser dataParser)
+        private ILogger logger;
+
+        public MainPageModel(IProgressCollector progressCollector, IDataParser dataParser, ILogger<MainPageModel> logger)
         {
             this.progressCollector = progressCollector;
             this.progressCollector.PropertyChanged += OnProgressChanged;
 
             StartCommand = new LongRunningCommand(() => dataParser.Parse());
+
+            this.logger = logger;
         }
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            MainThread.BeginInvokeOnMainThread(() => OnProgressChanged(ev.PropertyName ?? string.Empty));
-        }
+            logger.LogInformation("{name}: {isMainThread}", ev.PropertyName, MainThread.IsMainThread);
 
-        private void OnProgressChanged(string name)
-        {
-            switch (name)
+            switch (ev.PropertyName ?? string.Empty)
             {
                 case nameof(IProgressCollector.DownloadSde):
                     OnDownloadSdeChanged();

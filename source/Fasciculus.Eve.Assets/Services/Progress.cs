@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
@@ -75,7 +76,7 @@ namespace Fasciculus.Eve.Assets.Services
         public PendingOrDone ParseTypes { get; set; }
     }
 
-    public partial class ProgressCollector : ObservableObject, IProgressCollector
+    public partial class ProgressCollector : MainThreadObservable, IProgressCollector
     {
         [ObservableProperty]
         private DownloadSdeStatus downloadSde = DownloadSdeStatus.Pending;
