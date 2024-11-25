@@ -9,6 +9,7 @@ namespace Fasciculus.Eve.Assets.Services
         public DirectoryInfo Downloads { get; }
         public DirectoryInfo Sde { get; }
         public DirectoryInfo Bsd { get; }
+        public DirectoryInfo Fsd { get; }
     }
 
     public class AssetsDirectories : IAssetsDirectories
@@ -19,6 +20,7 @@ namespace Fasciculus.Eve.Assets.Services
         public DirectoryInfo Downloads => Documents.Combine("Downloads").CreateIfNotExists();
         public DirectoryInfo Sde => Documents.Combine("Sde").CreateIfNotExists();
         public DirectoryInfo Bsd => Sde.Combine("bsd").CreateIfNotExists();
+        public DirectoryInfo Fsd => Sde.Combine("fsd").CreateIfNotExists();
 
         public AssetsDirectories(ISpecialDirectories specialDirectories)
         {
@@ -30,6 +32,7 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public FileInfo SdeZip { get; }
         public FileInfo NamesYaml { get; }
+        public FileInfo TypesYaml { get; }
     }
 
     public class AssetsFiles : IAssetsFiles
@@ -38,6 +41,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         public FileInfo SdeZip => assetsDirectories.Downloads.File("sde.zip");
         public FileInfo NamesYaml => assetsDirectories.Bsd.File("invNames.yaml");
+        public FileInfo TypesYaml => assetsDirectories.Fsd.File("types.yaml");
 
         public AssetsFiles(IAssetsDirectories assetsDirectories)
         {

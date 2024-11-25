@@ -28,14 +28,20 @@ namespace Fasciculus.Eve.Assets.PageModels
         [ObservableProperty]
         private Color parseNamesColor = PendingOrDoneColor(PendingOrDone.Pending);
 
+        [ObservableProperty]
+        private string parseTypesText = PendingOrDoneText(PendingOrDone.Pending);
+
+        [ObservableProperty]
+        private Color parseTypesColor = PendingOrDoneColor(PendingOrDone.Pending);
+
         public ICommand StartCommand { get; init; }
 
-        public MainPageModel(IProgressCollector progressCollector, IParseData parseData)
+        public MainPageModel(IProgressCollector progressCollector, IDataParser dataParser)
         {
             this.progressCollector = progressCollector;
             this.progressCollector.PropertyChanged += OnProgressChanged;
 
-            StartCommand = new LongRunningCommand(() => parseData.Parse());
+            StartCommand = new LongRunningCommand(() => dataParser.Parse());
         }
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
@@ -57,6 +63,10 @@ namespace Fasciculus.Eve.Assets.PageModels
 
                 case nameof(IProgressCollector.ParseNames):
                     OnParseNamesChanged();
+                    break;
+
+                case nameof(IProgressCollector.ParseTypes):
+                    OnParseTypesChanged();
                     break;
             }
         }
@@ -94,6 +104,12 @@ namespace Fasciculus.Eve.Assets.PageModels
         {
             ParseNamesText = PendingOrDoneText(progressCollector.ParseNames);
             ParseNamesColor = PendingOrDoneColor(progressCollector.ParseNames);
+        }
+
+        private void OnParseTypesChanged()
+        {
+            ParseTypesText = PendingOrDoneText(progressCollector.ParseTypes);
+            ParseTypesColor = PendingOrDoneColor(progressCollector.ParseTypes);
         }
 
         private static string PendingOrDoneText(PendingOrDone status)

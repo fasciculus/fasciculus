@@ -4,6 +4,7 @@
     {
         public const string ExtractSde = "ExtractSde";
 
-        public const string ParseNames = "ParseNames";
+        public const string NamesParser = "NamesParser";
+        public const string TypesParser = "TypesParser";
     }
 }

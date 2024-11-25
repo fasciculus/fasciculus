@@ -4,7 +4,7 @@
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.Assets.PageModels"
              x:Class="Fasciculus.Eve.Assets.MainPage"
              x:DataType="pageModels:MainPageModel"
-             Title="" Shell.NavBarIsVisible="False" >
+             Title="" Shell.NavBarIsVisible="False">
 
     <ScrollView>
         <VerticalStackLayout
@@ -25,6 +25,8 @@
                 <Label Text="SDE Parsing" FontAttributes="Bold" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" />
                 <Label Text="Names" Grid.Row="3" Grid.Column="0" />
                 <Label Text="{Binding ParseNamesText}" TextColor="{Binding ParseNamesColor}" Grid.Row="3" Grid.Column="1" />
+                <Label Text="Types" Grid.Row="3" Grid.Column="2" />
+                <Label Text="{Binding ParseTypesText}" TextColor="{Binding ParseTypesColor}" Grid.Row="3" Grid.Column="3" />
             </Grid>
             
         </VerticalStackLayout>

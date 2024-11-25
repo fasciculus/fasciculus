@@ -36,11 +36,11 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
-    public class ParseNamesProgress : TaskSafeProgress<PendingOrDone>
+    public class NamesParserProgress : TaskSafeProgress<PendingOrDone>
     {
         private readonly IProgressCollector progressCollector;
 
-        public ParseNamesProgress(IProgressCollector progressCollector)
+        public NamesParserProgress(IProgressCollector progressCollector)
         {
             this.progressCollector = progressCollector;
         }
@@ -51,12 +51,28 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
+    public class TypesParserProgress : TaskSafeProgress<PendingOrDone>
+    {
+        private readonly IProgressCollector progressCollector;
+
+        public TypesParserProgress(IProgressCollector progressCollector)
+        {
+            this.progressCollector = progressCollector;
+        }
+
+        protected override void OnReport(PendingOrDone value)
+        {
+            progressCollector.ParseTypes = value;
+        }
+    }
+
     public interface IProgressCollector : INotifyPropertyChanged
     {
         public DownloadSdeStatus DownloadSde { get; set; }
         public double ExtractSde { get; set; }
 
         public PendingOrDone ParseNames { get; set; }
+        public PendingOrDone ParseTypes { get; set; }
     }
 
     public partial class ProgressCollector : ObservableObject, IProgressCollector
@@ -69,6 +85,9 @@ namespace Fasciculus.Eve.Assets.Services
 
         [ObservableProperty]
         private PendingOrDone parseNames = PendingOrDone.Pending;
+
+        [ObservableProperty]
+        private PendingOrDone parseTypes = PendingOrDone.Pending;
     }
 
     public static class ProgressServices
@@ -77,7 +96,8 @@ namespace Fasciculus.Eve.Assets.Services
         {
             services.TryAddSingleton<IProgress<DownloadSdeStatus>, DownloadSdeProgress>();
             services.TryAddKeyedSingleton<ILongProgress, ExtractSdeProgress>(ServiceKeys.ExtractSde);
-            services.TryAddKeyedSingleton<IProgress<PendingOrDone>, ParseNamesProgress>(ServiceKeys.ParseNames);
+            services.TryAddKeyedSingleton<IProgress<PendingOrDone>, NamesParserProgress>(ServiceKeys.NamesParser);
+            services.TryAddKeyedSingleton<IProgress<PendingOrDone>, TypesParserProgress>(ServiceKeys.TypesParser);
 
             services.TryAddSingleton<IProgressCollector, ProgressCollector>();
 

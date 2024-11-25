@@ -4,31 +4,32 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
-    public interface IParseNames
+    public interface IDataParserBase<T>
+        where T : class
     {
-        public Dictionary<long, string> Parse();
+        public T Parse();
     }
 
-    public class ParseNames : IParseNames
+    public abstract class DataParserBase<T> : IDataParserBase<T>
+        where T : class
     {
         private readonly IExtractSde extractSde;
-        private readonly IAssetsFiles assetsFiles;
         private readonly IYaml yaml;
+        private readonly IAssetsFiles files;
         private readonly IProgress<PendingOrDone> progress;
 
-        private Dictionary<long, string>? result;
+        protected T? result = null;
         private readonly TaskSafeMutex resultMutex = new();
 
-        public ParseNames(IExtractSde extractSde, IAssetsFiles assetsFiles, IYaml yaml,
-            [FromKeyedServices(ServiceKeys.ParseNames)] IProgress<PendingOrDone> progress)
+        protected DataParserBase(IExtractSde extractSde, IYaml yaml, IAssetsFiles files, IProgress<PendingOrDone> progress)
         {
             this.extractSde = extractSde;
-            this.assetsFiles = assetsFiles;
             this.yaml = yaml;
+            this.files = files;
             this.progress = progress;
         }
 
-        public Dictionary<long, string> Parse()
+        public T Parse()
         {
             using Locker locker = Locker.Lock(resultMutex);
 
@@ -37,54 +38,97 @@ namespace Fasciculus.Eve.Assets.Services
                 extractSde.Extract();
 
                 progress.Report(PendingOrDone.Pending);
-
-                NameSde[] names = yaml.Deserialize<NameSde[]>(assetsFiles.NamesYaml);
-
-                result = names.ToDictionary(name => name.ItemID, name => name.ItemName);
-
+                result = Parse(yaml, files);
                 progress.Report(PendingOrDone.Done);
             }
 
             return result;
         }
+
+        protected abstract T Parse(IYaml yaml, IAssetsFiles files);
     }
 
-    public interface IParseData
-    {
-        public void Parse();
-    }
+    public interface INamesParser : IDataParserBase<Dictionary<long, string>> { }
 
-    public class ParseData : IParseData
+    public class NamesParser : DataParserBase<Dictionary<long, string>>, INamesParser
     {
-        private readonly IParseNames parseNames;
+        public NamesParser(IExtractSde extractSde, IYaml yaml, IAssetsFiles assetsFiles,
+            [FromKeyedServices(ServiceKeys.NamesParser)] IProgress<PendingOrDone> progress)
+            : base(extractSde, yaml, assetsFiles, progress) { }
 
-        public ParseData(IParseNames parseNames)
+        protected override Dictionary<long, string> Parse(IYaml yaml, IAssetsFiles files)
         {
-            this.parseNames = parseNames;
+            SdeName[] names = yaml.Deserialize<SdeName[]>(files.NamesYaml);
+
+            return names.ToDictionary(name => name.ItemID, name => name.ItemName);
+        }
+    }
+
+    public interface ITypesParser : IDataParserBase<Dictionary<long, SdeType>> { }
+
+    public class TypesParser : DataParserBase<Dictionary<long, SdeType>>, ITypesParser
+    {
+        public TypesParser(IExtractSde extractSde, IYaml yaml, IAssetsFiles assetsFiles,
+            [FromKeyedServices(ServiceKeys.TypesParser)] IProgress<PendingOrDone> progress)
+            : base(extractSde, yaml, assetsFiles, progress) { }
+
+        protected override Dictionary<long, SdeType> Parse(IYaml yaml, IAssetsFiles files)
+        {
+            return yaml.Deserialize<Dictionary<long, SdeType>>(files.TypesYaml);
+        }
+    }
+
+    public interface IDataParser
+    {
+        public SdeData Parse();
+    }
+
+    public class DataParser : IDataParser
+    {
+        private readonly INamesParser namesParser;
+        private readonly ITypesParser typesParser;
+
+        public DataParser(INamesParser namesParser, ITypesParser typesParser)
+        {
+            this.namesParser = namesParser;
+            this.typesParser = typesParser;
         }
 
-        public void Parse()
+        public SdeData Parse()
         {
-            Action[] actions =
+            Task<Dictionary<long, string>> names = Tasks.LongRunning(ParseNames);
+            Task<Dictionary<long, SdeType>> types = Tasks.LongRunning(ParseTypes);
+
+            Task[] tasks = { names, types };
+
+            Task.WaitAll(tasks);
+
+            return new()
             {
-                () => parseNames.Parse(),
+                Names = names.Result,
+                Types = types.Result,
             };
-
-            actions.AsParallel().Apply(a => a());
         }
+
+        private Dictionary<long, string> ParseNames()
+            => namesParser.Parse();
+
+        private Dictionary<long, SdeType> ParseTypes()
+            => typesParser.Parse();
     }
 
-    public static class ParseDataServices
+    public static class DataParserServices
     {
-        public static IServiceCollection AddParseData(this IServiceCollection services)
+        public static IServiceCollection AddDataParsers(this IServiceCollection services)
         {
             services.AddSdeZip();
             services.AddAssetsFileSystem();
             services.AddYaml();
             services.AddAssetsProgress();
 
-            services.TryAddSingleton<IParseNames, ParseNames>();
-            services.TryAddSingleton<IParseData, ParseData>();
+            services.TryAddSingleton<INamesParser, NamesParser>();
+            services.TryAddSingleton<ITypesParser, TypesParser>();
+            services.TryAddSingleton<IDataParser, DataParser>();
 
             return services;
         }
