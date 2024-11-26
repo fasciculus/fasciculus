@@ -88,24 +88,30 @@ namespace Fasciculus.Eve.Assets.Services
     public class ResourcesCreator : IResourcesCreator
     {
         private readonly IDataParser dataParser;
+        private readonly IUniverseParser universeParser;
         private readonly IImageCopier imageCopier;
 
-        public ResourcesCreator(IDataParser dataParser, IImageCopier imageCopier)
+        public ResourcesCreator(IDataParser dataParser, IUniverseParser universeParser, IImageCopier imageCopier)
         {
             this.dataParser = dataParser;
+            this.universeParser = universeParser;
             this.imageCopier = imageCopier;
         }
 
         public void Create()
         {
             Task<SdeData> parseSdeData = Tasks.Start(ParseSdeData);
+            Task<SdeRegion[]> parseUniverse = Tasks.Start(ParseUniverse);
             Task extractImages = Tasks.Start(CopyImages);
 
-            Task.WaitAll([parseSdeData, extractImages]);
+            Task.WaitAll([parseSdeData, parseUniverse, extractImages]);
         }
 
         private SdeData ParseSdeData()
             => dataParser.Parse();
+
+        private SdeRegion[] ParseUniverse()
+            => universeParser.Parse();
 
         private void CopyImages()
             => imageCopier.Copy();
@@ -126,6 +132,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             services.AddImages();
             services.AddDataParsers();
+            services.AddUniverseParser();
             services.AddResourceWriter();
 
             services.TryAddSingleton<IResourcesCreator, ResourcesCreator>();

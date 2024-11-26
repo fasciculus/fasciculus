@@ -7,9 +7,15 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public DirectoryInfo Documents { get; }
         public DirectoryInfo Downloads { get; }
+
         public DirectoryInfo Sde { get; }
+
         public DirectoryInfo Bsd { get; }
         public DirectoryInfo Fsd { get; }
+        public DirectoryInfo Universe { get; }
+
+        public DirectoryInfo UniverseEve { get; }
+
         public DirectoryInfo Resources { get; }
         public DirectoryInfo Images { get; }
     }
@@ -20,9 +26,15 @@ namespace Fasciculus.Eve.Assets.Services
 
         public DirectoryInfo Documents => specialDirectories.Documents.Combine("Fasciculus", "Eve.Assets").CreateIfNotExists();
         public DirectoryInfo Downloads => Documents.Combine("Downloads").CreateIfNotExists();
+
         public DirectoryInfo Sde => Documents.Combine("Sde").CreateIfNotExists();
+
         public DirectoryInfo Bsd => Sde.Combine("bsd").CreateIfNotExists();
         public DirectoryInfo Fsd => Sde.Combine("fsd").CreateIfNotExists();
+        public DirectoryInfo Universe => Sde.Combine("universe").CreateIfNotExists();
+
+        public DirectoryInfo UniverseEve => Universe.Combine("eve").CreateIfNotExists();
+
         public DirectoryInfo Resources => Documents.Combine("Resources").CreateIfNotExists();
         public DirectoryInfo Images => Resources.Combine("Images").CreateIfNotExists();
 

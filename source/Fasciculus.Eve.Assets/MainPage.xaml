@@ -16,7 +16,7 @@
                 Text="Start" 
                 Command="{Binding StartCommand}" />
 
-            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="8" RowSpacing="8">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Download &amp; Extract" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" />
                 <Label Text="File" Grid.Row="1" Grid.Column="0" />
                 <Label Text="{Binding DownloadSdeText}" TextColor="{Binding DownloadSdeColor}" Grid.Row="1" Grid.Column="1" />
