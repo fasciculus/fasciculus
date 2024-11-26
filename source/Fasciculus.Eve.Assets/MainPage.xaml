@@ -16,7 +16,7 @@
                 Text="Start" 
                 Command="{Binding StartCommand}" />
 
-            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="100,*,100,*,100,*">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="8" RowSpacing="8">
                 <Label Text="SDE Download &amp; Extract" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" />
                 <Label Text="File" Grid.Row="1" Grid.Column="0" />
                 <Label Text="{Binding DownloadSdeText}" TextColor="{Binding DownloadSdeColor}" Grid.Row="1" Grid.Column="1" />
@@ -27,9 +27,15 @@
                 <Label Text="{Binding ParseNamesText}" TextColor="{Binding ParseNamesColor}" Grid.Row="3" Grid.Column="1" />
                 <Label Text="Types" Grid.Row="3" Grid.Column="2" />
                 <Label Text="{Binding ParseTypesText}" TextColor="{Binding ParseTypesColor}" Grid.Row="3" Grid.Column="3" />
-                <Label Text="Images" FontAttributes="Bold" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" />
-                <Label Text="Copy" Grid.Row="5" Grid.Column="0" />
-                <ProgressBar Progress="{Binding CopyImagesValue}" ProgressColor="{Binding CopyImagesColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="5" Grid.Column="1" />
+                <Label Text="Regions" Grid.Row="4" Grid.Column="0" />
+                <ProgressBar Progress="{Binding ParseRegionsValue}" ProgressColor="{Binding ParseRegionsColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="4" Grid.Column="1"/>
+                <Label Text="Constellations" Grid.Row="4" Grid.Column="2" />
+                <ProgressBar Progress="{Binding ParseConstellationsValue}" ProgressColor="{Binding ParseConstellationsColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="4" Grid.Column="3"/>
+                <Label Text="Solar Systems" Grid.Row="4" Grid.Column="4" />
+                <ProgressBar Progress="{Binding ParseSolarSystemsValue}" ProgressColor="{Binding ParseSolarSystemsColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="4" Grid.Column="5"/>
+                <Label Text="Images" FontAttributes="Bold" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" />
+                <Label Text="Copy" Grid.Row="7" Grid.Column="0" />
+                <ProgressBar Progress="{Binding CopyImagesValue}" ProgressColor="{Binding CopyImagesColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="7" Grid.Column="1" />
             </Grid>
             
         </VerticalStackLayout>

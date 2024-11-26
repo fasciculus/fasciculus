@@ -39,6 +39,24 @@ namespace Fasciculus.Eve.Assets.PageModels
         private Color parseTypesColor = PendingOrDoneColor(PendingOrDone.Pending);
 
         [ObservableProperty]
+        private double parseRegionsValue = 0;
+
+        [ObservableProperty]
+        private Color parseRegionsColor = PendingOrDoneColor(PendingOrDone.Pending);
+
+        [ObservableProperty]
+        private double parseConstellationsValue = 0;
+
+        [ObservableProperty]
+        private Color parseConstellationsColor = PendingOrDoneColor(PendingOrDone.Pending);
+
+        [ObservableProperty]
+        private double parseSolarSystemsValue = 0;
+
+        [ObservableProperty]
+        private Color parseSolarSystemsColor = PendingOrDoneColor(PendingOrDone.Pending);
+
+        [ObservableProperty]
         private double copyImagesValue = 0;
 
         [ObservableProperty]
@@ -83,6 +101,18 @@ namespace Fasciculus.Eve.Assets.PageModels
                 case nameof(IProgressCollector.CopyImages):
                     OnCopyImagesChanged();
                     break;
+
+                case nameof(IProgressCollector.ParseRegions):
+                    OnParseRegionsChanged();
+                    break;
+
+                case nameof(IProgressCollector.ParseConstellations):
+                    OnParseConstellationsChanged();
+                    break;
+
+                case nameof(IProgressCollector.ParseSolarSystems):
+                    OnParseSolarSystemsChanged();
+                    break;
             }
         }
 
@@ -125,6 +155,24 @@ namespace Fasciculus.Eve.Assets.PageModels
         {
             ParseTypesText = PendingOrDoneText(progressCollector.ParseTypes);
             ParseTypesColor = PendingOrDoneColor(progressCollector.ParseTypes);
+        }
+
+        private void OnParseRegionsChanged()
+        {
+            ParseRegionsValue = progressCollector.ParseRegions;
+            ParseRegionsColor = progressCollector.ParseRegions == 1.0 ? DoneColor : PendingColor;
+        }
+
+        private void OnParseConstellationsChanged()
+        {
+            ParseConstellationsValue = progressCollector.ParseConstellations;
+            ParseConstellationsColor = progressCollector.ParseConstellations == 1.0 ? DoneColor : PendingColor;
+        }
+
+        private void OnParseSolarSystemsChanged()
+        {
+            ParseSolarSystemsValue = progressCollector.ParseSolarSystems;
+            ParseSolarSystemsColor = progressCollector.ParseSolarSystems == 1.0 ? DoneColor : PendingColor;
         }
 
         private void OnCopyImagesChanged()

@@ -7,6 +7,10 @@
         public const string NamesParser = "NamesParser";
         public const string TypesParser = "TypesParser";
 
+        public const string RegionsParser = "RegionsParser";
+        public const string ConstellationsParser = "ConstellationsParser";
+        public const string SolarSystemsParser = "SolarSystemsParser";
+
         public const string ImageCopier = "ImageCopier";
     }
 }

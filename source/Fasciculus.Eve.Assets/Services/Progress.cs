@@ -67,6 +67,54 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
+    public class RegionsParserProgress : LongProgress
+    {
+        private readonly IProgressCollector progressCollector;
+
+        public RegionsParserProgress(IProgressCollector progressCollector)
+            : base(500)
+        {
+            this.progressCollector = progressCollector;
+        }
+
+        protected override void OnProgress()
+        {
+            progressCollector.ParseRegions = Progress;
+        }
+    }
+
+    public class ConstellationsParserProgress : LongProgress
+    {
+        private readonly IProgressCollector progressCollector;
+
+        public ConstellationsParserProgress(IProgressCollector progressCollector)
+            : base(500)
+        {
+            this.progressCollector = progressCollector;
+        }
+
+        protected override void OnProgress()
+        {
+            progressCollector.ParseConstellations = Progress;
+        }
+    }
+
+    public class SolarSystemsParserProgress : LongProgress
+    {
+        private readonly IProgressCollector progressCollector;
+
+        public SolarSystemsParserProgress(IProgressCollector progressCollector)
+            : base(500)
+        {
+            this.progressCollector = progressCollector;
+        }
+
+        protected override void OnProgress()
+        {
+            progressCollector.ParseSolarSystems = Progress;
+        }
+    }
+
     public class ImageCopierProgress : LongProgress
     {
         private readonly IProgressCollector progressCollector;
@@ -91,6 +139,10 @@ namespace Fasciculus.Eve.Assets.Services
         public PendingOrDone ParseNames { get; set; }
         public PendingOrDone ParseTypes { get; set; }
 
+        public double ParseRegions { get; set; }
+        public double ParseConstellations { get; set; }
+        public double ParseSolarSystems { get; set; }
+
         public double CopyImages { get; set; }
     }
 
@@ -109,6 +161,15 @@ namespace Fasciculus.Eve.Assets.Services
         private PendingOrDone parseTypes = PendingOrDone.Pending;
 
         [ObservableProperty]
+        private double parseRegions;
+
+        [ObservableProperty]
+        private double parseConstellations;
+
+        [ObservableProperty]
+        private double parseSolarSystems;
+
+        [ObservableProperty]
         private double copyImages;
     }
 
@@ -120,6 +181,11 @@ namespace Fasciculus.Eve.Assets.Services
             services.TryAddKeyedSingleton<ILongProgress, ExtractSdeProgress>(ServiceKeys.ExtractSde);
             services.TryAddKeyedSingleton<IProgress<PendingOrDone>, NamesParserProgress>(ServiceKeys.NamesParser);
             services.TryAddKeyedSingleton<IProgress<PendingOrDone>, TypesParserProgress>(ServiceKeys.TypesParser);
+
+            services.TryAddKeyedSingleton<ILongProgress, RegionsParserProgress>(ServiceKeys.RegionsParser);
+            services.TryAddKeyedSingleton<ILongProgress, ConstellationsParserProgress>(ServiceKeys.ConstellationsParser);
+            services.TryAddKeyedSingleton<ILongProgress, SolarSystemsParserProgress>(ServiceKeys.SolarSystemsParser);
+
             services.TryAddKeyedSingleton<ILongProgress, ImageCopierProgress>(ServiceKeys.ImageCopier);
 
             services.TryAddSingleton<IProgressCollector, ProgressCollector>();

@@ -98,8 +98,8 @@ namespace Fasciculus.Eve.Assets.Services
 
         public void Create()
         {
-            Task<SdeData> parseSdeData = Tasks.LongRunning(ParseSdeData);
-            Task extractImages = Tasks.LongRunning(CopyImages);
+            Task<SdeData> parseSdeData = Tasks.Start(ParseSdeData);
+            Task extractImages = Tasks.Start(CopyImages);
 
             Task.WaitAll([parseSdeData, extractImages]);
         }
