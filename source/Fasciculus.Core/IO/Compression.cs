@@ -13,6 +13,9 @@ namespace Fasciculus.IO
     public interface ICompression
     {
         public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, ILongProgress progress);
+
+        public void GZip(Stream uncompressed, Stream compressed);
+        public void UnGZip(Stream compressed, Stream uncompressed);
     }
 
     public class Compression : ICompression
@@ -59,6 +62,20 @@ namespace Fasciculus.IO
             DateTime dateTime = entry.LastWriteTime.UtcDateTime;
 
             return file.NeedsOverwrite(dateTime, overwrite);
+        }
+
+        public void GZip(Stream uncompressed, Stream compressed)
+        {
+            using GZipStream gzStream = new(compressed, CompressionMode.Compress);
+
+            uncompressed.CopyTo(gzStream);
+        }
+
+        public void UnGZip(Stream compressed, Stream uncompressed)
+        {
+            using GZipStream gzStream = new(compressed, CompressionMode.Decompress);
+
+            gzStream.CopyTo(uncompressed);
         }
     }
 

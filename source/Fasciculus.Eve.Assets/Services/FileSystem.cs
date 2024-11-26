@@ -10,6 +10,8 @@ namespace Fasciculus.Eve.Assets.Services
         public DirectoryInfo Sde { get; }
         public DirectoryInfo Bsd { get; }
         public DirectoryInfo Fsd { get; }
+        public DirectoryInfo Resources { get; }
+        public DirectoryInfo Images { get; }
     }
 
     public class AssetsDirectories : IAssetsDirectories
@@ -21,6 +23,8 @@ namespace Fasciculus.Eve.Assets.Services
         public DirectoryInfo Sde => Documents.Combine("Sde").CreateIfNotExists();
         public DirectoryInfo Bsd => Sde.Combine("bsd").CreateIfNotExists();
         public DirectoryInfo Fsd => Sde.Combine("fsd").CreateIfNotExists();
+        public DirectoryInfo Resources => Documents.Combine("Resources").CreateIfNotExists();
+        public DirectoryInfo Images => Resources.Combine("Images").CreateIfNotExists();
 
         public AssetsDirectories(ISpecialDirectories specialDirectories)
         {

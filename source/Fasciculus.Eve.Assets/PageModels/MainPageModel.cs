@@ -9,19 +9,22 @@ namespace Fasciculus.Eve.Assets.PageModels
 {
     public partial class MainPageModel : ObservableObject
     {
+        private static Color PendingColor = Colors.Orange;
+        private static Color DoneColor = Colors.Green;
+
         private IProgressCollector progressCollector;
 
         [ObservableProperty]
-        private string downloadSdeStatusText = "Pending";
+        private string downloadSdeText = "Pending";
 
         [ObservableProperty]
-        private Color downloadSdeStatusColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color downloadSdeColor = PendingOrDoneColor(PendingOrDone.Pending);
 
         [ObservableProperty]
-        private double extractSdeProgressValue = 0;
+        private double extractSdeValue = 0;
 
         [ObservableProperty]
-        private Color extractSdeProgressColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color extractSdeColor = PendingOrDoneColor(PendingOrDone.Pending);
 
         [ObservableProperty]
         private string parseNamesText = PendingOrDoneText(PendingOrDone.Pending);
@@ -34,6 +37,12 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         [ObservableProperty]
         private Color parseTypesColor = PendingOrDoneColor(PendingOrDone.Pending);
+
+        [ObservableProperty]
+        private double copyImagesValue = 0;
+
+        [ObservableProperty]
+        private Color copyImagesColor = PendingOrDoneColor(PendingOrDone.Pending);
 
         public ICommand StartCommand { get; init; }
 
@@ -51,7 +60,7 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            logger.LogInformation("{name}: {isMainThread}", ev.PropertyName, MainThread.IsMainThread);
+            //logger.LogInformation("{name}: {isMainThread}", ev.PropertyName, MainThread.IsMainThread);
 
             switch (ev.PropertyName ?? string.Empty)
             {
@@ -70,6 +79,10 @@ namespace Fasciculus.Eve.Assets.PageModels
                 case nameof(IProgressCollector.ParseTypes):
                     OnParseTypesChanged();
                     break;
+
+                case nameof(IProgressCollector.CopyImages):
+                    OnCopyImagesChanged();
+                    break;
             }
         }
 
@@ -77,7 +90,7 @@ namespace Fasciculus.Eve.Assets.PageModels
         {
             DownloadSdeStatus status = progressCollector.DownloadSde;
 
-            DownloadSdeStatusText = status switch
+            DownloadSdeText = status switch
             {
                 DownloadSdeStatus.Pending => "Pending",
                 DownloadSdeStatus.Downloading => "Downloading",
@@ -86,20 +99,20 @@ namespace Fasciculus.Eve.Assets.PageModels
                 _ => string.Empty
             };
 
-            DownloadSdeStatusColor = status switch
+            DownloadSdeColor = status switch
             {
-                DownloadSdeStatus.Pending => Colors.Orange,
-                DownloadSdeStatus.Downloading => Colors.Orange,
-                DownloadSdeStatus.Downloaded => Colors.Green,
-                DownloadSdeStatus.NotModified => Colors.Green,
+                DownloadSdeStatus.Pending => PendingColor,
+                DownloadSdeStatus.Downloading => PendingColor,
+                DownloadSdeStatus.Downloaded => DoneColor,
+                DownloadSdeStatus.NotModified => DoneColor,
                 _ => Colors.Black
             };
         }
 
         private void OnExtractSdeChanged()
         {
-            ExtractSdeProgressValue = progressCollector.ExtractSde;
-            ExtractSdeProgressColor = progressCollector.ExtractSde == 1.0 ? Colors.Green : Colors.Orange;
+            ExtractSdeValue = progressCollector.ExtractSde;
+            ExtractSdeColor = progressCollector.ExtractSde == 1.0 ? DoneColor : PendingColor;
         }
 
         private void OnParseNamesChanged()
@@ -112,6 +125,12 @@ namespace Fasciculus.Eve.Assets.PageModels
         {
             ParseTypesText = PendingOrDoneText(progressCollector.ParseTypes);
             ParseTypesColor = PendingOrDoneColor(progressCollector.ParseTypes);
+        }
+
+        private void OnCopyImagesChanged()
+        {
+            CopyImagesValue = progressCollector.CopyImages;
+            CopyImagesColor = progressCollector.CopyImages == 1.0 ? DoneColor : PendingColor;
         }
 
         private static string PendingOrDoneText(PendingOrDone status)
@@ -128,8 +147,8 @@ namespace Fasciculus.Eve.Assets.PageModels
         {
             return status switch
             {
-                PendingOrDone.Pending => Colors.Orange,
-                PendingOrDone.Done => Colors.Green,
+                PendingOrDone.Pending => PendingColor,
+                PendingOrDone.Done => DoneColor,
                 _ => Colors.Red
             };
         }

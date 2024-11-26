@@ -6,5 +6,7 @@
 
         public const string NamesParser = "NamesParser";
         public const string TypesParser = "TypesParser";
+
+        public const string ImageCopier = "ImageCopier";
     }
 }

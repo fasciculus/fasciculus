@@ -67,6 +67,22 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
+    public class ImageCopierProgress : LongProgress
+    {
+        private readonly IProgressCollector progressCollector;
+
+        public ImageCopierProgress(IProgressCollector progressCollector)
+            : base(500)
+        {
+            this.progressCollector = progressCollector;
+        }
+
+        protected override void OnProgress()
+        {
+            progressCollector.CopyImages = Progress;
+        }
+    }
+
     public interface IProgressCollector : INotifyPropertyChanged
     {
         public DownloadSdeStatus DownloadSde { get; set; }
@@ -74,6 +90,8 @@ namespace Fasciculus.Eve.Assets.Services
 
         public PendingOrDone ParseNames { get; set; }
         public PendingOrDone ParseTypes { get; set; }
+
+        public double CopyImages { get; set; }
     }
 
     public partial class ProgressCollector : MainThreadObservable, IProgressCollector
@@ -89,6 +107,9 @@ namespace Fasciculus.Eve.Assets.Services
 
         [ObservableProperty]
         private PendingOrDone parseTypes = PendingOrDone.Pending;
+
+        [ObservableProperty]
+        private double copyImages;
     }
 
     public static class ProgressServices
@@ -99,6 +120,7 @@ namespace Fasciculus.Eve.Assets.Services
             services.TryAddKeyedSingleton<ILongProgress, ExtractSdeProgress>(ServiceKeys.ExtractSde);
             services.TryAddKeyedSingleton<IProgress<PendingOrDone>, NamesParserProgress>(ServiceKeys.NamesParser);
             services.TryAddKeyedSingleton<IProgress<PendingOrDone>, TypesParserProgress>(ServiceKeys.TypesParser);
+            services.TryAddKeyedSingleton<ILongProgress, ImageCopierProgress>(ServiceKeys.ImageCopier);
 
             services.TryAddSingleton<IProgressCollector, ProgressCollector>();
 
