@@ -11,12 +11,13 @@
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <ApplicationTitle>Fasciculus.Eve</ApplicationTitle>
+    <ApplicationId>io.github.fasciculus.eve</ApplicationId>
+    <ApplicationDisplayVersion>0.1.1</ApplicationDisplayVersion>
+    <ApplicationVersion>0</ApplicationVersion>
     <SelfContained>true</SelfContained>
     <WindowsPackageType>None</WindowsPackageType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(RuntimeIdentifierOverride)' != ''">
-    <RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
 
   <PropertyGroup>
