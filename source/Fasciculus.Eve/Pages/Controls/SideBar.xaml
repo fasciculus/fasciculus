@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<VerticalStackLayout xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                     xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
+                     x:Class="Fasciculus.Eve.Pages.Controls.SideBar"
+                     x:DataType="pageModels:SideBarModel">
+
+    <Button Text="Info" Command="{Binding InfoCommand}" />
+    <Button Text="Market" Command="{Binding MarketCommand}" />
+    <Button Text="Map" Command="{Binding MapCommand}" />
+
+</VerticalStackLayout>

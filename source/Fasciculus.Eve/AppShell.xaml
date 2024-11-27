@@ -3,13 +3,23 @@
     x:Class="Fasciculus.Eve.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Fasciculus.Eve"
+    xmlns:pages="clr-namespace:Fasciculus.Eve.Pages"
     Shell.FlyoutBehavior="Disabled"
     Title="Fasciculus.Eve">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Info"
+        ContentTemplate="{DataTemplate pages:InfoPage}"
+        Route="Info" />
+
+    <ShellContent
+        Title="Market"
+        ContentTemplate="{DataTemplate pages:MarketPage}"
+        Route="Market" />
+
+    <ShellContent
+        Title="Map"
+        ContentTemplate="{DataTemplate pages:MapPage}"
+        Route="Map" />
 
 </Shell>

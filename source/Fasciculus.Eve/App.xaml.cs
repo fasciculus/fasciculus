@@ -5,6 +5,8 @@ namespace Fasciculus.Eve
     {
         public App()
         {
+            UserAppTheme = AppTheme.Dark;
+
             InitializeComponent();
         }
 
