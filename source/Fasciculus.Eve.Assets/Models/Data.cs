@@ -22,6 +22,7 @@
 
     public class SdeData
     {
+        public DateTime Version { get; set; } = DateTime.MinValue;
         public Dictionary<long, string> Names { get; init; } = [];
         public Dictionary<long, SdeType> Types { get; init; } = [];
     }

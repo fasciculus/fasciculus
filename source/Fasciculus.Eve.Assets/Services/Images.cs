@@ -57,22 +57,22 @@ namespace Fasciculus.Eve.Assets.Services
             DirectoryInfo sharedCache = eveOnline.InstallationDirectory!.Combine("Shared Cache");
             FileInfo indexFile = sharedCache.Combine("tq").File("resfileindex.txt");
             DirectoryInfo resFiles = sharedCache.Combine("ResFiles");
-            DirectoryInfo images = assetsDirectories.Images;
+            DirectoryInfo steamImages = assetsDirectories.SteamImages;
 
             return indexFile
                 .ReadAllLines()
                 .Select(ParseIndexLine)
                 .NotNull()
-                .Select(v => CreateIndexEntry(v, resFiles, images))
+                .Select(v => CreateIndexEntry(v, resFiles, steamImages))
                 .NotNull()
                 .ToArray();
         }
 
         private static Tuple<FileInfo, FileInfo>? CreateIndexEntry(Tuple<string, string> value, DirectoryInfo resFiles,
-            DirectoryInfo images)
+            DirectoryInfo steamImages)
         {
             FileInfo source = resFiles.File(value.Item1);
-            FileInfo destination = images.File(value.Item2);
+            FileInfo destination = steamImages.File(value.Item2);
 
             return source.Exists ? new(source, destination) : null;
         }

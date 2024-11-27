@@ -1,4 +1,6 @@
 ﻿using Fasciculus.Eve.PageModels;
+using Fasciculus.Eve.Services;
+using Fasciculus.IO;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -20,6 +22,9 @@ namespace Fasciculus.Eve
 
         private static void ConfigureServices(IServiceCollection services)
         {
+            services.AddResources();
+            services.AddEsi();
+
             services.TryAddSingleton<SideBarModel>();
             services.TryAddSingleton<InfoPageModel>();
             services.TryAddSingleton<MarketPageModel>();

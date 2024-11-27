@@ -91,11 +91,17 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IUniverseParser universeParser;
         private readonly IImageCopier imageCopier;
 
-        public ResourcesCreator(IDataParser dataParser, IUniverseParser universeParser, IImageCopier imageCopier)
+        private readonly IAssetsDirectories assetsDirectories;
+        private readonly IResourceWriter resourceWriter;
+
+        public ResourcesCreator(IDataParser dataParser, IUniverseParser universeParser, IImageCopier imageCopier,
+            IAssetsDirectories assetsDirectories, IResourceWriter resourceWriter)
         {
             this.dataParser = dataParser;
             this.universeParser = universeParser;
             this.imageCopier = imageCopier;
+            this.assetsDirectories = assetsDirectories;
+            this.resourceWriter = resourceWriter;
         }
 
         public void Create()
@@ -105,6 +111,18 @@ namespace Fasciculus.Eve.Assets.Services
             Task extractImages = Tasks.Start(CopyImages);
 
             Task.WaitAll([parseSdeData, parseUniverse, extractImages]);
+
+            WriteVersion(parseSdeData.Result);
+        }
+
+        private void WriteVersion(SdeData sdeData)
+        {
+            using MemoryStream stream = new();
+            FileInfo file = assetsDirectories.Resources.File("SdeVersion");
+
+            stream.WriteLong(sdeData.Version.ToBinary());
+
+            resourceWriter.Write(stream.ToArray(), file, false);
         }
 
         private SdeData ParseSdeData()

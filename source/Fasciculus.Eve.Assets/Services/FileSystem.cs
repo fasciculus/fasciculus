@@ -9,6 +9,7 @@ namespace Fasciculus.Eve.Assets.Services
         public DirectoryInfo Downloads { get; }
 
         public DirectoryInfo Sde { get; }
+        public DirectoryInfo SteamImages { get; }
 
         public DirectoryInfo Resources { get; }
         public DirectoryInfo Images { get; }
@@ -22,6 +23,7 @@ namespace Fasciculus.Eve.Assets.Services
         public DirectoryInfo Downloads => Documents.Combine("Downloads").CreateIfNotExists();
 
         public DirectoryInfo Sde => Documents.Combine("Sde").CreateIfNotExists();
+        public DirectoryInfo SteamImages => Documents.Combine("SteamImages").CreateIfNotExists();
 
         public DirectoryInfo Resources => Documents.Combine("Resources").CreateIfNotExists();
         public DirectoryInfo Images => Resources.Combine("Images").CreateIfNotExists();

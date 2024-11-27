@@ -83,11 +83,13 @@ namespace Fasciculus.Eve.Assets.Services
 
     public class DataParser : IDataParser
     {
+        private readonly IDownloadSde downloadSde;
         private readonly INamesParser namesParser;
         private readonly ITypesParser typesParser;
 
-        public DataParser(INamesParser namesParser, ITypesParser typesParser)
+        public DataParser(IDownloadSde downloadSde, INamesParser namesParser, ITypesParser typesParser)
         {
+            this.downloadSde = downloadSde;
             this.namesParser = namesParser;
             this.typesParser = typesParser;
         }
@@ -103,6 +105,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             return new()
             {
+                Version = downloadSde.Download().LastWriteTimeUtc,
                 Names = names.Result,
                 Types = types.Result,
             };

@@ -1,17 +1,27 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Fasciculus.IO;
+using System.Reflection;
 
 namespace Fasciculus.Eve.PageModels
 {
     public partial class InfoPageModel : ObservableObject
     {
         [ObservableProperty]
-        private string version = "0.1.x";
+        private string applicationVersion = "0";
+
+        [ObservableProperty]
+        private string sdeVersion = "0";
 
         [ObservableProperty]
         private SideBarModel sideBar;
 
-        public InfoPageModel(SideBarModel sideBar)
+        public InfoPageModel(IEmbeddedResources resources, SideBarModel sideBar)
         {
+            DateTime sdeVersion = DateTime.FromBinary(resources["SdeVersion"].Read(s => s.ReadLong(), false));
+
+            ApplicationVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "?";
+            SdeVersion = sdeVersion.ToString("yyyy-MM-dd");
+
             SideBar = sideBar;
         }
     }
