@@ -8,8 +8,8 @@ namespace Fasciculus.Eve.Assets.Services
 {
     public interface IResourceWriter
     {
-        public void Write(byte[] source, FileInfo destination, bool compressed);
-        public void Copy(FileInfo source, FileInfo destination, bool compressed);
+        public bool Write(byte[] source, FileInfo destination, bool compressed);
+        public bool Copy(FileInfo source, FileInfo destination, bool compressed);
     }
 
     public class ResourceWriter : IResourceWriter
@@ -21,16 +21,18 @@ namespace Fasciculus.Eve.Assets.Services
             this.compression = compression;
         }
 
-        public void Copy(FileInfo source, FileInfo destination, bool compress)
+        public bool Copy(FileInfo source, FileInfo destination, bool compress)
         {
             byte[] bytes = source.ReadAllBytes();
 
-            Write(bytes, destination, compress);
+            return Write(bytes, destination, compress);
         }
 
-        public void Write(byte[] source, FileInfo destination, bool compress)
+        public bool Write(byte[] source, FileInfo destination, bool compress)
         {
-            if (WriteRequired(source, destination, compress))
+            bool writeRequired = WriteRequired(source, destination, compress);
+
+            if (writeRequired)
             {
                 destination.Directory?.CreateIfNotExists();
                 destination.DeleteIfExists();
@@ -47,6 +49,8 @@ namespace Fasciculus.Eve.Assets.Services
                     destination.WriteAllBytes(source);
                 }
             }
+
+            return writeRequired;
         }
 
         private bool WriteRequired(byte[] source, FileInfo destination, bool compress)
@@ -94,14 +98,18 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IAssetsDirectories assetsDirectories;
         private readonly IResourceWriter resourceWriter;
 
+        private readonly IProgress<FileInfo> progress;
+
         public ResourcesCreator(IDataParser dataParser, IUniverseParser universeParser, IImageCopier imageCopier,
-            IAssetsDirectories assetsDirectories, IResourceWriter resourceWriter)
+            IAssetsDirectories assetsDirectories, IResourceWriter resourceWriter,
+            [FromKeyedServices(ServiceKeys.ResourcesCreator)] IProgress<FileInfo> progress)
         {
             this.dataParser = dataParser;
             this.universeParser = universeParser;
             this.imageCopier = imageCopier;
             this.assetsDirectories = assetsDirectories;
             this.resourceWriter = resourceWriter;
+            this.progress = progress;
         }
 
         public void Create()
@@ -122,7 +130,10 @@ namespace Fasciculus.Eve.Assets.Services
 
             stream.WriteLong(sdeData.Version.ToBinary());
 
-            resourceWriter.Write(stream.ToArray(), file, false);
+            if (resourceWriter.Write(stream.ToArray(), file, false))
+            {
+                progress.Report(file);
+            }
         }
 
         private SdeData ParseSdeData()

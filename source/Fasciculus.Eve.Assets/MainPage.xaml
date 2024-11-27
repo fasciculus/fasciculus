@@ -43,7 +43,19 @@
                 <Label Text="Copy" Grid.Row="1" Grid.Column="0" />
                 <ProgressBar Progress="{Binding CopyImagesValue}" ProgressColor="{Binding CopyImagesColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="1" Grid.Column="1" />
             </Grid>
+
+            <Label Text="Changed Resources" FontAttributes="Bold" />
             
+            <ListView ItemsSource="{Binding ChangedResources}">
+                <ListView.ItemTemplate>
+                    <DataTemplate  x:DataType="x:String">
+                        <ViewCell>
+                            <Label Text="{Binding .}" />
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
         </VerticalStackLayout>
     </ScrollView>
 

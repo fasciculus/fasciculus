@@ -15,7 +15,7 @@ namespace Fasciculus.Eve.Assets.PageModels
         private IProgressCollector progressCollector;
 
         [ObservableProperty]
-        private string downloadSdeText = "Pending";
+        private string downloadSdeText = PendingOrDoneText(PendingOrDone.Pending);
 
         [ObservableProperty]
         private Color downloadSdeColor = PendingOrDoneColor(PendingOrDone.Pending);
@@ -61,6 +61,9 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         [ObservableProperty]
         private Color copyImagesColor = PendingOrDoneColor(PendingOrDone.Pending);
+
+        [ObservableProperty]
+        private string[] changedResources = [];
 
         public ICommand StartCommand { get; init; }
 
@@ -112,6 +115,10 @@ namespace Fasciculus.Eve.Assets.PageModels
 
                 case nameof(IProgressCollector.ParseSolarSystems):
                     OnParseSolarSystemsChanged();
+                    break;
+
+                case nameof(IProgressCollector.ChangedResources):
+                    OnChangedResourcesChanged();
                     break;
             }
         }
@@ -179,6 +186,11 @@ namespace Fasciculus.Eve.Assets.PageModels
         {
             CopyImagesValue = progressCollector.CopyImages;
             CopyImagesColor = progressCollector.CopyImages == 1.0 ? DoneColor : PendingColor;
+        }
+
+        private void OnChangedResourcesChanged()
+        {
+            ChangedResources = progressCollector.ChangedResources.Select(x => x.FullName).ToArray();
         }
 
         private static string PendingOrDoneText(PendingOrDone status)

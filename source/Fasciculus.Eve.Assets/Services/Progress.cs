@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Fasciculus.Collections;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -131,6 +132,24 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
+    public class ResourceCreatorProgress : TaskSafeProgress<FileInfo>
+    {
+        private readonly IProgressCollector progressCollector;
+        private readonly TaskSafeList<FileInfo> createdResources = [];
+
+        public ResourceCreatorProgress(IProgressCollector progressCollector)
+        {
+            this.progressCollector = progressCollector;
+        }
+
+        protected override void OnReport(FileInfo value)
+        {
+            createdResources.Add(value);
+
+            progressCollector.ChangedResources = createdResources.ToArray();
+        }
+    }
+
     public interface IProgressCollector : INotifyPropertyChanged
     {
         public DownloadSdeStatus DownloadSde { get; set; }
@@ -144,6 +163,8 @@ namespace Fasciculus.Eve.Assets.Services
         public double ParseSolarSystems { get; set; }
 
         public double CopyImages { get; set; }
+
+        public FileInfo[] ChangedResources { get; set; }
     }
 
     public partial class ProgressCollector : MainThreadObservable, IProgressCollector
@@ -171,6 +192,9 @@ namespace Fasciculus.Eve.Assets.Services
 
         [ObservableProperty]
         private double copyImages;
+
+        [ObservableProperty]
+        private FileInfo[] changedResources = [];
     }
 
     public static class ProgressServices
@@ -187,6 +211,8 @@ namespace Fasciculus.Eve.Assets.Services
             services.TryAddKeyedSingleton<ILongProgress, SolarSystemsParserProgress>(ServiceKeys.SolarSystemsParser);
 
             services.TryAddKeyedSingleton<ILongProgress, ImageCopierProgress>(ServiceKeys.ImageCopier);
+
+            services.TryAddKeyedSingleton<IProgress<FileInfo>, ResourceCreatorProgress>(ServiceKeys.ResourcesCreator);
 
             services.TryAddSingleton<IProgressCollector, ProgressCollector>();
 
