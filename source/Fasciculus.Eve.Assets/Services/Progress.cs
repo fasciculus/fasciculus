@@ -26,7 +26,7 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IProgressCollector progressCollector;
 
         public ExtractSdeProgress(IProgressCollector progressCollector)
-            : base(500)
+            : base(200)
         {
             this.progressCollector = progressCollector;
         }
@@ -72,7 +72,7 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IProgressCollector progressCollector;
 
         public RegionsParserProgress(IProgressCollector progressCollector)
-            : base(500)
+            : base(200)
         {
             this.progressCollector = progressCollector;
         }
@@ -88,7 +88,7 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IProgressCollector progressCollector;
 
         public ConstellationsParserProgress(IProgressCollector progressCollector)
-            : base(500)
+            : base(200)
         {
             this.progressCollector = progressCollector;
         }
@@ -104,7 +104,7 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IProgressCollector progressCollector;
 
         public SolarSystemsParserProgress(IProgressCollector progressCollector)
-            : base(500)
+            : base(200)
         {
             this.progressCollector = progressCollector;
         }
@@ -120,7 +120,7 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IProgressCollector progressCollector;
 
         public ImageCopierProgress(IProgressCollector progressCollector)
-            : base(500)
+            : base(200)
         {
             this.progressCollector = progressCollector;
         }
