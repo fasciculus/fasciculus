@@ -43,9 +43,10 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (result is null)
             {
-                extractSde.Extract();
+                ISdeFileSystem sdeFileSystem = extractSde.Extract();
+                DirectoryInfo[] regionDirectories = sdeFileSystem.Regions;
 
-                DirectoryInfo[] regionDirectories = Start();
+                Start(regionDirectories);
 
                 result = regionDirectories.AsParallel().Select(ParseRegion).ToArray();
 
@@ -91,9 +92,8 @@ namespace Fasciculus.Eve.Assets.Services
             return solarSystem;
         }
 
-        private DirectoryInfo[] Start()
+        private DirectoryInfo[] Start(DirectoryInfo[] regionDirectories)
         {
-            DirectoryInfo[] regionDirectories = assetsDirectories.UniverseEve.GetDirectories();
             DirectoryInfo[] constellationDirectories = regionDirectories.SelectMany(d => d.GetDirectories()).ToArray();
             DirectoryInfo[] solarSystemDirectories = constellationDirectories.SelectMany(d => d.GetDirectories()).ToArray();
 
@@ -116,7 +116,6 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public static IServiceCollection AddUniverseParser(this IServiceCollection services)
         {
-            services.AddAssetsFileSystem();
             services.AddAssetsProgress();
 
             services.AddSdeZip();

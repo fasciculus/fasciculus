@@ -96,7 +96,7 @@ namespace Fasciculus.Eve.Assets.Services
         public static IServiceCollection AddImages(this IServiceCollection services)
         {
             services.AddSteam();
-            services.AddAssetsFileSystem();
+            services.AddAssetsDirectories();
             services.AddAssetsProgress();
 
             services.TryAddSingleton<IImageCopier, ImageCopier>();
