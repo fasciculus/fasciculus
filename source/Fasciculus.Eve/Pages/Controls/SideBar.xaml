@@ -5,8 +5,8 @@
                      x:Class="Fasciculus.Eve.Pages.Controls.SideBar"
                      x:DataType="pageModels:SideBarModel">
 
-    <Button Text="Info" Command="{Binding InfoCommand}" />
-    <Button Text="Market" Command="{Binding MarketCommand}" />
-    <Button Text="Map" Command="{Binding MapCommand}" />
+    <ImageButton Source="info.png" Command="{Binding InfoCommand}" IsEnabled="{Binding Ready}" />
+    <ImageButton Source="market.png" Command="{Binding MarketCommand}" IsEnabled="{Binding Ready}" />
+    <ImageButton Source="map.png" Command="{Binding MapCommand}" IsEnabled="{Binding Ready}" />
 
 </VerticalStackLayout>
