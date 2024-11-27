@@ -10,5 +10,14 @@
 
             return result;
         }
+
+        public static T[] SubArray<T>(this T[] array, int start, int count)
+        {
+            T[] result = new T[count];
+
+            Array.Copy(array, start, result, 0, count);
+
+            return result;
+        }
     }
 }
