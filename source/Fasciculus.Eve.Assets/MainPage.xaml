@@ -8,8 +8,8 @@
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+            Padding="16,16"
+            Spacing="16">
 
             <Button
                 x:Name="StartBtn"
