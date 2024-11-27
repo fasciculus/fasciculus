@@ -30,18 +30,6 @@ namespace Fasciculus.Eve.Models
         }
     }
 
-    public class EveMarketPrice
-    {
-        public EveType Type { get; }
-        public double AveragePrice { get; }
-
-        public EveMarketPrice(EveType type, double averagePrice)
-        {
-            Type = type;
-            AveragePrice = averagePrice;
-        }
-    }
-
     public class EsiMarketOrder
     {
         [JsonPropertyName("is_buy_order")]
