@@ -30,14 +30,11 @@ namespace Fasciculus.Eve.PageModels
         {
             Ready = false;
 
-            try
-            {
-                await Shell.Current.GoToAsync(url).ContinueWith(_ => { Ready = true; });
-            }
-            catch
-            {
-                Ready = true;
-            }
+            await Task.Delay(100);
+            await Shell.Current.GoToAsync(url);
+            await Task.Delay(100);
+
+            Ready = true;
         }
     }
 }
