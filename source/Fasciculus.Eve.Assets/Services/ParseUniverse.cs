@@ -1,6 +1,5 @@
 ﻿using Fasciculus.Eve.Assets.Models;
 using Fasciculus.Threading;
-using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
@@ -15,24 +14,17 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IExtractSde extractSde;
         private readonly IYaml yaml;
         private readonly IAssetsDirectories assetsDirectories;
-
         private readonly IAssetsProgress progress;
-
-        private readonly IAccumulatingLongProgress solarSystemsProgress;
 
         private SdeRegion[]? result = null;
         private readonly TaskSafeMutex resultMutex = new();
 
-        public UniverseParser(IAssetsDirectories assetsDirectories, IExtractSde extractSde, IYaml yaml,
-            IAssetsProgress progress,
-            [FromKeyedServices(ServiceKeys.SolarSystemsParser)] IAccumulatingLongProgress solarSystemsProgress)
+        public UniverseParser(IAssetsDirectories assetsDirectories, IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
         {
             this.extractSde = extractSde;
             this.yaml = yaml;
             this.assetsDirectories = assetsDirectories;
-
             this.progress = progress;
-            this.solarSystemsProgress = solarSystemsProgress;
         }
 
         public SdeRegion[] Parse()
@@ -85,7 +77,7 @@ namespace Fasciculus.Eve.Assets.Services
             FileInfo file = solarSystemDirectory.File("solarsystem.yaml");
             SdeSolarSystem solarSystem = yaml.Deserialize<SdeSolarSystem>(file);
 
-            solarSystemsProgress.Report(1);
+            progress.SolarSystemsParserProgress.Report(1);
 
             return solarSystem;
         }
@@ -97,7 +89,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             progress.RegionsParserProgress.Begin(regionDirectories.Length);
             progress.ConstellationsParserProgress.Begin(constellationDirectories.Length);
-            solarSystemsProgress.Begin(solarSystemDirectories.Length);
+            progress.SolarSystemsParserProgress.Begin(solarSystemDirectories.Length);
 
             return regionDirectories;
         }
@@ -106,7 +98,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             progress.RegionsParserProgress.End();
             progress.ConstellationsParserProgress.End();
-            solarSystemsProgress.End();
+            progress.SolarSystemsParserProgress.End();
         }
     }
 

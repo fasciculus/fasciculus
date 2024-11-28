@@ -12,6 +12,8 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ExtractSdeProgress { get; }
         public IAccumulatingLongProgress RegionsParserProgress { get; }
         public IAccumulatingLongProgress ConstellationsParserProgress { get; }
+        public IAccumulatingLongProgress SolarSystemsParserProgress { get; }
+        public IAccumulatingLongProgress ImageCopierProgress { get; }
 
         public void ReportDownloadSde(DownloadSdeStatus status);
         public void ReportParseNames(PendingOrDone status);
@@ -25,12 +27,16 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ExtractSdeProgress { get; }
         public IAccumulatingLongProgress RegionsParserProgress { get; }
         public IAccumulatingLongProgress ConstellationsParserProgress { get; }
+        public IAccumulatingLongProgress SolarSystemsParserProgress { get; }
+        public IAccumulatingLongProgress ImageCopierProgress { get; }
 
         public AssetsProgress(IProgressCollector progressCollector)
         {
             ExtractSdeProgress = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
             RegionsParserProgress = new AccumulatingLongProgress(ReportRegionsParserProgress, 100);
             ConstellationsParserProgress = new AccumulatingLongProgress(ReportConstellationsParserProgress, 100);
+            SolarSystemsParserProgress = new AccumulatingLongProgress(ReportSolarSystemsParserProgress, 100);
+            ImageCopierProgress = new AccumulatingLongProgress(ReportImageCopierProgress, 100);
 
             this.progressCollector = progressCollector;
         }
@@ -44,6 +50,12 @@ namespace Fasciculus.Eve.Assets.Services
         private void ReportConstellationsParserProgress(long _)
             => progressCollector.ParseConstellations = ConstellationsParserProgress.Progress;
 
+        private void ReportSolarSystemsParserProgress(long _)
+            => progressCollector.ParseSolarSystems = SolarSystemsParserProgress.Progress;
+
+        private void ReportImageCopierProgress(long _)
+            => progressCollector.CopyImages = ImageCopierProgress.Progress;
+
         public void ReportDownloadSde(DownloadSdeStatus status)
             => progressCollector.DownloadSde = status;
 
@@ -52,32 +64,6 @@ namespace Fasciculus.Eve.Assets.Services
 
         public void ReportParseTypes(PendingOrDone status)
             => progressCollector.ParseTypes = status;
-    }
-
-    public class SolarSystemsParserProgress : AccumulatingLongProgress
-    {
-        private readonly IProgressCollector progressCollector;
-
-        public SolarSystemsParserProgress(IProgressCollector progressCollector)
-            : base(null, 100)
-        {
-            this.progressCollector = progressCollector;
-
-            report = (_) => progressCollector.ParseSolarSystems = Progress;
-        }
-    }
-
-    public class ImageCopierProgress : AccumulatingLongProgress
-    {
-        private readonly IProgressCollector progressCollector;
-
-        public ImageCopierProgress(IProgressCollector progressCollector)
-            : base(null, 100)
-        {
-            this.progressCollector = progressCollector;
-
-            report = (_) => progressCollector.CopyImages = Progress;
-        }
     }
 
     public class ResourceCreatorProgress : TaskSafeProgress<FileInfo>
@@ -145,10 +131,6 @@ namespace Fasciculus.Eve.Assets.Services
         public static IServiceCollection AddAssetsProgress(this IServiceCollection services)
         {
             services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
-
-            services.TryAddKeyedSingleton<IAccumulatingLongProgress, SolarSystemsParserProgress>(ServiceKeys.SolarSystemsParser);
-
-            services.TryAddKeyedSingleton<IAccumulatingLongProgress, ImageCopierProgress>(ServiceKeys.ImageCopier);
 
             services.TryAddKeyedSingleton<IProgress<FileInfo>, ResourceCreatorProgress>(ServiceKeys.ResourcesCreator);
 

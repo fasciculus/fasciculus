@@ -1,7 +1,6 @@
 ﻿using Fasciculus.Steam.Models;
 using Fasciculus.Steam.Services;
 using Fasciculus.Support;
-using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
@@ -15,10 +14,9 @@ namespace Fasciculus.Eve.Assets.Services
     {
         private readonly ISteamApplications steamApplications;
         private readonly IAssetsDirectories assetsDirectories;
-        private readonly IAccumulatingLongProgress progress;
+        private readonly IAssetsProgress progress;
 
-        public ImageCopier(ISteamApplications steamApplications, IAssetsDirectories assetsDirectories,
-            [FromKeyedServices(ServiceKeys.ImageCopier)] IAccumulatingLongProgress progress)
+        public ImageCopier(ISteamApplications steamApplications, IAssetsDirectories assetsDirectories, IAssetsProgress progress)
         {
             this.steamApplications = steamApplications;
             this.assetsDirectories = assetsDirectories;
@@ -29,11 +27,11 @@ namespace Fasciculus.Eve.Assets.Services
         {
             Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
 
-            progress.Begin(entries.Length);
+            progress.ImageCopierProgress.Begin(entries.Length);
 
             entries.Apply(Copy);
 
-            progress.End();
+            progress.ImageCopierProgress.End();
         }
 
         private void Copy(Tuple<FileInfo, FileInfo> entry)
@@ -48,7 +46,7 @@ namespace Fasciculus.Eve.Assets.Services
                 source.CopyTo(destination.FullName);
             }
 
-            progress.Report(1);
+            progress.ImageCopierProgress.Report(1);
         }
 
         private Tuple<FileInfo, FileInfo>[] ParseIndex()
