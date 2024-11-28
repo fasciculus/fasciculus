@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -62,11 +63,28 @@ namespace Fasciculus.Threading
             lockable.Unlock();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Locker Lock(ILockable lockable, CancellationToken ctk = default)
         {
             lockable.Lock(ctk);
 
             return new(lockable);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Locked(ILockable lockable, Action action, CancellationToken ctk = default)
+        {
+            using Locker locker = Lock(lockable, ctk);
+
+            action();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Locked<T>(ILockable lockable, Func<T> func, CancellationToken ctk = default)
+        {
+            using Locker locker = Lock(lockable, ctk);
+
+            return func();
         }
     }
 

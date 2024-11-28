@@ -9,11 +9,7 @@ namespace Fasciculus.Utilities
         private readonly TaskSafeMutex mutex = new();
 
         public void Report(T value)
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            OnReport(value);
-        }
+            => Locker.Locked(mutex, () => OnReport(value));
 
         protected abstract void OnReport(T value);
     }
