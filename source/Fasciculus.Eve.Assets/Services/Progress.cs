@@ -12,7 +12,8 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public IAccumulatingLongProgress ExtractSdeProgress { get; }
 
-        public void ReportDownloadSde(DownloadSdeStatus value);
+        public void ReportDownloadSde(DownloadSdeStatus status);
+        public void ReportParseNames(PendingOrDone status);
     }
 
     public class AssetsProgress : IAssetsProgress
@@ -32,25 +33,11 @@ namespace Fasciculus.Eve.Assets.Services
         private void OnExtractSdeProgress(long _)
             => progressCollector.ExtractSde = ExtractSdeProgress.Progress;
 
-        public void ReportDownloadSde(DownloadSdeStatus value)
-        {
-            using Locker locker = Locker.Lock(mutex);
+        public void ReportDownloadSde(DownloadSdeStatus status)
+            => progressCollector.DownloadSde = status;
 
-            progressCollector.DownloadSde = value;
-        }
-    }
-
-    public class NamesParserProgress : TaskSafeProgress<PendingOrDone>
-    {
-        private readonly IProgressCollector progressCollector;
-
-        public NamesParserProgress(IProgressCollector progressCollector)
-            : base(null)
-        {
-            this.progressCollector = progressCollector;
-
-            report = (value) => { progressCollector.ParseNames = value; };
-        }
+        public void ReportParseNames(PendingOrDone status)
+            => progressCollector.ParseNames = status;
     }
 
     public class TypesParserProgress : TaskSafeProgress<PendingOrDone>
@@ -184,7 +171,6 @@ namespace Fasciculus.Eve.Assets.Services
         {
             services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
 
-            services.TryAddKeyedSingleton<IProgress<PendingOrDone>, NamesParserProgress>(ServiceKeys.NamesParser);
             services.TryAddKeyedSingleton<IProgress<PendingOrDone>, TypesParserProgress>(ServiceKeys.TypesParser);
 
             services.TryAddKeyedSingleton<IAccumulatingLongProgress, RegionsParserProgress>(ServiceKeys.RegionsParser);

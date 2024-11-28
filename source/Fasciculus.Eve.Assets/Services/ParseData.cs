@@ -15,16 +15,14 @@ namespace Fasciculus.Eve.Assets.Services
     {
         private readonly IExtractSde extractSde;
         private readonly IYaml yaml;
-        private readonly IProgress<PendingOrDone> progress;
 
         protected T? result = null;
         private readonly TaskSafeMutex resultMutex = new();
 
-        protected DataParserBase(IExtractSde extractSde, IYaml yaml, IProgress<PendingOrDone> progress)
+        protected DataParserBase(IExtractSde extractSde, IYaml yaml)
         {
             this.extractSde = extractSde;
             this.yaml = yaml;
-            this.progress = progress;
         }
 
         public T Parse()
@@ -35,24 +33,29 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 ISdeFileSystem sdeFileSystem = extractSde.Extract();
 
-                progress.Report(PendingOrDone.Pending);
+                Report(PendingOrDone.Pending);
                 result = Parse(yaml, sdeFileSystem);
-                progress.Report(PendingOrDone.Done);
+                Report(PendingOrDone.Done);
             }
 
             return result;
         }
 
         protected abstract T Parse(IYaml yaml, ISdeFileSystem sdeFileSystem);
+        protected abstract void Report(PendingOrDone status);
     }
 
     public interface INamesParser : IDataParserBase<Dictionary<long, string>> { }
 
     public class NamesParser : DataParserBase<Dictionary<long, string>>, INamesParser
     {
-        public NamesParser(IExtractSde extractSde, IYaml yaml,
-            [FromKeyedServices(ServiceKeys.NamesParser)] IProgress<PendingOrDone> progress)
-            : base(extractSde, yaml, progress) { }
+        private readonly IAssetsProgress progress;
+
+        public NamesParser(IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
+            : base(extractSde, yaml)
+        {
+            this.progress = progress;
+        }
 
         protected override Dictionary<long, string> Parse(IYaml yaml, ISdeFileSystem sdeFileSystem)
         {
@@ -60,20 +63,31 @@ namespace Fasciculus.Eve.Assets.Services
 
             return names.ToDictionary(name => name.ItemID, name => name.ItemName);
         }
+
+        protected override void Report(PendingOrDone status)
+            => progress.ReportParseNames(status);
     }
 
     public interface ITypesParser : IDataParserBase<Dictionary<long, SdeType>> { }
 
     public class TypesParser : DataParserBase<Dictionary<long, SdeType>>, ITypesParser
     {
+        private readonly IProgress<PendingOrDone> progress;
+
         public TypesParser(IExtractSde extractSde, IYaml yaml,
             [FromKeyedServices(ServiceKeys.TypesParser)] IProgress<PendingOrDone> progress)
-            : base(extractSde, yaml, progress) { }
+            : base(extractSde, yaml)
+        {
+            this.progress = progress;
+        }
 
         protected override Dictionary<long, SdeType> Parse(IYaml yaml, ISdeFileSystem sdeFileSystem)
         {
             return yaml.Deserialize<Dictionary<long, SdeType>>(sdeFileSystem.TypesYaml);
         }
+
+        protected override void Report(PendingOrDone status)
+            => progress.Report(status);
     }
 
     public interface IDataParser
