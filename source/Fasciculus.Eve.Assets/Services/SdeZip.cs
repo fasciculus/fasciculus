@@ -17,12 +17,12 @@ namespace Fasciculus.Eve.Assets.Services
 
         private readonly IDownloader downloader;
         private readonly IAssetsDirectories assetsDirectories;
-        private readonly IProgress<DownloadSdeStatus> progress;
+        private readonly IAssetsProgress progress;
 
         private FileInfo? result;
         private readonly TaskSafeMutex resultMutex = new();
 
-        public DownloadSde(IDownloader downloader, IAssetsDirectories assetsDirectories, IProgress<DownloadSdeStatus> progress)
+        public DownloadSde(IDownloader downloader, IAssetsDirectories assetsDirectories, IAssetsProgress progress)
         {
             this.downloader = downloader;
             this.assetsDirectories = assetsDirectories;
@@ -35,13 +35,13 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (result == null)
             {
-                progress.Report(DownloadSdeStatus.Downloading);
+                progress.ReportDownloadSde(DownloadSdeStatus.Downloading);
 
                 FileInfo destination = assetsDirectories.Downloads.File("sde.zip");
 
                 result = downloader.Download(new(SdeZipUri), destination, out bool notModified);
 
-                progress.Report(notModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
+                progress.ReportDownloadSde(notModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
             }
 
             return result;

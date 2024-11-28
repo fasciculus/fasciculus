@@ -1,23 +1,32 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Collections;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Threading;
 using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.Assets.Services
 {
-    public class DownloadSdeProgress : TaskSafeProgress<DownloadSdeStatus>
+    public interface IAssetsProgress
+    {
+        public void ReportDownloadSde(DownloadSdeStatus value);
+    }
+
+    public class AssetsProgress : IAssetsProgress
     {
         private readonly IProgressCollector progressCollector;
+        private readonly TaskSafeMutex mutex = new();
 
-        public DownloadSdeProgress(IProgressCollector progressCollector)
+        public AssetsProgress(IProgressCollector progressCollector)
         {
             this.progressCollector = progressCollector;
         }
 
-        protected override void OnReport(DownloadSdeStatus value)
+        public void ReportDownloadSde(DownloadSdeStatus value)
         {
+            using Locker locker = Locker.Lock(mutex);
+
             progressCollector.DownloadSde = value;
         }
     }
@@ -201,7 +210,8 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public static IServiceCollection AddAssetsProgress(this IServiceCollection services)
         {
-            services.TryAddSingleton<IProgress<DownloadSdeStatus>, DownloadSdeProgress>();
+            services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
+
             services.TryAddKeyedSingleton<ILongProgress, ExtractSdeProgress>(ServiceKeys.ExtractSde);
             services.TryAddKeyedSingleton<IProgress<PendingOrDone>, NamesParserProgress>(ServiceKeys.NamesParser);
             services.TryAddKeyedSingleton<IProgress<PendingOrDone>, TypesParserProgress>(ServiceKeys.TypesParser);
