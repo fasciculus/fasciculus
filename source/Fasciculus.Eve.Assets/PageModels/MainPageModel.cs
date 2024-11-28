@@ -12,7 +12,8 @@ namespace Fasciculus.Eve.Assets.PageModels
         private static Color PendingColor = Colors.Orange;
         private static Color DoneColor = Colors.Green;
 
-        private IProgressCollector progressCollector;
+        private readonly IProgressCollector progressCollector;
+        private readonly IAssetsDirectories assetsDirectories;
 
         [ObservableProperty]
         private string downloadSdeText = PendingOrDoneText(PendingOrDone.Pending);
@@ -69,10 +70,11 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private ILogger logger;
 
-        public MainPageModel(IProgressCollector progressCollector, IResourcesCreator resourcesCreator, ILogger<MainPageModel> logger)
+        public MainPageModel(IProgressCollector progressCollector, IAssetsDirectories assetsDirectories, IResourcesCreator resourcesCreator, ILogger<MainPageModel> logger)
         {
             this.progressCollector = progressCollector;
             this.progressCollector.PropertyChanged += OnProgressChanged;
+            this.assetsDirectories = assetsDirectories;
 
             StartCommand = new LongRunningCommand(() => resourcesCreator.Create());
 
@@ -81,53 +83,40 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            //logger.LogInformation("{name}: {isMainThread}", ev.PropertyName, MainThread.IsMainThread);
+            DownloadSdeText = DownloadSdeStatusText(progressCollector.DownloadSde);
+            DownloadSdeColor = DownloadSdeStatusColor(progressCollector.DownloadSde);
 
-            switch (ev.PropertyName ?? string.Empty)
-            {
-                case nameof(IProgressCollector.DownloadSde):
-                    OnDownloadSdeChanged();
-                    break;
+            ExtractSdeValue = progressCollector.ExtractSde;
+            ExtractSdeColor = progressCollector.ExtractSde == 1.0 ? DoneColor : PendingColor;
 
-                case nameof(IProgressCollector.ExtractSde):
-                    OnExtractSdeChanged();
-                    break;
+            ParseNamesText = PendingOrDoneText(progressCollector.ParseNames);
+            ParseNamesColor = PendingOrDoneColor(progressCollector.ParseNames);
 
-                case nameof(IProgressCollector.ParseNames):
-                    OnParseNamesChanged();
-                    break;
+            ParseTypesText = PendingOrDoneText(progressCollector.ParseTypes);
+            ParseTypesColor = PendingOrDoneColor(progressCollector.ParseTypes);
 
-                case nameof(IProgressCollector.ParseTypes):
-                    OnParseTypesChanged();
-                    break;
+            ParseRegionsValue = progressCollector.ParseRegions;
+            ParseRegionsColor = progressCollector.ParseRegions == 1.0 ? DoneColor : PendingColor;
 
-                case nameof(IProgressCollector.CopyImages):
-                    OnCopyImagesChanged();
-                    break;
+            ParseConstellationsValue = progressCollector.ParseConstellations;
+            ParseConstellationsColor = progressCollector.ParseConstellations == 1.0 ? DoneColor : PendingColor;
 
-                case nameof(IProgressCollector.ParseRegions):
-                    OnParseRegionsChanged();
-                    break;
+            ParseSolarSystemsValue = progressCollector.ParseSolarSystems;
+            ParseSolarSystemsColor = progressCollector.ParseSolarSystems == 1.0 ? DoneColor : PendingColor;
 
-                case nameof(IProgressCollector.ParseConstellations):
-                    OnParseConstellationsChanged();
-                    break;
+            CopyImagesValue = progressCollector.CopyImages;
+            CopyImagesColor = progressCollector.CopyImages == 1.0 ? DoneColor : PendingColor;
 
-                case nameof(IProgressCollector.ParseSolarSystems):
-                    OnParseSolarSystemsChanged();
-                    break;
+            int prefix = assetsDirectories.Resources.FullName.Length + 1;
 
-                case nameof(IProgressCollector.ChangedResources):
-                    OnChangedResourcesChanged();
-                    break;
-            }
+            ChangedResources = progressCollector.ChangedResources
+                .Select(x => x.FullName.Substring(prefix).Replace('\\', '/'))
+                .ToArray();
         }
 
-        private void OnDownloadSdeChanged()
+        private static string DownloadSdeStatusText(DownloadSdeStatus status)
         {
-            DownloadSdeStatus status = progressCollector.DownloadSde;
-
-            DownloadSdeText = status switch
+            return status switch
             {
                 DownloadSdeStatus.Pending => "Pending",
                 DownloadSdeStatus.Downloading => "Downloading",
@@ -135,8 +124,11 @@ namespace Fasciculus.Eve.Assets.PageModels
                 DownloadSdeStatus.NotModified => "Not Modified",
                 _ => string.Empty
             };
+        }
 
-            DownloadSdeColor = status switch
+        private static Color DownloadSdeStatusColor(DownloadSdeStatus status)
+        {
+            return status switch
             {
                 DownloadSdeStatus.Pending => PendingColor,
                 DownloadSdeStatus.Downloading => PendingColor,
@@ -144,53 +136,7 @@ namespace Fasciculus.Eve.Assets.PageModels
                 DownloadSdeStatus.NotModified => DoneColor,
                 _ => Colors.Black
             };
-        }
 
-        private void OnExtractSdeChanged()
-        {
-            ExtractSdeValue = progressCollector.ExtractSde;
-            ExtractSdeColor = progressCollector.ExtractSde == 1.0 ? DoneColor : PendingColor;
-        }
-
-        private void OnParseNamesChanged()
-        {
-            ParseNamesText = PendingOrDoneText(progressCollector.ParseNames);
-            ParseNamesColor = PendingOrDoneColor(progressCollector.ParseNames);
-        }
-
-        private void OnParseTypesChanged()
-        {
-            ParseTypesText = PendingOrDoneText(progressCollector.ParseTypes);
-            ParseTypesColor = PendingOrDoneColor(progressCollector.ParseTypes);
-        }
-
-        private void OnParseRegionsChanged()
-        {
-            ParseRegionsValue = progressCollector.ParseRegions;
-            ParseRegionsColor = progressCollector.ParseRegions == 1.0 ? DoneColor : PendingColor;
-        }
-
-        private void OnParseConstellationsChanged()
-        {
-            ParseConstellationsValue = progressCollector.ParseConstellations;
-            ParseConstellationsColor = progressCollector.ParseConstellations == 1.0 ? DoneColor : PendingColor;
-        }
-
-        private void OnParseSolarSystemsChanged()
-        {
-            ParseSolarSystemsValue = progressCollector.ParseSolarSystems;
-            ParseSolarSystemsColor = progressCollector.ParseSolarSystems == 1.0 ? DoneColor : PendingColor;
-        }
-
-        private void OnCopyImagesChanged()
-        {
-            CopyImagesValue = progressCollector.CopyImages;
-            CopyImagesColor = progressCollector.CopyImages == 1.0 ? DoneColor : PendingColor;
-        }
-
-        private void OnChangedResourcesChanged()
-        {
-            ChangedResources = progressCollector.ChangedResources.Select(x => x.FullName).ToArray();
         }
 
         private static string PendingOrDoneText(PendingOrDone status)
