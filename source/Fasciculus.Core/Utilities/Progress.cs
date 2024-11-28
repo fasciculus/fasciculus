@@ -31,7 +31,7 @@ namespace Fasciculus.Utilities
 
     public abstract class LongProgress : TaskSafeProgress<long>, ILongProgress
     {
-        private TaskSafeMutex mutex = new();
+        private readonly TaskSafeMutex mutex = new();
 
         private long total;
         private long current;
