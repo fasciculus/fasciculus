@@ -98,11 +98,10 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IAssetsDirectories assetsDirectories;
         private readonly IResourceWriter resourceWriter;
 
-        private readonly IProgress<FileInfo> progress;
+        private readonly IAssetsProgress progress;
 
         public ResourcesCreator(IDataParser dataParser, IUniverseParser universeParser, IImageCopier imageCopier,
-            IAssetsDirectories assetsDirectories, IResourceWriter resourceWriter,
-            [FromKeyedServices(ServiceKeys.ResourcesCreator)] IProgress<FileInfo> progress)
+            IAssetsDirectories assetsDirectories, IResourceWriter resourceWriter, IAssetsProgress progress)
         {
             this.dataParser = dataParser;
             this.universeParser = universeParser;
@@ -132,7 +131,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (resourceWriter.Write(stream.ToArray(), file, false))
             {
-                progress.Report(file);
+                progress.ResourceCreatorProgress.Report([file]);
             }
         }
 

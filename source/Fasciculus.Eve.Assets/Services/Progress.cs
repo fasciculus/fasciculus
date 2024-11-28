@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Fasciculus.Collections;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Support;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -14,6 +13,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ConstellationsParserProgress { get; }
         public IAccumulatingLongProgress SolarSystemsParserProgress { get; }
         public IAccumulatingLongProgress ImageCopierProgress { get; }
+        public IAccumulatingProgress<List<FileInfo>> ResourceCreatorProgress { get; }
 
         public void ReportDownloadSde(DownloadSdeStatus status);
         public void ReportParseNames(PendingOrDone status);
@@ -29,6 +29,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ConstellationsParserProgress { get; }
         public IAccumulatingLongProgress SolarSystemsParserProgress { get; }
         public IAccumulatingLongProgress ImageCopierProgress { get; }
+        public IAccumulatingProgress<List<FileInfo>> ResourceCreatorProgress { get; }
 
         public AssetsProgress(IProgressCollector progressCollector)
         {
@@ -37,6 +38,9 @@ namespace Fasciculus.Eve.Assets.Services
             ConstellationsParserProgress = new AccumulatingLongProgress(ReportConstellationsParserProgress, 100);
             SolarSystemsParserProgress = new AccumulatingLongProgress(ReportSolarSystemsParserProgress, 100);
             ImageCopierProgress = new AccumulatingLongProgress(ReportImageCopierProgress, 100);
+
+            ResourceCreatorProgress = new AccumulatingProgress<List<FileInfo>>(ReportResourceCreatorProgress,
+                AccumulateResourceCreatorProgress, [], []);
 
             this.progressCollector = progressCollector;
         }
@@ -56,6 +60,12 @@ namespace Fasciculus.Eve.Assets.Services
         private void ReportImageCopierProgress(long _)
             => progressCollector.CopyImages = ImageCopierProgress.Progress;
 
+        private List<FileInfo> AccumulateResourceCreatorProgress(List<FileInfo> current, List<FileInfo> value)
+            => current.Concat(value).ToList();
+
+        private void ReportResourceCreatorProgress(List<FileInfo> files)
+            => progressCollector.ChangedResources = files.ToArray();
+
         public void ReportDownloadSde(DownloadSdeStatus status)
             => progressCollector.DownloadSde = status;
 
@@ -64,19 +74,6 @@ namespace Fasciculus.Eve.Assets.Services
 
         public void ReportParseTypes(PendingOrDone status)
             => progressCollector.ParseTypes = status;
-    }
-
-    public class ResourceCreatorProgress : TaskSafeProgress<FileInfo>
-    {
-        private readonly IProgressCollector progressCollector;
-        private readonly TaskSafeList<FileInfo> createdResources = [];
-
-        public ResourceCreatorProgress(IProgressCollector progressCollector)
-        {
-            this.progressCollector = progressCollector;
-
-            report = (file) => { createdResources.Add(file); progressCollector.ChangedResources = createdResources.ToArray(); };
-        }
     }
 
     public interface IProgressCollector : INotifyPropertyChanged
@@ -131,9 +128,6 @@ namespace Fasciculus.Eve.Assets.Services
         public static IServiceCollection AddAssetsProgress(this IServiceCollection services)
         {
             services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
-
-            services.TryAddKeyedSingleton<IProgress<FileInfo>, ResourceCreatorProgress>(ServiceKeys.ResourcesCreator);
-
             services.TryAddSingleton<IProgressCollector, ProgressCollector>();
 
             return services;
