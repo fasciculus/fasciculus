@@ -5,18 +5,27 @@ using Fasciculus.Threading;
 using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Fasciculus.Eve.Assets.Services
 {
     public interface IAssetsProgress
     {
         public void ReportDownloadSde(DownloadSdeStatus value);
+
+        public void StartExtractSde(long total);
+        public void StopExtractSde();
+        public void ReportExtractSde();
     }
 
     public class AssetsProgress : IAssetsProgress
     {
         private readonly IProgressCollector progressCollector;
         private readonly TaskSafeMutex mutex = new();
+
+        private readonly Stopwatch extractSdeStopwatch = new Stopwatch();
+        private long totalExtractSde;
+        private long currentExtractSde;
 
         public AssetsProgress(IProgressCollector progressCollector)
         {
@@ -28,6 +37,39 @@ namespace Fasciculus.Eve.Assets.Services
             using Locker locker = Locker.Lock(mutex);
 
             progressCollector.DownloadSde = value;
+        }
+
+        public void StartExtractSde(long total)
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            totalExtractSde = total;
+            currentExtractSde = 0;
+            extractSdeStopwatch.Restart();
+        }
+
+        public void StopExtractSde()
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            currentExtractSde = totalExtractSde;
+            extractSdeStopwatch.Stop();
+
+            progressCollector.ExtractSde = 1.0;
+        }
+
+        public void ReportExtractSde()
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            ++currentExtractSde;
+
+            if (extractSdeStopwatch.ElapsedMilliseconds > 100)
+            {
+                extractSdeStopwatch.Restart();
+
+                progressCollector.ExtractSde = (1.0 * currentExtractSde) / totalExtractSde;
+            }
         }
     }
 
