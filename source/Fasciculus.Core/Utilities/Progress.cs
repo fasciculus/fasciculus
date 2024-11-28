@@ -73,8 +73,6 @@ namespace Fasciculus.Utilities
         {
             using Locker locker = Locker.Lock(mutex);
 
-            Current = Total;
-
             stopwatch.Stop();
 
             DoReport(true);
