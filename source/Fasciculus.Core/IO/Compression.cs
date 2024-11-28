@@ -12,7 +12,7 @@ namespace Fasciculus.IO
 {
     public interface ICompression
     {
-        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, ILongProgress progress);
+        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IAccumulatingLongProgress progress);
 
         public void GZip(Stream uncompressed, Stream compressed);
         public void UnGZip(Stream compressed, Stream uncompressed);
@@ -20,7 +20,7 @@ namespace Fasciculus.IO
 
     public class Compression : ICompression
     {
-        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, ILongProgress progress)
+        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IAccumulatingLongProgress progress)
         {
             using Stream stream = zipFile.OpenRead();
             using ZipArchive archive = new(stream, ZipArchiveMode.Read);
@@ -28,14 +28,14 @@ namespace Fasciculus.IO
             ZipArchiveEntry[] entries = archive.Entries.Where(entry => IsUnzipRequired(entry, outputDirectory, overwrite)).ToArray();
             long total = entries.Sum(entry => entry.Length);
 
-            progress.Start(total);
+            progress.Begin(total);
 
             entries.Apply(entry => UnzipEntry(archive, entry.FullName, outputDirectory, progress));
 
-            progress.Done();
+            progress.End();
         }
 
-        private void UnzipEntry(ZipArchive archive, string entryFullName, DirectoryInfo outputDirectory, ILongProgress progress)
+        private void UnzipEntry(ZipArchive archive, string entryFullName, DirectoryInfo outputDirectory, IAccumulatingLongProgress progress)
         {
             ZipArchiveEntry entry = archive.GetEntry(entryFullName);
             FileInfo outputFile = PrepareUnzipOutputFile(entryFullName, outputDirectory);

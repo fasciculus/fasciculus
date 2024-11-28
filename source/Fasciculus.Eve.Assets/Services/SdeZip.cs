@@ -85,13 +85,13 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IDownloadSde downloadSde;
         private readonly IAssetsDirectories assetsDirectories;
         private readonly ICompression compression;
-        private readonly ILongProgress progress;
+        private readonly IAccumulatingLongProgress progress;
 
         private ISdeFileSystem? result = null;
         private TaskSafeMutex resultMutex = new();
 
         public ExtractSde(IDownloadSde downloadSde, IAssetsDirectories assetsDirectories, ICompression compression,
-            [FromKeyedServices(ServiceKeys.ExtractSde)] ILongProgress progress)
+            [FromKeyedServices(ServiceKeys.ExtractSde)] IAccumulatingLongProgress progress)
         {
             this.downloadSde = downloadSde;
             this.assetsDirectories = assetsDirectories;

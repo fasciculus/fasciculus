@@ -1,98 +1,144 @@
-﻿using Fasciculus.Threading;
+﻿using Fasciculus.Support;
+using Fasciculus.Threading;
 using System;
 using System.Diagnostics;
 
 namespace Fasciculus.Utilities
 {
-    public abstract class TaskSafeProgress<T> : IProgress<T>
+    public class TaskSafeProgress<T> : IProgress<T>
     {
-        private readonly TaskSafeMutex mutex = new();
+        protected readonly ReentrantTaskSafeMutex mutex = new();
 
-        public void Report(T value)
-            => Locker.Locked(mutex, () => OnReport(value));
+        protected Action<T>? report;
 
-        protected abstract void OnReport(T value);
+        public TaskSafeProgress(Action<T>? report = null)
+        {
+            this.report = report;
+        }
+
+        public virtual void Report(T value)
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            Cond.NotNull(report)(value);
+        }
     }
 
-    public interface ILongProgress : IProgress<long>
+    public interface IAccumulatingProgress<T> : IProgress<T>
     {
-        public long Total { get; }
-        public long Current { get; }
+        public T Total { get; }
+        public T Current { get; }
 
+        public void Begin(T total);
+        public void End();
+    }
+
+    public class AccumulatingProgress<T> : TaskSafeProgress<T>, IAccumulatingProgress<T>
+        where T : notnull
+    {
+        private readonly Func<T, T, T>? accumulate;
+        private readonly T start;
+
+        private readonly Stopwatch stopwatch = new();
+        private readonly long interval;
+
+        public T Total { get; private set; }
+        public T Current { get; private set; }
+
+        public AccumulatingProgress(Action<T>? report, Func<T, T, T>? accumulate, T total, T start, long interval = 0)
+            : base(report)
+        {
+            this.accumulate = accumulate;
+            this.start = start;
+
+            this.interval = interval;
+
+            Total = total;
+            Current = start;
+        }
+
+        public void Begin(T total)
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            Total = total;
+            Current = start;
+
+            stopwatch.Restart();
+
+            DoReport(true);
+        }
+
+        public void End()
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            Current = Total;
+
+            stopwatch.Stop();
+
+            DoReport(true);
+        }
+
+        public override void Report(T value)
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            Current = Accumulate(Current, value);
+
+            DoReport(false);
+        }
+
+        private void DoReport(bool forced)
+        {
+            if (forced)
+            {
+                base.Report(Current);
+            }
+
+            if (stopwatch.ElapsedMilliseconds >= interval)
+            {
+                stopwatch.Restart();
+
+                base.Report(Current);
+            }
+        }
+
+        protected virtual T Accumulate(T current, T value)
+        {
+            return Cond.NotNull(accumulate)(current, value);
+        }
+    }
+
+    public interface IAccumulatingLongProgress : IAccumulatingProgress<long>
+    {
         public double Progress { get; }
-
-        public void Start(long total);
-        public void Done();
     }
 
-    public abstract class LongProgress : TaskSafeProgress<long>, ILongProgress
+    public class AccumulatingLongProgress : AccumulatingProgress<long>, IAccumulatingLongProgress
     {
-        private readonly TaskSafeMutex mutex = new();
-
-        private long total;
-        private long current;
-
-        private long interval;
-        private Stopwatch stopwatch = new();
-
-        public long Total => total;
-        public long Current => current;
-
         public double Progress
         {
             get
             {
-                double progress = 1.0;
+                double progress = 1;
 
-                if (total > 0 && current != total)
+                if (Total > 0 && Current < Total)
                 {
-                    progress *= current;
-                    progress /= total;
+                    progress *= Current;
+                    progress /= Total;
                 }
 
                 return progress;
             }
         }
 
-        protected LongProgress(long interval)
+        public AccumulatingLongProgress(Action<long>? report, long interval = 0)
+            : base(report, null, 0, 0, interval)
         {
-            this.interval = interval;
         }
 
-        public void Start(long total)
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            this.total = total;
-            current = 0;
-
-            stopwatch.Restart();
-
-            OnProgress();
-        }
-
-        public void Done()
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            current = total;
-
-            OnProgress();
-        }
-
-        protected override void OnReport(long value)
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            current += value;
-
-            if (stopwatch.ElapsedMilliseconds > interval)
-            {
-                stopwatch.Restart();
-                OnProgress();
-            }
-        }
-
-        protected abstract void OnProgress();
+        protected override long Accumulate(long current, long value)
+            => current + value;
     }
 }

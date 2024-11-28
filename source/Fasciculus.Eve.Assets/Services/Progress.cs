@@ -73,19 +73,16 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
-    public class ExtractSdeProgress : LongProgress
+    public class ExtractSdeProgress : AccumulatingLongProgress
     {
         private readonly IProgressCollector progressCollector;
 
         public ExtractSdeProgress(IProgressCollector progressCollector)
-            : base(200)
+            : base(null, 100)
         {
             this.progressCollector = progressCollector;
-        }
 
-        protected override void OnProgress()
-        {
-            progressCollector.ExtractSde = Progress;
+            report = (_) => { progressCollector.ExtractSde = Progress; };
         }
     }
 
@@ -94,13 +91,11 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IProgressCollector progressCollector;
 
         public NamesParserProgress(IProgressCollector progressCollector)
+            : base(null)
         {
             this.progressCollector = progressCollector;
-        }
 
-        protected override void OnReport(PendingOrDone value)
-        {
-            progressCollector.ParseNames = value;
+            report = (value) => { progressCollector.ParseNames = value; };
         }
     }
 
@@ -109,77 +104,63 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IProgressCollector progressCollector;
 
         public TypesParserProgress(IProgressCollector progressCollector)
+            : base(null)
         {
             this.progressCollector = progressCollector;
-        }
 
-        protected override void OnReport(PendingOrDone value)
-        {
-            progressCollector.ParseTypes = value;
+            report = (value) => { progressCollector.ParseTypes = value; };
         }
     }
 
-    public class RegionsParserProgress : LongProgress
+    public class RegionsParserProgress : AccumulatingLongProgress
     {
         private readonly IProgressCollector progressCollector;
 
         public RegionsParserProgress(IProgressCollector progressCollector)
-            : base(200)
+            : base(null, 100)
         {
             this.progressCollector = progressCollector;
-        }
 
-        protected override void OnProgress()
-        {
-            progressCollector.ParseRegions = Progress;
+            report = (_) => progressCollector.ParseRegions = Progress;
         }
     }
 
-    public class ConstellationsParserProgress : LongProgress
+    public class ConstellationsParserProgress : AccumulatingLongProgress
     {
         private readonly IProgressCollector progressCollector;
 
         public ConstellationsParserProgress(IProgressCollector progressCollector)
-            : base(200)
+            : base(null, 200)
         {
             this.progressCollector = progressCollector;
-        }
 
-        protected override void OnProgress()
-        {
-            progressCollector.ParseConstellations = Progress;
+            report = (_) => progressCollector.ParseConstellations = Progress;
         }
     }
 
-    public class SolarSystemsParserProgress : LongProgress
+    public class SolarSystemsParserProgress : AccumulatingLongProgress
     {
         private readonly IProgressCollector progressCollector;
 
         public SolarSystemsParserProgress(IProgressCollector progressCollector)
-            : base(200)
+            : base(null, 100)
         {
             this.progressCollector = progressCollector;
-        }
 
-        protected override void OnProgress()
-        {
-            progressCollector.ParseSolarSystems = Progress;
+            report = (_) => progressCollector.ParseSolarSystems = Progress;
         }
     }
 
-    public class ImageCopierProgress : LongProgress
+    public class ImageCopierProgress : AccumulatingLongProgress
     {
         private readonly IProgressCollector progressCollector;
 
         public ImageCopierProgress(IProgressCollector progressCollector)
-            : base(200)
+            : base(null, 100)
         {
             this.progressCollector = progressCollector;
-        }
 
-        protected override void OnProgress()
-        {
-            progressCollector.CopyImages = Progress;
+            report = (_) => progressCollector.CopyImages = Progress;
         }
     }
 
@@ -191,13 +172,8 @@ namespace Fasciculus.Eve.Assets.Services
         public ResourceCreatorProgress(IProgressCollector progressCollector)
         {
             this.progressCollector = progressCollector;
-        }
 
-        protected override void OnReport(FileInfo value)
-        {
-            createdResources.Add(value);
-
-            progressCollector.ChangedResources = createdResources.ToArray();
+            report = (file) => { createdResources.Add(file); progressCollector.ChangedResources = createdResources.ToArray(); };
         }
     }
 
@@ -254,15 +230,15 @@ namespace Fasciculus.Eve.Assets.Services
         {
             services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
 
-            services.TryAddKeyedSingleton<ILongProgress, ExtractSdeProgress>(ServiceKeys.ExtractSde);
+            services.TryAddKeyedSingleton<IAccumulatingLongProgress, ExtractSdeProgress>(ServiceKeys.ExtractSde);
             services.TryAddKeyedSingleton<IProgress<PendingOrDone>, NamesParserProgress>(ServiceKeys.NamesParser);
             services.TryAddKeyedSingleton<IProgress<PendingOrDone>, TypesParserProgress>(ServiceKeys.TypesParser);
 
-            services.TryAddKeyedSingleton<ILongProgress, RegionsParserProgress>(ServiceKeys.RegionsParser);
-            services.TryAddKeyedSingleton<ILongProgress, ConstellationsParserProgress>(ServiceKeys.ConstellationsParser);
-            services.TryAddKeyedSingleton<ILongProgress, SolarSystemsParserProgress>(ServiceKeys.SolarSystemsParser);
+            services.TryAddKeyedSingleton<IAccumulatingLongProgress, RegionsParserProgress>(ServiceKeys.RegionsParser);
+            services.TryAddKeyedSingleton<IAccumulatingLongProgress, ConstellationsParserProgress>(ServiceKeys.ConstellationsParser);
+            services.TryAddKeyedSingleton<IAccumulatingLongProgress, SolarSystemsParserProgress>(ServiceKeys.SolarSystemsParser);
 
-            services.TryAddKeyedSingleton<ILongProgress, ImageCopierProgress>(ServiceKeys.ImageCopier);
+            services.TryAddKeyedSingleton<IAccumulatingLongProgress, ImageCopierProgress>(ServiceKeys.ImageCopier);
 
             services.TryAddKeyedSingleton<IProgress<FileInfo>, ResourceCreatorProgress>(ServiceKeys.ResourcesCreator);
 

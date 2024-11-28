@@ -16,17 +16,17 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IYaml yaml;
         private readonly IAssetsDirectories assetsDirectories;
 
-        private readonly ILongProgress regionsProgress;
-        private readonly ILongProgress constellationsProgress;
-        private readonly ILongProgress solarSystemsProgress;
+        private readonly IAccumulatingLongProgress regionsProgress;
+        private readonly IAccumulatingLongProgress constellationsProgress;
+        private readonly IAccumulatingLongProgress solarSystemsProgress;
 
         private SdeRegion[]? result = null;
         private readonly TaskSafeMutex resultMutex = new();
 
         public UniverseParser(IAssetsDirectories assetsDirectories, IExtractSde extractSde, IYaml yaml,
-            [FromKeyedServices(ServiceKeys.RegionsParser)] ILongProgress regionsProgress,
-            [FromKeyedServices(ServiceKeys.ConstellationsParser)] ILongProgress constellationsProgress,
-            [FromKeyedServices(ServiceKeys.SolarSystemsParser)] ILongProgress solarSystemsProgress)
+            [FromKeyedServices(ServiceKeys.RegionsParser)] IAccumulatingLongProgress regionsProgress,
+            [FromKeyedServices(ServiceKeys.ConstellationsParser)] IAccumulatingLongProgress constellationsProgress,
+            [FromKeyedServices(ServiceKeys.SolarSystemsParser)] IAccumulatingLongProgress solarSystemsProgress)
         {
             this.extractSde = extractSde;
             this.yaml = yaml;
@@ -97,18 +97,18 @@ namespace Fasciculus.Eve.Assets.Services
             DirectoryInfo[] constellationDirectories = regionDirectories.SelectMany(d => d.GetDirectories()).ToArray();
             DirectoryInfo[] solarSystemDirectories = constellationDirectories.SelectMany(d => d.GetDirectories()).ToArray();
 
-            regionsProgress.Start(regionDirectories.Length);
-            constellationsProgress.Start(constellationDirectories.Length);
-            solarSystemsProgress.Start(solarSystemDirectories.Length);
+            regionsProgress.Begin(regionDirectories.Length);
+            constellationsProgress.Begin(constellationDirectories.Length);
+            solarSystemsProgress.Begin(solarSystemDirectories.Length);
 
             return regionDirectories;
         }
 
         private void Done()
         {
-            regionsProgress.Done();
-            constellationsProgress.Done();
-            solarSystemsProgress.Done();
+            regionsProgress.End();
+            constellationsProgress.End();
+            solarSystemsProgress.End();
         }
     }
 
