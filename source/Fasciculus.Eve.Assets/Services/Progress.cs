@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Collections;
 using Fasciculus.Maui.ComponentModel;
-using Fasciculus.Threading;
 using Fasciculus.Utilities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
@@ -11,6 +10,7 @@ namespace Fasciculus.Eve.Assets.Services
     public interface IAssetsProgress
     {
         public IAccumulatingLongProgress ExtractSdeProgress { get; }
+        public IAccumulatingLongProgress RegionsParserProgress { get; }
 
         public void ReportDownloadSde(DownloadSdeStatus status);
         public void ReportParseNames(PendingOrDone status);
@@ -20,19 +20,23 @@ namespace Fasciculus.Eve.Assets.Services
     public class AssetsProgress : IAssetsProgress
     {
         private readonly IProgressCollector progressCollector;
-        private readonly ReentrantTaskSafeMutex mutex = new();
 
         public IAccumulatingLongProgress ExtractSdeProgress { get; }
+        public IAccumulatingLongProgress RegionsParserProgress { get; }
 
         public AssetsProgress(IProgressCollector progressCollector)
         {
-            ExtractSdeProgress = new AccumulatingLongProgress(OnExtractSdeProgress, 100);
+            ExtractSdeProgress = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
+            RegionsParserProgress = new AccumulatingLongProgress(ReportRegionsParserProgress, 100);
 
             this.progressCollector = progressCollector;
         }
 
-        private void OnExtractSdeProgress(long _)
+        private void ReportExtractSdeProgress(long _)
             => progressCollector.ExtractSde = ExtractSdeProgress.Progress;
+
+        private void ReportRegionsParserProgress(long _)
+            => progressCollector.ParseRegions = RegionsParserProgress.Progress;
 
         public void ReportDownloadSde(DownloadSdeStatus status)
             => progressCollector.DownloadSde = status;
@@ -42,19 +46,6 @@ namespace Fasciculus.Eve.Assets.Services
 
         public void ReportParseTypes(PendingOrDone status)
             => progressCollector.ParseTypes = status;
-    }
-
-    public class RegionsParserProgress : AccumulatingLongProgress
-    {
-        private readonly IProgressCollector progressCollector;
-
-        public RegionsParserProgress(IProgressCollector progressCollector)
-            : base(null, 100)
-        {
-            this.progressCollector = progressCollector;
-
-            report = (_) => progressCollector.ParseRegions = Progress;
-        }
     }
 
     public class ConstellationsParserProgress : AccumulatingLongProgress
@@ -162,7 +153,6 @@ namespace Fasciculus.Eve.Assets.Services
         {
             services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
 
-            services.TryAddKeyedSingleton<IAccumulatingLongProgress, RegionsParserProgress>(ServiceKeys.RegionsParser);
             services.TryAddKeyedSingleton<IAccumulatingLongProgress, ConstellationsParserProgress>(ServiceKeys.ConstellationsParser);
             services.TryAddKeyedSingleton<IAccumulatingLongProgress, SolarSystemsParserProgress>(ServiceKeys.SolarSystemsParser);
 

@@ -2,7 +2,6 @@
 {
     public static class ServiceKeys
     {
-        public const string RegionsParser = "RegionsParser";
         public const string ConstellationsParser = "ConstellationsParser";
         public const string SolarSystemsParser = "SolarSystemsParser";
 
