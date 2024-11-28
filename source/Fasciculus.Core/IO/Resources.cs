@@ -1,4 +1,4 @@
-﻿using Fasciculus.Validating;
+﻿using Fasciculus.Support;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -8,6 +8,13 @@ using System.Reflection;
 
 namespace Fasciculus.IO
 {
+    public class ResourceNotFoundException : IOException
+    {
+        public ResourceNotFoundException() { }
+
+        public ResourceNotFoundException(string name) : base(name) { }
+    }
+
     public interface IEmbeddedResource
     {
         public T Read<T>(Func<Stream, T> read, bool compressed);

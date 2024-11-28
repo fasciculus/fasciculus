@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fasciculus.Validating
+namespace Fasciculus.Support
 {
     public static class Cond
     {
