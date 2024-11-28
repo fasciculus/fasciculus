@@ -39,8 +39,10 @@ namespace Fasciculus.Utilities
         private readonly Func<T, T, T>? accumulate;
         private readonly T start;
 
-        private readonly Stopwatch stopwatch = new();
         private readonly long interval;
+        private readonly Stopwatch? stopwatch;
+
+        private long ElapsedTime => stopwatch?.ElapsedMilliseconds ?? 0;
 
         public T Total { get; private set; }
         public T Current { get; private set; }
@@ -52,6 +54,7 @@ namespace Fasciculus.Utilities
             this.start = start;
 
             this.interval = interval;
+            stopwatch = interval > 0 ? new() : null;
 
             Total = total;
             Current = start;
@@ -64,7 +67,7 @@ namespace Fasciculus.Utilities
             Total = total;
             Current = start;
 
-            stopwatch.Restart();
+            stopwatch?.Restart();
 
             DoReport(true);
         }
@@ -73,7 +76,7 @@ namespace Fasciculus.Utilities
         {
             using Locker locker = Locker.Lock(mutex);
 
-            stopwatch.Stop();
+            stopwatch?.Stop();
 
             DoReport(true);
         }
@@ -94,9 +97,9 @@ namespace Fasciculus.Utilities
                 base.Report(Current);
             }
 
-            if (stopwatch.ElapsedMilliseconds >= interval)
+            if (ElapsedTime >= interval)
             {
-                stopwatch.Restart();
+                stopwatch?.Restart();
 
                 base.Report(Current);
             }
