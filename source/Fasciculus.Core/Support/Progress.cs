@@ -1,9 +1,8 @@
-﻿using Fasciculus.Support;
-using Fasciculus.Threading;
+﻿using Fasciculus.Threading;
 using System;
 using System.Diagnostics;
 
-namespace Fasciculus.Utilities
+namespace Fasciculus.Support
 {
     public class TaskSafeProgress<T> : IProgress<T>
     {

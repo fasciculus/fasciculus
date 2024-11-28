@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Collections;
 using Fasciculus.Maui.ComponentModel;
-using Fasciculus.Utilities;
+using Fasciculus.Support;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
 
