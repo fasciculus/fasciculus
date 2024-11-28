@@ -72,10 +72,9 @@ namespace Fasciculus.Eve.Assets.Services
 
     public class TypesParser : DataParserBase<Dictionary<long, SdeType>>, ITypesParser
     {
-        private readonly IProgress<PendingOrDone> progress;
+        private readonly IAssetsProgress progress;
 
-        public TypesParser(IExtractSde extractSde, IYaml yaml,
-            [FromKeyedServices(ServiceKeys.TypesParser)] IProgress<PendingOrDone> progress)
+        public TypesParser(IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
             : base(extractSde, yaml)
         {
             this.progress = progress;
@@ -87,7 +86,7 @@ namespace Fasciculus.Eve.Assets.Services
         }
 
         protected override void Report(PendingOrDone status)
-            => progress.Report(status);
+            => progress.ReportParseTypes(status);
     }
 
     public interface IDataParser

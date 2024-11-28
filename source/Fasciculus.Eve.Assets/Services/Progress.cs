@@ -14,6 +14,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         public void ReportDownloadSde(DownloadSdeStatus status);
         public void ReportParseNames(PendingOrDone status);
+        public void ReportParseTypes(PendingOrDone status);
     }
 
     public class AssetsProgress : IAssetsProgress
@@ -38,19 +39,9 @@ namespace Fasciculus.Eve.Assets.Services
 
         public void ReportParseNames(PendingOrDone status)
             => progressCollector.ParseNames = status;
-    }
 
-    public class TypesParserProgress : TaskSafeProgress<PendingOrDone>
-    {
-        private readonly IProgressCollector progressCollector;
-
-        public TypesParserProgress(IProgressCollector progressCollector)
-            : base(null)
-        {
-            this.progressCollector = progressCollector;
-
-            report = (value) => { progressCollector.ParseTypes = value; };
-        }
+        public void ReportParseTypes(PendingOrDone status)
+            => progressCollector.ParseTypes = status;
     }
 
     public class RegionsParserProgress : AccumulatingLongProgress
@@ -170,8 +161,6 @@ namespace Fasciculus.Eve.Assets.Services
         public static IServiceCollection AddAssetsProgress(this IServiceCollection services)
         {
             services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
-
-            services.TryAddKeyedSingleton<IProgress<PendingOrDone>, TypesParserProgress>(ServiceKeys.TypesParser);
 
             services.TryAddKeyedSingleton<IAccumulatingLongProgress, RegionsParserProgress>(ServiceKeys.RegionsParser);
             services.TryAddKeyedSingleton<IAccumulatingLongProgress, ConstellationsParserProgress>(ServiceKeys.ConstellationsParser);
