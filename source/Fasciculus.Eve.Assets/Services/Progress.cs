@@ -11,6 +11,7 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public IAccumulatingLongProgress ExtractSdeProgress { get; }
         public IAccumulatingLongProgress RegionsParserProgress { get; }
+        public IAccumulatingLongProgress ConstellationsParserProgress { get; }
 
         public void ReportDownloadSde(DownloadSdeStatus status);
         public void ReportParseNames(PendingOrDone status);
@@ -23,11 +24,13 @@ namespace Fasciculus.Eve.Assets.Services
 
         public IAccumulatingLongProgress ExtractSdeProgress { get; }
         public IAccumulatingLongProgress RegionsParserProgress { get; }
+        public IAccumulatingLongProgress ConstellationsParserProgress { get; }
 
         public AssetsProgress(IProgressCollector progressCollector)
         {
             ExtractSdeProgress = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
             RegionsParserProgress = new AccumulatingLongProgress(ReportRegionsParserProgress, 100);
+            ConstellationsParserProgress = new AccumulatingLongProgress(ReportConstellationsParserProgress, 100);
 
             this.progressCollector = progressCollector;
         }
@@ -38,6 +41,9 @@ namespace Fasciculus.Eve.Assets.Services
         private void ReportRegionsParserProgress(long _)
             => progressCollector.ParseRegions = RegionsParserProgress.Progress;
 
+        private void ReportConstellationsParserProgress(long _)
+            => progressCollector.ParseConstellations = ConstellationsParserProgress.Progress;
+
         public void ReportDownloadSde(DownloadSdeStatus status)
             => progressCollector.DownloadSde = status;
 
@@ -46,19 +52,6 @@ namespace Fasciculus.Eve.Assets.Services
 
         public void ReportParseTypes(PendingOrDone status)
             => progressCollector.ParseTypes = status;
-    }
-
-    public class ConstellationsParserProgress : AccumulatingLongProgress
-    {
-        private readonly IProgressCollector progressCollector;
-
-        public ConstellationsParserProgress(IProgressCollector progressCollector)
-            : base(null, 200)
-        {
-            this.progressCollector = progressCollector;
-
-            report = (_) => progressCollector.ParseConstellations = Progress;
-        }
     }
 
     public class SolarSystemsParserProgress : AccumulatingLongProgress
@@ -153,7 +146,6 @@ namespace Fasciculus.Eve.Assets.Services
         {
             services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
 
-            services.TryAddKeyedSingleton<IAccumulatingLongProgress, ConstellationsParserProgress>(ServiceKeys.ConstellationsParser);
             services.TryAddKeyedSingleton<IAccumulatingLongProgress, SolarSystemsParserProgress>(ServiceKeys.SolarSystemsParser);
 
             services.TryAddKeyedSingleton<IAccumulatingLongProgress, ImageCopierProgress>(ServiceKeys.ImageCopier);
