@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Models;
 using Fasciculus.Support;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;

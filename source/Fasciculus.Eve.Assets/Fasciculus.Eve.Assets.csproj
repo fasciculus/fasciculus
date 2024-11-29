@@ -30,14 +30,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" />
 		<PackageReference Include="Microsoft.Maui.Controls" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
     <PackageReference Include="YamlDotNet" />
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Maui/Fasciculus.Maui.csproj" />
     <ProjectReference Include="../Fasciculus.Steam/Fasciculus.Steam.csproj" />
   </ItemGroup>
 

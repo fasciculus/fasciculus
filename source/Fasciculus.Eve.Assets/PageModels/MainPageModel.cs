@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Assets.Services;
-using Fasciculus.Maui.Input;
+using Fasciculus.Support;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -9,8 +9,8 @@ namespace Fasciculus.Eve.Assets.PageModels
 {
     public partial class MainPageModel : ObservableObject
     {
-        private static Color PendingColor = Colors.Orange;
-        private static Color DoneColor = Colors.Green;
+        private static readonly Color PendingColor = Colors.Orange;
+        private static readonly Color DoneColor = Colors.Green;
 
         private readonly IProgressCollector progressCollector;
         private readonly IAssetsDirectories assetsDirectories;

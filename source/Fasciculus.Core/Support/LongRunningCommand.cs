@@ -1,9 +1,8 @@
 ﻿using Fasciculus.Threading;
-using Microsoft.Maui.ApplicationModel;
 using System;
 using System.Windows.Input;
 
-namespace Fasciculus.Maui.Input
+namespace Fasciculus.Support
 {
     public class LongRunningCommand : ICommand
     {
@@ -20,11 +19,7 @@ namespace Fasciculus.Maui.Input
         }
 
         public bool CanExecute(object? parameter)
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            return canExecute;
-        }
+            => Locker.Locked(mutex, () => canExecute);
 
         public void Execute(object? parameter)
         {
@@ -44,7 +39,7 @@ namespace Fasciculus.Maui.Input
 
             canExecute = value;
 
-            MainThread.BeginInvokeOnMainThread(() => CanExecuteChanged?.Invoke(this, new EventArgs()));
+            Threads.RunInMainThread(() => CanExecuteChanged?.Invoke(this, new EventArgs()));
         }
     }
 }
