@@ -16,5 +16,19 @@ namespace Fasciculus.Threading
 
         public static Task<T> LongRunning<T>(Func<T> func)
             => Task.Factory.StartNew(func, TaskCreationOptions.LongRunning);
+
+        public static Task[] WaitAll(Task[] tasks)
+        {
+            Task.WaitAll(tasks);
+
+            return tasks;
+        }
+
+        public static Task<T>[] WaitAll<T>(Task<T>[] tasks)
+        {
+            Task.WaitAll(tasks);
+
+            return tasks;
+        }
     }
 }
