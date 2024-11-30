@@ -44,7 +44,7 @@ namespace Fasciculus.Support
         private long ElapsedTime => stopwatch?.ElapsedMilliseconds ?? 0;
 
         public T Total { get; private set; }
-        public T Current { get; private set; }
+        public T Current { get; protected set; }
 
         public AccumulatingProgress(Action<T>? report, Func<T, T, T>? accumulate, T total, T start, long interval = 0)
             : base(report)
@@ -71,7 +71,7 @@ namespace Fasciculus.Support
             DoReport(true);
         }
 
-        public void End()
+        public virtual void End()
         {
             using Locker locker = Locker.Lock(mutex);
 
@@ -95,8 +95,7 @@ namespace Fasciculus.Support
             {
                 base.Report(Current);
             }
-
-            if (ElapsedTime >= interval)
+            else if (ElapsedTime >= interval)
             {
                 stopwatch?.Restart();
 
@@ -112,15 +111,20 @@ namespace Fasciculus.Support
 
     public interface IAccumulatingLongProgress : IAccumulatingProgress<long>
     {
+        public bool Done { get; }
         public double Progress { get; }
     }
 
     public class AccumulatingLongProgress : AccumulatingProgress<long>, IAccumulatingLongProgress
     {
+        public bool Done => Locker.Locked(mutex, () => Current == Total);
+
         public double Progress
         {
             get
             {
+                using Locker locker = Locker.Lock(mutex);
+
                 double progress = 1;
 
                 if (Total > 0 && Current < Total)
@@ -140,5 +144,14 @@ namespace Fasciculus.Support
 
         protected override long Accumulate(long current, long value)
             => current + value;
+
+        public override void End()
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            Current = Total;
+
+            base.End();
+        }
     }
 }
