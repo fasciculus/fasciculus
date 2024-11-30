@@ -1,10 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pageModels="clr-namespace:Fasciculus.Eve.Assets.PageModels"
-             x:Class="Fasciculus.Eve.Assets.MainPage"
-             x:DataType="pageModels:MainPageModel"
+             xmlns:p="clr-namespace:Fasciculus.Eve.Assets.PageModels"
+             xmlns:c="clr-namespace:Fasciculus.Eve.Assets.Pages"
+             x:Class="Fasciculus.Eve.Assets.Pages.MainPage"
+             x:DataType="p:MainPageModel"
              Title="" Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <c:PendingToDoneConverter x:Key="ptd" />
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout
@@ -21,21 +26,27 @@
                 <Label Text="File" Grid.Row="1" Grid.Column="0" />
                 <Label Text="{Binding DownloadSdeText}" TextColor="{Binding DownloadSdeColor}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Extract" Grid.Row="1" Grid.Column="2" />
-                <ProgressBar Progress="{Binding ExtractSdeValue}" ProgressColor="{Binding ExtractSdeColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="1" Grid.Column="3" />
+                <ProgressBar Progress="{Binding ExtractSdeValue}" ProgressColor="{Binding ExtractSdeColor}" MinimumHeightRequest="8" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Parsing" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" />
                 <Label Text="Names" Grid.Row="1" Grid.Column="0" />
-                <Label Text="{Binding ParseNamesText}" TextColor="{Binding ParseNamesColor}" Grid.Row="1" Grid.Column="1" />
+                <Label Text="{Binding ParseNames, Converter={StaticResource ptd}}" TextColor="{Binding ParseNames, Converter={StaticResource ptd}}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Types" Grid.Row="1" Grid.Column="2" />
-                <Label Text="{Binding ParseTypesText}" TextColor="{Binding ParseTypesColor}" Grid.Row="1" Grid.Column="3" />
+                <Label Text="{Binding ParseTypes, Converter={StaticResource ptd}}" TextColor="{Binding ParseTypes, Converter={StaticResource ptd}}" Grid.Row="1" Grid.Column="3" />
                 <Label Text="Regions" Grid.Row="2" Grid.Column="0" />
-                <ProgressBar Progress="{Binding ParseRegionsValue}" ProgressColor="{Binding ParseRegionsColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="2" Grid.Column="1"/>
+                <ProgressBar Progress="{Binding ParseRegionsValue}" ProgressColor="{Binding ParseRegionsColor}" MinimumHeightRequest="8" Grid.Row="2" Grid.Column="1"/>
                 <Label Text="Constellations" Grid.Row="2" Grid.Column="2" />
-                <ProgressBar Progress="{Binding ParseConstellationsValue}" ProgressColor="{Binding ParseConstellationsColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="2" Grid.Column="3"/>
+                <ProgressBar Progress="{Binding ParseConstellationsValue}" ProgressColor="{Binding ParseConstellationsColor}" MinimumHeightRequest="8" Grid.Row="2" Grid.Column="3"/>
                 <Label Text="Solar Systems" Grid.Row="2" Grid.Column="4" />
-                <ProgressBar Progress="{Binding ParseSolarSystemsValue}" ProgressColor="{Binding ParseSolarSystemsColor}" BackgroundColor="LightGray" MinimumHeightRequest="8" Grid.Row="2" Grid.Column="5"/>
+                <ProgressBar Progress="{Binding ParseSolarSystemsValue}" ProgressColor="{Binding ParseSolarSystemsColor}" MinimumHeightRequest="8" Grid.Row="2" Grid.Column="5"/>
+            </Grid>
+
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
+                <Label Text="SDE Conversion" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" />
+                <Label Text="Universe" Grid.Row="1" Grid.Column="2" />
+                <Label Text="{Binding ConvertUniverse, Converter={StaticResource ptd}}" TextColor="{Binding ConvertUniverse, Converter={StaticResource ptd}}" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
@@ -45,7 +56,7 @@
             </Grid>
 
             <Label Text="Changed Resources" FontAttributes="Bold" />
-            
+
             <ListView ItemsSource="{Binding ChangedResources}">
                 <ListView.ItemTemplate>
                     <DataTemplate  x:DataType="x:String">

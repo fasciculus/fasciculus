@@ -9,11 +9,8 @@ namespace Fasciculus.Eve.Assets.PageModels
     public partial class MainPageModel : ObservableObject
     {
         private static readonly string PendingText = "Pending";
-        private static readonly string WorkingText = "Working";
-        private static readonly string DoneText = "Done";
 
         private static readonly Color PendingColor = Colors.Orange;
-        private static readonly Color WorkingColor = Colors.Orange;
         private static readonly Color DoneColor = Colors.Green;
 
         private readonly IProgressCollector progressCollector;
@@ -33,16 +30,10 @@ namespace Fasciculus.Eve.Assets.PageModels
         private Color extractSdeColor = PendingColor;
 
         [ObservableProperty]
-        private string parseNamesText = PendingText;
+        private PendingToDone parseNames = PendingToDone.Pending;
 
         [ObservableProperty]
-        private Color parseNamesColor = PendingColor;
-
-        [ObservableProperty]
-        private string parseTypesText = PendingText;
-
-        [ObservableProperty]
-        private Color parseTypesColor = PendingColor;
+        private PendingToDone parseTypes = PendingToDone.Pending;
 
         [ObservableProperty]
         private double parseRegionsValue = 0;
@@ -63,10 +54,7 @@ namespace Fasciculus.Eve.Assets.PageModels
         private Color parseSolarSystemsColor = PendingColor;
 
         [ObservableProperty]
-        private string convertUniverseText = PendingText;
-
-        [ObservableProperty]
-        private Color convertUniverseColor = PendingColor;
+        private PendingToDone convertUniverse = PendingToDone.Pending;
 
         [ObservableProperty]
         private double copyImagesValue = 0;
@@ -97,11 +85,8 @@ namespace Fasciculus.Eve.Assets.PageModels
             ExtractSdeValue = progressCollector.ExtractSde;
             ExtractSdeColor = progressCollector.ExtractSde == 1.0 ? DoneColor : PendingColor;
 
-            ParseNamesText = PendingToDoneText(progressCollector.ParseNames);
-            ParseNamesColor = PendingToDoneColor(progressCollector.ParseNames);
-
-            ParseTypesText = PendingToDoneText(progressCollector.ParseTypes);
-            ParseTypesColor = PendingToDoneColor(progressCollector.ParseTypes);
+            ParseNames = progressCollector.ParseNames;
+            ParseTypes = progressCollector.ParseTypes;
 
             ParseRegionsValue = progressCollector.ParseRegions;
             ParseRegionsColor = progressCollector.ParseRegionsDone ? DoneColor : PendingColor;
@@ -112,15 +97,19 @@ namespace Fasciculus.Eve.Assets.PageModels
             ParseSolarSystemsValue = progressCollector.ParseSolarSystems;
             ParseSolarSystemsColor = progressCollector.ParseSolarSystemsDone ? DoneColor : PendingColor;
 
-            ConvertUniverseText = PendingToDoneText(progressCollector.ConvertUniverse);
-            ConvertUniverseColor = PendingToDoneColor(progressCollector.ConvertUniverse);
+            ConvertUniverse = progressCollector.ConvertUniverse;
 
             CopyImagesValue = progressCollector.CopyImages;
             CopyImagesColor = progressCollector.CopyImages == 1.0 ? DoneColor : PendingColor;
 
+            ChangedResources = GetChangedResources();
+        }
+
+        private string[] GetChangedResources()
+        {
             int prefix = assetsDirectories.Resources.FullName.Length + 1;
 
-            ChangedResources = progressCollector.ChangedResources
+            return progressCollector.ChangedResources
                 .Select(x => x.FullName.Substring(prefix).Replace('\\', '/'))
                 .ToArray();
         }
@@ -148,28 +137,6 @@ namespace Fasciculus.Eve.Assets.PageModels
                 _ => Colors.Black
             };
 
-        }
-
-        private static string PendingToDoneText(PendingToDone status)
-        {
-            return status switch
-            {
-                PendingToDone.Pending => PendingText,
-                PendingToDone.Working => WorkingText,
-                PendingToDone.Done => DoneText,
-                _ => string.Empty
-            };
-        }
-
-        private static Color PendingToDoneColor(PendingToDone status)
-        {
-            return status switch
-            {
-                PendingToDone.Pending => PendingColor,
-                PendingToDone.Working => WorkingColor,
-                PendingToDone.Done => DoneColor,
-                _ => Colors.Red
-            };
         }
 
         [RelayCommand]
