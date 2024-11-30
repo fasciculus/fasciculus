@@ -33,6 +33,9 @@
 
     public class SdeSolarSystem
     {
+        public int SolarSystemID { get; set; }
+        public double Security { get; set; }
+
         public Dictionary<long, SdePlanet> Planets { get; set; } = [];
     }
 

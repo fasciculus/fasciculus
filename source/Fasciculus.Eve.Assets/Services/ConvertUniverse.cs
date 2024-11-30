@@ -60,8 +60,18 @@ namespace Fasciculus.Eve.Assets.Services
         {
             int id = sdeConstellation.ConstellationID;
             string name = sdeData.Names[id];
+            EveSolarSystem.Data[] solarSystems = sdeConstellation.SolarSystems.Select(s => ConvertSolarSystem(s, sdeData)).ToArray();
 
-            return new(id, name);
+            return new(id, name, solarSystems);
+        }
+
+        private static EveSolarSystem.Data ConvertSolarSystem(SdeSolarSystem sdeSolarSystem, SdeData sdeData)
+        {
+            int id = sdeSolarSystem.SolarSystemID;
+            string name = sdeData.Names[id];
+            double security = sdeSolarSystem.Security;
+
+            return new(id, name, security);
         }
     }
 
