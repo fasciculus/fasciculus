@@ -96,13 +96,13 @@ namespace Fasciculus.Eve.Assets.PageModels
             ParseTypesColor = PendingToDoneColor(progressCollector.ParseTypes);
 
             ParseRegionsValue = progressCollector.ParseRegions;
-            ParseRegionsColor = progressCollector.ParseRegions == 1.0 ? DoneColor : PendingColor;
+            ParseRegionsColor = progressCollector.ParseRegionsDone ? DoneColor : PendingColor;
 
             ParseConstellationsValue = progressCollector.ParseConstellations;
-            ParseConstellationsColor = progressCollector.ParseConstellations == 1.0 ? DoneColor : PendingColor;
+            ParseConstellationsColor = progressCollector.ParseConstellationsDone ? DoneColor : PendingColor;
 
             ParseSolarSystemsValue = progressCollector.ParseSolarSystems;
-            ParseSolarSystemsColor = progressCollector.ParseSolarSystems == 1.0 ? DoneColor : PendingColor;
+            ParseSolarSystemsColor = progressCollector.ParseSolarSystemsDone ? DoneColor : PendingColor;
 
             CopyImagesValue = progressCollector.CopyImages;
             CopyImagesColor = progressCollector.CopyImages == 1.0 ? DoneColor : PendingColor;

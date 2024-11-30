@@ -77,13 +77,22 @@ namespace Fasciculus.Eve.Assets.Services
             => progressCollector.ParseTypes = status;
 
         private void ReportParseRegions(long _)
-            => progressCollector.ParseRegions = ParseRegions.Progress;
+        {
+            progressCollector.ParseRegions = ParseRegions.Progress;
+            progressCollector.ParseRegionsDone = ParseRegions.Done;
+        }
 
         private void ReportParseConstellations(long _)
-            => progressCollector.ParseConstellations = ParseConstellations.Progress;
+        {
+            progressCollector.ParseConstellations = ParseConstellations.Progress;
+            progressCollector.ParseConstellationsDone = ParseConstellations.Done;
+        }
 
         private void ReportParseSolarSystems(long _)
-            => progressCollector.ParseSolarSystems = ParseSolarSystems.Progress;
+        {
+            progressCollector.ParseSolarSystems = ParseSolarSystems.Progress;
+            progressCollector.ParseSolarSystemsDone = ParseSolarSystems.Done;
+        }
 
         private void ReportCopyImages(long _)
             => progressCollector.CopyImages = CopyImages.Progress;
@@ -104,8 +113,13 @@ namespace Fasciculus.Eve.Assets.Services
         public PendingToDone ParseTypes { get; set; }
 
         public double ParseRegions { get; set; }
+        public bool ParseRegionsDone { get; set; }
+
         public double ParseConstellations { get; set; }
+        public bool ParseConstellationsDone { get; set; }
+
         public double ParseSolarSystems { get; set; }
+        public bool ParseSolarSystemsDone { get; set; }
 
         public double CopyImages { get; set; }
 
@@ -130,10 +144,19 @@ namespace Fasciculus.Eve.Assets.Services
         private double parseRegions;
 
         [ObservableProperty]
+        private bool parseRegionsDone;
+
+        [ObservableProperty]
         private double parseConstellations;
 
         [ObservableProperty]
+        private bool parseConstellationsDone;
+
+        [ObservableProperty]
         private double parseSolarSystems;
+
+        [ObservableProperty]
+        private bool parseSolarSystemsDone;
 
         [ObservableProperty]
         private double copyImages;

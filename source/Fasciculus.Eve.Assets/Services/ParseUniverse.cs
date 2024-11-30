@@ -27,9 +27,11 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public Task<SdeRegion[]> ParseAsync()
+        public async Task<SdeRegion[]> ParseAsync()
         {
             using Locker locker = Locker.Lock(resultMutex);
+
+            await Task.Yield();
 
             if (result is null)
             {
@@ -38,22 +40,24 @@ namespace Fasciculus.Eve.Assets.Services
 
                 Begin(regionDirectories);
 
-                result = regionDirectories.AsParallel().Select(ParseRegion).ToArray();
+                Task<SdeRegion>[] tasks = regionDirectories.Select(ParseRegionAsync).ToArray();
+
+                result = Tasks.WaitAll(tasks).Select(t => t.Result).ToArray();
 
                 End();
             }
 
-            return Task.FromResult(result);
+            return result;
         }
 
-        private SdeRegion ParseRegion(DirectoryInfo regionDirectory)
+        private async Task<SdeRegion> ParseRegionAsync(DirectoryInfo regionDirectory)
         {
+            await Task.Yield();
+
             FileInfo file = regionDirectory.File("region.yaml");
             SdeRegion region = yaml.Deserialize<SdeRegion>(file);
-            DirectoryInfo[] constellationDirectories = regionDirectory.GetDirectories();
 
-            region.Constellations = constellationDirectories.Select(ParseConstellation).ToArray();
-
+            region.Constellations = regionDirectory.GetDirectories().Select(ParseConstellation).ToArray();
             progress.ParseRegions.Report(1);
 
             return region;
@@ -63,10 +67,8 @@ namespace Fasciculus.Eve.Assets.Services
         {
             FileInfo file = constellationDirectory.File("constellation.yaml");
             SdeConstellation constellation = yaml.Deserialize<SdeConstellation>(file);
-            DirectoryInfo[] solarSystemDirectories = constellationDirectory.GetDirectories();
 
-            constellation.SolarSystems = solarSystemDirectories.Select(ParseSolarSystem).ToArray();
-
+            constellation.SolarSystems = constellationDirectory.GetDirectories().Select(ParseSolarSystem).ToArray();
             progress.ParseConstellations.Report(1);
 
             return constellation;
@@ -85,11 +87,11 @@ namespace Fasciculus.Eve.Assets.Services
         private DirectoryInfo[] Begin(DirectoryInfo[] regionDirectories)
         {
             DirectoryInfo[] constellationDirectories = regionDirectories.SelectMany(d => d.GetDirectories()).ToArray();
-            DirectoryInfo[] solarSystemDirectories = constellationDirectories.SelectMany(d => d.GetDirectories()).ToArray();
+            long solarSystemDirectories = constellationDirectories.SelectMany(d => d.GetDirectories()).Count();
 
             progress.ParseRegions.Begin(regionDirectories.Length);
             progress.ParseConstellations.Begin(constellationDirectories.Length);
-            progress.ParseSolarSystems.Begin(solarSystemDirectories.Length);
+            progress.ParseSolarSystems.Begin(solarSystemDirectories);
 
             return regionDirectories;
         }
