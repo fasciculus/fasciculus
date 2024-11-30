@@ -86,7 +86,7 @@ namespace Fasciculus.Eve.Assets.Services
 
     public interface ICreateResources
     {
-        public void Create();
+        public Task CreateAsync();
     }
 
     public class CreateResources : ICreateResources
@@ -111,38 +111,34 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public void Create()
+        private void Create()
         {
-            Task<SdeData> parseSdeData = Tasks.Start(ParseSdeData);
-            Task<SdeRegion[]> parseUniverse = Tasks.Start(ParseUniverse);
-            Task extractImages = Tasks.Start(CopyImages);
+            Task<SdeData> data = parseData.ParseAsync();
+            Task<SdeRegion[]> universe = parseUniverse.ParseAsync();
+            Task images = copyImages.CopyAsync();
 
-            Task.WaitAll([parseSdeData, parseUniverse, extractImages]);
+            Task.WaitAll([data, universe, images]);
 
-            WriteVersion(parseSdeData.Result);
+            WriteVersion(data.Result);
         }
 
-        private void WriteVersion(SdeData sdeData)
+        public Task CreateAsync()
+        {
+            return Tasks.LongRunning(() => Create());
+        }
+
+        private void WriteVersion(SdeData data)
         {
             using MemoryStream stream = new();
             FileInfo file = assetsDirectories.Resources.File("SdeVersion");
 
-            stream.WriteLong(sdeData.Version.ToBinary());
+            stream.WriteLong(data.Version.ToBinary());
 
             if (writeResource.Write(stream.ToArray(), file, false))
             {
                 progress.CreateResources.Report([file]);
             }
         }
-
-        private SdeData ParseSdeData()
-            => parseData.Parse();
-
-        private SdeRegion[] ParseUniverse()
-            => parseUniverse.Parse();
-
-        private void CopyImages()
-            => copyImages.Copy();
     }
 
     public static class ResourcesServices

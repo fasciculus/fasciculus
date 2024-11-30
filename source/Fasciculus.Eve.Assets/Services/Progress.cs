@@ -6,12 +6,27 @@ using System.ComponentModel;
 
 namespace Fasciculus.Eve.Assets.Services
 {
+    public enum PendingToDone
+    {
+        Pending,
+        Working,
+        Done
+    }
+
+    public enum DownloadSdeStatus
+    {
+        Pending,
+        Downloading,
+        Downloaded,
+        NotModified
+    }
+
     public interface IAssetsProgress
     {
         public IProgress<DownloadSdeStatus> DownloadSde { get; }
         public IAccumulatingLongProgress ExtractSde { get; }
-        public IProgress<PendingOrDone> ParseNames { get; }
-        public IProgress<PendingOrDone> ParseTypes { get; }
+        public IProgress<PendingToDone> ParseNames { get; }
+        public IProgress<PendingToDone> ParseTypes { get; }
         public IAccumulatingLongProgress ParseRegions { get; }
         public IAccumulatingLongProgress ParseConstellations { get; }
         public IAccumulatingLongProgress ParseSolarSystems { get; }
@@ -25,8 +40,8 @@ namespace Fasciculus.Eve.Assets.Services
 
         public IProgress<DownloadSdeStatus> DownloadSde { get; }
         public IAccumulatingLongProgress ExtractSde { get; }
-        public IProgress<PendingOrDone> ParseNames { get; }
-        public IProgress<PendingOrDone> ParseTypes { get; }
+        public IProgress<PendingToDone> ParseNames { get; }
+        public IProgress<PendingToDone> ParseTypes { get; }
         public IAccumulatingLongProgress ParseRegions { get; }
         public IAccumulatingLongProgress ParseConstellations { get; }
         public IAccumulatingLongProgress ParseSolarSystems { get; }
@@ -37,8 +52,8 @@ namespace Fasciculus.Eve.Assets.Services
         {
             DownloadSde = new TaskSafeProgress<DownloadSdeStatus>(ReportDownloadSde);
             ExtractSde = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
-            ParseNames = new TaskSafeProgress<PendingOrDone>(ReportParseNames);
-            ParseTypes = new TaskSafeProgress<PendingOrDone>(ReportParseTypes);
+            ParseNames = new TaskSafeProgress<PendingToDone>(ReportParseNames);
+            ParseTypes = new TaskSafeProgress<PendingToDone>(ReportParseTypes);
             ParseRegions = new AccumulatingLongProgress(ReportParseRegions, 100);
             ParseConstellations = new AccumulatingLongProgress(ReportParseConstellations, 100);
             ParseSolarSystems = new AccumulatingLongProgress(ReportParseSolarSystems, 100);
@@ -55,10 +70,10 @@ namespace Fasciculus.Eve.Assets.Services
         private void ReportExtractSdeProgress(long _)
             => progressCollector.ExtractSde = ExtractSde.Progress;
 
-        private void ReportParseNames(PendingOrDone status)
+        private void ReportParseNames(PendingToDone status)
             => progressCollector.ParseNames = status;
 
-        private void ReportParseTypes(PendingOrDone status)
+        private void ReportParseTypes(PendingToDone status)
             => progressCollector.ParseTypes = status;
 
         private void ReportParseRegions(long _)
@@ -85,8 +100,8 @@ namespace Fasciculus.Eve.Assets.Services
         public DownloadSdeStatus DownloadSde { get; set; }
         public double ExtractSde { get; set; }
 
-        public PendingOrDone ParseNames { get; set; }
-        public PendingOrDone ParseTypes { get; set; }
+        public PendingToDone ParseNames { get; set; }
+        public PendingToDone ParseTypes { get; set; }
 
         public double ParseRegions { get; set; }
         public double ParseConstellations { get; set; }
@@ -106,10 +121,10 @@ namespace Fasciculus.Eve.Assets.Services
         private double extractSde;
 
         [ObservableProperty]
-        private PendingOrDone parseNames = PendingOrDone.Pending;
+        private PendingToDone parseNames = PendingToDone.Pending;
 
         [ObservableProperty]
-        private PendingOrDone parseTypes = PendingOrDone.Pending;
+        private PendingToDone parseTypes = PendingToDone.Pending;
 
         [ObservableProperty]
         private double parseRegions;

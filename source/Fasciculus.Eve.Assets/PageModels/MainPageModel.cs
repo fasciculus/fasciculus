@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Assets.Services;
-using Fasciculus.Threading;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
@@ -10,6 +9,7 @@ namespace Fasciculus.Eve.Assets.PageModels
     public partial class MainPageModel : ObservableObject
     {
         private static readonly Color PendingColor = Colors.Orange;
+        private static readonly Color WorkingColor = Colors.Orange;
         private static readonly Color DoneColor = Colors.Green;
 
         private readonly IProgressCollector progressCollector;
@@ -17,52 +17,52 @@ namespace Fasciculus.Eve.Assets.PageModels
         private readonly ICreateResources createResources;
 
         [ObservableProperty]
-        private string downloadSdeText = PendingOrDoneText(PendingOrDone.Pending);
+        private string downloadSdeText = PendingToDoneText(PendingToDone.Pending);
 
         [ObservableProperty]
-        private Color downloadSdeColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color downloadSdeColor = PendingToDoneColor(PendingToDone.Pending);
 
         [ObservableProperty]
         private double extractSdeValue = 0;
 
         [ObservableProperty]
-        private Color extractSdeColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color extractSdeColor = PendingColor;
 
         [ObservableProperty]
-        private string parseNamesText = PendingOrDoneText(PendingOrDone.Pending);
+        private string parseNamesText = PendingToDoneText(PendingToDone.Pending);
 
         [ObservableProperty]
-        private Color parseNamesColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color parseNamesColor = PendingColor;
 
         [ObservableProperty]
-        private string parseTypesText = PendingOrDoneText(PendingOrDone.Pending);
+        private string parseTypesText = PendingToDoneText(PendingToDone.Pending);
 
         [ObservableProperty]
-        private Color parseTypesColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color parseTypesColor = PendingColor;
 
         [ObservableProperty]
         private double parseRegionsValue = 0;
 
         [ObservableProperty]
-        private Color parseRegionsColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color parseRegionsColor = PendingColor;
 
         [ObservableProperty]
         private double parseConstellationsValue = 0;
 
         [ObservableProperty]
-        private Color parseConstellationsColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color parseConstellationsColor = PendingColor;
 
         [ObservableProperty]
         private double parseSolarSystemsValue = 0;
 
         [ObservableProperty]
-        private Color parseSolarSystemsColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color parseSolarSystemsColor = PendingColor;
 
         [ObservableProperty]
         private double copyImagesValue = 0;
 
         [ObservableProperty]
-        private Color copyImagesColor = PendingOrDoneColor(PendingOrDone.Pending);
+        private Color copyImagesColor = PendingColor;
 
         [ObservableProperty]
         private string[] changedResources = [];
@@ -89,11 +89,11 @@ namespace Fasciculus.Eve.Assets.PageModels
             ExtractSdeValue = progressCollector.ExtractSde;
             ExtractSdeColor = progressCollector.ExtractSde == 1.0 ? DoneColor : PendingColor;
 
-            ParseNamesText = PendingOrDoneText(progressCollector.ParseNames);
-            ParseNamesColor = PendingOrDoneColor(progressCollector.ParseNames);
+            ParseNamesText = PendingToDoneText(progressCollector.ParseNames);
+            ParseNamesColor = PendingToDoneColor(progressCollector.ParseNames);
 
-            ParseTypesText = PendingOrDoneText(progressCollector.ParseTypes);
-            ParseTypesColor = PendingOrDoneColor(progressCollector.ParseTypes);
+            ParseTypesText = PendingToDoneText(progressCollector.ParseTypes);
+            ParseTypesColor = PendingToDoneColor(progressCollector.ParseTypes);
 
             ParseRegionsValue = progressCollector.ParseRegions;
             ParseRegionsColor = progressCollector.ParseRegions == 1.0 ? DoneColor : PendingColor;
@@ -139,22 +139,24 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         }
 
-        private static string PendingOrDoneText(PendingOrDone status)
+        private static string PendingToDoneText(PendingToDone status)
         {
             return status switch
             {
-                PendingOrDone.Pending => "Pending",
-                PendingOrDone.Done => "Done",
+                PendingToDone.Pending => "Pending",
+                PendingToDone.Working => "Working",
+                PendingToDone.Done => "Done",
                 _ => string.Empty
             };
         }
 
-        private static Color PendingOrDoneColor(PendingOrDone status)
+        private static Color PendingToDoneColor(PendingToDone status)
         {
             return status switch
             {
-                PendingOrDone.Pending => PendingColor,
-                PendingOrDone.Done => DoneColor,
+                PendingToDone.Pending => PendingColor,
+                PendingToDone.Working => WorkingColor,
+                PendingToDone.Done => DoneColor,
                 _ => Colors.Red
             };
         }
@@ -162,7 +164,7 @@ namespace Fasciculus.Eve.Assets.PageModels
         [RelayCommand]
         private Task Start()
         {
-            return Tasks.LongRunning(() => createResources.Create());
+            return createResources.CreateAsync();
         }
     }
 }

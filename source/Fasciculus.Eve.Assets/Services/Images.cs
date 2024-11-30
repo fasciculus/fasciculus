@@ -7,7 +7,7 @@ namespace Fasciculus.Eve.Assets.Services
 {
     public interface ICopyImages
     {
-        public void Copy();
+        public Task CopyAsync();
     }
 
     public class CopyImages : ICopyImages
@@ -23,7 +23,7 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public void Copy()
+        public Task CopyAsync()
         {
             Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
 
@@ -32,6 +32,8 @@ namespace Fasciculus.Eve.Assets.Services
             entries.Apply(Copy);
 
             progress.CopyImages.End();
+
+            return Task.CompletedTask;
         }
 
         private void Copy(Tuple<FileInfo, FileInfo> entry)

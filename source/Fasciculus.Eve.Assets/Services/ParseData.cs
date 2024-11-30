@@ -7,7 +7,7 @@ namespace Fasciculus.Eve.Assets.Services
     public interface IDataParserBase<T>
         where T : class
     {
-        public T Parse();
+        public Task<T> ParseAsync();
     }
 
     public abstract class DataParserBase<T> : IDataParserBase<T>
@@ -25,24 +25,26 @@ namespace Fasciculus.Eve.Assets.Services
             this.yaml = yaml;
         }
 
-        public T Parse()
+        public async Task<T> ParseAsync()
         {
             using Locker locker = Locker.Lock(resultMutex);
+
+            await Task.Yield();
 
             if (result is null)
             {
                 ISdeFileSystem sdeFileSystem = extractSde.Extract();
 
-                Report(PendingOrDone.Pending);
+                Report(PendingToDone.Working);
                 result = Parse(yaml, sdeFileSystem);
-                Report(PendingOrDone.Done);
+                Report(PendingToDone.Done);
             }
 
             return result;
         }
 
         protected abstract T Parse(IYaml yaml, ISdeFileSystem sdeFileSystem);
-        protected abstract void Report(PendingOrDone status);
+        protected abstract void Report(PendingToDone status);
     }
 
     public interface IParseNames : IDataParserBase<Dictionary<long, string>> { }
@@ -58,13 +60,9 @@ namespace Fasciculus.Eve.Assets.Services
         }
 
         protected override Dictionary<long, string> Parse(IYaml yaml, ISdeFileSystem sdeFileSystem)
-        {
-            SdeName[] names = yaml.Deserialize<SdeName[]>(sdeFileSystem.NamesYaml);
+            => yaml.Deserialize<SdeName[]>(sdeFileSystem.NamesYaml).ToDictionary(n => n.ItemID, n => n.ItemName);
 
-            return names.ToDictionary(name => name.ItemID, name => name.ItemName);
-        }
-
-        protected override void Report(PendingOrDone status)
+        protected override void Report(PendingToDone status)
             => progress.ParseNames.Report(status);
     }
 
@@ -81,17 +79,15 @@ namespace Fasciculus.Eve.Assets.Services
         }
 
         protected override Dictionary<long, SdeType> Parse(IYaml yaml, ISdeFileSystem sdeFileSystem)
-        {
-            return yaml.Deserialize<Dictionary<long, SdeType>>(sdeFileSystem.TypesYaml);
-        }
+            => yaml.Deserialize<Dictionary<long, SdeType>>(sdeFileSystem.TypesYaml);
 
-        protected override void Report(PendingOrDone status)
+        protected override void Report(PendingToDone status)
             => progress.ParseTypes.Report(status);
     }
 
     public interface IParseData
     {
-        public SdeData Parse();
+        public Task<SdeData> ParseAsync();
     }
 
     public class ParseData : IParseData
@@ -107,10 +103,12 @@ namespace Fasciculus.Eve.Assets.Services
             this.parseTypes = parseTypes;
         }
 
-        public SdeData Parse()
+        public async Task<SdeData> ParseAsync()
         {
-            Task<Dictionary<long, string>> names = Tasks.LongRunning(ParseNames);
-            Task<Dictionary<long, SdeType>> types = Tasks.LongRunning(ParseTypes);
+            await Task.Yield();
+
+            Task<Dictionary<long, string>> names = parseNames.ParseAsync();
+            Task<Dictionary<long, SdeType>> types = parseTypes.ParseAsync();
 
             Task.WaitAll([names, types]);
 
@@ -121,12 +119,6 @@ namespace Fasciculus.Eve.Assets.Services
                 Types = types.Result,
             };
         }
-
-        private Dictionary<long, string> ParseNames()
-            => parseNames.Parse();
-
-        private Dictionary<long, SdeType> ParseTypes()
-            => parseTypes.Parse();
     }
 
     public static class DataParserServices

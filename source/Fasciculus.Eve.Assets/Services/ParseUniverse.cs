@@ -6,7 +6,7 @@ namespace Fasciculus.Eve.Assets.Services
 {
     public interface IParseUniverse
     {
-        public SdeRegion[] Parse();
+        public Task<SdeRegion[]> ParseAsync();
     }
 
     public class ParseUniverse : IParseUniverse
@@ -27,7 +27,7 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public SdeRegion[] Parse()
+        public Task<SdeRegion[]> ParseAsync()
         {
             using Locker locker = Locker.Lock(resultMutex);
 
@@ -43,7 +43,7 @@ namespace Fasciculus.Eve.Assets.Services
                 End();
             }
 
-            return result;
+            return Task.FromResult(result);
         }
 
         private SdeRegion ParseRegion(DirectoryInfo regionDirectory)
