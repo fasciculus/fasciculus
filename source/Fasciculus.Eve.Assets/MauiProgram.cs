@@ -24,7 +24,7 @@ namespace Fasciculus.Eve.Assets
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddResourcesCreator();
+            services.AddCreateResources();
 
             services.TryAddSingleton<MainPageModel>();
         }

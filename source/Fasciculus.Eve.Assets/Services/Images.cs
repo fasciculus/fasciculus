@@ -5,18 +5,18 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
-    public interface IImageCopier
+    public interface ICopyImages
     {
         public void Copy();
     }
 
-    public class ImageCopier : IImageCopier
+    public class CopyImages : ICopyImages
     {
         private readonly ISteamApplications steamApplications;
         private readonly IAssetsDirectories assetsDirectories;
         private readonly IAssetsProgress progress;
 
-        public ImageCopier(ISteamApplications steamApplications, IAssetsDirectories assetsDirectories, IAssetsProgress progress)
+        public CopyImages(ISteamApplications steamApplications, IAssetsDirectories assetsDirectories, IAssetsProgress progress)
         {
             this.steamApplications = steamApplications;
             this.assetsDirectories = assetsDirectories;
@@ -27,11 +27,11 @@ namespace Fasciculus.Eve.Assets.Services
         {
             Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
 
-            progress.ImageCopier.Begin(entries.Length);
+            progress.CopyImages.Begin(entries.Length);
 
             entries.Apply(Copy);
 
-            progress.ImageCopier.End();
+            progress.CopyImages.End();
         }
 
         private void Copy(Tuple<FileInfo, FileInfo> entry)
@@ -46,7 +46,7 @@ namespace Fasciculus.Eve.Assets.Services
                 source.CopyTo(destination.FullName);
             }
 
-            progress.ImageCopier.Report(1);
+            progress.CopyImages.Report(1);
         }
 
         private Tuple<FileInfo, FileInfo>[] ParseIndex()
@@ -97,7 +97,7 @@ namespace Fasciculus.Eve.Assets.Services
             services.AddAssetsDirectories();
             services.AddAssetsProgress();
 
-            services.TryAddSingleton<IImageCopier, ImageCopier>();
+            services.TryAddSingleton<ICopyImages, CopyImages>();
 
             return services;
         }

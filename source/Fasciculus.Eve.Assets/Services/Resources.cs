@@ -6,17 +6,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
-    public interface IResourceWriter
+    public interface IWriteResource
     {
         public bool Write(byte[] source, FileInfo destination, bool compressed);
         public bool Copy(FileInfo source, FileInfo destination, bool compressed);
     }
 
-    public class ResourceWriter : IResourceWriter
+    public class WriteResource : IWriteResource
     {
         private readonly ICompression compression;
 
-        public ResourceWriter(ICompression compression)
+        public WriteResource(ICompression compression)
         {
             this.compression = compression;
         }
@@ -84,30 +84,30 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
-    public interface IResourcesCreator
+    public interface ICreateResources
     {
         public void Create();
     }
 
-    public class ResourcesCreator : IResourcesCreator
+    public class CreateResources : ICreateResources
     {
-        private readonly IDataParser dataParser;
-        private readonly IUniverseParser universeParser;
-        private readonly IImageCopier imageCopier;
+        private readonly IParseData parseData;
+        private readonly IParseUniverse parseUniverse;
+        private readonly ICopyImages copyImages;
 
         private readonly IAssetsDirectories assetsDirectories;
-        private readonly IResourceWriter resourceWriter;
+        private readonly IWriteResource writeResource;
 
         private readonly IAssetsProgress progress;
 
-        public ResourcesCreator(IDataParser dataParser, IUniverseParser universeParser, IImageCopier imageCopier,
-            IAssetsDirectories assetsDirectories, IResourceWriter resourceWriter, IAssetsProgress progress)
+        public CreateResources(IParseData parseData, IParseUniverse parseUniverse, ICopyImages copyImages,
+            IAssetsDirectories assetsDirectories, IWriteResource writeResource, IAssetsProgress progress)
         {
-            this.dataParser = dataParser;
-            this.universeParser = universeParser;
-            this.imageCopier = imageCopier;
+            this.parseData = parseData;
+            this.parseUniverse = parseUniverse;
+            this.copyImages = copyImages;
             this.assetsDirectories = assetsDirectories;
-            this.resourceWriter = resourceWriter;
+            this.writeResource = writeResource;
             this.progress = progress;
         }
 
@@ -129,41 +129,41 @@ namespace Fasciculus.Eve.Assets.Services
 
             stream.WriteLong(sdeData.Version.ToBinary());
 
-            if (resourceWriter.Write(stream.ToArray(), file, false))
+            if (writeResource.Write(stream.ToArray(), file, false))
             {
-                progress.ResourceCreator.Report([file]);
+                progress.CreateResources.Report([file]);
             }
         }
 
         private SdeData ParseSdeData()
-            => dataParser.Parse();
+            => parseData.Parse();
 
         private SdeRegion[] ParseUniverse()
-            => universeParser.Parse();
+            => parseUniverse.Parse();
 
         private void CopyImages()
-            => imageCopier.Copy();
+            => copyImages.Copy();
     }
 
     public static class ResourcesServices
     {
-        public static IServiceCollection AddResourceWriter(this IServiceCollection services)
+        public static IServiceCollection AddWriteResource(this IServiceCollection services)
         {
             services.AddCompression();
 
-            services.TryAddSingleton<IResourceWriter, ResourceWriter>();
+            services.TryAddSingleton<IWriteResource, WriteResource>();
 
             return services;
         }
 
-        public static IServiceCollection AddResourcesCreator(this IServiceCollection services)
+        public static IServiceCollection AddCreateResources(this IServiceCollection services)
         {
             services.AddImages();
             services.AddDataParsers();
             services.AddUniverseParser();
-            services.AddResourceWriter();
+            services.AddWriteResource();
 
-            services.TryAddSingleton<IResourcesCreator, ResourcesCreator>();
+            services.TryAddSingleton<ICreateResources, CreateResources>();
 
             return services;
         }

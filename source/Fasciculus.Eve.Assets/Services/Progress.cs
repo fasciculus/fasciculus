@@ -12,11 +12,11 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ExtractSde { get; }
         public IProgress<PendingOrDone> ParseNames { get; }
         public IProgress<PendingOrDone> ParseTypes { get; }
-        public IAccumulatingLongProgress RegionsParser { get; }
-        public IAccumulatingLongProgress ConstellationsParser { get; }
-        public IAccumulatingLongProgress SolarSystemsParser { get; }
-        public IAccumulatingLongProgress ImageCopier { get; }
-        public IAccumulatingProgress<List<FileInfo>> ResourceCreator { get; }
+        public IAccumulatingLongProgress ParseRegions { get; }
+        public IAccumulatingLongProgress ParseConstellations { get; }
+        public IAccumulatingLongProgress ParseSolarSystems { get; }
+        public IAccumulatingLongProgress CopyImages { get; }
+        public IAccumulatingProgress<List<FileInfo>> CreateResources { get; }
     }
 
     public class AssetsProgress : IAssetsProgress
@@ -27,11 +27,11 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ExtractSde { get; }
         public IProgress<PendingOrDone> ParseNames { get; }
         public IProgress<PendingOrDone> ParseTypes { get; }
-        public IAccumulatingLongProgress RegionsParser { get; }
-        public IAccumulatingLongProgress ConstellationsParser { get; }
-        public IAccumulatingLongProgress SolarSystemsParser { get; }
-        public IAccumulatingLongProgress ImageCopier { get; }
-        public IAccumulatingProgress<List<FileInfo>> ResourceCreator { get; }
+        public IAccumulatingLongProgress ParseRegions { get; }
+        public IAccumulatingLongProgress ParseConstellations { get; }
+        public IAccumulatingLongProgress ParseSolarSystems { get; }
+        public IAccumulatingLongProgress CopyImages { get; }
+        public IAccumulatingProgress<List<FileInfo>> CreateResources { get; }
 
         public AssetsProgress(IProgressCollector progressCollector)
         {
@@ -39,13 +39,12 @@ namespace Fasciculus.Eve.Assets.Services
             ExtractSde = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
             ParseNames = new TaskSafeProgress<PendingOrDone>(ReportParseNames);
             ParseTypes = new TaskSafeProgress<PendingOrDone>(ReportParseTypes);
-            RegionsParser = new AccumulatingLongProgress(ReportRegionsParserProgress, 100);
-            ConstellationsParser = new AccumulatingLongProgress(ReportConstellationsParserProgress, 100);
-            SolarSystemsParser = new AccumulatingLongProgress(ReportSolarSystemsParserProgress, 100);
-            ImageCopier = new AccumulatingLongProgress(ReportImageCopierProgress, 100);
+            ParseRegions = new AccumulatingLongProgress(ReportParseRegions, 100);
+            ParseConstellations = new AccumulatingLongProgress(ReportParseConstellations, 100);
+            ParseSolarSystems = new AccumulatingLongProgress(ReportParseSolarSystems, 100);
+            CopyImages = new AccumulatingLongProgress(ReportCopyImages, 100);
 
-            ResourceCreator = new AccumulatingProgress<List<FileInfo>>(ReportResourceCreatorProgress,
-                AccumulateResourceCreatorProgress, [], []);
+            CreateResources = new AccumulatingProgress<List<FileInfo>>(ReportCreateResources, AccumulateCreateResources, [], []);
 
             this.progressCollector = progressCollector;
         }
@@ -62,23 +61,23 @@ namespace Fasciculus.Eve.Assets.Services
         private void ReportParseTypes(PendingOrDone status)
             => progressCollector.ParseTypes = status;
 
-        private void ReportRegionsParserProgress(long _)
-            => progressCollector.ParseRegions = RegionsParser.Progress;
+        private void ReportParseRegions(long _)
+            => progressCollector.ParseRegions = ParseRegions.Progress;
 
-        private void ReportConstellationsParserProgress(long _)
-            => progressCollector.ParseConstellations = ConstellationsParser.Progress;
+        private void ReportParseConstellations(long _)
+            => progressCollector.ParseConstellations = ParseConstellations.Progress;
 
-        private void ReportSolarSystemsParserProgress(long _)
-            => progressCollector.ParseSolarSystems = SolarSystemsParser.Progress;
+        private void ReportParseSolarSystems(long _)
+            => progressCollector.ParseSolarSystems = ParseSolarSystems.Progress;
 
-        private void ReportImageCopierProgress(long _)
-            => progressCollector.CopyImages = ImageCopier.Progress;
+        private void ReportCopyImages(long _)
+            => progressCollector.CopyImages = CopyImages.Progress;
 
-        private List<FileInfo> AccumulateResourceCreatorProgress(List<FileInfo> current, List<FileInfo> value)
-            => current.Concat(value).ToList();
-
-        private void ReportResourceCreatorProgress(List<FileInfo> files)
+        private void ReportCreateResources(List<FileInfo> files)
             => progressCollector.ChangedResources = files.ToArray();
+
+        private List<FileInfo> AccumulateCreateResources(List<FileInfo> current, List<FileInfo> value)
+            => current.Concat(value).ToList();
     }
 
     public interface IProgressCollector : INotifyPropertyChanged

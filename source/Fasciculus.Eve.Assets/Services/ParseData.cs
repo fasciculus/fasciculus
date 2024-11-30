@@ -89,18 +89,18 @@ namespace Fasciculus.Eve.Assets.Services
             => progress.ParseTypes.Report(status);
     }
 
-    public interface IDataParser
+    public interface IParseData
     {
         public SdeData Parse();
     }
 
-    public class DataParser : IDataParser
+    public class ParseData : IParseData
     {
         private readonly IDownloadSde downloadSde;
         private readonly IParseNames parseNames;
         private readonly IParseTypes parseTypes;
 
-        public DataParser(IDownloadSde downloadSde, IParseNames parseNames, IParseTypes parseTypes)
+        public ParseData(IDownloadSde downloadSde, IParseNames parseNames, IParseTypes parseTypes)
         {
             this.downloadSde = downloadSde;
             this.parseNames = parseNames;
@@ -141,7 +141,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             services.TryAddSingleton<IParseNames, ParseNames>();
             services.TryAddSingleton<IParseTypes, ParseTypes>();
-            services.TryAddSingleton<IDataParser, DataParser>();
+            services.TryAddSingleton<IParseData, ParseData>();
 
             return services;
         }

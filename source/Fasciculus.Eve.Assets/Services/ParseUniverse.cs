@@ -4,12 +4,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
-    public interface IUniverseParser
+    public interface IParseUniverse
     {
         public SdeRegion[] Parse();
     }
 
-    public class UniverseParser : IUniverseParser
+    public class ParseUniverse : IParseUniverse
     {
         private readonly IExtractSde extractSde;
         private readonly IYaml yaml;
@@ -19,7 +19,7 @@ namespace Fasciculus.Eve.Assets.Services
         private SdeRegion[]? result = null;
         private readonly TaskSafeMutex resultMutex = new();
 
-        public UniverseParser(IAssetsDirectories assetsDirectories, IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
+        public ParseUniverse(IAssetsDirectories assetsDirectories, IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
         {
             this.extractSde = extractSde;
             this.yaml = yaml;
@@ -36,11 +36,11 @@ namespace Fasciculus.Eve.Assets.Services
                 ISdeFileSystem sdeFileSystem = extractSde.Extract();
                 DirectoryInfo[] regionDirectories = sdeFileSystem.Regions;
 
-                Start(regionDirectories);
+                Begin(regionDirectories);
 
                 result = regionDirectories.AsParallel().Select(ParseRegion).ToArray();
 
-                Done();
+                End();
             }
 
             return result;
@@ -54,7 +54,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             region.Constellations = constellationDirectories.Select(ParseConstellation).ToArray();
 
-            progress.RegionsParser.Report(1);
+            progress.ParseRegions.Report(1);
 
             return region;
         }
@@ -67,7 +67,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             constellation.SolarSystems = solarSystemDirectories.Select(ParseSolarSystem).ToArray();
 
-            progress.ConstellationsParser.Report(1);
+            progress.ParseConstellations.Report(1);
 
             return constellation;
         }
@@ -77,28 +77,28 @@ namespace Fasciculus.Eve.Assets.Services
             FileInfo file = solarSystemDirectory.File("solarsystem.yaml");
             SdeSolarSystem solarSystem = yaml.Deserialize<SdeSolarSystem>(file);
 
-            progress.SolarSystemsParser.Report(1);
+            progress.ParseSolarSystems.Report(1);
 
             return solarSystem;
         }
 
-        private DirectoryInfo[] Start(DirectoryInfo[] regionDirectories)
+        private DirectoryInfo[] Begin(DirectoryInfo[] regionDirectories)
         {
             DirectoryInfo[] constellationDirectories = regionDirectories.SelectMany(d => d.GetDirectories()).ToArray();
             DirectoryInfo[] solarSystemDirectories = constellationDirectories.SelectMany(d => d.GetDirectories()).ToArray();
 
-            progress.RegionsParser.Begin(regionDirectories.Length);
-            progress.ConstellationsParser.Begin(constellationDirectories.Length);
-            progress.SolarSystemsParser.Begin(solarSystemDirectories.Length);
+            progress.ParseRegions.Begin(regionDirectories.Length);
+            progress.ParseConstellations.Begin(constellationDirectories.Length);
+            progress.ParseSolarSystems.Begin(solarSystemDirectories.Length);
 
             return regionDirectories;
         }
 
-        private void Done()
+        private void End()
         {
-            progress.RegionsParser.End();
-            progress.ConstellationsParser.End();
-            progress.SolarSystemsParser.End();
+            progress.ParseRegions.End();
+            progress.ParseConstellations.End();
+            progress.ParseSolarSystems.End();
         }
     }
 
@@ -111,7 +111,7 @@ namespace Fasciculus.Eve.Assets.Services
             services.AddSdeZip();
             services.AddYaml();
 
-            services.TryAddSingleton<IUniverseParser, UniverseParser>();
+            services.TryAddSingleton<IParseUniverse, ParseUniverse>();
 
             return services;
         }
