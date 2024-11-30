@@ -34,13 +34,13 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (result == null)
             {
-                progress.ReportDownloadSde(DownloadSdeStatus.Downloading);
+                progress.DownloadSde.Report(DownloadSdeStatus.Downloading);
 
                 FileInfo destination = assetsDirectories.Downloads.File("sde.zip");
 
                 result = downloader.Download(new(SdeZipUri), destination, out bool notModified);
 
-                progress.ReportDownloadSde(notModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
+                progress.DownloadSde.Report(notModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
             }
 
             return result;
@@ -106,7 +106,7 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 FileInfo file = downloadSde.Download();
 
-                compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSdeProgress);
+                compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSde);
                 result = new SdeFileSystem(assetsDirectories.Sde);
             }
 

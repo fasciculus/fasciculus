@@ -8,72 +8,77 @@ namespace Fasciculus.Eve.Assets.Services
 {
     public interface IAssetsProgress
     {
-        public IAccumulatingLongProgress ExtractSdeProgress { get; }
-        public IAccumulatingLongProgress RegionsParserProgress { get; }
-        public IAccumulatingLongProgress ConstellationsParserProgress { get; }
-        public IAccumulatingLongProgress SolarSystemsParserProgress { get; }
-        public IAccumulatingLongProgress ImageCopierProgress { get; }
-        public IAccumulatingProgress<List<FileInfo>> ResourceCreatorProgress { get; }
-
-        public void ReportDownloadSde(DownloadSdeStatus status);
-        public void ReportParseNames(PendingOrDone status);
-        public void ReportParseTypes(PendingOrDone status);
+        public IProgress<DownloadSdeStatus> DownloadSde { get; }
+        public IAccumulatingLongProgress ExtractSde { get; }
+        public IProgress<PendingOrDone> ParseNames { get; }
+        public IProgress<PendingOrDone> ParseTypes { get; }
+        public IAccumulatingLongProgress RegionsParser { get; }
+        public IAccumulatingLongProgress ConstellationsParser { get; }
+        public IAccumulatingLongProgress SolarSystemsParser { get; }
+        public IAccumulatingLongProgress ImageCopier { get; }
+        public IAccumulatingProgress<List<FileInfo>> ResourceCreator { get; }
     }
 
     public class AssetsProgress : IAssetsProgress
     {
         private readonly IProgressCollector progressCollector;
 
-        public IAccumulatingLongProgress ExtractSdeProgress { get; }
-        public IAccumulatingLongProgress RegionsParserProgress { get; }
-        public IAccumulatingLongProgress ConstellationsParserProgress { get; }
-        public IAccumulatingLongProgress SolarSystemsParserProgress { get; }
-        public IAccumulatingLongProgress ImageCopierProgress { get; }
-        public IAccumulatingProgress<List<FileInfo>> ResourceCreatorProgress { get; }
+        public IProgress<DownloadSdeStatus> DownloadSde { get; }
+        public IAccumulatingLongProgress ExtractSde { get; }
+        public IProgress<PendingOrDone> ParseNames { get; }
+        public IProgress<PendingOrDone> ParseTypes { get; }
+        public IAccumulatingLongProgress RegionsParser { get; }
+        public IAccumulatingLongProgress ConstellationsParser { get; }
+        public IAccumulatingLongProgress SolarSystemsParser { get; }
+        public IAccumulatingLongProgress ImageCopier { get; }
+        public IAccumulatingProgress<List<FileInfo>> ResourceCreator { get; }
 
         public AssetsProgress(IProgressCollector progressCollector)
         {
-            ExtractSdeProgress = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
-            RegionsParserProgress = new AccumulatingLongProgress(ReportRegionsParserProgress, 100);
-            ConstellationsParserProgress = new AccumulatingLongProgress(ReportConstellationsParserProgress, 100);
-            SolarSystemsParserProgress = new AccumulatingLongProgress(ReportSolarSystemsParserProgress, 100);
-            ImageCopierProgress = new AccumulatingLongProgress(ReportImageCopierProgress, 100);
+            DownloadSde = new TaskSafeProgress<DownloadSdeStatus>(ReportDownloadSde);
+            ExtractSde = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
+            ParseNames = new TaskSafeProgress<PendingOrDone>(ReportParseNames);
+            ParseTypes = new TaskSafeProgress<PendingOrDone>(ReportParseTypes);
+            RegionsParser = new AccumulatingLongProgress(ReportRegionsParserProgress, 100);
+            ConstellationsParser = new AccumulatingLongProgress(ReportConstellationsParserProgress, 100);
+            SolarSystemsParser = new AccumulatingLongProgress(ReportSolarSystemsParserProgress, 100);
+            ImageCopier = new AccumulatingLongProgress(ReportImageCopierProgress, 100);
 
-            ResourceCreatorProgress = new AccumulatingProgress<List<FileInfo>>(ReportResourceCreatorProgress,
+            ResourceCreator = new AccumulatingProgress<List<FileInfo>>(ReportResourceCreatorProgress,
                 AccumulateResourceCreatorProgress, [], []);
 
             this.progressCollector = progressCollector;
         }
 
+        private void ReportDownloadSde(DownloadSdeStatus status)
+            => progressCollector.DownloadSde = status;
+
         private void ReportExtractSdeProgress(long _)
-            => progressCollector.ExtractSde = ExtractSdeProgress.Progress;
+            => progressCollector.ExtractSde = ExtractSde.Progress;
+
+        private void ReportParseNames(PendingOrDone status)
+            => progressCollector.ParseNames = status;
+
+        private void ReportParseTypes(PendingOrDone status)
+            => progressCollector.ParseTypes = status;
 
         private void ReportRegionsParserProgress(long _)
-            => progressCollector.ParseRegions = RegionsParserProgress.Progress;
+            => progressCollector.ParseRegions = RegionsParser.Progress;
 
         private void ReportConstellationsParserProgress(long _)
-            => progressCollector.ParseConstellations = ConstellationsParserProgress.Progress;
+            => progressCollector.ParseConstellations = ConstellationsParser.Progress;
 
         private void ReportSolarSystemsParserProgress(long _)
-            => progressCollector.ParseSolarSystems = SolarSystemsParserProgress.Progress;
+            => progressCollector.ParseSolarSystems = SolarSystemsParser.Progress;
 
         private void ReportImageCopierProgress(long _)
-            => progressCollector.CopyImages = ImageCopierProgress.Progress;
+            => progressCollector.CopyImages = ImageCopier.Progress;
 
         private List<FileInfo> AccumulateResourceCreatorProgress(List<FileInfo> current, List<FileInfo> value)
             => current.Concat(value).ToList();
 
         private void ReportResourceCreatorProgress(List<FileInfo> files)
             => progressCollector.ChangedResources = files.ToArray();
-
-        public void ReportDownloadSde(DownloadSdeStatus status)
-            => progressCollector.DownloadSde = status;
-
-        public void ReportParseNames(PendingOrDone status)
-            => progressCollector.ParseNames = status;
-
-        public void ReportParseTypes(PendingOrDone status)
-            => progressCollector.ParseTypes = status;
     }
 
     public interface IProgressCollector : INotifyPropertyChanged

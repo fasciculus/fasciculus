@@ -54,7 +54,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             region.Constellations = constellationDirectories.Select(ParseConstellation).ToArray();
 
-            progress.RegionsParserProgress.Report(1);
+            progress.RegionsParser.Report(1);
 
             return region;
         }
@@ -67,7 +67,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             constellation.SolarSystems = solarSystemDirectories.Select(ParseSolarSystem).ToArray();
 
-            progress.ConstellationsParserProgress.Report(1);
+            progress.ConstellationsParser.Report(1);
 
             return constellation;
         }
@@ -77,7 +77,7 @@ namespace Fasciculus.Eve.Assets.Services
             FileInfo file = solarSystemDirectory.File("solarsystem.yaml");
             SdeSolarSystem solarSystem = yaml.Deserialize<SdeSolarSystem>(file);
 
-            progress.SolarSystemsParserProgress.Report(1);
+            progress.SolarSystemsParser.Report(1);
 
             return solarSystem;
         }
@@ -87,18 +87,18 @@ namespace Fasciculus.Eve.Assets.Services
             DirectoryInfo[] constellationDirectories = regionDirectories.SelectMany(d => d.GetDirectories()).ToArray();
             DirectoryInfo[] solarSystemDirectories = constellationDirectories.SelectMany(d => d.GetDirectories()).ToArray();
 
-            progress.RegionsParserProgress.Begin(regionDirectories.Length);
-            progress.ConstellationsParserProgress.Begin(constellationDirectories.Length);
-            progress.SolarSystemsParserProgress.Begin(solarSystemDirectories.Length);
+            progress.RegionsParser.Begin(regionDirectories.Length);
+            progress.ConstellationsParser.Begin(constellationDirectories.Length);
+            progress.SolarSystemsParser.Begin(solarSystemDirectories.Length);
 
             return regionDirectories;
         }
 
         private void Done()
         {
-            progress.RegionsParserProgress.End();
-            progress.ConstellationsParserProgress.End();
-            progress.SolarSystemsParserProgress.End();
+            progress.RegionsParser.End();
+            progress.ConstellationsParser.End();
+            progress.SolarSystemsParser.End();
         }
     }
 

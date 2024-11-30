@@ -27,11 +27,11 @@ namespace Fasciculus.Eve.Assets.Services
         {
             Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
 
-            progress.ImageCopierProgress.Begin(entries.Length);
+            progress.ImageCopier.Begin(entries.Length);
 
             entries.Apply(Copy);
 
-            progress.ImageCopierProgress.End();
+            progress.ImageCopier.End();
         }
 
         private void Copy(Tuple<FileInfo, FileInfo> entry)
@@ -46,7 +46,7 @@ namespace Fasciculus.Eve.Assets.Services
                 source.CopyTo(destination.FullName);
             }
 
-            progress.ImageCopierProgress.Report(1);
+            progress.ImageCopier.Report(1);
         }
 
         private Tuple<FileInfo, FileInfo>[] ParseIndex()

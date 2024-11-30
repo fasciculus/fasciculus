@@ -131,7 +131,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (resourceWriter.Write(stream.ToArray(), file, false))
             {
-                progress.ResourceCreatorProgress.Report([file]);
+                progress.ResourceCreator.Report([file]);
             }
         }
 

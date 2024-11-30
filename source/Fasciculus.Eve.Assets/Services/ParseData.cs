@@ -45,13 +45,13 @@ namespace Fasciculus.Eve.Assets.Services
         protected abstract void Report(PendingOrDone status);
     }
 
-    public interface INamesParser : IDataParserBase<Dictionary<long, string>> { }
+    public interface IParseNames : IDataParserBase<Dictionary<long, string>> { }
 
-    public class NamesParser : DataParserBase<Dictionary<long, string>>, INamesParser
+    public class ParseNames : DataParserBase<Dictionary<long, string>>, IParseNames
     {
         private readonly IAssetsProgress progress;
 
-        public NamesParser(IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
+        public ParseNames(IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
             : base(extractSde, yaml)
         {
             this.progress = progress;
@@ -65,16 +65,16 @@ namespace Fasciculus.Eve.Assets.Services
         }
 
         protected override void Report(PendingOrDone status)
-            => progress.ReportParseNames(status);
+            => progress.ParseNames.Report(status);
     }
 
-    public interface ITypesParser : IDataParserBase<Dictionary<long, SdeType>> { }
+    public interface IParseTypes : IDataParserBase<Dictionary<long, SdeType>> { }
 
-    public class TypesParser : DataParserBase<Dictionary<long, SdeType>>, ITypesParser
+    public class ParseTypes : DataParserBase<Dictionary<long, SdeType>>, IParseTypes
     {
         private readonly IAssetsProgress progress;
 
-        public TypesParser(IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
+        public ParseTypes(IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
             : base(extractSde, yaml)
         {
             this.progress = progress;
@@ -86,7 +86,7 @@ namespace Fasciculus.Eve.Assets.Services
         }
 
         protected override void Report(PendingOrDone status)
-            => progress.ReportParseTypes(status);
+            => progress.ParseTypes.Report(status);
     }
 
     public interface IDataParser
@@ -97,14 +97,14 @@ namespace Fasciculus.Eve.Assets.Services
     public class DataParser : IDataParser
     {
         private readonly IDownloadSde downloadSde;
-        private readonly INamesParser namesParser;
-        private readonly ITypesParser typesParser;
+        private readonly IParseNames parseNames;
+        private readonly IParseTypes parseTypes;
 
-        public DataParser(IDownloadSde downloadSde, INamesParser namesParser, ITypesParser typesParser)
+        public DataParser(IDownloadSde downloadSde, IParseNames parseNames, IParseTypes parseTypes)
         {
             this.downloadSde = downloadSde;
-            this.namesParser = namesParser;
-            this.typesParser = typesParser;
+            this.parseNames = parseNames;
+            this.parseTypes = parseTypes;
         }
 
         public SdeData Parse()
@@ -112,9 +112,7 @@ namespace Fasciculus.Eve.Assets.Services
             Task<Dictionary<long, string>> names = Tasks.LongRunning(ParseNames);
             Task<Dictionary<long, SdeType>> types = Tasks.LongRunning(ParseTypes);
 
-            Task[] tasks = { names, types };
-
-            Task.WaitAll(tasks);
+            Task.WaitAll([names, types]);
 
             return new()
             {
@@ -125,10 +123,10 @@ namespace Fasciculus.Eve.Assets.Services
         }
 
         private Dictionary<long, string> ParseNames()
-            => namesParser.Parse();
+            => parseNames.Parse();
 
         private Dictionary<long, SdeType> ParseTypes()
-            => typesParser.Parse();
+            => parseTypes.Parse();
     }
 
     public static class DataParserServices
@@ -141,8 +139,8 @@ namespace Fasciculus.Eve.Assets.Services
             services.AddSdeZip();
             services.AddYaml();
 
-            services.TryAddSingleton<INamesParser, NamesParser>();
-            services.TryAddSingleton<ITypesParser, TypesParser>();
+            services.TryAddSingleton<IParseNames, ParseNames>();
+            services.TryAddSingleton<IParseTypes, ParseTypes>();
             services.TryAddSingleton<IDataParser, DataParser>();
 
             return services;
