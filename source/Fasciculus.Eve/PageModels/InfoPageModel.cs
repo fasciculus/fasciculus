@@ -19,7 +19,7 @@ namespace Fasciculus.Eve.PageModels
         {
             DateTime sdeVersion = DateTime.FromBinary(resources["SdeVersion"].Read(s => s.ReadLong(), false));
 
-            ApplicationVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "?";
+            ApplicationVersion = Assembly.GetEntryAssembly().GetVersion();
             SdeVersion = sdeVersion.ToString("yyyy-MM-dd");
 
             SideBar = sideBar;
