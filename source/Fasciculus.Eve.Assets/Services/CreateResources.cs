@@ -1,5 +1,4 @@
-﻿using Fasciculus.Eve.Assets.Models;
-using Fasciculus.Eve.Models;
+﻿using Fasciculus.Eve.Models;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -12,7 +11,7 @@ namespace Fasciculus.Eve.Assets.Services
 
     public class CreateResources : ICreateResources
     {
-        private readonly IParseData parseData;
+        private readonly IConvertData convertData;
         private readonly IConvertUniverse convertUniverse;
         private readonly ICreateImages createImages;
 
@@ -21,10 +20,10 @@ namespace Fasciculus.Eve.Assets.Services
 
         private readonly IAssetsProgress progress;
 
-        public CreateResources(IParseData parseData, IConvertUniverse convertUniverse, ICreateImages createImages,
+        public CreateResources(IConvertData convertData, IConvertUniverse convertUniverse, ICreateImages createImages,
             IAssetsDirectories assetsDirectories, IWriteResource writeResource, IAssetsProgress progress)
         {
-            this.parseData = parseData;
+            this.convertData = convertData;
             this.convertUniverse = convertUniverse;
             this.createImages = createImages;
             this.assetsDirectories = assetsDirectories;
@@ -34,15 +33,15 @@ namespace Fasciculus.Eve.Assets.Services
 
         private void Create()
         {
-            Task<SdeData> data = parseData.ParseAsync();
+            Task<EveData> data = convertData.ConvertAsync();
             Task<EveUniverse> universe = convertUniverse.ConvertAsync();
             Task<List<FileInfo>> images = createImages.CreateAsync();
 
             Task.WaitAll([data, universe, images]);
 
-            progress.CreateResources.Report(images.Result);
+            progress.CreateResources.Report(WriteData(data.Result));
             progress.CreateResources.Report(WriteUniverse(universe.Result));
-            progress.CreateResources.Report(WriteVersion(data.Result));
+            progress.CreateResources.Report(images.Result);
         }
 
         public Task CreateAsync()
@@ -50,14 +49,14 @@ namespace Fasciculus.Eve.Assets.Services
             return Tasks.LongRunning(() => Create());
         }
 
-        private List<FileInfo> WriteVersion(SdeData data)
+        private List<FileInfo> WriteData(EveData data)
         {
             using MemoryStream stream = new();
-            FileInfo file = assetsDirectories.Resources.File("SdeVersion");
+            FileInfo file = assetsDirectories.Resources.File("EveData");
 
-            stream.WriteLong(data.Version.ToBinary());
+            data.Write(stream);
 
-            return writeResource.Write(stream.ToArray(), file, false) ? [file] : [];
+            return writeResource.Write(stream.ToArray(), file, true) ? [file] : [];
         }
 
         private List<FileInfo> WriteUniverse(EveUniverse universe)
@@ -76,9 +75,10 @@ namespace Fasciculus.Eve.Assets.Services
         public static IServiceCollection AddCreateResources(this IServiceCollection services)
         {
             services.AddImages();
-            services.AddParseData();
+            services.AddConvertData();
             services.AddConvertUniverse();
             services.AddWriteResource();
+            services.AddAssetsProgress();
 
             services.TryAddSingleton<ICreateResources, CreateResources>();
 

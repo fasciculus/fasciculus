@@ -74,6 +74,11 @@
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Conversion" FontAttributes="Bold"
                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
+                <Label Text="Data"
+                       Grid.Row="1" Grid.Column="0" />
+                <Label Text="{Binding ConvertData, Converter={StaticResource ptd}}"
+                       TextColor="{Binding ConvertData, Converter={StaticResource ptd}}"
+                       Grid.Row="1" Grid.Column="1" />
                 <Label Text="Universe"
                        Grid.Row="1" Grid.Column="2" />
                 <Label Text="{Binding ConvertUniverse, Converter={StaticResource ptd}}"

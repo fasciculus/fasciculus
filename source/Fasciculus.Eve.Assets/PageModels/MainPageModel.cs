@@ -35,6 +35,9 @@ namespace Fasciculus.Eve.Assets.PageModels
         private LongProgressInfo parseSolarSystems = LongProgressInfo.Start;
 
         [ObservableProperty]
+        private PendingToDone convertData = PendingToDone.Pending;
+
+        [ObservableProperty]
         private PendingToDone convertUniverse = PendingToDone.Pending;
 
         [ObservableProperty]
@@ -70,6 +73,7 @@ namespace Fasciculus.Eve.Assets.PageModels
             ParseConstellations = progressCollector.ParseConstellations;
             ParseSolarSystems = progressCollector.ParseSolarSystems;
 
+            ConvertData = progressCollector.ConvertData;
             ConvertUniverse = progressCollector.ConvertUniverse;
 
             CopyImages = progressCollector.CopyImages;

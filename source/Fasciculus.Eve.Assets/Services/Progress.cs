@@ -30,6 +30,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ParseRegions { get; }
         public IAccumulatingLongProgress ParseConstellations { get; }
         public IAccumulatingLongProgress ParseSolarSystems { get; }
+        public IProgress<PendingToDone> ConvertData { get; }
         public IProgress<PendingToDone> ConvertUniverse { get; }
         public IAccumulatingLongProgress CopyImages { get; }
         public IProgress<PendingToDone> CreateImages { get; }
@@ -47,6 +48,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ParseRegions { get; }
         public IAccumulatingLongProgress ParseConstellations { get; }
         public IAccumulatingLongProgress ParseSolarSystems { get; }
+        public IProgress<PendingToDone> ConvertData { get; }
         public IProgress<PendingToDone> ConvertUniverse { get; }
         public IAccumulatingLongProgress CopyImages { get; }
         public IProgress<PendingToDone> CreateImages { get; }
@@ -61,6 +63,7 @@ namespace Fasciculus.Eve.Assets.Services
             ParseRegions = new AccumulatingLongProgress(ReportParseRegions, 100);
             ParseConstellations = new AccumulatingLongProgress(ReportParseConstellations, 100);
             ParseSolarSystems = new AccumulatingLongProgress(ReportParseSolarSystems, 100);
+            ConvertData = new TaskSafeProgress<PendingToDone>(ReportConvertData);
             ConvertUniverse = new TaskSafeProgress<PendingToDone>(ReportConvertUniverse);
             CopyImages = new AccumulatingLongProgress(ReportCopyImages, 100);
             CreateImages = new TaskSafeProgress<PendingToDone>(ReportCreateImages);
@@ -91,6 +94,9 @@ namespace Fasciculus.Eve.Assets.Services
         private void ReportParseSolarSystems(long _)
             => progressCollector.ParseSolarSystems = ParseSolarSystems.Progress;
 
+        private void ReportConvertData(PendingToDone status)
+            => progressCollector.ConvertData = status;
+
         private void ReportConvertUniverse(PendingToDone status)
             => progressCollector.ConvertUniverse = status;
 
@@ -119,6 +125,7 @@ namespace Fasciculus.Eve.Assets.Services
         public LongProgressInfo ParseConstellations { get; set; }
         public LongProgressInfo ParseSolarSystems { get; set; }
 
+        public PendingToDone ConvertData { get; set; }
         public PendingToDone ConvertUniverse { get; set; }
 
         public LongProgressInfo CopyImages { get; set; }
@@ -149,6 +156,9 @@ namespace Fasciculus.Eve.Assets.Services
 
         [ObservableProperty]
         private LongProgressInfo parseSolarSystems = LongProgressInfo.Start;
+
+        [ObservableProperty]
+        private PendingToDone convertData = PendingToDone.Pending;
 
         [ObservableProperty]
         private PendingToDone convertUniverse = PendingToDone.Pending;
