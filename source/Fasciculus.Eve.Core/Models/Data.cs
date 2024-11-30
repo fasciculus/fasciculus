@@ -3,29 +3,73 @@ using System.IO;
 
 namespace Fasciculus.Eve.Models
 {
+    public class EveType
+    {
+        public class Data
+        {
+            public long Id { get; }
+            public string Name { get; } = string.Empty;
+            public double Volume { get; }
+
+            public Data(long id, string name, double volume)
+            {
+                Id = id;
+                Name = name;
+                Volume = volume;
+            }
+
+            public Data(Stream stream)
+            {
+                Id = stream.ReadLong();
+                Name = stream.ReadString();
+                Volume = stream.ReadDouble();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteLong(Id);
+                stream.WriteString(Name);
+                stream.WriteDouble(Volume);
+            }
+        }
+
+        private readonly Data data;
+
+        public EveType(Data data)
+        {
+            this.data = data;
+        }
+    }
+
     public class EveData
     {
         public class Data
         {
             public DateTime Version { get; }
+            public EveType.Data[] Types { get; }
 
-            public Data(DateTime version)
+            public Data(DateTime version, EveType.Data[] types)
             {
                 Version = version;
+                Types = types;
             }
 
             public Data(Stream stream)
             {
                 Version = stream.ReadDateTime();
+                Types = stream.ReadArray(s => new EveType.Data(s));
             }
 
             public void Write(Stream stream)
             {
                 stream.WriteDateTime(Version);
+                stream.WriteArray(Types, t => t.Write(stream));
             }
         }
 
         private readonly Data data;
+
+        public DateTime Version => data.Version;
 
         public EveData(Data data)
         {

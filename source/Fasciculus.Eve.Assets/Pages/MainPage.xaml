@@ -16,7 +16,7 @@
     <ScrollView>
         <VerticalStackLayout
             Padding="16,16"
-            Spacing="16">
+            Spacing="32">
 
             <Button
                 x:Name="StartBtn"
@@ -108,7 +108,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate  x:DataType="x:String">
                         <ViewCell>
-                            <Label Text="{Binding .}" />
+                            <Label Text="{Binding .}" TextColor="Orange" />
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

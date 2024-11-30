@@ -86,7 +86,7 @@ namespace Fasciculus.IO
 
     public static class ResourceServices
     {
-        public static IServiceCollection AddResources(this IServiceCollection services)
+        public static IServiceCollection AddEmbeddedResources(this IServiceCollection services)
         {
             services.AddCompression();
 

@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources/SdeVersion">
-      <LogicalName>SdeVersion</LogicalName>
+    <EmbeddedResource Include="Resources/EveData">
+      <LogicalName>EveData</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 

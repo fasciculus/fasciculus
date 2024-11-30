@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Fasciculus.IO;
+using Fasciculus.Eve.Services;
 using System.Reflection;
 
 namespace Fasciculus.Eve.PageModels
@@ -15,12 +15,10 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private SideBarModel sideBar;
 
-        public InfoPageModel(IEmbeddedResources resources, SideBarModel sideBar)
+        public InfoPageModel(IEveResources resources, SideBarModel sideBar)
         {
-            DateTime sdeVersion = DateTime.FromBinary(resources["SdeVersion"].Read(s => s.ReadLong(), false));
-
             ApplicationVersion = Assembly.GetEntryAssembly().GetVersion();
-            SdeVersion = sdeVersion.ToString("yyyy-MM-dd");
+            SdeVersion = resources.Data.Version.ToString("yyyy-MM-dd");
 
             SideBar = sideBar;
         }
