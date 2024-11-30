@@ -38,6 +38,7 @@
 
     public class SdeConstellation
     {
+        public int ConstellationID { get; set; }
         public SdeSolarSystem[] SolarSystems { get; set; } = [];
     }
 
