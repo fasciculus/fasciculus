@@ -156,8 +156,38 @@ namespace Fasciculus.Eve.Models
         {
             this.data = data;
         }
+    }
 
-        public EveRegion(Stream stream)
+    public class EveUniverse
+    {
+        public class Data
+        {
+            public EveRegion.Data[] Regions { get; }
+
+            public Data(EveRegion.Data[] regions)
+            {
+                Regions = regions;
+            }
+
+            public Data(Stream stream)
+            {
+                Regions = stream.ReadArray(s => new EveRegion.Data(s));
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteArray(Regions, r => r.Write(stream));
+            }
+        }
+
+        private readonly Data data;
+
+        public EveUniverse(Data data)
+        {
+            this.data = data;
+        }
+
+        public EveUniverse(Stream stream)
             : this(new Data(stream)) { }
 
         public void Write(Stream stream)

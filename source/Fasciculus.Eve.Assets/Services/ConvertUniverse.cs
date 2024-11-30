@@ -7,7 +7,7 @@ namespace Fasciculus.Eve.Assets.Services
 {
     public interface IConvertUniverse
     {
-        public Task<EveRegion.Data[]> ConvertAsync();
+        public Task<EveUniverse> ConvertAsync();
     }
 
     public class ConvertUniverse : IConvertUniverse
@@ -16,7 +16,7 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IParseUniverse parseUniverse;
         private readonly IAssetsProgress progress;
 
-        private EveRegion.Data[]? result = null;
+        private EveUniverse? result = null;
         private readonly TaskSafeMutex mutex = new();
 
         public ConvertUniverse(IParseData parseData, IParseUniverse parseUniverse, IAssetsProgress progress)
@@ -26,7 +26,7 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public async Task<EveRegion.Data[]> ConvertAsync()
+        public async Task<EveUniverse> ConvertAsync()
         {
             using Locker locker = Locker.Lock(mutex);
 
@@ -34,22 +34,27 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (result is null)
             {
-                Task<SdeData> sdeData = parseData.ParseAsync();
                 Task<SdeRegion[]> sdeRegions = parseUniverse.ParseAsync();
+                Task<SdeData> sdeData = parseData.ParseAsync();
 
-                Task.WaitAll([sdeData, sdeRegions]);
+                Task.WaitAll([sdeRegions, sdeData]);
 
                 progress.ConvertUniverse.Report(PendingToDone.Working);
-
-                result = sdeRegions.Result
-                    .Select(r => ConvertRegion(r, sdeData.Result))
-                    .OrderBy(r => r.Id)
-                    .ToArray();
-
+                result = ConvertRegions(sdeRegions.Result, sdeData.Result);
                 progress.ConvertUniverse.Report(PendingToDone.Done);
             }
 
             return result;
+        }
+
+        private static EveUniverse ConvertRegions(SdeRegion[] sdeRegions, SdeData sdeData)
+        {
+            EveRegion.Data[] regions = sdeRegions
+                    .Select(r => ConvertRegion(r, sdeData))
+                    .OrderBy(r => r.Id)
+                    .ToArray();
+
+            return new(new EveUniverse.Data(regions));
         }
 
         private static EveRegion.Data ConvertRegion(SdeRegion sdeRegion, SdeData sdeData)
