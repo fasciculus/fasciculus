@@ -43,6 +43,7 @@
 
     public class SdeRegion
     {
+        public int RegionID { get; set; }
         public SdeConstellation[] Constellations { get; set; } = [];
     }
 }

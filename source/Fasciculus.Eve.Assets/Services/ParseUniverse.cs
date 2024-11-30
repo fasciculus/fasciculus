@@ -104,9 +104,9 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
-    public static class UniverseParserServices
+    public static class ParseUniverseServices
     {
-        public static IServiceCollection AddUniverseParser(this IServiceCollection services)
+        public static IServiceCollection AddParseUniverse(this IServiceCollection services)
         {
             services.AddAssetsProgress();
 

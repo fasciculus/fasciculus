@@ -123,7 +123,7 @@ namespace Fasciculus.Eve.Assets.Services
 
     public static class DataParserServices
     {
-        public static IServiceCollection AddDataParsers(this IServiceCollection services)
+        public static IServiceCollection AddParseData(this IServiceCollection services)
         {
             services.AddAssetsDirectories();
             services.AddAssetsProgress();

@@ -8,6 +8,10 @@ namespace Fasciculus.Eve.Assets.PageModels
 {
     public partial class MainPageModel : ObservableObject
     {
+        private static readonly string PendingText = "Pending";
+        private static readonly string WorkingText = "Working";
+        private static readonly string DoneText = "Done";
+
         private static readonly Color PendingColor = Colors.Orange;
         private static readonly Color WorkingColor = Colors.Orange;
         private static readonly Color DoneColor = Colors.Green;
@@ -17,10 +21,10 @@ namespace Fasciculus.Eve.Assets.PageModels
         private readonly ICreateResources createResources;
 
         [ObservableProperty]
-        private string downloadSdeText = PendingToDoneText(PendingToDone.Pending);
+        private string downloadSdeText = PendingText;
 
         [ObservableProperty]
-        private Color downloadSdeColor = PendingToDoneColor(PendingToDone.Pending);
+        private Color downloadSdeColor = PendingColor;
 
         [ObservableProperty]
         private double extractSdeValue = 0;
@@ -29,13 +33,13 @@ namespace Fasciculus.Eve.Assets.PageModels
         private Color extractSdeColor = PendingColor;
 
         [ObservableProperty]
-        private string parseNamesText = PendingToDoneText(PendingToDone.Pending);
+        private string parseNamesText = PendingText;
 
         [ObservableProperty]
         private Color parseNamesColor = PendingColor;
 
         [ObservableProperty]
-        private string parseTypesText = PendingToDoneText(PendingToDone.Pending);
+        private string parseTypesText = PendingText;
 
         [ObservableProperty]
         private Color parseTypesColor = PendingColor;
@@ -59,6 +63,12 @@ namespace Fasciculus.Eve.Assets.PageModels
         private Color parseSolarSystemsColor = PendingColor;
 
         [ObservableProperty]
+        private string convertUniverseText = PendingText;
+
+        [ObservableProperty]
+        private Color convertUniverseColor = PendingColor;
+
+        [ObservableProperty]
         private double copyImagesValue = 0;
 
         [ObservableProperty]
@@ -66,8 +76,6 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         [ObservableProperty]
         private string[] changedResources = [];
-
-        //public ICommand StartCommand { get; init; }
 
         private ILogger logger;
 
@@ -103,6 +111,9 @@ namespace Fasciculus.Eve.Assets.PageModels
 
             ParseSolarSystemsValue = progressCollector.ParseSolarSystems;
             ParseSolarSystemsColor = progressCollector.ParseSolarSystemsDone ? DoneColor : PendingColor;
+
+            ConvertUniverseText = PendingToDoneText(progressCollector.ConvertUniverse);
+            ConvertUniverseColor = PendingToDoneColor(progressCollector.ConvertUniverse);
 
             CopyImagesValue = progressCollector.CopyImages;
             CopyImagesColor = progressCollector.CopyImages == 1.0 ? DoneColor : PendingColor;
@@ -143,9 +154,9 @@ namespace Fasciculus.Eve.Assets.PageModels
         {
             return status switch
             {
-                PendingToDone.Pending => "Pending",
-                PendingToDone.Working => "Working",
-                PendingToDone.Done => "Done",
+                PendingToDone.Pending => PendingText,
+                PendingToDone.Working => WorkingText,
+                PendingToDone.Done => DoneText,
                 _ => string.Empty
             };
         }

@@ -36,6 +36,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Eve.Core/Fasciculus.Eve.Core.csproj" />
     <ProjectReference Include="../Fasciculus.Steam/Fasciculus.Steam.csproj" />
   </ItemGroup>
 
