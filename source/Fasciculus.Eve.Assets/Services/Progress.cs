@@ -80,22 +80,13 @@ namespace Fasciculus.Eve.Assets.Services
             => progressCollector.ParseTypes = status;
 
         private void ReportParseRegions(long _)
-        {
-            progressCollector.ParseRegions = ParseRegions.Progress;
-            progressCollector.ParseRegionsDone = ParseRegions.Done;
-        }
+            => progressCollector.ParseRegions = ParseRegions.Progress;
 
         private void ReportParseConstellations(long _)
-        {
-            progressCollector.ParseConstellations = ParseConstellations.Progress;
-            progressCollector.ParseConstellationsDone = ParseConstellations.Done;
-        }
+            => progressCollector.ParseConstellations = ParseConstellations.Progress;
 
         private void ReportParseSolarSystems(long _)
-        {
-            progressCollector.ParseSolarSystems = ParseSolarSystems.Progress;
-            progressCollector.ParseSolarSystemsDone = ParseSolarSystems.Done;
-        }
+            => progressCollector.ParseSolarSystems = ParseSolarSystems.Progress;
 
         private void ReportConvertUniverse(PendingToDone status)
             => progressCollector.ConvertUniverse = status;
@@ -104,32 +95,27 @@ namespace Fasciculus.Eve.Assets.Services
             => progressCollector.CopyImages = CopyImages.Progress;
 
         private void ReportCreateResources(List<FileInfo> files)
-            => progressCollector.ChangedResources = files.ToArray();
+            => progressCollector.ChangedResources = [.. files];
 
         private List<FileInfo> AccumulateCreateResources(List<FileInfo> current, List<FileInfo> value)
-            => current.Concat(value).ToList();
+            => [.. current, .. value];
     }
 
     public interface IProgressCollector : INotifyPropertyChanged
     {
         public DownloadSdeStatus DownloadSde { get; set; }
-        public double ExtractSde { get; set; }
+        public LongProgressInfo ExtractSde { get; set; }
 
         public PendingToDone ParseNames { get; set; }
         public PendingToDone ParseTypes { get; set; }
 
-        public double ParseRegions { get; set; }
-        public bool ParseRegionsDone { get; set; }
-
-        public double ParseConstellations { get; set; }
-        public bool ParseConstellationsDone { get; set; }
-
-        public double ParseSolarSystems { get; set; }
-        public bool ParseSolarSystemsDone { get; set; }
+        public LongProgressInfo ParseRegions { get; set; }
+        public LongProgressInfo ParseConstellations { get; set; }
+        public LongProgressInfo ParseSolarSystems { get; set; }
 
         public PendingToDone ConvertUniverse { get; set; }
 
-        public double CopyImages { get; set; }
+        public LongProgressInfo CopyImages { get; set; }
 
         public FileInfo[] ChangedResources { get; set; }
     }
@@ -140,7 +126,7 @@ namespace Fasciculus.Eve.Assets.Services
         private DownloadSdeStatus downloadSde = DownloadSdeStatus.Pending;
 
         [ObservableProperty]
-        private double extractSde;
+        private LongProgressInfo extractSde = LongProgressInfo.Start;
 
         [ObservableProperty]
         private PendingToDone parseNames = PendingToDone.Pending;
@@ -149,28 +135,19 @@ namespace Fasciculus.Eve.Assets.Services
         private PendingToDone parseTypes = PendingToDone.Pending;
 
         [ObservableProperty]
-        private double parseRegions;
+        private LongProgressInfo parseRegions = LongProgressInfo.Start;
 
         [ObservableProperty]
-        private bool parseRegionsDone;
+        private LongProgressInfo parseConstellations = LongProgressInfo.Start;
 
         [ObservableProperty]
-        private double parseConstellations;
-
-        [ObservableProperty]
-        private bool parseConstellationsDone;
-
-        [ObservableProperty]
-        private double parseSolarSystems;
-
-        [ObservableProperty]
-        private bool parseSolarSystemsDone;
+        private LongProgressInfo parseSolarSystems = LongProgressInfo.Start;
 
         [ObservableProperty]
         private PendingToDone convertUniverse = PendingToDone.Pending;
 
         [ObservableProperty]
-        private double copyImages;
+        private LongProgressInfo copyImages = LongProgressInfo.Start;
 
         [ObservableProperty]
         private FileInfo[] changedResources = [];

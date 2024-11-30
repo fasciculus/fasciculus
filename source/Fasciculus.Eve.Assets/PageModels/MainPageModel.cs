@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Assets.Services;
+using Fasciculus.Support;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
@@ -8,26 +9,15 @@ namespace Fasciculus.Eve.Assets.PageModels
 {
     public partial class MainPageModel : ObservableObject
     {
-        private static readonly string PendingText = "Pending";
-
-        private static readonly Color PendingColor = Colors.Orange;
-        private static readonly Color DoneColor = Colors.Green;
-
         private readonly IProgressCollector progressCollector;
         private readonly IAssetsDirectories assetsDirectories;
         private readonly ICreateResources createResources;
 
         [ObservableProperty]
-        private string downloadSdeText = PendingText;
+        private DownloadSdeStatus downloadSde = DownloadSdeStatus.Pending;
 
         [ObservableProperty]
-        private Color downloadSdeColor = PendingColor;
-
-        [ObservableProperty]
-        private double extractSdeValue = 0;
-
-        [ObservableProperty]
-        private Color extractSdeColor = PendingColor;
+        private LongProgressInfo extractSde = LongProgressInfo.Start;
 
         [ObservableProperty]
         private PendingToDone parseNames = PendingToDone.Pending;
@@ -36,31 +26,19 @@ namespace Fasciculus.Eve.Assets.PageModels
         private PendingToDone parseTypes = PendingToDone.Pending;
 
         [ObservableProperty]
-        private double parseRegionsValue = 0;
+        private LongProgressInfo parseRegions = LongProgressInfo.Start;
 
         [ObservableProperty]
-        private Color parseRegionsColor = PendingColor;
+        private LongProgressInfo parseConstellations = LongProgressInfo.Start;
 
         [ObservableProperty]
-        private double parseConstellationsValue = 0;
-
-        [ObservableProperty]
-        private Color parseConstellationsColor = PendingColor;
-
-        [ObservableProperty]
-        private double parseSolarSystemsValue = 0;
-
-        [ObservableProperty]
-        private Color parseSolarSystemsColor = PendingColor;
+        private LongProgressInfo parseSolarSystems = LongProgressInfo.Start;
 
         [ObservableProperty]
         private PendingToDone convertUniverse = PendingToDone.Pending;
 
         [ObservableProperty]
-        private double copyImagesValue = 0;
-
-        [ObservableProperty]
-        private Color copyImagesColor = PendingColor;
+        private LongProgressInfo copyImages = LongProgressInfo.Start;
 
         [ObservableProperty]
         private string[] changedResources = [];
@@ -79,28 +57,19 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            DownloadSdeText = DownloadSdeStatusText(progressCollector.DownloadSde);
-            DownloadSdeColor = DownloadSdeStatusColor(progressCollector.DownloadSde);
-
-            ExtractSdeValue = progressCollector.ExtractSde;
-            ExtractSdeColor = progressCollector.ExtractSde == 1.0 ? DoneColor : PendingColor;
+            DownloadSde = progressCollector.DownloadSde;
+            ExtractSde = progressCollector.ExtractSde;
 
             ParseNames = progressCollector.ParseNames;
             ParseTypes = progressCollector.ParseTypes;
 
-            ParseRegionsValue = progressCollector.ParseRegions;
-            ParseRegionsColor = progressCollector.ParseRegionsDone ? DoneColor : PendingColor;
-
-            ParseConstellationsValue = progressCollector.ParseConstellations;
-            ParseConstellationsColor = progressCollector.ParseConstellationsDone ? DoneColor : PendingColor;
-
-            ParseSolarSystemsValue = progressCollector.ParseSolarSystems;
-            ParseSolarSystemsColor = progressCollector.ParseSolarSystemsDone ? DoneColor : PendingColor;
+            ParseRegions = progressCollector.ParseRegions;
+            ParseConstellations = progressCollector.ParseConstellations;
+            ParseSolarSystems = progressCollector.ParseSolarSystems;
 
             ConvertUniverse = progressCollector.ConvertUniverse;
 
-            CopyImagesValue = progressCollector.CopyImages;
-            CopyImagesColor = progressCollector.CopyImages == 1.0 ? DoneColor : PendingColor;
+            CopyImages = progressCollector.CopyImages;
 
             ChangedResources = GetChangedResources();
         }
@@ -110,33 +79,8 @@ namespace Fasciculus.Eve.Assets.PageModels
             int prefix = assetsDirectories.Resources.FullName.Length + 1;
 
             return progressCollector.ChangedResources
-                .Select(x => x.FullName.Substring(prefix).Replace('\\', '/'))
+                .Select(x => x.FullName[prefix..].Replace('\\', '/'))
                 .ToArray();
-        }
-
-        private static string DownloadSdeStatusText(DownloadSdeStatus status)
-        {
-            return status switch
-            {
-                DownloadSdeStatus.Pending => "Pending",
-                DownloadSdeStatus.Downloading => "Downloading",
-                DownloadSdeStatus.Downloaded => "Downloaded",
-                DownloadSdeStatus.NotModified => "Not Modified",
-                _ => string.Empty
-            };
-        }
-
-        private static Color DownloadSdeStatusColor(DownloadSdeStatus status)
-        {
-            return status switch
-            {
-                DownloadSdeStatus.Pending => PendingColor,
-                DownloadSdeStatus.Downloading => PendingColor,
-                DownloadSdeStatus.Downloaded => DoneColor,
-                DownloadSdeStatus.NotModified => DoneColor,
-                _ => Colors.Black
-            };
-
         }
 
         [RelayCommand]

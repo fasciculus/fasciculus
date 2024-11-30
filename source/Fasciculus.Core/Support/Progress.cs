@@ -109,31 +109,74 @@ namespace Fasciculus.Support
         }
     }
 
-    public interface IAccumulatingLongProgress : IAccumulatingProgress<long>
+    public class LongProgressInfo : IEquatable<LongProgressInfo>, IComparable<LongProgressInfo>
     {
         public bool Done { get; }
-        public double Progress { get; }
+        public double Value { get; }
+
+        public LongProgressInfo(bool done, double value)
+        {
+            Done = done;
+            Value = value;
+        }
+
+        public bool Equals(LongProgressInfo other)
+            => Done == other.Done && Value == other.Value;
+
+        public int CompareTo(LongProgressInfo other)
+        {
+            int result = Done.CompareTo(other.Done);
+
+            if (result == 0)
+            {
+                result = Value.CompareTo(other.Value);
+            }
+
+            return result;
+        }
+
+        public override bool Equals(object obj)
+            => obj is LongProgressInfo other && Equals(other);
+
+        public override int GetHashCode()
+            => Done.GetHashCode() + Value.GetHashCode();
+
+        public static bool operator ==(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.Equals(rhs);
+        public static bool operator !=(LongProgressInfo lhs, LongProgressInfo rhs) => !lhs.Equals(rhs);
+
+        public static bool operator <(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.CompareTo(rhs) < 0;
+        public static bool operator >(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.CompareTo(rhs) > 0;
+
+        public static bool operator <=(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.CompareTo(rhs) <= 0;
+        public static bool operator >=(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.CompareTo(rhs) >= 0;
+
+        public static LongProgressInfo Start => new(false, 0);
+    }
+
+    public interface IAccumulatingLongProgress : IAccumulatingProgress<long>
+    {
+        public LongProgressInfo Progress { get; }
     }
 
     public class AccumulatingLongProgress : AccumulatingProgress<long>, IAccumulatingLongProgress
     {
         public bool Done => Locker.Locked(mutex, () => Current == Total);
 
-        public double Progress
+        public LongProgressInfo Progress
         {
             get
             {
                 using Locker locker = Locker.Lock(mutex);
 
-                double progress = 1;
+                double value = 1;
 
                 if (Total > 0 && Current < Total)
                 {
-                    progress *= Current;
-                    progress /= Total;
+                    value *= Current;
+                    value /= Total;
                 }
 
-                return progress;
+                return new(Current == Total, value);
             }
         }
 
