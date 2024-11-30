@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Assets.Services;
-using Fasciculus.Support;
+using Fasciculus.Threading;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
-using System.Windows.Input;
 
 namespace Fasciculus.Eve.Assets.PageModels
 {
@@ -14,6 +14,7 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private readonly IProgressCollector progressCollector;
         private readonly IAssetsDirectories assetsDirectories;
+        private readonly ICreateResources createResources;
 
         [ObservableProperty]
         private string downloadSdeText = PendingOrDoneText(PendingOrDone.Pending);
@@ -66,7 +67,7 @@ namespace Fasciculus.Eve.Assets.PageModels
         [ObservableProperty]
         private string[] changedResources = [];
 
-        public ICommand StartCommand { get; init; }
+        //public ICommand StartCommand { get; init; }
 
         private ILogger logger;
 
@@ -76,9 +77,7 @@ namespace Fasciculus.Eve.Assets.PageModels
             this.progressCollector = progressCollector;
             this.progressCollector.PropertyChanged += OnProgressChanged;
             this.assetsDirectories = assetsDirectories;
-
-            StartCommand = new LongRunningCommand(() => createResources.Create());
-
+            this.createResources = createResources;
             this.logger = logger;
         }
 
@@ -158,6 +157,12 @@ namespace Fasciculus.Eve.Assets.PageModels
                 PendingOrDone.Done => DoneColor,
                 _ => Colors.Red
             };
+        }
+
+        [RelayCommand]
+        private Task Start()
+        {
+            return Tasks.LongRunning(() => createResources.Create());
         }
     }
 }
