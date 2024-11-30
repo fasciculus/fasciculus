@@ -2,6 +2,33 @@
 
 namespace Fasciculus.Eve.Models
 {
+    public class EveStargate
+    {
+        public class Data
+        {
+            public int Id { get; }
+            public int Destination { get; }
+
+            public Data(int id, int destination)
+            {
+                Id = id;
+                Destination = destination;
+            }
+
+            public Data(Stream stream)
+            {
+                Id = stream.ReadInt();
+                Destination = stream.ReadInt();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Id);
+                stream.WriteInt(Destination);
+            }
+        }
+    }
+
     public class EveSolarSystem
     {
         public class Data
@@ -10,11 +37,14 @@ namespace Fasciculus.Eve.Models
             public string Name { get; }
             public double Security { get; }
 
-            public Data(int id, string name, double security)
+            public EveStargate.Data[] Stargates { get; }
+
+            public Data(int id, string name, double security, EveStargate.Data[] stargates)
             {
                 Id = id;
                 Name = name;
                 Security = security;
+                Stargates = stargates;
             }
 
             public Data(Stream stream)
@@ -22,6 +52,7 @@ namespace Fasciculus.Eve.Models
                 Id = stream.ReadInt();
                 Name = stream.ReadString();
                 Security = stream.ReadDouble();
+                Stargates = stream.ReadArray(s => new EveStargate.Data(s));
             }
 
             public void Write(Stream stream)
@@ -29,6 +60,7 @@ namespace Fasciculus.Eve.Models
                 stream.WriteInt(Id);
                 stream.WriteString(Name);
                 stream.WriteDouble(Security);
+                stream.WriteArray(Stargates, sg => sg.Write(stream));
             }
         }
 

@@ -32,6 +32,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ParseSolarSystems { get; }
         public IProgress<PendingToDone> ConvertUniverse { get; }
         public IAccumulatingLongProgress CopyImages { get; }
+        public IProgress<PendingToDone> CreateImages { get; }
         public IAccumulatingProgress<List<FileInfo>> CreateResources { get; }
     }
 
@@ -48,6 +49,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ParseSolarSystems { get; }
         public IProgress<PendingToDone> ConvertUniverse { get; }
         public IAccumulatingLongProgress CopyImages { get; }
+        public IProgress<PendingToDone> CreateImages { get; }
         public IAccumulatingProgress<List<FileInfo>> CreateResources { get; }
 
         public AssetsProgress(IProgressCollector progressCollector)
@@ -61,6 +63,7 @@ namespace Fasciculus.Eve.Assets.Services
             ParseSolarSystems = new AccumulatingLongProgress(ReportParseSolarSystems, 100);
             ConvertUniverse = new TaskSafeProgress<PendingToDone>(ReportConvertUniverse);
             CopyImages = new AccumulatingLongProgress(ReportCopyImages, 100);
+            CreateImages = new TaskSafeProgress<PendingToDone>(ReportCreateImages);
 
             CreateResources = new AccumulatingProgress<List<FileInfo>>(ReportCreateResources, AccumulateCreateResources, [], []);
 
@@ -94,6 +97,9 @@ namespace Fasciculus.Eve.Assets.Services
         private void ReportCopyImages(long _)
             => progressCollector.CopyImages = CopyImages.Progress;
 
+        private void ReportCreateImages(PendingToDone status)
+            => progressCollector.CreateImages = status;
+
         private void ReportCreateResources(List<FileInfo> files)
             => progressCollector.ChangedResources = [.. files];
 
@@ -116,6 +122,7 @@ namespace Fasciculus.Eve.Assets.Services
         public PendingToDone ConvertUniverse { get; set; }
 
         public LongProgressInfo CopyImages { get; set; }
+        public PendingToDone CreateImages { get; set; }
 
         public FileInfo[] ChangedResources { get; set; }
     }
@@ -148,6 +155,9 @@ namespace Fasciculus.Eve.Assets.Services
 
         [ObservableProperty]
         private LongProgressInfo copyImages = LongProgressInfo.Start;
+
+        [ObservableProperty]
+        private PendingToDone createImages = PendingToDone.Pending;
 
         [ObservableProperty]
         private FileInfo[] changedResources = [];

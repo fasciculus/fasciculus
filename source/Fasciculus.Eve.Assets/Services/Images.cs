@@ -27,9 +27,11 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public Task CopyAsync()
+        public async Task CopyAsync()
         {
             using Locker locker = Locker.Lock(mutex);
+
+            await Task.Yield();
 
             if (!result)
             {
@@ -43,8 +45,6 @@ namespace Fasciculus.Eve.Assets.Services
 
                 result = true;
             }
-
-            return Task.CompletedTask;
         }
 
         private void Copy(Tuple<FileInfo, FileInfo> entry)
@@ -120,19 +120,38 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly ICopyImages copyImages;
         private readonly IAssetsDirectories assetsDirectories;
         private readonly IWriteResource writeResource;
+        private readonly IAssetsProgress progress;
 
-        public CreateImages(ICopyImages copyImages, IAssetsDirectories assetsDirectories, IWriteResource writeResource)
+        private List<FileInfo>? result;
+        private TaskSafeMutex mutex = new();
+
+        public CreateImages(ICopyImages copyImages, IAssetsDirectories assetsDirectories, IWriteResource writeResource,
+            IAssetsProgress progress)
         {
             this.copyImages = copyImages;
             this.assetsDirectories = assetsDirectories;
             this.writeResource = writeResource;
+            this.progress = progress;
         }
 
         public async Task<List<FileInfo>> CreateAsync()
         {
+            using Locker locker = Locker.Lock(mutex);
+
+            await Task.Yield();
+
+            if (result is null)
+            {
+                await copyImages.CopyAsync();
+
+                progress.CreateImages.Report(PendingToDone.Working);
+                result = paths.Select(CreateImage).NotNull().ToList();
+                progress.CreateImages.Report(PendingToDone.Done);
+            }
+
             await copyImages.CopyAsync();
 
-            return paths.Select(CreateImage).NotNull().ToList();
+            return result;
         }
 
         private FileInfo? CreateImage(KeyValuePair<string, string> kvp)

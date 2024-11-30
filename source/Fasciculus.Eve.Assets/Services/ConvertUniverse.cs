@@ -40,7 +40,12 @@ namespace Fasciculus.Eve.Assets.Services
                 Task.WaitAll([sdeData, sdeRegions]);
 
                 progress.ConvertUniverse.Report(PendingToDone.Working);
-                result = sdeRegions.Result.Select(r => ConvertRegion(r, sdeData.Result)).ToArray();
+
+                result = sdeRegions.Result
+                    .Select(r => ConvertRegion(r, sdeData.Result))
+                    .OrderBy(r => r.Id)
+                    .ToArray();
+
                 progress.ConvertUniverse.Report(PendingToDone.Done);
             }
 
@@ -51,7 +56,11 @@ namespace Fasciculus.Eve.Assets.Services
         {
             int id = sdeRegion.RegionID;
             string name = sdeData.Names[id];
-            EveConstellation.Data[] constellations = sdeRegion.Constellations.Select(c => ConvertConstellation(c, sdeData)).ToArray();
+
+            EveConstellation.Data[] constellations = sdeRegion.Constellations
+                .Select(c => ConvertConstellation(c, sdeData))
+                .OrderBy(c => c.Id)
+                .ToArray();
 
             return new(id, name, constellations);
         }
@@ -60,7 +69,11 @@ namespace Fasciculus.Eve.Assets.Services
         {
             int id = sdeConstellation.ConstellationID;
             string name = sdeData.Names[id];
-            EveSolarSystem.Data[] solarSystems = sdeConstellation.SolarSystems.Select(s => ConvertSolarSystem(s, sdeData)).ToArray();
+
+            EveSolarSystem.Data[] solarSystems = sdeConstellation.SolarSystems
+                .Select(s => ConvertSolarSystem(s, sdeData))
+                .OrderBy(s => s.Id)
+                .ToArray();
 
             return new(id, name, solarSystems);
         }
@@ -71,7 +84,20 @@ namespace Fasciculus.Eve.Assets.Services
             string name = sdeData.Names[id];
             double security = sdeSolarSystem.Security;
 
-            return new(id, name, security);
+            EveStargate.Data[] stargates = sdeSolarSystem.Stargates
+                .Select(ConvertStargate)
+                .OrderBy(sg => sg.Id)
+                .ToArray();
+
+            return new(id, name, security, stargates);
+        }
+
+        private static EveStargate.Data ConvertStargate(KeyValuePair<int, SdeStargate> kvp)
+        {
+            int id = kvp.Key;
+            int destination = kvp.Value.Destination;
+
+            return new(id, destination);
         }
     }
 

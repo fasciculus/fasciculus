@@ -41,6 +41,9 @@ namespace Fasciculus.Eve.Assets.PageModels
         private LongProgressInfo copyImages = LongProgressInfo.Start;
 
         [ObservableProperty]
+        private PendingToDone createImages = PendingToDone.Pending;
+
+        [ObservableProperty]
         private string[] changedResources = [];
 
         private ILogger logger;
@@ -70,6 +73,7 @@ namespace Fasciculus.Eve.Assets.PageModels
             ConvertUniverse = progressCollector.ConvertUniverse;
 
             CopyImages = progressCollector.CopyImages;
+            CreateImages = progressCollector.CreateImages;
 
             ChangedResources = GetChangedResources();
         }
