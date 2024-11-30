@@ -26,6 +26,7 @@ namespace Fasciculus.Eve
             services.AddEsi();
 
             services.TryAddSingleton<SideBarModel>();
+            services.TryAddSingleton<IndustryPageModel>();
             services.TryAddSingleton<InfoPageModel>();
             services.TryAddSingleton<MarketPageModel>();
             services.TryAddSingleton<MapPageModel>();

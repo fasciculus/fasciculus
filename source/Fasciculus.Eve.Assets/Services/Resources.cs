@@ -93,19 +93,19 @@ namespace Fasciculus.Eve.Assets.Services
     {
         private readonly IParseData parseData;
         private readonly IParseUniverse parseUniverse;
-        private readonly ICopyImages copyImages;
+        private readonly ICreateImages createImages;
 
         private readonly IAssetsDirectories assetsDirectories;
         private readonly IWriteResource writeResource;
 
         private readonly IAssetsProgress progress;
 
-        public CreateResources(IParseData parseData, IParseUniverse parseUniverse, ICopyImages copyImages,
+        public CreateResources(IParseData parseData, IParseUniverse parseUniverse, ICreateImages createImages,
             IAssetsDirectories assetsDirectories, IWriteResource writeResource, IAssetsProgress progress)
         {
             this.parseData = parseData;
             this.parseUniverse = parseUniverse;
-            this.copyImages = copyImages;
+            this.createImages = createImages;
             this.assetsDirectories = assetsDirectories;
             this.writeResource = writeResource;
             this.progress = progress;
@@ -115,11 +115,12 @@ namespace Fasciculus.Eve.Assets.Services
         {
             Task<SdeData> data = parseData.ParseAsync();
             Task<SdeRegion[]> universe = parseUniverse.ParseAsync();
-            Task images = copyImages.CopyAsync();
+            Task<List<FileInfo>> images = createImages.CreateAsync();
 
             Task.WaitAll([data, universe, images]);
 
-            WriteVersion(data.Result);
+            progress.CreateResources.Report(images.Result);
+            progress.CreateResources.Report(WriteVersion(data.Result));
         }
 
         public Task CreateAsync()
@@ -127,17 +128,14 @@ namespace Fasciculus.Eve.Assets.Services
             return Tasks.LongRunning(() => Create());
         }
 
-        private void WriteVersion(SdeData data)
+        private List<FileInfo> WriteVersion(SdeData data)
         {
             using MemoryStream stream = new();
             FileInfo file = assetsDirectories.Resources.File("SdeVersion");
 
             stream.WriteLong(data.Version.ToBinary());
 
-            if (writeResource.Write(stream.ToArray(), file, false))
-            {
-                progress.CreateResources.Report([file]);
-            }
+            return writeResource.Write(stream.ToArray(), file, false) ? [file] : [];
         }
     }
 

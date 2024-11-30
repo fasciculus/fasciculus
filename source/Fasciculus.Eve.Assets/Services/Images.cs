@@ -1,6 +1,7 @@
 ﻿using Fasciculus.Steam.Models;
 using Fasciculus.Steam.Services;
 using Fasciculus.Support;
+using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
@@ -16,6 +17,9 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IAssetsDirectories assetsDirectories;
         private readonly IAssetsProgress progress;
 
+        private bool result = false;
+        private readonly TaskSafeMutex mutex = new();
+
         public CopyImages(ISteamApplications steamApplications, IAssetsDirectories assetsDirectories, IAssetsProgress progress)
         {
             this.steamApplications = steamApplications;
@@ -25,13 +29,20 @@ namespace Fasciculus.Eve.Assets.Services
 
         public Task CopyAsync()
         {
-            Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
+            using Locker locker = Locker.Lock(mutex);
 
-            progress.CopyImages.Begin(entries.Length);
+            if (!result)
+            {
+                Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
 
-            entries.Apply(Copy);
+                progress.CopyImages.Begin(entries.Length);
 
-            progress.CopyImages.End();
+                entries.Apply(Copy);
+
+                progress.CopyImages.End();
+
+                result = true;
+            }
 
             return Task.CompletedTask;
         }
@@ -91,6 +102,48 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
+    public interface ICreateImages
+    {
+        public Task<List<FileInfo>> CreateAsync();
+    }
+
+    public class CreateImages : ICreateImages
+    {
+        private static readonly Dictionary<string, string> paths = new()
+        {
+            { "industry.png", "ui/texture/windowicons/industry.png"},
+            { "info.png", "ui/texture/windowicons/info.png"},
+            { "map.png", "ui/texture/windowicons/map.png"},
+            { "market.png", "ui/texture/windowicons/market.png"},
+        };
+
+        private readonly ICopyImages copyImages;
+        private readonly IAssetsDirectories assetsDirectories;
+        private readonly IWriteResource writeResource;
+
+        public CreateImages(ICopyImages copyImages, IAssetsDirectories assetsDirectories, IWriteResource writeResource)
+        {
+            this.copyImages = copyImages;
+            this.assetsDirectories = assetsDirectories;
+            this.writeResource = writeResource;
+        }
+
+        public async Task<List<FileInfo>> CreateAsync()
+        {
+            await copyImages.CopyAsync();
+
+            return paths.Select(CreateImage).NotNull().ToList();
+        }
+
+        private FileInfo? CreateImage(KeyValuePair<string, string> kvp)
+        {
+            FileInfo source = assetsDirectories.SteamImages.File(kvp.Value);
+            FileInfo destination = assetsDirectories.Images.File(kvp.Key);
+
+            return writeResource.Copy(source, destination, false) ? destination : null;
+        }
+    }
+
     public static class ImageServices
     {
         public static IServiceCollection AddImages(this IServiceCollection services)
@@ -98,8 +151,10 @@ namespace Fasciculus.Eve.Assets.Services
             services.AddSteam();
             services.AddAssetsDirectories();
             services.AddAssetsProgress();
+            services.AddWriteResource();
 
             services.TryAddSingleton<ICopyImages, CopyImages>();
+            services.TryAddSingleton<ICreateImages, CreateImages>();
 
             return services;
         }

@@ -52,6 +52,7 @@
     <MauiImage Include="Resources\Images\*" />
     <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
     <MauiImage Update="Resources\Images\info.png" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\industry.png" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\market.png" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\map.png" Resize="True" BaseSize="32,32" />
     <MauiFont Include="Resources\Fonts\*" />
@@ -60,6 +61,9 @@
 
   <ItemGroup>
     <MauiXaml Update="Pages\Controls\SideBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Pages\IndustryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Pages\MapPage.xaml">

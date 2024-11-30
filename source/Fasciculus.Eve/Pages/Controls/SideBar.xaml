@@ -7,6 +7,7 @@
 
     <ImageButton Source="info.png" Command="{Binding InfoCommand}" IsEnabled="{Binding Ready}" />
     <ImageButton Source="market.png" Command="{Binding MarketCommand}" IsEnabled="{Binding Ready}" />
+    <ImageButton Source="industry.png" Command="{Binding IndustryCommand}" IsEnabled="{Binding Ready}" />
     <ImageButton Source="map.png" Command="{Binding MapCommand}" IsEnabled="{Binding Ready}" />
 
 </VerticalStackLayout>

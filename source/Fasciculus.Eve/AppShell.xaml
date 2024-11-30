@@ -13,6 +13,11 @@
         Route="Info" />
 
     <ShellContent
+        Title="Industry"
+        ContentTemplate="{DataTemplate pages:IndustryPage}"
+        Route="Industry" />
+
+    <ShellContent
         Title="Market"
         ContentTemplate="{DataTemplate pages:MarketPage}"
         Route="Market" />

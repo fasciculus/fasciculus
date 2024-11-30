@@ -9,21 +9,27 @@ namespace Fasciculus.Eve.PageModels
         private bool ready = true;
 
         [RelayCommand]
-        private async Task Info()
+        private Task Info()
         {
-            await NavigateTo("//Info");
+            return NavigateTo("//Info");
         }
 
         [RelayCommand]
-        private async Task Market()
+        private Task Industry()
         {
-            await NavigateTo("//Market");
+            return NavigateTo("//Industry");
         }
 
         [RelayCommand]
-        private async Task Map()
+        private Task Market()
         {
-            await NavigateTo("//Map");
+            return NavigateTo("//Market");
+        }
+
+        [RelayCommand]
+        private Task Map()
+        {
+            return NavigateTo("//Map");
         }
 
         private async Task NavigateTo(string url)
