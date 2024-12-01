@@ -13,17 +13,15 @@ namespace Fasciculus.Eve.Assets.Services
     {
         private readonly IExtractSde extractSde;
         private readonly IYaml yaml;
-        private readonly IAssetsDirectories assetsDirectories;
         private readonly IAssetsProgress progress;
 
         private SdeRegion[]? result = null;
         private readonly TaskSafeMutex resultMutex = new();
 
-        public ParseUniverse(IAssetsDirectories assetsDirectories, IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
+        public ParseUniverse(IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
         {
             this.extractSde = extractSde;
             this.yaml = yaml;
-            this.assetsDirectories = assetsDirectories;
             this.progress = progress;
         }
 
