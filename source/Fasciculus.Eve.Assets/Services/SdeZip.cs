@@ -7,7 +7,7 @@ namespace Fasciculus.Eve.Assets.Services
 {
     public interface IDownloadSde
     {
-        public FileInfo Download();
+        public Task<FileInfo> DownloadedFile { get; }
     }
 
     public class DownloadSde : IDownloadSde
@@ -18,8 +18,10 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IAssetsDirectories assetsDirectories;
         private readonly IAssetsProgress progress;
 
-        private FileInfo? result;
-        private readonly TaskSafeMutex resultMutex = new();
+        private FileInfo? downloadedFile;
+        private readonly TaskSafeMutex mutex = new();
+
+        public Task<FileInfo> DownloadedFile => GetDownloadedFileAsync();
 
         public DownloadSde(IDownloader downloader, IAssetsDirectories assetsDirectories, IAssetsProgress progress)
         {
@@ -28,22 +30,24 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public FileInfo Download()
+        private async Task<FileInfo> GetDownloadedFileAsync()
         {
-            using Locker locker = Locker.Lock(resultMutex);
+            await Task.Yield();
 
-            if (result == null)
+            using Locker locker = Locker.Lock(mutex);
+
+            if (downloadedFile is null)
             {
                 progress.DownloadSde.Report(DownloadSdeStatus.Downloading);
 
                 FileInfo destination = assetsDirectories.Downloads.File("sde.zip");
 
-                result = downloader.Download(new(SdeZipUri), destination, out bool notModified);
+                downloadedFile = downloader.Download(new(SdeZipUri), destination, out bool notModified);
 
                 progress.DownloadSde.Report(notModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
             }
 
-            return result;
+            return downloadedFile;
         }
     }
 
@@ -87,7 +91,7 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IAssetsProgress progress;
 
         private ISdeFileSystem? result = null;
-        private TaskSafeMutex resultMutex = new();
+        private readonly TaskSafeMutex resultMutex = new();
 
         public ExtractSde(IDownloadSde downloadSde, IAssetsDirectories assetsDirectories, ICompression compression,
             IAssetsProgress progress)
@@ -104,7 +108,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (result is null)
             {
-                FileInfo file = downloadSde.Download();
+                FileInfo file = Tasks.Wait(downloadSde.DownloadedFile);
 
                 compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSde);
                 result = new SdeFileSystem(assetsDirectories.Sde);

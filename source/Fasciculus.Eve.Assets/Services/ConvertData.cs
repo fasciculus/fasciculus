@@ -12,16 +12,14 @@ namespace Fasciculus.Eve.Assets.Services
 
     public class ConvertData : IConvertData
     {
-        private readonly IDownloadSde downloadSde;
         private readonly IParseData parseData;
         private readonly IAssetsProgress progress;
 
         private EveData? result;
         private readonly TaskSafeMutex mutex = new();
 
-        public ConvertData(IDownloadSde downloadSde, IParseData parseData, IAssetsProgress progress)
+        public ConvertData(IParseData parseData, IAssetsProgress progress)
         {
-            this.downloadSde = downloadSde;
             this.parseData = parseData;
             this.progress = progress;
         }
@@ -34,11 +32,10 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (result is null)
             {
-                SdeData sdeData = await parseData.ParseAsync();
-
                 progress.ConvertData.Report(PendingToDone.Working);
 
-                DateTime version = downloadSde.Download().LastWriteTimeUtc;
+                SdeData sdeData = await parseData.ParseAsync();
+                DateTime version = sdeData.Version;
                 EveType.Data[] types = ConvertTypes(sdeData.Types);
                 EveData.Data data = new(version, types);
 
@@ -51,12 +48,7 @@ namespace Fasciculus.Eve.Assets.Services
         }
 
         private static EveType.Data[] ConvertTypes(Dictionary<long, SdeType> types)
-        {
-            return types
-                .Select(ConvertType)
-                .OrderBy(t => t.Id)
-                .ToArray();
-        }
+            => [.. types.Select(ConvertType).OrderBy(t => t.Id)];
 
         private static EveType.Data ConvertType(KeyValuePair<long, SdeType> kvp)
         {
@@ -74,7 +66,7 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public static IServiceCollection AddConvertData(this IServiceCollection services)
         {
-            services.AddSdeZip();
+            services.AddParseData();
             services.AddAssetsProgress();
 
             services.TryAddSingleton<IConvertData, ConvertData>();

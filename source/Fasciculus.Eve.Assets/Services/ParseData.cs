@@ -27,7 +27,8 @@ namespace Fasciculus.Eve.Assets.Services
         {
             await Task.Yield();
 
-            DateTime version = downloadSde.Download().LastWriteTimeUtc;
+            FileInfo downloadedFile = await downloadSde.DownloadedFile;
+            DateTime version = downloadedFile.LastWriteTimeUtc;
             ISdeFileSystem sdeFileSystem = extractSde.Extract();
             Task<Dictionary<long, string>> names = ParseNamesAsync(sdeFileSystem);
             Task<Dictionary<long, SdeType>> types = ParseTypesAsync(sdeFileSystem);
