@@ -102,17 +102,20 @@
                        Grid.Row="1" Grid.Column="3" />
             </Grid>
 
-            <Label Text="Changed Resources" FontAttributes="Bold" />
-
-            <ListView ItemsSource="{Binding ChangedResources}">
-                <ListView.ItemTemplate>
-                    <DataTemplate  x:DataType="x:String">
-                        <ViewCell>
-                            <Label Text="{Binding .}" TextColor="Orange" />
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*" ColumnSpacing="16" RowSpacing="8">
+                <Label Text="Changed Resources" FontAttributes="Bold"
+                       Grid.Row="0" Grid.Column="0"/>
+                <ListView ItemsSource="{Binding ChangedResources}"
+                          Grid.Row="1" Grid.Column="0">
+                    <ListView.ItemTemplate>
+                        <DataTemplate  x:DataType="x:String">
+                            <ViewCell>
+                                <Label Text="{Binding .}" TextColor="Orange" />
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
 
         </VerticalStackLayout>
     </ScrollView>

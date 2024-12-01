@@ -74,6 +74,8 @@ namespace Fasciculus.Eve.Assets.Services
 
         private SdeSolarSystem ParseSolarSystem(DirectoryInfo solarSystemDirectory)
         {
+            SdeMoonIndex.CelestialIndex.Value = 1;
+
             FileInfo file = solarSystemDirectory.File("solarsystem.yaml");
             SdeSolarSystem solarSystem = yaml.Deserialize<SdeSolarSystem>(file);
 

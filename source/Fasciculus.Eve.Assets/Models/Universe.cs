@@ -18,7 +18,7 @@
     {
         public Dictionary<int, SdeNpcStation> NpcStations { get; set; } = [];
 
-        public int CelestialIndex { get; set; }
+        public int CelestialIndex { get; }
 
         public SdeMoon()
         {
@@ -28,12 +28,9 @@
 
     public class SdePlanet
     {
-        public Dictionary<int, SdeMoon> Moons { get; set; } = [];
+        public int CelestialIndex { get; set; }
 
-        public SdePlanet()
-        {
-            SdeMoonIndex.CelestialIndex.Value = 1;
-        }
+        public Dictionary<int, SdeMoon> Moons { get; set; } = [];
     }
 
     public class SdeSolarSystem
@@ -41,7 +38,7 @@
         public int SolarSystemID { get; set; }
         public double Security { get; set; }
 
-        public Dictionary<long, SdePlanet> Planets { get; set; } = [];
+        public Dictionary<int, SdePlanet> Planets { get; set; } = [];
         public Dictionary<int, SdeStargate> Stargates { get; set; } = [];
     }
 

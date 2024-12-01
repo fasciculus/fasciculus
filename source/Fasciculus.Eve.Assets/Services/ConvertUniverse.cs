@@ -89,12 +89,27 @@ namespace Fasciculus.Eve.Assets.Services
             string name = sdeData.Names[id];
             double security = sdeSolarSystem.Security;
 
+            EvePlanet.Data[] planets = sdeSolarSystem.Planets
+                .Select(ConvertPlanet)
+                .OrderBy(p => p.Id)
+                .ToArray();
+
             EveStargate.Data[] stargates = sdeSolarSystem.Stargates
                 .Select(ConvertStargate)
                 .OrderBy(sg => sg.Id)
                 .ToArray();
 
-            return new(id, name, security, stargates);
+            return new(id, name, security, planets, stargates);
+        }
+
+        private static EvePlanet.Data ConvertPlanet(KeyValuePair<int, SdePlanet> kvp)
+        {
+            SdePlanet sdePlanet = kvp.Value;
+
+            int id = kvp.Key;
+            int celestialIndex = sdePlanet.CelestialIndex;
+
+            return new(id, celestialIndex);
         }
 
         private static EveStargate.Data ConvertStargate(KeyValuePair<int, SdeStargate> kvp)

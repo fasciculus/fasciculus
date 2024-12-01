@@ -5,6 +5,63 @@ using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
+    public class EvePlanet
+    {
+        public class Data
+        {
+            public int Id { get; }
+            public int CelestialIndex;
+
+            public Data(int celestialIndex, int id)
+            {
+                Id = id;
+                CelestialIndex = celestialIndex;
+            }
+
+            public Data(Stream stream)
+            {
+                Id = stream.ReadInt();
+                CelestialIndex = stream.ReadInt();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Id);
+                stream.WriteInt(CelestialIndex);
+            }
+        }
+
+        private readonly Data data;
+
+        public int Id => data.Id;
+        public int CelestialIndex => data.CelestialIndex;
+
+        public EvePlanet(Data data)
+        {
+            this.data = data;
+        }
+    }
+
+    public class EvePlanets : IEnumerable<EvePlanet>
+    {
+        private readonly Dictionary<int, EvePlanet> byId;
+
+        public int Count => byId.Count;
+
+        public EvePlanet this[int id] => byId[id];
+
+        public EvePlanets(IEnumerable<EvePlanet> planets)
+        {
+            byId = planets.ToDictionary(r => r.Id, r => r);
+        }
+
+        public IEnumerator<EvePlanet> GetEnumerator()
+            => byId.Values.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => byId.Values.GetEnumerator();
+    }
+
     public class EveStargate
     {
         public class Data
@@ -69,13 +126,15 @@ namespace Fasciculus.Eve.Models
             public string Name { get; }
             public double Security { get; }
 
+            public EvePlanet.Data[] Planets { get; }
             public EveStargate.Data[] Stargates { get; }
 
-            public Data(int id, string name, double security, EveStargate.Data[] stargates)
+            public Data(int id, string name, double security, EvePlanet.Data[] planets, EveStargate.Data[] stargates)
             {
                 Id = id;
                 Name = name;
                 Security = security;
+                Planets = planets;
                 Stargates = stargates;
             }
 
@@ -84,6 +143,7 @@ namespace Fasciculus.Eve.Models
                 Id = stream.ReadInt();
                 Name = stream.ReadString();
                 Security = stream.ReadDouble();
+                Planets = stream.ReadArray(s => new EvePlanet.Data(s));
                 Stargates = stream.ReadArray(s => new EveStargate.Data(s));
             }
 
@@ -92,6 +152,7 @@ namespace Fasciculus.Eve.Models
                 stream.WriteInt(Id);
                 stream.WriteString(Name);
                 stream.WriteDouble(Security);
+                stream.WriteArray(Planets, p => p.Write(stream));
                 stream.WriteArray(Stargates, sg => sg.Write(stream));
             }
         }
@@ -101,12 +162,14 @@ namespace Fasciculus.Eve.Models
         public int Id => data.Id;
         public string Name => data.Name;
 
+        public EvePlanets Planets { get; }
         public EveStargates Stargates { get; }
 
         public EveSolarSystem(Data data)
         {
             this.data = data;
 
+            Planets = new(data.Planets.Select(d => new EvePlanet(d)));
             Stargates = new(data.Stargates.Select(d => new EveStargate(d)));
         }
     }
