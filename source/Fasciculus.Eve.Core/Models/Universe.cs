@@ -8,7 +8,7 @@ using System.Linq;
 namespace Fasciculus.Eve.Models
 {
     [DebuggerDisplay("{Name}")]
-    public class EvePlanet
+    public class EveMoon
     {
         public class Data
         {
@@ -41,11 +41,86 @@ namespace Fasciculus.Eve.Models
 
         public string Name { get; }
 
+        public EveMoon(Data data, EvePlanet planet)
+        {
+            this.data = data;
+
+            Name = $"{planet.Name} - Moon {CelestialIndex}";
+        }
+    }
+
+    [DebuggerDisplay("Count = {Count}")]
+    public class EveMoons : IEnumerable<EveMoon>
+    {
+        private readonly Dictionary<int, EveMoon> byId;
+        private readonly Dictionary<string, EveMoon> byName;
+
+        public int Count => byId.Count;
+
+        public EveMoon this[int id] => byId[id];
+        public EveMoon this[string name] => byName[name];
+
+        public EveMoons(IEnumerable<EveMoon> moons)
+        {
+            byId = moons.ToDictionary(x => x.Id, x => x);
+            byName = moons.ToDictionary(x => x.Name, x => x);
+        }
+
+        public IEnumerator<EveMoon> GetEnumerator()
+            => byId.Values.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => byId.Values.GetEnumerator();
+    }
+
+    [DebuggerDisplay("{Name}")]
+    public class EvePlanet
+    {
+        public class Data
+        {
+            public int Id { get; }
+            public int CelestialIndex;
+
+            public EveMoon.Data[] Moons { get; }
+
+            public Data(int id, int celestialIndex, EveMoon.Data[] moons)
+            {
+                Id = id;
+                CelestialIndex = celestialIndex;
+                Moons = moons;
+            }
+
+            public Data(Stream stream)
+            {
+                Id = stream.ReadInt();
+                CelestialIndex = stream.ReadInt();
+                Moons = stream.ReadArray(s => new EveMoon.Data(s));
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Id);
+                stream.WriteInt(CelestialIndex);
+                stream.WriteArray(Moons, m => m.Write(stream));
+            }
+        }
+
+        private readonly Data data;
+
+        public int Id => data.Id;
+        public int CelestialIndex => data.CelestialIndex;
+
+        public string Name { get; }
+
+        public EveMoons Moons { get; }
+
         public EvePlanet(Data data, EveSolarSystem solarSystem)
         {
             this.data = data;
 
             Name = $"{solarSystem.Name} {RomanNumbers.Format(CelestialIndex)}";
+
+            Moons = new(data.Moons.Select(d => new EveMoon(d, this)));
         }
     }
 
@@ -58,6 +133,7 @@ namespace Fasciculus.Eve.Models
         public int Count => byId.Count;
 
         public EvePlanet this[int id] => byId[id];
+        public EvePlanet this[string name] => byName[name];
 
         public EvePlanets(IEnumerable<EvePlanet> planets)
         {

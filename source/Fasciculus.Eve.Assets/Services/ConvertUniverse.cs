@@ -109,6 +109,21 @@ namespace Fasciculus.Eve.Assets.Services
             int id = kvp.Key;
             int celestialIndex = sdePlanet.CelestialIndex;
 
+            EveMoon.Data[] moons = sdePlanet.Moons
+                .Select(ConvertMoon)
+                .OrderBy(m => m.Id)
+                .ToArray();
+
+            return new(id, celestialIndex, moons);
+        }
+
+        private static EveMoon.Data ConvertMoon(KeyValuePair<int, SdeMoon> kvp)
+        {
+            SdeMoon sdeMoon = kvp.Value;
+
+            int id = kvp.Key;
+            int celestialIndex = sdeMoon.CelestialIndex;
+
             return new(id, celestialIndex);
         }
 
