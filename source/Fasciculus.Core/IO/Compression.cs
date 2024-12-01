@@ -13,7 +13,7 @@ namespace Fasciculus.IO
 {
     public interface ICompression
     {
-        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IAccumulatingLongProgress progress);
+        public DirectoryInfo Unzip(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite, IAccumulatingLongProgress progress);
 
         public void GZip(Stream uncompressed, Stream compressed);
         public void UnGZip(Stream compressed, Stream uncompressed);
@@ -21,25 +21,25 @@ namespace Fasciculus.IO
 
     public class Compression : ICompression
     {
-        public void Unzip(FileInfo zipFile, DirectoryInfo outputDirectory, FileOverwriteMode overwrite, IAccumulatingLongProgress progress)
+        public DirectoryInfo Unzip(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite, IAccumulatingLongProgress progress)
         {
-            using Stream stream = zipFile.OpenRead();
+            using Stream stream = file.OpenRead();
             using ZipArchive archive = new(stream, ZipArchiveMode.Read);
 
-            ZipArchiveEntry[] entries = archive.Entries.Where(entry => IsUnzipRequired(entry, outputDirectory, overwrite)).ToArray();
+            ZipArchiveEntry[] entries = archive.Entries.Where(entry => IsUnzipRequired(entry, target, overwrite)).ToArray();
             long total = entries.Sum(entry => entry.Length);
 
             progress.Begin(total);
-
-            entries.Apply(entry => UnzipEntry(archive, entry.FullName, outputDirectory, progress));
-
+            entries.Apply(entry => UnzipEntry(archive, entry.FullName, target, progress));
             progress.End();
+
+            return new(target.FullName);
         }
 
-        private void UnzipEntry(ZipArchive archive, string entryFullName, DirectoryInfo outputDirectory, IAccumulatingLongProgress progress)
+        private void UnzipEntry(ZipArchive archive, string name, DirectoryInfo target, IAccumulatingLongProgress progress)
         {
-            ZipArchiveEntry entry = archive.GetEntry(entryFullName);
-            FileInfo outputFile = PrepareUnzipOutputFile(entryFullName, outputDirectory);
+            ZipArchiveEntry entry = archive.GetEntry(name);
+            FileInfo outputFile = PrepareUnzipTarget(name, target);
 
             entry.ExtractToFile(outputFile.FullName);
             outputFile.CreationTimeUtc = outputFile.LastWriteTimeUtc = entry.LastWriteTime.UtcDateTime;
@@ -47,9 +47,9 @@ namespace Fasciculus.IO
             progress.Report(entry.Length);
         }
 
-        private FileInfo PrepareUnzipOutputFile(string entryFullName, DirectoryInfo outputDirectory)
+        private FileInfo PrepareUnzipTarget(string name, DirectoryInfo target)
         {
-            FileInfo outputFile = outputDirectory.File(entryFullName);
+            FileInfo outputFile = target.File(name);
 
             outputFile.Directory.Create();
             outputFile.DeleteIfExists();
@@ -57,9 +57,9 @@ namespace Fasciculus.IO
             return outputFile;
         }
 
-        private bool IsUnzipRequired(ZipArchiveEntry entry, DirectoryInfo outputDirectory, FileOverwriteMode overwrite)
+        private bool IsUnzipRequired(ZipArchiveEntry entry, DirectoryInfo target, FileOverwriteMode overwrite)
         {
-            FileInfo file = outputDirectory.File(entry.FullName);
+            FileInfo file = target.File(entry.FullName);
             DateTime dateTime = entry.LastWriteTime.UtcDateTime;
 
             return file.NeedsOverwrite(dateTime, overwrite);
