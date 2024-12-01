@@ -106,16 +106,26 @@ namespace Fasciculus.Eve.Assets.Services
             return types;
         }
 
-        private async Task<SdeData> GetDataAsync()
+        private Task<SdeData> GetDataAsync()
+        {
+            return Tasks.LongRunning(GetData);
+        }
+
+        private SdeData GetData()
         {
             using Locker locker = Locker.Lock(dataMutex);
 
-            data ??= new()
+            if (data is null)
             {
-                Version = await Version,
-                Names = await Names,
-                Types = await Types,
-            };
+                Task.WaitAll([Version, Names, Types]);
+
+                data = new()
+                {
+                    Version = Version.Result,
+                    Names = Names.Result,
+                    Types = Types.Result,
+                };
+            }
 
             return data;
         }
