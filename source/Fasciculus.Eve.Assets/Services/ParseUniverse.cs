@@ -18,7 +18,7 @@ namespace Fasciculus.Eve.Assets.Services
         private SdeRegion[]? regions = null;
         private readonly TaskSafeMutex regionsMutex = new();
 
-        public Task<SdeRegion[]> Regions => GetRegions();
+        public Task<SdeRegion[]> Regions => GetRegionsAsync();
 
         public ParseUniverse(IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
         {
@@ -27,7 +27,7 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        private async Task<SdeRegion[]> GetRegions()
+        private async Task<SdeRegion[]> GetRegionsAsync()
         {
             using Locker locker = Locker.Lock(regionsMutex);
 

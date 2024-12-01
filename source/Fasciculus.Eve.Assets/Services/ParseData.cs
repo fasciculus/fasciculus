@@ -32,11 +32,11 @@ namespace Fasciculus.Eve.Assets.Services
         private SdeData? data = null;
         private readonly TaskSafeMutex dataMutex = new();
 
-        public Task<DateTime> Version => GetVersion();
-        public Task<Dictionary<long, string>> Names => GetNames();
-        public Task<Dictionary<long, SdeType>> Types => GetTypes();
+        public Task<DateTime> Version => GetVersionAsync();
+        public Task<Dictionary<long, string>> Names => GetNamesAsync();
+        public Task<Dictionary<long, SdeType>> Types => GetTypesAsync();
 
-        public Task<SdeData> Data => GetData();
+        public Task<SdeData> Data => GetDataAsync();
 
         public ParseData(IDownloadSde downloadSde, IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
         {
@@ -46,7 +46,7 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        private async Task<DateTime> GetVersion()
+        private async Task<DateTime> GetVersionAsync()
         {
             using Locker locker = Locker.Lock(versionMutex);
 
@@ -60,15 +60,20 @@ namespace Fasciculus.Eve.Assets.Services
             return version.Value;
         }
 
-        private async Task<Dictionary<long, string>> GetNames()
+        private Task<Dictionary<long, string>> GetNamesAsync()
+        {
+            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+
+            return Tasks.LongRunning(() => GetNames(sdeFiles));
+        }
+
+        private Dictionary<long, string> GetNames(SdeFiles sdeFiles)
         {
             using Locker locker = Locker.Lock(namesMutex);
 
             if (names is null)
             {
                 progress.ParseNames.Report(PendingToDone.Working);
-
-                SdeFiles sdeFiles = await extractSde.Files;
 
                 names = yaml
                     .Deserialize<SdeName[]>(sdeFiles.NamesYaml)
@@ -80,41 +85,37 @@ namespace Fasciculus.Eve.Assets.Services
             return names;
         }
 
-        private async Task<Dictionary<long, SdeType>> GetTypes()
+        private Task<Dictionary<long, SdeType>> GetTypesAsync()
+        {
+            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+
+            return Tasks.LongRunning(() => GetTypes(sdeFiles));
+        }
+
+        private Dictionary<long, SdeType> GetTypes(SdeFiles sdeFiles)
         {
             using Locker locker = Locker.Lock(typesMutex);
 
             if (types is null)
             {
                 progress.ParseTypes.Report(PendingToDone.Working);
-
-                SdeFiles sdeFiles = await extractSde.Files;
-
                 types = yaml.Deserialize<Dictionary<long, SdeType>>(sdeFiles.TypesYaml);
-
                 progress.ParseTypes.Report(PendingToDone.Done);
             }
 
             return types;
         }
 
-        private async Task<SdeData> GetData()
+        private async Task<SdeData> GetDataAsync()
         {
             using Locker locker = Locker.Lock(dataMutex);
 
-            if (data is null)
+            data ??= new()
             {
-                Task.WaitAll([Version, Names, Types]);
-
-                data = new()
-                {
-                    Version = Version.Result,
-                    Names = Names.Result,
-                    Types = Types.Result,
-                };
-
-                await Task.Yield();
-            }
+                Version = await Version,
+                Names = await Names,
+                Types = await Types,
+            };
 
             return data;
         }
