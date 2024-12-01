@@ -1,11 +1,16 @@
 ﻿using Fasciculus.Eve.Assets.Models;
+using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
     public interface IParseData
     {
-        public Task<SdeData> ParseAsync();
+        public Task<DateTime> Version { get; }
+        public Task<Dictionary<long, string>> Names { get; }
+        public Task<Dictionary<long, SdeType>> Types { get; }
+
+        public Task<SdeData> Data { get; }
     }
 
     public class ParseData : IParseData
@@ -15,6 +20,24 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IYaml yaml;
         private readonly IAssetsProgress progress;
 
+        private DateTime? version = null;
+        private readonly TaskSafeMutex versionMutex = new();
+
+        private Dictionary<long, string>? names = null;
+        private readonly TaskSafeMutex namesMutex = new();
+
+        private Dictionary<long, SdeType>? types = null;
+        private readonly TaskSafeMutex typesMutex = new();
+
+        private SdeData? data = null;
+        private readonly TaskSafeMutex dataMutex = new();
+
+        public Task<DateTime> Version => GetVersion();
+        public Task<Dictionary<long, string>> Names => GetNames();
+        public Task<Dictionary<long, SdeType>> Types => GetTypes();
+
+        public Task<SdeData> Data => GetData();
+
         public ParseData(IDownloadSde downloadSde, IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
         {
             this.downloadSde = downloadSde;
@@ -23,53 +46,76 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public async Task<SdeData> ParseAsync()
+        private async Task<DateTime> GetVersion()
         {
-            await Task.Yield();
+            using Locker locker = Locker.Lock(versionMutex);
 
-            FileInfo downloadedFile = await downloadSde.DownloadedFile;
-            DateTime version = downloadedFile.LastWriteTimeUtc;
-            SdeFiles sdeFiles = await extractSde.Files;
-            Task<Dictionary<long, string>> names = ParseNamesAsync(sdeFiles);
-            Task<Dictionary<long, SdeType>> types = ParseTypesAsync(sdeFiles);
-
-            Task.WaitAll([names, types]);
-
-            return new()
+            if (!version.HasValue)
             {
-                Version = version,
-                Names = names.Result,
-                Types = types.Result,
-            };
+                FileInfo downloadedFile = await downloadSde.DownloadedFile;
+
+                version = downloadedFile.LastWriteTimeUtc;
+            }
+
+            return version.Value;
         }
 
-        private async Task<Dictionary<long, string>> ParseNamesAsync(SdeFiles sdeFiles)
+        private async Task<Dictionary<long, string>> GetNames()
         {
-            await Task.Yield();
+            using Locker locker = Locker.Lock(namesMutex);
 
-            progress.ParseNames.Report(PendingToDone.Working);
+            if (names is null)
+            {
+                progress.ParseNames.Report(PendingToDone.Working);
 
-            Dictionary<long, string> names = yaml
-                .Deserialize<SdeName[]>(sdeFiles.NamesYaml)
-                .ToDictionary(n => n.ItemID, n => n.ItemName);
+                SdeFiles sdeFiles = await extractSde.Files;
 
-            progress.ParseNames.Report(PendingToDone.Done);
+                names = yaml
+                    .Deserialize<SdeName[]>(sdeFiles.NamesYaml)
+                    .ToDictionary(n => n.ItemID, n => n.ItemName);
+
+                progress.ParseNames.Report(PendingToDone.Done);
+            }
 
             return names;
         }
 
-        private async Task<Dictionary<long, SdeType>> ParseTypesAsync(SdeFiles sdeFiles)
+        private async Task<Dictionary<long, SdeType>> GetTypes()
         {
-            await Task.Yield();
+            using Locker locker = Locker.Lock(typesMutex);
 
-            progress.ParseTypes.Report(PendingToDone.Working);
+            if (types is null)
+            {
+                progress.ParseTypes.Report(PendingToDone.Working);
 
-            Dictionary<long, SdeType> types = yaml
-                .Deserialize<Dictionary<long, SdeType>>(sdeFiles.TypesYaml);
+                SdeFiles sdeFiles = await extractSde.Files;
 
-            progress.ParseTypes.Report(PendingToDone.Done);
+                types = yaml.Deserialize<Dictionary<long, SdeType>>(sdeFiles.TypesYaml);
+
+                progress.ParseTypes.Report(PendingToDone.Done);
+            }
 
             return types;
+        }
+
+        private async Task<SdeData> GetData()
+        {
+            using Locker locker = Locker.Lock(dataMutex);
+
+            if (data is null)
+            {
+                Task.WaitAll([Version, Names, Types]);
+                await Task.Yield();
+
+                data = new()
+                {
+                    Version = Version.Result,
+                    Names = Names.Result,
+                    Types = Types.Result,
+                };
+            }
+
+            return data;
         }
     }
 
