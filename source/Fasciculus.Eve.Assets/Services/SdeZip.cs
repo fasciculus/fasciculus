@@ -50,15 +50,7 @@ namespace Fasciculus.Eve.Assets.Services
         }
     }
 
-    public interface ISdeFileSystem
-    {
-        public FileInfo NamesYaml { get; }
-        public FileInfo TypesYaml { get; }
-
-        public DirectoryInfo[] Regions { get; }
-    }
-
-    public class SdeFileSystem : ISdeFileSystem
+    public class SdeFiles
     {
         private readonly DirectoryInfo sdeDirectory;
 
@@ -71,7 +63,7 @@ namespace Fasciculus.Eve.Assets.Services
         public DirectoryInfo[] Regions
             => sdeDirectory.Combine("universe", "eve").GetDirectories();
 
-        public SdeFileSystem(DirectoryInfo sdeDirectory)
+        public SdeFiles(DirectoryInfo sdeDirectory)
         {
             this.sdeDirectory = sdeDirectory;
         }
@@ -79,7 +71,7 @@ namespace Fasciculus.Eve.Assets.Services
 
     public interface IExtractSde
     {
-        public ISdeFileSystem Extract();
+        public Task<SdeFiles> Files { get; }
     }
 
     public class ExtractSde : IExtractSde
@@ -89,8 +81,10 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly ICompression compression;
         private readonly IAssetsProgress progress;
 
-        private ISdeFileSystem? result = null;
-        private readonly TaskSafeMutex resultMutex = new();
+        private SdeFiles? files = null;
+        private readonly TaskSafeMutex mutex = new();
+
+        public Task<SdeFiles> Files => GetFiles();
 
         public ExtractSde(IDownloadSde downloadSde, IAssetsDirectories assetsDirectories, ICompression compression,
             IAssetsProgress progress)
@@ -101,19 +95,19 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public ISdeFileSystem Extract()
+        private async Task<SdeFiles> GetFiles()
         {
-            using Locker locker = Locker.Lock(resultMutex);
+            using Locker locker = Locker.Lock(mutex);
 
-            if (result is null)
+            if (files is null)
             {
-                FileInfo file = Tasks.Wait(downloadSde.DownloadedFile);
+                FileInfo file = await downloadSde.DownloadedFile;
+                DirectoryInfo directory = compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSde);
 
-                compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSde);
-                result = new SdeFileSystem(assetsDirectories.Sde);
+                files = new(directory);
             }
 
-            return result;
+            return files;
         }
     }
 

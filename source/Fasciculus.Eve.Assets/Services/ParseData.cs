@@ -29,9 +29,9 @@ namespace Fasciculus.Eve.Assets.Services
 
             FileInfo downloadedFile = await downloadSde.DownloadedFile;
             DateTime version = downloadedFile.LastWriteTimeUtc;
-            ISdeFileSystem sdeFileSystem = extractSde.Extract();
-            Task<Dictionary<long, string>> names = ParseNamesAsync(sdeFileSystem);
-            Task<Dictionary<long, SdeType>> types = ParseTypesAsync(sdeFileSystem);
+            SdeFiles sdeFiles = await extractSde.Files;
+            Task<Dictionary<long, string>> names = ParseNamesAsync(sdeFiles);
+            Task<Dictionary<long, SdeType>> types = ParseTypesAsync(sdeFiles);
 
             Task.WaitAll([names, types]);
 
@@ -43,14 +43,14 @@ namespace Fasciculus.Eve.Assets.Services
             };
         }
 
-        private async Task<Dictionary<long, string>> ParseNamesAsync(ISdeFileSystem sdeFileSystem)
+        private async Task<Dictionary<long, string>> ParseNamesAsync(SdeFiles sdeFiles)
         {
             await Task.Yield();
 
             progress.ParseNames.Report(PendingToDone.Working);
 
             Dictionary<long, string> names = yaml
-                .Deserialize<SdeName[]>(sdeFileSystem.NamesYaml)
+                .Deserialize<SdeName[]>(sdeFiles.NamesYaml)
                 .ToDictionary(n => n.ItemID, n => n.ItemName);
 
             progress.ParseNames.Report(PendingToDone.Done);
@@ -58,14 +58,14 @@ namespace Fasciculus.Eve.Assets.Services
             return names;
         }
 
-        private async Task<Dictionary<long, SdeType>> ParseTypesAsync(ISdeFileSystem sdeFileSystem)
+        private async Task<Dictionary<long, SdeType>> ParseTypesAsync(SdeFiles sdeFiles)
         {
             await Task.Yield();
 
             progress.ParseTypes.Report(PendingToDone.Working);
 
             Dictionary<long, SdeType> types = yaml
-                .Deserialize<Dictionary<long, SdeType>>(sdeFileSystem.TypesYaml);
+                .Deserialize<Dictionary<long, SdeType>>(sdeFiles.TypesYaml);
 
             progress.ParseTypes.Report(PendingToDone.Done);
 

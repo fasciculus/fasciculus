@@ -33,8 +33,8 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (result is null)
             {
-                ISdeFileSystem sdeFileSystem = extractSde.Extract();
-                DirectoryInfo[] regionDirectories = sdeFileSystem.Regions;
+                SdeFiles sdeFiles = await extractSde.Files;
+                DirectoryInfo[] regionDirectories = sdeFiles.Regions;
 
                 Begin(regionDirectories);
 
