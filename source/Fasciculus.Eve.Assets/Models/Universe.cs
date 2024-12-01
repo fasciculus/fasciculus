@@ -31,6 +31,11 @@
         public int CelestialIndex { get; set; }
 
         public Dictionary<int, SdeMoon> Moons { get; set; } = [];
+
+        public SdePlanet()
+        {
+            SdeMoonIndex.CelestialIndex.Value = 1;
+        }
     }
 
     public class SdeSolarSystem
