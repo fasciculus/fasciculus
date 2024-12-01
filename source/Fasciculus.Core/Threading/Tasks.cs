@@ -30,5 +30,18 @@ namespace Fasciculus.Threading
 
             return tasks;
         }
+
+        public static void Wait(Task task)
+            => task.GetAwaiter().GetResult();
+
+        public static T Wait<T>(Task<T> task)
+            => task.GetAwaiter().GetResult();
+
+        public static Tuple<T1, T2> Wait<T1, T2>(Task<T1> task1, Task<T2> task2)
+        {
+            Task.WaitAll([task1, task2]);
+
+            return new(task1.Result, task2.Result);
+        }
     }
 }

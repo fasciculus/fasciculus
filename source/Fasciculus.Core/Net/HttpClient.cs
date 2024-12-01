@@ -7,7 +7,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace Fasciculus.Net
 {
@@ -135,7 +134,7 @@ namespace Fasciculus.Net
                 httpRequest.Headers.IfModifiedSince = destination.LastWriteTimeUtc;
             }
 
-            HttpResponseMessage httpResponse = httpClient.SendAsync(httpRequest).Run();
+            HttpResponseMessage httpResponse = Tasks.Wait(httpClient.SendAsync(httpRequest));
 
             if (httpResponse.StatusCode == HttpStatusCode.NotModified)
             {
@@ -145,7 +144,7 @@ namespace Fasciculus.Net
             {
                 httpResponse.EnsureSuccessStatusCode();
 
-                byte[] bytes = httpResponse.Content.ReadAsByteArrayAsync().Run();
+                byte[] bytes = Tasks.Wait(httpResponse.Content.ReadAsByteArrayAsync());
 
                 destination.DeleteIfExists();
                 destination.WriteAllBytes(bytes);

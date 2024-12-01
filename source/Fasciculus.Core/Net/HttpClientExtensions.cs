@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using Fasciculus.Threading;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace System.Net.Http
@@ -16,9 +17,9 @@ namespace System.Net.Http
         }
 
         public static HttpContentHeaders Head(this HttpClient httpClient, Uri? requestUri)
-            => httpClient.HeadAsync(requestUri).Run();
+            => Tasks.Wait(httpClient.HeadAsync(requestUri));
 
         public static byte[] GetByteArray(this HttpClient httpClient, Uri? requestUri)
-            => httpClient.GetByteArrayAsync(requestUri).Run();
+            => Tasks.Wait(httpClient.GetByteArrayAsync(requestUri));
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Support;
+using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -120,7 +121,7 @@ namespace Fasciculus.IO
         }
 
         public static void Extract(FileInfo zipFile, DirectoryInfo outputDirectory, Overwrite overwrite)
-            => ExtractAsync(zipFile, outputDirectory, overwrite).Run();
+            => Tasks.Wait(ExtractAsync(zipFile, outputDirectory, overwrite));
 
         private static bool Filter(ZipArchiveEntry entry, DirectoryInfo outputDirectory, Overwrite overwrite)
         {

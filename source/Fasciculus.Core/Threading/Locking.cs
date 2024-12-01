@@ -28,7 +28,7 @@ namespace Fasciculus.Threading
                     return;
                 }
 
-                Task.Delay(0).Run();
+                Tasks.Wait(Task.Delay(0));
             }
         }
 
@@ -118,7 +118,7 @@ namespace Fasciculus.Threading
                     return;
                 }
 
-                Task.Delay(0).Run();
+                Tasks.Wait(Task.Delay(0));
             }
         }
 
