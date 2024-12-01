@@ -33,15 +33,14 @@ namespace Fasciculus.Eve.Assets.Services
 
         private void Create()
         {
-            Task<EveData> data = convertData.ConvertAsync();
-            Task<EveUniverse> universe = convertUniverse.ConvertAsync();
-            Task<List<FileInfo>> images = createImages.CreateAsync();
+            var result = Tasks.Wait(convertData.Data, convertUniverse.ConvertAsync(), createImages.CreateAsync());
+            EveData.Data data = result.Item1;
+            EveUniverse universe = result.Item2;
+            List<FileInfo> images = result.Item3;
 
-            Task.WaitAll([data, universe, images]);
-
-            progress.CreateResources.Report(WriteData(data.Result));
-            progress.CreateResources.Report(WriteUniverse(universe.Result));
-            progress.CreateResources.Report(images.Result);
+            progress.CreateResources.Report(WriteData(data));
+            progress.CreateResources.Report(WriteUniverse(universe));
+            progress.CreateResources.Report(images);
         }
 
         public Task CreateAsync()
@@ -49,7 +48,7 @@ namespace Fasciculus.Eve.Assets.Services
             return Tasks.LongRunning(() => Create());
         }
 
-        private List<FileInfo> WriteData(EveData data)
+        private List<FileInfo> WriteData(EveData.Data data)
         {
             using MemoryStream stream = new();
             FileInfo file = assetsDirectories.Resources.File("EveData");

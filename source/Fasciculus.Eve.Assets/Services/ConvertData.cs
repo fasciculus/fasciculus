@@ -7,7 +7,7 @@ namespace Fasciculus.Eve.Assets.Services
 {
     public interface IConvertData
     {
-        public Task<EveData> ConvertAsync();
+        public Task<EveData.Data> Data { get; }
     }
 
     public class ConvertData : IConvertData
@@ -15,8 +15,10 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IParseData parseData;
         private readonly IAssetsProgress progress;
 
-        private EveData? result;
-        private readonly TaskSafeMutex mutex = new();
+        private EveData.Data? data;
+        private readonly TaskSafeMutex dataMutex = new();
+
+        public Task<EveData.Data> Data => GetData();
 
         public ConvertData(IParseData parseData, IAssetsProgress progress)
         {
@@ -24,27 +26,26 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public async Task<EveData> ConvertAsync()
+        private async Task<EveData.Data> GetData()
         {
-            using Locker locker = Locker.Lock(mutex);
+            using Locker locker = Locker.Lock(dataMutex);
 
-            if (result is null)
+            if (data is null)
             {
                 progress.ConvertData.Report(PendingToDone.Working);
 
                 SdeData sdeData = await parseData.Data;
                 DateTime version = sdeData.Version;
                 EveType.Data[] types = ConvertTypes(sdeData.Types);
-                EveData.Data data = new(version, types);
 
-                result = new(data);
+                data = new(version, types);
 
                 progress.ConvertData.Report(PendingToDone.Done);
 
                 await Task.Yield();
             }
 
-            return result;
+            return data;
         }
 
         private static EveType.Data[] ConvertTypes(Dictionary<long, SdeType> types)
