@@ -8,7 +8,7 @@ namespace Fasciculus.Eve.Assets.Services
 {
     public interface ICopyImages
     {
-        public Task CopyAsync();
+        public Task<FileInfo[]> FilesCopied { get; }
     }
 
     public class CopyImages : ICopyImages
@@ -17,8 +17,10 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IAssetsDirectories assetsDirectories;
         private readonly IAssetsProgress progress;
 
-        private bool result = false;
-        private readonly TaskSafeMutex mutex = new();
+        private FileInfo[]? files = null;
+        private readonly TaskSafeMutex filesMutex = new();
+
+        public Task<FileInfo[]> FilesCopied => GetFilesCopied();
 
         public CopyImages(ISteamApplications steamApplications, IAssetsDirectories assetsDirectories, IAssetsProgress progress)
         {
@@ -27,27 +29,24 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public async Task CopyAsync()
+        private async Task<FileInfo[]> GetFilesCopied()
         {
-            using Locker locker = Locker.Lock(mutex);
+            using Locker locker = Locker.Lock(filesMutex);
 
-            if (!result)
+            if (files is null)
             {
                 Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
 
                 progress.CopyImages.Begin(entries.Length);
-
-                entries.Apply(Copy);
-
+                files = entries.AsParallel().Select(Copy).ToArray();
                 progress.CopyImages.End();
-
-                result = true;
-
                 await Task.Yield();
             }
+
+            return files;
         }
 
-        private void Copy(Tuple<FileInfo, FileInfo> entry)
+        private FileInfo Copy(Tuple<FileInfo, FileInfo> entry)
         {
             FileInfo source = entry.Item1;
             FileInfo destination = entry.Item2;
@@ -60,6 +59,8 @@ namespace Fasciculus.Eve.Assets.Services
             }
 
             progress.CopyImages.Report(1);
+
+            return new(destination.FullName);
         }
 
         private Tuple<FileInfo, FileInfo>[] ParseIndex()
@@ -74,6 +75,7 @@ namespace Fasciculus.Eve.Assets.Services
                 .ReadAllLines()
                 .Select(ParseIndexLine)
                 .NotNull()
+                .AsParallel()
                 .Select(v => CreateIndexEntry(v, resFiles, steamImages))
                 .NotNull()
                 .ToArray();
@@ -83,9 +85,8 @@ namespace Fasciculus.Eve.Assets.Services
             DirectoryInfo steamImages)
         {
             FileInfo source = resFiles.File(value.Item1);
-            FileInfo destination = steamImages.File(value.Item2);
 
-            return source.Exists ? new(source, destination) : null;
+            return source.Exists ? new(source, steamImages.File(value.Item2)) : null;
         }
 
         private static Tuple<string, string>? ParseIndexLine(string line)
@@ -104,7 +105,7 @@ namespace Fasciculus.Eve.Assets.Services
 
     public interface ICreateImages
     {
-        public Task<List<FileInfo>> CreateAsync();
+        public Task<List<FileInfo>> FilesCreated { get; }
     }
 
     public class CreateImages : ICreateImages
@@ -122,8 +123,10 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IWriteResource writeResource;
         private readonly IAssetsProgress progress;
 
-        private List<FileInfo>? result;
-        private TaskSafeMutex mutex = new();
+        private List<FileInfo>? filesCreated = null;
+        private readonly TaskSafeMutex filesCreatedMutex = new();
+
+        public Task<List<FileInfo>> FilesCreated => GetFilesCreated();
 
         public CreateImages(ICopyImages copyImages, IAssetsDirectories assetsDirectories, IWriteResource writeResource,
             IAssetsProgress progress)
@@ -134,24 +137,20 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public async Task<List<FileInfo>> CreateAsync()
+        private async Task<List<FileInfo>> GetFilesCreated()
         {
-            using Locker locker = Locker.Lock(mutex);
+            using Locker locker = Locker.Lock(filesCreatedMutex);
 
-            if (result is null)
+            if (filesCreated is null)
             {
-                await copyImages.CopyAsync();
+                FileInfo[] _ = await copyImages.FilesCopied;
 
                 progress.CreateImages.Report(PendingToDone.Working);
-                result = paths.Select(CreateImage).NotNull().ToList();
+                filesCreated = paths.Select(CreateImage).NotNull().ToList();
                 progress.CreateImages.Report(PendingToDone.Done);
-
-                await Task.Yield();
             }
 
-            await copyImages.CopyAsync();
-
-            return result;
+            return filesCreated;
         }
 
         private FileInfo? CreateImage(KeyValuePair<string, string> kvp)
