@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -102,59 +101,6 @@ namespace Fasciculus.Net
         }
     }
 
-    public interface IDownloader
-    {
-        public FileInfo Download(Uri uri, FileInfo destination);
-        public FileInfo Download(Uri uri, FileInfo destination, out bool notModified);
-    }
-
-    public class Downloader : IDownloader
-    {
-        private readonly IHttpClientPool httpClientPool;
-
-        public Downloader(IHttpClientPool httpClientPool)
-        {
-            this.httpClientPool = httpClientPool;
-        }
-
-        public FileInfo Download(Uri uri, FileInfo destination)
-        {
-            return Download(uri, destination, out bool _);
-        }
-
-        public FileInfo Download(Uri uri, FileInfo destination, out bool notModified)
-        {
-            HttpClient httpClient = httpClientPool[uri];
-            HttpRequestMessage httpRequest = new(HttpMethod.Get, uri);
-
-            notModified = false;
-
-            if (File.Exists(destination.FullName))
-            {
-                httpRequest.Headers.IfModifiedSince = destination.LastWriteTimeUtc;
-            }
-
-            HttpResponseMessage httpResponse = Tasks.Wait(httpClient.SendAsync(httpRequest));
-
-            if (httpResponse.StatusCode == HttpStatusCode.NotModified)
-            {
-                notModified = true;
-            }
-            else
-            {
-                httpResponse.EnsureSuccessStatusCode();
-
-                byte[] bytes = Tasks.Wait(httpResponse.Content.ReadAsByteArrayAsync());
-
-                destination.DeleteIfExists();
-                destination.WriteAllBytes(bytes);
-                destination = new(destination.FullName);
-            }
-
-            return destination;
-        }
-    }
-
     public static class HttpClientServices
     {
         public static IServiceCollection AddHttpClientHandlers(this IServiceCollection services)
@@ -168,14 +114,6 @@ namespace Fasciculus.Net
         {
             services.AddHttpClientHandlers();
             services.TryAddSingleton<IHttpClientPool, HttpClientPool>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddDownloader(this IServiceCollection services)
-        {
-            services.AddHttpClientPool();
-            services.TryAddSingleton<IDownloader, Downloader>();
 
             return services;
         }

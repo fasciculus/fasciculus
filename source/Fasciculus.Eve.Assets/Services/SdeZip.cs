@@ -32,8 +32,6 @@ namespace Fasciculus.Eve.Assets.Services
 
         private async Task<FileInfo> GetDownloadedFileAsync()
         {
-            await Task.Yield();
-
             using Locker locker = Locker.Lock(mutex);
 
             if (downloadedFile is null)
@@ -41,10 +39,11 @@ namespace Fasciculus.Eve.Assets.Services
                 progress.DownloadSde.Report(DownloadSdeStatus.Downloading);
 
                 FileInfo destination = assetsDirectories.Downloads.File("sde.zip");
+                DownloaderResult result = await downloader.DownloadAsync(new(SdeZipUri), destination);
 
-                downloadedFile = downloader.Download(new(SdeZipUri), destination, out bool notModified);
+                downloadedFile = result.DownloadedFile;
 
-                progress.DownloadSde.Report(notModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
+                progress.DownloadSde.Report(result.NotModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
             }
 
             return downloadedFile;
