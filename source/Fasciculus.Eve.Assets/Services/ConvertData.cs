@@ -28,8 +28,6 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(mutex);
 
-            await Task.Yield();
-
             if (result is null)
             {
                 progress.ConvertData.Report(PendingToDone.Working);
@@ -42,6 +40,8 @@ namespace Fasciculus.Eve.Assets.Services
                 result = new(data);
 
                 progress.ConvertData.Report(PendingToDone.Done);
+
+                await Task.Yield();
             }
 
             return result;

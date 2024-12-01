@@ -6,7 +6,7 @@ namespace Fasciculus.Eve.Assets.Services
 {
     public interface IParseUniverse
     {
-        public Task<SdeRegion[]> ParseAsync();
+        public Task<SdeRegion[]> Regions { get; }
     }
 
     public class ParseUniverse : IParseUniverse
@@ -15,8 +15,10 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IYaml yaml;
         private readonly IAssetsProgress progress;
 
-        private SdeRegion[]? result = null;
-        private readonly TaskSafeMutex resultMutex = new();
+        private SdeRegion[]? regions = null;
+        private readonly TaskSafeMutex regionsMutex = new();
+
+        public Task<SdeRegion[]> Regions => GetRegions();
 
         public ParseUniverse(IExtractSde extractSde, IYaml yaml, IAssetsProgress progress)
         {
@@ -25,33 +27,25 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        public async Task<SdeRegion[]> ParseAsync()
+        private async Task<SdeRegion[]> GetRegions()
         {
-            using Locker locker = Locker.Lock(resultMutex);
+            using Locker locker = Locker.Lock(regionsMutex);
 
-            await Task.Yield();
-
-            if (result is null)
+            if (regions is null)
             {
                 SdeFiles sdeFiles = await extractSde.Files;
                 DirectoryInfo[] regionDirectories = sdeFiles.Regions;
 
                 Begin(regionDirectories);
-
-                Task<SdeRegion>[] tasks = regionDirectories.Select(ParseRegionAsync).ToArray();
-
-                result = Tasks.WaitAll(tasks).Select(t => t.Result).ToArray();
-
+                regions = regionDirectories.AsParallel().Select(ParseRegion).ToArray();
                 End();
             }
 
-            return result;
+            return regions;
         }
 
-        private async Task<SdeRegion> ParseRegionAsync(DirectoryInfo regionDirectory)
+        private SdeRegion ParseRegion(DirectoryInfo regionDirectory)
         {
-            await Task.Yield();
-
             FileInfo file = regionDirectory.File("region.yaml");
             SdeRegion region = yaml.Deserialize<SdeRegion>(file);
 

@@ -105,7 +105,6 @@ namespace Fasciculus.Eve.Assets.Services
             if (data is null)
             {
                 Task.WaitAll([Version, Names, Types]);
-                await Task.Yield();
 
                 data = new()
                 {
@@ -113,6 +112,8 @@ namespace Fasciculus.Eve.Assets.Services
                     Names = Names.Result,
                     Types = Types.Result,
                 };
+
+                await Task.Yield();
             }
 
             return data;

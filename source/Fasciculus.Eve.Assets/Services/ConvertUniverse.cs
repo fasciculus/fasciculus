@@ -30,17 +30,17 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(mutex);
 
-            await Task.Yield();
-
             if (result is null)
             {
-                var results = Tasks.Wait(parseUniverse.ParseAsync(), parseData.Names);
+                var results = Tasks.Wait(parseUniverse.Regions, parseData.Names);
                 SdeRegion[] sdeRegions = results.Item1;
                 Dictionary<long, string> names = results.Item2;
 
                 progress.ConvertUniverse.Report(PendingToDone.Working);
                 result = ConvertRegions(sdeRegions, names);
                 progress.ConvertUniverse.Report(PendingToDone.Done);
+
+                await Task.Yield();
             }
 
             return result;

@@ -31,8 +31,6 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(mutex);
 
-            await Task.Yield();
-
             if (!result)
             {
                 Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
@@ -44,6 +42,8 @@ namespace Fasciculus.Eve.Assets.Services
                 progress.CopyImages.End();
 
                 result = true;
+
+                await Task.Yield();
             }
         }
 
@@ -138,8 +138,6 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(mutex);
 
-            await Task.Yield();
-
             if (result is null)
             {
                 await copyImages.CopyAsync();
@@ -147,6 +145,8 @@ namespace Fasciculus.Eve.Assets.Services
                 progress.CreateImages.Report(PendingToDone.Working);
                 result = paths.Select(CreateImage).NotNull().ToList();
                 progress.CreateImages.Report(PendingToDone.Done);
+
+                await Task.Yield();
             }
 
             await copyImages.CopyAsync();
