@@ -1,0 +1,24 @@
+﻿using Fasciculus.Mathematics;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Fasciculus.Eve.Models
+{
+    public class EveNavigation
+    {
+        public class Data
+        {
+            private readonly SparseShortMatrix[] distances;
+
+            public IReadOnlyList<SparseShortMatrix> Distances => distances;
+
+            public Data(SparseShortMatrix[] distances)
+            {
+                this.distances = distances;
+            }
+
+            public Data(Stream stream)
+                : this(stream.ReadArray(s => new SparseShortMatrix(s))) { }
+        }
+    }
+}
