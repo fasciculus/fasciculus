@@ -7,13 +7,33 @@ using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
+    public class EveSecurity
+    {
+        public enum Level : int
+        {
+            All = 0,
+            LowAndHigh = 1,
+            High = 2
+        }
+
+        public static Level[] Levels => [Level.All, Level.LowAndHigh, Level.High];
+
+        public delegate bool Filter(double security);
+
+        private static readonly Filter AllFilter = (_) => true;
+        private static readonly Filter LowAndHighFilter = (security) => security >= 0.0;
+        private static readonly Filter HighFilter = (security) => security >= 0.5;
+
+        public static Filter[] Filters => [AllFilter, LowAndHighFilter, HighFilter];
+    }
+
     [DebuggerDisplay("{Name}")]
     public class EveMoon
     {
         public class Data
         {
             public int Id { get; }
-            public int CelestialIndex;
+            public int CelestialIndex { get; }
 
             public Data(int id, int celestialIndex)
             {
