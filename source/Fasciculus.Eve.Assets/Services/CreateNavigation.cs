@@ -57,9 +57,13 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (navigation is null)
             {
+                progress.CreateDistances.Begin(EveSecurity.Levels.Length * GetSystems().Length);
+
                 SparseShortMatrix[] distances = EveSecurity.Levels.Select(GetDistances).ToArray();
 
                 navigation = new(distances);
+
+                progress.CreateDistances.End();
             }
 
             return navigation;
@@ -67,9 +71,20 @@ namespace Fasciculus.Eve.Assets.Services
 
         private SparseShortMatrix GetDistances(EveSecurity.Level level)
         {
-            GetConnections();
+            SparseBoolMatrix connections = GetConnections()[level];
 
-            return new(0, []);
+            Dictionary<int, SparseShortVector> distances = GetSystems().AsParallel()
+                .Select(s => Tuple.Create(s.Id, GetDistances(s, connections)))
+                .ToDictionary(x => x.Item1, x => x.Item2);
+
+            return new(distances);
+        }
+
+        private SparseShortVector GetDistances(EveSolarSystem.Data solarSystem, SparseBoolMatrix connections)
+        {
+            progress.CreateDistances.Report(1);
+
+            return SparseShortVector.Empty;
         }
 
         private Dictionary<EveSecurity.Level, SparseBoolMatrix> GetConnections()

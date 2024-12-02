@@ -33,6 +33,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IProgress<PendingToDone> ConvertData { get; }
         public IProgress<PendingToDone> ConvertUniverse { get; }
         public IProgress<PendingToDone> CreateConnections { get; }
+        public IAccumulatingLongProgress CreateDistances { get; }
         public IAccumulatingLongProgress CopyImages { get; }
         public IProgress<PendingToDone> CreateImages { get; }
         public IAccumulatingProgress<List<FileInfo>> CreateResources { get; }
@@ -52,6 +53,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IProgress<PendingToDone> ConvertData { get; }
         public IProgress<PendingToDone> ConvertUniverse { get; }
         public IProgress<PendingToDone> CreateConnections { get; }
+        public IAccumulatingLongProgress CreateDistances { get; }
         public IAccumulatingLongProgress CopyImages { get; }
         public IProgress<PendingToDone> CreateImages { get; }
         public IAccumulatingProgress<List<FileInfo>> CreateResources { get; }
@@ -68,6 +70,7 @@ namespace Fasciculus.Eve.Assets.Services
             ConvertData = new TaskSafeProgress<PendingToDone>(ReportConvertData);
             ConvertUniverse = new TaskSafeProgress<PendingToDone>(ReportConvertUniverse);
             CreateConnections = new TaskSafeProgress<PendingToDone>(ReportCreateConnections);
+            CreateDistances = new AccumulatingLongProgress(ReportCreateDistances, 100);
             CopyImages = new AccumulatingLongProgress(ReportCopyImages, 100);
             CreateImages = new TaskSafeProgress<PendingToDone>(ReportCreateImages);
 
@@ -106,6 +109,9 @@ namespace Fasciculus.Eve.Assets.Services
         private void ReportCreateConnections(PendingToDone status)
             => progressCollector.CreateConnections = status;
 
+        private void ReportCreateDistances(long _)
+            => progressCollector.CreateDistances = CreateDistances.Progress;
+
         private void ReportCopyImages(long _)
             => progressCollector.CopyImages = CopyImages.Progress;
 
@@ -135,6 +141,7 @@ namespace Fasciculus.Eve.Assets.Services
         public PendingToDone ConvertUniverse { get; set; }
 
         public PendingToDone CreateConnections { get; set; }
+        public LongProgressInfo CreateDistances { get; set; }
 
         public LongProgressInfo CopyImages { get; set; }
         public PendingToDone CreateImages { get; set; }
@@ -173,6 +180,9 @@ namespace Fasciculus.Eve.Assets.Services
 
         [ObservableProperty]
         private PendingToDone createConnections = PendingToDone.Pending;
+
+        [ObservableProperty]
+        private LongProgressInfo createDistances = LongProgressInfo.Start;
 
         [ObservableProperty]
         private LongProgressInfo copyImages = LongProgressInfo.Start;

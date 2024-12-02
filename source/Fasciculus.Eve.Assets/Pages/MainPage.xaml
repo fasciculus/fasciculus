@@ -94,6 +94,12 @@
                 <Label Text="{Binding CreateConnections, Converter={StaticResource ptd}}"
                        TextColor="{Binding CreateConnections, Converter={StaticResource ptd}}"
                        Grid.Row="1" Grid.Column="1" />
+                <Label Text="Distances"
+                       Grid.Row="1" Grid.Column="2" />
+                <ProgressBar Progress="{Binding CreateDistances, Converter={StaticResource lpi}}"
+                             ProgressColor="{Binding CreateDistances, Converter={StaticResource lpi}}"
+                             BackgroundColor="LightGray" MinimumHeightRequest="8"
+                             Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">

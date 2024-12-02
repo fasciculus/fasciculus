@@ -44,6 +44,9 @@ namespace Fasciculus.Eve.Assets.PageModels
         private PendingToDone createConnections = PendingToDone.Pending;
 
         [ObservableProperty]
+        private LongProgressInfo createDistances = LongProgressInfo.Start;
+
+        [ObservableProperty]
         private LongProgressInfo copyImages = LongProgressInfo.Start;
 
         [ObservableProperty]
@@ -80,6 +83,7 @@ namespace Fasciculus.Eve.Assets.PageModels
             ConvertUniverse = progressCollector.ConvertUniverse;
 
             CreateConnections = progressCollector.CreateConnections;
+            CreateDistances = progressCollector.CreateDistances;
 
             CopyImages = progressCollector.CopyImages;
             CreateImages = progressCollector.CreateImages;
