@@ -117,6 +117,18 @@ namespace Fasciculus.Mathematics
             ColumnCount = columnCount;
             this.rows = rows.ShallowCopy();
         }
+
+        public SparseShortMatrix(Stream stream)
+        {
+            ColumnCount = stream.ReadInt();
+            rows = stream.ReadArray(s => new SparseShortVector(s));
+        }
+
+        public void Write(Stream stream)
+        {
+            stream.WriteInt(ColumnCount);
+            stream.WriteArray(rows, r => r.Write(stream));
+        }
     }
 
     public class DenseShortMatrix

@@ -1,6 +1,5 @@
 ﻿using Fasciculus.Algorithms;
 using Fasciculus.Collections;
-using Fasciculus.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +30,18 @@ namespace Fasciculus.Mathematics
         {
             this.indices = indices;
             this.values = values;
+        }
+
+        public SparseShortVector(Stream stream)
+        {
+            indices = stream.ReadIntArray();
+            values = stream.ReadShortArray();
+        }
+
+        public void Write(Stream stream)
+        {
+            stream.WriteIntArray(indices);
+            stream.WriteShortArray(values);
         }
 
         public static SparseShortVector Create(short[] source)

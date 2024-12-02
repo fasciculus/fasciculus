@@ -126,6 +126,19 @@ namespace System.IO
             values.Apply(stream.WriteShort);
         }
 
+        public static int[] ReadIntArray(this Stream stream)
+        {
+            int length = stream.ReadInt();
+
+            return Enumerable.Range(0, length).Select(_ => stream.ReadInt()).ToArray();
+        }
+
+        public static void WriteIntArray(this Stream stream, int[] values)
+        {
+            stream.WriteInt(values.Length);
+            values.Apply(stream.WriteInt);
+        }
+
         public static T[] ReadArray<T>(this Stream stream, Func<Stream, T> read)
         {
             int length = stream.ReadInt();
