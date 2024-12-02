@@ -15,8 +15,8 @@ namespace Fasciculus.Mathematics
         private readonly int[] indices;
         private readonly short[] values;
 
-        public int Count
-            => indices.Length;
+        public IEnumerable<int> Indices
+            => indices;
 
         public short this[int index]
         {

@@ -90,33 +90,27 @@ namespace Fasciculus.Mathematics
 
     public class SparseShortMatrix
     {
-        public int RowCount => rows.Length;
-        public int ColumnCount { get; }
+        private readonly Dictionary<int, SparseShortVector> rows;
+        private readonly SortedSet<int> indices;
 
-        public int Count
-            => rows.Select(row => row.Count).Sum();
+        public SparseShortVector this[int index]
+            => rows.TryGetValue(index, out SparseShortVector row) ? row : SparseShortVector.Empty;
 
-        private readonly SparseShortVector[] rows;
-
-        public SparseShortVector this[int row]
-            => rows[row];
-
-        public SparseShortMatrix(int columnCount, SparseShortVector[] rows)
+        public SparseShortMatrix(Dictionary<int, SparseShortVector> rows)
         {
-            ColumnCount = columnCount;
-            this.rows = rows.ShallowCopy();
+            this.rows = rows.Where(r => r.Value.Indices.Any()).ToDictionary(x => x.Key, x => x.Value);
+            indices = new(this.rows.Keys);
         }
 
         public SparseShortMatrix(Stream stream)
         {
-            ColumnCount = stream.ReadInt();
-            rows = stream.ReadArray(s => new SparseShortVector(s));
+            rows = stream.ReadDictionary(s => s.ReadInt(), s => new SparseShortVector(s));
+            indices = new(this.rows.Keys);
         }
 
         public void Write(Stream stream)
         {
-            stream.WriteInt(ColumnCount);
-            stream.WriteArray(rows, r => r.Write(stream));
+            stream.WriteDictionary(rows, k => stream.WriteInt(k), v => v.Write(stream));
         }
     }
 
@@ -135,9 +129,6 @@ namespace Fasciculus.Mathematics
             ColumnCount = columnCount;
             this.rows = rows.ShallowCopy();
         }
-
-        public SparseShortMatrix ToSparse()
-            => new(ColumnCount, rows.Select(row => row.ToSparse()).ToArray());
 
         public void Write(Stream stream)
         {
