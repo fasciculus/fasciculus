@@ -19,6 +19,11 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
                 : this(stream.ReadArray(s => new SparseShortMatrix(s))) { }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteArray(distances, x => x.Write(stream));
+            }
         }
     }
 }

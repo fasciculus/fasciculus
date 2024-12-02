@@ -32,9 +32,10 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (data is null)
             {
+                SdeData sdeData = await parseData.Data;
+
                 progress.ConvertData.Report(PendingToDone.Working);
 
-                SdeData sdeData = await parseData.Data;
                 DateTime version = sdeData.Version;
                 EveType.Data[] types = ConvertTypes(sdeData.Types);
 

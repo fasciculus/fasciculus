@@ -13,6 +13,7 @@ namespace Fasciculus.Eve.Assets.Services
     {
         private readonly IConvertData convertData;
         private readonly IConvertUniverse convertUniverse;
+        private readonly ICreateNavigation createNavigation;
         private readonly ICreateImages createImages;
 
         private readonly IAssetsDirectories assetsDirectories;
@@ -20,11 +21,12 @@ namespace Fasciculus.Eve.Assets.Services
 
         private readonly IAssetsProgress progress;
 
-        public CreateResources(IConvertData convertData, IConvertUniverse convertUniverse, ICreateImages createImages,
-            IAssetsDirectories assetsDirectories, IWriteResource writeResource, IAssetsProgress progress)
+        public CreateResources(IConvertData convertData, IConvertUniverse convertUniverse, ICreateNavigation createNavigation,
+            ICreateImages createImages, IAssetsDirectories assetsDirectories, IWriteResource writeResource, IAssetsProgress progress)
         {
             this.convertData = convertData;
             this.convertUniverse = convertUniverse;
+            this.createNavigation = createNavigation;
             this.createImages = createImages;
             this.assetsDirectories = assetsDirectories;
             this.writeResource = writeResource;
@@ -33,13 +35,15 @@ namespace Fasciculus.Eve.Assets.Services
 
         private void Create()
         {
-            var result = Tasks.Wait(convertData.Data, convertUniverse.Universe, createImages.FilesCreated);
+            var result = Tasks.Wait(convertData.Data, convertUniverse.Universe, createNavigation.Navigation, createImages.FilesCreated);
             EveData.Data data = result.Item1;
             EveUniverse.Data universe = result.Item2;
-            List<FileInfo> images = result.Item3;
+            EveNavigation.Data navigation = result.Item3;
+            List<FileInfo> images = result.Item4;
 
             progress.CreateResources.Report(WriteData(data));
             progress.CreateResources.Report(WriteUniverse(universe));
+            progress.CreateResources.Report(WriteNavigation(navigation));
             progress.CreateResources.Report(images);
         }
 
@@ -67,6 +71,16 @@ namespace Fasciculus.Eve.Assets.Services
 
             return writeResource.Write(stream.ToArray(), file, true) ? [file] : [];
         }
+
+        private List<FileInfo> WriteNavigation(EveNavigation.Data navigation)
+        {
+            using MemoryStream stream = new();
+            FileInfo file = assetsDirectories.Resources.File("EveNavigation");
+
+            navigation.Write(stream);
+
+            return writeResource.Write(stream.ToArray(), file, true) ? [file] : [];
+        }
     }
 
     public static class CreateResourcesServices
@@ -76,6 +90,7 @@ namespace Fasciculus.Eve.Assets.Services
             services.AddImages();
             services.AddConvertData();
             services.AddConvertUniverse();
+            services.AddCreateNanigation();
             services.AddWriteResource();
             services.AddAssetsProgress();
 

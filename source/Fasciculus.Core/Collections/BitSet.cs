@@ -8,6 +8,8 @@ namespace Fasciculus.Collections
 {
     public class BitSet : IEnumerable<int>
     {
+        public static readonly BitSet Empty = new(new int[0]);
+
         private readonly int[] entries;
 
         public int Count => entries.Length;

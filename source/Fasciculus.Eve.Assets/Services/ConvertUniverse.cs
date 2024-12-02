@@ -19,7 +19,7 @@ namespace Fasciculus.Eve.Assets.Services
         private EveUniverse.Data? universe = null;
         private readonly TaskSafeMutex universeMutex = new();
 
-        public Task<EveUniverse.Data> Universe => GetUniverse();
+        public Task<EveUniverse.Data> Universe => GetUniverseAsync();
 
         public ConvertUniverse(IParseData parseData, IParseUniverse parseUniverse, IAssetsProgress progress)
         {
@@ -28,7 +28,12 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        private async Task<EveUniverse.Data> GetUniverse()
+        private Task<EveUniverse.Data> GetUniverseAsync()
+        {
+            return Tasks.LongRunning(GetUniverse);
+        }
+
+        private EveUniverse.Data GetUniverse()
         {
             using Locker locker = Locker.Lock(universeMutex);
 
@@ -41,8 +46,6 @@ namespace Fasciculus.Eve.Assets.Services
                 progress.ConvertUniverse.Report(PendingToDone.Working);
                 universe = ConvertRegions(sdeRegions, names);
                 progress.ConvertUniverse.Report(PendingToDone.Done);
-
-                await Task.Yield();
             }
 
             return universe;

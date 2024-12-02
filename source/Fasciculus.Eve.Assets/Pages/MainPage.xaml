@@ -87,6 +87,16 @@
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
+                <Label Text="Navigation" FontAttributes="Bold"
+                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
+                <Label Text="Connections"
+                       Grid.Row="1" Grid.Column="0" />
+                <Label Text="{Binding CreateConnections, Converter={StaticResource ptd}}"
+                       TextColor="{Binding CreateConnections, Converter={StaticResource ptd}}"
+                       Grid.Row="1" Grid.Column="1" />
+            </Grid>
+
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="Images" FontAttributes="Bold"
                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Copy"

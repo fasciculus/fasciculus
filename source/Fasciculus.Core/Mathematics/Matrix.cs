@@ -72,31 +72,15 @@ namespace Fasciculus.Mathematics
 
     public class SparseBoolMatrix
     {
-        public int RowCount => rows.Length;
-        public int ColumnCount { get; }
+        private readonly Dictionary<int, SparseBoolVector> rows;
 
-        private readonly SparseBoolVector[] rows;
-
-        public SparseBoolMatrix(int columnCount, SparseBoolVector[] rows)
+        public SparseBoolMatrix(Dictionary<int, SparseBoolVector> rows)
         {
-            ColumnCount = columnCount;
-            this.rows = rows.ShallowCopy();
+            this.rows = rows.Where(r => r.Value.Length()).ToDictionary(x => x.Key, x => x.Value);
         }
 
-        public SparseBoolVector this[int row]
-            => rows[row];
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SparseBoolVector operator *(SparseBoolMatrix matrix, SparseBoolVector vector)
-            => SparseBoolVector.Create(Enumerable.Range(0, matrix.RowCount).Where(index => matrix.rows[index] * vector));
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SparseBoolMatrix Create(int rowCount, int columnCount, IEnumerable<MatrixKey> entries)
-            => new(columnCount, Enumerable.Range(0, rowCount).Select(row => CreateRow(row, entries)).ToArray());
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static SparseBoolVector CreateRow(int row, IEnumerable<MatrixKey> entries)
-            => SparseBoolVector.Create(entries.Where(e => e.Row == row).Select(e => e.Column));
+        public SparseBoolVector this[int index]
+            => rows.TryGetValue(index, out SparseBoolVector row) ? row : SparseBoolVector.Empty;
     }
 
     public class SparseShortMatrix

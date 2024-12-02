@@ -24,7 +24,12 @@ namespace Fasciculus.Eve.Models
         private static readonly Filter LowAndHighFilter = (security) => security >= 0.0;
         private static readonly Filter HighFilter = (security) => security >= 0.5;
 
-        public static Filter[] Filters => [AllFilter, LowAndHighFilter, HighFilter];
+        public static readonly IReadOnlyDictionary<Level, Filter> Filters = new Dictionary<Level, Filter>()
+        {
+            { Level.All, AllFilter },
+            { Level.LowAndHigh, LowAndHighFilter },
+            { Level.High, HighFilter }
+        };
     }
 
     [DebuggerDisplay("{Name}")]

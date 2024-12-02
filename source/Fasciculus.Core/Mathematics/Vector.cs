@@ -125,6 +125,8 @@ namespace Fasciculus.Mathematics
     {
         private readonly BitSet entries;
 
+        public static readonly SparseBoolVector Empty = new(BitSet.Empty);
+
         public IEnumerable<int> Indices
             => entries;
 
