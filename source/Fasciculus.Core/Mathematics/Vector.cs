@@ -10,6 +10,8 @@ namespace Fasciculus.Mathematics
 {
     public class SparseShortVector
     {
+        public static readonly SparseShortVector Empty = new([], []);
+
         private readonly int[] indices;
         private readonly short[] values;
 
@@ -26,7 +28,7 @@ namespace Fasciculus.Mathematics
             }
         }
 
-        private SparseShortVector(int[] indices, short[] values)
+        internal SparseShortVector(int[] indices, short[] values)
         {
             this.indices = indices;
             this.values = values;
@@ -62,6 +64,14 @@ namespace Fasciculus.Mathematics
             }
 
             return new(new Span<int>(indices, 0, k).ToArray(), new Span<short>(values, 0, k).ToArray());
+        }
+
+        public static SparseShortVector operator +(SparseShortVector lhs, SparseShortVector rhs)
+        {
+            SortedSet<int> indices = new(lhs.indices.Concat(rhs.indices));
+            short[] values = indices.Select(i => (short)(lhs[i] + rhs[i])).ToArray();
+
+            return new([.. indices], values);
         }
     }
 
@@ -165,5 +175,13 @@ namespace Fasciculus.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator *(SparseBoolVector lhs, SparseBoolVector rhs)
             => lhs.entries.Intersects(rhs.entries);
+
+        public static SparseShortVector operator *(SparseBoolVector v, short f)
+        {
+            int[] indices = v.Indices.ToArray();
+            short[] values = indices.Select(_ => f).ToArray();
+
+            return new(indices, values);
+        }
     }
 }
