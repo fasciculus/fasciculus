@@ -87,8 +87,8 @@ namespace Fasciculus.Eve.Models
 
         public EveMoons(IEnumerable<EveMoon> moons)
         {
-            byId = moons.ToDictionary(x => x.Id, x => x);
-            byName = moons.ToDictionary(x => x.Name, x => x);
+            byId = moons.ToDictionary(x => x.Id);
+            byName = moons.ToDictionary(x => x.Name);
         }
 
         public IEnumerator<EveMoon> GetEnumerator()
@@ -162,8 +162,8 @@ namespace Fasciculus.Eve.Models
 
         public EvePlanets(IEnumerable<EvePlanet> planets)
         {
-            byId = planets.ToDictionary(p => p.Id, p => p);
-            byName = planets.ToDictionary(p => p.Name, p => p);
+            byId = planets.ToDictionary(p => p.Id);
+            byName = planets.ToDictionary(p => p.Name);
         }
 
         public IEnumerator<EvePlanet> GetEnumerator()
@@ -220,7 +220,7 @@ namespace Fasciculus.Eve.Models
 
         public EveStargates(IEnumerable<EveStargate> stargates)
         {
-            byId = stargates.ToDictionary(s => s.Id, s => s);
+            byId = stargates.ToDictionary(s => s.Id);
         }
 
         public IEnumerator<EveStargate> GetEnumerator()
@@ -300,8 +300,8 @@ namespace Fasciculus.Eve.Models
 
         public EveSolarSystems(IEnumerable<EveSolarSystem> solarSystems)
         {
-            byId = solarSystems.ToDictionary(s => s.Id, s => s);
-            byName = solarSystems.ToDictionary(s => s.Name, s => s);
+            byId = solarSystems.ToDictionary(s => s.Id);
+            byName = solarSystems.ToDictionary(s => s.Name);
         }
 
         public IEnumerator<EveSolarSystem> GetEnumerator()
@@ -371,8 +371,8 @@ namespace Fasciculus.Eve.Models
 
         public EveConstellations(IEnumerable<EveConstellation> constellations)
         {
-            byId = constellations.ToDictionary(c => c.Id, c => c);
-            byName = constellations.ToDictionary(c => c.Name, c => c);
+            byId = constellations.ToDictionary(c => c.Id);
+            byName = constellations.ToDictionary(c => c.Name);
         }
 
         public IEnumerator<EveConstellation> GetEnumerator()
@@ -441,8 +441,8 @@ namespace Fasciculus.Eve.Models
 
         public EveRegions(IEnumerable<EveRegion> regions)
         {
-            byId = regions.ToDictionary(r => r.Id, r => r);
-            byName = regions.ToDictionary(r => r.Name, r => r);
+            byId = regions.ToDictionary(r => r.Id);
+            byName = regions.ToDictionary(r => r.Name);
         }
 
         public IEnumerator<EveRegion> GetEnumerator()

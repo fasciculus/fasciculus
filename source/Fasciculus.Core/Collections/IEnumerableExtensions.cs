@@ -15,5 +15,11 @@ namespace System.Collections.Generic
                 action(value);
             }
         }
+
+        public static Dictionary<K, V> ToDictionary<K, V>(this IEnumerable<KeyValuePair<K, V>> kvps)
+            => kvps.ToDictionary(x => x.Key, x => x.Value);
+
+        public static Dictionary<K, V> ToDictionary<K, V>(this IEnumerable<Tuple<K, V>> kvps)
+            => kvps.ToDictionary(x => x.Item1, x => x.Item2);
     }
 }

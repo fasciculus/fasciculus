@@ -112,7 +112,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             Dictionary<int, SparseBoolVector> rows = GetSystems()
                 .Select(s => Tuple.Create(s.Id, GetConnectionsRow(s, security, filter)))
-                .ToDictionary(x => x.Item1, x => x.Item2);
+                .ToDictionary();
 
             return new(rows);
         }
@@ -131,7 +131,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(neighboursMutex);
 
-            return neighbours ??= GetSystems().Select(GetNeighbours).ToDictionary(x => x.Item1, x => x.Item2);
+            return neighbours ??= GetSystems().Select(GetNeighbours).ToDictionary();
         }
 
         private Tuple<int, int[]> GetNeighbours(EveSolarSystem.Data solarSystem)
@@ -147,7 +147,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(stargatesMutex);
 
-            return stargates ??= GetSystems().SelectMany(GetStargates).ToDictionary(x => x.Item1, x => x.Item2);
+            return stargates ??= GetSystems().SelectMany(GetStargates).ToDictionary();
         }
 
         private IEnumerable<Tuple<int, int>> GetStargates(EveSolarSystem.Data solarSystem)

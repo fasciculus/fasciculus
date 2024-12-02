@@ -77,7 +77,7 @@ namespace Fasciculus.Mathematics
 
         public SparseBoolMatrix(Dictionary<int, SparseBoolVector> rows)
         {
-            this.rows = rows.Where(r => r.Value.Length()).ToDictionary(x => x.Key, x => x.Value);
+            this.rows = rows.Where(r => r.Value.Length()).ToDictionary();
             indices = new(this.rows.Keys);
         }
 
@@ -98,7 +98,7 @@ namespace Fasciculus.Mathematics
 
         public SparseShortMatrix(Dictionary<int, SparseShortVector> rows)
         {
-            this.rows = rows.Where(r => r.Value.Indices.Any()).ToDictionary(x => x.Key, x => x.Value);
+            this.rows = rows.Where(r => r.Value.Indices.Any()).ToDictionary();
             indices = new(this.rows.Keys);
         }
 
