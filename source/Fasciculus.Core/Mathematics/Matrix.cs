@@ -73,14 +73,19 @@ namespace Fasciculus.Mathematics
     public class SparseBoolMatrix
     {
         private readonly Dictionary<int, SparseBoolVector> rows;
+        private readonly SortedSet<int> indices;
 
         public SparseBoolMatrix(Dictionary<int, SparseBoolVector> rows)
         {
             this.rows = rows.Where(r => r.Value.Length()).ToDictionary(x => x.Key, x => x.Value);
+            indices = new(this.rows.Keys);
         }
 
         public SparseBoolVector this[int index]
             => rows.TryGetValue(index, out SparseBoolVector row) ? row : SparseBoolVector.Empty;
+
+        public static SparseBoolVector operator *(SparseBoolMatrix m, SparseBoolVector v)
+            => SparseBoolVector.Create(m.indices.Where(i => m[i] * v));
     }
 
     public class SparseShortMatrix
