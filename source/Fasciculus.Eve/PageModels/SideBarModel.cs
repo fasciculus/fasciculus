@@ -1,46 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Fasciculus.Threading;
 
 namespace Fasciculus.Eve.PageModels
 {
     public partial class SideBarModel : ObservableObject
     {
-        [ObservableProperty]
-        private bool ready = true;
-
+#pragma warning disable CA1822 // Mark members as static
         [RelayCommand]
-        private Task Info()
+        private Task Navigate(string url)
         {
-            return NavigateTo("//Info");
+            return Shell.Current.GoToAsync(url)
+                .ContinueWith(_ => Tasks.Wait(Task.Delay(250)));
         }
-
-        [RelayCommand]
-        private Task Industry()
-        {
-            return NavigateTo("//Industry");
-        }
-
-        [RelayCommand]
-        private Task Market()
-        {
-            return NavigateTo("//Market");
-        }
-
-        [RelayCommand]
-        private Task Map()
-        {
-            return NavigateTo("//Map");
-        }
-
-        private async Task NavigateTo(string url)
-        {
-            Ready = false;
-
-            await Task.Delay(100);
-            await Shell.Current.GoToAsync(url);
-            await Task.Delay(100);
-
-            Ready = true;
-        }
+#pragma warning restore CA1822 // Mark members as static
     }
 }
