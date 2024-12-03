@@ -10,11 +10,14 @@
     <VerticalStackLayout Margin="120" Spacing="40">
         <ActivityIndicator IsRunning="true" />
         <Label Text="Loading Resources..." HorizontalOptions="Center" />
-        <Grid RowDefinitions="Auto" ColumnDefinitions="120,*,120,*,120,*">
+        <Grid RowDefinitions="Auto" ColumnDefinitions="120,*,120,*,120,*"  ColumnSpacing="16">
             <Label Text="Common Data" Grid.Row="0" Grid.Column="0" />
             <Label Text="{Binding DataText}" TextColor="{Binding DataColor}" Grid.Row="0" Grid.Column="1" />
             <Label Text="Universe" Grid.Row="0" Grid.Column="2" />
-            <Label Text="{Binding UniverseText}" TextColor="{Binding UniverseColor}" Grid.Row="0" Grid.Column="3" />
+            <ProgressBar Progress="{Binding UniverseProgress}"
+                             ProgressColor="{Binding UniverseColor}"
+                             BackgroundColor="LightGray" MinimumHeightRequest="8"
+                             Grid.Row="0" Grid.Column="3" />
             <Label Text="Navigation" Grid.Row="0" Grid.Column="4" />
             <Label Text="{Binding NavigationText}" TextColor="{Binding NavigationColor}" Grid.Row="0" Grid.Column="5" />
         </Grid>

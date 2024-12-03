@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Algorithms;
+using Fasciculus.Support;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -561,12 +562,13 @@ namespace Fasciculus.Eve.Models
 
         public EveConstellations Constellations { get; }
 
-        public EveRegion(Data data, IProgress<Tuple<bool, string>> progress)
+        public EveRegion(Data data, IProgress<long> progress)
         {
             this.data = data;
 
-            progress.Report(Tuple.Create(false, data.Name));
             Constellations = new(data.Constellations.Select(d => new EveConstellation(d)));
+
+            progress.Report(1);
         }
     }
 
@@ -625,32 +627,23 @@ namespace Fasciculus.Eve.Models
         public EveAllMoons Moons { get; }
         public EveStargates Stargates { get; }
 
-        public EveUniverse(Data data, IProgress<Tuple<bool, string>> progress)
+        public EveUniverse(Data data, IAccumulatingProgress<long> progress)
         {
             this.data = data;
 
-            progress.Report(Tuple.Create(false, "Regions"));
-            Regions = new(data.Regions.Select(d => new EveRegion(d, progress)));
+            progress.Begin(data.Regions.Length);
 
-            progress.Report(Tuple.Create(false, "Constellations"));
+            Regions = new(data.Regions.AsParallel().Select(d => new EveRegion(d, progress)).ToArray());
             Constellations = new(Regions.SelectMany(r => r.Constellations));
-
-            progress.Report(Tuple.Create(false, "Solar Systems"));
             SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems));
-
-            progress.Report(Tuple.Create(false, "Planets"));
             Planets = new(SolarSystems.SelectMany(s => s.Planets));
-
-            progress.Report(Tuple.Create(false, "Moons"));
             Moons = new(Planets.SelectMany(p => p.Moons));
-
-            progress.Report(Tuple.Create(false, "Stargates"));
             Stargates = new(SolarSystems.SelectMany(s => s.Stargates));
 
-            progress.Report(Tuple.Create(true, "Done"));
+            progress.End();
         }
 
-        public EveUniverse(Stream stream, IProgress<Tuple<bool, string>> progress)
+        public EveUniverse(Stream stream, IAccumulatingProgress<long> progress)
             : this(new Data(stream), progress) { }
 
         public void Write(Stream stream)

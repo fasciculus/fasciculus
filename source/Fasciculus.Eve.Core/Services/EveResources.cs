@@ -15,25 +15,25 @@ namespace Fasciculus.Eve.Services
     public interface IEveResourcesProgress : INotifyPropertyChanged
     {
         public IProgress<bool> DataProgress { get; }
-        public IProgress<Tuple<bool, string>> UniverseProgress { get; }
+        public IAccumulatingLongProgress UniverseProgress { get; }
         public IProgress<bool> NavigationProgress { get; }
 
         public bool Data { get; }
-        public Tuple<bool, string> Universe { get; }
+        public LongProgressInfo Universe { get; }
         public bool Navigation { get; }
     }
 
     public partial class EveResourcesProgress : MainThreadObservable, IEveResourcesProgress
     {
         public IProgress<bool> DataProgress { get; }
-        public IProgress<Tuple<bool, string>> UniverseProgress { get; }
+        public IAccumulatingLongProgress UniverseProgress { get; }
         public IProgress<bool> NavigationProgress { get; }
 
         [ObservableProperty]
         private bool data;
 
         [ObservableProperty]
-        private Tuple<bool, string> universe = Tuple.Create(false, string.Empty);
+        private LongProgressInfo universe = LongProgressInfo.Start;
 
         [ObservableProperty]
         private bool navigation;
@@ -41,7 +41,7 @@ namespace Fasciculus.Eve.Services
         public EveResourcesProgress()
         {
             DataProgress = new TaskSafeProgress<bool>((done) => { Data = done; });
-            UniverseProgress = new TaskSafeProgress<Tuple<bool, string>>((status) => { Universe = status; });
+            UniverseProgress = new AccumulatingLongProgress(_ => { Universe = UniverseProgress?.Progress ?? LongProgressInfo.Start; });
             NavigationProgress = new TaskSafeProgress<bool>((done) => { Navigation = done; });
         }
     }
