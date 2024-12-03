@@ -37,14 +37,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" />
-    <PackageReference Include="Microsoft.Maui.Controls" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
     <ProjectReference Include="../Fasciculus.Eve.Core/Fasciculus.Eve.Core.csproj" />
+    <ProjectReference Include="../Fasciculus.Maui/Fasciculus.Maui.csproj" />
   </ItemGroup>
 
   <ItemGroup>

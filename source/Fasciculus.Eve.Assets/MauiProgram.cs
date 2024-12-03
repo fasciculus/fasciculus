@@ -1,5 +1,4 @@
 ﻿using Fasciculus.Eve.Assets.Services;
-using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -9,8 +8,6 @@ namespace Fasciculus.Eve.Assets
     {
         public static MauiApp CreateMauiApp()
         {
-            Threads.SetMainThread();
-
             var builder = MauiApp.CreateBuilder();
 
             builder.UseMauiApp<App>();

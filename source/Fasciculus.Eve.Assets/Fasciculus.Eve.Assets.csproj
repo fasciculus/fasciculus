@@ -30,7 +30,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
     <PackageReference Include="YamlDotNet" />
 	</ItemGroup>
@@ -38,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Eve.Core/Fasciculus.Eve.Core.csproj" />
     <ProjectReference Include="../Fasciculus.Steam/Fasciculus.Steam.csproj" />
+    <ProjectReference Include="../Fasciculus.Maui/Fasciculus.Maui.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Fasciculus.Eve.Services;
+using Fasciculus.Maui.Services;
 using Fasciculus.Threading;
 
 namespace Fasciculus.Eve.PageModels

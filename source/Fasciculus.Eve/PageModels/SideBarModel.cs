@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Fasciculus.Eve.Services;
+using Fasciculus.Maui.Services;
 
 namespace Fasciculus.Eve.PageModels
 {
