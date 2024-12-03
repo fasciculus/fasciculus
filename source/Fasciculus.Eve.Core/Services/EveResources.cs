@@ -3,13 +3,15 @@ using Fasciculus.IO;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Services
 {
     public interface IEveResources
     {
-        public EveData Data { get; }
-        public EveUniverse Universe { get; }
+        public Task<EveData> Data { get; }
+        public Task<EveUniverse> Universe { get; }
+        public Task<EveNavigation> Navigation { get; }
     }
 
     public class EveResources : IEveResources
@@ -22,13 +24,20 @@ namespace Fasciculus.Eve.Services
         private EveUniverse? universe = null;
         private TaskSafeMutex universeMutex = new();
 
-        public EveData Data => GetData();
-        public EveUniverse Universe => GetUniverse();
+        private EveNavigation? navigation = null;
+        private TaskSafeMutex navigationMutex = new();
+
+        public Task<EveData> Data => GetDataAsync();
+        public Task<EveUniverse> Universe => GetUniverseAsync();
+        public Task<EveNavigation> Navigation => GetNavigationAsync();
 
         public EveResources(IEmbeddedResources resources)
         {
             this.resources = resources;
         }
+
+        private Task<EveData> GetDataAsync()
+            => Tasks.Start(GetData);
 
         private EveData GetData()
         {
@@ -44,6 +53,9 @@ namespace Fasciculus.Eve.Services
             return data;
         }
 
+        private Task<EveUniverse> GetUniverseAsync()
+            => Tasks.LongRunning(GetUniverse);
+
         private EveUniverse GetUniverse()
         {
             using Locker locker = Locker.Lock(universeMutex);
@@ -56,6 +68,23 @@ namespace Fasciculus.Eve.Services
             }
 
             return universe;
+        }
+
+        private Task<EveNavigation> GetNavigationAsync()
+            => Tasks.Start(GetNavigation);
+
+        private EveNavigation GetNavigation()
+        {
+            using Locker locker = Locker.Lock(navigationMutex);
+
+            if (navigation is null)
+            {
+                IEmbeddedResource resource = resources["EveNavigation"];
+
+                navigation = resource.Read(s => new EveNavigation(s), true);
+            }
+
+            return navigation;
         }
     }
 

@@ -16,6 +16,9 @@
     <EmbeddedResource Include="Resources/EveUniverse">
       <LogicalName>EveUniverse</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources/EveNavigation">
+      <LogicalName>EveNavigation</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

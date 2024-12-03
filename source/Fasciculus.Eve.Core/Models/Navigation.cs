@@ -25,5 +25,15 @@ namespace Fasciculus.Eve.Models
                 stream.WriteArray(distances, x => x.Write(stream));
             }
         }
+
+        private readonly Data data;
+
+        public EveNavigation(Data data)
+        {
+            this.data = data;
+        }
+
+        public EveNavigation(Stream stream)
+            : this(new Data(stream)) { }
     }
 }

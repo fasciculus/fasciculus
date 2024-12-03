@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Services;
+using Fasciculus.Threading;
 using System.Reflection;
 
 namespace Fasciculus.Eve.PageModels
@@ -18,7 +19,7 @@ namespace Fasciculus.Eve.PageModels
         public InfoPageModel(IEveResources resources, SideBarModel sideBar)
         {
             ApplicationVersion = Assembly.GetEntryAssembly().GetVersion();
-            SdeVersion = resources.Data.Version.ToString("yyyy-MM-dd");
+            SdeVersion = Tasks.Wait(resources.Data).Version.ToString("yyyy-MM-dd");
 
             SideBar = sideBar;
         }
