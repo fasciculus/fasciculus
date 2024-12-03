@@ -16,6 +16,9 @@
     <MauiXaml Update="Pages\InfoPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
+    <MauiXaml Update="Pages\LoadingPage.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
     <MauiXaml Update="Pages\MapPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>

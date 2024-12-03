@@ -1,18 +1,22 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Fasciculus.Threading;
+using Fasciculus.Eve.Services;
 
 namespace Fasciculus.Eve.PageModels
 {
     public partial class SideBarModel : ObservableObject
     {
-#pragma warning disable CA1822 // Mark members as static
+        private readonly INavigator navigator;
+
+        public SideBarModel(INavigator navigator)
+        {
+            this.navigator = navigator;
+        }
+
         [RelayCommand]
         private Task Navigate(string url)
         {
-            return Shell.Current.GoToAsync(url)
-                .ContinueWith(_ => Tasks.Wait(Task.Delay(250)));
+            return navigator.GoTo(url);
         }
-#pragma warning restore CA1822 // Mark members as static
     }
 }

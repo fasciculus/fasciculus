@@ -7,6 +7,7 @@
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <NoWarn>$(NoWarn);XC0103</NoWarn>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
@@ -66,6 +67,9 @@
     <MauiXaml Update="Pages\IndustryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Pages\LoadingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Pages\MapPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
@@ -73,5 +77,9 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>
+
+  <Target Name="CreateGeneratedDirectory" AfterTargets="AfterResolveReferences">
+    <MakeDir Directories="$(IntermediateOutputPath)/generated" />
+  </Target>
 
 </Project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:m="clr-namespace:Fasciculus.Eve.PageModels"
+             x:Class="Fasciculus.Eve.Pages.LoadingPage"
+             x:DataType="m:LoadingPageModel"
+             Title="" Shell.NavBarIsVisible="False"
+             Loaded="OnLoaded">
+    
+    <VerticalStackLayout Margin="120" Spacing="40">
+        <ActivityIndicator IsRunning="true" />
+        <Label Text="Loading Resources..." HorizontalOptions="Center" />
+    </VerticalStackLayout>
+    
+</ContentPage>

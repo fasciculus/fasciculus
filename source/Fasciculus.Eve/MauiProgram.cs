@@ -1,5 +1,6 @@
 ﻿using Fasciculus.Eve.PageModels;
 using Fasciculus.Eve.Services;
+using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -9,6 +10,8 @@ namespace Fasciculus.Eve
     {
         public static MauiApp CreateMauiApp()
         {
+            Threads.SetMainThread();
+
             var builder = MauiApp.CreateBuilder();
 
             builder.UseMauiApp<App>();
@@ -21,9 +24,11 @@ namespace Fasciculus.Eve
 
         private static void ConfigureServices(IServiceCollection services)
         {
+            services.AddNavigator();
             services.AddEveResources();
             services.AddEsi();
 
+            services.TryAddSingleton<LoadingPageModel>();
             services.TryAddSingleton<SideBarModel>();
             services.TryAddSingleton<IndustryPageModel>();
             services.TryAddSingleton<InfoPageModel>();
