@@ -61,6 +61,34 @@ namespace Fasciculus.Eve.Models
                 stream.WriteInt(Owner);
             }
         }
+
+        private readonly Data data;
+
+        public int Id => data.Id;
+
+        public EveMoonStation(Data data)
+        {
+            this.data = data;
+        }
+    }
+
+    [DebuggerDisplay("Count = {Count}")]
+    public class EveMoonStations : IEnumerable<EveMoonStation>
+    {
+        private readonly Dictionary<int, EveMoonStation> byId;
+
+        public int Count => byId.Count;
+
+        public EveMoonStations(IEnumerable<EveMoonStation> stations)
+        {
+            byId = stations.ToDictionary(x => x.Id);
+        }
+
+        public IEnumerator<EveMoonStation> GetEnumerator()
+            => byId.Values.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => byId.Values.GetEnumerator();
     }
 
     [DebuggerDisplay("{Name}")]
@@ -102,16 +130,20 @@ namespace Fasciculus.Eve.Models
 
         public string Name { get; }
 
+        public EveMoonStations Stations { get; }
+
         public EveMoon(Data data, EvePlanet planet)
         {
             this.data = data;
 
             Name = $"{planet.Name} - Moon {CelestialIndex}";
+
+            Stations = new(data.Stations.Select(d => new EveMoonStation(d)));
         }
     }
 
     [DebuggerDisplay("Count = {Count}")]
-    public class EveMoons : IEnumerable<EveMoon>
+    public class EveAllMoons : IEnumerable<EveMoon>
     {
         private readonly Dictionary<int, EveMoon> byId;
         private readonly Dictionary<string, EveMoon> byName;
@@ -121,10 +153,46 @@ namespace Fasciculus.Eve.Models
         public EveMoon this[int id] => byId[id];
         public EveMoon this[string name] => byName[name];
 
-        public EveMoons(IEnumerable<EveMoon> moons)
+        public EveAllMoons(IEnumerable<EveMoon> moons)
         {
             byId = moons.ToDictionary(x => x.Id);
             byName = moons.ToDictionary(x => x.Name);
+        }
+
+        public IEnumerator<EveMoon> GetEnumerator()
+            => byId.Values.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => byId.Values.GetEnumerator();
+    }
+
+    [DebuggerDisplay("Count = {Count}")]
+    public class EvePlanetMoons : IEnumerable<EveMoon>
+    {
+        private readonly Dictionary<int, EveMoon> byId;
+        private readonly Dictionary<int, EveMoon> byIndex;
+        private readonly Dictionary<string, EveMoon> byName;
+
+        public int Count => byId.Count;
+
+        public EveMoon this[int idOrIndex] => GetMoon(idOrIndex);
+        public EveMoon this[string name] => byName[name];
+
+        public EvePlanetMoons(IEnumerable<EveMoon> moons)
+        {
+            byId = moons.ToDictionary(x => x.Id);
+            byIndex = moons.ToDictionary(x => x.CelestialIndex);
+            byName = moons.ToDictionary(x => x.Name);
+        }
+
+        private EveMoon GetMoon(int idOrIndex)
+        {
+            if (byIndex.TryGetValue(idOrIndex, out EveMoon? moon))
+            {
+                return moon;
+            }
+
+            return byId[idOrIndex];
         }
 
         public IEnumerator<EveMoon> GetEnumerator()
@@ -173,7 +241,7 @@ namespace Fasciculus.Eve.Models
 
         public string Name { get; }
 
-        public EveMoons Moons { get; }
+        public EvePlanetMoons Moons { get; }
 
         public EvePlanet(Data data, EveSolarSystem solarSystem)
         {
@@ -186,7 +254,7 @@ namespace Fasciculus.Eve.Models
     }
 
     [DebuggerDisplay("Count = {Count}")]
-    public class EvePlanets : IEnumerable<EvePlanet>
+    public class EveAllPlanets : IEnumerable<EvePlanet>
     {
         private readonly Dictionary<int, EvePlanet> byId;
         private readonly Dictionary<string, EvePlanet> byName;
@@ -196,10 +264,46 @@ namespace Fasciculus.Eve.Models
         public EvePlanet this[int id] => byId[id];
         public EvePlanet this[string name] => byName[name];
 
-        public EvePlanets(IEnumerable<EvePlanet> planets)
+        public EveAllPlanets(IEnumerable<EvePlanet> planets)
         {
             byId = planets.ToDictionary(p => p.Id);
             byName = planets.ToDictionary(p => p.Name);
+        }
+
+        public IEnumerator<EvePlanet> GetEnumerator()
+            => byId.Values.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => byId.Values.GetEnumerator();
+    }
+
+    [DebuggerDisplay("Count = {Count}")]
+    public class EveSystemPlanets : IEnumerable<EvePlanet>
+    {
+        private readonly Dictionary<int, EvePlanet> byId;
+        private readonly Dictionary<int, EvePlanet> byIndex;
+        private readonly Dictionary<string, EvePlanet> byName;
+
+        public int Count => byId.Count;
+
+        public EvePlanet this[int idOrIndex] => GetPlanet(idOrIndex);
+        public EvePlanet this[string name] => byName[name];
+
+        public EveSystemPlanets(IEnumerable<EvePlanet> planets)
+        {
+            byId = planets.ToDictionary(p => p.Id);
+            byIndex = planets.ToDictionary(p => p.CelestialIndex);
+            byName = planets.ToDictionary(p => p.Name);
+        }
+
+        private EvePlanet GetPlanet(int idOrIndex)
+        {
+            if (byIndex.TryGetValue(idOrIndex, out EvePlanet? planet))
+            {
+                return planet;
+            }
+
+            return byId[idOrIndex];
         }
 
         public IEnumerator<EvePlanet> GetEnumerator()
@@ -311,7 +415,7 @@ namespace Fasciculus.Eve.Models
         public int Id => data.Id;
         public string Name => data.Name;
 
-        public EvePlanets Planets { get; }
+        public EveSystemPlanets Planets { get; }
         public EveStargates Stargates { get; }
 
         public EveSolarSystem(Data data)
@@ -515,6 +619,8 @@ namespace Fasciculus.Eve.Models
         public EveRegions Regions { get; }
         public EveConstellations Constellations { get; }
         public EveSolarSystems SolarSystems { get; }
+        public EveAllPlanets Planets { get; }
+        public EveAllMoons Moons { get; }
         public EveStargates Stargates { get; }
 
         public EveUniverse(Data data)
@@ -524,6 +630,8 @@ namespace Fasciculus.Eve.Models
             Regions = new(data.Regions.Select(d => new EveRegion(d)));
             Constellations = new(Regions.SelectMany(r => r.Constellations));
             SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems));
+            Planets = new(SolarSystems.SelectMany(s => s.Planets));
+            Moons = new(Planets.SelectMany(p => p.Moons));
             Stargates = new(SolarSystems.SelectMany(s => s.Stargates));
         }
 

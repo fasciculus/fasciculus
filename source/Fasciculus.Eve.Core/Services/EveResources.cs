@@ -19,13 +19,13 @@ namespace Fasciculus.Eve.Services
         private readonly IEmbeddedResources resources;
 
         private EveData? data = null;
-        private TaskSafeMutex dataMutex = new();
+        private readonly TaskSafeMutex dataMutex = new();
 
         private EveUniverse? universe = null;
-        private TaskSafeMutex universeMutex = new();
+        private readonly TaskSafeMutex universeMutex = new();
 
         private EveNavigation? navigation = null;
-        private TaskSafeMutex navigationMutex = new();
+        private readonly TaskSafeMutex navigationMutex = new();
 
         public Task<EveData> Data => GetDataAsync();
         public Task<EveUniverse> Universe => GetUniverseAsync();
