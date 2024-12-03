@@ -38,9 +38,10 @@ namespace Fasciculus.Eve.Assets.Services
 
                 DateTime version = sdeData.Version;
                 EveType.Data[] types = ConvertTypes(sdeData.Types);
+                EveStationOperation.Data[] stationOperations = ConvertStationOperations(sdeData.StationOperations);
                 EveNpcCorporation.Data[] npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
 
-                data = new(version, types, npcCorporations);
+                data = new(version, types, stationOperations, npcCorporations);
 
                 progress.ConvertData.Report(PendingToDone.Done);
 
@@ -62,6 +63,19 @@ namespace Fasciculus.Eve.Assets.Services
             double volume = sdeType.Volume;
 
             return new(id, name, volume);
+        }
+
+        private static EveStationOperation.Data[] ConvertStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
+            => [.. stationOperations.Select(ConvertStationOperation).OrderBy(t => t.Id)];
+
+        private static EveStationOperation.Data ConvertStationOperation(KeyValuePair<int, SdeStationOperation> kvp)
+        {
+            SdeStationOperation sdeStationOperation = kvp.Value;
+
+            int id = kvp.Key;
+            string name = sdeStationOperation.OperationNameID.En;
+
+            return new(id, name);
         }
 
         private static EveNpcCorporation.Data[] ConvertNpcCorporations(Dictionary<int, SdeNpcCorporation> npcCorporations)

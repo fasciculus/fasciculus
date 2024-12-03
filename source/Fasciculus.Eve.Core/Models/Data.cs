@@ -41,6 +41,33 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    public class EveStationOperation
+    {
+        public class Data
+        {
+            public int Id { get; }
+            public string Name { get; } = string.Empty;
+
+            public Data(int id, string name)
+            {
+                Id = id;
+                Name = name;
+            }
+
+            public Data(Stream stream)
+            {
+                Id = stream.ReadInt();
+                Name = stream.ReadString();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Id);
+                stream.WriteString(Name);
+            }
+        }
+    }
+
     public class EveNpcCorporation
     {
         public class Data
@@ -74,12 +101,15 @@ namespace Fasciculus.Eve.Models
         {
             public DateTime Version { get; }
             public EveType.Data[] Types { get; }
+            public EveStationOperation.Data[] StationOperations { get; }
             public EveNpcCorporation.Data[] NpcCorporations { get; }
 
-            public Data(DateTime version, EveType.Data[] types, EveNpcCorporation.Data[] npcCorporations)
+            public Data(DateTime version, EveType.Data[] types, EveStationOperation.Data[] stationOperations,
+                EveNpcCorporation.Data[] npcCorporations)
             {
                 Version = version;
                 Types = types;
+                StationOperations = stationOperations;
                 NpcCorporations = npcCorporations;
             }
 
@@ -87,6 +117,7 @@ namespace Fasciculus.Eve.Models
             {
                 Version = stream.ReadDateTime();
                 Types = stream.ReadArray(s => new EveType.Data(s));
+                StationOperations = stream.ReadArray(s => new EveStationOperation.Data(s));
                 NpcCorporations = stream.ReadArray(s => new EveNpcCorporation.Data(s));
             }
 
@@ -94,6 +125,7 @@ namespace Fasciculus.Eve.Models
             {
                 stream.WriteDateTime(Version);
                 stream.WriteArray(Types, x => x.Write(stream));
+                stream.WriteArray(StationOperations, x => x.Write(stream));
                 stream.WriteArray(NpcCorporations, x => x.Write(stream));
             }
         }
