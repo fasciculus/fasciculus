@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Fasciculus.Eve.Models;
+using Fasciculus.Eve.Services;
 using Fasciculus.Maui.Services;
 using Fasciculus.Threading;
 
@@ -6,10 +8,12 @@ namespace Fasciculus.Eve.PageModels
 {
     public partial class LoadingPageModel : ObservableObject
     {
+        private readonly IEveResources resources;
         private readonly INavigator navigator;
 
-        public LoadingPageModel(INavigator navigator)
+        public LoadingPageModel(IEveResources resources, INavigator navigator)
         {
+            this.resources = resources;
             this.navigator = navigator;
         }
 
@@ -21,7 +25,7 @@ namespace Fasciculus.Eve.PageModels
 
         private void LoadResources()
         {
-            Tasks.Wait(Task.Delay(2000));
+            EveData _ = resources.Data;
         }
 
         private Task GoToMainPage(object? _)
