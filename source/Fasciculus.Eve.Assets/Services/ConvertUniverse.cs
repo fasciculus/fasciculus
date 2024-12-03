@@ -41,7 +41,7 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 var results = Tasks.Wait(parseUniverse.Regions, parseData.Names);
                 SdeRegion[] sdeRegions = results.Item1;
-                Dictionary<long, string> names = results.Item2;
+                Dictionary<int, string> names = results.Item2;
 
                 progress.ConvertUniverse.Report(PendingToDone.Working);
                 universe = ConvertRegions(sdeRegions, names);
@@ -51,14 +51,14 @@ namespace Fasciculus.Eve.Assets.Services
             return universe;
         }
 
-        private static EveUniverse.Data ConvertRegions(SdeRegion[] sdeRegions, Dictionary<long, string> names)
+        private static EveUniverse.Data ConvertRegions(SdeRegion[] sdeRegions, Dictionary<int, string> names)
         {
             EveRegion.Data[] regions = [.. sdeRegions.Select(r => ConvertRegion(r, names)).OrderBy(r => r.Id)];
 
             return new EveUniverse.Data(regions);
         }
 
-        private static EveRegion.Data ConvertRegion(SdeRegion sdeRegion, Dictionary<long, string> names)
+        private static EveRegion.Data ConvertRegion(SdeRegion sdeRegion, Dictionary<int, string> names)
         {
             int id = sdeRegion.RegionID;
             string name = names[id];
@@ -70,7 +70,7 @@ namespace Fasciculus.Eve.Assets.Services
             return new(id, name, constellations);
         }
 
-        private static EveConstellation.Data ConvertConstellation(SdeConstellation sdeConstellation, Dictionary<long, string> names)
+        private static EveConstellation.Data ConvertConstellation(SdeConstellation sdeConstellation, Dictionary<int, string> names)
         {
             int id = sdeConstellation.ConstellationID;
             string name = names[id];
@@ -82,7 +82,7 @@ namespace Fasciculus.Eve.Assets.Services
             return new(id, name, solarSystems);
         }
 
-        private static EveSolarSystem.Data ConvertSolarSystem(SdeSolarSystem sdeSolarSystem, Dictionary<long, string> names)
+        private static EveSolarSystem.Data ConvertSolarSystem(SdeSolarSystem sdeSolarSystem, Dictionary<int, string> names)
         {
             int id = sdeSolarSystem.SolarSystemID;
             string name = names[id];

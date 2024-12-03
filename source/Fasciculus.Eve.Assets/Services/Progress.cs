@@ -27,6 +27,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ExtractSde { get; }
         public IProgress<PendingToDone> ParseNames { get; }
         public IProgress<PendingToDone> ParseTypes { get; }
+        public IProgress<PendingToDone> ParseStationOperations { get; }
         public IProgress<PendingToDone> ParseNpcCorporations { get; }
         public IAccumulatingLongProgress ParseRegions { get; }
         public IAccumulatingLongProgress ParseConstellations { get; }
@@ -48,6 +49,7 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ExtractSde { get; }
         public IProgress<PendingToDone> ParseNames { get; }
         public IProgress<PendingToDone> ParseTypes { get; }
+        public IProgress<PendingToDone> ParseStationOperations { get; }
         public IProgress<PendingToDone> ParseNpcCorporations { get; }
         public IAccumulatingLongProgress ParseRegions { get; }
         public IAccumulatingLongProgress ParseConstellations { get; }
@@ -66,6 +68,7 @@ namespace Fasciculus.Eve.Assets.Services
             ExtractSde = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
             ParseNames = new TaskSafeProgress<PendingToDone>(ReportParseNames);
             ParseTypes = new TaskSafeProgress<PendingToDone>(ReportParseTypes);
+            ParseStationOperations = new TaskSafeProgress<PendingToDone>(ReportParseStationOperations);
             ParseNpcCorporations = new TaskSafeProgress<PendingToDone>(ReportParseNpcCorporations);
             ParseRegions = new AccumulatingLongProgress(ReportParseRegions, 100);
             ParseConstellations = new AccumulatingLongProgress(ReportParseConstellations, 100);
@@ -93,6 +96,9 @@ namespace Fasciculus.Eve.Assets.Services
 
         private void ReportParseTypes(PendingToDone status)
             => progressCollector.ParseTypes = status;
+
+        private void ReportParseStationOperations(PendingToDone status)
+            => progressCollector.ParseStationOperations = status;
 
         private void ReportParseNpcCorporations(PendingToDone status)
             => progressCollector.ParseNpcCorporations = status;
@@ -138,6 +144,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         public PendingToDone ParseNames { get; set; }
         public PendingToDone ParseTypes { get; set; }
+        public PendingToDone ParseStationOperations { get; set; }
         public PendingToDone ParseNpcCorporations { get; set; }
 
         public LongProgressInfo ParseRegions { get; set; }
@@ -169,6 +176,9 @@ namespace Fasciculus.Eve.Assets.Services
 
         [ObservableProperty]
         private PendingToDone parseTypes = PendingToDone.Pending;
+
+        [ObservableProperty]
+        private PendingToDone parseStationOperations = PendingToDone.Pending;
 
         [ObservableProperty]
         private PendingToDone parseNpcCorporations = PendingToDone.Pending;

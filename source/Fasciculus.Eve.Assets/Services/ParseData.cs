@@ -7,9 +7,10 @@ namespace Fasciculus.Eve.Assets.Services
     public interface IParseData
     {
         public Task<DateTime> Version { get; }
-        public Task<Dictionary<long, string>> Names { get; }
-        public Task<Dictionary<long, SdeType>> Types { get; }
-        public Task<Dictionary<long, SdeNpcCorporation>> NpcCorporations { get; }
+        public Task<Dictionary<int, string>> Names { get; }
+        public Task<Dictionary<int, SdeType>> Types { get; }
+        public Task<Dictionary<int, SdeStationOperation>> StationOperations { get; }
+        public Task<Dictionary<int, SdeNpcCorporation>> NpcCorporations { get; }
 
         public Task<SdeData> Data { get; }
     }
@@ -24,22 +25,26 @@ namespace Fasciculus.Eve.Assets.Services
         private DateTime? version = null;
         private readonly TaskSafeMutex versionMutex = new();
 
-        private Dictionary<long, string>? names = null;
+        private Dictionary<int, string>? names = null;
         private readonly TaskSafeMutex namesMutex = new();
 
-        private Dictionary<long, SdeType>? types = null;
+        private Dictionary<int, SdeType>? types = null;
         private readonly TaskSafeMutex typesMutex = new();
 
-        private Dictionary<long, SdeNpcCorporation>? npcCorporations = null;
+        private Dictionary<int, SdeStationOperation>? stationOperations = null;
+        private readonly TaskSafeMutex stationOperationsMutex = new();
+
+        private Dictionary<int, SdeNpcCorporation>? npcCorporations = null;
         private readonly TaskSafeMutex npcCorporationsMutex = new();
 
         private SdeData? data = null;
         private readonly TaskSafeMutex dataMutex = new();
 
         public Task<DateTime> Version => GetVersionAsync();
-        public Task<Dictionary<long, string>> Names => GetNamesAsync();
-        public Task<Dictionary<long, SdeType>> Types => GetTypesAsync();
-        public Task<Dictionary<long, SdeNpcCorporation>> NpcCorporations => GetNpcCorporationsAsync();
+        public Task<Dictionary<int, string>> Names => GetNamesAsync();
+        public Task<Dictionary<int, SdeType>> Types => GetTypesAsync();
+        public Task<Dictionary<int, SdeStationOperation>> StationOperations => GetStationOperationsAsync();
+        public Task<Dictionary<int, SdeNpcCorporation>> NpcCorporations => GetNpcCorporationsAsync();
 
         public Task<SdeData> Data => GetDataAsync();
 
@@ -65,14 +70,14 @@ namespace Fasciculus.Eve.Assets.Services
             return version.Value;
         }
 
-        private Task<Dictionary<long, string>> GetNamesAsync()
+        private Task<Dictionary<int, string>> GetNamesAsync()
         {
             SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
 
             return Tasks.LongRunning(() => GetNames(sdeFiles));
         }
 
-        private Dictionary<long, string> GetNames(SdeFiles sdeFiles)
+        private Dictionary<int, string> GetNames(SdeFiles sdeFiles)
         {
             using Locker locker = Locker.Lock(namesMutex);
 
@@ -90,42 +95,63 @@ namespace Fasciculus.Eve.Assets.Services
             return names;
         }
 
-        private Task<Dictionary<long, SdeType>> GetTypesAsync()
+        private Task<Dictionary<int, SdeType>> GetTypesAsync()
         {
             SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
 
             return Tasks.LongRunning(() => GetTypes(sdeFiles));
         }
 
-        private Dictionary<long, SdeType> GetTypes(SdeFiles sdeFiles)
+        private Dictionary<int, SdeType> GetTypes(SdeFiles sdeFiles)
         {
             using Locker locker = Locker.Lock(typesMutex);
 
             if (types is null)
             {
                 progress.ParseTypes.Report(PendingToDone.Working);
-                types = yaml.Deserialize<Dictionary<long, SdeType>>(sdeFiles.TypesYaml);
+                types = yaml.Deserialize<Dictionary<int, SdeType>>(sdeFiles.TypesYaml);
                 progress.ParseTypes.Report(PendingToDone.Done);
             }
 
             return types;
         }
 
-        private Task<Dictionary<long, SdeNpcCorporation>> GetNpcCorporationsAsync()
+        private Task<Dictionary<int, SdeStationOperation>> GetStationOperationsAsync()
+        {
+            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+
+            return Tasks.Start(() => GetStationOperations(sdeFiles));
+        }
+
+        private Dictionary<int, SdeStationOperation> GetStationOperations(SdeFiles sdeFiles)
+        {
+            using Locker locker = Locker.Lock(stationOperationsMutex);
+
+            if (stationOperations is null)
+            {
+                progress.ParseStationOperations.Report(PendingToDone.Working);
+                stationOperations = yaml.Deserialize<Dictionary<int, SdeStationOperation>>(sdeFiles.StationOperationsYaml);
+                progress.ParseStationOperations.Report(PendingToDone.Done);
+            }
+
+            return stationOperations;
+        }
+
+        private Task<Dictionary<int, SdeNpcCorporation>> GetNpcCorporationsAsync()
         {
             SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
 
             return Tasks.Start(() => GetNpcCorporations(sdeFiles));
         }
 
-        private Dictionary<long, SdeNpcCorporation> GetNpcCorporations(SdeFiles sdeFiles)
+        private Dictionary<int, SdeNpcCorporation> GetNpcCorporations(SdeFiles sdeFiles)
         {
             using Locker locker = Locker.Lock(npcCorporationsMutex);
 
             if (npcCorporations is null)
             {
                 progress.ParseNpcCorporations.Report(PendingToDone.Working);
-                npcCorporations = yaml.Deserialize<Dictionary<long, SdeNpcCorporation>>(sdeFiles.NpcCorporationsYaml);
+                npcCorporations = yaml.Deserialize<Dictionary<int, SdeNpcCorporation>>(sdeFiles.NpcCorporationsYaml);
                 progress.ParseNpcCorporations.Report(PendingToDone.Done);
             }
 
@@ -143,13 +169,14 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (data is null)
             {
-                Task.WaitAll([Version, Names, Types, NpcCorporations]);
+                Task.WaitAll([Version, Names, Types, StationOperations, NpcCorporations]);
 
                 data = new()
                 {
                     Version = Version.Result,
                     Names = Names.Result,
                     Types = Types.Result,
+                    StationOperations = StationOperations.Result,
                     NpcCorporations = NpcCorporations.Result
                 };
             }

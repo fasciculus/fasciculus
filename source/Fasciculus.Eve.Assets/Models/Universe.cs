@@ -5,8 +5,10 @@
         public int Destination { get; set; }
     }
 
-    public class SdeNpcStation
+    public class SdeMoonStation
     {
+        public int OperationID { get; set; }
+        public int OwnerID { get; set; }
     }
 
     public static class SdeMoonIndex
@@ -16,7 +18,7 @@
 
     public class SdeMoon
     {
-        public Dictionary<int, SdeNpcStation> NpcStations { get; set; } = [];
+        public Dictionary<int, SdeMoonStation> NpcStations { get; set; } = [];
 
         public int CelestialIndex { get; }
 

@@ -7,11 +7,11 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public long Id { get; }
+            public int Id { get; }
             public string Name { get; } = string.Empty;
             public double Volume { get; }
 
-            public Data(long id, string name, double volume)
+            public Data(int id, string name, double volume)
             {
                 Id = id;
                 Name = name;
@@ -20,14 +20,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
             {
-                Id = stream.ReadLong();
+                Id = stream.ReadInt();
                 Name = stream.ReadString();
                 Volume = stream.ReadDouble();
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteLong(Id);
+                stream.WriteInt(Id);
                 stream.WriteString(Name);
                 stream.WriteDouble(Volume);
             }
@@ -45,10 +45,10 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public long Id { get; }
+            public int Id { get; }
             public string Name { get; } = string.Empty;
 
-            public Data(long id, string name)
+            public Data(int id, string name)
             {
                 Id = id;
                 Name = name;
@@ -56,13 +56,13 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
             {
-                Id = stream.ReadLong();
+                Id = stream.ReadInt();
                 Name = stream.ReadString();
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteLong(Id);
+                stream.WriteInt(Id);
                 stream.WriteString(Name);
             }
         }

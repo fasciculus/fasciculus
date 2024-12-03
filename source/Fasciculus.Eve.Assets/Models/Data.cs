@@ -9,7 +9,7 @@
 
     public class SdeName
     {
-        public long ItemID { get; set; }
+        public int ItemID { get; set; }
         public string ItemName { get; set; } = string.Empty;
     }
 
@@ -20,6 +20,11 @@
         public double Volume { get; set; } = double.MaxValue;
     }
 
+    public class SdeStationOperation
+    {
+        public SdeLocalized OperationNameID { get; set; } = SdeLocalized.Empty;
+    }
+
     public class SdeNpcCorporation
     {
         public SdeLocalized NameID { get; set; } = SdeLocalized.Empty;
@@ -28,8 +33,9 @@
     public class SdeData
     {
         public DateTime Version { get; set; } = DateTime.MinValue;
-        public Dictionary<long, string> Names { get; init; } = [];
-        public Dictionary<long, SdeType> Types { get; init; } = [];
-        public Dictionary<long, SdeNpcCorporation> NpcCorporations { get; init; } = [];
+        public Dictionary<int, string> Names { get; init; } = [];
+        public Dictionary<int, SdeType> Types { get; init; } = [];
+        public Dictionary<int, SdeStationOperation> StationOperations { get; init; } = [];
+        public Dictionary<int, SdeNpcCorporation> NpcCorporations { get; init; } = [];
     }
 }

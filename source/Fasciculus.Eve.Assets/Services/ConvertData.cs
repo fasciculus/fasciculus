@@ -50,28 +50,28 @@ namespace Fasciculus.Eve.Assets.Services
             return data;
         }
 
-        private static EveType.Data[] ConvertTypes(Dictionary<long, SdeType> types)
+        private static EveType.Data[] ConvertTypes(Dictionary<int, SdeType> types)
             => [.. types.Select(ConvertType).OrderBy(t => t.Id)];
 
-        private static EveType.Data ConvertType(KeyValuePair<long, SdeType> kvp)
+        private static EveType.Data ConvertType(KeyValuePair<int, SdeType> kvp)
         {
             SdeType sdeType = kvp.Value;
 
-            long id = kvp.Key;
+            int id = kvp.Key;
             string name = sdeType.Name.En;
             double volume = sdeType.Volume;
 
             return new(id, name, volume);
         }
 
-        private static EveNpcCorporation.Data[] ConvertNpcCorporations(Dictionary<long, SdeNpcCorporation> npcCorporations)
+        private static EveNpcCorporation.Data[] ConvertNpcCorporations(Dictionary<int, SdeNpcCorporation> npcCorporations)
             => [.. npcCorporations.Select(ConvertNpcCorporation).OrderBy(t => t.Id)];
 
-        private static EveNpcCorporation.Data ConvertNpcCorporation(KeyValuePair<long, SdeNpcCorporation> kvp)
+        private static EveNpcCorporation.Data ConvertNpcCorporation(KeyValuePair<int, SdeNpcCorporation> kvp)
         {
             SdeNpcCorporation sdeNpcCorporation = kvp.Value;
 
-            long id = kvp.Key;
+            int id = kvp.Key;
             string name = sdeNpcCorporation.NameID.En;
 
             return new(id, name);
