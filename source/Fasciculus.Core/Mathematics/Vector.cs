@@ -183,5 +183,9 @@ namespace Fasciculus.Mathematics
 
             return new(indices, values);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SparseShortVector operator *(short f, SparseBoolVector v)
+            => v * f;
     }
 }
