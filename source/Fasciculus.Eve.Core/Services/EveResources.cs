@@ -9,6 +9,7 @@ namespace Fasciculus.Eve.Services
     public interface IEveResources
     {
         public EveData Data { get; }
+        public EveUniverse Universe { get; }
     }
 
     public class EveResources : IEveResources
@@ -18,7 +19,11 @@ namespace Fasciculus.Eve.Services
         private EveData? data = null;
         private TaskSafeMutex dataMutex = new();
 
+        private EveUniverse? universe = null;
+        private TaskSafeMutex universeMutex = new();
+
         public EveData Data => GetData();
+        public EveUniverse Universe => GetUniverse();
 
         public EveResources(IEmbeddedResources resources)
         {
@@ -37,6 +42,20 @@ namespace Fasciculus.Eve.Services
             }
 
             return data;
+        }
+
+        private EveUniverse GetUniverse()
+        {
+            using Locker locker = Locker.Lock(universeMutex);
+
+            if (universe is null)
+            {
+                IEmbeddedResource resource = resources["EveUniverse"];
+
+                universe = resource.Read(s => new EveUniverse(s), true);
+            }
+
+            return universe;
         }
     }
 

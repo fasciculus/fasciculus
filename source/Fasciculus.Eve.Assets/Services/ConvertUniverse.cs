@@ -120,7 +120,22 @@ namespace Fasciculus.Eve.Assets.Services
             int id = kvp.Key;
             int celestialIndex = sdeMoon.CelestialIndex;
 
-            return new(id, celestialIndex);
+            EveMoonStation.Data[] stations = [.. sdeMoon.NpcStations
+                .Select(ConvertMoonStation)
+                .OrderBy(x => x.Id)];
+
+            return new(id, celestialIndex, stations);
+        }
+
+        private static EveMoonStation.Data ConvertMoonStation(KeyValuePair<int, SdeMoonStation> kvp)
+        {
+            SdeMoonStation sdeMoonStation = kvp.Value;
+
+            int id = kvp.Key;
+            int operation = sdeMoonStation.OperationID;
+            int owner = sdeMoonStation.OwnerID;
+
+            return new(id, operation, owner);
         }
 
         private static EveStargate.Data ConvertStargate(KeyValuePair<int, SdeStargate> kvp)

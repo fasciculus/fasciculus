@@ -32,6 +32,37 @@ namespace Fasciculus.Eve.Models
         };
     }
 
+    public class EveMoonStation
+    {
+        public class Data
+        {
+            public int Id { get; set; }
+            public int Operation { get; set; }
+            public int Owner { get; set; }
+
+            public Data(int id, int operation, int owner)
+            {
+                Id = id;
+                Operation = operation;
+                Owner = owner;
+            }
+
+            public Data(Stream stream)
+            {
+                Id = stream.ReadInt();
+                Operation = stream.ReadInt();
+                Owner = stream.ReadInt();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Id);
+                stream.WriteInt(Operation);
+                stream.WriteInt(Owner);
+            }
+        }
+    }
+
     [DebuggerDisplay("{Name}")]
     public class EveMoon
     {
@@ -40,22 +71,27 @@ namespace Fasciculus.Eve.Models
             public int Id { get; }
             public int CelestialIndex { get; }
 
-            public Data(int id, int celestialIndex)
+            public EveMoonStation.Data[] Stations { get; }
+
+            public Data(int id, int celestialIndex, EveMoonStation.Data[] stations)
             {
                 Id = id;
                 CelestialIndex = celestialIndex;
+                Stations = stations;
             }
 
             public Data(Stream stream)
             {
                 Id = stream.ReadInt();
                 CelestialIndex = stream.ReadInt();
+                Stations = stream.ReadArray(s => new EveMoonStation.Data(s));
             }
 
             public void Write(Stream stream)
             {
                 stream.WriteInt(Id);
                 stream.WriteInt(CelestialIndex);
+                stream.WriteArray(Stations, x => x.Write(stream));
             }
         }
 
