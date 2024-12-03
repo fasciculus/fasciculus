@@ -41,7 +41,7 @@ namespace Fasciculus.Eve.Services
         public EveResourcesProgress()
         {
             DataProgress = new TaskSafeProgress<bool>((done) => { Data = done; });
-            UniverseProgress = new AccumulatingLongProgress(_ => { Universe = UniverseProgress?.Progress ?? LongProgressInfo.Start; });
+            UniverseProgress = new AccumulatingLongProgress(_ => { Universe = UniverseProgress?.Progress ?? LongProgressInfo.Start; }, 100);
             NavigationProgress = new TaskSafeProgress<bool>((done) => { Navigation = done; });
         }
     }
