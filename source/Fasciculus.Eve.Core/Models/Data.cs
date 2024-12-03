@@ -41,29 +41,60 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    public class EveNpcCorporation
+    {
+        public class Data
+        {
+            public long Id { get; }
+            public string Name { get; } = string.Empty;
+
+            public Data(long id, string name)
+            {
+                Id = id;
+                Name = name;
+            }
+
+            public Data(Stream stream)
+            {
+                Id = stream.ReadLong();
+                Name = stream.ReadString();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteLong(Id);
+                stream.WriteString(Name);
+            }
+        }
+    }
+
     public class EveData
     {
         public class Data
         {
             public DateTime Version { get; }
             public EveType.Data[] Types { get; }
+            public EveNpcCorporation.Data[] NpcCorporations { get; }
 
-            public Data(DateTime version, EveType.Data[] types)
+            public Data(DateTime version, EveType.Data[] types, EveNpcCorporation.Data[] npcCorporations)
             {
                 Version = version;
                 Types = types;
+                NpcCorporations = npcCorporations;
             }
 
             public Data(Stream stream)
             {
                 Version = stream.ReadDateTime();
                 Types = stream.ReadArray(s => new EveType.Data(s));
+                NpcCorporations = stream.ReadArray(s => new EveNpcCorporation.Data(s));
             }
 
             public void Write(Stream stream)
             {
                 stream.WriteDateTime(Version);
-                stream.WriteArray(Types, t => t.Write(stream));
+                stream.WriteArray(Types, x => x.Write(stream));
+                stream.WriteArray(NpcCorporations, x => x.Write(stream));
             }
         }
 
