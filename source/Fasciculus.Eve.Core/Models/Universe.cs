@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Algorithms;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -560,10 +561,11 @@ namespace Fasciculus.Eve.Models
 
         public EveConstellations Constellations { get; }
 
-        public EveRegion(Data data)
+        public EveRegion(Data data, IProgress<Tuple<bool, string>> progress)
         {
             this.data = data;
 
+            progress.Report(Tuple.Create(false, data.Name));
             Constellations = new(data.Constellations.Select(d => new EveConstellation(d)));
         }
     }
@@ -623,20 +625,33 @@ namespace Fasciculus.Eve.Models
         public EveAllMoons Moons { get; }
         public EveStargates Stargates { get; }
 
-        public EveUniverse(Data data)
+        public EveUniverse(Data data, IProgress<Tuple<bool, string>> progress)
         {
             this.data = data;
 
-            Regions = new(data.Regions.Select(d => new EveRegion(d)));
+            progress.Report(Tuple.Create(false, "Regions"));
+            Regions = new(data.Regions.Select(d => new EveRegion(d, progress)));
+
+            progress.Report(Tuple.Create(false, "Constellations"));
             Constellations = new(Regions.SelectMany(r => r.Constellations));
+
+            progress.Report(Tuple.Create(false, "Solar Systems"));
             SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems));
+
+            progress.Report(Tuple.Create(false, "Planets"));
             Planets = new(SolarSystems.SelectMany(s => s.Planets));
+
+            progress.Report(Tuple.Create(false, "Moons"));
             Moons = new(Planets.SelectMany(p => p.Moons));
+
+            progress.Report(Tuple.Create(false, "Stargates"));
             Stargates = new(SolarSystems.SelectMany(s => s.Stargates));
+
+            progress.Report(Tuple.Create(true, "Done"));
         }
 
-        public EveUniverse(Stream stream)
-            : this(new Data(stream)) { }
+        public EveUniverse(Stream stream, IProgress<Tuple<bool, string>> progress)
+            : this(new Data(stream), progress) { }
 
         public void Write(Stream stream)
         {

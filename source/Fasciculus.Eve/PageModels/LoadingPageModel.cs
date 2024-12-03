@@ -1,14 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Services;
 using Fasciculus.Threading;
+using System.ComponentModel;
 
 namespace Fasciculus.Eve.PageModels
 {
     public partial class LoadingPageModel : MainThreadObservable
     {
         private readonly IEveResources resources;
+        private readonly IEveResourcesProgress progress;
         private readonly INavigator navigator;
 
         [ObservableProperty]
@@ -29,10 +32,13 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private Color navigationColor = Colors.Orange;
 
-        public LoadingPageModel(IEveResources resources, INavigator navigator)
+        public LoadingPageModel(IEveResources resources, IEveResourcesProgress progress, INavigator navigator)
         {
             this.resources = resources;
+            this.progress = progress;
             this.navigator = navigator;
+
+            this.progress.PropertyChanged += OnProgressChanged;
         }
 
         public void OnLoaded()
@@ -44,16 +50,23 @@ namespace Fasciculus.Eve.PageModels
 
         private void LoadResources()
         {
-            Task data = resources.Data
-                .ContinueWith(_ => { DataText = "Done"; DataColor = Colors.Green; });
-
-            Task universe = resources.Universe
-                .ContinueWith(_ => { UniverseText = "Done"; UniverseColor = Colors.Green; });
-
-            Task navigation = resources.Navigation
-                .ContinueWith(_ => { NavigationText = "Done"; NavigationColor = Colors.Green; });
+            Task<EveData> data = resources.Data;
+            Task<EveUniverse> universe = resources.Universe;
+            Task<EveNavigation> navigation = resources.Navigation;
 
             Task.WaitAll([data, universe, navigation]);
+        }
+
+        private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
+        {
+            DataText = progress.Data ? "Done" : "Pending";
+            DataColor = progress.Data ? Colors.Green : Colors.Orange;
+
+            UniverseText = progress.Universe.Item2;
+            UniverseColor = progress.Universe.Item1 ? Colors.Green : Colors.Orange;
+
+            NavigationText = progress.Navigation ? "Done" : "Pending";
+            NavigationColor = progress.Navigation ? Colors.Green : Colors.Orange;
         }
 
         private Task GoToMainPage(object? _)

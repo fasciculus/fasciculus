@@ -1,12 +1,51 @@
-﻿using Fasciculus.Eve.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Fasciculus.Eve.Models;
 using Fasciculus.IO;
+using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Services
 {
+    public interface IEveResourcesProgress : INotifyPropertyChanged
+    {
+        public IProgress<bool> DataProgress { get; }
+        public IProgress<Tuple<bool, string>> UniverseProgress { get; }
+        public IProgress<bool> NavigationProgress { get; }
+
+        public bool Data { get; }
+        public Tuple<bool, string> Universe { get; }
+        public bool Navigation { get; }
+    }
+
+    public partial class EveResourcesProgress : MainThreadObservable, IEveResourcesProgress
+    {
+        public IProgress<bool> DataProgress { get; }
+        public IProgress<Tuple<bool, string>> UniverseProgress { get; }
+        public IProgress<bool> NavigationProgress { get; }
+
+        [ObservableProperty]
+        private bool data;
+
+        [ObservableProperty]
+        private Tuple<bool, string> universe = Tuple.Create(false, string.Empty);
+
+        [ObservableProperty]
+        private bool navigation;
+
+        public EveResourcesProgress()
+        {
+            DataProgress = new TaskSafeProgress<bool>((done) => { Data = done; });
+            UniverseProgress = new TaskSafeProgress<Tuple<bool, string>>((status) => { Universe = status; });
+            NavigationProgress = new TaskSafeProgress<bool>((done) => { Navigation = done; });
+        }
+    }
+
     public interface IEveResources
     {
         public Task<EveData> Data { get; }
@@ -17,6 +56,7 @@ namespace Fasciculus.Eve.Services
     public class EveResources : IEveResources
     {
         private readonly IEmbeddedResources resources;
+        private readonly IEveResourcesProgress progress;
 
         private EveData? data = null;
         private readonly TaskSafeMutex dataMutex = new();
@@ -31,9 +71,10 @@ namespace Fasciculus.Eve.Services
         public Task<EveUniverse> Universe => GetUniverseAsync();
         public Task<EveNavigation> Navigation => GetNavigationAsync();
 
-        public EveResources(IEmbeddedResources resources)
+        public EveResources(IEmbeddedResources resources, IEveResourcesProgress progress)
         {
             this.resources = resources;
+            this.progress = progress;
         }
 
         private Task<EveData> GetDataAsync()
@@ -47,7 +88,9 @@ namespace Fasciculus.Eve.Services
             {
                 IEmbeddedResource resource = resources["EveData"];
 
+                progress.DataProgress.Report(false);
                 data = resource.Read(s => new EveData(s), true);
+                progress.DataProgress.Report(true);
             }
 
             return data;
@@ -64,7 +107,7 @@ namespace Fasciculus.Eve.Services
             {
                 IEmbeddedResource resource = resources["EveUniverse"];
 
-                universe = resource.Read(s => new EveUniverse(s), true);
+                universe = resource.Read(s => new EveUniverse(s, progress.UniverseProgress), true);
             }
 
             return universe;
@@ -81,7 +124,9 @@ namespace Fasciculus.Eve.Services
             {
                 IEmbeddedResource resource = resources["EveNavigation"];
 
+                progress.NavigationProgress.Report(false);
                 navigation = resource.Read(s => new EveNavigation(s), true);
+                progress.NavigationProgress.Report(true);
             }
 
             return navigation;
@@ -94,6 +139,7 @@ namespace Fasciculus.Eve.Services
         {
             services.AddEmbeddedResources();
 
+            services.TryAddSingleton<IEveResourcesProgress, EveResourcesProgress>();
             services.TryAddSingleton<IEveResources, EveResources>();
 
             return services;
