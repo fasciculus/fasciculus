@@ -26,6 +26,9 @@ namespace Fasciculus.Eve.Assets.PageModels
         private PendingToDone parseTypes = PendingToDone.Pending;
 
         [ObservableProperty]
+        private PendingToDone parseNpcCorporations = PendingToDone.Pending;
+
+        [ObservableProperty]
         private LongProgressInfo parseRegions = LongProgressInfo.Start;
 
         [ObservableProperty]
@@ -74,6 +77,7 @@ namespace Fasciculus.Eve.Assets.PageModels
 
             ParseNames = progressCollector.ParseNames;
             ParseTypes = progressCollector.ParseTypes;
+            ParseNpcCorporations = progressCollector.ParseNpcCorporations;
 
             ParseRegions = progressCollector.ParseRegions;
             ParseConstellations = progressCollector.ParseConstellations;

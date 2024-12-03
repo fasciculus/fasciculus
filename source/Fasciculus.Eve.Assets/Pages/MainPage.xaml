@@ -23,7 +23,7 @@
                 Text="Start" 
                 Command="{Binding StartCommand}" />
 
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="120,*,120,*,120,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Download &amp; Extract" FontAttributes="Bold"
                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="File"
@@ -39,7 +39,7 @@
                              Grid.Row="1" Grid.Column="3" />
             </Grid>
 
-            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
+            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="120,*,120,*,120,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Parsing" FontAttributes="Bold"
                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Names"
@@ -52,6 +52,11 @@
                 <Label Text="{Binding ParseTypes, Converter={StaticResource ptd}}"
                        TextColor="{Binding ParseTypes, Converter={StaticResource ptd}}"
                        Grid.Row="1" Grid.Column="3" />
+                <Label Text="NPC Corporations"
+                       Grid.Row="1" Grid.Column="4" />
+                <Label Text="{Binding ParseNpcCorporations, Converter={StaticResource ptd}}"
+                       TextColor="{Binding ParseNpcCorporations, Converter={StaticResource ptd}}"
+                       Grid.Row="1" Grid.Column="5" />
                 <Label Text="Regions"
                        Grid.Row="2" Grid.Column="0" />
                 <ProgressBar Progress="{Binding ParseRegions, Converter={StaticResource lpi}}"
@@ -71,7 +76,7 @@
                              Grid.Row="2" Grid.Column="5"/>
             </Grid>
 
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="120,*,120,*,120,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Conversion" FontAttributes="Bold"
                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Data"
@@ -86,7 +91,7 @@
                        Grid.Row="1" Grid.Column="3" />
             </Grid>
 
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="120,*,120,*,120,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="Navigation" FontAttributes="Bold"
                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Connections"
@@ -102,7 +107,7 @@
                              Grid.Row="1" Grid.Column="3" />
             </Grid>
 
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16" RowSpacing="8">
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="120,*,120,*,120,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="Images" FontAttributes="Bold"
                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Copy"

@@ -9,6 +9,7 @@ namespace Fasciculus.Eve.Assets.Services
         public Task<DateTime> Version { get; }
         public Task<Dictionary<long, string>> Names { get; }
         public Task<Dictionary<long, SdeType>> Types { get; }
+        public Task<Dictionary<long, SdeNpcCorporation>> NpcCorporations { get; }
 
         public Task<SdeData> Data { get; }
     }
@@ -29,12 +30,16 @@ namespace Fasciculus.Eve.Assets.Services
         private Dictionary<long, SdeType>? types = null;
         private readonly TaskSafeMutex typesMutex = new();
 
+        private Dictionary<long, SdeNpcCorporation>? npcCorporations = null;
+        private readonly TaskSafeMutex npcCorporationsMutex = new();
+
         private SdeData? data = null;
         private readonly TaskSafeMutex dataMutex = new();
 
         public Task<DateTime> Version => GetVersionAsync();
         public Task<Dictionary<long, string>> Names => GetNamesAsync();
         public Task<Dictionary<long, SdeType>> Types => GetTypesAsync();
+        public Task<Dictionary<long, SdeNpcCorporation>> NpcCorporations => GetNpcCorporationsAsync();
 
         public Task<SdeData> Data => GetDataAsync();
 
@@ -106,6 +111,27 @@ namespace Fasciculus.Eve.Assets.Services
             return types;
         }
 
+        private Task<Dictionary<long, SdeNpcCorporation>> GetNpcCorporationsAsync()
+        {
+            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+
+            return Tasks.Start(() => GetNpcCorporations(sdeFiles));
+        }
+
+        private Dictionary<long, SdeNpcCorporation> GetNpcCorporations(SdeFiles sdeFiles)
+        {
+            using Locker locker = Locker.Lock(npcCorporationsMutex);
+
+            if (npcCorporations is null)
+            {
+                progress.ParseNpcCorporations.Report(PendingToDone.Working);
+                npcCorporations = yaml.Deserialize<Dictionary<long, SdeNpcCorporation>>(sdeFiles.NpcCorporationsYaml);
+                progress.ParseNpcCorporations.Report(PendingToDone.Done);
+            }
+
+            return npcCorporations;
+        }
+
         private Task<SdeData> GetDataAsync()
         {
             return Tasks.LongRunning(GetData);
@@ -117,13 +143,14 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (data is null)
             {
-                Task.WaitAll([Version, Names, Types]);
+                Task.WaitAll([Version, Names, Types, NpcCorporations]);
 
                 data = new()
                 {
                     Version = Version.Result,
                     Names = Names.Result,
                     Types = Types.Result,
+                    NpcCorporations = NpcCorporations.Result
                 };
             }
 

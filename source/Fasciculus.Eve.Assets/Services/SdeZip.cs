@@ -60,6 +60,9 @@ namespace Fasciculus.Eve.Assets.Services
         public FileInfo TypesYaml
             => sdeDirectory.Combine("fsd").File("types.yaml");
 
+        public FileInfo NpcCorporationsYaml
+            => sdeDirectory.Combine("fsd").File("npcCorporations.yaml");
+
         public DirectoryInfo[] Regions
             => sdeDirectory.Combine("universe", "eve").GetDirectories();
 

@@ -20,10 +20,16 @@
         public double Volume { get; set; } = double.MaxValue;
     }
 
+    public class SdeNpcCorporation
+    {
+        public SdeLocalized NameID { get; set; } = SdeLocalized.Empty;
+    }
+
     public class SdeData
     {
         public DateTime Version { get; set; } = DateTime.MinValue;
         public Dictionary<long, string> Names { get; init; } = [];
         public Dictionary<long, SdeType> Types { get; init; } = [];
+        public Dictionary<long, SdeNpcCorporation> NpcCorporations { get; init; } = [];
     }
 }
