@@ -1,20 +1,73 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:m="clr-namespace:Fasciculus.Eve.PageModels"
-             xmlns:c="clr-namespace:Fasciculus.Eve.Pages.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
+             xmlns:eveControls="clr-namespace:Fasciculus.Eve.Pages.Controls"
              x:Class="Fasciculus.Eve.Pages.MarketPage"
-             x:DataType="m:MarketPageModel"
+             x:DataType="pageModels:MarketPageModel"
              Title="" Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="Red" />
+        </Style>
+        <Style x:Key="ValidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="LightGreen" />
+        </Style>
+    </ContentPage.Resources>
 
     <ScrollView>
         <HorizontalStackLayout>
-            <c:SideBar BindingContext="{Binding SideBar}" />
+            <eveControls:SideBar BindingContext="{Binding SideBar}" />
             <VerticalStackLayout Padding="16,16" Spacing="16">
-                <HorizontalStackLayout Spacing="16">
-                    <Label Text="Hub:" />
-                    <Label Text="{Binding Hub}" TextColor="LightGreen" />
-                </HorizontalStackLayout>
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="160,*"
+                      RowSpacing="12" ColumnSpacing="16">
+                    <Label Text="Target Hub:" Grid.Row="0" Grid.Column="0" />
+                    <Label Text="{Binding Hub}" TextColor="LightGreen" Grid.Row="0" Grid.Column="1" />
+                    <Label Text="Max Distance:" Grid.Row="1" Grid.Column="0" VerticalTextAlignment="Center" />
+                    <Entry Keyboard="Numeric" Text="{Binding MaxDistance}"
+                           HorizontalOptions="Start" WidthRequest="160"
+                           Grid.Row="1" Grid.Column="1">
+                        <Entry.Behaviors>
+                            <toolkit:NumericValidationBehavior
+                                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                ValidStyle="{StaticResource ValidEntryStyle}"
+                                Flags="ValidateOnValueChanged"
+                                MinimumValue="0"
+                                MaximumValue="5"
+                                MaximumDecimalPlaces="0" />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Label Text="Max m³/Type:" Grid.Row="2" Grid.Column="0" VerticalTextAlignment="Center" />
+                    <Entry Keyboard="Numeric" Text="{Binding MaxVolumePerType}"
+                           HorizontalOptions="Start" WidthRequest="160"
+                           Grid.Row="2" Grid.Column="1">
+                        <Entry.Behaviors>
+                            <toolkit:NumericValidationBehavior
+                                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                ValidStyle="{StaticResource ValidEntryStyle}"
+                                Flags="ValidateOnValueChanged"
+                                MinimumValue="1"
+                                MaximumValue="1000000"
+                                MaximumDecimalPlaces="0" />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Label Text="Max ISK/Type:" Grid.Row="3" Grid.Column="0" VerticalTextAlignment="Center" />
+                    <Entry Keyboard="Numeric" Text="{Binding MaxIskPerType}"
+                           HorizontalOptions="Start" WidthRequest="160"
+                           Grid.Row="3" Grid.Column="1">
+                        <Entry.Behaviors>
+                            <toolkit:NumericValidationBehavior
+                                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                ValidStyle="{StaticResource ValidEntryStyle}"
+                                Flags="ValidateOnValueChanged"
+                                MinimumValue="1"
+                                MaximumValue="1000000000"
+                                MaximumDecimalPlaces="0" />
+                        </Entry.Behaviors>
+                    </Entry>
+                </Grid>
             </VerticalStackLayout>
         </HorizontalStackLayout>
     </ScrollView>
