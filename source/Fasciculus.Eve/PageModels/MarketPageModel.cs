@@ -17,7 +17,7 @@ namespace Fasciculus.Eve.PageModels
         private readonly ITradeFinder tradeFinder;
 
         [ObservableProperty]
-        private string targetHub;
+        private string targetHub = string.Empty;
 
         [ObservableProperty]
         private int maxDistance;
@@ -40,21 +40,32 @@ namespace Fasciculus.Eve.PageModels
             this.tradeOptions = tradeOptions;
             this.tradeFinder = tradeFinder;
 
+            this.tradeOptions.PropertyChanged += OnTradeOptionsChanged;
             this.tradeFinder.PropertyChanged += OnTradeFinderChanged;
 
-            targetHub = tradeOptions.TargetStation.FullName;
-            maxDistance = tradeOptions.MaxDistance;
-            maxVolumePerType = tradeOptions.MaxVolumePerType;
-            maxIskPerType = tradeOptions.MaxIskPerType;
+            EveTradeOptions options = tradeOptions.Options;
+
+            targetHub = options.TargetStation.FullName;
+            maxDistance = options.MaxDistance;
+            maxVolumePerType = options.MaxVolumePerType;
+            maxIskPerType = options.MaxIskPerType;
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs ev)
         {
             base.OnPropertyChanged(ev);
 
-            tradeOptions.MaxDistance = MaxDistance;
-            tradeOptions.MaxVolumePerType = MaxVolumePerType;
-            tradeOptions.MaxIskPerType = MaxIskPerType;
+            tradeOptions.Options = tradeOptions.Create(MaxDistance, MaxVolumePerType, MaxIskPerType);
+        }
+
+        private void OnTradeOptionsChanged(object? sender, PropertyChangedEventArgs ev)
+        {
+            EveTradeOptions options = tradeOptions.Options;
+
+            TargetHub = options.TargetStation.FullName;
+            MaxDistance = options.MaxDistance;
+            MaxVolumePerType = options.MaxVolumePerType;
+            MaxIskPerType = options.MaxIskPerType;
         }
 
         private void OnTradeFinderChanged(object? sender, PropertyChangedEventArgs ev)

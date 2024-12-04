@@ -38,9 +38,9 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public long Id { get; set; }
-            public int Operation { get; set; }
-            public int Owner { get; set; }
+            public long Id { get; }
+            public int Operation { get; }
+            public int Owner { get; }
 
             public Data(long id, int operation, int owner)
             {

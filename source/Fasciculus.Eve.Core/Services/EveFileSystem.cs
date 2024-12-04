@@ -14,7 +14,7 @@ namespace Fasciculus.Eve.Services
     public class EveFileSystem : IEveFileSystem
     {
         public DirectoryInfo Documents { get; }
-        public FileInfo TradeOptions => Documents.File("TradeOptions.json");
+        public FileInfo TradeOptions => Documents.File("TradeOptions");
 
         public EveFileSystem(ISpecialDirectories specialDirectories)
         {

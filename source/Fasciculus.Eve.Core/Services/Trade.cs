@@ -7,80 +7,67 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Services
 {
-    public interface ITradeOptions
+    public interface ITradeOptions : INotifyPropertyChanged
     {
-        public EveMoonStation TargetStation { get; }
-        public int MaxDistance { get; set; }
-        public int MaxVolumePerType { get; set; }
-        public int MaxIskPerType { get; set; }
+        public EveTradeOptions Options { get; set; }
+
+        public EveTradeOptions Create(int maxDistance, int maxVolumePerType, int maxIskPerType);
     }
 
     public partial class TradeOptions : MainThreadObservable, ITradeOptions
     {
-        private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
-        {
-            WriteIndented = true,
-        };
-
         private readonly IEveFileSystem fileSystem;
 
-        public EveMoonStation TargetStation { get; }
+        private readonly EveMoonStations stations;
 
         [ObservableProperty]
-        private int maxDistance = EveTradeOptions.DefaultMaxDistance;
-
-        [ObservableProperty]
-        private int maxVolumePerType = EveTradeOptions.DefaultMaxVolumePerType;
-
-        [ObservableProperty]
-        private int maxIskPerType = EveTradeOptions.DefaultMaxIskPerType;
+        private EveTradeOptions options;
 
         public TradeOptions(IEveResources resources, IEveFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
 
-            TargetStation = Tasks.Wait(resources.Universe).NpcStations[EveTradeOptions.DefaultTargetStationId];
+            stations = Tasks.Wait(resources.Universe).NpcStations;
+            options = new(stations);
 
             Read();
-            Write();
+        }
+
+        public EveTradeOptions Create(int maxDistance, int maxVolumePerType, int maxIskPerType)
+        {
+            EveTradeOptions.Data data = new(maxDistance, maxVolumePerType, maxIskPerType);
+
+            return new(data, stations);
         }
 
         private void Read()
         {
-            EveTradeOptions options = new();
-
             FileInfo file = fileSystem.TradeOptions;
+            EveTradeOptions? options = null;
 
             if (file.Exists)
             {
-                string json = file.ReadAllText();
+                using Stream stream = file.OpenRead();
 
-                options = JsonSerializer.Deserialize<EveTradeOptions>(json) ?? new();
+                options = new(stream, stations);
             }
 
-            MaxDistance = options.MaxDistance;
-            MaxVolumePerType = options.MaxVolumePerType;
-            MaxIskPerType = options.MaxIskPerType;
+            if (options is not null)
+            {
+                Options = options;
+            }
         }
 
         private void Write()
         {
-            EveTradeOptions options = new()
-            {
-                TargetStationId = TargetStation.Id,
-                MaxDistance = MaxDistance,
-                MaxVolumePerType = MaxVolumePerType,
-                MaxIskPerType = MaxIskPerType
-            };
+            FileInfo file = fileSystem.TradeOptions;
+            using Stream stream = file.OpenWrite();
 
-            string json = JsonSerializer.Serialize(options, serializerOptions);
-
-            fileSystem.TradeOptions.WriteAllText(json);
+            Options.Write(stream);
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -107,10 +94,14 @@ namespace Fasciculus.Eve.Services
         [ObservableProperty]
         private EveTrade[] trades = [];
 
-        public IAccumulatingLongProgress longProgress;
+        private readonly ITradeOptions tradeOptions;
 
-        public TradeFinder()
+        private readonly IAccumulatingLongProgress longProgress;
+
+        public TradeFinder(ITradeOptions tradeOptions)
         {
+            this.tradeOptions = tradeOptions;
+
             longProgress = new AccumulatingLongProgress(OnProgress, 200);
         }
 
@@ -121,8 +112,10 @@ namespace Fasciculus.Eve.Services
 
         private void Start()
         {
-            longProgress.Begin(1);
-            Tasks.Wait(Task.Delay(2000));
+            longProgress.Begin(0);
+
+            EveTradeOptions options = new(tradeOptions.Options);
+
             longProgress.End();
         }
 
