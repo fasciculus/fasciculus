@@ -26,6 +26,7 @@ namespace Fasciculus.Eve
         {
             services.AddNavigator();
             services.AddEveResources();
+            services.AddEveFileSystem();
             services.AddEsi();
 
             services.TryAddSingleton<LoadingPageModel>();
