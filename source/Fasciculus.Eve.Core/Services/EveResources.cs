@@ -126,9 +126,10 @@ namespace Fasciculus.Eve.Services
             if (navigation is null)
             {
                 IEmbeddedResource resource = resources["EveNavigation"];
+                EveSolarSystems solarSystems = Tasks.Wait(Universe).SolarSystems;
 
                 progress.NavigationProgress.Report(false);
-                navigation = resource.Read(s => new EveNavigation(s), true);
+                navigation = resource.Read(s => new EveNavigation(s, solarSystems), true);
                 progress.NavigationProgress.Report(true);
             }
 
