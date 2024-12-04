@@ -1,6 +1,4 @@
 ﻿using Fasciculus.Algorithms;
-using Fasciculus.Support;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -562,13 +560,11 @@ namespace Fasciculus.Eve.Models
 
         public EveConstellations Constellations { get; }
 
-        public EveRegion(Data data, IProgress<long> progress)
+        public EveRegion(Data data)
         {
             this.data = data;
 
             Constellations = new(data.Constellations.Select(d => new EveConstellation(d)));
-
-            progress.Report(1);
         }
     }
 
@@ -627,24 +623,20 @@ namespace Fasciculus.Eve.Models
         public EveAllMoons Moons { get; }
         public EveStargates Stargates { get; }
 
-        public EveUniverse(Data data, IAccumulatingProgress<long> progress)
+        public EveUniverse(Data data)
         {
             this.data = data;
 
-            progress.Begin(data.Regions.Length);
-
-            Regions = new(data.Regions.AsParallel().Select(d => new EveRegion(d, progress)).ToArray());
+            Regions = new(data.Regions.AsParallel().Select(d => new EveRegion(d)).ToArray());
             Constellations = new(Regions.SelectMany(r => r.Constellations));
             SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems));
             Planets = new(SolarSystems.SelectMany(s => s.Planets));
             Moons = new(Planets.SelectMany(p => p.Moons));
             Stargates = new(SolarSystems.SelectMany(s => s.Stargates));
-
-            progress.End();
         }
 
-        public EveUniverse(Stream stream, IAccumulatingProgress<long> progress)
-            : this(new Data(stream), progress) { }
+        public EveUniverse(Stream stream)
+            : this(new Data(stream)) { }
 
         public void Write(Stream stream)
         {

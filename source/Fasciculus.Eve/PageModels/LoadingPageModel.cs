@@ -24,9 +24,6 @@ namespace Fasciculus.Eve.PageModels
         private string universeText = "Pending";
 
         [ObservableProperty]
-        private double universeProgress;
-
-        [ObservableProperty]
         private Color universeColor = Colors.Orange;
 
         [ObservableProperty]
@@ -65,9 +62,8 @@ namespace Fasciculus.Eve.PageModels
             DataText = progress.Data ? "Done" : "Pending";
             DataColor = progress.Data ? Colors.Green : Colors.Orange;
 
-            UniverseProgress = progress.Universe.Value;
-            UniverseText = string.Empty;
-            UniverseColor = progress.Universe.Done ? Colors.Green : Colors.Orange;
+            UniverseText = progress.Universe ? "Done" : "Pending";
+            UniverseColor = progress.Universe ? Colors.Green : Colors.Orange;
 
             NavigationText = progress.Navigation ? "Done" : "Pending";
             NavigationColor = progress.Navigation ? Colors.Green : Colors.Orange;

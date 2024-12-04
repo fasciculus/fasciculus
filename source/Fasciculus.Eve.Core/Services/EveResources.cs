@@ -15,25 +15,25 @@ namespace Fasciculus.Eve.Services
     public interface IEveResourcesProgress : INotifyPropertyChanged
     {
         public IProgress<bool> DataProgress { get; }
-        public IAccumulatingLongProgress UniverseProgress { get; }
+        public IProgress<bool> UniverseProgress { get; }
         public IProgress<bool> NavigationProgress { get; }
 
         public bool Data { get; }
-        public LongProgressInfo Universe { get; }
+        public bool Universe { get; }
         public bool Navigation { get; }
     }
 
     public partial class EveResourcesProgress : MainThreadObservable, IEveResourcesProgress
     {
         public IProgress<bool> DataProgress { get; }
-        public IAccumulatingLongProgress UniverseProgress { get; }
+        public IProgress<bool> UniverseProgress { get; }
         public IProgress<bool> NavigationProgress { get; }
 
         [ObservableProperty]
         private bool data;
 
         [ObservableProperty]
-        private LongProgressInfo universe = LongProgressInfo.Start;
+        private bool universe;
 
         [ObservableProperty]
         private bool navigation;
@@ -41,7 +41,7 @@ namespace Fasciculus.Eve.Services
         public EveResourcesProgress()
         {
             DataProgress = new TaskSafeProgress<bool>((done) => { Data = done; });
-            UniverseProgress = new AccumulatingLongProgress(_ => { Universe = UniverseProgress?.Progress ?? LongProgressInfo.Start; }, 100);
+            UniverseProgress = new TaskSafeProgress<bool>((done) => { universe = done; });
             NavigationProgress = new TaskSafeProgress<bool>((done) => { Navigation = done; });
         }
     }
@@ -107,7 +107,9 @@ namespace Fasciculus.Eve.Services
             {
                 IEmbeddedResource resource = resources["EveUniverse"];
 
-                universe = resource.Read(s => new EveUniverse(s, progress.UniverseProgress), true);
+                progress.UniverseProgress.Report(false);
+                universe = resource.Read(s => new EveUniverse(s), true);
+                progress.UniverseProgress.Report(true);
             }
 
             return universe;
