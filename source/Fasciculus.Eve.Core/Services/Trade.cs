@@ -1,12 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Services
 {
@@ -89,6 +91,47 @@ namespace Fasciculus.Eve.Services
         }
     }
 
+    public interface ITradeFinder : INotifyPropertyChanged
+    {
+        public LongProgressInfo Progress { get; }
+        public EveTrade[] Trades { get; }
+
+        public Task StartAsync();
+    }
+
+    public partial class TradeFinder : MainThreadObservable, ITradeFinder
+    {
+        [ObservableProperty]
+        private LongProgressInfo progress = LongProgressInfo.Start;
+
+        [ObservableProperty]
+        private EveTrade[] trades = [];
+
+        public IAccumulatingLongProgress longProgress;
+
+        public TradeFinder()
+        {
+            longProgress = new AccumulatingLongProgress(OnProgress, 200);
+        }
+
+        public Task StartAsync()
+        {
+            return Tasks.LongRunning(Start);
+        }
+
+        private void Start()
+        {
+            longProgress.Begin(1);
+            Tasks.Wait(Task.Delay(2000));
+            longProgress.End();
+        }
+
+        private void OnProgress(long _)
+        {
+            Progress = longProgress.Progress;
+        }
+    }
+
     public static class TradeServices
     {
         public static IServiceCollection AddTrade(this IServiceCollection services)
@@ -97,6 +140,7 @@ namespace Fasciculus.Eve.Services
             services.AddEveResources();
 
             services.TryAddSingleton<ITradeOptions, TradeOptions>();
+            services.TryAddSingleton<ITradeFinder, TradeFinder>();
 
             return services;
         }

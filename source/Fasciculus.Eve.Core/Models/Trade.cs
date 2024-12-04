@@ -12,4 +12,8 @@
         public int MaxVolumePerType { get; set; } = DefaultMaxVolumePerType;
         public int MaxIskPerType { get; set; } = DefaultMaxIskPerType;
     }
+
+    public class EveTrade
+    {
+    }
 }

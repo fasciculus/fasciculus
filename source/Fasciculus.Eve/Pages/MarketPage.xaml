@@ -4,6 +4,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
              xmlns:eveControls="clr-namespace:Fasciculus.Eve.Pages.Controls"
+             xmlns:eveConverters="clr-namespace:Fasciculus.Eve.Pages"
              x:Class="Fasciculus.Eve.Pages.MarketPage"
              x:DataType="pageModels:MarketPageModel"
              Title="" Shell.NavBarIsVisible="False">
@@ -15,16 +16,18 @@
         <Style x:Key="ValidEntryStyle" TargetType="Entry">
             <Setter Property="TextColor" Value="LightGreen" />
         </Style>
+        <eveConverters:LongProgressInfoConverter x:Key="lpi" />
     </ContentPage.Resources>
 
     <ScrollView>
         <HorizontalStackLayout>
             <eveControls:SideBar BindingContext="{Binding SideBar}" />
             <VerticalStackLayout Padding="16,16" Spacing="16">
-                <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="160,*"
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="160,160,Auto"
                       RowSpacing="12" ColumnSpacing="16">
                     <Label Text="Target Hub:" Grid.Row="0" Grid.Column="0" />
-                    <Label Text="{Binding TargetHub}" TextColor="LightGreen" Grid.Row="0" Grid.Column="1" />
+                    <Label Text="{Binding TargetHub}" TextColor="LightGreen"
+                           Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" />
                     <Label Text="Max Distance:" Grid.Row="1" Grid.Column="0" VerticalTextAlignment="Center" />
                     <Entry Keyboard="Numeric" Text="{Binding MaxDistance}"
                            HorizontalOptions="Start" WidthRequest="160"
@@ -34,9 +37,7 @@
                                 InvalidStyle="{StaticResource InvalidEntryStyle}"
                                 ValidStyle="{StaticResource ValidEntryStyle}"
                                 Flags="ValidateOnValueChanged"
-                                MinimumValue="0"
-                                MaximumValue="5"
-                                MaximumDecimalPlaces="0" />
+                                MinimumValue="0" MaximumValue="5" MaximumDecimalPlaces="0" />
                         </Entry.Behaviors>
                     </Entry>
                     <Label Text="Max m³/Type:" Grid.Row="2" Grid.Column="0" VerticalTextAlignment="Center" />
@@ -48,9 +49,7 @@
                                 InvalidStyle="{StaticResource InvalidEntryStyle}"
                                 ValidStyle="{StaticResource ValidEntryStyle}"
                                 Flags="ValidateOnValueChanged"
-                                MinimumValue="1"
-                                MaximumValue="1000000"
-                                MaximumDecimalPlaces="0" />
+                                MinimumValue="1" MaximumValue="1000000" MaximumDecimalPlaces="0" />
                         </Entry.Behaviors>
                     </Entry>
                     <Label Text="Max ISK/Type:" Grid.Row="3" Grid.Column="0" VerticalTextAlignment="Center" />
@@ -62,11 +61,15 @@
                                 InvalidStyle="{StaticResource InvalidEntryStyle}"
                                 ValidStyle="{StaticResource ValidEntryStyle}"
                                 Flags="ValidateOnValueChanged"
-                                MinimumValue="1"
-                                MaximumValue="1000000000"
-                                MaximumDecimalPlaces="0" />
+                                MinimumValue="1" MaximumValue="1000000000" MaximumDecimalPlaces="0" />
                         </Entry.Behaviors>
                     </Entry>
+                    <Button Text="Start" Command="{Binding StartCommand}"
+                             Grid.Row="4" Grid.Column="0" />
+                    <ProgressBar Progress="{Binding Progress, Converter={StaticResource lpi}}"
+                                 ProgressColor="{Binding Progress, Converter={StaticResource lpi}}"
+                                 BackgroundColor="LightGray" MinimumHeightRequest="8"
+                                 Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
                 </Grid>
             </VerticalStackLayout>
         </HorizontalStackLayout>
