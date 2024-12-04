@@ -26,9 +26,8 @@ namespace Fasciculus.Eve
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddNavigator();
-            services.AddEveResources();
-            services.AddEveFileSystem();
             services.AddEsi();
+            services.AddTrade();
 
             services.TryAddSingleton<LoadingPageModel>();
             services.TryAddSingleton<SideBarModel>();

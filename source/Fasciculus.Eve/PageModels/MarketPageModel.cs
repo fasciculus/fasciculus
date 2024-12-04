@@ -1,18 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
-using Fasciculus.Threading;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.PageModels
 {
     public partial class MarketPageModel : MainThreadObservable
     {
+        private readonly ITradeOptions tradeOptions;
+
         [ObservableProperty]
         private SideBarModel sideBar;
 
         [ObservableProperty]
-        private string hub;
+        private string targetHub;
 
         [ObservableProperty]
         private int maxDistance;
@@ -23,16 +24,24 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private int maxIskPerType;
 
-        public MarketPageModel(SideBarModel sideBar, IEveResources resources)
+        public MarketPageModel(SideBarModel sideBar, ITradeOptions tradeOptions)
         {
+            this.tradeOptions = tradeOptions;
             this.sideBar = sideBar;
 
-            hub = Tasks.Wait(resources.Universe).NpcStations[60003760].FullName;
+            targetHub = tradeOptions.TargetStation.FullName;
+            maxDistance = tradeOptions.MaxDistance;
+            maxVolumePerType = tradeOptions.MaxVolumePerType;
+            maxIskPerType = tradeOptions.MaxIskPerType;
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
+
+            tradeOptions.MaxDistance = MaxDistance;
+            tradeOptions.MaxVolumePerType = MaxVolumePerType;
+            tradeOptions.MaxIskPerType = MaxIskPerType;
         }
     }
 }

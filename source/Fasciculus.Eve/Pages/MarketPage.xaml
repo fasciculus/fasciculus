@@ -24,7 +24,7 @@
                 <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="160,*"
                       RowSpacing="12" ColumnSpacing="16">
                     <Label Text="Target Hub:" Grid.Row="0" Grid.Column="0" />
-                    <Label Text="{Binding Hub}" TextColor="LightGreen" Grid.Row="0" Grid.Column="1" />
+                    <Label Text="{Binding TargetHub}" TextColor="LightGreen" Grid.Row="0" Grid.Column="1" />
                     <Label Text="Max Distance:" Grid.Row="1" Grid.Column="0" VerticalTextAlignment="Center" />
                     <Entry Keyboard="Numeric" Text="{Binding MaxDistance}"
                            HorizontalOptions="Start" WidthRequest="160"

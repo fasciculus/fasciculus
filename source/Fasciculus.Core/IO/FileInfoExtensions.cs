@@ -42,6 +42,9 @@ namespace System.IO
         public static string ReadAllText(this FileInfo file, Encoding? encoding = null)
             => File.ReadAllText(file.FullName, encoding ?? Encoding.UTF8);
 
+        public static void WriteAllText(this FileInfo file, string text, Encoding? encoding = null)
+            => File.WriteAllText(file.FullName, text, encoding ?? Encoding.UTF8);
+
         public static string[] ReadAllLines(this FileInfo file, Encoding? encoding = null)
             => File.ReadAllLines(file.FullName, encoding ?? Encoding.UTF8);
 
