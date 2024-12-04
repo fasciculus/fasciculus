@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Fasciculus.Eve.Pages.Controls;
+using Fasciculus.Eve.Services;
+using Fasciculus.Threading;
 
 namespace Fasciculus.Eve.PageModels
 {
@@ -8,9 +9,14 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private SideBarModel sideBar;
 
-        public MarketPageModel(SideBarModel sideBar)
+        [ObservableProperty]
+        private string hub;
+
+        public MarketPageModel(SideBarModel sideBar, IEveResources resources)
         {
             SideBar = sideBar;
+
+            hub = Tasks.Wait(resources.Universe).NpcStations[60003760].FullName;
         }
     }
 }

@@ -33,6 +33,7 @@ namespace Fasciculus.Eve.Models
         };
     }
 
+    [DebuggerDisplay("{FullName}")]
     public class EveMoonStation
     {
         public class Data
@@ -67,15 +68,23 @@ namespace Fasciculus.Eve.Models
 
         public int Id => data.Id;
 
+        public string Name { get; }
+        public string FullName { get; }
+
+        public EveMoon Moon { get; }
         public EveStationOperation Operation { get; }
         public EveNpcCorporation Owner { get; }
 
-        public EveMoonStation(Data data, EveData eveData)
+        public EveMoonStation(Data data, EveMoon moon, EveData eveData)
         {
             this.data = data;
 
+            Moon = moon;
             Operation = eveData.StationOperations[data.Operation];
             Owner = eveData.NpcCorporations[data.Owner];
+
+            Name = $"{Owner.Name} {Operation.Name}";
+            FullName = $"{Moon.Name} - {Name}";
         }
     }
 
@@ -87,6 +96,8 @@ namespace Fasciculus.Eve.Models
         private readonly Lazy<Dictionary<int, EveMoonStation>> byId;
 
         public int Count => stations.Length;
+
+        public EveMoonStation this[int id] => byId.Value[id];
 
         public EveMoonStations(IEnumerable<EveMoonStation> stations)
         {
@@ -149,7 +160,7 @@ namespace Fasciculus.Eve.Models
 
             Name = $"{planet.Name} - Moon {CelestialIndex}";
 
-            Stations = new(data.Stations.Select(d => new EveMoonStation(d, eveData)));
+            Stations = new(data.Stations.Select(d => new EveMoonStation(d, this, eveData)));
         }
     }
 
@@ -662,6 +673,7 @@ namespace Fasciculus.Eve.Models
         public EveSolarSystems SolarSystems { get; }
         public EveAllPlanets Planets { get; }
         public EveAllMoons Moons { get; }
+        public EveMoonStations NpcStations { get; }
         public EveStargates Stargates { get; }
 
         public EveUniverse(Data data, EveData eveData)
@@ -673,6 +685,7 @@ namespace Fasciculus.Eve.Models
             SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems));
             Planets = new(SolarSystems.SelectMany(s => s.Planets));
             Moons = new(Planets.SelectMany(p => p.Moons));
+            NpcStations = new(Moons.SelectMany(m => m.Stations));
             Stargates = new(SolarSystems.SelectMany(s => s.Stargates));
         }
 

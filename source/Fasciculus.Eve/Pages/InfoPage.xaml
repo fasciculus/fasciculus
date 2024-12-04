@@ -11,7 +11,7 @@
         <HorizontalStackLayout>
             <controls:SideBar BindingContext="{Binding SideBar}" />
             <VerticalStackLayout Padding="16,16" Spacing="16">
-                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*">
+                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*" RowSpacing="16" ColumnSpacing="16">
                     <Label Text="Application" Grid.Row="0" Grid.Column="0" />
                     <Label Text="{Binding ApplicationVersion}" Grid.Row="0" Grid.Column="1" />
                     <Label Text="SDE" Grid.Row="1" Grid.Column="0" />

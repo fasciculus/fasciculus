@@ -10,7 +10,7 @@
     <VerticalStackLayout Margin="120" Spacing="40">
         <ActivityIndicator IsRunning="true" />
         <Label Text="Loading Resources..." HorizontalOptions="Center" />
-        <Grid RowDefinitions="Auto" ColumnDefinitions="100,*,100,*,100,*" ColumnSpacing="16">
+        <Grid RowDefinitions="Auto" ColumnDefinitions="110,*,110,*,110,*" ColumnSpacing="16">
             <Label Text="Common Data" Grid.Row="0" Grid.Column="0" />
             <Label Text="{Binding DataText}" TextColor="{Binding DataColor}" Grid.Row="0" Grid.Column="1" />
             <Label Text="Universe" Grid.Row="0" Grid.Column="2" />
