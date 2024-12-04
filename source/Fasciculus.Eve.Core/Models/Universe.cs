@@ -38,11 +38,11 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public int Id { get; set; }
+            public long Id { get; set; }
             public int Operation { get; set; }
             public int Owner { get; set; }
 
-            public Data(int id, int operation, int owner)
+            public Data(long id, int operation, int owner)
             {
                 Id = id;
                 Operation = operation;
@@ -51,14 +51,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
             {
-                Id = stream.ReadInt();
+                Id = stream.ReadLong();
                 Operation = stream.ReadInt();
                 Owner = stream.ReadInt();
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteInt(Id);
+                stream.WriteLong(Id);
                 stream.WriteInt(Operation);
                 stream.WriteInt(Owner);
             }
@@ -66,7 +66,7 @@ namespace Fasciculus.Eve.Models
 
         private readonly Data data;
 
-        public int Id => data.Id;
+        public long Id => data.Id;
 
         public string Name { get; }
         public string FullName { get; }
@@ -93,11 +93,12 @@ namespace Fasciculus.Eve.Models
     {
         private readonly EveMoonStation[] stations;
 
-        private readonly Lazy<Dictionary<int, EveMoonStation>> byId;
+        private readonly Lazy<Dictionary<long, EveMoonStation>> byId;
 
         public int Count => stations.Length;
 
-        public EveMoonStation this[int id] => byId.Value[id];
+        public bool Contains(long id) => byId.Value.ContainsKey(id);
+        public EveMoonStation this[long id] => byId.Value[id];
 
         public EveMoonStations(IEnumerable<EveMoonStation> stations)
         {
