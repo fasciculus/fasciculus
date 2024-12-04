@@ -10,6 +10,8 @@ namespace Fasciculus.Eve
     {
         public static MauiApp CreateMauiApp()
         {
+            // Thread.CurrentThread.Priority = ThreadPriority.AboveNormal;
+
             var builder = MauiApp.CreateBuilder();
 
             builder.UseMauiApp<App>();

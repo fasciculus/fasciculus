@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Algorithms;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -66,9 +67,15 @@ namespace Fasciculus.Eve.Models
 
         public int Id => data.Id;
 
-        public EveMoonStation(Data data)
+        public EveStationOperation Operation { get; }
+        public EveNpcCorporation Owner { get; }
+
+        public EveMoonStation(Data data, EveData eveData)
         {
             this.data = data;
+
+            Operation = eveData.StationOperations[data.Operation];
+            Owner = eveData.NpcCorporations[data.Owner];
         }
     }
 
@@ -132,13 +139,13 @@ namespace Fasciculus.Eve.Models
 
         public EveMoonStations Stations { get; }
 
-        public EveMoon(Data data, EvePlanet planet)
+        public EveMoon(Data data, EvePlanet planet, EveData eveData)
         {
             this.data = data;
 
             Name = $"{planet.Name} - Moon {CelestialIndex}";
 
-            Stations = new(data.Stations.Select(d => new EveMoonStation(d)));
+            Stations = new(data.Stations.Select(d => new EveMoonStation(d, eveData)));
         }
     }
 
@@ -243,13 +250,13 @@ namespace Fasciculus.Eve.Models
 
         public EvePlanetMoons Moons { get; }
 
-        public EvePlanet(Data data, EveSolarSystem solarSystem)
+        public EvePlanet(Data data, EveSolarSystem solarSystem, EveData eveData)
         {
             this.data = data;
 
             Name = $"{solarSystem.Name} {RomanNumbers.Format(CelestialIndex)}";
 
-            Moons = new(data.Moons.Select(d => new EveMoon(d, this)));
+            Moons = new(data.Moons.Select(d => new EveMoon(d, this, eveData)));
         }
     }
 
@@ -418,11 +425,11 @@ namespace Fasciculus.Eve.Models
         public EveSystemPlanets Planets { get; }
         public EveStargates Stargates { get; }
 
-        public EveSolarSystem(Data data)
+        public EveSolarSystem(Data data, EveData eveData)
         {
             this.data = data;
 
-            Planets = new(data.Planets.Select(d => new EvePlanet(d, this)));
+            Planets = new(data.Planets.Select(d => new EvePlanet(d, this, eveData)));
             Stargates = new(data.Stargates.Select(d => new EveStargate(d)));
         }
     }
@@ -490,11 +497,11 @@ namespace Fasciculus.Eve.Models
 
         public EveSolarSystems SolarSystems { get; }
 
-        public EveConstellation(Data data)
+        public EveConstellation(Data data, EveData eveData)
         {
             this.data = data;
 
-            SolarSystems = new(data.SolarSystems.Select(d => new EveSolarSystem(d)));
+            SolarSystems = new(data.SolarSystems.Select(d => new EveSolarSystem(d, eveData)));
         }
     }
 
@@ -560,36 +567,40 @@ namespace Fasciculus.Eve.Models
 
         public EveConstellations Constellations { get; }
 
-        public EveRegion(Data data)
+        public EveRegion(Data data, EveData eveData)
         {
             this.data = data;
 
-            Constellations = new(data.Constellations.Select(d => new EveConstellation(d)));
+            Constellations = new(data.Constellations.Select(d => new EveConstellation(d, eveData)));
         }
     }
 
     [DebuggerDisplay("Count = {Count}")]
     public class EveRegions : IEnumerable<EveRegion>
     {
-        private readonly Dictionary<int, EveRegion> byId;
-        private readonly Dictionary<string, EveRegion> byName;
+        private readonly EveRegion[] regions;
 
-        public int Count => byId.Count;
+        private readonly Lazy<Dictionary<int, EveRegion>> byId;
+        private readonly Lazy<Dictionary<string, EveRegion>> byName;
 
-        public EveRegion this[int id] => byId[id];
-        public EveRegion this[string name] => byName[name];
+        public int Count => regions.Length;
+
+        public EveRegion this[int id] => byId.Value[id];
+        public EveRegion this[string name] => byName.Value[name];
 
         public EveRegions(IEnumerable<EveRegion> regions)
         {
-            byId = regions.ToDictionary(r => r.Id);
-            byName = regions.ToDictionary(r => r.Name);
+            this.regions = regions.ToArray();
+
+            byId = new(() => this.regions.ToDictionary(r => r.Id), true);
+            byName = new(() => this.regions.ToDictionary(r => r.Name), true);
         }
 
         public IEnumerator<EveRegion> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => regions.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => regions.GetEnumerator();
     }
 
     public class EveUniverse
@@ -623,11 +634,11 @@ namespace Fasciculus.Eve.Models
         public EveAllMoons Moons { get; }
         public EveStargates Stargates { get; }
 
-        public EveUniverse(Data data)
+        public EveUniverse(Data data, EveData eveData)
         {
             this.data = data;
 
-            Regions = new(data.Regions.AsParallel().Select(d => new EveRegion(d)).ToArray());
+            Regions = new(data.Regions.AsParallel().Select(d => new EveRegion(d, eveData)));
             Constellations = new(Regions.SelectMany(r => r.Constellations));
             SolarSystems = new(Constellations.SelectMany(c => c.SolarSystems));
             Planets = new(SolarSystems.SelectMany(s => s.Planets));
@@ -635,8 +646,8 @@ namespace Fasciculus.Eve.Models
             Stargates = new(SolarSystems.SelectMany(s => s.Stargates));
         }
 
-        public EveUniverse(Stream stream)
-            : this(new Data(stream)) { }
+        public EveUniverse(Stream stream, EveData eveData)
+            : this(new Data(stream), eveData) { }
 
         public void Write(Stream stream)
         {

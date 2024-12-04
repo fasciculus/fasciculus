@@ -41,7 +41,7 @@ namespace Fasciculus.Eve.Services
         public EveResourcesProgress()
         {
             DataProgress = new TaskSafeProgress<bool>((done) => { Data = done; });
-            UniverseProgress = new TaskSafeProgress<bool>((done) => { universe = done; });
+            UniverseProgress = new TaskSafeProgress<bool>((done) => { Universe = done; });
             NavigationProgress = new TaskSafeProgress<bool>((done) => { Navigation = done; });
         }
     }
@@ -106,9 +106,10 @@ namespace Fasciculus.Eve.Services
             if (universe is null)
             {
                 IEmbeddedResource resource = resources["EveUniverse"];
+                EveData eveData = Tasks.Wait(Data);
 
                 progress.UniverseProgress.Report(false);
-                universe = resource.Read(s => new EveUniverse(s), true);
+                universe = resource.Read(s => new EveUniverse(s, eveData), true);
                 progress.UniverseProgress.Report(true);
             }
 
