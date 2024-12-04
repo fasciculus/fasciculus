@@ -97,7 +97,7 @@ namespace Fasciculus.Eve.Services
         }
 
         private Task<EveUniverse> GetUniverseAsync()
-            => Tasks.LongRunning(GetUniverse);
+            => Tasks.Start(GetUniverse);
 
         private EveUniverse GetUniverse()
         {

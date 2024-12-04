@@ -82,20 +82,24 @@ namespace Fasciculus.Eve.Models
     [DebuggerDisplay("Count = {Count}")]
     public class EveMoonStations : IEnumerable<EveMoonStation>
     {
-        private readonly Dictionary<int, EveMoonStation> byId;
+        private readonly EveMoonStation[] stations;
 
-        public int Count => byId.Count;
+        private readonly Lazy<Dictionary<int, EveMoonStation>> byId;
+
+        public int Count => stations.Length;
 
         public EveMoonStations(IEnumerable<EveMoonStation> stations)
         {
-            byId = stations.ToDictionary(x => x.Id);
+            this.stations = stations.ToArray();
+
+            byId = new(() => this.stations.ToDictionary(x => x.Id), true);
         }
 
         public IEnumerator<EveMoonStation> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => stations.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => stations.GetEnumerator();
     }
 
     [DebuggerDisplay("{Name}")]
@@ -152,61 +156,69 @@ namespace Fasciculus.Eve.Models
     [DebuggerDisplay("Count = {Count}")]
     public class EveAllMoons : IEnumerable<EveMoon>
     {
-        private readonly Dictionary<int, EveMoon> byId;
-        private readonly Dictionary<string, EveMoon> byName;
+        private readonly EveMoon[] moons;
 
-        public int Count => byId.Count;
+        private readonly Lazy<Dictionary<int, EveMoon>> byId;
+        private readonly Lazy<Dictionary<string, EveMoon>> byName;
 
-        public EveMoon this[int id] => byId[id];
-        public EveMoon this[string name] => byName[name];
+        public int Count => moons.Length;
+
+        public EveMoon this[int id] => byId.Value[id];
+        public EveMoon this[string name] => byName.Value[name];
 
         public EveAllMoons(IEnumerable<EveMoon> moons)
         {
-            byId = moons.ToDictionary(x => x.Id);
-            byName = moons.ToDictionary(x => x.Name);
+            this.moons = moons.ToArray();
+
+            byId = new(() => this.moons.ToDictionary(x => x.Id), true);
+            byName = new(() => this.moons.ToDictionary(x => x.Name), true);
         }
 
         public IEnumerator<EveMoon> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => moons.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => moons.GetEnumerator();
     }
 
     [DebuggerDisplay("Count = {Count}")]
     public class EvePlanetMoons : IEnumerable<EveMoon>
     {
-        private readonly Dictionary<int, EveMoon> byId;
-        private readonly Dictionary<int, EveMoon> byIndex;
-        private readonly Dictionary<string, EveMoon> byName;
+        private readonly EveMoon[] moons;
 
-        public int Count => byId.Count;
+        private readonly Lazy<Dictionary<int, EveMoon>> byId;
+        private readonly Lazy<Dictionary<int, EveMoon>> byIndex;
+        private readonly Lazy<Dictionary<string, EveMoon>> byName;
+
+        public int Count => moons.Length;
 
         public EveMoon this[int idOrIndex] => GetMoon(idOrIndex);
-        public EveMoon this[string name] => byName[name];
+        public EveMoon this[string name] => byName.Value[name];
 
         public EvePlanetMoons(IEnumerable<EveMoon> moons)
         {
-            byId = moons.ToDictionary(x => x.Id);
-            byIndex = moons.ToDictionary(x => x.CelestialIndex);
-            byName = moons.ToDictionary(x => x.Name);
+            this.moons = moons.ToArray();
+
+            byId = new(() => this.moons.ToDictionary(x => x.Id), true);
+            byIndex = new(() => this.moons.ToDictionary(x => x.CelestialIndex), true);
+            byName = new(() => this.moons.ToDictionary(x => x.Name), true);
         }
 
         private EveMoon GetMoon(int idOrIndex)
         {
-            if (byIndex.TryGetValue(idOrIndex, out EveMoon? moon))
+            if (byIndex.Value.TryGetValue(idOrIndex, out EveMoon? moon))
             {
                 return moon;
             }
 
-            return byId[idOrIndex];
+            return byId.Value[idOrIndex];
         }
 
         public IEnumerator<EveMoon> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => moons.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => moons.GetEnumerator();
     }
 
     [DebuggerDisplay("{Name}")]
@@ -263,61 +275,69 @@ namespace Fasciculus.Eve.Models
     [DebuggerDisplay("Count = {Count}")]
     public class EveAllPlanets : IEnumerable<EvePlanet>
     {
-        private readonly Dictionary<int, EvePlanet> byId;
-        private readonly Dictionary<string, EvePlanet> byName;
+        private readonly EvePlanet[] planets;
 
-        public int Count => byId.Count;
+        private readonly Lazy<Dictionary<int, EvePlanet>> byId;
+        private readonly Lazy<Dictionary<string, EvePlanet>> byName;
 
-        public EvePlanet this[int id] => byId[id];
-        public EvePlanet this[string name] => byName[name];
+        public int Count => planets.Length;
+
+        public EvePlanet this[int id] => byId.Value[id];
+        public EvePlanet this[string name] => byName.Value[name];
 
         public EveAllPlanets(IEnumerable<EvePlanet> planets)
         {
-            byId = planets.ToDictionary(p => p.Id);
-            byName = planets.ToDictionary(p => p.Name);
+            this.planets = planets.ToArray();
+
+            byId = new(() => this.planets.ToDictionary(x => x.Id), true);
+            byName = new(() => this.planets.ToDictionary(x => x.Name), true);
         }
 
         public IEnumerator<EvePlanet> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => planets.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => planets.GetEnumerator();
     }
 
     [DebuggerDisplay("Count = {Count}")]
     public class EveSystemPlanets : IEnumerable<EvePlanet>
     {
-        private readonly Dictionary<int, EvePlanet> byId;
-        private readonly Dictionary<int, EvePlanet> byIndex;
-        private readonly Dictionary<string, EvePlanet> byName;
+        private readonly EvePlanet[] planets;
 
-        public int Count => byId.Count;
+        private readonly Lazy<Dictionary<int, EvePlanet>> byId;
+        private readonly Lazy<Dictionary<int, EvePlanet>> byIndex;
+        private readonly Lazy<Dictionary<string, EvePlanet>> byName;
+
+        public int Count => planets.Length;
 
         public EvePlanet this[int idOrIndex] => GetPlanet(idOrIndex);
-        public EvePlanet this[string name] => byName[name];
+        public EvePlanet this[string name] => byName.Value[name];
 
         public EveSystemPlanets(IEnumerable<EvePlanet> planets)
         {
-            byId = planets.ToDictionary(p => p.Id);
-            byIndex = planets.ToDictionary(p => p.CelestialIndex);
-            byName = planets.ToDictionary(p => p.Name);
+            this.planets = planets.ToArray();
+
+            byId = new(() => this.planets.ToDictionary(x => x.Id), true);
+            byIndex = new(() => this.planets.ToDictionary(x => x.CelestialIndex), true);
+            byName = new(() => this.planets.ToDictionary(x => x.Name), true);
         }
 
         private EvePlanet GetPlanet(int idOrIndex)
         {
-            if (byIndex.TryGetValue(idOrIndex, out EvePlanet? planet))
+            if (byIndex.Value.TryGetValue(idOrIndex, out EvePlanet? planet))
             {
                 return planet;
             }
 
-            return byId[idOrIndex];
+            return byId.Value[idOrIndex];
         }
 
         public IEnumerator<EvePlanet> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => planets.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => planets.GetEnumerator();
     }
 
     public class EveStargate
@@ -359,22 +379,25 @@ namespace Fasciculus.Eve.Models
     [DebuggerDisplay("Count = {Count}")]
     public class EveStargates : IEnumerable<EveStargate>
     {
-        private readonly Dictionary<int, EveStargate> byId;
+        private readonly EveStargate[] stargates;
+        private readonly Lazy<Dictionary<int, EveStargate>> byId;
 
-        public int Count => byId.Count;
+        public int Count => stargates.Length;
 
-        public EveStargate this[int id] => byId[id];
+        public EveStargate this[int id] => byId.Value[id];
 
         public EveStargates(IEnumerable<EveStargate> stargates)
         {
-            byId = stargates.ToDictionary(s => s.Id);
+            this.stargates = stargates.ToArray();
+
+            byId = new(() => this.stargates.ToDictionary(x => x.Id), true); ;
         }
 
         public IEnumerator<EveStargate> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => stargates.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => stargates.GetEnumerator();
     }
 
     [DebuggerDisplay("{Name}")]
@@ -437,25 +460,29 @@ namespace Fasciculus.Eve.Models
     [DebuggerDisplay("Count = {Count}")]
     public class EveSolarSystems : IEnumerable<EveSolarSystem>
     {
-        private readonly Dictionary<int, EveSolarSystem> byId;
-        private readonly Dictionary<string, EveSolarSystem> byName;
+        private readonly EveSolarSystem[] solarSystems;
 
-        public int Count => byId.Count;
+        private readonly Lazy<Dictionary<int, EveSolarSystem>> byId;
+        private readonly Lazy<Dictionary<string, EveSolarSystem>> byName;
 
-        public EveSolarSystem this[int id] => byId[id];
-        public EveSolarSystem this[string name] => byName[name];
+        public int Count => solarSystems.Length;
+
+        public EveSolarSystem this[int id] => byId.Value[id];
+        public EveSolarSystem this[string name] => byName.Value[name];
 
         public EveSolarSystems(IEnumerable<EveSolarSystem> solarSystems)
         {
-            byId = solarSystems.ToDictionary(s => s.Id);
-            byName = solarSystems.ToDictionary(s => s.Name);
+            this.solarSystems = solarSystems.ToArray();
+
+            byId = new(() => this.solarSystems.ToDictionary(x => x.Id), true);
+            byName = new(() => this.solarSystems.ToDictionary(x => x.Name), true);
         }
 
         public IEnumerator<EveSolarSystem> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => solarSystems.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => solarSystems.GetEnumerator();
     }
 
     [DebuggerDisplay("{Name}")]
@@ -508,25 +535,28 @@ namespace Fasciculus.Eve.Models
     [DebuggerDisplay("Count = {Count}")]
     public class EveConstellations : IEnumerable<EveConstellation>
     {
-        private readonly Dictionary<int, EveConstellation> byId;
-        private readonly Dictionary<string, EveConstellation> byName;
+        private readonly EveConstellation[] constellations;
+        private readonly Lazy<Dictionary<int, EveConstellation>> byId;
+        private readonly Lazy<Dictionary<string, EveConstellation>> byName;
 
-        public int Count => byId.Count;
+        public int Count => constellations.Length;
 
-        public EveConstellation this[int id] => byId[id];
-        public EveConstellation this[string name] => byName[name];
+        public EveConstellation this[int id] => byId.Value[id];
+        public EveConstellation this[string name] => byName.Value[name];
 
         public EveConstellations(IEnumerable<EveConstellation> constellations)
         {
-            byId = constellations.ToDictionary(c => c.Id);
-            byName = constellations.ToDictionary(c => c.Name);
+            this.constellations = constellations.ToArray();
+
+            byId = new(() => this.constellations.ToDictionary(x => x.Id), true);
+            byName = new(() => this.constellations.ToDictionary(x => x.Name), true);
         }
 
         public IEnumerator<EveConstellation> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => constellations.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => constellations.GetEnumerator();
     }
 
     [DebuggerDisplay("{Name}")]
@@ -592,8 +622,8 @@ namespace Fasciculus.Eve.Models
         {
             this.regions = regions.ToArray();
 
-            byId = new(() => this.regions.ToDictionary(r => r.Id), true);
-            byName = new(() => this.regions.ToDictionary(r => r.Name), true);
+            byId = new(() => this.regions.ToDictionary(x => x.Id), true);
+            byName = new(() => this.regions.ToDictionary(x => x.Name), true);
         }
 
         public IEnumerator<EveRegion> GetEnumerator()

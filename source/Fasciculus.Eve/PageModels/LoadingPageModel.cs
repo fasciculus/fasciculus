@@ -5,7 +5,6 @@ using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Services;
 using Fasciculus.Threading;
 using System.ComponentModel;
-using System.Diagnostics;
 
 namespace Fasciculus.Eve.PageModels
 {
@@ -33,11 +32,6 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private Color navigationColor = Colors.Orange;
 
-        [ObservableProperty]
-        private string timerText = string.Empty;
-
-        private readonly Stopwatch stopwatch = new();
-
         public LoadingPageModel(IEveResources resources, IEveResourcesProgress progress, INavigator navigator)
         {
             this.resources = resources;
@@ -50,27 +44,17 @@ namespace Fasciculus.Eve.PageModels
         public void OnLoaded()
         {
             Tasks.LongRunning(LoadResources)
-                .ContinueWith(_ => Tasks.Wait(Task.Delay(2000)))
+                .ContinueWith(_ => Tasks.Wait(Task.Delay(200)))
                 .ContinueWith(GoToMainPage);
         }
 
         private void LoadResources()
         {
-            IDispatcherTimer timer = Application.Current!.Dispatcher.CreateTimer();
-
-            stopwatch.Start();
-            timer.Interval = TimeSpan.FromMilliseconds(200);
-            timer.Tick += OnTimerTick;
-            timer.Start();
-
             Task<EveData> data = resources.Data;
             Task<EveUniverse> universe = resources.Universe;
             Task<EveNavigation> navigation = resources.Navigation;
 
             Task.WaitAll([data, universe, navigation]);
-
-            timer.Stop();
-            stopwatch.Stop();
         }
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
@@ -83,13 +67,6 @@ namespace Fasciculus.Eve.PageModels
 
             NavigationText = progress.Navigation ? "Done" : "Pending";
             NavigationColor = progress.Navigation ? Colors.Green : Colors.Orange;
-        }
-
-        private void OnTimerTick(object? sender, EventArgs ev)
-        {
-            double elapsed = stopwatch.ElapsedMilliseconds / 1000.0;
-
-            TimerText = elapsed.ToString("0.0") + " s";
         }
 
         private Task GoToMainPage(object? _)
