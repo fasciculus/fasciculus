@@ -87,7 +87,7 @@ namespace Fasciculus.Eve.Services
         public Task StartAsync();
     }
 
-    public partial class TradeFinder : MainThreadObservable, ITradeFinder
+    public partial class TradeFinder : ObservableObject, ITradeFinder
     {
         [ObservableProperty]
         private LongProgressInfo progress = LongProgressInfo.Start;
@@ -119,7 +119,7 @@ namespace Fasciculus.Eve.Services
 
         private void Start()
         {
-            longProgress.Begin(0);
+            longProgress.Begin(1);
 
             EveMarketPrices marketPrices = Tasks.Wait(esiClient.MarketPrices);
             EveTradeOptions options = new(tradeOptions.Options);

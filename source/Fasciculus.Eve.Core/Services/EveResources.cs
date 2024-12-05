@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.IO;
-using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +22,7 @@ namespace Fasciculus.Eve.Services
         public bool Navigation { get; }
     }
 
-    public partial class EveResourcesProgress : MainThreadObservable, IEveResourcesProgress
+    public partial class EveResourcesProgress : ObservableObject, IEveResourcesProgress
     {
         public IProgress<bool> DataProgress { get; }
         public IProgress<bool> UniverseProgress { get; }
