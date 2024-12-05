@@ -518,27 +518,28 @@ namespace Fasciculus.Eve.Models
             public int Id { get; }
             public string Name { get; }
 
-            public EveSolarSystem.Data[] SolarSystems { get; }
+            private EveSolarSystem.Data[] solarSystems;
+            public IReadOnlyList<EveSolarSystem.Data> SolarSystems => solarSystems;
 
-            public Data(int id, string name, EveSolarSystem.Data[] solarSystems)
+            public Data(int id, string name, IEnumerable<EveSolarSystem.Data> solarSystems)
             {
                 Id = id;
                 Name = name;
-                SolarSystems = solarSystems;
+                this.solarSystems = solarSystems.ToArray();
             }
 
             public Data(Stream stream)
             {
                 Id = stream.ReadInt();
                 Name = stream.ReadString();
-                SolarSystems = stream.ReadArray(s => new EveSolarSystem.Data(s));
+                solarSystems = stream.ReadArray(s => new EveSolarSystem.Data(s));
             }
 
             public void Write(Stream stream)
             {
                 stream.WriteInt(Id);
                 stream.WriteString(Name);
-                stream.WriteArray(SolarSystems, s => s.Write(stream));
+                stream.WriteArray(solarSystems, s => s.Write(stream));
             }
         }
 

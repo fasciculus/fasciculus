@@ -75,9 +75,7 @@ namespace Fasciculus.Eve.Assets.Services
             int id = sdeConstellation.ConstellationID;
             string name = names[id];
 
-            EveSolarSystem.Data[] solarSystems = [.. sdeConstellation.SolarSystems
-                .Select(s => ConvertSolarSystem(s, names))
-                .OrderBy(s => s.Id)];
+            var solarSystems = sdeConstellation.SolarSystems.Select(s => ConvertSolarSystem(s, names)).OrderBy(s => s.Id);
 
             return new(id, name, solarSystems);
         }
