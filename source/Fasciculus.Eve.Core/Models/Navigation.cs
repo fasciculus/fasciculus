@@ -13,9 +13,9 @@ namespace Fasciculus.Eve.Models
 
             public IReadOnlyList<SparseShortMatrix> Distances => distances;
 
-            public Data(SparseShortMatrix[] distances)
+            public Data(IEnumerable<SparseShortMatrix> distances)
             {
-                this.distances = distances;
+                this.distances = distances.ToArray();
             }
 
             public Data(Stream stream)
