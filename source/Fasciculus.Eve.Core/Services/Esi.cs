@@ -49,7 +49,7 @@ namespace Fasciculus.Eve.Services
         public EveMarketPrices? MarketPrices
         {
             get => Read(files.MarketPrices, MarketPricesMaxAge, s => new EveMarketPrices(s, types));
-            set { if (value is not null) files.MarketPrices.Write(value.Write); }
+            set { if (value is not null) Write(files.MarketPrices, value.Write); }
         }
 
         public EsiCache(IEsiCacheFiles files, IEveResources resources)
@@ -62,6 +62,8 @@ namespace Fasciculus.Eve.Services
         private static T? Read<T>(FileInfo file, TimeSpan maxAge, Func<Stream, T> read)
             where T : notnull
         {
+            using Locker locker = NamedTaskSafeMutexes.Lock(file.FullName);
+
             T? result = default;
 
             if (file.Exists && file.IsNewerThan(DateTime.UtcNow - maxAge))
@@ -70,6 +72,13 @@ namespace Fasciculus.Eve.Services
             }
 
             return result;
+        }
+
+        private static void Write(FileInfo file, Action<Stream> write)
+        {
+            using Locker locker = NamedTaskSafeMutexes.Lock(file.FullName);
+
+            file.Write(write);
         }
     }
 
@@ -89,10 +98,10 @@ namespace Fasciculus.Eve.Services
 
         public Task<EveMarketPrices> MarketPrices => GetEveMarketPricesAsync();
 
-        public EsiClient(IHttpClientPool httpClientPool, [FromKeyedServices("EsiUserAgent")] string userAgent, IEsiCache cache,
-            IEveResources resources)
+        public EsiClient(IHttpClientPool httpClientPool, IEsiCache cache, IEveResources resources,
+            [FromKeyedServices("EsiUserAgent")] string userAgent)
         {
-            httpClient = GetHttpClient(httpClientPool, userAgent);
+            httpClient = CreateHttpClient(httpClientPool, userAgent);
             this.cache = cache;
 
             types = Tasks.Wait(resources.Data).Types;
@@ -100,6 +109,8 @@ namespace Fasciculus.Eve.Services
 
         private async Task<EveMarketPrices> GetEveMarketPricesAsync()
         {
+            using Locker locker = NamedTaskSafeMutexes.Lock("MarketPrices");
+
             EveMarketPrices? result = cache.MarketPrices;
 
             if (result == null)
@@ -121,7 +132,7 @@ namespace Fasciculus.Eve.Services
             return result;
         }
 
-        private static HttpClient GetHttpClient(IHttpClientPool httpClientPool, string userAgent)
+        private static HttpClient CreateHttpClient(IHttpClientPool httpClientPool, string userAgent)
         {
             HttpClient httpClient = httpClientPool[BaseUri];
 
