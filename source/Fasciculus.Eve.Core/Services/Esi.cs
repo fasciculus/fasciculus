@@ -18,7 +18,7 @@ namespace Fasciculus.Eve.Services
     {
         public FileInfo MarketPrices { get; }
 
-        public FileInfo MarketOrders(EveRegion region, EveType type);
+        public FileInfo MarketOrders(EveRegion region, EveType type, bool buy);
     }
 
     public class EsiCacheFiles : IEsiCacheFiles
@@ -34,18 +34,26 @@ namespace Fasciculus.Eve.Services
             market = cache.Combine("Market").CreateIfNotExists();
         }
 
-        public FileInfo MarketOrders(EveRegion region, EveType type)
-            => market.File($"Orders_{region.Id}_{type.Id}");
+        public FileInfo MarketOrders(EveRegion region, EveType type, bool buy)
+        {
+            string buyOrSell = buy ? "buy" : "sell";
+
+            return market.File($"Orders_{region.Id}_{type.Id}_{buyOrSell}");
+        }
     }
 
     public interface IEsiCache
     {
         public EveMarketPrices? MarketPrices { get; set; }
+
+        public EveMarketOrders? GetMarketOrders(EveRegion region, EveType type, bool buy);
+        public void SetMarketOrders(EveRegion region, EveType type, bool buy, EveMarketOrders marketOrders);
     }
 
     public class EsiCache : IEsiCache
     {
-        public static readonly TimeSpan MarketPricesMaxAge = TimeSpan.FromSeconds(3600);
+        public static readonly TimeSpan MarketPricesMaxAge = TimeSpan.FromSeconds(360000); // 3600
+        public static readonly TimeSpan MarketOrdersMaxAge = TimeSpan.FromSeconds(360000); // 300
 
         private readonly IEsiCacheFiles files;
 
@@ -63,6 +71,12 @@ namespace Fasciculus.Eve.Services
 
             types = Tasks.Wait(resources.Data).Types;
         }
+
+        public EveMarketOrders? GetMarketOrders(EveRegion region, EveType type, bool buy)
+            => Read(files.MarketOrders(region, type, buy), MarketOrdersMaxAge, s => new EveMarketOrders(s));
+
+        public void SetMarketOrders(EveRegion region, EveType type, bool buy, EveMarketOrders marketOrders)
+            => Write(files.MarketOrders(region, type, buy), marketOrders.Write);
 
         private static T? Read<T>(FileInfo file, TimeSpan maxAge, Func<Stream, T> read)
             where T : notnull
@@ -90,6 +104,8 @@ namespace Fasciculus.Eve.Services
     public interface IEsiClient
     {
         public Task<EveMarketPrices> MarketPrices { get; }
+
+        public Task<EveMarketOrders> GetMarketOrdersAsync(EveRegion region, EveType type, bool buy);
     }
 
     public class EsiClient : IEsiClient
@@ -100,6 +116,7 @@ namespace Fasciculus.Eve.Services
         private readonly IEsiCache cache;
 
         private readonly EveTypes types;
+        private readonly EveMoonStations stations;
 
         public Task<EveMarketPrices> MarketPrices => GetEveMarketPricesAsync();
 
@@ -110,6 +127,7 @@ namespace Fasciculus.Eve.Services
             this.cache = cache;
 
             types = Tasks.Wait(resources.Data).Types;
+            stations = Tasks.Wait(resources.Universe).NpcStations;
         }
 
         private async Task<EveMarketPrices> GetEveMarketPricesAsync()
@@ -118,20 +136,76 @@ namespace Fasciculus.Eve.Services
 
             EveMarketPrices? result = cache.MarketPrices;
 
-            if (result == null)
+            if (result is null)
             {
-                HttpRequestMessage request = new(HttpMethod.Get, "markets/prices");
-                HttpResponseMessage response = await httpClient.SendAsync(request);
+                try
+                {
+                    HttpRequestMessage request = new(HttpMethod.Get, "markets/prices");
+                    HttpResponseMessage response = await httpClient.SendAsync(request);
 
-                response.EnsureSuccessStatusCode();
+                    response.EnsureSuccessStatusCode();
 
-                string json = await response.Content.ReadAsStringAsync();
-                EsiMarketPrice[] esiMarketPrices = JsonSerializer.Deserialize<EsiMarketPrice[]>(json)!;
-                Dictionary<int, double> dictionary = esiMarketPrices.ToDictionary(x => x.TypeId, x => x.AveragePrice);
-                EveMarketPrices.Data data = new(dictionary);
+                    string json = await response.Content.ReadAsStringAsync();
+                    EsiMarketPrice[] esiMarketPrices = JsonSerializer.Deserialize<EsiMarketPrice[]>(json) ?? [];
+                    Dictionary<int, double> dictionary = esiMarketPrices.ToDictionary(x => x.TypeId, x => x.AveragePrice);
+                    EveMarketPrices.Data data = new(dictionary);
 
-                result = new(data, types);
+                    result = new(data, types);
+                }
+                catch
+                {
+                    result = EveMarketPrices.Empty(types);
+                }
+
                 cache.MarketPrices = result;
+            }
+
+            return result;
+        }
+
+        public async Task<EveMarketOrders> GetMarketOrdersAsync(EveRegion region, EveType type, bool buy)
+        {
+            using Locker locker = NamedTaskSafeMutexes.Lock($"MarketOrders_{region.Id}_{type.Id}_{buy}");
+
+            EveMarketOrders? result = cache.GetMarketOrders(region, type, buy);
+
+            if (result is null)
+            {
+                try
+                {
+                    string orderType = buy ? "buy" : "sell";
+                    string uri = $"markets/{region.Id}/orders/?order_type={orderType}&type_id={type.Id}";
+                    HttpRequestMessage request = new(HttpMethod.Get, uri);
+                    HttpResponseMessage response = await httpClient.SendAsync(request);
+
+                    response.EnsureSuccessStatusCode();
+
+                    string json = await response.Content.ReadAsStringAsync();
+                    EsiMarketOrder[] esiOrders = JsonSerializer.Deserialize<EsiMarketOrder[]>(json) ?? [];
+                    IEnumerable<EveMarketOrder.Data> orders = esiOrders.Select(Convert).NotNull();
+                    EveMarketOrders.Data data = new(type.Id, orders);
+
+                    result = new(data);
+                }
+                catch
+                {
+                    result = EveMarketOrders.Empty(type);
+                }
+
+                cache.SetMarketOrders(region, type, buy, result);
+            }
+
+            return result;
+        }
+
+        private EveMarketOrder.Data? Convert(EsiMarketOrder order)
+        {
+            EveMarketOrder.Data? result = null;
+            long stationId = order.LocationId;
+
+            if (stations.Contains(stationId))
+            {
+                result = new(stationId, order.IsBuyOrder, order.Price, order.Quantity);
             }
 
             return result;

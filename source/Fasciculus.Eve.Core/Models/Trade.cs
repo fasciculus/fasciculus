@@ -150,6 +150,9 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
             => data.Write(stream);
+
+        public static EveMarketPrices Empty(EveTypes types)
+            => new(new Data([]), types);
     }
 
     public class EveMarketOrder
@@ -193,7 +196,7 @@ namespace Fasciculus.Eve.Models
         {
             public int TypeId { get; }
 
-            private EveMarketOrder.Data[] orders;
+            private readonly EveMarketOrder.Data[] orders;
             public IReadOnlyList<EveMarketOrder.Data> Orders => orders;
 
             public Data(int typeId, IEnumerable<EveMarketOrder.Data> orders)
@@ -214,6 +217,24 @@ namespace Fasciculus.Eve.Models
                 stream.WriteArray(orders, x => x.Write(stream));
             }
         }
+
+        private readonly Data data;
+
+        public EveMarketOrders(Data data)
+        {
+            this.data = data;
+        }
+
+        public EveMarketOrders(Stream stream)
+            : this(new Data(stream)) { }
+
+        public void Write(Stream stream)
+        {
+            data.Write(stream);
+        }
+
+        public static EveMarketOrders Empty(EveType type)
+            => new(new Data(type.Id, []));
     }
 
     public class EveTrade

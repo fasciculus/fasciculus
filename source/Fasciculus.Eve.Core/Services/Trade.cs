@@ -136,7 +136,19 @@ namespace Fasciculus.Eve.Services
 
         private void FindTrades(EveTradeOptions options, EveMoonStations stations, EveRegion[] regions, EveTypes types)
         {
+            regions.Apply(x => FindTrades(options, stations, x, types));
+        }
 
+        private void FindTrades(EveTradeOptions options, EveMoonStations stations, EveRegion region, EveTypes types)
+        {
+            types.Apply(x => FindTrades(options, stations, region, x));
+        }
+
+        private void FindTrades(EveTradeOptions options, EveMoonStations stations, EveRegion region, EveType type)
+        {
+            EveMarketOrders orders = Tasks.Wait(esiClient.GetMarketOrdersAsync(region, type, false));
+
+            longProgress.Report(1);
         }
 
         private EveSolarSystem[] GetSolarSystems(EveTradeOptions options)
