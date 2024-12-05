@@ -53,7 +53,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         private static EveUniverse.Data ConvertRegions(SdeRegion[] sdeRegions, Dictionary<int, string> names)
         {
-            EveRegion.Data[] regions = [.. sdeRegions.Select(r => ConvertRegion(r, names)).OrderBy(r => r.Id)];
+            var regions = sdeRegions.Select(r => ConvertRegion(r, names)).OrderBy(r => r.Id);
 
             return new EveUniverse.Data(regions);
         }

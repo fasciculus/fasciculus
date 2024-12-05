@@ -667,21 +667,22 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public EveRegion.Data[] Regions { get; }
+            private readonly EveRegion.Data[] regions;
+            public IReadOnlyList<EveRegion.Data> Regions => regions;
 
-            public Data(EveRegion.Data[] regions)
+            public Data(IEnumerable<EveRegion.Data> regions)
             {
-                Regions = regions;
+                this.regions = regions.ToArray();
             }
 
             public Data(Stream stream)
             {
-                Regions = stream.ReadArray(s => new EveRegion.Data(s));
+                regions = stream.ReadArray(s => new EveRegion.Data(s));
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteArray(Regions, r => r.Write(stream));
+                stream.WriteArray(regions, r => r.Write(stream));
             }
         }
 
