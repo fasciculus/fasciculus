@@ -105,10 +105,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             int id = kvp.Key;
             int celestialIndex = sdePlanet.CelestialIndex;
-
-            EveMoon.Data[] moons = [.. sdePlanet.Moons
-                .Select(ConvertMoon)
-                .OrderBy(m => m.Id)];
+            var moons = sdePlanet.Moons.Select(ConvertMoon).OrderBy(m => m.Id);
 
             return new(id, celestialIndex, moons);
         }
@@ -119,10 +116,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             int id = kvp.Key;
             int celestialIndex = sdeMoon.CelestialIndex;
-
-            EveMoonStation.Data[] stations = [.. sdeMoon.NpcStations
-                .Select(ConvertMoonStation)
-                .OrderBy(x => x.Id)];
+            var stations = sdeMoon.NpcStations.Select(ConvertMoonStation).OrderBy(x => x.Id);
 
             return new(id, celestialIndex, stations);
         }

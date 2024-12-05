@@ -122,27 +122,28 @@ namespace Fasciculus.Eve.Models
             public int Id { get; }
             public int CelestialIndex { get; }
 
-            public EveMoonStation.Data[] Stations { get; }
+            private readonly EveMoonStation.Data[] stations;
+            public IReadOnlyList<EveMoonStation.Data> Stations => stations;
 
-            public Data(int id, int celestialIndex, EveMoonStation.Data[] stations)
+            public Data(int id, int celestialIndex, IEnumerable<EveMoonStation.Data> stations)
             {
                 Id = id;
                 CelestialIndex = celestialIndex;
-                Stations = stations;
+                this.stations = stations.ToArray();
             }
 
             public Data(Stream stream)
             {
                 Id = stream.ReadInt();
                 CelestialIndex = stream.ReadInt();
-                Stations = stream.ReadArray(s => new EveMoonStation.Data(s));
+                stations = stream.ReadArray(s => new EveMoonStation.Data(s));
             }
 
             public void Write(Stream stream)
             {
                 stream.WriteInt(Id);
                 stream.WriteInt(CelestialIndex);
-                stream.WriteArray(Stations, x => x.Write(stream));
+                stream.WriteArray(stations, x => x.Write(stream));
             }
         }
 
@@ -243,27 +244,28 @@ namespace Fasciculus.Eve.Models
             public int Id { get; }
             public int CelestialIndex;
 
-            public EveMoon.Data[] Moons { get; }
+            private EveMoon.Data[] moons;
+            public IReadOnlyList<EveMoon.Data> Moons => moons;
 
-            public Data(int id, int celestialIndex, EveMoon.Data[] moons)
+            public Data(int id, int celestialIndex, IEnumerable<EveMoon.Data> moons)
             {
                 Id = id;
                 CelestialIndex = celestialIndex;
-                Moons = moons;
+                this.moons = moons.ToArray();
             }
 
             public Data(Stream stream)
             {
                 Id = stream.ReadInt();
                 CelestialIndex = stream.ReadInt();
-                Moons = stream.ReadArray(s => new EveMoon.Data(s));
+                moons = stream.ReadArray(s => new EveMoon.Data(s));
             }
 
             public void Write(Stream stream)
             {
                 stream.WriteInt(Id);
                 stream.WriteInt(CelestialIndex);
-                stream.WriteArray(Moons, m => m.Write(stream));
+                stream.WriteArray(moons, m => m.Write(stream));
             }
         }
 
