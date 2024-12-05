@@ -181,33 +181,39 @@ namespace Fasciculus.Eve.Models
         public class Data
         {
             public DateTime Version { get; }
-            public EveType.Data[] Types { get; }
-            public EveStationOperation.Data[] StationOperations { get; }
-            public EveNpcCorporation.Data[] NpcCorporations { get; }
 
-            public Data(DateTime version, EveType.Data[] types, EveStationOperation.Data[] stationOperations,
-                EveNpcCorporation.Data[] npcCorporations)
+            private readonly EveType.Data[] types;
+            public IReadOnlyList<EveType.Data> Types => types;
+
+            private readonly EveStationOperation.Data[] stationOperations;
+            public IReadOnlyList<EveStationOperation.Data> StationOperations => stationOperations;
+
+            private readonly EveNpcCorporation.Data[] npcCorporations;
+            public IReadOnlyList<EveNpcCorporation.Data> NpcCorporations => npcCorporations;
+
+            public Data(DateTime version, IEnumerable<EveType.Data> types, IEnumerable<EveStationOperation.Data> stationOperations,
+                IEnumerable<EveNpcCorporation.Data> npcCorporations)
             {
                 Version = version;
-                Types = types;
-                StationOperations = stationOperations;
-                NpcCorporations = npcCorporations;
+                this.types = types.ToArray();
+                this.stationOperations = stationOperations.ToArray();
+                this.npcCorporations = npcCorporations.ToArray();
             }
 
             public Data(Stream stream)
             {
                 Version = stream.ReadDateTime();
-                Types = stream.ReadArray(s => new EveType.Data(s));
-                StationOperations = stream.ReadArray(s => new EveStationOperation.Data(s));
-                NpcCorporations = stream.ReadArray(s => new EveNpcCorporation.Data(s));
+                types = stream.ReadArray(s => new EveType.Data(s));
+                stationOperations = stream.ReadArray(s => new EveStationOperation.Data(s));
+                npcCorporations = stream.ReadArray(s => new EveNpcCorporation.Data(s));
             }
 
             public void Write(Stream stream)
             {
                 stream.WriteDateTime(Version);
-                stream.WriteArray(Types, x => x.Write(stream));
-                stream.WriteArray(StationOperations, x => x.Write(stream));
-                stream.WriteArray(NpcCorporations, x => x.Write(stream));
+                stream.WriteArray(types, x => x.Write(stream));
+                stream.WriteArray(stationOperations, x => x.Write(stream));
+                stream.WriteArray(npcCorporations, x => x.Write(stream));
             }
         }
 
