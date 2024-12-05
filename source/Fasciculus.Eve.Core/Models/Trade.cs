@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
@@ -101,6 +103,40 @@ namespace Fasciculus.Eve.Models
 
         public override int GetHashCode()
             => data.GetHashCode();
+    }
+
+    public class EveMarketPrices
+    {
+        public class Data
+        {
+            private readonly Dictionary<int, double> prices;
+            public IReadOnlyDictionary<int, double> Prices => prices;
+
+            public Data(Stream stream)
+            {
+                prices = stream.ReadDictionary(s => s.ReadInt(), s => s.ReadDouble());
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteDictionary(prices, stream.WriteInt, stream.WriteDouble);
+            }
+        }
+
+        private readonly Data data;
+
+        public double this[EveType type]
+            => data.Prices.TryGetValue(type.Id, out var price) ? price : 0;
+
+        private readonly Lazy<EveType[]> tradedTypes;
+        public IEnumerable<EveType> TradedTypes => tradedTypes.Value;
+
+        public EveMarketPrices(Data data, EveTypes types)
+        {
+            this.data = data;
+
+            tradedTypes = new(() => data.Prices.Keys.Select(id => types[id]).ToArray(), true);
+        }
     }
 
     public class EveTrade
