@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Services
@@ -96,11 +97,15 @@ namespace Fasciculus.Eve.Services
 
         private readonly ITradeOptions tradeOptions;
 
+        private readonly EveNavigation navigation;
+
         private readonly IAccumulatingLongProgress longProgress;
 
-        public TradeFinder(ITradeOptions tradeOptions)
+        public TradeFinder(ITradeOptions tradeOptions, IEveResources resources)
         {
             this.tradeOptions = tradeOptions;
+
+            navigation = Tasks.Wait(resources.Navigation);
 
             longProgress = new AccumulatingLongProgress(OnProgress, 200);
         }
@@ -115,8 +120,28 @@ namespace Fasciculus.Eve.Services
             longProgress.Begin(0);
 
             EveTradeOptions options = new(tradeOptions.Options);
+            EveRegion[] regions = GetRegions(options);
+
+            longProgress.Begin(regions.Length);
+
+            foreach (var region in regions)
+            {
+                Tasks.Wait(Task.Delay(1000));
+                longProgress.Report(1);
+            }
 
             longProgress.End();
+        }
+
+        private EveRegion[] GetRegions(EveTradeOptions options)
+        {
+            EveSolarSystem origin = options.TargetStation.Moon.Planet.SolarSystem;
+
+            return navigation
+                .InRange(origin, options.MaxDistance, EveSecurity.Level.High)
+                .Select(x => x.Constellation.Region)
+                .Distinct()
+                .ToArray();
         }
 
         private void OnProgress(long _)

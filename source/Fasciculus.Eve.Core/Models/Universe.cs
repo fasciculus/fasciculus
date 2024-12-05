@@ -153,6 +153,7 @@ namespace Fasciculus.Eve.Models
 
         public string Name { get; }
 
+        public EvePlanet Planet { get; }
         public EveMoonStations Stations { get; }
 
         public EveMoon(Data data, EvePlanet planet, EveData eveData)
@@ -161,6 +162,7 @@ namespace Fasciculus.Eve.Models
 
             Name = $"{planet.Name} - Moon {CelestialIndex}";
 
+            Planet = planet;
             Stations = new(data.Stations.Select(d => new EveMoonStation(d, this, eveData)));
         }
     }
@@ -272,6 +274,7 @@ namespace Fasciculus.Eve.Models
 
         public string Name { get; }
 
+        public EveSolarSystem SolarSystem { get; }
         public EvePlanetMoons Moons { get; }
 
         public EvePlanet(Data data, EveSolarSystem solarSystem, EveData eveData)
@@ -280,6 +283,7 @@ namespace Fasciculus.Eve.Models
 
             Name = $"{solarSystem.Name} {RomanNumbers.Format(CelestialIndex)}";
 
+            SolarSystem = solarSystem;
             Moons = new(data.Moons.Select(d => new EveMoon(d, this, eveData)));
         }
     }
@@ -458,7 +462,6 @@ namespace Fasciculus.Eve.Models
         public string Name => data.Name;
 
         public EveConstellation Constellation { get; }
-        public EveRegion Region { get; }
 
         public EveSystemPlanets Planets { get; }
         public EveStargates Stargates { get; }
@@ -468,7 +471,6 @@ namespace Fasciculus.Eve.Models
             this.data = data;
 
             Constellation = constellation;
-            Region = constellation.Region;
 
             Planets = new(data.Planets.Select(d => new EvePlanet(d, this, eveData)));
             Stargates = new(data.Stargates.Select(d => new EveStargate(d)));
