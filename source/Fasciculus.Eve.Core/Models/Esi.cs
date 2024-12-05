@@ -10,24 +10,6 @@ namespace Fasciculus.Eve.Models
 
         [JsonPropertyName("type_id")]
         public int TypeId { get; set; }
-
-        public void Write(Stream stream)
-        {
-            stream.WriteDouble(AveragePrice);
-            stream.WriteInt(TypeId);
-        }
-
-        public static EsiMarketPrice Read(Stream stream)
-        {
-            double averagePrice = stream.ReadDouble();
-            int typeId = stream.ReadInt();
-
-            return new()
-            {
-                AveragePrice = averagePrice,
-                TypeId = typeId
-            };
-        }
     }
 
     public class EsiMarketOrder

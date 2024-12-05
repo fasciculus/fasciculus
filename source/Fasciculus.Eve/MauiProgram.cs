@@ -29,6 +29,8 @@ namespace Fasciculus.Eve
             services.AddEsi();
             services.AddTrade();
 
+            services.TryAddKeyedSingleton("EsiUserAgent", "Fasciculus.Eve (rhj1)");
+
             services.TryAddSingleton<LoadingPageModel>();
             services.TryAddSingleton<SideBarModel>();
             services.TryAddSingleton<IndustryPageModel>();

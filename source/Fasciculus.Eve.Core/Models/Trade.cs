@@ -112,6 +112,11 @@ namespace Fasciculus.Eve.Models
             private readonly Dictionary<int, double> prices;
             public IReadOnlyDictionary<int, double> Prices => prices;
 
+            public Data(Dictionary<int, double> prices)
+            {
+                this.prices = prices.ToDictionary(x => x.Key, x => x.Value);
+            }
+
             public Data(Stream stream)
             {
                 prices = stream.ReadDictionary(s => s.ReadInt(), s => s.ReadDouble());
@@ -137,6 +142,12 @@ namespace Fasciculus.Eve.Models
 
             tradedTypes = new(() => data.Prices.Keys.Select(id => types[id]).ToArray(), true);
         }
+
+        public EveMarketPrices(Stream stream, EveTypes types)
+            : this(new Data(stream), types) { }
+
+        public void Write(Stream stream)
+            => data.Write(stream);
     }
 
     public class EveTrade

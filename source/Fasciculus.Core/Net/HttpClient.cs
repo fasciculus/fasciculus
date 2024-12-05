@@ -113,6 +113,7 @@ namespace Fasciculus.Net
         public static IServiceCollection AddHttpClientPool(this IServiceCollection services)
         {
             services.AddHttpClientHandlers();
+
             services.TryAddSingleton<IHttpClientPool, HttpClientPool>();
 
             return services;

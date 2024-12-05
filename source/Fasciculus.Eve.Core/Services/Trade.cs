@@ -96,14 +96,16 @@ namespace Fasciculus.Eve.Services
         private EveTrade[] trades = [];
 
         private readonly ITradeOptions tradeOptions;
+        private readonly IEsiClient esiClient;
 
         private readonly EveNavigation navigation;
 
         private readonly IAccumulatingLongProgress longProgress;
 
-        public TradeFinder(ITradeOptions tradeOptions, IEveResources resources)
+        public TradeFinder(ITradeOptions tradeOptions, IEsiClient esiClient, IEveResources resources)
         {
             this.tradeOptions = tradeOptions;
+            this.esiClient = esiClient;
 
             navigation = Tasks.Wait(resources.Navigation);
 
@@ -119,6 +121,7 @@ namespace Fasciculus.Eve.Services
         {
             longProgress.Begin(0);
 
+            EveMarketPrices marketPrices = Tasks.Wait(esiClient.MarketPrices);
             EveTradeOptions options = new(tradeOptions.Options);
             EveRegion[] regions = GetRegions(options);
 

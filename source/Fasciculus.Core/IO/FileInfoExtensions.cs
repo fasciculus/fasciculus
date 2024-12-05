@@ -61,6 +61,13 @@ namespace System.IO
             read(stream);
         }
 
+        public static T Read<T>(this FileInfo file, Func<Stream, T> read)
+        {
+            using Stream stream = file.OpenRead();
+
+            return read(stream);
+        }
+
         public static FileInfo Write(this FileInfo file, Action<Stream> write)
         {
             file.DeleteIfExists();
