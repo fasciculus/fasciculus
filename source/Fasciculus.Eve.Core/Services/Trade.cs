@@ -5,6 +5,8 @@ using Fasciculus.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -121,30 +123,59 @@ namespace Fasciculus.Eve.Services
         {
             longProgress.Begin(1);
 
-            EveMarketPrices marketPrices = Tasks.Wait(esiClient.MarketPrices);
             EveTradeOptions options = new(tradeOptions.Options);
-            EveRegion[] regions = GetRegions(options);
+            EveSolarSystem[] solarSystems = GetSolarSystems(options);
+            EveMoonStations stations = GetStations(solarSystems);
+            EveRegion[] regions = GetRegions(options, solarSystems);
+            EveTypes types = GetTypes(options);
 
-            longProgress.Begin(regions.Length);
-
-            foreach (var region in regions)
-            {
-                Tasks.Wait(Task.Delay(1000));
-                longProgress.Report(1);
-            }
-
+            longProgress.Begin(regions.Length * types.Count);
+            FindTrades(options, stations, regions, types);
             longProgress.End();
         }
 
-        private EveRegion[] GetRegions(EveTradeOptions options)
+        private void FindTrades(EveTradeOptions options, EveMoonStations stations, EveRegion[] regions, EveTypes types)
+        {
+
+        }
+
+        private EveSolarSystem[] GetSolarSystems(EveTradeOptions options)
         {
             EveSolarSystem origin = options.TargetStation.Moon.Planet.SolarSystem;
 
-            return navigation
-                .InRange(origin, options.MaxDistance, EveSecurity.Level.High)
-                .Select(x => x.Constellation.Region)
-                .Distinct()
-                .ToArray();
+            return navigation.InRange(origin, options.MaxDistance, EveSecurity.Level.High).ToArray();
+        }
+
+        private static EveMoonStations GetStations(IEnumerable<EveSolarSystem> solarSystems)
+        {
+            IEnumerable<EveMoonStation> stations = solarSystems
+                .SelectMany(x => x.Planets)
+                .SelectMany(x => x.Moons)
+                .SelectMany(x => x.Stations);
+
+            return new(stations);
+        }
+
+        private static EveRegion[] GetRegions(EveTradeOptions options, IEnumerable<EveSolarSystem> solarSystems)
+        {
+            EveRegion targetRegion = options.TargetStation.GetRegion();
+
+            return solarSystems.Select(x => x.Constellation.Region).Append(targetRegion).Distinct().ToArray();
+        }
+
+        private EveTypes GetTypes(EveTradeOptions options)
+        {
+            EveMarketPrices marketPrices = Tasks.Wait(esiClient.MarketPrices);
+            double maxVolume = options.MaxVolumePerType / 10.0;
+            double maxPrice = options.MaxIskPerType / 10.0;
+
+            IEnumerable<EveType> types = marketPrices.TradedTypes
+                .Where(x => x.Volume > 0 && x.Volume <= maxVolume)
+                .Select(x => Tuple.Create(x, marketPrices[x]))
+                .Where(x => x.Item2 > 0 && x.Item2 <= maxPrice)
+                .Select(x => x.Item1);
+
+            return new(types);
         }
 
         private void OnProgress(long _)

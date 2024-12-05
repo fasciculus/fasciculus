@@ -663,6 +663,12 @@ namespace Fasciculus.Eve.Models
             => regions.GetEnumerator();
     }
 
+    public static class EveUniverseExtensions
+    {
+        public static EveRegion GetRegion(this EveMoonStation station)
+            => station.Moon.Planet.SolarSystem.Constellation.Region;
+    }
+
     public class EveUniverse
     {
         public class Data

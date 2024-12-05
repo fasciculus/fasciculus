@@ -52,6 +52,9 @@ namespace Fasciculus.Eve.Models
     {
         private Dictionary<int, EveType> byId;
 
+        public int Count => byId.Count;
+
+        public bool Contains(int id) => byId.ContainsKey(id);
         public EveType this[int id] => byId[id];
 
         public EveTypes(IEnumerable<EveType> types)

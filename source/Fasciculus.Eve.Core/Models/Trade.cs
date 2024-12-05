@@ -140,7 +140,9 @@ namespace Fasciculus.Eve.Models
         {
             this.data = data;
 
-            tradedTypes = new(() => data.Prices.Keys.Select(id => types[id]).ToArray(), true);
+            tradedTypes = new(() => data.Prices.Keys
+                .Where(x => types.Contains(x))
+                .Select(id => types[id]).ToArray(), true);
         }
 
         public EveMarketPrices(Stream stream, EveTypes types)
@@ -148,6 +150,70 @@ namespace Fasciculus.Eve.Models
 
         public void Write(Stream stream)
             => data.Write(stream);
+    }
+
+    public class EveMarketOrder
+    {
+        public class Data
+        {
+            public long StationId { get; }
+            public bool IsBuy { get; }
+            public double Price { get; }
+            public int Quantity { get; }
+
+            public Data(long stationId, bool isBuy, double price, int quantity)
+            {
+                StationId = stationId;
+                IsBuy = isBuy;
+                Price = price;
+                Quantity = quantity;
+            }
+
+            public Data(Stream stream)
+            {
+                StationId = stream.ReadLong();
+                IsBuy = stream.ReadBool();
+                Price = stream.ReadDouble();
+                Quantity = stream.ReadInt();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteLong(StationId);
+                stream.WriteBool(IsBuy);
+                stream.WriteDouble(Price);
+                stream.WriteInt(Quantity);
+            }
+        }
+    }
+
+    public class EveMarketOrders
+    {
+        public class Data
+        {
+            public int TypeId { get; }
+
+            private EveMarketOrder.Data[] orders;
+            public IReadOnlyList<EveMarketOrder.Data> Orders => orders;
+
+            public Data(int typeId, IEnumerable<EveMarketOrder.Data> orders)
+            {
+                TypeId = typeId;
+                this.orders = orders.ToArray();
+            }
+
+            public Data(Stream stream)
+            {
+                TypeId = stream.ReadInt();
+                orders = stream.ReadArray(s => new EveMarketOrder.Data(s));
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(TypeId);
+                stream.WriteArray(orders, x => x.Write(stream));
+            }
+        }
     }
 
     public class EveTrade

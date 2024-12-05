@@ -17,6 +17,8 @@ namespace Fasciculus.Eve.Services
     public interface IEsiCacheFiles
     {
         public FileInfo MarketPrices { get; }
+
+        public FileInfo MarketOrders(EveRegion region, EveType type);
     }
 
     public class EsiCacheFiles : IEsiCacheFiles
@@ -31,6 +33,9 @@ namespace Fasciculus.Eve.Services
             cache = eveFileSystem.Documents.Combine("EsiCache").CreateIfNotExists();
             market = cache.Combine("Market").CreateIfNotExists();
         }
+
+        public FileInfo MarketOrders(EveRegion region, EveType type)
+            => market.File($"Orders_{region.Id}_{type.Id}");
     }
 
     public interface IEsiCache
