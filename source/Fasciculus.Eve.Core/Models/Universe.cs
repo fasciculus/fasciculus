@@ -594,27 +594,29 @@ namespace Fasciculus.Eve.Models
         {
             public int Id { get; }
             public string Name { get; }
-            public EveConstellation.Data[] Constellations { get; }
 
-            public Data(int id, string name, EveConstellation.Data[] constellations)
+            private readonly EveConstellation.Data[] constellations;
+            public IReadOnlyList<EveConstellation.Data> Constellations => constellations;
+
+            public Data(int id, string name, IEnumerable<EveConstellation.Data> constellations)
             {
                 Id = id;
                 Name = name;
-                Constellations = constellations;
+                this.constellations = constellations.ToArray();
             }
 
             public Data(Stream stream)
             {
                 Id = stream.ReadInt();
                 Name = stream.ReadString();
-                Constellations = stream.ReadArray(s => new EveConstellation.Data(s));
+                constellations = stream.ReadArray(s => new EveConstellation.Data(s));
             }
 
             public void Write(Stream stream)
             {
                 stream.WriteInt(Id);
                 stream.WriteString(Name);
-                stream.WriteArray(Constellations, c => c.Write(stream));
+                stream.WriteArray(constellations, c => c.Write(stream));
             }
         }
 

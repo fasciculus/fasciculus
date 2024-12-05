@@ -62,10 +62,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             int id = sdeRegion.RegionID;
             string name = names[id];
-
-            EveConstellation.Data[] constellations = [.. sdeRegion.Constellations
-                .Select(c => ConvertConstellation(c, names))
-                .OrderBy(c => c.Id)];
+            var constellations = sdeRegion.Constellations.Select(c => ConvertConstellation(c, names)).OrderBy(c => c.Id);
 
             return new(id, name, constellations);
         }
@@ -74,7 +71,6 @@ namespace Fasciculus.Eve.Assets.Services
         {
             int id = sdeConstellation.ConstellationID;
             string name = names[id];
-
             var solarSystems = sdeConstellation.SolarSystems.Select(s => ConvertSolarSystem(s, names)).OrderBy(s => s.Id);
 
             return new(id, name, solarSystems);
