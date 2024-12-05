@@ -18,7 +18,7 @@ namespace Fasciculus.Eve.Assets.Services
         private EveData.Data? data;
         private readonly TaskSafeMutex dataMutex = new();
 
-        public Task<EveData.Data> Data => GetData();
+        public Task<EveData.Data> Data => GetDataAsync();
 
         public ConvertData(IParseData parseData, IAssetsProgress progress)
         {
@@ -26,7 +26,7 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        private async Task<EveData.Data> GetData()
+        private async Task<EveData.Data> GetDataAsync()
         {
             using Locker locker = Locker.Lock(dataMutex);
 
@@ -37,22 +37,20 @@ namespace Fasciculus.Eve.Assets.Services
                 progress.ConvertData.Report(PendingToDone.Working);
 
                 DateTime version = sdeData.Version;
-                EveType.Data[] types = ConvertTypes(sdeData.Types);
-                EveStationOperation.Data[] stationOperations = ConvertStationOperations(sdeData.StationOperations);
-                EveNpcCorporation.Data[] npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
+                IEnumerable<EveType.Data> types = ConvertTypes(sdeData.Types);
+                IEnumerable<EveStationOperation.Data> stationOperations = ConvertStationOperations(sdeData.StationOperations);
+                IEnumerable<EveNpcCorporation.Data> npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
 
                 data = new(version, types, stationOperations, npcCorporations);
 
                 progress.ConvertData.Report(PendingToDone.Done);
-
-                await Task.Yield();
             }
 
             return data;
         }
 
-        private static EveType.Data[] ConvertTypes(Dictionary<int, SdeType> types)
-            => [.. types.Select(ConvertType).OrderBy(t => t.Id)];
+        private static IEnumerable<EveType.Data> ConvertTypes(Dictionary<int, SdeType> types)
+            => types.Select(ConvertType).OrderBy(t => t.Id);
 
         private static EveType.Data ConvertType(KeyValuePair<int, SdeType> kvp)
         {
@@ -65,8 +63,8 @@ namespace Fasciculus.Eve.Assets.Services
             return new(id, name, volume);
         }
 
-        private static EveStationOperation.Data[] ConvertStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
-            => [.. stationOperations.Select(ConvertStationOperation).OrderBy(t => t.Id)];
+        private static IEnumerable<EveStationOperation.Data> ConvertStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
+            => stationOperations.Select(ConvertStationOperation).OrderBy(t => t.Id);
 
         private static EveStationOperation.Data ConvertStationOperation(KeyValuePair<int, SdeStationOperation> kvp)
         {
@@ -78,8 +76,8 @@ namespace Fasciculus.Eve.Assets.Services
             return new(id, name);
         }
 
-        private static EveNpcCorporation.Data[] ConvertNpcCorporations(Dictionary<int, SdeNpcCorporation> npcCorporations)
-            => [.. npcCorporations.Select(ConvertNpcCorporation).OrderBy(t => t.Id)];
+        private static IEnumerable<EveNpcCorporation.Data> ConvertNpcCorporations(Dictionary<int, SdeNpcCorporation> npcCorporations)
+            => npcCorporations.Select(ConvertNpcCorporation).OrderBy(t => t.Id);
 
         private static EveNpcCorporation.Data ConvertNpcCorporation(KeyValuePair<int, SdeNpcCorporation> kvp)
         {
