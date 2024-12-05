@@ -87,14 +87,8 @@ namespace Fasciculus.Eve.Assets.Services
             int id = sdeSolarSystem.SolarSystemID;
             string name = names[id];
             double security = sdeSolarSystem.Security;
-
-            EvePlanet.Data[] planets = [.. sdeSolarSystem.Planets
-                .Select(ConvertPlanet)
-                .OrderBy(p => p.Id)];
-
-            EveStargate.Data[] stargates = [.. sdeSolarSystem.Stargates
-                .Select(ConvertStargate)
-                .OrderBy(sg => sg.Id)];
+            var planets = sdeSolarSystem.Planets.Select(ConvertPlanet).OrderBy(p => p.Id);
+            var stargates = sdeSolarSystem.Stargates.Select(ConvertStargate).OrderBy(sg => sg.Id);
 
             return new(id, name, security, planets, stargates);
         }

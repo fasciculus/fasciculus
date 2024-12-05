@@ -427,16 +427,19 @@ namespace Fasciculus.Eve.Models
             public string Name { get; }
             public double Security { get; }
 
-            public EvePlanet.Data[] Planets { get; }
-            public EveStargate.Data[] Stargates { get; }
+            private readonly EvePlanet.Data[] planets;
+            public IReadOnlyList<EvePlanet.Data> Planets => planets;
 
-            public Data(int id, string name, double security, EvePlanet.Data[] planets, EveStargate.Data[] stargates)
+            private readonly EveStargate.Data[] stargates;
+            public IReadOnlyList<EveStargate.Data> Stargates => stargates;
+
+            public Data(int id, string name, double security, IEnumerable<EvePlanet.Data> planets, IEnumerable<EveStargate.Data> stargates)
             {
                 Id = id;
                 Name = name;
                 Security = security;
-                Planets = planets;
-                Stargates = stargates;
+                this.planets = planets.ToArray();
+                this.stargates = stargates.ToArray();
             }
 
             public Data(Stream stream)
@@ -444,8 +447,8 @@ namespace Fasciculus.Eve.Models
                 Id = stream.ReadInt();
                 Name = stream.ReadString();
                 Security = stream.ReadDouble();
-                Planets = stream.ReadArray(s => new EvePlanet.Data(s));
-                Stargates = stream.ReadArray(s => new EveStargate.Data(s));
+                planets = stream.ReadArray(s => new EvePlanet.Data(s));
+                stargates = stream.ReadArray(s => new EveStargate.Data(s));
             }
 
             public void Write(Stream stream)
@@ -453,8 +456,8 @@ namespace Fasciculus.Eve.Models
                 stream.WriteInt(Id);
                 stream.WriteString(Name);
                 stream.WriteDouble(Security);
-                stream.WriteArray(Planets, p => p.Write(stream));
-                stream.WriteArray(Stargates, sg => sg.Write(stream));
+                stream.WriteArray(planets, p => p.Write(stream));
+                stream.WriteArray(stargates, sg => sg.Write(stream));
             }
         }
 
