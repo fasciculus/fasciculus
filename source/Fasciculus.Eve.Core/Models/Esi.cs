@@ -23,6 +23,9 @@ namespace Fasciculus.Eve.Models
         [JsonPropertyName("price")]
         public double Price { get; set; }
 
+        [JsonPropertyName("type_id")]
+        public int Type { get; set; }
+
         [JsonPropertyName("volume_remain")]
         public int Quantity { get; set; }
 

@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Fasciculus.Eve.Models;assembly=Fasciculus.Eve.Core"
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
              xmlns:eveControls="clr-namespace:Fasciculus.Eve.Pages.Controls"
              xmlns:eveConverters="clr-namespace:Fasciculus.Eve.Pages"
@@ -37,7 +38,7 @@
                                 InvalidStyle="{StaticResource InvalidEntryStyle}"
                                 ValidStyle="{StaticResource ValidEntryStyle}"
                                 Flags="ValidateOnValueChanged"
-                                MinimumValue="0" MaximumValue="5" MaximumDecimalPlaces="0" />
+                                MinimumValue="0" MaximumValue="10" MaximumDecimalPlaces="0" />
                         </Entry.Behaviors>
                     </Entry>
                     <Label Text="Max m³/Type:" Grid.Row="2" Grid.Column="0" VerticalTextAlignment="Center" />
@@ -66,12 +67,25 @@
                     </Entry>
                     <Button Text="Start" Command="{Binding StartCommand}"
                              Grid.Row="4" Grid.Column="0" />
-                    <ProgressBar Progress="{Binding Progress, Converter={StaticResource lpi}}"
-                                 ProgressColor="{Binding Progress, Converter={StaticResource lpi}}"
-                                 BackgroundColor="LightGray" MinimumHeightRequest="8"
-                                 WidthRequest="480"
-                                 Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
+                    <Label Text="{Binding Progress}" Grid.Row="4" Grid.Column="1" />
                 </Grid>
+                <Grid RowDefinitions="Auto" ColumnDefinitions="480,320,120,120,120,120">
+                    <Label Text="Station" Grid.Column="0" />
+                    <Label Text="Type" Grid.Column="1" />
+                    <Label Text="Quantity" HorizontalOptions="End" Grid.Column="2" />
+                    <Label Text="Buy @" HorizontalOptions="End" Grid.Column="3" />
+                    <Label Text="Sell @" HorizontalOptions="End" Grid.Column="4" />
+                    <Label Text="Profit" HorizontalOptions="End" Grid.Column="5" />
+                </Grid>
+                <ListView ItemsSource="{Binding Trades}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:EveTrade">
+                            <ViewCell>
+                                <eveControls:Trade BindingContext="{Binding .}" />
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </VerticalStackLayout>
         </HorizontalStackLayout>
     </ScrollView>

@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.ComponentModel;
-using Fasciculus.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -83,7 +82,7 @@ namespace Fasciculus.Eve.Services
 
     public interface ITradeFinder : INotifyPropertyChanged
     {
-        public LongProgressInfo Progress { get; }
+        public string Progress { get; }
         public EveTrade[] Trades { get; }
 
         public Task StartAsync();
@@ -91,19 +90,23 @@ namespace Fasciculus.Eve.Services
 
     public partial class TradeFinder : ObservableObject, ITradeFinder
     {
+        private TaskSafeMutex runningMutex = new();
+
         [ObservableProperty]
-        private LongProgressInfo progress = LongProgressInfo.Start;
+        private string progress = string.Empty;
+
+        private int workTotal;
+        private int workDone;
+        private readonly TaskSafeMutex workMutex = new();
 
         [ObservableProperty]
         private EveTrade[] trades = [];
-        private TaskSafeMutex tradesMutex = new();
+        private readonly TaskSafeMutex tradesMutex = new();
 
         private readonly ITradeOptions tradeOptions;
         private readonly IEsiClient esiClient;
 
         private readonly EveNavigation navigation;
-
-        private readonly IAccumulatingLongProgress longProgress;
 
         public TradeFinder(ITradeOptions tradeOptions, IEsiClient esiClient, IEveResources resources)
         {
@@ -111,133 +114,99 @@ namespace Fasciculus.Eve.Services
             this.esiClient = esiClient;
 
             navigation = Tasks.Wait(resources.Navigation);
-
-            longProgress = new AccumulatingLongProgress(OnProgress, 200);
         }
 
         public Task StartAsync()
         {
+            using Locker locker = Locker.Lock(runningMutex);
+
             return Tasks.LongRunning(Start);
         }
 
         private void Start()
         {
-            longProgress.Begin(1);
+            Trades = [];
+            Tasks.Sleep(100);
 
             EveTradeOptions options = new(tradeOptions.Options);
             EveSolarSystem[] solarSystems = GetSolarSystems(options);
             EveMoonStations stations = GetStations(solarSystems);
             EveRegion[] regions = GetRegions(options, solarSystems);
             EveMarketPrices marketPrices = Tasks.Wait(esiClient.MarketPrices);
-            EveTypes types = GetTypes(options, marketPrices);
+            IEnumerable<Tuple<EveType, int>> types = GetTypes(options, marketPrices);
 
-            longProgress.Begin((regions.Length + 1) * types.Count);
+            workTotal = regions.Length + 1;
+            workDone = 0;
+            Progress = $"{workDone} / {workTotal}";
+            Tasks.Sleep(100);
 
             Dictionary<int, EveDemandOrSupply> demands = FindDemands(options, marketPrices, types);
 
-            FindTrades(options, marketPrices, stations, regions, types, demands);
+            // FindTrades(options, marketPrices, stations, regions, types, demands);
 
-            longProgress.End();
+            workDone = workTotal;
+            Progress = $"{workDone} / {workTotal}";
+            Tasks.Sleep(100);
+        }
+
+        private void OnWorkDone()
+        {
+            using Locker locker = Locker.Lock(workMutex);
+
+            ++workDone;
+            Progress = $"{workDone} / {workTotal}";
+            //Tasks.Sleep(5);
         }
 
         private void AddTrade(EveTrade trade)
         {
             using Locker locker = Locker.Lock(tradesMutex);
 
-            IEnumerable<EveTrade> trades = Trades.Append(trade).OrderByDescending(x => x.Profit);
-            int count = Math.Min(10, trades.Count());
+            bool changed = false;
 
-            Trades = trades.Take(count).ToArray();
+            if (Trades.Length < 10)
+            {
+                IEnumerable<EveTrade> trades = Trades.Append(trade).OrderByDescending(x => x.Profit);
+                int count = Math.Min(10, trades.Count());
+
+                Trades = trades.Take(count).ToArray();
+                changed = true;
+            }
+            else
+            {
+                EveTrade worst = Trades.Last();
+
+                if (trade.Profit > worst.Profit)
+                {
+                    IEnumerable<EveTrade> trades = Trades.Append(trade).OrderByDescending(x => x.Profit);
+
+                    Trades = trades.Take(10).ToArray();
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                Tasks.Sleep(500);
+            }
+
         }
 
-        private Dictionary<int, EveDemandOrSupply> FindDemands(EveTradeOptions options, EveMarketPrices marketPrices, EveTypes types)
-        {
-            return types
-                .AsParallel()
-                .SelectMany(x => FindDemands(options, marketPrices, x))
-                .ToDictionary(x => x.Type.Id);
-        }
-
-        private IEnumerable<EveDemandOrSupply> FindDemands(EveTradeOptions options, EveMarketPrices marketPrices, EveType type)
+        private Dictionary<int, EveDemandOrSupply> FindDemands(EveTradeOptions options, EveMarketPrices marketPrices,
+            IEnumerable<Tuple<EveType, int>> types)
         {
             EveRegion region = options.TargetStation.GetRegion();
-            EveMoonStations stations = new([options.TargetStation]);
+            long location = options.TargetStation.Id;
+            IEnumerable<EveMarketOrder> regionOrders = Tasks.Wait(esiClient.GetMarketOrdersAsync(region, true));
+            IEnumerable<EveMarketOrder> targetOrders = regionOrders.Where(x => x.Location == location);
 
-            return FindDemandsOrSupplies(options, marketPrices, region, type, true, stations);
+            return [];
         }
 
         private void FindTrades(EveTradeOptions options, EveMarketPrices marketPrices, EveMoonStations stations, EveRegion[] regions,
             EveTypes types, Dictionary<int, EveDemandOrSupply> demands)
         {
-            regions.Apply(x => FindTrades(options, marketPrices, stations, x, types, demands));
-        }
-
-        private void FindTrades(EveTradeOptions options, EveMarketPrices marketPrices, EveMoonStations stations, EveRegion region,
-            EveTypes types, Dictionary<int, EveDemandOrSupply> demands)
-        {
-            types
-                .Where(x => demands.ContainsKey(x.Id))
-                .AsParallel()
-                .Apply(x => FindTrades(options, marketPrices, stations, region, x, demands));
-        }
-
-        private void FindTrades(EveTradeOptions options, EveMarketPrices marketPrices, EveMoonStations stations, EveRegion region,
-            EveType type, Dictionary<int, EveDemandOrSupply> demands)
-        {
-            EveDemandOrSupply demand = demands[type.Id];
-            IEnumerable<EveDemandOrSupply> supplies = FindDemandsOrSupplies(options, marketPrices, region, type, false, stations);
-
-            foreach (EveDemandOrSupply supply in supplies)
-            {
-                int quantity = Math.Min(demand.Quantity, supply.Quantity);
-                double cost = quantity * supply.Price;
-                double income = quantity * demand.Price;
-
-                if (income > cost)
-                {
-                    EveTrade trade = new(supply, demand, quantity, income - cost);
-
-                    AddTrade(trade);
-                }
-            }
-        }
-
-        private IEnumerable<EveDemandOrSupply> FindDemandsOrSupplies(EveTradeOptions options, EveMarketPrices marketPrices, EveRegion region,
-            EveType type, bool buy, EveMoonStations stations)
-        {
-            IEnumerable<EveMarketOrder> all = Tasks.Wait(esiClient.GetMarketOrdersAsync(region, type, buy));
-            IEnumerable<EveMarketOrder> filtered = all.Where(x => stations.Contains(x.Location));
-            IEnumerable<IGrouping<long, EveMarketOrder>> grouped = filtered.GroupBy(x => x.Location);
-
-            return grouped.Select(x => FindDemandOrSupply(options, marketPrices, type, x, buy, stations)).NotNull();
-        }
-
-        private static EveDemandOrSupply? FindDemandOrSupply(EveTradeOptions options, EveMarketPrices marketPrices, EveType type,
-            IGrouping<long, EveMarketOrder> orders, bool buy, EveMoonStations stations)
-        {
-            IOrderedEnumerable<EveMarketOrder> sorted = buy ? orders.OrderByDescending(x => x.Price) : orders.OrderBy(x => x.Price);
-            int volumeQuantity = (int)Math.Floor(options.MaxVolumePerType / type.Volume);
-            int priceQuantity = (int)Math.Floor(options.MaxIskPerType / marketPrices[type]);
-            int desiredQuantity = Math.Min(volumeQuantity, priceQuantity);
-            int quantity = 0;
-            double price = 0;
-
-            for (IEnumerator<EveMarketOrder> i = orders.GetEnumerator(); quantity < desiredQuantity && i.MoveNext();)
-            {
-                EveMarketOrder order = i.Current;
-
-                quantity += Math.Min(order.Quantity, desiredQuantity - quantity);
-                price = order.Price;
-            }
-
-            if (quantity > 0)
-            {
-                EveMoonStation station = stations[orders.Key];
-
-                return new(station, type, price, quantity);
-            }
-
-            return null;
+            return;
         }
 
         private EveSolarSystem[] GetSolarSystems(EveTradeOptions options)
@@ -264,23 +233,20 @@ namespace Fasciculus.Eve.Services
             return solarSystems.Select(x => x.Constellation.Region).Append(targetRegion).Distinct().ToArray();
         }
 
-        private static EveTypes GetTypes(EveTradeOptions options, EveMarketPrices marketPrices)
+        private static IEnumerable<Tuple<EveType, int>> GetTypes(EveTradeOptions options, EveMarketPrices marketPrices)
         {
-            double maxVolume = options.MaxVolumePerType / 1000.0;
-            double maxPrice = options.MaxIskPerType / 1000.0;
+            double maxVolume = options.MaxVolumePerType / 10.0;
+            double maxPrice = options.MaxIskPerType;
 
-            IEnumerable<EveType> types = marketPrices.TradedTypes
+            return marketPrices.TradedTypes
                 .Where(x => x.Volume > 0 && x.Volume <= maxVolume)
                 .Select(x => Tuple.Create(x, marketPrices[x]))
                 .Where(x => x.Item2 > 0 && x.Item2 <= maxPrice)
-                .Select(x => x.Item1);
-
-            return new(types);
-        }
-
-        private void OnProgress(long _)
-        {
-            Progress = longProgress.Progress;
+                .Select(x => x.Item1)
+                .Select(x => Tuple.Create(x, maxVolume / x.Volume, maxPrice / marketPrices[x]))
+                .Select(x => Tuple.Create(x.Item1, (int)Math.Floor(x.Item2), (int)Math.Floor(x.Item3)))
+                .Select(x => Tuple.Create(x.Item1, Math.Min(x.Item2, x.Item3)))
+                .Where(x => x.Item2 > 0);
         }
     }
 

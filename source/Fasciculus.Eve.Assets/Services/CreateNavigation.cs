@@ -13,7 +13,18 @@ namespace Fasciculus.Eve.Assets.Services
     public class CreateNavigation : ICreateNavigation
     {
         private static SortedSet<string> ALLOWED_REGIONS =
-            ["The Forge", "Lonetrek", "The Citadel", "Genesis", "Sinq Laison"];
+            [
+                // Caldari
+                "Black Rise", "Lonetrek", "The Citadel", "The Forge",
+                // Gallente
+                "Essence", "Everyshore", "Placid", "Sinq Laison", "Solitude", "Verge Vendor", 
+                // Amarr
+                "Aridia", "Devoid", "Domain", "Kador", "Khanid", "Kor-Azor", "Tash-Murkon", "The Bleak Lands",
+                // Minmatar
+                "Derelik", "Heimatar", "Metropolis", "Molden Heath",
+                // Other
+                "Genesis"
+            ];
 
         private readonly IConvertUniverse convertUniverse;
         private readonly IAssetsProgress progress;

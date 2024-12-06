@@ -31,6 +31,9 @@ namespace Fasciculus.Threading
             return tasks;
         }
 
+        public static void Sleep(int milliseconds)
+            => Tasks.Wait(Task.Delay(milliseconds));
+
         public static void Wait(Task task)
             => task.GetAwaiter().GetResult();
 

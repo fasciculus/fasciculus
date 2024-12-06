@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Fasciculus.Eve.Models;assembly=Fasciculus.Eve.Core"
+             x:Class="Fasciculus.Eve.Pages.Controls.Trade"
+             x:DataType="models:EveTrade"
+             RowDefinitions="Auto" ColumnDefinitions="480,320,120,120,120,120">
+    <Label Text="{Binding Supply.Station.FullName}" Grid.Column="0" />
+    <Label Text="{Binding Supply.Type.Name}" Grid.Column="1" />
+    <Label Text="{Binding QuantityText}" HorizontalOptions="End" Grid.Column="2" />
+    <Label Text="{Binding BuyPriceText}" HorizontalOptions="End" Grid.Column="3" />
+    <Label Text="{Binding SellPriceText}" HorizontalOptions="End" Grid.Column="4" />
+    <Label Text="{Binding ProfitText}" HorizontalOptions="End" Grid.Column="5" />
+</Grid>

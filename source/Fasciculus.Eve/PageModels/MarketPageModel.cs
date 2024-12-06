@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
-using Fasciculus.Support;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.PageModels
@@ -29,7 +28,7 @@ namespace Fasciculus.Eve.PageModels
         private int maxIskPerType;
 
         [ObservableProperty]
-        private LongProgressInfo progress = LongProgressInfo.Start;
+        private string progress = string.Empty;
 
         [ObservableProperty]
         private EveTrade[] trades = [];
@@ -70,8 +69,17 @@ namespace Fasciculus.Eve.PageModels
 
         private void OnTradeFinderChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            Progress = tradeFinder.Progress;
-            Trades = tradeFinder.Trades.ShallowCopy();
+            switch (ev.PropertyName)
+            {
+                case nameof(ITradeFinder.Progress):
+                    Progress = tradeFinder.Progress;
+                    break;
+
+                case nameof(ITradeFinder.Trades):
+                    Trades = tradeFinder.Trades.ShallowCopy();
+                    break;
+            }
+
         }
 
         [RelayCommand]

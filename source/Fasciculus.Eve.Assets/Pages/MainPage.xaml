@@ -134,7 +134,7 @@
                 <ListView ItemsSource="{Binding ChangedResources}"
                           Grid.Row="1" Grid.Column="0">
                     <ListView.ItemTemplate>
-                        <DataTemplate  x:DataType="x:String">
+                        <DataTemplate x:DataType="x:String">
                             <ViewCell>
                                 <Label Text="{Binding .}" TextColor="Orange" />
                             </ViewCell>

@@ -160,13 +160,15 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
+            public int Type { get; }
             public long Location { get; }
             public bool IsBuy { get; }
             public double Price { get; }
             public int Quantity { get; }
 
-            public Data(long location, bool isBuy, double price, int quantity)
+            public Data(int type, long location, bool isBuy, double price, int quantity)
             {
+                Type = type;
                 Location = location;
                 IsBuy = isBuy;
                 Price = price;
@@ -175,6 +177,7 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
             {
+                Type = stream.ReadInt();
                 Location = stream.ReadLong();
                 IsBuy = stream.ReadBool();
                 Price = stream.ReadDouble();
@@ -183,6 +186,7 @@ namespace Fasciculus.Eve.Models
 
             public void Write(Stream stream)
             {
+                stream.WriteInt(Type);
                 stream.WriteLong(Location);
                 stream.WriteBool(IsBuy);
                 stream.WriteDouble(Price);
@@ -190,8 +194,9 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        private readonly Data data;
+        internal readonly Data data;
 
+        public int Type => data.Type;
         public long Location => data.Location;
         public double Price => data.Price;
         public int Quantity => data.Quantity;
@@ -206,26 +211,21 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public int TypeId { get; }
-
             private readonly EveMarketOrder.Data[] orders;
             public IReadOnlyList<EveMarketOrder.Data> Orders => orders;
 
-            public Data(int typeId, IEnumerable<EveMarketOrder.Data> orders)
+            public Data(IEnumerable<EveMarketOrder.Data> orders)
             {
-                TypeId = typeId;
                 this.orders = orders.ToArray();
             }
 
             public Data(Stream stream)
             {
-                TypeId = stream.ReadInt();
                 orders = stream.ReadArray(s => new EveMarketOrder.Data(s));
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteInt(TypeId);
                 stream.WriteArray(orders, x => x.Write(stream));
             }
         }
@@ -241,6 +241,13 @@ namespace Fasciculus.Eve.Models
             orders = data.Orders.Select(x => new EveMarketOrder(x)).ToArray();
         }
 
+        public EveMarketOrders(IEnumerable<EveMarketOrder> orders)
+        {
+            this.orders = orders.ToArray();
+
+            data = new(orders.Select(x => x.data));
+        }
+
         public EveMarketOrders(Stream stream)
             : this(new Data(stream)) { }
 
@@ -249,8 +256,8 @@ namespace Fasciculus.Eve.Models
             data.Write(stream);
         }
 
-        public static EveMarketOrders Empty(EveType type)
-            => new(new Data(type.Id, []));
+        public static EveMarketOrders Empty
+            => new(new Data([]));
 
         public IEnumerator<EveMarketOrder> GetEnumerator()
             => orders.AsEnumerable().GetEnumerator();
@@ -281,6 +288,11 @@ namespace Fasciculus.Eve.Models
         public EveDemandOrSupply Demand { get; }
         public int Quantity { get; }
         public double Profit { get; }
+
+        public string QuantityText => Quantity.ToString("#,###,###,##0");
+        public string BuyPriceText => Supply.Price.ToString("#,###,###,##0.00");
+        public string SellPriceText => Demand.Price.ToString("#,###,###,##0.00");
+        public string ProfitText => Profit.ToString("#,###,###,##0.00");
 
         public EveTrade(EveDemandOrSupply supply, EveDemandOrSupply demand, int quantity, double profit)
         {
