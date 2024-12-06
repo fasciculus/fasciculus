@@ -23,9 +23,9 @@
     <ScrollView>
         <HorizontalStackLayout>
             <eveControls:SideBar BindingContext="{Binding SideBar}" />
-            <VerticalStackLayout Padding="16,16" Spacing="16">
+            <VerticalStackLayout Padding="16,16" Spacing="12">
                 <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="160,160,Auto"
-                      RowSpacing="12" ColumnSpacing="16">
+                      RowSpacing="8" ColumnSpacing="12">
                     <Label Text="Target Hub:" Grid.Row="0" Grid.Column="0" />
                     <Label Text="{Binding TargetHub}" TextColor="LightGreen"
                            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" />
@@ -67,7 +67,7 @@
                     </Entry>
                     <Button Text="Start" Command="{Binding StartCommand}"
                              Grid.Row="4" Grid.Column="0" />
-                    <Label Text="{Binding Progress}" Grid.Row="4" Grid.Column="1" />
+                    <Label Text="{Binding Progress}" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="4" Grid.Column="1" />
                 </Grid>
                 <Grid RowDefinitions="Auto" ColumnDefinitions="480,320,120,120,120,120">
                     <Label Text="Station" Grid.Column="0" />
