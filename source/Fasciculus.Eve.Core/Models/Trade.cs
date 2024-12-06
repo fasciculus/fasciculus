@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -159,14 +160,14 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public long StationId { get; }
+            public long Location { get; }
             public bool IsBuy { get; }
             public double Price { get; }
             public int Quantity { get; }
 
-            public Data(long stationId, bool isBuy, double price, int quantity)
+            public Data(long location, bool isBuy, double price, int quantity)
             {
-                StationId = stationId;
+                Location = location;
                 IsBuy = isBuy;
                 Price = price;
                 Quantity = quantity;
@@ -174,7 +175,7 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
             {
-                StationId = stream.ReadLong();
+                Location = stream.ReadLong();
                 IsBuy = stream.ReadBool();
                 Price = stream.ReadDouble();
                 Quantity = stream.ReadInt();
@@ -182,15 +183,26 @@ namespace Fasciculus.Eve.Models
 
             public void Write(Stream stream)
             {
-                stream.WriteLong(StationId);
+                stream.WriteLong(Location);
                 stream.WriteBool(IsBuy);
                 stream.WriteDouble(Price);
                 stream.WriteInt(Quantity);
             }
         }
+
+        private readonly Data data;
+
+        public long Location => data.Location;
+        public double Price => data.Price;
+        public int Quantity => data.Quantity;
+
+        public EveMarketOrder(Data data)
+        {
+            this.data = data;
+        }
     }
 
-    public class EveMarketOrders
+    public class EveMarketOrders : IEnumerable<EveMarketOrder>
     {
         public class Data
         {
@@ -220,9 +232,13 @@ namespace Fasciculus.Eve.Models
 
         private readonly Data data;
 
+        private readonly EveMarketOrder[] orders;
+
         public EveMarketOrders(Data data)
         {
             this.data = data;
+
+            orders = data.Orders.Select(x => new EveMarketOrder(x)).ToArray();
         }
 
         public EveMarketOrders(Stream stream)
@@ -235,9 +251,43 @@ namespace Fasciculus.Eve.Models
 
         public static EveMarketOrders Empty(EveType type)
             => new(new Data(type.Id, []));
+
+        public IEnumerator<EveMarketOrder> GetEnumerator()
+            => orders.AsEnumerable().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => orders.GetEnumerator();
+    }
+
+    public class EveDemandOrSupply
+    {
+        public EveMoonStation Station { get; }
+        public EveType Type { get; }
+        public double Price { get; }
+        public int Quantity { get; }
+
+        public EveDemandOrSupply(EveMoonStation station, EveType type, double price, int quantity)
+        {
+            Station = station;
+            Type = type;
+            Price = price;
+            Quantity = quantity;
+        }
     }
 
     public class EveTrade
     {
+        public EveDemandOrSupply Supply { get; }
+        public EveDemandOrSupply Demand { get; }
+        public int Quantity { get; }
+        public double Profit { get; }
+
+        public EveTrade(EveDemandOrSupply supply, EveDemandOrSupply demand, int quantity, double profit)
+        {
+            Supply = supply;
+            Demand = demand;
+            Quantity = quantity;
+            Profit = profit;
+        }
     }
 }

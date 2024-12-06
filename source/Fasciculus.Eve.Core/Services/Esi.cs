@@ -37,8 +37,9 @@ namespace Fasciculus.Eve.Services
         public FileInfo MarketOrders(EveRegion region, EveType type, bool buy)
         {
             string buyOrSell = buy ? "buy" : "sell";
+            DirectoryInfo directory = market.Combine("Orders", $"{region.Id}", buyOrSell).CreateIfNotExists();
 
-            return market.File($"Orders_{region.Id}_{type.Id}_{buyOrSell}");
+            return directory.File(type.Id.ToString());
         }
     }
 
@@ -147,7 +148,11 @@ namespace Fasciculus.Eve.Services
 
                     string json = await response.Content.ReadAsStringAsync();
                     EsiMarketPrice[] esiMarketPrices = JsonSerializer.Deserialize<EsiMarketPrice[]>(json) ?? [];
-                    Dictionary<int, double> dictionary = esiMarketPrices.ToDictionary(x => x.TypeId, x => x.AveragePrice);
+
+                    Dictionary<int, double> dictionary = esiMarketPrices
+                        .Where(x => x.AveragePrice > 0)
+                        .ToDictionary(x => x.TypeId, x => x.AveragePrice);
+
                     EveMarketPrices.Data data = new(dictionary);
 
                     result = new(data, types);
@@ -201,11 +206,11 @@ namespace Fasciculus.Eve.Services
         private EveMarketOrder.Data? Convert(EsiMarketOrder order)
         {
             EveMarketOrder.Data? result = null;
-            long stationId = order.LocationId;
+            long location = order.LocationId;
 
-            if (stations.Contains(stationId))
+            if (stations.Contains(location))
             {
-                result = new(stationId, order.IsBuyOrder, order.Price, order.Quantity);
+                result = new(location, order.IsBuyOrder, order.Price, order.Quantity);
             }
 
             return result;
