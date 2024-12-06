@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
+    [DebuggerDisplay("{Name}")]
     public class EveType
     {
         public class Data
@@ -69,6 +71,7 @@ namespace Fasciculus.Eve.Models
             => byId.Values.GetEnumerator();
     }
 
+    [DebuggerDisplay("{Name}")]
     public class EveStationOperation
     {
         public class Data
@@ -124,6 +127,7 @@ namespace Fasciculus.Eve.Models
             => byId.Values.GetEnumerator();
     }
 
+    [DebuggerDisplay("{Name}")]
     public class EveNpcCorporation
     {
         public class Data
