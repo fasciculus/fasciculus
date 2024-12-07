@@ -21,11 +21,15 @@ namespace Fasciculus.Eve.Assets.Services
         NotModified
     }
 
-    public interface IAssetsProgress
+    public interface IAssetsProgress : INotifyPropertyChanged
     {
         public IProgress<DownloadSdeStatus> DownloadSde { get; }
         public IAccumulatingLongProgress ExtractSde { get; }
         public IProgress<PendingToDone> ParseNames { get; }
+
+        public PendingToDone ParseMarketGroups { get; }
+        public IProgress<PendingToDone> ParseMarketGroupsProgress { get; }
+
         public IProgress<PendingToDone> ParseTypes { get; }
         public IProgress<PendingToDone> ParseStationOperations { get; }
         public IProgress<PendingToDone> ParseNpcCorporations { get; }
@@ -41,13 +45,18 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingProgress<List<FileInfo>> CreateResources { get; }
     }
 
-    public class AssetsProgress : IAssetsProgress
+    public partial class AssetsProgress : MainThreadObservable, IAssetsProgress
     {
         private readonly IProgressCollector progressCollector;
 
         public IProgress<DownloadSdeStatus> DownloadSde { get; }
         public IAccumulatingLongProgress ExtractSde { get; }
         public IProgress<PendingToDone> ParseNames { get; }
+
+        [ObservableProperty]
+        private PendingToDone parseMarketGroups;
+        public IProgress<PendingToDone> ParseMarketGroupsProgress { get; }
+
         public IProgress<PendingToDone> ParseTypes { get; }
         public IProgress<PendingToDone> ParseStationOperations { get; }
         public IProgress<PendingToDone> ParseNpcCorporations { get; }
@@ -67,6 +76,7 @@ namespace Fasciculus.Eve.Assets.Services
             DownloadSde = new TaskSafeProgress<DownloadSdeStatus>(ReportDownloadSde);
             ExtractSde = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
             ParseNames = new TaskSafeProgress<PendingToDone>(ReportParseNames);
+            ParseMarketGroupsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseMarketGroups = x; });
             ParseTypes = new TaskSafeProgress<PendingToDone>(ReportParseTypes);
             ParseStationOperations = new TaskSafeProgress<PendingToDone>(ReportParseStationOperations);
             ParseNpcCorporations = new TaskSafeProgress<PendingToDone>(ReportParseNpcCorporations);

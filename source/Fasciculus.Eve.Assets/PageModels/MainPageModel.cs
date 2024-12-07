@@ -9,6 +9,7 @@ namespace Fasciculus.Eve.Assets.PageModels
 {
     public partial class MainPageModel : ObservableObject
     {
+        private readonly IAssetsProgress assetsProgress;
         private readonly IProgressCollector progressCollector;
         private readonly IAssetsDirectories assetsDirectories;
         private readonly ICreateResources createResources;
@@ -21,6 +22,9 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         [ObservableProperty]
         private PendingToDone parseNames = PendingToDone.Pending;
+
+        [ObservableProperty]
+        private PendingToDone parseMarketGroups = PendingToDone.Pending;
 
         [ObservableProperty]
         private PendingToDone parseTypes = PendingToDone.Pending;
@@ -63,11 +67,15 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private ILogger logger;
 
-        public MainPageModel(IProgressCollector progressCollector, IAssetsDirectories assetsDirectories, ICreateResources createResources,
+        public MainPageModel(IAssetsProgress assetsProgress, IProgressCollector progressCollector, IAssetsDirectories assetsDirectories, ICreateResources createResources,
             ILogger<MainPageModel> logger)
         {
+            this.assetsProgress = assetsProgress;
+            this.assetsProgress.PropertyChanged += OnProgressChanged;
+
             this.progressCollector = progressCollector;
             this.progressCollector.PropertyChanged += OnProgressChanged;
+
             this.assetsDirectories = assetsDirectories;
             this.createResources = createResources;
             this.logger = logger;
@@ -79,6 +87,7 @@ namespace Fasciculus.Eve.Assets.PageModels
             ExtractSde = progressCollector.ExtractSde;
 
             ParseNames = progressCollector.ParseNames;
+            ParseMarketGroups = assetsProgress.ParseMarketGroups;
             ParseTypes = progressCollector.ParseTypes;
             ParseStationOperations = progressCollector.ParseStationOperations;
             ParseNpcCorporations = progressCollector.ParseNpcCorporations;

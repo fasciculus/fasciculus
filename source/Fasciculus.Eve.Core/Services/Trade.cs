@@ -203,7 +203,7 @@ namespace Fasciculus.Eve.Services
             Dictionary<int, EveMarketOrder[]> ordersByItem = stationOrders.GroupBy(x => x.Type).ToDictionary(x => x.Key, x => x.ToArray());
 
             Dictionary<int, EveDemandOrSupply> result = typeQuantities
-                .Select(x => FindDemandOrSupply(station, ordersByItem, x, x => x.OrderByDescending(x => x.Price)))
+                .Select(x => FindDemandOrSupply(options.MaxIskPerType * 10.0, station, ordersByItem, x, x => x.OrderByDescending(x => x.Price)))
                 .NotNull()
                 .ToDictionary(x => x.Type.Id);
 
@@ -233,7 +233,7 @@ namespace Fasciculus.Eve.Services
                     .GroupBy(x => x.Type).ToDictionary(x => x.Key, x => x.ToArray());
 
                 return typeQuantities
-                    .Select(x => FindDemandOrSupply(station, ordersByItem, x, x => x.OrderBy(x => x.Price)))
+                    .Select(x => FindDemandOrSupply(options.MaxIskPerType, station, ordersByItem, x, x => x.OrderBy(x => x.Price)))
                     .NotNull().ToArray();
             }
 
@@ -277,8 +277,9 @@ namespace Fasciculus.Eve.Services
             }
         }
 
-        private static EveDemandOrSupply? FindDemandOrSupply(EveMoonStation station, Dictionary<int, EveMarketOrder[]> ordersByItem,
-            Tuple<EveType, int> typeQuantity, Func<EveMarketOrder[], IOrderedEnumerable<EveMarketOrder>> sort)
+        private static EveDemandOrSupply? FindDemandOrSupply(double maxIskPerType, EveMoonStation station,
+            Dictionary<int, EveMarketOrder[]> ordersByItem, Tuple<EveType, int> typeQuantity,
+            Func<EveMarketOrder[], IOrderedEnumerable<EveMarketOrder>> sort)
         {
             EveDemandOrSupply? result = null;
             EveType type = typeQuantity.Item1;
@@ -301,7 +302,17 @@ namespace Fasciculus.Eve.Services
 
                 if (quantity > 0)
                 {
-                    result = new(station, type, price, quantity);
+                    double cost = quantity * price;
+
+                    if (cost > maxIskPerType)
+                    {
+                        quantity = (int)Math.Floor(maxIskPerType / price);
+
+                        if (quantity > 0)
+                        {
+                            result = new(station, type, price, quantity);
+                        }
+                    }
                 }
             }
 

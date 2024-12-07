@@ -2,15 +2,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:p="clr-namespace:Fasciculus.Eve.Assets.PageModels"
-             xmlns:c="clr-namespace:Fasciculus.Eve.Assets.Pages"
+             xmlns:converters="clr-namespace:Fasciculus.Eve.Assets.Pages"
              x:Class="Fasciculus.Eve.Assets.Pages.MainPage"
              x:DataType="p:MainPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
-        <c:DownloadSdeStatusConverter x:Key="dwn" />
-        <c:PendingToDoneConverter x:Key="ptd" />
-        <c:LongProgressInfoConverter x:Key="lpi" />
+        <converters:DownloadSdeStatusConverter x:Key="dwn" />
+        <converters:PendingToDoneConverter x:Key="ptd" />
+        <converters:LongProgressInfoConverter x:Key="lpi" />
     </ContentPage.Resources>
 
     <ScrollView>
@@ -42,28 +42,27 @@
             <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Parsing" FontAttributes="Bold"
                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="Names"
-                       Grid.Row="1" Grid.Column="0" />
+                <Label Text="Names" Grid.Row="1" Grid.Column="0" />
                 <Label Text="{Binding ParseNames, Converter={StaticResource ptd}}"
                        TextColor="{Binding ParseNames, Converter={StaticResource ptd}}"
                        Grid.Row="1" Grid.Column="1" />
-                <Label Text="Types"
-                       Grid.Row="1" Grid.Column="2" />
-                <Label Text="{Binding ParseTypes, Converter={StaticResource ptd}}"
+                <Label Text="Market Groups" Grid.Row="1" Grid.Column="2" />
+                <Label Text="{Binding ParseMarketGroups, Converter={StaticResource ptd}}"
                        TextColor="{Binding ParseTypes, Converter={StaticResource ptd}}"
                        Grid.Row="1" Grid.Column="3" />
-                <Label Text="Station Operations"
-                       Grid.Row="2" Grid.Column="0" />
+                <Label Text="Types" Grid.Row="1" Grid.Column="4" />
+                <Label Text="{Binding ParseTypes, Converter={StaticResource ptd}}"
+                       TextColor="{Binding ParseTypes, Converter={StaticResource ptd}}"
+                       Grid.Row="1" Grid.Column="5" />
+                <Label Text="Station Operations" Grid.Row="2" Grid.Column="0" />
                 <Label Text="{Binding ParseStationOperations, Converter={StaticResource ptd}}"
                        TextColor="{Binding ParseStationOperations, Converter={StaticResource ptd}}"
                        Grid.Row="2" Grid.Column="1" />
-                <Label Text="NPC Corporations"
-                       Grid.Row="2" Grid.Column="2" />
+                <Label Text="NPC Corporations" Grid.Row="2" Grid.Column="2" />
                 <Label Text="{Binding ParseNpcCorporations, Converter={StaticResource ptd}}"
                        TextColor="{Binding ParseNpcCorporations, Converter={StaticResource ptd}}"
                        Grid.Row="2" Grid.Column="3" />
-                <Label Text="Regions"
-                       Grid.Row="3" Grid.Column="0" />
+                <Label Text="Regions" Grid.Row="3" Grid.Column="0" />
                 <ProgressBar Progress="{Binding ParseRegions, Converter={StaticResource lpi}}"
                              ProgressColor="{Binding ParseRegions, Converter={StaticResource lpi}}"
                              BackgroundColor="LightGray" MinimumHeightRequest="8"
@@ -73,8 +72,7 @@
                              ProgressColor="{Binding ParseConstellations, Converter={StaticResource lpi}}"
                              BackgroundColor="LightGray" MinimumHeightRequest="8"
                              Grid.Row="3" Grid.Column="3"/>
-                <Label Text="Solar Systems"
-                       Grid.Row="3" Grid.Column="4" />
+                <Label Text="Solar Systems" Grid.Row="3" Grid.Column="4" />
                 <ProgressBar Progress="{Binding ParseSolarSystems, Converter={StaticResource lpi}}"
                              ProgressColor="{Binding ParseSolarSystems, Converter={StaticResource lpi}}"
                              BackgroundColor="LightGray" MinimumHeightRequest="8"

@@ -38,7 +38,7 @@
                                 InvalidStyle="{StaticResource InvalidEntryStyle}"
                                 ValidStyle="{StaticResource ValidEntryStyle}"
                                 Flags="ValidateOnValueChanged"
-                                MinimumValue="0" MaximumValue="10" MaximumDecimalPlaces="0" />
+                                MinimumValue="0" MaximumValue="20" MaximumDecimalPlaces="0" />
                         </Entry.Behaviors>
                     </Entry>
                     <Label Text="Max m³/Type:" Grid.Row="2" Grid.Column="0" VerticalTextAlignment="Center" />

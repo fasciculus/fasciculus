@@ -8,6 +8,7 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public Task<DateTime> Version { get; }
         public Task<Dictionary<int, string>> Names { get; }
+        public Task<Dictionary<int, SdeMarketGroup>> MarketGroups { get; }
         public Task<Dictionary<int, SdeType>> Types { get; }
         public Task<Dictionary<int, SdeStationOperation>> StationOperations { get; }
         public Task<Dictionary<int, SdeNpcCorporation>> NpcCorporations { get; }
@@ -28,6 +29,9 @@ namespace Fasciculus.Eve.Assets.Services
         private Dictionary<int, string>? names = null;
         private readonly TaskSafeMutex namesMutex = new();
 
+        private Dictionary<int, SdeMarketGroup>? marketGroups = null;
+        private readonly TaskSafeMutex marketGroupsMutex = new();
+
         private Dictionary<int, SdeType>? types = null;
         private readonly TaskSafeMutex typesMutex = new();
 
@@ -42,6 +46,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         public Task<DateTime> Version => GetVersionAsync();
         public Task<Dictionary<int, string>> Names => GetNamesAsync();
+        public Task<Dictionary<int, SdeMarketGroup>> MarketGroups => GetMarketGroupsAsync();
         public Task<Dictionary<int, SdeType>> Types => GetTypesAsync();
         public Task<Dictionary<int, SdeStationOperation>> StationOperations => GetStationOperationsAsync();
         public Task<Dictionary<int, SdeNpcCorporation>> NpcCorporations => GetNpcCorporationsAsync();
@@ -93,6 +98,27 @@ namespace Fasciculus.Eve.Assets.Services
             }
 
             return names;
+        }
+
+        private Task<Dictionary<int, SdeMarketGroup>> GetMarketGroupsAsync()
+        {
+            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+
+            return Tasks.LongRunning(() => GetMarketGroups(sdeFiles));
+        }
+
+        private Dictionary<int, SdeMarketGroup> GetMarketGroups(SdeFiles sdeFiles)
+        {
+            using Locker locker = Locker.Lock(marketGroupsMutex);
+
+            if (marketGroups is null)
+            {
+                progress.ParseMarketGroupsProgress.Report(PendingToDone.Working);
+                marketGroups = yaml.Deserialize<Dictionary<int, SdeMarketGroup>>(sdeFiles.MarketGroupYaml);
+                progress.ParseMarketGroupsProgress.Report(PendingToDone.Done);
+            }
+
+            return marketGroups;
         }
 
         private Task<Dictionary<int, SdeType>> GetTypesAsync()
@@ -169,12 +195,13 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (data is null)
             {
-                Task.WaitAll([Version, Names, Types, StationOperations, NpcCorporations]);
+                Task.WaitAll([Version, Names, MarketGroups, Types, StationOperations, NpcCorporations]);
 
                 data = new()
                 {
                     Version = Version.Result,
                     Names = Names.Result,
+                    MarketGroups = MarketGroups.Result,
                     Types = Types.Result,
                     StationOperations = StationOperations.Result,
                     NpcCorporations = NpcCorporations.Result

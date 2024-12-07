@@ -60,6 +60,9 @@ namespace Fasciculus.Eve.Assets.Services
         public FileInfo TypesYaml
             => sdeDirectory.Combine("fsd").File("types.yaml");
 
+        public FileInfo MarketGroupYaml
+            => sdeDirectory.Combine("fsd").File("marketGroups.yaml");
+
         public FileInfo StationOperationsYaml
             => sdeDirectory.Combine("fsd").File("stationOperations.yaml");
 
