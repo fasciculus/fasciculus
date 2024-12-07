@@ -140,9 +140,9 @@ namespace Fasciculus.Eve.Services
 
             EveMoonStations stations = GetStations(solarSystems);
             Tuple<EveType, int>[] typeQuantities = GetTypeQuantities(options, marketPrices);
-            Dictionary<int, EveDemandOrSupply> demands = FindDemands(options, typeQuantities);
+            Dictionary<int, EveDemandOrSupply> demandsByType = FindDemands(options, typeQuantities);
 
-            FindTrades(options, stations, regions, typeQuantities);
+            FindTrades(options, stations, regions, typeQuantities, demandsByType);
 
             workDone = workTotal;
             Progress = $"{workDone} / {workTotal}";
@@ -220,20 +220,60 @@ namespace Fasciculus.Eve.Services
                 .GroupBy(x => x.Location)
                 .ToDictionary(x => x.Key, x => x.ToArray());
 
+            return stations.SelectMany(x => FindSupplies(options, x, ordersByStation, typeQuantities)).ToArray();
+        }
+
+        private static EveDemandOrSupply[] FindSupplies(EveTradeOptions options, EveMoonStation station,
+            Dictionary<long, EveMarketOrder[]> ordersByStation, Tuple<EveType, int>[] typeQuantities)
+        {
+            if (ordersByStation.TryGetValue(station.Id, out EveMarketOrder[]? ordersOfStation))
+            {
+                Dictionary<int, EveMarketOrder[]> ordersByItem = ordersOfStation
+                    .GroupBy(x => x.Type).ToDictionary(x => x.Key, x => x.ToArray());
+
+                return typeQuantities
+                    .Select(x => FindDemandOrSupply(station, ordersByItem, x, x => x.OrderBy(x => x.Price)))
+                    .NotNull().ToArray();
+            }
+
             return [];
         }
 
         private void FindTrades(EveTradeOptions options, EveMoonStations stations, EveRegion[] regions,
-            Tuple<EveType, int>[] typeQuantities)
+            Tuple<EveType, int>[] typeQuantities, Dictionary<int, EveDemandOrSupply> demandsByType)
+            => regions.Apply(x => { FindTrades(options, stations, x, typeQuantities, demandsByType); });
+
+        private void FindTrades(EveTradeOptions options, EveMoonStations stations, EveRegion region, Tuple<EveType, int>[] typeQuantities,
+            Dictionary<int, EveDemandOrSupply> demandsByType)
         {
-            foreach (EveRegion region in regions)
+            EveDemandOrSupply[] regionSupplies = FindSupplies(options, typeQuantities, region, stations);
+
+            Dictionary<EveType, EveDemandOrSupply[]> suppliesByType = regionSupplies
+                .GroupBy(x => x.Type)
+                .ToDictionary(x => x.Key, x => x.ToArray());
+
+            suppliesByType.Apply(x => { FindTrades(x.Key, x.Value, demandsByType); });
+
+            OnWorkDone();
+        }
+
+        private void FindTrades(EveType type, EveDemandOrSupply[] typeSupplies, Dictionary<int, EveDemandOrSupply> demandsByType)
+        {
+            if (demandsByType.TryGetValue(type.Id, out EveDemandOrSupply? demand))
             {
-                EveDemandOrSupply[] supplies = FindSupplies(options, typeQuantities, region, stations);
-
-                OnWorkDone();
+                typeSupplies.Apply(x => { FindTrade(x, demand); });
             }
+        }
 
-            return;
+        private void FindTrade(EveDemandOrSupply supply, EveDemandOrSupply demand)
+        {
+            int quantity = Math.Min(supply.Quantity, demand.Quantity);
+            double profit = quantity * (demand.Price - supply.Price);
+
+            if (profit > 0)
+            {
+                EveTrade trade = new(supply, demand, quantity, profit);
+            }
         }
 
         private static EveDemandOrSupply? FindDemandOrSupply(EveMoonStation station, Dictionary<int, EveMarketOrder[]> ordersByItem,
