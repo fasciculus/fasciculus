@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Services;
@@ -50,11 +49,9 @@ namespace Fasciculus.Eve.PageModels
 
         private void LoadResources()
         {
-            Task<EveData> data = resources.Data;
-            Task<EveUniverse> universe = resources.Universe;
-            Task<EveNavigation> navigation = resources.Navigation;
-
-            Task.WaitAll([data, universe, navigation]);
+            Tasks.Wait(resources.Data);
+            Tasks.Wait(resources.Universe);
+            Tasks.Wait(resources.Navigation);
         }
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
