@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.PageModels
@@ -30,8 +31,7 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private string progress = string.Empty;
 
-        [ObservableProperty]
-        private EveTrade[] trades = [];
+        public ObservableCollection<EveTrade> Trades { get; }
 
         public MarketPageModel(SideBarModel sideBar, ITradeOptions tradeOptions, ITradeFinder tradeFinder)
         {
@@ -48,6 +48,8 @@ namespace Fasciculus.Eve.PageModels
             maxDistance = options.MaxDistance;
             maxVolumePerType = options.MaxVolumePerType;
             maxIskPerType = options.MaxIskPerType;
+
+            Trades = tradeFinder.Trades;
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs ev)
@@ -73,10 +75,6 @@ namespace Fasciculus.Eve.PageModels
             {
                 case nameof(ITradeFinder.Progress):
                     Progress = tradeFinder.Progress;
-                    break;
-
-                case nameof(ITradeFinder.Trades):
-                    Trades = tradeFinder.Trades.ShallowCopy();
                     break;
             }
 

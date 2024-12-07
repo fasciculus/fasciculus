@@ -4,8 +4,10 @@ using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Maui.ApplicationModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -83,7 +85,7 @@ namespace Fasciculus.Eve.Services
     public interface ITradeFinder : INotifyPropertyChanged
     {
         public string Progress { get; }
-        public EveTrade[] Trades { get; }
+        public ObservableCollection<EveTrade> Trades { get; }
 
         public Task StartAsync();
     }
@@ -99,9 +101,7 @@ namespace Fasciculus.Eve.Services
         private int workDone;
         private readonly TaskSafeMutex workMutex = new();
 
-        [ObservableProperty]
-        private EveTrade[] trades = [];
-        private readonly TaskSafeMutex tradesMutex = new();
+        public ObservableCollection<EveTrade> Trades { get; } = [];
 
         private readonly ITradeOptions tradeOptions;
         private readonly IEsiClient esiClient;
@@ -125,8 +125,7 @@ namespace Fasciculus.Eve.Services
 
         private void Start()
         {
-            Trades = [];
-            Tasks.Sleep(100);
+            ClearTrades();
 
             EveMarketPrices marketPrices = Tasks.Wait(esiClient.MarketPrices);
             EveTradeOptions options = new(tradeOptions.Options);
@@ -158,38 +157,40 @@ namespace Fasciculus.Eve.Services
             //Tasks.Sleep(5);
         }
 
+        private void ClearTrades()
+        {
+            Tasks.Wait(MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Trades.Clear();
+            }));
+        }
+
         private void AddTrade(EveTrade trade)
         {
-            using Locker locker = Locker.Lock(tradesMutex);
-
-            bool changed = false;
-
-            if (Trades.Length < 10)
+            Tasks.Wait(MainThread.InvokeOnMainThreadAsync(() =>
             {
-                IEnumerable<EveTrade> trades = Trades.Append(trade).OrderByDescending(x => x.Profit);
-                int count = Math.Min(10, trades.Count());
-
-                Trades = trades.Take(count).ToArray();
-                changed = true;
-            }
-            else
-            {
-                EveTrade worst = Trades.Last();
-
-                if (trade.Profit > worst.Profit)
+                if (Trades.Count == 10)
                 {
-                    IEnumerable<EveTrade> trades = Trades.Append(trade).OrderByDescending(x => x.Profit);
+                    EveTrade worst = Trades.Last();
 
-                    Trades = trades.Take(10).ToArray();
-                    changed = true;
+                    if (trade.Profit > worst.Profit)
+                    {
+                        Trades.RemoveAt(9);
+                    }
                 }
-            }
 
-            if (changed)
-            {
-                Tasks.Sleep(500);
-            }
+                if (Trades.Count < 10)
+                {
+                    int index = 0;
 
+                    while (index < Trades.Count && Trades[index].Profit > trade.Profit)
+                    {
+                        ++index;
+                    }
+
+                    Trades.Insert(index, trade);
+                }
+            }));
         }
 
         private Dictionary<int, EveDemandOrSupply> FindDemands(EveTradeOptions options, Tuple<EveType, int>[] typeQuantities)
@@ -272,7 +273,7 @@ namespace Fasciculus.Eve.Services
 
             if (profit > 0)
             {
-                EveTrade trade = new(supply, demand, quantity, profit);
+                AddTrade(new(supply, demand, quantity, profit));
             }
         }
 

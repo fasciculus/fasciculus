@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -282,6 +283,7 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    [DebuggerDisplay("{ProfitText}")]
     public class EveTrade
     {
         public EveDemandOrSupply Supply { get; }
