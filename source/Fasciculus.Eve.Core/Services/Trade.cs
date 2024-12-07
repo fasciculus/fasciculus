@@ -128,21 +128,21 @@ namespace Fasciculus.Eve.Services
             Trades = [];
             Tasks.Sleep(100);
 
+            EveMarketPrices marketPrices = Tasks.Wait(esiClient.MarketPrices);
             EveTradeOptions options = new(tradeOptions.Options);
             EveSolarSystem[] solarSystems = GetSolarSystems(options);
-            EveMoonStations stations = GetStations(solarSystems);
             EveRegion[] regions = GetRegions(options, solarSystems);
-            EveMarketPrices marketPrices = Tasks.Wait(esiClient.MarketPrices);
 
             workTotal = regions.Length + 1;
             workDone = 0;
             Progress = $"{workDone} / {workTotal}";
             Tasks.Sleep(100);
 
+            EveMoonStations stations = GetStations(solarSystems);
             Tuple<EveType, int>[] typeQuantities = GetTypeQuantities(options, marketPrices);
             Dictionary<int, EveDemandOrSupply> demands = FindDemands(options, typeQuantities);
 
-            // FindTrades(options, marketPrices, stations, regions, types, demands);
+            FindTrades(options, stations, regions, typeQuantities);
 
             workDone = workTotal;
             Progress = $"{workDone} / {workTotal}";
@@ -199,10 +199,10 @@ namespace Fasciculus.Eve.Services
             EveRegion region = options.TargetStation.GetRegion();
             EveMarketOrders regionOrders = Tasks.Wait(esiClient.GetMarketOrdersAsync(region, true));
             EveMarketOrder[] stationOrders = regionOrders.Where(x => x.Location == location).ToArray();
-            Dictionary<int, EveMarketOrder[]> itemOrders = stationOrders.GroupBy(x => x.Type).ToDictionary(x => x.Key, x => x.ToArray());
+            Dictionary<int, EveMarketOrder[]> ordersByItem = stationOrders.GroupBy(x => x.Type).ToDictionary(x => x.Key, x => x.ToArray());
 
             Dictionary<int, EveDemandOrSupply> result = typeQuantities
-                .Select(x => FindDemandOrSupply(station, itemOrders, x, x => x.OrderByDescending(x => x.Price)))
+                .Select(x => FindDemandOrSupply(station, ordersByItem, x, x => x.OrderByDescending(x => x.Price)))
                 .NotNull()
                 .ToDictionary(x => x.Type.Id);
 
@@ -211,20 +211,39 @@ namespace Fasciculus.Eve.Services
             return result;
         }
 
-        private void FindTrades(EveTradeOptions options, EveMarketPrices marketPrices, EveMoonStations stations, EveRegion[] regions,
-            EveTypes types, Dictionary<int, EveDemandOrSupply> demands)
+        private EveDemandOrSupply[] FindSupplies(EveTradeOptions options, Tuple<EveType, int>[] typeQuantities,
+            EveRegion region, EveMoonStations stations)
         {
+            EveMarketOrders regionOrders = Tasks.Wait(esiClient.GetMarketOrdersAsync(region, false));
+
+            Dictionary<long, EveMarketOrder[]> ordersByStation = regionOrders
+                .GroupBy(x => x.Location)
+                .ToDictionary(x => x.Key, x => x.ToArray());
+
+            return [];
+        }
+
+        private void FindTrades(EveTradeOptions options, EveMoonStations stations, EveRegion[] regions,
+            Tuple<EveType, int>[] typeQuantities)
+        {
+            foreach (EveRegion region in regions)
+            {
+                EveDemandOrSupply[] supplies = FindSupplies(options, typeQuantities, region, stations);
+
+                OnWorkDone();
+            }
+
             return;
         }
 
-        private static EveDemandOrSupply? FindDemandOrSupply(EveMoonStation station, Dictionary<int, EveMarketOrder[]> itemOrders,
+        private static EveDemandOrSupply? FindDemandOrSupply(EveMoonStation station, Dictionary<int, EveMarketOrder[]> ordersByItem,
             Tuple<EveType, int> typeQuantity, Func<EveMarketOrder[], IOrderedEnumerable<EveMarketOrder>> sort)
         {
             EveDemandOrSupply? result = null;
             EveType type = typeQuantity.Item1;
             int typeId = type.Id;
 
-            if (itemOrders.TryGetValue(typeId, out EveMarketOrder[]? unsortedOrders))
+            if (ordersByItem.TryGetValue(typeId, out EveMarketOrder[]? unsortedOrders))
             {
                 IEnumerable<EveMarketOrder> sortedOrders = sort(unsortedOrders);
                 int desiredQuantity = typeQuantity.Item2;
