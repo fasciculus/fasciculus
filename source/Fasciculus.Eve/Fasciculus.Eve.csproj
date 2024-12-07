@@ -80,8 +80,4 @@
     </MauiXaml>
   </ItemGroup>
 
-  <Target Name="CreateGeneratedDirectory" AfterTargets="AfterResolveReferences">
-    <MakeDir Directories="$(IntermediateOutputPath)/generated" />
-  </Target>
-
 </Project>
