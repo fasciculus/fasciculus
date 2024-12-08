@@ -5,7 +5,7 @@ namespace Fasciculus.Eve.Assets.Pages.Controls
     public partial class DownloadSdeStatusLabel : Label
     {
         public static readonly BindableProperty SourceProperty
-            = BindableProperty.Create("Source", typeof(DownloadSdeStatus), typeof(Label), DownloadSdeStatus.Pending,
+            = BindableProperty.Create(nameof(Source), typeof(DownloadSdeStatus), typeof(Label), null,
                 BindingMode.OneWay, null, OnSourcePropertyChanged);
 
         private static void OnSourcePropertyChanged(BindableObject bindable, object oldvalue, object newvalue)
