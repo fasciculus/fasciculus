@@ -37,23 +37,26 @@ namespace Fasciculus.Support
         private readonly Func<T, T, T>? accumulate;
         private readonly T start;
 
-        private readonly long step;
+        private long stepSize;
         private long count;
 
         public T Total { get; private set; }
         public T Current { get; protected set; }
 
-        public AccumulatingProgress(Action<T>? report, Func<T, T, T>? accumulate, T total, T start, long step = 1)
+        public AccumulatingProgress(Action<T>? report, Func<T, T, T>? accumulate, T total, T start)
             : base(report)
         {
             this.accumulate = accumulate;
             this.start = start;
 
-            this.step = Math.Max(1, step);
+            stepSize = 1;
 
             Total = total;
             Current = start;
         }
+
+        protected virtual long GetStepSize()
+            => 1;
 
         public void Begin(T total)
         {
@@ -62,6 +65,7 @@ namespace Fasciculus.Support
             Total = total;
             Current = start;
 
+            stepSize = GetStepSize();
             count = 0;
 
             DoReport(true);
@@ -90,7 +94,7 @@ namespace Fasciculus.Support
             {
                 base.Report(Current);
             }
-            else if ((count % step) == 0)
+            else if ((count % stepSize) == 0)
             {
                 base.Report(Current);
             }
@@ -173,8 +177,8 @@ namespace Fasciculus.Support
             }
         }
 
-        public AccumulatingLongProgress(Action<long>? report, long step = 1)
-            : base(report, null, 0, 0, step)
+        public AccumulatingLongProgress(Action<long>? report)
+            : base(report, null, 0, 0)
         {
         }
 
@@ -188,6 +192,11 @@ namespace Fasciculus.Support
             Current = Total;
 
             base.End();
+        }
+
+        protected override long GetStepSize()
+        {
+            return Math.Max(1, Total / 100);
         }
     }
 }

@@ -122,7 +122,7 @@ namespace Fasciculus.Eve.Assets.Services
         public AssetsProgress(IProgressCollector progressCollector)
         {
             DownloadSdeProgress = new TaskSafeProgress<DownloadSdeStatus>(x => { DownloadSdeInfo = x; });
-            ExtractSdeProgress = new AccumulatingLongProgress(_ => { ExtractSdeInfo = ExtractSdeProgress!.Progress; }, 100);
+            ExtractSdeProgress = new AccumulatingLongProgress(_ => { ExtractSdeInfo = ExtractSdeProgress!.Progress; });
             ParseNamesProgress = new TaskSafeProgress<PendingToDone>(x => { ParseNamesInfo = x; });
             ParseMarketGroupsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseMarketGroupsInfo = x; });
             ParseTypesProgress = new TaskSafeProgress<PendingToDone>(x => { ParseTypesInfo = x; });
@@ -130,12 +130,12 @@ namespace Fasciculus.Eve.Assets.Services
             ParseNpcCorporationsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseNpcCorporationsInfo = x; });
             ParseRegionsProgress = new AccumulatingLongProgress(_ => { ParseRegionsInfo = ParseRegionsProgress!.Progress; });
             ParseConstellationsProgress = new AccumulatingLongProgress(_ => { ParseConstellationsInfo = ParseConstellationsProgress!.Progress; });
-            ParseSolarSystemsProgress = new AccumulatingLongProgress(_ => { ParseSolarSystemsInfo = ParseSolarSystemsProgress!.Progress; }, 100);
+            ParseSolarSystemsProgress = new AccumulatingLongProgress(_ => { ParseSolarSystemsInfo = ParseSolarSystemsProgress!.Progress; });
             ConvertDataProgress = new TaskSafeProgress<PendingToDone>(ReportConvertData);
             ConvertUniverseProgress = new TaskSafeProgress<PendingToDone>(ReportConvertUniverse);
             CreateConnectionsProgress = new TaskSafeProgress<PendingToDone>(ReportCreateConnections);
-            CreateDistancesProgress = new AccumulatingLongProgress(ReportCreateDistances, 100);
-            CopyImagesProgress = new AccumulatingLongProgress(ReportCopyImages, 100);
+            CreateDistancesProgress = new AccumulatingLongProgress(ReportCreateDistances);
+            CopyImagesProgress = new AccumulatingLongProgress(ReportCopyImages);
             CreateImagesProgress = new TaskSafeProgress<PendingToDone>(ReportCreateImages);
 
             CreateResourcesProgress = new AccumulatingProgress<List<FileInfo>>(ReportCreateResources, AccumulateCreateResources, [], []);
