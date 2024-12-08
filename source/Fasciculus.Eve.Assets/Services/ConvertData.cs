@@ -34,7 +34,7 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 SdeData sdeData = await parseData.Data;
 
-                progress.ConvertData.Report(PendingToDone.Working);
+                progress.ConvertDataProgress.Report(PendingToDone.Working);
 
                 DateTime version = sdeData.Version;
                 IEnumerable<EveType.Data> types = ConvertTypes(sdeData.Types);
@@ -43,7 +43,7 @@ namespace Fasciculus.Eve.Assets.Services
 
                 data = new(version, types, stationOperations, npcCorporations);
 
-                progress.ConvertData.Report(PendingToDone.Done);
+                progress.ConvertDataProgress.Report(PendingToDone.Done);
             }
 
             return data;

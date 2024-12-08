@@ -23,29 +23,48 @@ namespace Fasciculus.Eve.Assets.Services
 
     public interface IAssetsProgress : INotifyPropertyChanged
     {
-        public DownloadSdeStatus DownloadSde { get; }
+        public DownloadSdeStatus DownloadSdeInfo { get; }
         public IProgress<DownloadSdeStatus> DownloadSdeProgress { get; }
 
-        public IAccumulatingLongProgress ExtractSde { get; }
+        public LongProgressInfo ExtractSdeInfo { get; }
+        public IAccumulatingLongProgress ExtractSdeProgress { get; }
 
-        public IProgress<PendingToDone> ParseNames { get; }
+        public PendingToDone ParseNamesInfo { get; }
+        public IProgress<PendingToDone> ParseNamesProgress { get; }
 
-        public PendingToDone ParseMarketGroups { get; }
+        public PendingToDone ParseMarketGroupsInfo { get; }
         public IProgress<PendingToDone> ParseMarketGroupsProgress { get; }
 
-        public IProgress<PendingToDone> ParseTypes { get; }
-        public IProgress<PendingToDone> ParseStationOperations { get; }
-        public IProgress<PendingToDone> ParseNpcCorporations { get; }
-        public IAccumulatingLongProgress ParseRegions { get; }
-        public IAccumulatingLongProgress ParseConstellations { get; }
-        public IAccumulatingLongProgress ParseSolarSystems { get; }
-        public IProgress<PendingToDone> ConvertData { get; }
-        public IProgress<PendingToDone> ConvertUniverse { get; }
-        public IProgress<PendingToDone> CreateConnections { get; }
-        public IAccumulatingLongProgress CreateDistances { get; }
-        public IAccumulatingLongProgress CopyImages { get; }
-        public IProgress<PendingToDone> CreateImages { get; }
-        public IAccumulatingProgress<List<FileInfo>> CreateResources { get; }
+        public PendingToDone ParseTypesInfo { get; }
+        public IProgress<PendingToDone> ParseTypesProgress { get; }
+
+        public PendingToDone ParseStationOperationsInfo { get; }
+        public IProgress<PendingToDone> ParseStationOperationsProgress { get; }
+
+        public PendingToDone ParseNpcCorporationsInfo { get; }
+        public IProgress<PendingToDone> ParseNpcCorporationsProgress { get; }
+
+        public LongProgressInfo ParseRegionsInfo { get; }
+        public IAccumulatingLongProgress ParseRegionsProgress { get; }
+
+        public LongProgressInfo ParseConstellationsInfo { get; }
+        public IAccumulatingLongProgress ParseConstellationsProgress { get; }
+
+        public LongProgressInfo ParseSolarSystemsInfo { get; }
+        public IAccumulatingLongProgress ParseSolarSystemsProgress { get; }
+
+        public IProgress<PendingToDone> ConvertDataProgress { get; }
+
+        public IProgress<PendingToDone> ConvertUniverseProgress { get; }
+
+        public IProgress<PendingToDone> CreateConnectionsProgress { get; }
+
+        public IAccumulatingLongProgress CreateDistancesProgress { get; }
+        public IAccumulatingLongProgress CopyImagesProgress { get; }
+
+        public IProgress<PendingToDone> CreateImagesProgress { get; }
+
+        public IAccumulatingProgress<List<FileInfo>> CreateResourcesProgress { get; }
     }
 
     public partial class AssetsProgress : MainThreadObservable, IAssetsProgress
@@ -53,77 +72,76 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IProgressCollector progressCollector;
 
         [ObservableProperty]
-        private DownloadSdeStatus downloadSde = DownloadSdeStatus.Pending;
+        private DownloadSdeStatus downloadSdeInfo = DownloadSdeStatus.Pending;
         public IProgress<DownloadSdeStatus> DownloadSdeProgress { get; }
 
-        public IAccumulatingLongProgress ExtractSde { get; }
-        public IProgress<PendingToDone> ParseNames { get; }
+        [ObservableProperty]
+        private LongProgressInfo extractSdeInfo = LongProgressInfo.Start;
+        public IAccumulatingLongProgress ExtractSdeProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone parseMarketGroups = PendingToDone.Pending;
+        private PendingToDone parseNamesInfo = PendingToDone.Pending;
+        public IProgress<PendingToDone> ParseNamesProgress { get; }
+
+        [ObservableProperty]
+        private PendingToDone parseMarketGroupsInfo = PendingToDone.Pending;
         public IProgress<PendingToDone> ParseMarketGroupsProgress { get; }
 
-        public IProgress<PendingToDone> ParseTypes { get; }
-        public IProgress<PendingToDone> ParseStationOperations { get; }
-        public IProgress<PendingToDone> ParseNpcCorporations { get; }
-        public IAccumulatingLongProgress ParseRegions { get; }
-        public IAccumulatingLongProgress ParseConstellations { get; }
-        public IAccumulatingLongProgress ParseSolarSystems { get; }
-        public IProgress<PendingToDone> ConvertData { get; }
-        public IProgress<PendingToDone> ConvertUniverse { get; }
-        public IProgress<PendingToDone> CreateConnections { get; }
-        public IAccumulatingLongProgress CreateDistances { get; }
-        public IAccumulatingLongProgress CopyImages { get; }
-        public IProgress<PendingToDone> CreateImages { get; }
-        public IAccumulatingProgress<List<FileInfo>> CreateResources { get; }
+        [ObservableProperty]
+        private PendingToDone parseTypesInfo = PendingToDone.Pending;
+        public IProgress<PendingToDone> ParseTypesProgress { get; }
+
+        [ObservableProperty]
+        private PendingToDone parseStationOperationsInfo = PendingToDone.Pending;
+        public IProgress<PendingToDone> ParseStationOperationsProgress { get; }
+
+        [ObservableProperty]
+        private PendingToDone parseNpcCorporationsInfo = PendingToDone.Pending;
+        public IProgress<PendingToDone> ParseNpcCorporationsProgress { get; }
+
+        [ObservableProperty]
+        private LongProgressInfo parseRegionsInfo = LongProgressInfo.Start;
+        public IAccumulatingLongProgress ParseRegionsProgress { get; }
+
+        [ObservableProperty]
+        private LongProgressInfo parseConstellationsInfo = LongProgressInfo.Start;
+        public IAccumulatingLongProgress ParseConstellationsProgress { get; }
+
+        [ObservableProperty]
+        private LongProgressInfo parseSolarSystemsInfo = LongProgressInfo.Start;
+        public IAccumulatingLongProgress ParseSolarSystemsProgress { get; }
+
+        public IProgress<PendingToDone> ConvertDataProgress { get; }
+        public IProgress<PendingToDone> ConvertUniverseProgress { get; }
+        public IProgress<PendingToDone> CreateConnectionsProgress { get; }
+        public IAccumulatingLongProgress CreateDistancesProgress { get; }
+        public IAccumulatingLongProgress CopyImagesProgress { get; }
+        public IProgress<PendingToDone> CreateImagesProgress { get; }
+        public IAccumulatingProgress<List<FileInfo>> CreateResourcesProgress { get; }
 
         public AssetsProgress(IProgressCollector progressCollector)
         {
-            DownloadSdeProgress = new TaskSafeProgress<DownloadSdeStatus>(x => { DownloadSde = x; });
-            ExtractSde = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
-            ParseNames = new TaskSafeProgress<PendingToDone>(ReportParseNames);
-            ParseMarketGroupsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseMarketGroups = x; });
-            ParseTypes = new TaskSafeProgress<PendingToDone>(ReportParseTypes);
-            ParseStationOperations = new TaskSafeProgress<PendingToDone>(ReportParseStationOperations);
-            ParseNpcCorporations = new TaskSafeProgress<PendingToDone>(ReportParseNpcCorporations);
-            ParseRegions = new AccumulatingLongProgress(ReportParseRegions);
-            ParseConstellations = new AccumulatingLongProgress(ReportParseConstellations);
-            ParseSolarSystems = new AccumulatingLongProgress(ReportParseSolarSystems, 100);
-            ConvertData = new TaskSafeProgress<PendingToDone>(ReportConvertData);
-            ConvertUniverse = new TaskSafeProgress<PendingToDone>(ReportConvertUniverse);
-            CreateConnections = new TaskSafeProgress<PendingToDone>(ReportCreateConnections);
-            CreateDistances = new AccumulatingLongProgress(ReportCreateDistances, 100);
-            CopyImages = new AccumulatingLongProgress(ReportCopyImages, 100);
-            CreateImages = new TaskSafeProgress<PendingToDone>(ReportCreateImages);
+            DownloadSdeProgress = new TaskSafeProgress<DownloadSdeStatus>(x => { DownloadSdeInfo = x; });
+            ExtractSdeProgress = new AccumulatingLongProgress(_ => { ExtractSdeInfo = ExtractSdeProgress!.Progress; }, 100);
+            ParseNamesProgress = new TaskSafeProgress<PendingToDone>(x => { ParseNamesInfo = x; });
+            ParseMarketGroupsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseMarketGroupsInfo = x; });
+            ParseTypesProgress = new TaskSafeProgress<PendingToDone>(x => { ParseTypesInfo = x; });
+            ParseStationOperationsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseStationOperationsInfo = x; });
+            ParseNpcCorporationsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseNpcCorporationsInfo = x; });
+            ParseRegionsProgress = new AccumulatingLongProgress(_ => { ParseRegionsInfo = ParseRegionsProgress!.Progress; });
+            ParseConstellationsProgress = new AccumulatingLongProgress(_ => { ParseConstellationsInfo = ParseConstellationsProgress!.Progress; });
+            ParseSolarSystemsProgress = new AccumulatingLongProgress(_ => { ParseSolarSystemsInfo = ParseSolarSystemsProgress!.Progress; }, 100);
+            ConvertDataProgress = new TaskSafeProgress<PendingToDone>(ReportConvertData);
+            ConvertUniverseProgress = new TaskSafeProgress<PendingToDone>(ReportConvertUniverse);
+            CreateConnectionsProgress = new TaskSafeProgress<PendingToDone>(ReportCreateConnections);
+            CreateDistancesProgress = new AccumulatingLongProgress(ReportCreateDistances, 100);
+            CopyImagesProgress = new AccumulatingLongProgress(ReportCopyImages, 100);
+            CreateImagesProgress = new TaskSafeProgress<PendingToDone>(ReportCreateImages);
 
-            CreateResources = new AccumulatingProgress<List<FileInfo>>(ReportCreateResources, AccumulateCreateResources, [], []);
+            CreateResourcesProgress = new AccumulatingProgress<List<FileInfo>>(ReportCreateResources, AccumulateCreateResources, [], []);
 
             this.progressCollector = progressCollector;
         }
-
-        private void ReportExtractSdeProgress(long _)
-            => progressCollector.ExtractSde = ExtractSde.Progress;
-
-        private void ReportParseNames(PendingToDone status)
-            => progressCollector.ParseNames = status;
-
-        private void ReportParseTypes(PendingToDone status)
-            => progressCollector.ParseTypes = status;
-
-        private void ReportParseStationOperations(PendingToDone status)
-            => progressCollector.ParseStationOperations = status;
-
-        private void ReportParseNpcCorporations(PendingToDone status)
-            => progressCollector.ParseNpcCorporations = status;
-
-        private void ReportParseRegions(long _)
-            => progressCollector.ParseRegions = ParseRegions.Progress;
-
-        private void ReportParseConstellations(long _)
-            => progressCollector.ParseConstellations = ParseConstellations.Progress;
-
-        private void ReportParseSolarSystems(long _)
-            => progressCollector.ParseSolarSystems = ParseSolarSystems.Progress;
 
         private void ReportConvertData(PendingToDone status)
             => progressCollector.ConvertData = status;
@@ -135,10 +153,10 @@ namespace Fasciculus.Eve.Assets.Services
             => progressCollector.CreateConnections = status;
 
         private void ReportCreateDistances(long _)
-            => progressCollector.CreateDistances = CreateDistances.Progress;
+            => progressCollector.CreateDistances = CreateDistancesProgress.Progress;
 
         private void ReportCopyImages(long _)
-            => progressCollector.CopyImages = CopyImages.Progress;
+            => progressCollector.CopyImages = CopyImagesProgress.Progress;
 
         private void ReportCreateImages(PendingToDone status)
             => progressCollector.CreateImages = status;
@@ -152,17 +170,6 @@ namespace Fasciculus.Eve.Assets.Services
 
     public interface IProgressCollector : INotifyPropertyChanged
     {
-        public LongProgressInfo ExtractSde { get; set; }
-
-        public PendingToDone ParseNames { get; set; }
-        public PendingToDone ParseTypes { get; set; }
-        public PendingToDone ParseStationOperations { get; set; }
-        public PendingToDone ParseNpcCorporations { get; set; }
-
-        public LongProgressInfo ParseRegions { get; set; }
-        public LongProgressInfo ParseConstellations { get; set; }
-        public LongProgressInfo ParseSolarSystems { get; set; }
-
         public PendingToDone ConvertData { get; set; }
         public PendingToDone ConvertUniverse { get; set; }
 
@@ -177,30 +184,6 @@ namespace Fasciculus.Eve.Assets.Services
 
     public partial class ProgressCollector : MainThreadObservable, IProgressCollector
     {
-        [ObservableProperty]
-        private LongProgressInfo extractSde = LongProgressInfo.Start;
-
-        [ObservableProperty]
-        private PendingToDone parseNames = PendingToDone.Pending;
-
-        [ObservableProperty]
-        private PendingToDone parseTypes = PendingToDone.Pending;
-
-        [ObservableProperty]
-        private PendingToDone parseStationOperations = PendingToDone.Pending;
-
-        [ObservableProperty]
-        private PendingToDone parseNpcCorporations = PendingToDone.Pending;
-
-        [ObservableProperty]
-        private LongProgressInfo parseRegions = LongProgressInfo.Start;
-
-        [ObservableProperty]
-        private LongProgressInfo parseConstellations = LongProgressInfo.Start;
-
-        [ObservableProperty]
-        private LongProgressInfo parseSolarSystems = LongProgressInfo.Start;
-
         [ObservableProperty]
         private PendingToDone convertData = PendingToDone.Pending;
 

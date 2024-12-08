@@ -41,10 +41,10 @@ namespace Fasciculus.Eve.Assets.Services
             EveNavigation.Data navigation = result.Item3;
             List<FileInfo> images = result.Item4;
 
-            progress.CreateResources.Report(WriteData(data));
-            progress.CreateResources.Report(WriteUniverse(universe));
-            progress.CreateResources.Report(WriteNavigation(navigation));
-            progress.CreateResources.Report(images);
+            progress.CreateResourcesProgress.Report(WriteData(data));
+            progress.CreateResourcesProgress.Report(WriteUniverse(universe));
+            progress.CreateResourcesProgress.Report(WriteNavigation(navigation));
+            progress.CreateResourcesProgress.Report(images);
         }
 
         public Task CreateAsync()

@@ -43,9 +43,9 @@ namespace Fasciculus.Eve.Assets.Services
                 SdeRegion[] sdeRegions = results.Item1;
                 Dictionary<int, string> names = results.Item2;
 
-                progress.ConvertUniverse.Report(PendingToDone.Working);
+                progress.ConvertUniverseProgress.Report(PendingToDone.Working);
                 universe = ConvertRegions(sdeRegions, names);
-                progress.ConvertUniverse.Report(PendingToDone.Done);
+                progress.ConvertUniverseProgress.Report(PendingToDone.Done);
             }
 
             return universe;

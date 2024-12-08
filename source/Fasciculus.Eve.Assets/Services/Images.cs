@@ -37,9 +37,9 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
 
-                progress.CopyImages.Begin(entries.Length);
+                progress.CopyImagesProgress.Begin(entries.Length);
                 files = entries.AsParallel().Select(Copy).ToArray();
-                progress.CopyImages.End();
+                progress.CopyImagesProgress.End();
                 await Task.Yield();
             }
 
@@ -58,7 +58,7 @@ namespace Fasciculus.Eve.Assets.Services
                 source.CopyTo(destination.FullName);
             }
 
-            progress.CopyImages.Report(1);
+            progress.CopyImagesProgress.Report(1);
 
             return new(destination.FullName);
         }
@@ -145,9 +145,9 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 FileInfo[] _ = await copyImages.FilesCopied;
 
-                progress.CreateImages.Report(PendingToDone.Working);
+                progress.CreateImagesProgress.Report(PendingToDone.Working);
                 filesCreated = paths.Select(CreateImage).NotNull().ToList();
-                progress.CreateImages.Report(PendingToDone.Done);
+                progress.CreateImagesProgress.Report(PendingToDone.Done);
             }
 
             return filesCreated;

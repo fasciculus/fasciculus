@@ -77,13 +77,13 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (navigation is null)
             {
-                progress.CreateDistances.Begin(EveSecurity.Levels.Length * GetAllowedSystems().Indices.Count());
+                progress.CreateDistancesProgress.Begin(EveSecurity.Levels.Length * GetAllowedSystems().Indices.Count());
 
                 IEnumerable<SparseShortMatrix> distances = EveSecurity.Levels.Select(GetDistances);
 
                 navigation = new(distances);
 
-                progress.CreateDistances.End();
+                progress.CreateDistancesProgress.End();
             }
 
             return navigation;
@@ -116,7 +116,7 @@ namespace Fasciculus.Eve.Assets.Services
                 distances += distance * front;
             }
 
-            progress.CreateDistances.Report(1);
+            progress.CreateDistancesProgress.Report(1);
 
             return distances;
         }
@@ -127,14 +127,14 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (connections is null)
             {
-                progress.CreateConnections.Report(PendingToDone.Working);
+                progress.CreateConnectionsProgress.Report(PendingToDone.Working);
 
                 connections = EveSecurity.Levels
                     .AsParallel()
                     .Select(level => Tuple.Create(level, GetConnections(level)))
                     .ToDictionary(x => x.Item1, x => x.Item2);
 
-                progress.CreateConnections.Report(PendingToDone.Done);
+                progress.CreateConnectionsProgress.Report(PendingToDone.Done);
             }
 
             return connections;

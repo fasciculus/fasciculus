@@ -111,7 +111,7 @@ namespace Fasciculus.Eve.Assets.Services
             if (files is null)
             {
                 FileInfo file = await downloadSde.DownloadedFile;
-                DirectoryInfo directory = compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSde);
+                DirectoryInfo directory = compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSdeProgress);
 
                 files = new(directory);
             }

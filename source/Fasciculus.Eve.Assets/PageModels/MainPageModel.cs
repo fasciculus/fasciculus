@@ -83,18 +83,18 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            DownloadSde = assetsProgress.DownloadSde;
-            ExtractSde = progressCollector.ExtractSde;
+            DownloadSde = assetsProgress.DownloadSdeInfo;
+            ExtractSde = assetsProgress.ExtractSdeInfo;
 
-            ParseNames = progressCollector.ParseNames;
-            ParseMarketGroups = assetsProgress.ParseMarketGroups;
-            ParseTypes = progressCollector.ParseTypes;
-            ParseStationOperations = progressCollector.ParseStationOperations;
-            ParseNpcCorporations = progressCollector.ParseNpcCorporations;
+            ParseNames = assetsProgress.ParseNamesInfo;
+            ParseMarketGroups = assetsProgress.ParseMarketGroupsInfo;
+            ParseTypes = assetsProgress.ParseTypesInfo;
+            ParseStationOperations = assetsProgress.ParseStationOperationsInfo;
+            ParseNpcCorporations = assetsProgress.ParseNpcCorporationsInfo;
 
-            ParseRegions = progressCollector.ParseRegions;
-            ParseConstellations = progressCollector.ParseConstellations;
-            ParseSolarSystems = progressCollector.ParseSolarSystems;
+            ParseRegions = assetsProgress.ParseRegionsInfo;
+            ParseConstellations = assetsProgress.ParseConstellationsInfo;
+            ParseSolarSystems = assetsProgress.ParseSolarSystemsInfo;
 
             ConvertData = progressCollector.ConvertData;
             ConvertUniverse = progressCollector.ConvertUniverse;
