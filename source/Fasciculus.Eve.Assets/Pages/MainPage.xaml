@@ -10,7 +10,6 @@
 
     <ContentPage.Resources>
         <converters:DownloadSdeStatusConverter x:Key="dwn" />
-        <converters:PendingToDoneConverter x:Key="ptd" />
         <converters:LongProgressInfoConverter x:Key="lpi" />
     </ContentPage.Resources>
 
