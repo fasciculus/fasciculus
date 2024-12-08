@@ -10,7 +10,6 @@ namespace Fasciculus.Eve.Assets.PageModels
     public partial class MainPageModel : ObservableObject
     {
         private readonly IAssetsProgress assetsProgress;
-        private readonly IProgressCollector progressCollector;
         private readonly IAssetsDirectories assetsDirectories;
         private readonly ICreateResources createResources;
 
@@ -67,14 +66,11 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private ILogger logger;
 
-        public MainPageModel(IAssetsProgress assetsProgress, IProgressCollector progressCollector, IAssetsDirectories assetsDirectories, ICreateResources createResources,
+        public MainPageModel(IAssetsProgress assetsProgress, IAssetsDirectories assetsDirectories, ICreateResources createResources,
             ILogger<MainPageModel> logger)
         {
             this.assetsProgress = assetsProgress;
             this.assetsProgress.PropertyChanged += OnProgressChanged;
-
-            this.progressCollector = progressCollector;
-            this.progressCollector.PropertyChanged += OnProgressChanged;
 
             this.assetsDirectories = assetsDirectories;
             this.createResources = createResources;
@@ -96,24 +92,24 @@ namespace Fasciculus.Eve.Assets.PageModels
             ParseConstellations = assetsProgress.ParseConstellationsInfo;
             ParseSolarSystems = assetsProgress.ParseSolarSystemsInfo;
 
-            ConvertData = progressCollector.ConvertData;
-            ConvertUniverse = progressCollector.ConvertUniverse;
+            ConvertData = assetsProgress.ConvertDataInfo;
+            ConvertUniverse = assetsProgress.ConvertUniverseInfo;
 
-            CreateConnections = progressCollector.CreateConnections;
-            CreateDistances = progressCollector.CreateDistances;
+            CreateConnections = assetsProgress.CreateConnectionsInfo;
+            CreateDistances = assetsProgress.CreateDistancesInfo;
 
-            CopyImages = progressCollector.CopyImages;
-            CreateImages = progressCollector.CreateImages;
+            CopyImages = assetsProgress.CopyImagesInfo;
+            CreateImages = assetsProgress.CreateImagesInfo;
 
             ChangedResources = GetChangedResources();
         }
 
         private string[] GetChangedResources()
         {
-            int prefix = assetsDirectories.Resources.FullName.Length + 1;
+            int prefixLength = assetsDirectories.Resources.FullName.Length + 1;
 
-            return progressCollector.ChangedResources
-                .Select(x => x.FullName[prefix..].Replace('\\', '/'))
+            return assetsProgress.CreateResourcesInfo
+                .Select(x => x.FullName[prefixLength..].Replace('\\', '/'))
                 .ToArray();
         }
 

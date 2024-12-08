@@ -53,24 +53,30 @@ namespace Fasciculus.Eve.Assets.Services
         public LongProgressInfo ParseSolarSystemsInfo { get; }
         public IAccumulatingLongProgress ParseSolarSystemsProgress { get; }
 
+        public PendingToDone ConvertDataInfo { get; }
         public IProgress<PendingToDone> ConvertDataProgress { get; }
 
+        public PendingToDone ConvertUniverseInfo { get; }
         public IProgress<PendingToDone> ConvertUniverseProgress { get; }
 
+        public PendingToDone CreateConnectionsInfo { get; }
         public IProgress<PendingToDone> CreateConnectionsProgress { get; }
 
+        public LongProgressInfo CreateDistancesInfo { get; }
         public IAccumulatingLongProgress CreateDistancesProgress { get; }
+
+        public LongProgressInfo CopyImagesInfo { get; }
         public IAccumulatingLongProgress CopyImagesProgress { get; }
 
+        public PendingToDone CreateImagesInfo { get; }
         public IProgress<PendingToDone> CreateImagesProgress { get; }
 
+        public FileInfo[] CreateResourcesInfo { get; }
         public IAccumulatingProgress<List<FileInfo>> CreateResourcesProgress { get; }
     }
 
     public partial class AssetsProgress : MainThreadObservable, IAssetsProgress
     {
-        private readonly IProgressCollector progressCollector;
-
         [ObservableProperty]
         private DownloadSdeStatus downloadSdeInfo = DownloadSdeStatus.Pending;
         public IProgress<DownloadSdeStatus> DownloadSdeProgress { get; }
@@ -111,15 +117,35 @@ namespace Fasciculus.Eve.Assets.Services
         private LongProgressInfo parseSolarSystemsInfo = LongProgressInfo.Start;
         public IAccumulatingLongProgress ParseSolarSystemsProgress { get; }
 
+        [ObservableProperty]
+        private PendingToDone convertDataInfo;
         public IProgress<PendingToDone> ConvertDataProgress { get; }
+
+        [ObservableProperty]
+        private PendingToDone convertUniverseInfo;
         public IProgress<PendingToDone> ConvertUniverseProgress { get; }
+
+        [ObservableProperty]
+        private PendingToDone createConnectionsInfo;
         public IProgress<PendingToDone> CreateConnectionsProgress { get; }
+
+        [ObservableProperty]
+        private LongProgressInfo createDistancesInfo = LongProgressInfo.Start;
         public IAccumulatingLongProgress CreateDistancesProgress { get; }
+
+        [ObservableProperty]
+        private LongProgressInfo copyImagesInfo = LongProgressInfo.Start;
         public IAccumulatingLongProgress CopyImagesProgress { get; }
+
+        [ObservableProperty]
+        private PendingToDone createImagesInfo;
         public IProgress<PendingToDone> CreateImagesProgress { get; }
+
+        [ObservableProperty]
+        private FileInfo[] createResourcesInfo = [];
         public IAccumulatingProgress<List<FileInfo>> CreateResourcesProgress { get; }
 
-        public AssetsProgress(IProgressCollector progressCollector)
+        public AssetsProgress()
         {
             DownloadSdeProgress = new TaskSafeProgress<DownloadSdeStatus>(x => { DownloadSdeInfo = x; });
             ExtractSdeProgress = new AccumulatingLongProgress(_ => { ExtractSdeInfo = ExtractSdeProgress!.Progress; });
@@ -131,79 +157,16 @@ namespace Fasciculus.Eve.Assets.Services
             ParseRegionsProgress = new AccumulatingLongProgress(_ => { ParseRegionsInfo = ParseRegionsProgress!.Progress; });
             ParseConstellationsProgress = new AccumulatingLongProgress(_ => { ParseConstellationsInfo = ParseConstellationsProgress!.Progress; });
             ParseSolarSystemsProgress = new AccumulatingLongProgress(_ => { ParseSolarSystemsInfo = ParseSolarSystemsProgress!.Progress; });
-            ConvertDataProgress = new TaskSafeProgress<PendingToDone>(ReportConvertData);
-            ConvertUniverseProgress = new TaskSafeProgress<PendingToDone>(ReportConvertUniverse);
-            CreateConnectionsProgress = new TaskSafeProgress<PendingToDone>(ReportCreateConnections);
-            CreateDistancesProgress = new AccumulatingLongProgress(ReportCreateDistances);
-            CopyImagesProgress = new AccumulatingLongProgress(ReportCopyImages);
-            CreateImagesProgress = new TaskSafeProgress<PendingToDone>(ReportCreateImages);
+            ConvertDataProgress = new TaskSafeProgress<PendingToDone>(x => { ConvertDataInfo = x; });
+            ConvertUniverseProgress = new TaskSafeProgress<PendingToDone>(x => { ConvertUniverseInfo = x; });
+            CreateConnectionsProgress = new TaskSafeProgress<PendingToDone>(x => { CreateConnectionsInfo = x; });
+            CreateDistancesProgress = new AccumulatingLongProgress(_ => { CreateDistancesInfo = CreateDistancesProgress!.Progress; });
+            CopyImagesProgress = new AccumulatingLongProgress(_ => { CopyImagesInfo = CopyImagesProgress!.Progress; });
+            CreateImagesProgress = new TaskSafeProgress<PendingToDone>(x => { CreateImagesInfo = x; });
 
-            CreateResourcesProgress = new AccumulatingProgress<List<FileInfo>>(ReportCreateResources, AccumulateCreateResources, [], []);
-
-            this.progressCollector = progressCollector;
+            CreateResourcesProgress
+                = new AccumulatingProgress<List<FileInfo>>(x => { CreateResourcesInfo = [.. x]; }, (x, y) => [.. x, .. y], [], []);
         }
-
-        private void ReportConvertData(PendingToDone status)
-            => progressCollector.ConvertData = status;
-
-        private void ReportConvertUniverse(PendingToDone status)
-            => progressCollector.ConvertUniverse = status;
-
-        private void ReportCreateConnections(PendingToDone status)
-            => progressCollector.CreateConnections = status;
-
-        private void ReportCreateDistances(long _)
-            => progressCollector.CreateDistances = CreateDistancesProgress.Progress;
-
-        private void ReportCopyImages(long _)
-            => progressCollector.CopyImages = CopyImagesProgress.Progress;
-
-        private void ReportCreateImages(PendingToDone status)
-            => progressCollector.CreateImages = status;
-
-        private void ReportCreateResources(List<FileInfo> files)
-            => progressCollector.ChangedResources = [.. files];
-
-        private List<FileInfo> AccumulateCreateResources(List<FileInfo> current, List<FileInfo> value)
-            => [.. current, .. value];
-    }
-
-    public interface IProgressCollector : INotifyPropertyChanged
-    {
-        public PendingToDone ConvertData { get; set; }
-        public PendingToDone ConvertUniverse { get; set; }
-
-        public PendingToDone CreateConnections { get; set; }
-        public LongProgressInfo CreateDistances { get; set; }
-
-        public LongProgressInfo CopyImages { get; set; }
-        public PendingToDone CreateImages { get; set; }
-
-        public FileInfo[] ChangedResources { get; set; }
-    }
-
-    public partial class ProgressCollector : MainThreadObservable, IProgressCollector
-    {
-        [ObservableProperty]
-        private PendingToDone convertData = PendingToDone.Pending;
-
-        [ObservableProperty]
-        private PendingToDone convertUniverse = PendingToDone.Pending;
-
-        [ObservableProperty]
-        private PendingToDone createConnections = PendingToDone.Pending;
-
-        [ObservableProperty]
-        private LongProgressInfo createDistances = LongProgressInfo.Start;
-
-        [ObservableProperty]
-        private LongProgressInfo copyImages = LongProgressInfo.Start;
-
-        [ObservableProperty]
-        private PendingToDone createImages = PendingToDone.Pending;
-
-        [ObservableProperty]
-        private FileInfo[] changedResources = [];
     }
 
     public static class ProgressServices
@@ -211,7 +174,6 @@ namespace Fasciculus.Eve.Assets.Services
         public static IServiceCollection AddAssetsProgress(this IServiceCollection services)
         {
             services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
-            services.TryAddSingleton<IProgressCollector, ProgressCollector>();
 
             return services;
         }
