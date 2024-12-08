@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:p="clr-namespace:Fasciculus.Eve.Assets.PageModels"
              xmlns:converters="clr-namespace:Fasciculus.Eve.Assets.Pages"
+             xmlns:controls="clr-namespace:Fasciculus.Eve.Assets.Pages.Controls"
              x:Class="Fasciculus.Eve.Assets.Pages.MainPage"
              x:DataType="p:MainPageModel"
              Title="" Shell.NavBarIsVisible="False">
@@ -40,28 +41,17 @@
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="SDE Parsing" FontAttributes="Bold"
-                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
+                <Label Text="SDE Parsing" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Names" Grid.Row="1" Grid.Column="0" />
-                <Label Text="{Binding ParseNames, Converter={StaticResource ptd}}"
-                       TextColor="{Binding ParseNames, Converter={StaticResource ptd}}"
-                       Grid.Row="1" Grid.Column="1" />
+                <controls:PendingToDoneLabel Source="{Binding ParseNames}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Market Groups" Grid.Row="1" Grid.Column="2" />
-                <Label Text="{Binding ParseMarketGroups, Converter={StaticResource ptd}}"
-                       TextColor="{Binding ParseTypes, Converter={StaticResource ptd}}"
-                       Grid.Row="1" Grid.Column="3" />
+                <controls:PendingToDoneLabel Source="{Binding ParseMarketGroups}" Grid.Row="1" Grid.Column="3" />
                 <Label Text="Types" Grid.Row="1" Grid.Column="4" />
-                <Label Text="{Binding ParseTypes, Converter={StaticResource ptd}}"
-                       TextColor="{Binding ParseTypes, Converter={StaticResource ptd}}"
-                       Grid.Row="1" Grid.Column="5" />
+                <controls:PendingToDoneLabel Source="{Binding ParseTypes}" Grid.Row="1" Grid.Column="5" />
                 <Label Text="Station Operations" Grid.Row="2" Grid.Column="0" />
-                <Label Text="{Binding ParseStationOperations, Converter={StaticResource ptd}}"
-                       TextColor="{Binding ParseStationOperations, Converter={StaticResource ptd}}"
-                       Grid.Row="2" Grid.Column="1" />
+                <controls:PendingToDoneLabel Source="{Binding ParseStationOperations}" Grid.Row="2" Grid.Column="1" />
                 <Label Text="NPC Corporations" Grid.Row="2" Grid.Column="2" />
-                <Label Text="{Binding ParseNpcCorporations, Converter={StaticResource ptd}}"
-                       TextColor="{Binding ParseNpcCorporations, Converter={StaticResource ptd}}"
-                       Grid.Row="2" Grid.Column="3" />
+                <controls:PendingToDoneLabel Source="{Binding ParseNpcCorporations}" Grid.Row="2" Grid.Column="3" />
                 <Label Text="Regions" Grid.Row="3" Grid.Column="0" />
                 <ProgressBar Progress="{Binding ParseRegions, Converter={StaticResource lpi}}"
                              ProgressColor="{Binding ParseRegions, Converter={StaticResource lpi}}"
@@ -80,30 +70,19 @@
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="SDE Conversion" FontAttributes="Bold"
-                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="Data"
-                       Grid.Row="1" Grid.Column="0" />
-                <Label Text="{Binding ConvertData, Converter={StaticResource ptd}}"
-                       TextColor="{Binding ConvertData, Converter={StaticResource ptd}}"
-                       Grid.Row="1" Grid.Column="1" />
+                <Label Text="SDE Conversion" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
+                <Label Text="Data" Grid.Row="1" Grid.Column="0" />
+                <controls:PendingToDoneLabel Source="{Binding ConvertData}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Universe"
                        Grid.Row="1" Grid.Column="2" />
-                <Label Text="{Binding ConvertUniverse, Converter={StaticResource ptd}}"
-                       TextColor="{Binding ConvertUniverse, Converter={StaticResource ptd}}"
-                       Grid.Row="1" Grid.Column="3" />
+                <controls:PendingToDoneLabel Source="{Binding ConvertUniverse}" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="Navigation" FontAttributes="Bold"
-                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="Connections"
-                       Grid.Row="1" Grid.Column="0" />
-                <Label Text="{Binding CreateConnections, Converter={StaticResource ptd}}"
-                       TextColor="{Binding CreateConnections, Converter={StaticResource ptd}}"
-                       Grid.Row="1" Grid.Column="1" />
-                <Label Text="Distances"
-                       Grid.Row="1" Grid.Column="2" />
+                <Label Text="Navigation" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
+                <Label Text="Connections" Grid.Row="1" Grid.Column="0" />
+                <controls:PendingToDoneLabel Source="{Binding CreateConnections}" Grid.Row="1" Grid.Column="1" />
+                <Label Text="Distances" Grid.Row="1" Grid.Column="2" />
                 <ProgressBar Progress="{Binding CreateDistances, Converter={StaticResource lpi}}"
                              ProgressColor="{Binding CreateDistances, Converter={StaticResource lpi}}"
                              BackgroundColor="LightGray" MinimumHeightRequest="8"
@@ -121,9 +100,7 @@
                              Grid.Row="1" Grid.Column="1" />
                 <Label Text="Create"
                        Grid.Row="1" Grid.Column="2" />
-                <Label Text="{Binding CreateImages, Converter={StaticResource ptd}}"
-                       TextColor="{Binding CreateImages, Converter={StaticResource ptd}}"
-                       Grid.Row="1" Grid.Column="3" />
+                <controls:PendingToDoneLabel Source="{Binding CreateImages}" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*" ColumnSpacing="16" RowSpacing="8">
