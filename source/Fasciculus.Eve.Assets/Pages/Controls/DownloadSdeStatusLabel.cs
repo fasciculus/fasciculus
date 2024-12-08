@@ -26,10 +26,10 @@ namespace Fasciculus.Eve.Assets.Pages.Controls
 
             label.TextColor = status switch
             {
-                DownloadSdeStatus.Pending => Colors.Orange,
+                DownloadSdeStatus.Pending => Colors.Red,
                 DownloadSdeStatus.Downloading => Colors.Orange,
-                DownloadSdeStatus.Downloaded => Colors.Green,
-                DownloadSdeStatus.NotModified => Colors.Green,
+                DownloadSdeStatus.Downloaded => Colors.LightGreen,
+                DownloadSdeStatus.NotModified => Colors.LightGreen,
                 _ => Colors.Black
             };
         }

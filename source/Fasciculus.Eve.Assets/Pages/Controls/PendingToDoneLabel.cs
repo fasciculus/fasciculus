@@ -25,9 +25,9 @@ namespace Fasciculus.Eve.Assets.Pages.Controls
 
             label.TextColor = status switch
             {
-                PendingToDone.Pending => Colors.Orange,
+                PendingToDone.Pending => Colors.Red,
                 PendingToDone.Working => Colors.Orange,
-                PendingToDone.Done => Colors.Green,
+                PendingToDone.Done => Colors.LightGreen,
                 _ => Colors.Red
             };
         }
