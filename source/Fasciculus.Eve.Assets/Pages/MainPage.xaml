@@ -9,7 +9,6 @@
              Title="" Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
-        <converters:DownloadSdeStatusConverter x:Key="dwn" />
         <converters:LongProgressInfoConverter x:Key="lpi" />
     </ContentPage.Resources>
 
