@@ -36,14 +36,14 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (downloadedFile is null)
             {
-                progress.DownloadSde.Report(DownloadSdeStatus.Downloading);
+                progress.DownloadSdeProgress.Report(DownloadSdeStatus.Downloading);
 
                 FileInfo destination = assetsDirectories.Downloads.File("sde.zip");
                 DownloaderResult result = await downloader.DownloadAsync(new(SdeZipUri), destination);
 
                 downloadedFile = result.DownloadedFile;
 
-                progress.DownloadSde.Report(result.NotModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
+                progress.DownloadSdeProgress.Report(result.NotModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
             }
 
             return downloadedFile;

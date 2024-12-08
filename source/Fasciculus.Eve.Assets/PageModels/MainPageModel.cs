@@ -83,7 +83,7 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            DownloadSde = progressCollector.DownloadSde;
+            DownloadSde = assetsProgress.DownloadSde;
             ExtractSde = progressCollector.ExtractSde;
 
             ParseNames = progressCollector.ParseNames;

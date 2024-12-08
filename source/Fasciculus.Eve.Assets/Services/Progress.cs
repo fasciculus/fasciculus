@@ -23,8 +23,11 @@ namespace Fasciculus.Eve.Assets.Services
 
     public interface IAssetsProgress : INotifyPropertyChanged
     {
-        public IProgress<DownloadSdeStatus> DownloadSde { get; }
+        public DownloadSdeStatus DownloadSde { get; }
+        public IProgress<DownloadSdeStatus> DownloadSdeProgress { get; }
+
         public IAccumulatingLongProgress ExtractSde { get; }
+
         public IProgress<PendingToDone> ParseNames { get; }
 
         public PendingToDone ParseMarketGroups { get; }
@@ -49,12 +52,15 @@ namespace Fasciculus.Eve.Assets.Services
     {
         private readonly IProgressCollector progressCollector;
 
-        public IProgress<DownloadSdeStatus> DownloadSde { get; }
+        [ObservableProperty]
+        private DownloadSdeStatus downloadSde = DownloadSdeStatus.Pending;
+        public IProgress<DownloadSdeStatus> DownloadSdeProgress { get; }
+
         public IAccumulatingLongProgress ExtractSde { get; }
         public IProgress<PendingToDone> ParseNames { get; }
 
         [ObservableProperty]
-        private PendingToDone parseMarketGroups;
+        private PendingToDone parseMarketGroups = PendingToDone.Pending;
         public IProgress<PendingToDone> ParseMarketGroupsProgress { get; }
 
         public IProgress<PendingToDone> ParseTypes { get; }
@@ -73,7 +79,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         public AssetsProgress(IProgressCollector progressCollector)
         {
-            DownloadSde = new TaskSafeProgress<DownloadSdeStatus>(ReportDownloadSde);
+            DownloadSdeProgress = new TaskSafeProgress<DownloadSdeStatus>(x => { DownloadSde = x; });
             ExtractSde = new AccumulatingLongProgress(ReportExtractSdeProgress, 100);
             ParseNames = new TaskSafeProgress<PendingToDone>(ReportParseNames);
             ParseMarketGroupsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseMarketGroups = x; });
@@ -94,9 +100,6 @@ namespace Fasciculus.Eve.Assets.Services
 
             this.progressCollector = progressCollector;
         }
-
-        private void ReportDownloadSde(DownloadSdeStatus status)
-            => progressCollector.DownloadSde = status;
 
         private void ReportExtractSdeProgress(long _)
             => progressCollector.ExtractSde = ExtractSde.Progress;
@@ -149,7 +152,6 @@ namespace Fasciculus.Eve.Assets.Services
 
     public interface IProgressCollector : INotifyPropertyChanged
     {
-        public DownloadSdeStatus DownloadSde { get; set; }
         public LongProgressInfo ExtractSde { get; set; }
 
         public PendingToDone ParseNames { get; set; }
@@ -175,9 +177,6 @@ namespace Fasciculus.Eve.Assets.Services
 
     public partial class ProgressCollector : MainThreadObservable, IProgressCollector
     {
-        [ObservableProperty]
-        private DownloadSdeStatus downloadSde = DownloadSdeStatus.Pending;
-
         [ObservableProperty]
         private LongProgressInfo extractSde = LongProgressInfo.Start;
 

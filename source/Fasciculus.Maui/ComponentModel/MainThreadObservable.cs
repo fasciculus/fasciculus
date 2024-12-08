@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace Fasciculus.Maui.ComponentModel
 {
-    public abstract class MainThreadObservable : ObservableObject
+    public class MainThreadObservable : ObservableObject
     {
         protected override void OnPropertyChanging(PropertyChangingEventArgs e)
         {
