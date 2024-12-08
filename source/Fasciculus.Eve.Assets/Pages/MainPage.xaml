@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:fasciculus="http://fasciculus.github.io/2024/maui"
              xmlns:p="clr-namespace:Fasciculus.Eve.Assets.PageModels"
              xmlns:converters="clr-namespace:Fasciculus.Eve.Assets.Pages"
              xmlns:controls="clr-namespace:Fasciculus.Eve.Assets.Pages.Controls"
@@ -10,6 +11,12 @@
 
     <ContentPage.Resources>
         <converters:LongProgressInfoConverter x:Key="lpi" />
+        <Style TargetType="fasciculus:LongProgressInfoBar">
+            <Setter Property="BackgroundColor" Value="LightGray" />
+            <Setter Property="MinimumHeightRequest" Value="8" />
+            <Setter Property="BusyColor" Value="Orange" />
+            <Setter Property="DoneColor" Value="LightGreen" />
+        </Style>
     </ContentPage.Resources>
 
     <ScrollView>
@@ -27,10 +34,7 @@
                 <Label Text="File" Grid.Row="1" Grid.Column="0" />
                 <controls:DownloadSdeStatusLabel Source="{Binding DownloadSde}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Extract" Grid.Row="1" Grid.Column="2" />
-                <ProgressBar Progress="{Binding ExtractSde, Converter={StaticResource lpi}}"
-                             ProgressColor="{Binding ExtractSde, Converter={StaticResource lpi}}"
-                             BackgroundColor="LightGray" MinimumHeightRequest="8"
-                             Grid.Row="1" Grid.Column="3" />
+                <fasciculus:LongProgressInfoBar Source="{Binding ExtractSde}" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
@@ -46,28 +50,18 @@
                 <Label Text="NPC Corporations" Grid.Row="2" Grid.Column="2" />
                 <controls:PendingToDoneLabel Source="{Binding ParseNpcCorporations}" Grid.Row="2" Grid.Column="3" />
                 <Label Text="Regions" Grid.Row="3" Grid.Column="0" />
-                <ProgressBar Progress="{Binding ParseRegions, Converter={StaticResource lpi}}"
-                             ProgressColor="{Binding ParseRegions, Converter={StaticResource lpi}}"
-                             BackgroundColor="LightGray" MinimumHeightRequest="8"
-                             Grid.Row="3" Grid.Column="1"/>
+                <fasciculus:LongProgressInfoBar Source="{Binding ParseRegions}" Grid.Row="3" Grid.Column="1" />
                 <Label Text="Constellations" Grid.Row="3" Grid.Column="2" />
-                <ProgressBar Progress="{Binding ParseConstellations, Converter={StaticResource lpi}}"
-                             ProgressColor="{Binding ParseConstellations, Converter={StaticResource lpi}}"
-                             BackgroundColor="LightGray" MinimumHeightRequest="8"
-                             Grid.Row="3" Grid.Column="3"/>
+                <fasciculus:LongProgressInfoBar Source="{Binding ParseConstellations}" Grid.Row="3" Grid.Column="3" />
                 <Label Text="Solar Systems" Grid.Row="3" Grid.Column="4" />
-                <ProgressBar Progress="{Binding ParseSolarSystems, Converter={StaticResource lpi}}"
-                             ProgressColor="{Binding ParseSolarSystems, Converter={StaticResource lpi}}"
-                             BackgroundColor="LightGray" MinimumHeightRequest="8"
-                             Grid.Row="3" Grid.Column="5"/>
+                <fasciculus:LongProgressInfoBar Source="{Binding ParseSolarSystems}" Grid.Row="3" Grid.Column="5" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Conversion" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Data" Grid.Row="1" Grid.Column="0" />
                 <controls:PendingToDoneLabel Source="{Binding ConvertData}" Grid.Row="1" Grid.Column="1" />
-                <Label Text="Universe"
-                       Grid.Row="1" Grid.Column="2" />
+                <Label Text="Universe" Grid.Row="1" Grid.Column="2" />
                 <controls:PendingToDoneLabel Source="{Binding ConvertUniverse}" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
@@ -76,29 +70,19 @@
                 <Label Text="Connections" Grid.Row="1" Grid.Column="0" />
                 <controls:PendingToDoneLabel Source="{Binding CreateConnections}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Distances" Grid.Row="1" Grid.Column="2" />
-                <ProgressBar Progress="{Binding CreateDistances, Converter={StaticResource lpi}}"
-                             ProgressColor="{Binding CreateDistances, Converter={StaticResource lpi}}"
-                             BackgroundColor="LightGray" MinimumHeightRequest="8"
-                             Grid.Row="1" Grid.Column="3" />
+                <fasciculus:LongProgressInfoBar Source="{Binding CreateDistances}" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="Images" FontAttributes="Bold"
-                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="Copy"
-                       Grid.Row="1" Grid.Column="0" />
-                <ProgressBar Progress="{Binding CopyImages, Converter={StaticResource lpi}}"
-                             ProgressColor="{Binding CopyImages, Converter={StaticResource lpi}}"
-                             BackgroundColor="LightGray" MinimumHeightRequest="8"
-                             Grid.Row="1" Grid.Column="1" />
-                <Label Text="Create"
-                       Grid.Row="1" Grid.Column="2" />
+                <Label Text="Images" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
+                <Label Text="Copy" Grid.Row="1" Grid.Column="0" />
+                <fasciculus:LongProgressInfoBar Source="{Binding CopyImages}" Grid.Row="1" Grid.Column="1" />
+                <Label Text="Create" Grid.Row="1" Grid.Column="2" />
                 <controls:PendingToDoneLabel Source="{Binding CreateImages}" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="Changed Resources" FontAttributes="Bold"
-                       Grid.Row="0" Grid.Column="0"/>
+                <Label Text="Changed Resources" FontAttributes="Bold" Grid.Row="0" Grid.Column="0"/>
                 <ListView ItemsSource="{Binding ChangedResources}"
                           Grid.Row="1" Grid.Column="0">
                     <ListView.ItemTemplate>

@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Eve.Assets.Services;
+using Fasciculus.Maui;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -11,6 +12,7 @@ namespace Fasciculus.Eve.Assets
             var builder = MauiApp.CreateBuilder();
 
             builder.UseMauiApp<App>();
+            builder.UseMauiFasciculus();
 
             ConfigureFonts(builder);
             ConfigureLogging(builder.Logging);
