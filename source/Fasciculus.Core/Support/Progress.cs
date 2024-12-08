@@ -1,6 +1,5 @@
 ﻿using Fasciculus.Threading;
 using System;
-using System.Diagnostics;
 
 namespace Fasciculus.Support
 {
@@ -38,22 +37,19 @@ namespace Fasciculus.Support
         private readonly Func<T, T, T>? accumulate;
         private readonly T start;
 
-        private readonly long interval;
-        private readonly Stopwatch? stopwatch;
-
-        private long ElapsedTime => stopwatch?.ElapsedMilliseconds ?? 0;
+        private readonly long step;
+        private long count;
 
         public T Total { get; private set; }
         public T Current { get; protected set; }
 
-        public AccumulatingProgress(Action<T>? report, Func<T, T, T>? accumulate, T total, T start, long interval = 0)
+        public AccumulatingProgress(Action<T>? report, Func<T, T, T>? accumulate, T total, T start, long step = 1)
             : base(report)
         {
             this.accumulate = accumulate;
             this.start = start;
 
-            this.interval = interval;
-            stopwatch = interval > 0 ? new() : null;
+            this.step = Math.Max(1, step);
 
             Total = total;
             Current = start;
@@ -66,7 +62,7 @@ namespace Fasciculus.Support
             Total = total;
             Current = start;
 
-            stopwatch?.Restart();
+            count = 0;
 
             DoReport(true);
         }
@@ -74,8 +70,6 @@ namespace Fasciculus.Support
         public virtual void End()
         {
             using Locker locker = Locker.Lock(mutex);
-
-            stopwatch?.Stop();
 
             DoReport(true);
         }
@@ -85,6 +79,7 @@ namespace Fasciculus.Support
             using Locker locker = Locker.Lock(mutex);
 
             Current = Accumulate(Current, value);
+            ++count;
 
             DoReport(false);
         }
@@ -95,10 +90,8 @@ namespace Fasciculus.Support
             {
                 base.Report(Current);
             }
-            else if (ElapsedTime >= interval)
+            else if ((count % step) == 0)
             {
-                stopwatch?.Restart();
-
                 base.Report(Current);
             }
         }
@@ -180,8 +173,8 @@ namespace Fasciculus.Support
             }
         }
 
-        public AccumulatingLongProgress(Action<long>? report, long interval = 0)
-            : base(report, null, 0, 0, interval)
+        public AccumulatingLongProgress(Action<long>? report, long step = 1)
+            : base(report, null, 0, 0, step)
         {
         }
 

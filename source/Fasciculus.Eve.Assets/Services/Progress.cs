@@ -86,8 +86,8 @@ namespace Fasciculus.Eve.Assets.Services
             ParseTypes = new TaskSafeProgress<PendingToDone>(ReportParseTypes);
             ParseStationOperations = new TaskSafeProgress<PendingToDone>(ReportParseStationOperations);
             ParseNpcCorporations = new TaskSafeProgress<PendingToDone>(ReportParseNpcCorporations);
-            ParseRegions = new AccumulatingLongProgress(ReportParseRegions, 100);
-            ParseConstellations = new AccumulatingLongProgress(ReportParseConstellations, 100);
+            ParseRegions = new AccumulatingLongProgress(ReportParseRegions);
+            ParseConstellations = new AccumulatingLongProgress(ReportParseConstellations);
             ParseSolarSystems = new AccumulatingLongProgress(ReportParseSolarSystems, 100);
             ConvertData = new TaskSafeProgress<PendingToDone>(ReportConvertData);
             ConvertUniverse = new TaskSafeProgress<PendingToDone>(ReportConvertUniverse);
