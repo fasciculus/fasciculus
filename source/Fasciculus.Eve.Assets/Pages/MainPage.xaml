@@ -24,15 +24,10 @@
                 Command="{Binding StartCommand}" />
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="SDE Download &amp; Extract" FontAttributes="Bold"
-                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="File"
-                       Grid.Row="1" Grid.Column="0" />
-                <Label Text="{Binding DownloadSde, Converter={StaticResource dwn}}"
-                       TextColor="{Binding DownloadSde, Converter={StaticResource dwn}}"
-                       Grid.Row="1" Grid.Column="1" />
-                <Label Text="Extract"
-                       Grid.Row="1" Grid.Column="2" />
+                <Label Text="SDE Download &amp; Extract" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
+                <Label Text="File" Grid.Row="1" Grid.Column="0" />
+                <controls:DownloadSdeStatusLabel Source="{Binding DownloadSde}" Grid.Row="1" Grid.Column="1" />
+                <Label Text="Extract" Grid.Row="1" Grid.Column="2" />
                 <ProgressBar Progress="{Binding ExtractSde, Converter={StaticResource lpi}}"
                              ProgressColor="{Binding ExtractSde, Converter={StaticResource lpi}}"
                              BackgroundColor="LightGray" MinimumHeightRequest="8"

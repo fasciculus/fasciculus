@@ -5,7 +5,7 @@ namespace Fasciculus.Eve.Assets.Pages.Controls
     public partial class PendingToDoneLabel : Label
     {
         public static readonly BindableProperty SourceProperty
-            = BindableProperty.Create("Source", typeof(PendingToDone), typeof(Label), PendingToDone.Pending,
+            = BindableProperty.Create("Source", typeof(PendingToDone), typeof(PendingToDoneLabel), PendingToDone.Pending,
                 BindingMode.OneWay, null, OnSourcePropertyChanged);
 
         private static void OnSourcePropertyChanged(BindableObject bindable, object oldvalue, object newvalue)
@@ -41,11 +41,6 @@ namespace Fasciculus.Eve.Assets.Pages.Controls
         public PendingToDoneLabel()
         {
             SetTextAndColor(this, PendingToDone.Pending);
-        }
-
-        protected override void OnBindingContextChanged()
-        {
-            base.OnBindingContextChanged();
         }
     }
 }
