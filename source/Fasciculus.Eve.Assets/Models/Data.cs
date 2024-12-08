@@ -16,6 +16,7 @@
     public class SdeMarketGroup
     {
         public SdeLocalized NameID { get; set; } = SdeLocalized.Empty;
+        public int ParentGroupID { get; set; }
     }
 
     public class SdeType

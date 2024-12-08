@@ -8,6 +8,82 @@ using System.Linq;
 namespace Fasciculus.Eve.Models
 {
     [DebuggerDisplay("{Name}")]
+    public class EveMarketGroup
+    {
+        public class Data
+        {
+            public int Id { get; }
+            public string Name { get; } = string.Empty;
+            public int ParentId { get; }
+
+            public Data(int id, string name, int parentId)
+            {
+                Id = id;
+                Name = name;
+                ParentId = parentId;
+            }
+
+            public Data(Stream stream)
+            {
+                Id = stream.ReadInt();
+                Name = stream.ReadString();
+                ParentId = stream.ReadInt();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Id);
+                stream.WriteString(Name);
+                stream.WriteInt(ParentId);
+            }
+        }
+
+        private readonly Data data;
+
+        public int Id => data.Id;
+        public string Name => data.Name;
+        public EveMarketGroup? Parent { get; private set; }
+
+        public EveMarketGroup(Data data)
+        {
+            this.data = data;
+        }
+
+        internal void SetParent(IReadOnlyDictionary<int, EveMarketGroup> marketGroups)
+        {
+            if (marketGroups.TryGetValue(data.ParentId, out EveMarketGroup? parent))
+            {
+                Parent = parent;
+            }
+        }
+    }
+
+    public class EveMarketGroups : IEnumerable<EveMarketGroup>
+    {
+        private readonly EveMarketGroup[] marketGroups;
+        private readonly Dictionary<int, EveMarketGroup> byId;
+
+        public int Count => marketGroups.Length;
+
+        public bool Contains(int id) => byId.ContainsKey(id);
+        public EveMarketGroup? this[int id] => byId.TryGetValue(id, out EveMarketGroup? result) ? result : null;
+
+        public EveMarketGroups(IEnumerable<EveMarketGroup> marketGroups)
+        {
+            this.marketGroups = marketGroups.ToArray();
+
+            byId = this.marketGroups.ToDictionary(x => x.Id);
+            this.marketGroups.Apply(x => { x.SetParent(byId); });
+        }
+
+        public IEnumerator<EveMarketGroup> GetEnumerator()
+            => marketGroups.AsEnumerable().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => marketGroups.GetEnumerator();
+    }
+
+    [DebuggerDisplay("{Name}")]
     public class EveType
     {
         public class Data
