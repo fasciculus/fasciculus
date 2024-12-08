@@ -79,7 +79,7 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 progress.CreateDistancesProgress.Begin(EveSecurity.Levels.Length * GetAllowedSystems().Indices.Count());
 
-                IEnumerable<SparseShortMatrix> distances = EveSecurity.Levels.Select(GetDistances);
+                SparseShortMatrix[] distances = EveSecurity.Levels.Select(GetDistances).ToArray();
 
                 navigation = new(distances);
 
