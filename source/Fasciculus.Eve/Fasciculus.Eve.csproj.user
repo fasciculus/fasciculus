@@ -31,5 +31,8 @@
     <MauiXaml Update="Pages\PlanetaryIndustryPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
+    <MauiXaml Update="Resources\Styles\EveStyles.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
   </ItemGroup>
 </Project>

@@ -82,6 +82,9 @@
     <MauiXaml Update="Pages\PlanetaryIndustryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Resources\Styles\EveStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
   </ItemGroup>
 
 </Project>

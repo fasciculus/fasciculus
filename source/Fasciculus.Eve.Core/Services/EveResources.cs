@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.IO;
-using Fasciculus.Support;
+using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -13,23 +13,29 @@ namespace Fasciculus.Eve.Services
 {
     public interface IEveResourcesProgress : INotifyPropertyChanged
     {
-        public IProgress<bool> DataProgress { get; }
-        public IProgress<bool> UniverseProgress { get; }
-        public IProgress<bool> NavigationProgress { get; }
+        public WorkState DataInfo { get; }
+        public IProgress<WorkState> DataProgress { get; }
 
-        public bool Data { get; }
-        public bool Universe { get; }
-        public bool Navigation { get; }
+        public WorkState UniverseInfo { get; }
+        public IProgress<WorkState> UniverseProgress { get; }
+
+        public WorkState NavigationInfo { get; }
+        public IProgress<WorkState> NavigationProgress { get; }
     }
 
     public partial class EveResourcesProgress : ObservableObject, IEveResourcesProgress
     {
-        public IProgress<bool> DataProgress { get; }
-        public IProgress<bool> UniverseProgress { get; }
-        public IProgress<bool> NavigationProgress { get; }
+        [ObservableProperty]
+        private WorkState dataInfo;
+        public IProgress<WorkState> DataProgress { get; }
 
         [ObservableProperty]
-        private bool data;
+        private WorkState universeInfo;
+        public IProgress<WorkState> UniverseProgress { get; }
+
+        [ObservableProperty]
+        private WorkState navigationInfo;
+        public IProgress<WorkState> NavigationProgress { get; }
 
         [ObservableProperty]
         private bool universe;
@@ -39,9 +45,9 @@ namespace Fasciculus.Eve.Services
 
         public EveResourcesProgress()
         {
-            DataProgress = new TaskSafeProgress<bool>((done) => { Data = done; });
-            UniverseProgress = new TaskSafeProgress<bool>((done) => { Universe = done; });
-            NavigationProgress = new TaskSafeProgress<bool>((done) => { Navigation = done; });
+            DataProgress = new WorkStateProgress((x) => { DataInfo = x; });
+            UniverseProgress = new WorkStateProgress((x) => { UniverseInfo = x; });
+            NavigationProgress = new WorkStateProgress((x) => { NavigationInfo = x; });
         }
     }
 
@@ -87,9 +93,9 @@ namespace Fasciculus.Eve.Services
             {
                 IEmbeddedResource resource = resources["EveData"];
 
-                progress.DataProgress.Report(false);
+                progress.DataProgress.Report(WorkState.Working);
                 data = resource.Read(s => new EveData(s), true);
-                progress.DataProgress.Report(true);
+                progress.DataProgress.Report(WorkState.Done);
             }
 
             return data;
@@ -107,9 +113,9 @@ namespace Fasciculus.Eve.Services
                 IEmbeddedResource resource = resources["EveUniverse"];
                 EveData eveData = Tasks.Wait(Data);
 
-                progress.UniverseProgress.Report(false);
+                progress.UniverseProgress.Report(WorkState.Working);
                 universe = resource.Read(s => new EveUniverse(s, eveData), true);
-                progress.UniverseProgress.Report(true);
+                progress.UniverseProgress.Report(WorkState.Done);
             }
 
             return universe;
@@ -127,9 +133,9 @@ namespace Fasciculus.Eve.Services
                 IEmbeddedResource resource = resources["EveNavigation"];
                 EveSolarSystems solarSystems = Tasks.Wait(Universe).SolarSystems;
 
-                progress.NavigationProgress.Report(false);
+                progress.NavigationProgress.Report(WorkState.Working);
                 navigation = resource.Read(s => new EveNavigation(s, solarSystems), true);
-                progress.NavigationProgress.Report(true);
+                progress.NavigationProgress.Report(WorkState.Done);
             }
 
             return navigation;

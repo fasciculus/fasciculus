@@ -2,6 +2,7 @@
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Services;
+using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using System.ComponentModel;
 
@@ -14,22 +15,13 @@ namespace Fasciculus.Eve.PageModels
         private readonly INavigator navigator;
 
         [ObservableProperty]
-        private string dataText = "Pending";
+        private WorkState data = WorkState.Pending;
 
         [ObservableProperty]
-        private Color dataColor = Colors.Orange;
+        private WorkState universe = WorkState.Pending;
 
         [ObservableProperty]
-        private string universeText = "Pending";
-
-        [ObservableProperty]
-        private Color universeColor = Colors.Orange;
-
-        [ObservableProperty]
-        private string navigationText = "Pending";
-
-        [ObservableProperty]
-        private Color navigationColor = Colors.Orange;
+        private WorkState navigation = WorkState.Pending;
 
         public LoadingPageModel(IEveResources resources, IEveResourcesProgress progress, INavigator navigator)
         {
@@ -56,14 +48,9 @@ namespace Fasciculus.Eve.PageModels
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            DataText = progress.Data ? "Done" : "Pending";
-            DataColor = progress.Data ? Colors.Green : Colors.Orange;
-
-            UniverseText = progress.Universe ? "Done" : "Pending";
-            UniverseColor = progress.Universe ? Colors.Green : Colors.Orange;
-
-            NavigationText = progress.Navigation ? "Done" : "Pending";
-            NavigationColor = progress.Navigation ? Colors.Green : Colors.Orange;
+            Data = progress.DataInfo;
+            Universe = progress.UniverseInfo;
+            Navigation = progress.NavigationInfo;
         }
 
         private Task GoToMainPage(object? _)

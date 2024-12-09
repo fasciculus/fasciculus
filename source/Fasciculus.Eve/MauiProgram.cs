@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Fasciculus.Eve.PageModels;
 using Fasciculus.Eve.Services;
+using Fasciculus.Maui;
 using Fasciculus.Maui.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ namespace Fasciculus.Eve
 
             builder.UseMauiApp<App>();
             builder.UseMauiCommunityToolkit();
+            builder.UseMauiFasciculus();
 
             ConfigureFonts(builder);
             ConfigureLogging(builder.Logging);
@@ -28,6 +30,7 @@ namespace Fasciculus.Eve
             services.AddNavigator();
             services.AddEsi();
             services.AddTrade();
+            services.AddPlanetaryIndustry();
 
             services.TryAddKeyedSingleton("EsiUserAgent", "Fasciculus.Eve (rhj1)");
 
