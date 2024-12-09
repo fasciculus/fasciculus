@@ -42,8 +42,9 @@ namespace Fasciculus.Eve.Assets.Services
                 EveType.Data[] types = ConvertTypes(sdeData.Types);
                 EveStationOperation.Data[] stationOperations = ConvertStationOperations(sdeData.StationOperations);
                 EveNpcCorporation.Data[] npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
+                EvePlanetSchematic.Data[] planetSchematics = ConvertPlanetSchematics(sdeData.PlanetSchematics);
 
-                data = new(version, marketGroups, types, stationOperations, npcCorporations);
+                data = new(version, marketGroups, types, stationOperations, npcCorporations, planetSchematics);
 
                 progress.ConvertDataProgress.Report(WorkState.Done);
             }
@@ -104,6 +105,37 @@ namespace Fasciculus.Eve.Assets.Services
             string name = sdeNpcCorporation.NameID.En;
 
             return new(id, name);
+        }
+
+        private static EvePlanetSchematic.Data[] ConvertPlanetSchematics(Dictionary<int, SdePlanetSchematic> planetSchematics)
+            => [.. planetSchematics.Select(ConvertPlanetSchematic).OrderBy(t => t.Id)];
+
+        private static EvePlanetSchematic.Data ConvertPlanetSchematic(KeyValuePair<int, SdePlanetSchematic> kvp)
+        {
+            SdePlanetSchematic sdePlanetSchematic = kvp.Value;
+
+            int id = kvp.Key;
+            string name = sdePlanetSchematic.NameID.En;
+
+            EvePlanetSchematicType.Data[] inputs = sdePlanetSchematic.Types
+                .Where(x => x.Value.IsInput)
+                .Select(ConvertPlanetSchematicType)
+                .ToArray();
+
+            EvePlanetSchematicType.Data output = ConvertPlanetSchematicType(sdePlanetSchematic.Types.Single(x => !x.Value.IsInput));
+
+            return new(id, name, inputs, output);
+        }
+
+        private static EvePlanetSchematicType.Data ConvertPlanetSchematicType(KeyValuePair<int, SdePlanetSchematicType> kvp)
+        {
+            SdePlanetSchematicType sdePlanetSchematicType = kvp.Value;
+
+            int id = kvp.Key;
+            bool isInput = sdePlanetSchematicType.IsInput;
+            int quantity = sdePlanetSchematicType.Quantity;
+
+            return new(id, isInput, quantity);
         }
     }
 

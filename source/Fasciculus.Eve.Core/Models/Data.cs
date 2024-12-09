@@ -269,6 +269,71 @@ namespace Fasciculus.Eve.Models
             => npcCorporations.GetEnumerator();
     }
 
+    public class EvePlanetSchematicType
+    {
+        public class Data
+        {
+            public int Type { get; }
+            public int Quantity { get; }
+
+            public Data(int id, bool isInput, int quantity)
+            {
+                Type = id;
+                Quantity = quantity;
+            }
+
+            public Data(Stream stream)
+            {
+                Type = stream.ReadInt();
+                Quantity = stream.ReadInt();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Type);
+                stream.WriteInt(Quantity);
+            }
+        }
+    }
+
+    public class EvePlanetSchematic
+    {
+        public class Data
+        {
+            public int Id { get; }
+            public string Name { get; }
+
+            private readonly EvePlanetSchematicType.Data[] inputs;
+            public IReadOnlyList<EvePlanetSchematicType.Data> Inputs => inputs;
+
+            public EvePlanetSchematicType.Data Output { get; }
+
+            public Data(int id, string name, IEnumerable<EvePlanetSchematicType.Data> inputs, EvePlanetSchematicType.Data output)
+            {
+                Id = id;
+                Name = name;
+                this.inputs = inputs.ToArray();
+                Output = output;
+            }
+
+            public Data(Stream stream)
+            {
+                Id = stream.ReadInt();
+                Name = stream.ReadString();
+                inputs = stream.ReadArray(s => new EvePlanetSchematicType.Data(s));
+                Output = new EvePlanetSchematicType.Data(stream);
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Id);
+                stream.WriteString(Name);
+                stream.WriteArray(inputs, x => x.Write(stream));
+                Output.Write(stream);
+            }
+        }
+    }
+
     public class EveData
     {
         public class Data
@@ -287,14 +352,19 @@ namespace Fasciculus.Eve.Models
             private readonly EveNpcCorporation.Data[] npcCorporations;
             public IReadOnlyList<EveNpcCorporation.Data> NpcCorporations => npcCorporations;
 
+            private readonly EvePlanetSchematic.Data[] planetSchematics;
+            public IReadOnlyList<EvePlanetSchematic.Data> PlanetSchematics => planetSchematics;
+
             public Data(DateTime version, IEnumerable<EveMarketGroup.Data> marketGroups, IEnumerable<EveType.Data> types,
-                IEnumerable<EveStationOperation.Data> stationOperations, IEnumerable<EveNpcCorporation.Data> npcCorporations)
+                IEnumerable<EveStationOperation.Data> stationOperations, IEnumerable<EveNpcCorporation.Data> npcCorporations,
+                IEnumerable<EvePlanetSchematic.Data> planetSchematics)
             {
                 Version = version;
                 this.marketGroups = marketGroups.ToArray();
                 this.types = types.ToArray();
                 this.stationOperations = stationOperations.ToArray();
                 this.npcCorporations = npcCorporations.ToArray();
+                this.planetSchematics = planetSchematics.ToArray();
             }
 
             public Data(Stream stream)
@@ -304,6 +374,7 @@ namespace Fasciculus.Eve.Models
                 types = stream.ReadArray(s => new EveType.Data(s));
                 stationOperations = stream.ReadArray(s => new EveStationOperation.Data(s));
                 npcCorporations = stream.ReadArray(s => new EveNpcCorporation.Data(s));
+                planetSchematics = stream.ReadArray(s => new EvePlanetSchematic.Data(s));
             }
 
             public void Write(Stream stream)
@@ -313,6 +384,7 @@ namespace Fasciculus.Eve.Models
                 stream.WriteArray(types, x => x.Write(stream));
                 stream.WriteArray(stationOperations, x => x.Write(stream));
                 stream.WriteArray(npcCorporations, x => x.Write(stream));
+                stream.WriteArray(planetSchematics, x => x.Write(stream));
             }
         }
 
