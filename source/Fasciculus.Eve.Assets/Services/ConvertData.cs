@@ -38,11 +38,12 @@ namespace Fasciculus.Eve.Assets.Services
                 progress.ConvertDataProgress.Report(WorkState.Working);
 
                 DateTime version = sdeData.Version;
-                IEnumerable<EveType.Data> types = ConvertTypes(sdeData.Types);
-                IEnumerable<EveStationOperation.Data> stationOperations = ConvertStationOperations(sdeData.StationOperations);
-                IEnumerable<EveNpcCorporation.Data> npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
+                EveMarketGroup.Data[] marketGroups = ConvertMarketGroups(sdeData.MarketGroups);
+                EveType.Data[] types = ConvertTypes(sdeData.Types);
+                EveStationOperation.Data[] stationOperations = ConvertStationOperations(sdeData.StationOperations);
+                EveNpcCorporation.Data[] npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
 
-                data = new(version, types, stationOperations, npcCorporations);
+                data = new(version, marketGroups, types, stationOperations, npcCorporations);
 
                 progress.ConvertDataProgress.Report(WorkState.Done);
             }
@@ -50,8 +51,8 @@ namespace Fasciculus.Eve.Assets.Services
             return data;
         }
 
-        private static IEnumerable<EveType.Data> ConvertTypes(Dictionary<int, SdeType> types)
-            => types.Select(ConvertType).OrderBy(t => t.Id);
+        private static EveType.Data[] ConvertTypes(Dictionary<int, SdeType> types)
+            => [.. types.Select(ConvertType).OrderBy(t => t.Id)];
 
         private static EveType.Data ConvertType(KeyValuePair<int, SdeType> kvp)
         {
@@ -64,8 +65,22 @@ namespace Fasciculus.Eve.Assets.Services
             return new(id, name, volume);
         }
 
-        private static IEnumerable<EveStationOperation.Data> ConvertStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
-            => stationOperations.Select(ConvertStationOperation).OrderBy(t => t.Id);
+        private static EveMarketGroup.Data[] ConvertMarketGroups(Dictionary<int, SdeMarketGroup> marketGroups)
+            => [.. marketGroups.Select(ConvertMarketGroup).OrderBy(t => t.Id)];
+
+        private static EveMarketGroup.Data ConvertMarketGroup(KeyValuePair<int, SdeMarketGroup> kvp)
+        {
+            SdeMarketGroup marketGroup = kvp.Value;
+
+            int id = kvp.Key;
+            string name = marketGroup.NameID.En;
+            int parentId = marketGroup.ParentGroupID;
+
+            return new(id, name, parentId);
+        }
+
+        private static EveStationOperation.Data[] ConvertStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
+            => [.. stationOperations.Select(ConvertStationOperation).OrderBy(t => t.Id)];
 
         private static EveStationOperation.Data ConvertStationOperation(KeyValuePair<int, SdeStationOperation> kvp)
         {
@@ -77,8 +92,8 @@ namespace Fasciculus.Eve.Assets.Services
             return new(id, name);
         }
 
-        private static IEnumerable<EveNpcCorporation.Data> ConvertNpcCorporations(Dictionary<int, SdeNpcCorporation> npcCorporations)
-            => npcCorporations.Select(ConvertNpcCorporation).OrderBy(t => t.Id);
+        private static EveNpcCorporation.Data[] ConvertNpcCorporations(Dictionary<int, SdeNpcCorporation> npcCorporations)
+            => [.. npcCorporations.Select(ConvertNpcCorporation).OrderBy(t => t.Id)];
 
         private static EveNpcCorporation.Data ConvertNpcCorporation(KeyValuePair<int, SdeNpcCorporation> kvp)
         {

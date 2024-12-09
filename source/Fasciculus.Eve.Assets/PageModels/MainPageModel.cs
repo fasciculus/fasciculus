@@ -4,6 +4,7 @@ using Fasciculus.Eve.Assets.Services;
 using Fasciculus.Maui.Support;
 using Fasciculus.Support;
 using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.Assets.PageModels
@@ -62,8 +63,7 @@ namespace Fasciculus.Eve.Assets.PageModels
         [ObservableProperty]
         private WorkState createImages = WorkState.Pending;
 
-        [ObservableProperty]
-        private string[] changedResources = [];
+        public ObservableCollection<string> ChangedResources { get; } = [];
 
         private ILogger logger;
 
@@ -102,16 +102,21 @@ namespace Fasciculus.Eve.Assets.PageModels
             CopyImages = assetsProgress.CopyImagesInfo;
             CreateImages = assetsProgress.CreateImagesInfo;
 
-            ChangedResources = GetChangedResources();
+            if (ev.PropertyName == nameof(IAssetsProgress.CreateResourcesInfo))
+            {
+                UpdateChangedResources();
+            }
         }
 
-        private string[] GetChangedResources()
+        private void UpdateChangedResources()
         {
             int prefixLength = assetsDirectories.Resources.FullName.Length + 1;
 
-            return assetsProgress.CreateResourcesInfo
+            ChangedResources.Clear();
+
+            assetsProgress.CreateResourcesInfo
                 .Select(x => x.FullName[prefixLength..].Replace('\\', '/'))
-                .ToArray();
+                .Apply(ChangedResources.Add);
         }
 
         [RelayCommand]

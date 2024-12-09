@@ -271,6 +271,9 @@ namespace Fasciculus.Eve.Models
         {
             public DateTime Version { get; }
 
+            private readonly EveMarketGroup.Data[] marketGroups;
+            public IReadOnlyList<EveMarketGroup.Data> MarketGroups => marketGroups;
+
             private readonly EveType.Data[] types;
             public IReadOnlyList<EveType.Data> Types => types;
 
@@ -280,10 +283,11 @@ namespace Fasciculus.Eve.Models
             private readonly EveNpcCorporation.Data[] npcCorporations;
             public IReadOnlyList<EveNpcCorporation.Data> NpcCorporations => npcCorporations;
 
-            public Data(DateTime version, IEnumerable<EveType.Data> types, IEnumerable<EveStationOperation.Data> stationOperations,
-                IEnumerable<EveNpcCorporation.Data> npcCorporations)
+            public Data(DateTime version, IEnumerable<EveMarketGroup.Data> marketGroups, IEnumerable<EveType.Data> types,
+                IEnumerable<EveStationOperation.Data> stationOperations, IEnumerable<EveNpcCorporation.Data> npcCorporations)
             {
                 Version = version;
+                this.marketGroups = marketGroups.ToArray();
                 this.types = types.ToArray();
                 this.stationOperations = stationOperations.ToArray();
                 this.npcCorporations = npcCorporations.ToArray();
@@ -292,6 +296,7 @@ namespace Fasciculus.Eve.Models
             public Data(Stream stream)
             {
                 Version = stream.ReadDateTime();
+                marketGroups = stream.ReadArray(s => new EveMarketGroup.Data(s));
                 types = stream.ReadArray(s => new EveType.Data(s));
                 stationOperations = stream.ReadArray(s => new EveStationOperation.Data(s));
                 npcCorporations = stream.ReadArray(s => new EveNpcCorporation.Data(s));
@@ -300,6 +305,7 @@ namespace Fasciculus.Eve.Models
             public void Write(Stream stream)
             {
                 stream.WriteDateTime(Version);
+                stream.WriteArray(marketGroups, x => x.Write(stream));
                 stream.WriteArray(types, x => x.Write(stream));
                 stream.WriteArray(stationOperations, x => x.Write(stream));
                 stream.WriteArray(npcCorporations, x => x.Write(stream));
