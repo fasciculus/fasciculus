@@ -121,6 +121,7 @@ namespace Fasciculus.Eve.Assets.Services
             EvePlanetSchematicType.Data[] inputs = sdePlanetSchematic.Types
                 .Where(x => x.Value.IsInput)
                 .Select(ConvertPlanetSchematicType)
+                .OrderBy(x => x.Type)
                 .ToArray();
 
             EvePlanetSchematicType.Data output = ConvertPlanetSchematicType(sdePlanetSchematic.Types.Single(x => !x.Value.IsInput));
@@ -133,10 +134,9 @@ namespace Fasciculus.Eve.Assets.Services
             SdePlanetSchematicType sdePlanetSchematicType = kvp.Value;
 
             int id = kvp.Key;
-            bool isInput = sdePlanetSchematicType.IsInput;
             int quantity = sdePlanetSchematicType.Quantity;
 
-            return new(id, isInput, quantity);
+            return new(id, quantity);
         }
     }
 

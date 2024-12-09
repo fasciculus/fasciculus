@@ -269,6 +269,7 @@ namespace Fasciculus.Eve.Models
             => npcCorporations.GetEnumerator();
     }
 
+    [DebuggerDisplay("{Type.Name} (x{Quantity})")]
     public class EvePlanetSchematicType
     {
         public class Data
@@ -276,7 +277,7 @@ namespace Fasciculus.Eve.Models
             public int Type { get; }
             public int Quantity { get; }
 
-            public Data(int id, bool isInput, int quantity)
+            public Data(int id, int quantity)
             {
                 Type = id;
                 Quantity = quantity;
@@ -294,8 +295,21 @@ namespace Fasciculus.Eve.Models
                 stream.WriteInt(Quantity);
             }
         }
+
+        private readonly Data data;
+
+        public EveType Type { get; }
+        public int Quantity => data.Quantity;
+
+        public EvePlanetSchematicType(Data data, EveTypes types)
+        {
+            this.data = data;
+
+            Type = types[data.Type];
+        }
     }
 
+    [DebuggerDisplay("{Name}")]
     public class EvePlanetSchematic
     {
         public class Data
@@ -339,9 +353,21 @@ namespace Fasciculus.Eve.Models
 
         private readonly Data data;
 
-        public EvePlanetSchematic(Data data)
+        public int Id => data.Id;
+        public string Name => data.Name;
+        public int CycleTime => data.CycleTime;
+
+        private readonly EvePlanetSchematicType[] inputs;
+        public IReadOnlyList<EvePlanetSchematicType> Inputs => inputs;
+
+        public EvePlanetSchematicType Output { get; }
+
+        public EvePlanetSchematic(Data data, EveTypes types)
         {
             this.data = data;
+
+            inputs = data.Inputs.Select(x => new EvePlanetSchematicType(x, types)).ToArray();
+            Output = new EvePlanetSchematicType(data.Output, types);
         }
     }
 
@@ -430,7 +456,7 @@ namespace Fasciculus.Eve.Models
             Types = new(data.Types.Select(x => new EveType(x)));
             StationOperations = new(data.StationOperations.Select(x => new EveStationOperation(x)));
             NpcCorporations = new(data.NpcCorporations.Select(x => new EveNpcCorporation(x)));
-            PlanetSchematics = new(data.PlanetSchematics.Select(x => new EvePlanetSchematic(x)));
+            PlanetSchematics = new(data.PlanetSchematics.Select(x => new EvePlanetSchematic(x, Types)));
         }
 
         public EveData(Stream stream)
