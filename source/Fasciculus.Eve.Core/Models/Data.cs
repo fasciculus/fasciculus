@@ -336,6 +336,29 @@ namespace Fasciculus.Eve.Models
                 Output.Write(stream);
             }
         }
+
+        private readonly Data data;
+
+        public EvePlanetSchematic(Data data)
+        {
+            this.data = data;
+        }
+    }
+
+    public class EvePlanetSchematics : IEnumerable<EvePlanetSchematic>
+    {
+        private readonly EvePlanetSchematic[] planetSchematics;
+
+        public EvePlanetSchematics(IEnumerable<EvePlanetSchematic> planetSchematics)
+        {
+            this.planetSchematics = planetSchematics.ToArray();
+        }
+
+        public IEnumerator<EvePlanetSchematic> GetEnumerator()
+            => planetSchematics.AsEnumerable().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => planetSchematics.GetEnumerator();
     }
 
     public class EveData
@@ -398,6 +421,7 @@ namespace Fasciculus.Eve.Models
         public EveTypes Types { get; }
         public EveStationOperations StationOperations { get; }
         public EveNpcCorporations NpcCorporations { get; }
+        public EvePlanetSchematics PlanetSchematics { get; }
 
         public EveData(Data data)
         {
@@ -406,6 +430,7 @@ namespace Fasciculus.Eve.Models
             Types = new(data.Types.Select(x => new EveType(x)));
             StationOperations = new(data.StationOperations.Select(x => new EveStationOperation(x)));
             NpcCorporations = new(data.NpcCorporations.Select(x => new EveNpcCorporation(x)));
+            PlanetSchematics = new(data.PlanetSchematics.Select(x => new EvePlanetSchematic(x)));
         }
 
         public EveData(Stream stream)
