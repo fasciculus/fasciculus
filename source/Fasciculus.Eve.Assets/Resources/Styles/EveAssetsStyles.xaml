@@ -8,13 +8,13 @@
   <Style TargetType="fasciculus:LongProgressInfoBar">
     <Setter Property="BackgroundColor" Value="LightGray" />
     <Setter Property="MinimumHeightRequest" Value="8" />
-    <Setter Property="BusyColor" Value="Orange" />
+    <Setter Property="BusyColor" Value="#FFD0D000" />
     <Setter Property="DoneColor" Value="LightGreen" />
   </Style>
 
   <Style TargetType="fasciculus:WorkStateLabel">
-    <Setter Property="PendingColor" Value="Red" />
-    <Setter Property="WorkingColor" Value="Orange" />
+    <Setter Property="PendingColor" Value="#FFFF6060" />
+    <Setter Property="WorkingColor" Value="#FFD0D000" />
     <Setter Property="DoneColor" Value="LightGreen" />
   </Style>
   
