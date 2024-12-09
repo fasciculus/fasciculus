@@ -4,13 +4,17 @@
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
              xmlns:eveControls="clr-namespace:Fasciculus.Eve.Pages.Controls"
              x:Class="Fasciculus.Eve.Pages.PlanetaryIndustryPage"
-             x:DataType="pageModels:IndustryPageModel"
+             x:DataType="pageModels:PlanetaryIndustryPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
     <ScrollView>
         <HorizontalStackLayout>
             <eveControls:SideBar BindingContext="{Binding SideBar}" />
-            <Label Text="Planetary Industry" />
+            <VerticalStackLayout Padding="16,16" Spacing="12">
+                <Grid RowDefinitions="Auto" ColumnDefinitions="160,*">
+                    <Button Text="Start" Command="{Binding StartCommand}"  Grid.Row="0" Grid.Column="0" />
+                </Grid>
+            </VerticalStackLayout>
         </HorizontalStackLayout>
     </ScrollView>
     
