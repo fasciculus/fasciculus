@@ -128,23 +128,25 @@ namespace Fasciculus.Eve.Models
 
     public class EveTypes : IEnumerable<EveType>
     {
-        private Dictionary<int, EveType> byId;
+        private readonly EveType[] types;
+        private readonly Lazy<Dictionary<int, EveType>> byId;
 
-        public int Count => byId.Count;
+        public int Count => types.Length;
 
-        public bool Contains(int id) => byId.ContainsKey(id);
-        public EveType this[int id] => byId[id];
+        public bool Contains(int id) => byId.Value.ContainsKey(id);
+        public EveType this[int id] => byId.Value[id];
 
         public EveTypes(IEnumerable<EveType> types)
         {
-            byId = types.ToDictionary(x => x.Id);
+            this.types = types.ToArray();
+            byId = new(() => types.ToDictionary(x => x.Id), true);
         }
 
         public IEnumerator<EveType> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => types.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => types.GetEnumerator();
     }
 
     [DebuggerDisplay("{Name}")]
@@ -187,20 +189,22 @@ namespace Fasciculus.Eve.Models
 
     public class EveStationOperations : IEnumerable<EveStationOperation>
     {
-        private Dictionary<int, EveStationOperation> byId;
+        private readonly EveStationOperation[] stationOperations;
+        private readonly Lazy<Dictionary<int, EveStationOperation>> byId;
 
-        public EveStationOperation this[int id] => byId[id];
+        public EveStationOperation this[int id] => byId.Value[id];
 
-        public EveStationOperations(IEnumerable<EveStationOperation> operations)
+        public EveStationOperations(IEnumerable<EveStationOperation> stationOperations)
         {
-            byId = operations.ToDictionary(x => x.Id);
+            this.stationOperations = stationOperations.ToArray();
+            byId = new(() => this.stationOperations.ToDictionary(x => x.Id), true);
         }
 
         public IEnumerator<EveStationOperation> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => stationOperations.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => stationOperations.GetEnumerator();
     }
 
     [DebuggerDisplay("{Name}")]
@@ -243,20 +247,22 @@ namespace Fasciculus.Eve.Models
 
     public class EveNpcCorporations : IEnumerable<EveNpcCorporation>
     {
-        private Dictionary<int, EveNpcCorporation> byId;
+        private readonly EveNpcCorporation[] npcCorporations;
+        private readonly Lazy<Dictionary<int, EveNpcCorporation>> byId;
 
-        public EveNpcCorporation this[int id] => byId[id];
+        public EveNpcCorporation this[int id] => byId.Value[id];
 
-        public EveNpcCorporations(IEnumerable<EveNpcCorporation> operations)
+        public EveNpcCorporations(IEnumerable<EveNpcCorporation> npcCorporations)
         {
-            byId = operations.ToDictionary(x => x.Id);
+            this.npcCorporations = npcCorporations.ToArray();
+            byId = new(() => this.npcCorporations.ToDictionary(x => x.Id), true);
         }
 
         public IEnumerator<EveNpcCorporation> GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => npcCorporations.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => byId.Values.GetEnumerator();
+            => npcCorporations.GetEnumerator();
     }
 
     public class EveData
