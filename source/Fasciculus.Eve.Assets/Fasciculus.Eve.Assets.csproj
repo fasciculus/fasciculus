@@ -44,6 +44,9 @@
     <MauiXaml Update="Pages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Resources\Styles\EveAssetsStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
   </ItemGroup>
 
 </Project>

@@ -9,25 +9,10 @@
              x:DataType="p:MainPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
-    <ContentPage.Resources>
-        <converters:LongProgressInfoConverter x:Key="lpi" />
-        <Style TargetType="fasciculus:LongProgressInfoBar">
-            <Setter Property="BackgroundColor" Value="LightGray" />
-            <Setter Property="MinimumHeightRequest" Value="8" />
-            <Setter Property="BusyColor" Value="Orange" />
-            <Setter Property="DoneColor" Value="LightGreen" />
-        </Style>
-    </ContentPage.Resources>
-
     <ScrollView>
-        <VerticalStackLayout
-            Padding="16,16"
-            Spacing="32">
+        <VerticalStackLayout Padding="16,16" Spacing="32">
 
-            <Button
-                x:Name="StartBtn"
-                Text="Start" 
-                Command="{Binding StartCommand}" />
+            <Button x:Name="StartBtn" Text="Start" Command="{Binding StartCommand}" />
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Download &amp; Extract" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />

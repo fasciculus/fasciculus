@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:fasciculus="http://fasciculus.github.io/2024/maui">
+
+  <Style TargetType="fasciculus:LongProgressInfoBar">
+    <Setter Property="BackgroundColor" Value="LightGray" />
+    <Setter Property="MinimumHeightRequest" Value="8" />
+    <Setter Property="BusyColor" Value="Orange" />
+    <Setter Property="DoneColor" Value="LightGreen" />
+  </Style>
+  
+</ResourceDictionary>
