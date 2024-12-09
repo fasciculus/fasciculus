@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Eve.Assets.Models;
+using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -88,13 +89,13 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (names is null)
             {
-                progress.ParseNamesProgress.Report(PendingToDone.Working);
+                progress.ParseNamesProgress.Report(WorkState.Working);
 
                 names = yaml
                     .Deserialize<SdeName[]>(sdeFiles.NamesYaml)
                     .ToDictionary(n => n.ItemID, n => n.ItemName);
 
-                progress.ParseNamesProgress.Report(PendingToDone.Done);
+                progress.ParseNamesProgress.Report(WorkState.Done);
             }
 
             return names;

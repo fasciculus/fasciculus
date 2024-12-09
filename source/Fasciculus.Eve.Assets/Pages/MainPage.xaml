@@ -25,7 +25,7 @@
             <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Parsing" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Names" Grid.Row="1" Grid.Column="0" />
-                <controls:PendingToDoneLabel Source="{Binding ParseNames}" Grid.Row="1" Grid.Column="1" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseNames}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Market Groups" Grid.Row="1" Grid.Column="2" />
                 <controls:PendingToDoneLabel Source="{Binding ParseMarketGroups}" Grid.Row="1" Grid.Column="3" />
                 <Label Text="Types" Grid.Row="1" Grid.Column="4" />

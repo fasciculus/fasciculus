@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Assets.Services;
+using Fasciculus.Maui.Support;
 using Fasciculus.Support;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
@@ -20,7 +21,7 @@ namespace Fasciculus.Eve.Assets.PageModels
         private LongProgressInfo extractSde = LongProgressInfo.Start;
 
         [ObservableProperty]
-        private PendingToDone parseNames = PendingToDone.Pending;
+        private WorkState parseNames = WorkState.Pending;
 
         [ObservableProperty]
         private PendingToDone parseMarketGroups = PendingToDone.Pending;

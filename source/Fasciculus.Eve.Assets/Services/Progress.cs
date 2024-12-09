@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Maui.Support;
 using Fasciculus.Support;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
@@ -29,8 +30,8 @@ namespace Fasciculus.Eve.Assets.Services
         public LongProgressInfo ExtractSdeInfo { get; }
         public IAccumulatingLongProgress ExtractSdeProgress { get; }
 
-        public PendingToDone ParseNamesInfo { get; }
-        public IProgress<PendingToDone> ParseNamesProgress { get; }
+        public WorkState ParseNamesInfo { get; }
+        public IProgress<WorkState> ParseNamesProgress { get; }
 
         public PendingToDone ParseMarketGroupsInfo { get; }
         public IProgress<PendingToDone> ParseMarketGroupsProgress { get; }
@@ -86,8 +87,8 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ExtractSdeProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone parseNamesInfo = PendingToDone.Pending;
-        public IProgress<PendingToDone> ParseNamesProgress { get; }
+        private WorkState parseNamesInfo = WorkState.Pending;
+        public IProgress<WorkState> ParseNamesProgress { get; }
 
         [ObservableProperty]
         private PendingToDone parseMarketGroupsInfo = PendingToDone.Pending;
@@ -149,7 +150,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             DownloadSdeProgress = new TaskSafeProgress<DownloadSdeStatus>(x => { DownloadSdeInfo = x; });
             ExtractSdeProgress = new AccumulatingLongProgress(_ => { ExtractSdeInfo = ExtractSdeProgress!.Progress; });
-            ParseNamesProgress = new TaskSafeProgress<PendingToDone>(x => { ParseNamesInfo = x; });
+            ParseNamesProgress = new WorkStateProgress(x => { ParseNamesInfo = x; });
             ParseMarketGroupsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseMarketGroupsInfo = x; });
             ParseTypesProgress = new TaskSafeProgress<PendingToDone>(x => { ParseTypesInfo = x; });
             ParseStationOperationsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseStationOperationsInfo = x; });

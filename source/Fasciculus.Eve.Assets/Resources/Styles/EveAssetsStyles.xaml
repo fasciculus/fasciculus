@@ -11,5 +11,11 @@
     <Setter Property="BusyColor" Value="Orange" />
     <Setter Property="DoneColor" Value="LightGreen" />
   </Style>
+
+  <Style TargetType="fasciculus:WorkStateLabel">
+    <Setter Property="PendingColor" Value="Red" />
+    <Setter Property="WorkingColor" Value="Orange" />
+    <Setter Property="DoneColor" Value="LightGreen" />
+  </Style>
   
 </ResourceDictionary>
