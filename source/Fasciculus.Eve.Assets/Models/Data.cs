@@ -21,7 +21,7 @@
 
     public class SdeType
     {
-        public long GroupID { get; set; }
+        public int MarketGroupID { get; set; }
         public SdeLocalized Name { get; set; } = SdeLocalized.Empty;
         public double Volume { get; set; } = double.MaxValue;
     }

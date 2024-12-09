@@ -51,20 +51,6 @@ namespace Fasciculus.Eve.Assets.Services
             return data;
         }
 
-        private static EveType.Data[] ConvertTypes(Dictionary<int, SdeType> types)
-            => [.. types.Select(ConvertType).OrderBy(t => t.Id)];
-
-        private static EveType.Data ConvertType(KeyValuePair<int, SdeType> kvp)
-        {
-            SdeType sdeType = kvp.Value;
-
-            int id = kvp.Key;
-            string name = sdeType.Name.En;
-            double volume = sdeType.Volume;
-
-            return new(id, name, volume);
-        }
-
         private static EveMarketGroup.Data[] ConvertMarketGroups(Dictionary<int, SdeMarketGroup> marketGroups)
             => [.. marketGroups.Select(ConvertMarketGroup).OrderBy(t => t.Id)];
 
@@ -77,6 +63,21 @@ namespace Fasciculus.Eve.Assets.Services
             int parentId = marketGroup.ParentGroupID;
 
             return new(id, name, parentId);
+        }
+
+        private static EveType.Data[] ConvertTypes(Dictionary<int, SdeType> types)
+            => [.. types.Select(ConvertType).OrderBy(t => t.Id)];
+
+        private static EveType.Data ConvertType(KeyValuePair<int, SdeType> kvp)
+        {
+            SdeType sdeType = kvp.Value;
+
+            int id = kvp.Key;
+            string name = sdeType.Name.En;
+            double volume = sdeType.Volume;
+            int marketGroupId = sdeType.MarketGroupID;
+
+            return new(id, name, volume, marketGroupId);
         }
 
         private static EveStationOperation.Data[] ConvertStationOperations(Dictionary<int, SdeStationOperation> stationOperations)

@@ -91,12 +91,14 @@ namespace Fasciculus.Eve.Models
             public int Id { get; }
             public string Name { get; } = string.Empty;
             public double Volume { get; }
+            public int MarketGroupId { get; }
 
-            public Data(int id, string name, double volume)
+            public Data(int id, string name, double volume, int marketGroupId)
             {
                 Id = id;
                 Name = name;
                 Volume = volume;
+                MarketGroupId = marketGroupId;
             }
 
             public Data(Stream stream)
@@ -104,6 +106,7 @@ namespace Fasciculus.Eve.Models
                 Id = stream.ReadInt();
                 Name = stream.ReadString();
                 Volume = stream.ReadDouble();
+                MarketGroupId = stream.ReadInt();
             }
 
             public void Write(Stream stream)
@@ -111,6 +114,7 @@ namespace Fasciculus.Eve.Models
                 stream.WriteInt(Id);
                 stream.WriteString(Name);
                 stream.WriteDouble(Volume);
+                stream.WriteInt(MarketGroupId);
             }
         }
 
