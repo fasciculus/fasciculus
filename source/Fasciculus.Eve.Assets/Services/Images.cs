@@ -1,4 +1,5 @@
-﻿using Fasciculus.Steam.Models;
+﻿using Fasciculus.Maui.Support;
+using Fasciculus.Steam.Models;
 using Fasciculus.Steam.Services;
 using Fasciculus.Support;
 using Fasciculus.Threading;
@@ -20,7 +21,7 @@ namespace Fasciculus.Eve.Assets.Services
         private FileInfo[]? files = null;
         private readonly TaskSafeMutex filesMutex = new();
 
-        public Task<FileInfo[]> FilesCopied => GetFilesCopied();
+        public Task<FileInfo[]> FilesCopied => GetFilesCopiedAsync();
 
         public CopyImages(ISteamApplications steamApplications, IAssetsDirectories assetsDirectories, IAssetsProgress progress)
         {
@@ -29,10 +30,15 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        private async Task<FileInfo[]> GetFilesCopied()
+        private Task<FileInfo[]> GetFilesCopiedAsync()
         {
             using Locker locker = Locker.Lock(filesMutex);
 
+            return Tasks.LongRunning(() => GetFilesCopied());
+        }
+
+        private FileInfo[] GetFilesCopied()
+        {
             if (files is null)
             {
                 Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
@@ -40,7 +46,6 @@ namespace Fasciculus.Eve.Assets.Services
                 progress.CopyImagesProgress.Begin(entries.Length);
                 files = entries.AsParallel().Select(Copy).ToArray();
                 progress.CopyImagesProgress.End();
-                await Task.Yield();
             }
 
             return files;
@@ -126,7 +131,7 @@ namespace Fasciculus.Eve.Assets.Services
         private List<FileInfo>? filesCreated = null;
         private readonly TaskSafeMutex filesCreatedMutex = new();
 
-        public Task<List<FileInfo>> FilesCreated => GetFilesCreated();
+        public Task<List<FileInfo>> FilesCreated => GetFilesCreatedAsync();
 
         public CreateImages(ICopyImages copyImages, IAssetsDirectories assetsDirectories, IWriteResource writeResource,
             IAssetsProgress progress)
@@ -137,17 +142,22 @@ namespace Fasciculus.Eve.Assets.Services
             this.progress = progress;
         }
 
-        private async Task<List<FileInfo>> GetFilesCreated()
+        private Task<List<FileInfo>> GetFilesCreatedAsync()
         {
             using Locker locker = Locker.Lock(filesCreatedMutex);
 
+            return Tasks.LongRunning(() => GetFilesCreated());
+        }
+
+        private List<FileInfo> GetFilesCreated()
+        {
             if (filesCreated is null)
             {
-                FileInfo[] _ = await copyImages.FilesCopied;
+                Tasks.Wait(copyImages.FilesCopied);
 
-                progress.CreateImagesProgress.Report(PendingToDone.Working);
+                progress.CreateImagesProgress.Report(WorkState.Working);
                 filesCreated = paths.Select(CreateImage).NotNull().ToList();
-                progress.CreateImagesProgress.Report(PendingToDone.Done);
+                progress.CreateImagesProgress.Report(WorkState.Done);
             }
 
             return filesCreated;

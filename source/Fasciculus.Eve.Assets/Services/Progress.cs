@@ -33,17 +33,17 @@ namespace Fasciculus.Eve.Assets.Services
         public WorkState ParseNamesInfo { get; }
         public IProgress<WorkState> ParseNamesProgress { get; }
 
-        public PendingToDone ParseMarketGroupsInfo { get; }
-        public IProgress<PendingToDone> ParseMarketGroupsProgress { get; }
+        public WorkState ParseMarketGroupsInfo { get; }
+        public IProgress<WorkState> ParseMarketGroupsProgress { get; }
 
-        public PendingToDone ParseTypesInfo { get; }
-        public IProgress<PendingToDone> ParseTypesProgress { get; }
+        public WorkState ParseTypesInfo { get; }
+        public IProgress<WorkState> ParseTypesProgress { get; }
 
-        public PendingToDone ParseStationOperationsInfo { get; }
-        public IProgress<PendingToDone> ParseStationOperationsProgress { get; }
+        public WorkState ParseStationOperationsInfo { get; }
+        public IProgress<WorkState> ParseStationOperationsProgress { get; }
 
-        public PendingToDone ParseNpcCorporationsInfo { get; }
-        public IProgress<PendingToDone> ParseNpcCorporationsProgress { get; }
+        public WorkState ParseNpcCorporationsInfo { get; }
+        public IProgress<WorkState> ParseNpcCorporationsProgress { get; }
 
         public LongProgressInfo ParseRegionsInfo { get; }
         public IAccumulatingLongProgress ParseRegionsProgress { get; }
@@ -54,14 +54,14 @@ namespace Fasciculus.Eve.Assets.Services
         public LongProgressInfo ParseSolarSystemsInfo { get; }
         public IAccumulatingLongProgress ParseSolarSystemsProgress { get; }
 
-        public PendingToDone ConvertDataInfo { get; }
-        public IProgress<PendingToDone> ConvertDataProgress { get; }
+        public WorkState ConvertDataInfo { get; }
+        public IProgress<WorkState> ConvertDataProgress { get; }
 
-        public PendingToDone ConvertUniverseInfo { get; }
-        public IProgress<PendingToDone> ConvertUniverseProgress { get; }
+        public WorkState ConvertUniverseInfo { get; }
+        public IProgress<WorkState> ConvertUniverseProgress { get; }
 
-        public PendingToDone CreateConnectionsInfo { get; }
-        public IProgress<PendingToDone> CreateConnectionsProgress { get; }
+        public WorkState CreateConnectionsInfo { get; }
+        public IProgress<WorkState> CreateConnectionsProgress { get; }
 
         public LongProgressInfo CreateDistancesInfo { get; }
         public IAccumulatingLongProgress CreateDistancesProgress { get; }
@@ -69,8 +69,8 @@ namespace Fasciculus.Eve.Assets.Services
         public LongProgressInfo CopyImagesInfo { get; }
         public IAccumulatingLongProgress CopyImagesProgress { get; }
 
-        public PendingToDone CreateImagesInfo { get; }
-        public IProgress<PendingToDone> CreateImagesProgress { get; }
+        public WorkState CreateImagesInfo { get; }
+        public IProgress<WorkState> CreateImagesProgress { get; }
 
         public FileInfo[] CreateResourcesInfo { get; }
         public IAccumulatingProgress<List<FileInfo>> CreateResourcesProgress { get; }
@@ -91,20 +91,20 @@ namespace Fasciculus.Eve.Assets.Services
         public IProgress<WorkState> ParseNamesProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone parseMarketGroupsInfo = PendingToDone.Pending;
-        public IProgress<PendingToDone> ParseMarketGroupsProgress { get; }
+        private WorkState parseMarketGroupsInfo = WorkState.Pending;
+        public IProgress<WorkState> ParseMarketGroupsProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone parseTypesInfo = PendingToDone.Pending;
-        public IProgress<PendingToDone> ParseTypesProgress { get; }
+        private WorkState parseTypesInfo = WorkState.Pending;
+        public IProgress<WorkState> ParseTypesProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone parseStationOperationsInfo = PendingToDone.Pending;
-        public IProgress<PendingToDone> ParseStationOperationsProgress { get; }
+        private WorkState parseStationOperationsInfo = WorkState.Pending;
+        public IProgress<WorkState> ParseStationOperationsProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone parseNpcCorporationsInfo = PendingToDone.Pending;
-        public IProgress<PendingToDone> ParseNpcCorporationsProgress { get; }
+        private WorkState parseNpcCorporationsInfo = WorkState.Pending;
+        public IProgress<WorkState> ParseNpcCorporationsProgress { get; }
 
         [ObservableProperty]
         private LongProgressInfo parseRegionsInfo = LongProgressInfo.Start;
@@ -119,16 +119,16 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress ParseSolarSystemsProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone convertDataInfo;
-        public IProgress<PendingToDone> ConvertDataProgress { get; }
+        private WorkState convertDataInfo = WorkState.Pending;
+        public IProgress<WorkState> ConvertDataProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone convertUniverseInfo;
-        public IProgress<PendingToDone> ConvertUniverseProgress { get; }
+        private WorkState convertUniverseInfo = WorkState.Pending;
+        public IProgress<WorkState> ConvertUniverseProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone createConnectionsInfo;
-        public IProgress<PendingToDone> CreateConnectionsProgress { get; }
+        private WorkState createConnectionsInfo = WorkState.Pending;
+        public IProgress<WorkState> CreateConnectionsProgress { get; }
 
         [ObservableProperty]
         private LongProgressInfo createDistancesInfo = LongProgressInfo.Start;
@@ -139,8 +139,8 @@ namespace Fasciculus.Eve.Assets.Services
         public IAccumulatingLongProgress CopyImagesProgress { get; }
 
         [ObservableProperty]
-        private PendingToDone createImagesInfo;
-        public IProgress<PendingToDone> CreateImagesProgress { get; }
+        private WorkState createImagesInfo = WorkState.Pending;
+        public IProgress<WorkState> CreateImagesProgress { get; }
 
         [ObservableProperty]
         private FileInfo[] createResourcesInfo = [];
@@ -151,19 +151,19 @@ namespace Fasciculus.Eve.Assets.Services
             DownloadSdeProgress = new TaskSafeProgress<DownloadSdeStatus>(x => { DownloadSdeInfo = x; });
             ExtractSdeProgress = new AccumulatingLongProgress(_ => { ExtractSdeInfo = ExtractSdeProgress!.Progress; });
             ParseNamesProgress = new WorkStateProgress(x => { ParseNamesInfo = x; });
-            ParseMarketGroupsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseMarketGroupsInfo = x; });
-            ParseTypesProgress = new TaskSafeProgress<PendingToDone>(x => { ParseTypesInfo = x; });
-            ParseStationOperationsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseStationOperationsInfo = x; });
-            ParseNpcCorporationsProgress = new TaskSafeProgress<PendingToDone>(x => { ParseNpcCorporationsInfo = x; });
+            ParseMarketGroupsProgress = new WorkStateProgress(x => { ParseMarketGroupsInfo = x; });
+            ParseTypesProgress = new WorkStateProgress(x => { ParseTypesInfo = x; });
+            ParseStationOperationsProgress = new WorkStateProgress(x => { ParseStationOperationsInfo = x; });
+            ParseNpcCorporationsProgress = new WorkStateProgress(x => { ParseNpcCorporationsInfo = x; });
             ParseRegionsProgress = new AccumulatingLongProgress(_ => { ParseRegionsInfo = ParseRegionsProgress!.Progress; });
             ParseConstellationsProgress = new AccumulatingLongProgress(_ => { ParseConstellationsInfo = ParseConstellationsProgress!.Progress; });
             ParseSolarSystemsProgress = new AccumulatingLongProgress(_ => { ParseSolarSystemsInfo = ParseSolarSystemsProgress!.Progress; });
-            ConvertDataProgress = new TaskSafeProgress<PendingToDone>(x => { ConvertDataInfo = x; });
-            ConvertUniverseProgress = new TaskSafeProgress<PendingToDone>(x => { ConvertUniverseInfo = x; });
-            CreateConnectionsProgress = new TaskSafeProgress<PendingToDone>(x => { CreateConnectionsInfo = x; });
+            ConvertDataProgress = new WorkStateProgress(x => { ConvertDataInfo = x; });
+            ConvertUniverseProgress = new WorkStateProgress(x => { ConvertUniverseInfo = x; });
+            CreateConnectionsProgress = new WorkStateProgress(x => { CreateConnectionsInfo = x; });
             CreateDistancesProgress = new AccumulatingLongProgress(_ => { CreateDistancesInfo = CreateDistancesProgress!.Progress; });
             CopyImagesProgress = new AccumulatingLongProgress(_ => { CopyImagesInfo = CopyImagesProgress!.Progress; });
-            CreateImagesProgress = new TaskSafeProgress<PendingToDone>(x => { CreateImagesInfo = x; });
+            CreateImagesProgress = new WorkStateProgress(x => { CreateImagesInfo = x; });
 
             CreateResourcesProgress
                 = new AccumulatingProgress<List<FileInfo>>(x => { CreateResourcesInfo = [.. x]; }, (x, y) => [.. x, .. y], [], []);

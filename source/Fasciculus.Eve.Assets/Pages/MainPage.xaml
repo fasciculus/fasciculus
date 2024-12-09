@@ -27,13 +27,13 @@
                 <Label Text="Names" Grid.Row="1" Grid.Column="0" />
                 <fasciculus:WorkStateLabel Source="{Binding ParseNames}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Market Groups" Grid.Row="1" Grid.Column="2" />
-                <controls:PendingToDoneLabel Source="{Binding ParseMarketGroups}" Grid.Row="1" Grid.Column="3" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseMarketGroups}" Grid.Row="1" Grid.Column="3" />
                 <Label Text="Types" Grid.Row="1" Grid.Column="4" />
-                <controls:PendingToDoneLabel Source="{Binding ParseTypes}" Grid.Row="1" Grid.Column="5" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseTypes}" Grid.Row="1" Grid.Column="5" />
                 <Label Text="Station Operations" Grid.Row="2" Grid.Column="0" />
-                <controls:PendingToDoneLabel Source="{Binding ParseStationOperations}" Grid.Row="2" Grid.Column="1" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseStationOperations}" Grid.Row="2" Grid.Column="1" />
                 <Label Text="NPC Corporations" Grid.Row="2" Grid.Column="2" />
-                <controls:PendingToDoneLabel Source="{Binding ParseNpcCorporations}" Grid.Row="2" Grid.Column="3" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseNpcCorporations}" Grid.Row="2" Grid.Column="3" />
                 <Label Text="Regions" Grid.Row="3" Grid.Column="0" />
                 <fasciculus:LongProgressInfoBar Source="{Binding ParseRegions}" Grid.Row="3" Grid.Column="1" />
                 <Label Text="Constellations" Grid.Row="3" Grid.Column="2" />
@@ -45,15 +45,15 @@
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="SDE Conversion" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Data" Grid.Row="1" Grid.Column="0" />
-                <controls:PendingToDoneLabel Source="{Binding ConvertData}" Grid.Row="1" Grid.Column="1" />
+                <fasciculus:WorkStateLabel Source="{Binding ConvertData}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Universe" Grid.Row="1" Grid.Column="2" />
-                <controls:PendingToDoneLabel Source="{Binding ConvertUniverse}" Grid.Row="1" Grid.Column="3" />
+                <fasciculus:WorkStateLabel Source="{Binding ConvertUniverse}" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
                 <Label Text="Navigation" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
                 <Label Text="Connections" Grid.Row="1" Grid.Column="0" />
-                <controls:PendingToDoneLabel Source="{Binding CreateConnections}" Grid.Row="1" Grid.Column="1" />
+                <fasciculus:WorkStateLabel Source="{Binding CreateConnections}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Distances" Grid.Row="1" Grid.Column="2" />
                 <fasciculus:LongProgressInfoBar Source="{Binding CreateDistances}" Grid.Row="1" Grid.Column="3" />
             </Grid>
@@ -63,7 +63,7 @@
                 <Label Text="Copy" Grid.Row="1" Grid.Column="0" />
                 <fasciculus:LongProgressInfoBar Source="{Binding CopyImages}" Grid.Row="1" Grid.Column="1" />
                 <Label Text="Create" Grid.Row="1" Grid.Column="2" />
-                <controls:PendingToDoneLabel Source="{Binding CreateImages}" Grid.Row="1" Grid.Column="3" />
+                <fasciculus:WorkStateLabel Source="{Binding CreateImages}" Grid.Row="1" Grid.Column="3" />
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*" ColumnSpacing="16" RowSpacing="8">

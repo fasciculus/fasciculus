@@ -1,5 +1,6 @@
 ﻿using Fasciculus.Eve.Assets.Models;
 using Fasciculus.Eve.Models;
+using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -43,9 +44,9 @@ namespace Fasciculus.Eve.Assets.Services
                 SdeRegion[] sdeRegions = results.Item1;
                 Dictionary<int, string> names = results.Item2;
 
-                progress.ConvertUniverseProgress.Report(PendingToDone.Working);
+                progress.ConvertUniverseProgress.Report(WorkState.Working);
                 universe = ConvertRegions(sdeRegions, names);
-                progress.ConvertUniverseProgress.Report(PendingToDone.Done);
+                progress.ConvertUniverseProgress.Report(WorkState.Done);
             }
 
             return universe;

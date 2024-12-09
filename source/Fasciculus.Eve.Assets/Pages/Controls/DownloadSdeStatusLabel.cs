@@ -4,6 +4,9 @@ namespace Fasciculus.Eve.Assets.Pages.Controls
 {
     public partial class DownloadSdeStatusLabel : Label
     {
+        private static readonly Color PendingColor = Color.FromArgb("#FFFF6060");
+        private static readonly Color WorkingColor = Color.FromArgb("#FFD0D000");
+
         public static readonly BindableProperty SourceProperty
             = BindableProperty.Create(nameof(Source), typeof(DownloadSdeStatus), typeof(Label), null,
                 BindingMode.OneWay, null, OnSourcePropertyChanged);
@@ -26,8 +29,8 @@ namespace Fasciculus.Eve.Assets.Pages.Controls
 
             label.TextColor = status switch
             {
-                DownloadSdeStatus.Pending => Colors.Red,
-                DownloadSdeStatus.Downloading => Colors.Orange,
+                DownloadSdeStatus.Pending => PendingColor,
+                DownloadSdeStatus.Downloading => WorkingColor,
                 DownloadSdeStatus.Downloaded => Colors.LightGreen,
                 DownloadSdeStatus.NotModified => Colors.LightGreen,
                 _ => Colors.Black

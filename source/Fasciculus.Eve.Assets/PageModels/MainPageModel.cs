@@ -24,16 +24,16 @@ namespace Fasciculus.Eve.Assets.PageModels
         private WorkState parseNames = WorkState.Pending;
 
         [ObservableProperty]
-        private PendingToDone parseMarketGroups = PendingToDone.Pending;
+        private WorkState parseMarketGroups = WorkState.Pending;
 
         [ObservableProperty]
-        private PendingToDone parseTypes = PendingToDone.Pending;
+        private WorkState parseTypes = WorkState.Pending;
 
         [ObservableProperty]
-        private PendingToDone parseStationOperations = PendingToDone.Pending;
+        private WorkState parseStationOperations = WorkState.Pending;
 
         [ObservableProperty]
-        private PendingToDone parseNpcCorporations = PendingToDone.Pending;
+        private WorkState parseNpcCorporations = WorkState.Pending;
 
         [ObservableProperty]
         private LongProgressInfo parseRegions = LongProgressInfo.Start;
@@ -45,13 +45,13 @@ namespace Fasciculus.Eve.Assets.PageModels
         private LongProgressInfo parseSolarSystems = LongProgressInfo.Start;
 
         [ObservableProperty]
-        private PendingToDone convertData = PendingToDone.Pending;
+        private WorkState convertData = WorkState.Pending;
 
         [ObservableProperty]
-        private PendingToDone convertUniverse = PendingToDone.Pending;
+        private WorkState convertUniverse = WorkState.Pending;
 
         [ObservableProperty]
-        private PendingToDone createConnections = PendingToDone.Pending;
+        private WorkState createConnections = WorkState.Pending;
 
         [ObservableProperty]
         private LongProgressInfo createDistances = LongProgressInfo.Start;
@@ -60,7 +60,7 @@ namespace Fasciculus.Eve.Assets.PageModels
         private LongProgressInfo copyImages = LongProgressInfo.Start;
 
         [ObservableProperty]
-        private PendingToDone createImages = PendingToDone.Pending;
+        private WorkState createImages = WorkState.Pending;
 
         [ObservableProperty]
         private string[] changedResources = [];

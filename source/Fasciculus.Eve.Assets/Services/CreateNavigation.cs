@@ -1,5 +1,6 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Mathematics;
+using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -132,14 +133,14 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (connections is null)
             {
-                progress.CreateConnectionsProgress.Report(PendingToDone.Working);
+                progress.CreateConnectionsProgress.Report(WorkState.Working);
 
                 connections = EveSecurity.Levels
                     .AsParallel()
                     .Select(level => Tuple.Create(level, GetConnections(level)))
                     .ToDictionary(x => x.Item1, x => x.Item2);
 
-                progress.CreateConnectionsProgress.Report(PendingToDone.Done);
+                progress.CreateConnectionsProgress.Report(WorkState.Done);
             }
 
             return connections;

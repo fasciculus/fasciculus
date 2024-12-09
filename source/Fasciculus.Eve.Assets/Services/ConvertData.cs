@@ -1,5 +1,6 @@
 ﻿using Fasciculus.Eve.Assets.Models;
 using Fasciculus.Eve.Models;
+using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -34,7 +35,7 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 SdeData sdeData = await parseData.Data;
 
-                progress.ConvertDataProgress.Report(PendingToDone.Working);
+                progress.ConvertDataProgress.Report(WorkState.Working);
 
                 DateTime version = sdeData.Version;
                 IEnumerable<EveType.Data> types = ConvertTypes(sdeData.Types);
@@ -43,7 +44,7 @@ namespace Fasciculus.Eve.Assets.Services
 
                 data = new(version, types, stationOperations, npcCorporations);
 
-                progress.ConvertDataProgress.Report(PendingToDone.Done);
+                progress.ConvertDataProgress.Report(WorkState.Done);
             }
 
             return data;

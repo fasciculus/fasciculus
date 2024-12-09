@@ -114,9 +114,9 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (marketGroups is null)
             {
-                progress.ParseMarketGroupsProgress.Report(PendingToDone.Working);
+                progress.ParseMarketGroupsProgress.Report(WorkState.Working);
                 marketGroups = yaml.Deserialize<Dictionary<int, SdeMarketGroup>>(sdeFiles.MarketGroupYaml);
-                progress.ParseMarketGroupsProgress.Report(PendingToDone.Done);
+                progress.ParseMarketGroupsProgress.Report(WorkState.Done);
             }
 
             return marketGroups;
@@ -135,9 +135,9 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (types is null)
             {
-                progress.ParseTypesProgress.Report(PendingToDone.Working);
+                progress.ParseTypesProgress.Report(WorkState.Working);
                 types = yaml.Deserialize<Dictionary<int, SdeType>>(sdeFiles.TypesYaml);
-                progress.ParseTypesProgress.Report(PendingToDone.Done);
+                progress.ParseTypesProgress.Report(WorkState.Done);
             }
 
             return types;
@@ -156,9 +156,9 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (stationOperations is null)
             {
-                progress.ParseStationOperationsProgress.Report(PendingToDone.Working);
+                progress.ParseStationOperationsProgress.Report(WorkState.Working);
                 stationOperations = yaml.Deserialize<Dictionary<int, SdeStationOperation>>(sdeFiles.StationOperationsYaml);
-                progress.ParseStationOperationsProgress.Report(PendingToDone.Done);
+                progress.ParseStationOperationsProgress.Report(WorkState.Done);
             }
 
             return stationOperations;
@@ -177,9 +177,9 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (npcCorporations is null)
             {
-                progress.ParseNpcCorporationsProgress.Report(PendingToDone.Working);
+                progress.ParseNpcCorporationsProgress.Report(WorkState.Working);
                 npcCorporations = yaml.Deserialize<Dictionary<int, SdeNpcCorporation>>(sdeFiles.NpcCorporationsYaml);
-                progress.ParseNpcCorporationsProgress.Report(PendingToDone.Done);
+                progress.ParseNpcCorporationsProgress.Report(WorkState.Done);
             }
 
             return npcCorporations;
