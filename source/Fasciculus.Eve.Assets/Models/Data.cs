@@ -57,5 +57,6 @@
         public Dictionary<int, SdeType> Types { get; init; } = [];
         public Dictionary<int, SdeStationOperation> StationOperations { get; init; } = [];
         public Dictionary<int, SdeNpcCorporation> NpcCorporations { get; init; } = [];
+        public Dictionary<int, SdePlanetSchematic> PlanetSchematics { get; init; } = [];
     }
 }

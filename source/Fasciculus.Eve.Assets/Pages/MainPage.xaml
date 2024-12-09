@@ -34,6 +34,8 @@
                 <fasciculus:WorkStateLabel Source="{Binding ParseStationOperations}" Grid.Row="2" Grid.Column="1" />
                 <Label Text="NPC Corporations" Grid.Row="2" Grid.Column="2" />
                 <fasciculus:WorkStateLabel Source="{Binding ParseNpcCorporations}" Grid.Row="2" Grid.Column="3" />
+                <Label Text="Planet Schematics" Grid.Row="2" Grid.Column="4" />
+                <fasciculus:WorkStateLabel Source="{Binding ParsePlanetSchematics}" Grid.Row="2" Grid.Column="5" />
                 <Label Text="Regions" Grid.Row="3" Grid.Column="0" />
                 <fasciculus:LongProgressInfoBar Source="{Binding ParseRegions}" Grid.Row="3" Grid.Column="1" />
                 <Label Text="Constellations" Grid.Row="3" Grid.Column="2" />

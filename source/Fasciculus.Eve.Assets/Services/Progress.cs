@@ -45,6 +45,9 @@ namespace Fasciculus.Eve.Assets.Services
         public WorkState ParseNpcCorporationsInfo { get; }
         public IProgress<WorkState> ParseNpcCorporationsProgress { get; }
 
+        public WorkState ParsePlanetSchematicsInfo { get; }
+        public IProgress<WorkState> ParsePlanetSchematicsProgress { get; }
+
         public LongProgressInfo ParseRegionsInfo { get; }
         public IAccumulatingLongProgress ParseRegionsProgress { get; }
 
@@ -107,6 +110,10 @@ namespace Fasciculus.Eve.Assets.Services
         public IProgress<WorkState> ParseNpcCorporationsProgress { get; }
 
         [ObservableProperty]
+        private WorkState parsePlanetSchematicsInfo = WorkState.Pending;
+        public IProgress<WorkState> ParsePlanetSchematicsProgress { get; }
+
+        [ObservableProperty]
         private LongProgressInfo parseRegionsInfo = LongProgressInfo.Start;
         public IAccumulatingLongProgress ParseRegionsProgress { get; }
 
@@ -155,6 +162,7 @@ namespace Fasciculus.Eve.Assets.Services
             ParseTypesProgress = new WorkStateProgress(x => { ParseTypesInfo = x; });
             ParseStationOperationsProgress = new WorkStateProgress(x => { ParseStationOperationsInfo = x; });
             ParseNpcCorporationsProgress = new WorkStateProgress(x => { ParseNpcCorporationsInfo = x; });
+            ParsePlanetSchematicsProgress = new WorkStateProgress(x => { ParsePlanetSchematicsInfo = x; });
             ParseRegionsProgress = new AccumulatingLongProgress(_ => { ParseRegionsInfo = ParseRegionsProgress!.Progress; });
             ParseConstellationsProgress = new AccumulatingLongProgress(_ => { ParseConstellationsInfo = ParseConstellationsProgress!.Progress; });
             ParseSolarSystemsProgress = new AccumulatingLongProgress(_ => { ParseSolarSystemsInfo = ParseSolarSystemsProgress!.Progress; });

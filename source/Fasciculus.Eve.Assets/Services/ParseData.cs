@@ -13,6 +13,7 @@ namespace Fasciculus.Eve.Assets.Services
         public Task<Dictionary<int, SdeType>> Types { get; }
         public Task<Dictionary<int, SdeStationOperation>> StationOperations { get; }
         public Task<Dictionary<int, SdeNpcCorporation>> NpcCorporations { get; }
+        public Task<Dictionary<int, SdePlanetSchematic>> PlanetSchematics { get; }
 
         public Task<SdeData> Data { get; }
     }
@@ -42,6 +43,9 @@ namespace Fasciculus.Eve.Assets.Services
         private Dictionary<int, SdeNpcCorporation>? npcCorporations = null;
         private readonly TaskSafeMutex npcCorporationsMutex = new();
 
+        private Dictionary<int, SdePlanetSchematic>? planetSchematics = null;
+        private readonly TaskSafeMutex planetSchematicsMutex = new();
+
         private SdeData? data = null;
         private readonly TaskSafeMutex dataMutex = new();
 
@@ -51,6 +55,7 @@ namespace Fasciculus.Eve.Assets.Services
         public Task<Dictionary<int, SdeType>> Types => GetTypesAsync();
         public Task<Dictionary<int, SdeStationOperation>> StationOperations => GetStationOperationsAsync();
         public Task<Dictionary<int, SdeNpcCorporation>> NpcCorporations => GetNpcCorporationsAsync();
+        public Task<Dictionary<int, SdePlanetSchematic>> PlanetSchematics => GetPlanetSchematicsAsync();
 
         public Task<SdeData> Data => GetDataAsync();
 
@@ -60,6 +65,11 @@ namespace Fasciculus.Eve.Assets.Services
             this.extractSde = extractSde;
             this.yaml = yaml;
             this.progress = progress;
+        }
+
+        private SdeFiles GetSdeFiles()
+        {
+            return Tasks.Wait(extractSde.Files);
         }
 
         private async Task<DateTime> GetVersionAsync()
@@ -78,15 +88,13 @@ namespace Fasciculus.Eve.Assets.Services
 
         private Task<Dictionary<int, string>> GetNamesAsync()
         {
-            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+            using Locker locker = Locker.Lock(namesMutex);
 
-            return Tasks.LongRunning(() => GetNames(sdeFiles));
+            return Tasks.LongRunning(() => GetNames(GetSdeFiles()));
         }
 
         private Dictionary<int, string> GetNames(SdeFiles sdeFiles)
         {
-            using Locker locker = Locker.Lock(namesMutex);
-
             if (names is null)
             {
                 progress.ParseNamesProgress.Report(WorkState.Working);
@@ -103,15 +111,13 @@ namespace Fasciculus.Eve.Assets.Services
 
         private Task<Dictionary<int, SdeMarketGroup>> GetMarketGroupsAsync()
         {
-            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+            using Locker locker = Locker.Lock(marketGroupsMutex);
 
-            return Tasks.LongRunning(() => GetMarketGroups(sdeFiles));
+            return Tasks.LongRunning(() => GetMarketGroups(GetSdeFiles()));
         }
 
         private Dictionary<int, SdeMarketGroup> GetMarketGroups(SdeFiles sdeFiles)
         {
-            using Locker locker = Locker.Lock(marketGroupsMutex);
-
             if (marketGroups is null)
             {
                 progress.ParseMarketGroupsProgress.Report(WorkState.Working);
@@ -124,15 +130,13 @@ namespace Fasciculus.Eve.Assets.Services
 
         private Task<Dictionary<int, SdeType>> GetTypesAsync()
         {
-            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+            using Locker locker = Locker.Lock(typesMutex);
 
-            return Tasks.LongRunning(() => GetTypes(sdeFiles));
+            return Tasks.LongRunning(() => GetTypes(GetSdeFiles()));
         }
 
         private Dictionary<int, SdeType> GetTypes(SdeFiles sdeFiles)
         {
-            using Locker locker = Locker.Lock(typesMutex);
-
             if (types is null)
             {
                 progress.ParseTypesProgress.Report(WorkState.Working);
@@ -145,15 +149,13 @@ namespace Fasciculus.Eve.Assets.Services
 
         private Task<Dictionary<int, SdeStationOperation>> GetStationOperationsAsync()
         {
-            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+            using Locker locker = Locker.Lock(stationOperationsMutex);
 
-            return Tasks.Start(() => GetStationOperations(sdeFiles));
+            return Tasks.Start(() => GetStationOperations(GetSdeFiles()));
         }
 
         private Dictionary<int, SdeStationOperation> GetStationOperations(SdeFiles sdeFiles)
         {
-            using Locker locker = Locker.Lock(stationOperationsMutex);
-
             if (stationOperations is null)
             {
                 progress.ParseStationOperationsProgress.Report(WorkState.Working);
@@ -166,15 +168,13 @@ namespace Fasciculus.Eve.Assets.Services
 
         private Task<Dictionary<int, SdeNpcCorporation>> GetNpcCorporationsAsync()
         {
-            SdeFiles sdeFiles = Tasks.Wait(extractSde.Files);
+            using Locker locker = Locker.Lock(npcCorporationsMutex);
 
-            return Tasks.Start(() => GetNpcCorporations(sdeFiles));
+            return Tasks.Start(() => GetNpcCorporations(GetSdeFiles()));
         }
 
         private Dictionary<int, SdeNpcCorporation> GetNpcCorporations(SdeFiles sdeFiles)
         {
-            using Locker locker = Locker.Lock(npcCorporationsMutex);
-
             if (npcCorporations is null)
             {
                 progress.ParseNpcCorporationsProgress.Report(WorkState.Working);
@@ -183,6 +183,25 @@ namespace Fasciculus.Eve.Assets.Services
             }
 
             return npcCorporations;
+        }
+
+        private Task<Dictionary<int, SdePlanetSchematic>> GetPlanetSchematicsAsync()
+        {
+            using Locker locker = Locker.Lock(planetSchematicsMutex);
+
+            return Tasks.Start(() => GetPlanetSchematics(GetSdeFiles()));
+        }
+
+        private Dictionary<int, SdePlanetSchematic> GetPlanetSchematics(SdeFiles sdeFiles)
+        {
+            if (planetSchematics is null)
+            {
+                progress.ParsePlanetSchematicsProgress.Report(WorkState.Working);
+                planetSchematics = yaml.Deserialize<Dictionary<int, SdePlanetSchematic>>(sdeFiles.PlanetSchematicsYaml);
+                progress.ParsePlanetSchematicsProgress.Report(WorkState.Done);
+            }
+
+            return planetSchematics;
         }
 
         private Task<SdeData> GetDataAsync()
@@ -196,7 +215,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (data is null)
             {
-                Task.WaitAll([Version, Names, MarketGroups, Types, StationOperations, NpcCorporations]);
+                Task.WaitAll([Version, Names, MarketGroups, Types, StationOperations, NpcCorporations, PlanetSchematics]);
 
                 data = new()
                 {
@@ -205,7 +224,8 @@ namespace Fasciculus.Eve.Assets.Services
                     MarketGroups = MarketGroups.Result,
                     Types = Types.Result,
                     StationOperations = StationOperations.Result,
-                    NpcCorporations = NpcCorporations.Result
+                    NpcCorporations = NpcCorporations.Result,
+                    PlanetSchematics = PlanetSchematics.Result,
                 };
             }
 

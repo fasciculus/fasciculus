@@ -69,6 +69,9 @@ namespace Fasciculus.Eve.Assets.Services
         public FileInfo NpcCorporationsYaml
             => sdeDirectory.Combine("fsd").File("npcCorporations.yaml");
 
+        public FileInfo PlanetSchematicsYaml
+            => sdeDirectory.Combine("fsd").File("planetSchematics.yaml");
+
         public DirectoryInfo[] Regions
             => sdeDirectory.Combine("universe", "eve").GetDirectories();
 
