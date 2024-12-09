@@ -55,6 +55,7 @@
     <MauiImage Update="Resources\Images\industry.png" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\market.png" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\map.png" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\planets.png" Resize="True" BaseSize="32,32" />
     <MauiFont Include="Resources\Fonts\*" />
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
@@ -76,6 +77,9 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Pages\MarketPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Pages\PlanetaryIndustryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>

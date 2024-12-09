@@ -8,6 +8,7 @@
     <ImageButton Source="info.png" Command="{Binding NavigateCommand}" CommandParameter="//Info" />
     <ImageButton Source="market.png" Command="{Binding NavigateCommand}" CommandParameter="//Market" />
     <ImageButton Source="industry.png" Command="{Binding NavigateCommand}" CommandParameter="//Industry" />
+    <ImageButton Source="planets.png" Command="{Binding NavigateCommand}" CommandParameter="//PlanetaryIndustry" />
     <ImageButton Source="map.png" Command="{Binding NavigateCommand}" CommandParameter="//Map" />
 
 </VerticalStackLayout>

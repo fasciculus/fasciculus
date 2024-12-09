@@ -32,4 +32,9 @@
         ContentTemplate="{DataTemplate p:MapPage}"
         Route="Map" />
 
+    <ShellContent
+        Title="Planetary Industry"
+        ContentTemplate="{DataTemplate p:PlanetaryIndustryPage}"
+        Route="PlanetaryIndustry" />
+
 </Shell>

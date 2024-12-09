@@ -92,7 +92,7 @@ namespace Fasciculus.Eve.Services
 
     public partial class TradeFinder : ObservableObject, ITradeFinder
     {
-        private TaskSafeMutex runningMutex = new();
+        private readonly TaskSafeMutex runningMutex = new();
 
         [ObservableProperty]
         private string progress = string.Empty;

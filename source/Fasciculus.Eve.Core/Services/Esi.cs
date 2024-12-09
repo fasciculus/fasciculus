@@ -125,6 +125,8 @@ namespace Fasciculus.Eve.Services
         private readonly EveTypes types;
         private readonly EveMoonStations stations;
 
+        private readonly TaskSafeMutex mutex = new();
+
         private readonly ILogger logger;
 
         public Task<EveMarketPrices> MarketPrices => GetEveMarketPricesAsync();
@@ -143,7 +145,7 @@ namespace Fasciculus.Eve.Services
 
         private async Task<EveMarketPrices> GetEveMarketPricesAsync()
         {
-            using Locker locker = NamedTaskSafeMutexes.Lock("MarketPrices");
+            using Locker locker = Locker.Lock(mutex);
 
             EveMarketPrices? result = cache.MarketPrices;
 
@@ -181,7 +183,7 @@ namespace Fasciculus.Eve.Services
 
         public async Task<EveMarketOrders> GetMarketOrdersAsync(EveRegion region, bool buy)
         {
-            using Locker locker = NamedTaskSafeMutexes.Lock($"MarketOrders_{region.Id}_{buy}");
+            using Locker locker = Locker.Lock(mutex);
 
             EveMarketOrders? result = cache.GetMarketOrders(region, buy);
 
