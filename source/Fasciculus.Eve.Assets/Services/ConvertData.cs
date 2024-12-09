@@ -116,6 +116,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             int id = kvp.Key;
             string name = sdePlanetSchematic.NameID.En;
+            int cycleTime = sdePlanetSchematic.CycleTime;
 
             EvePlanetSchematicType.Data[] inputs = sdePlanetSchematic.Types
                 .Where(x => x.Value.IsInput)
@@ -124,7 +125,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             EvePlanetSchematicType.Data output = ConvertPlanetSchematicType(sdePlanetSchematic.Types.Single(x => !x.Value.IsInput));
 
-            return new(id, name, inputs, output);
+            return new(id, name, cycleTime, inputs, output);
         }
 
         private static EvePlanetSchematicType.Data ConvertPlanetSchematicType(KeyValuePair<int, SdePlanetSchematicType> kvp)

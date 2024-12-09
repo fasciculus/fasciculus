@@ -302,16 +302,18 @@ namespace Fasciculus.Eve.Models
         {
             public int Id { get; }
             public string Name { get; }
+            public int CycleTime { get; }
 
             private readonly EvePlanetSchematicType.Data[] inputs;
             public IReadOnlyList<EvePlanetSchematicType.Data> Inputs => inputs;
 
             public EvePlanetSchematicType.Data Output { get; }
 
-            public Data(int id, string name, IEnumerable<EvePlanetSchematicType.Data> inputs, EvePlanetSchematicType.Data output)
+            public Data(int id, string name, int cycleTime, IEnumerable<EvePlanetSchematicType.Data> inputs, EvePlanetSchematicType.Data output)
             {
                 Id = id;
                 Name = name;
+                CycleTime = cycleTime;
                 this.inputs = inputs.ToArray();
                 Output = output;
             }
@@ -320,6 +322,7 @@ namespace Fasciculus.Eve.Models
             {
                 Id = stream.ReadInt();
                 Name = stream.ReadString();
+                CycleTime = stream.ReadInt();
                 inputs = stream.ReadArray(s => new EvePlanetSchematicType.Data(s));
                 Output = new EvePlanetSchematicType.Data(stream);
             }
@@ -328,6 +331,7 @@ namespace Fasciculus.Eve.Models
             {
                 stream.WriteInt(Id);
                 stream.WriteString(Name);
+                stream.WriteInt(CycleTime);
                 stream.WriteArray(inputs, x => x.Write(stream));
                 Output.Write(stream);
             }
