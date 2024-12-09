@@ -67,17 +67,14 @@
             </Grid>
 
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="Changed Resources" FontAttributes="Bold" Grid.Row="0" Grid.Column="0"/>
-                <ListView ItemsSource="{Binding ChangedResources}"
-                          Grid.Row="1" Grid.Column="0">
-                    <ListView.ItemTemplate>
+                <Label Text="Changed Resources" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
+                <CollectionView ItemsSource="{Binding ChangedResources}" Grid.Row="1" Grid.Column="0">
+                    <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="x:String">
-                            <ViewCell>
-                                <Label Text="{Binding .}" TextColor="Orange" />
-                            </ViewCell>
+                            <Label Text="{Binding .}" TextColor="Orange" />
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
             </Grid>
 
         </VerticalStackLayout>

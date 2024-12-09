@@ -110,13 +110,15 @@ namespace Fasciculus.Eve.Assets.PageModels
 
         private void UpdateChangedResources()
         {
-            int prefixLength = assetsDirectories.Resources.FullName.Length + 1;
+            int len = assetsDirectories.Resources.FullName.Length + 1;
 
-            ChangedResources.Clear();
+            List<string> current = [.. assetsProgress.CreateResourcesInfo.Select(x => x.FullName[len..].Replace('\\', '/')).OrderBy(x => x)];
+            List<string> existing = new(ChangedResources);
+            List<string> remove = existing.Where(x => !current.Contains(x)).ToList();
+            List<string> add = current.Where(x => !existing.Contains(x)).ToList();
 
-            assetsProgress.CreateResourcesInfo
-                .Select(x => x.FullName[prefixLength..].Replace('\\', '/'))
-                .Apply(ChangedResources.Add);
+            remove.Apply(x => { ChangedResources.Remove(x); });
+            add.Apply(ChangedResources.Add);
         }
 
         [RelayCommand]
