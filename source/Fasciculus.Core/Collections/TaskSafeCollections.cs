@@ -5,28 +5,44 @@ using System.Collections.Generic;
 
 namespace Fasciculus.Collections
 {
-    public class TaskSafeList<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IList
+    public class TaskSafeList<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>,
+        IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IList
+        where T : notnull
     {
+        protected class Enumerator : IEnumerator<T>
+        {
+            public T Current => throw new NotImplementedException();
+            object IEnumerator.Current => throw new NotImplementedException();
+
+            public void Dispose() { }
+
+            public bool MoveNext()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Reset()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         private readonly List<T> list = [];
-        private readonly TaskSafeMutex mutex = new();
+        private readonly ReentrantTaskSafeMutex mutex = new();
 
         public int Count => Locker.Locked(mutex, () => list.Count);
 
         public bool IsReadOnly => false;
+        public bool IsSynchronized => false;
+        public object SyncRoot => mutex;
+        public bool IsFixedSize => false;
 
-        public bool IsSynchronized => throw new NotImplementedException();
+        object IList.this[int index] { get => GetAt(index); set => SetAt(index, (T)value); }
+        public T this[int index] { get => GetAt(index); set => SetAt(index, value); }
 
-        public object SyncRoot => throw new NotImplementedException();
+        private T GetAt(int index) => Locker.Locked(mutex, () => list[index]);
+        private void SetAt(int index, T value) => Locker.Locked(mutex, () => list[index] = value);
 
-        public bool IsFixedSize => throw new NotImplementedException();
-
-        object IList.this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public T this[int index]
-        {
-            get => Locker.Locked(mutex, () => list[index]);
-            set => Locker.Locked(mutex, () => list[index] = value);
-        }
         public void Add(T item)
             => Locker.Locked(mutex, () => list.Add(item));
 
@@ -43,10 +59,10 @@ namespace Fasciculus.Collections
             => Locker.Locked(mutex, () => list.Remove(item));
 
         public IEnumerator<T> GetEnumerator()
-            => Locker.Locked(mutex, () => list.GetEnumerator());
+            => new Enumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => Locker.Locked(mutex, () => list.GetEnumerator());
+            => new Enumerator();
 
         public int IndexOf(T item)
             => Locker.Locked(mutex, () => list.IndexOf(item));
