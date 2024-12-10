@@ -28,6 +28,7 @@ namespace Fasciculus.Eve
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddNavigator();
+            services.AddLastError();
             services.AddEsi();
             services.AddTrade();
             services.AddPlanetaryIndustry();
