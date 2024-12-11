@@ -2,7 +2,6 @@
 using Fasciculus.Eve.PageModels;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui;
-using Fasciculus.Maui.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +26,6 @@ namespace Fasciculus.Eve
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddNavigator();
             services.AddLastError();
             services.AddEsi();
             services.AddTrade();
