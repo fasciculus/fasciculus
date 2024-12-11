@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Fasciculus.Eve.ViewModels"
              x:Class="Fasciculus.Eve.Views.StatusBarView"
-             x:DataType="viewModels:StatusBarViewModel">
+             x:DataType="viewModels:StatusBarViewModel"
+             IsVisible="{Binding IsError}">
 
     <Grid RowDefinitions="Auto" ColumnDefinitions="*,48" Padding="14,7">
+        
         <Grid.Triggers>
             <DataTrigger TargetType="Grid" Binding="{Binding IsError}" Value="false">
                 <Setter Property="BackgroundColor" Value="DarkGreen" />
@@ -14,8 +16,11 @@
                 <Setter Property="BackgroundColor" Value="DarkRed" />
             </DataTrigger>
         </Grid.Triggers>
-        <Label Text="{Binding Text}" Grid.Row="0" Grid.Column="0" VerticalOptions="Center" />
-        <Button Text="Clear" Command="{Binding ClearCommand}" BackgroundColor="AntiqueWhite" Grid.Row="0" Grid.Column="1" />
+        
+        <Label Text="{Binding Text}" VerticalOptions="Center"
+               Grid.Row="0" Grid.Column="0" />
+        <Button Text="Clear" Command="{Binding ClearCommand}" IsEnabled="{Binding IsError}"
+                Grid.Row="0" Grid.Column="1" />
     </Grid>
     
 </ContentView>

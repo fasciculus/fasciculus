@@ -31,8 +31,8 @@
         <Setter Property="BorderWidth" Value="0"/>
         <Setter Property="CornerRadius" Value="2"/>
         <Setter Property="Padding" Value="2,2"/>
-        <Setter Property="MinimumHeightRequest" Value="18"/>
-        <Setter Property="MaximumHeightRequest" Value="18"/>
+        <Setter Property="MinimumHeightRequest" Value="24"/>
+        <Setter Property="MaximumHeightRequest" Value="24"/>
         <Setter Property="MinimumWidthRequest" Value="20"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
