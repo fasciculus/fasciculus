@@ -10,25 +10,19 @@
 
     <FlexLayout Direction="Column" >
         <FlexLayout FlexLayout.Grow="1">
-            <Label Text="CONTENT" FontSize="18" TextColor="Black" BackgroundColor="Gray" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FlexLayout.Grow="1" />
-            <BoxView FlexLayout.Basis="50" FlexLayout.Order="-1" Color="Blue" />
+            <views:NavBarView FlexLayout.Basis="44" />
+            <ScrollView FlexLayout.Grow="1" >
+                <VerticalStackLayout Padding="14">
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*" RowSpacing="7" ColumnSpacing="14">
+                        <Label Text="Application" Grid.Row="0" Grid.Column="0" />
+                        <Label Text="{Binding ApplicationVersion}" Grid.Row="0" Grid.Column="1" />
+                        <Label Text="SDE" Grid.Row="1" Grid.Column="0" />
+                        <Label Text="{Binding SdeVersion}" Grid.Row="1" Grid.Column="1" />
+                    </Grid>
+                </VerticalStackLayout>
+            </ScrollView>
         </FlexLayout>
-        <!--<Label Text="FOOTER" FontSize="18" TextColor="Black" BackgroundColor="Pink" HorizontalTextAlignment="Center" />-->
         <views:StatusBarView FlexLayout.Shrink="1" />
     </FlexLayout>
-
-    <!--<ScrollView>
-        <HorizontalStackLayout>
-            <controls:SideBar BindingContext="{Binding SideBar}" />
-            <VerticalStackLayout Padding="16,16" Spacing="16">
-                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*" RowSpacing="16" ColumnSpacing="16">
-                    <Label Text="Application" Grid.Row="0" Grid.Column="0" />
-                    <Label Text="{Binding ApplicationVersion}" Grid.Row="0" Grid.Column="1" />
-                    <Label Text="SDE" Grid.Row="1" Grid.Column="0" />
-                    <Label Text="{Binding SdeVersion}" Grid.Row="1" Grid.Column="1" />
-                </Grid>
-            </VerticalStackLayout>
-        </HorizontalStackLayout>
-    </ScrollView>-->
 
 </ContentPage>

@@ -15,7 +15,7 @@
             </DataTrigger>
         </Grid.Triggers>
         <Label Text="{Binding Text}" Grid.Row="0" Grid.Column="0" VerticalOptions="Center" />
-        <Button Text="Clear" Command="{Binding ClearCommand}" Grid.Row="0" Grid.Column="1" />
+        <Button Text="Clear" Command="{Binding ClearCommand}" BackgroundColor="AntiqueWhite" Grid.Row="0" Grid.Column="1" />
     </Grid>
     
 </ContentView>

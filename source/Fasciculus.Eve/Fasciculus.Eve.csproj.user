@@ -31,6 +31,9 @@
     <MauiXaml Update="Resources\Styles\EveStyles.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
+    <MauiXaml Update="Views\NavBarView.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
     <MauiXaml Update="Views\StatusBarView.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
