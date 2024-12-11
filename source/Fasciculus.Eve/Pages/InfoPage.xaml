@@ -7,7 +7,7 @@
              x:DataType="pageModels:InfoPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
-    <FlexLayout Direction="Column" >
+    <FlexLayout Direction="Column">
         <FlexLayout FlexLayout.Grow="1">
             <views:NavBarView FlexLayout.Basis="44" />
             <ScrollView FlexLayout.Grow="1">

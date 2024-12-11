@@ -2,20 +2,19 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
-             xmlns:controls="clr-namespace:Fasciculus.Eve.Pages.Controls"
+             xmlns:views="clr-namespace:Fasciculus.Eve.Views"
              x:Class="Fasciculus.Eve.Pages.MapPage"
              x:DataType="pageModels:MapPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
-    <ScrollView>
-        <HorizontalStackLayout>
-            <controls:SideBar BindingContext="{Binding SideBar}" />
-            <VerticalStackLayout Padding="16,16" Spacing="16">
-                <Grid RowDefinitions="Auto" ColumnDefinitions="100,*">
-                    <Label Text="Map" Grid.Row="0" Grid.Column="0" />
-                </Grid>
-            </VerticalStackLayout>
-        </HorizontalStackLayout>
-    </ScrollView>
+    <FlexLayout Direction="Column">
+        <FlexLayout FlexLayout.Grow="1">
+            <views:NavBarView FlexLayout.Basis="44" />
+            <ScrollView FlexLayout.Grow="1" Padding="14">
+                <Label Text="Map" />
+            </ScrollView>
+        </FlexLayout>
+        <views:StatusBarView FlexLayout.Shrink="1" />
+    </FlexLayout>
 
 </ContentPage>
