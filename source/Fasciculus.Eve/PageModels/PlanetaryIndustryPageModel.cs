@@ -10,11 +10,16 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private SideBarModel sideBar;
 
+        [ObservableProperty]
+        private StatusBarModel statusBar;
+
         private readonly IPlanetaryIndustry planetaryIndustry;
 
         public PlanetaryIndustryPageModel(SideBarModel sideBar, IPlanetaryIndustry planetaryIndustry)
         {
             this.sideBar = sideBar;
+
+            statusBar = Application.Current!.Handler.GetRequiredService<StatusBarModel>();
 
             this.planetaryIndustry = planetaryIndustry;
         }

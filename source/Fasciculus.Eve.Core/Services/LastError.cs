@@ -3,10 +3,11 @@ using Fasciculus.Maui.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using System.ComponentModel;
 
 namespace Fasciculus.Eve.Services
 {
-    public interface ILastError
+    public interface ILastError : INotifyPropertyChanged
     {
         public Exception? Error { get; set; }
     }

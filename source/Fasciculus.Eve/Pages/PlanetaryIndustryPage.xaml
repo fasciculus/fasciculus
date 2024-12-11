@@ -7,15 +7,16 @@
              x:DataType="pageModels:PlanetaryIndustryPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
-    <ScrollView>
-        <HorizontalStackLayout>
-            <eveControls:SideBar BindingContext="{Binding SideBar}" />
-            <VerticalStackLayout Padding="16,16" Spacing="12">
-                <Grid RowDefinitions="Auto" ColumnDefinitions="160,*">
-                    <Button Text="Start" Command="{Binding StartCommand}"  Grid.Row="0" Grid.Column="0" />
+    <HorizontalStackLayout HorizontalOptions="Fill">
+        <eveControls:SideBar BindingContext="{Binding SideBar}" />
+        <FlexLayout Direction="Column">
+            <ScrollView FlexLayout.Grow="1">
+                <Grid RowDefinitions="Auto" ColumnDefinitions="160,*" Padding="16">
+                    <Button Text="Start" Command="{Binding StartCommand}" Grid.Row="0" Grid.Column="0" />
                 </Grid>
-            </VerticalStackLayout>
-        </HorizontalStackLayout>
-    </ScrollView>
+            </ScrollView>
+            <eveControls:StatusBar Source="{Binding StatusBar}" Padding="16,8" />
+        </FlexLayout>
+    </HorizontalStackLayout>
     
 </ContentPage>

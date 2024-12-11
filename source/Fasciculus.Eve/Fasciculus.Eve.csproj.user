@@ -10,9 +10,6 @@
     <MauiXaml Update="Pages\Controls\SideBar.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
-    <MauiXaml Update="Pages\Controls\Trade.xaml">
-      <SubType>Designer</SubType>
-    </MauiXaml>
     <MauiXaml Update="Pages\IndustryPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
