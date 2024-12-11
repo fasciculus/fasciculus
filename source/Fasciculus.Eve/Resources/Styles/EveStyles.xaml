@@ -14,6 +14,9 @@
     </Style>
 
     <Style TargetType="fasciculus:WorkStateLabel">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="PendingColor" Value="#FFFF6060" />
         <Setter Property="WorkingColor" Value="#FFD0D000" />
         <Setter Property="DoneColor" Value="LightGreen" />
