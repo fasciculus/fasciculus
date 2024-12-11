@@ -2,6 +2,7 @@
 using Fasciculus.Eve.PageModels;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui;
+using Fasciculus.Maui.Support;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +22,11 @@ namespace Fasciculus.Eve
             ConfigureLogging(builder.Logging);
             ConfigureServices(builder.Services);
 
-            return builder.Build();
+            MauiApp mauiApp = builder.Build();
+
+            mauiApp.InitializeServices();
+
+            return mauiApp;
         }
 
         private static void ConfigureServices(IServiceCollection services)
