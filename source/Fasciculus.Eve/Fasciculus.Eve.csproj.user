@@ -25,7 +25,7 @@
     <MauiXaml Update="Pages\MarketPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
-    <MauiXaml Update="Pages\PlanetaryIndustryPage.xaml">
+    <MauiXaml Update="Pages\PlanetsPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
     <MauiXaml Update="Resources\Styles\EveStyles.xaml">

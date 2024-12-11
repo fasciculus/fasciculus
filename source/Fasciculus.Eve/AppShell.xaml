@@ -34,7 +34,7 @@
 
     <ShellContent
         Title="Planetary Industry"
-        ContentTemplate="{DataTemplate p:PlanetaryIndustryPage}"
-        Route="PlanetaryIndustry" />
+        ContentTemplate="{DataTemplate p:PlanetsPage}"
+        Route="Planets" />
 
 </Shell>

@@ -2,11 +2,12 @@ using Fasciculus.Eve.PageModels;
 
 namespace Fasciculus.Eve.Pages;
 
-public partial class PlanetaryIndustryPage : ContentPage
+public partial class PlanetsPage : ContentPage
 {
-    public PlanetaryIndustryPage(PlanetaryIndustryPageModel model)
+    public PlanetsPage(PlanetsPageModel model)
     {
         InitializeComponent();
+
         BindingContext = model;
     }
 }

@@ -76,7 +76,7 @@
     <MauiXaml Update="Pages\MarketPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="Pages\PlanetaryIndustryPage.xaml">
+    <MauiXaml Update="Pages\PlanetsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Resources\Styles\EveStyles.xaml">
