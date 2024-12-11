@@ -7,7 +7,7 @@
 
     <VerticalStackLayout>
         <ImageButton Source="info.png" Command="{Binding GoToCommand}" CommandParameter="//Info" />
-        <ImageButton Source="market.png" Command="{Binding GoToCommand}" CommandParameter="//Market" />
+        <ImageButton Source="market.png" Command="{Binding GoToCommand}" CommandParameter="//Trades" />
         <ImageButton Source="industry.png" Command="{Binding GoToCommand}" CommandParameter="//Industry" />
         <ImageButton Source="planets.png" Command="{Binding GoToCommand}" CommandParameter="//Planets" />
         <ImageButton Source="map.png" Command="{Binding GoToCommand}" CommandParameter="//Map" />

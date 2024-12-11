@@ -33,7 +33,7 @@ namespace Fasciculus.Eve
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddEsi();
-            services.AddTrade();
+            services.AddTrades();
             services.AddPlanetaryIndustry();
 
             services.TryAddKeyedSingleton("EsiUserAgent", "Fasciculus.Eve (rhj1)");
@@ -47,7 +47,7 @@ namespace Fasciculus.Eve
             services.TryAddSingleton<LoadingPageModel>();
             services.TryAddSingleton<IndustryPageModel>();
             services.TryAddSingleton<InfoPageModel>();
-            services.TryAddSingleton<MarketPageModel>();
+            services.TryAddSingleton<TradesPageModel>();
             services.TryAddSingleton<MapPageModel>();
             services.TryAddSingleton<PlanetsPageModel>();
         }

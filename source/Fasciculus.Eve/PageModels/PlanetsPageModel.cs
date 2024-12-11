@@ -6,17 +6,17 @@ namespace Fasciculus.Eve.PageModels
 {
     public partial class PlanetsPageModel : MainThreadObservable
     {
-        private readonly IPlanetaryIndustry planetaryIndustry;
+        private readonly IPlanets planets;
 
-        public PlanetsPageModel(IPlanetaryIndustry planetaryIndustry)
+        public PlanetsPageModel(IPlanets planets)
         {
-            this.planetaryIndustry = planetaryIndustry;
+            this.planets = planets;
         }
 
         [RelayCommand]
         private Task Start()
         {
-            return planetaryIndustry.StartAsync();
+            return planets.StartAsync();
         }
     }
 }

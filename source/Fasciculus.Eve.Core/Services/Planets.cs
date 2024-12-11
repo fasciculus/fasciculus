@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Services
 {
-    public interface IPlanetaryIndustry
+    public interface IPlanets
     {
         public Task StartAsync();
     }
 
-    public class PlanetaryIndustry : IPlanetaryIndustry
+    public class Planets : IPlanets
     {
         private readonly TaskSafeMutex mutex = new();
 
         private readonly IExceptions exceptions;
         private readonly IEveResources resources;
 
-        public PlanetaryIndustry(IExceptions exceptions, IEveResources resources)
+        public Planets(IExceptions exceptions, IEveResources resources)
         {
             this.exceptions = exceptions;
             this.resources = resources;
@@ -59,7 +59,7 @@ namespace Fasciculus.Eve.Services
     {
         public static IServiceCollection AddPlanetaryIndustry(this IServiceCollection services)
         {
-            services.TryAddSingleton<IPlanetaryIndustry, PlanetaryIndustry>();
+            services.TryAddSingleton<IPlanets, Planets>();
 
             return services;
         }

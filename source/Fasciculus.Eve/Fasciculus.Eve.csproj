@@ -61,6 +61,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <MauiXaml Include="Pages\MarketPage.xaml.xml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+  </ItemGroup>
+
+  <ItemGroup>
     <MauiXaml Update="Pages\Controls\SideBar.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
@@ -73,10 +79,10 @@
     <MauiXaml Update="Pages\MapPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="Pages\MarketPage.xaml">
+    <MauiXaml Update="Pages\PlanetsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="Pages\PlanetsPage.xaml">
+    <MauiXaml Update="Pages\TradesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Resources\Styles\EveStyles.xaml">

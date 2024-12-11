@@ -24,8 +24,8 @@
 
     <ShellContent
         Title="Market"
-        ContentTemplate="{DataTemplate p:MarketPage}"
-        Route="Market" />
+        ContentTemplate="{DataTemplate p:TradesPage}"
+        Route="Trades" />
 
     <ShellContent
         Title="Map"

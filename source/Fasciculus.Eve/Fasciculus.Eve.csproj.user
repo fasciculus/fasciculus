@@ -22,10 +22,13 @@
     <MauiXaml Update="Pages\MapPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
-    <MauiXaml Update="Pages\MarketPage.xaml">
+    <MauiXaml Update="Pages\MarketPage.xaml.xml">
       <SubType>Designer</SubType>
     </MauiXaml>
     <MauiXaml Update="Pages\PlanetsPage.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
+    <MauiXaml Update="Pages\TradesPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
     <MauiXaml Update="Resources\Styles\EveStyles.xaml">
