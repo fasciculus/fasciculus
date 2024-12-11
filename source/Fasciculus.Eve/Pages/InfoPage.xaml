@@ -3,11 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
              xmlns:controls="clr-namespace:Fasciculus.Eve.Pages.Controls"
+             xmlns:views="clr-namespace:Fasciculus.Eve.Views"
              x:Class="Fasciculus.Eve.Pages.InfoPage"
              x:DataType="pageModels:InfoPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
-    <ScrollView>
+    <FlexLayout Direction="Column" >
+        <FlexLayout FlexLayout.Grow="1">
+            <Label Text="CONTENT" FontSize="18" TextColor="Black" BackgroundColor="Gray" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FlexLayout.Grow="1" />
+            <BoxView FlexLayout.Basis="50" FlexLayout.Order="-1" Color="Blue" />
+        </FlexLayout>
+        <!--<Label Text="FOOTER" FontSize="18" TextColor="Black" BackgroundColor="Pink" HorizontalTextAlignment="Center" />-->
+        <views:StatusBarView FlexLayout.Shrink="1" />
+    </FlexLayout>
+
+    <!--<ScrollView>
         <HorizontalStackLayout>
             <controls:SideBar BindingContext="{Binding SideBar}" />
             <VerticalStackLayout Padding="16,16" Spacing="16">
@@ -19,6 +29,6 @@
                 </Grid>
             </VerticalStackLayout>
         </HorizontalStackLayout>
-    </ScrollView>
+    </ScrollView>-->
 
 </ContentPage>

@@ -82,6 +82,9 @@
     <MauiXaml Update="Resources\Styles\EveStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Views\StatusBarView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Fasciculus.Eve.ViewModels"
+             x:Class="Fasciculus.Eve.Views.StatusBarView"
+             x:DataType="viewModels:StatusBarViewModel">
+
+    <Grid RowDefinitions="Auto" ColumnDefinitions="*,48" Padding="14,7">
+        <Grid.Triggers>
+            <DataTrigger TargetType="Grid" Binding="{Binding IsError}" Value="false">
+                <Setter Property="BackgroundColor" Value="DarkGreen" />
+            </DataTrigger>
+            <DataTrigger TargetType="Grid"  Binding="{Binding IsError}" Value="true">
+                <Setter Property="BackgroundColor" Value="DarkRed" />
+            </DataTrigger>
+        </Grid.Triggers>
+        <Label Text="{Binding Text}" Grid.Row="0" Grid.Column="0" VerticalOptions="Center" />
+        <Button Text="Clear" Command="{Binding ClearCommand}" Grid.Row="0" Grid.Column="1" />
+    </Grid>
+    
+</ContentView>

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Fasciculus.Eve.PageModels;
 using Fasciculus.Eve.Services;
+using Fasciculus.Eve.ViewModels;
 using Fasciculus.Maui;
 using Fasciculus.Maui.Support;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -36,6 +37,8 @@ namespace Fasciculus.Eve
             services.AddPlanetaryIndustry();
 
             services.TryAddKeyedSingleton("EsiUserAgent", "Fasciculus.Eve (rhj1)");
+
+            services.TryAddSingleton<StatusBarViewModel>();
 
             services.TryAddSingleton<SideBarModel>();
             services.TryAddSingleton<StatusBarModel>();
