@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Eve.Models;
+using Fasciculus.Maui.Services;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -16,12 +17,12 @@ namespace Fasciculus.Eve.Services
     {
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly ILastError lastError;
+        private readonly IExceptions exceptions;
         private readonly IEveResources resources;
 
-        public PlanetaryIndustry(ILastError lastError, IEveResources resources)
+        public PlanetaryIndustry(IExceptions exceptions, IEveResources resources)
         {
-            this.lastError = lastError;
+            this.exceptions = exceptions;
             this.resources = resources;
         }
 
@@ -34,7 +35,7 @@ namespace Fasciculus.Eve.Services
 
         private void Start()
         {
-            lastError.Error = null;
+            exceptions.Clear();
 
             EvePlanetSchematics schematics = GetSchematics();
 
@@ -45,7 +46,7 @@ namespace Fasciculus.Eve.Services
             EvePlanetSchematic[] p4 = [.. schematics.P4];
 
             Tasks.Sleep(2000);
-            lastError.Error = new Exception("Not (yet) implemented");
+            exceptions.Add(new Exception("Not (yet) implemented"));
         }
 
         private EvePlanetSchematics GetSchematics()

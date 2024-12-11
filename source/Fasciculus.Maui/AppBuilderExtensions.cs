@@ -15,6 +15,7 @@ namespace Fasciculus.Maui
         {
             IServiceCollection services = builder.Services;
 
+            services.TryAddSingleton<IExceptions, Exceptions>();
             services.TryAddSingleton<INavigator, Navigator>();
 
             return builder;

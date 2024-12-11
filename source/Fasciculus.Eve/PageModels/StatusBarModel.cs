@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Maui.Services;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.PageModels
@@ -9,7 +9,7 @@ namespace Fasciculus.Eve.PageModels
     {
         private const string NoError = "No Error";
 
-        private readonly ILastError lastError;
+        private readonly IExceptions exceptions;
 
         [ObservableProperty]
         private string text = NoError;
@@ -17,18 +17,18 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private bool isError = false;
 
-        public StatusBarModel(ILastError lastError)
+        public StatusBarModel(IExceptions exceptions)
         {
-            this.lastError = lastError;
-            this.lastError.PropertyChanged += OnLastErrorChanged;
+            this.exceptions = exceptions;
+            this.exceptions.PropertyChanged += OnExceptionsChanged;
         }
 
-        private void OnLastErrorChanged(object? sender, PropertyChangedEventArgs e)
+        private void OnExceptionsChanged(object? sender, PropertyChangedEventArgs e)
         {
-            Exception? error = lastError.Error;
+            Exception? exception = exceptions.Last;
 
-            Text = error?.Message ?? NoError;
-            IsError = error is not null;
+            Text = exception?.Message ?? NoError;
+            IsError = exception is not null;
         }
     }
 }
