@@ -3,8 +3,6 @@ using Fasciculus.Eve.Models;
 using Fasciculus.IO;
 using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -139,19 +137,6 @@ namespace Fasciculus.Eve.Services
             }
 
             return navigation;
-        }
-    }
-
-    public static class EveResourcesServices
-    {
-        public static IServiceCollection AddEveResources(this IServiceCollection services)
-        {
-            services.AddEmbeddedResources();
-
-            services.TryAddSingleton<IEveResourcesProgress, EveResourcesProgress>();
-            services.TryAddSingleton<IEveResources, EveResources>();
-
-            return services;
         }
     }
 }

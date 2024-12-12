@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui;
 using Fasciculus.Eve.PageModels;
-using Fasciculus.Eve.Services;
 using Fasciculus.Eve.ViewModels;
 using Fasciculus.Maui;
 using Fasciculus.Maui.Support;
@@ -18,26 +17,17 @@ namespace Fasciculus.Eve
             builder.UseMauiApp<App>();
             builder.UseMauiCommunityToolkit();
             builder.UseMauiFasciculus();
+            builder.UseEveCore("Fasciculus.Eve (rhj1)");
 
             ConfigureFonts(builder);
             ConfigureLogging(builder.Logging);
             ConfigureServices(builder.Services);
 
-            MauiApp mauiApp = builder.Build();
-
-            mauiApp.InitializeServices();
-
-            return mauiApp;
+            return builder.Build().InitializeServices();
         }
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddEsi();
-            services.AddTrades();
-            services.AddPlanetaryIndustry();
-
-            services.TryAddKeyedSingleton("EsiUserAgent", "Fasciculus.Eve (rhj1)");
-
             services.TryAddSingleton<NavBarViewModel>();
             services.TryAddSingleton<StatusBarViewModel>();
 

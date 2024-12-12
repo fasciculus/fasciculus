@@ -2,7 +2,6 @@
 using Fasciculus.Net;
 using Fasciculus.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -117,6 +116,8 @@ namespace Fasciculus.Eve.Services
 
     public class EsiClient : IEsiClient
     {
+        public const string UserAgentKey = "EsiUserAgent";
+
         private static readonly Uri BaseUri = new("https://esi.evetech.net/latest/");
 
         private readonly HttpClient httpClient;
@@ -132,7 +133,7 @@ namespace Fasciculus.Eve.Services
         public Task<EveMarketPrices> MarketPrices => GetEveMarketPricesAsync();
 
         public EsiClient(IHttpClientPool httpClientPool, IEsiCache cache, IEveResources resources, ILogger<EsiClient> logger,
-            [FromKeyedServices("EsiUserAgent")] string userAgent)
+            [FromKeyedServices(UserAgentKey)] string userAgent)
         {
             httpClient = CreateHttpClient(httpClientPool, userAgent);
             this.cache = cache;
@@ -264,22 +265,6 @@ namespace Fasciculus.Eve.Services
             httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
 
             return httpClient;
-        }
-    }
-
-    public static class EsiServices
-    {
-        public static IServiceCollection AddEsi(this IServiceCollection services)
-        {
-            services.AddEveFileSystem();
-            services.AddEveResources();
-            services.AddHttpClientPool();
-
-            services.TryAddSingleton<IEsiCacheFiles, EsiCacheFiles>();
-            services.TryAddSingleton<IEsiCache, EsiCache>();
-            services.TryAddSingleton<IEsiClient, EsiClient>();
-
-            return services;
         }
     }
 }

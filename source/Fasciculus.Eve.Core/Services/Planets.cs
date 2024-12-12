@@ -1,8 +1,6 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Maui.Services;
 using Fasciculus.Threading;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Threading.Tasks;
 
@@ -52,16 +50,6 @@ namespace Fasciculus.Eve.Services
         private EvePlanetSchematics GetSchematics()
         {
             return Tasks.Wait(resources.Data).PlanetSchematics;
-        }
-    }
-
-    public static class PlanetaryIndustryServices
-    {
-        public static IServiceCollection AddPlanetaryIndustry(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IPlanets, Planets>();
-
-            return services;
         }
     }
 }
