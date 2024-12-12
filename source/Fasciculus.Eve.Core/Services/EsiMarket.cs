@@ -13,9 +13,9 @@ namespace Fasciculus.Eve.Services
         {
             using Locker locker = Locker.Lock(mutex);
 
-            EveMarketPrices? result = cache.MarketPrices;
+            EveMarketPrices.Data? data = cache.GetMarketPrices();
 
-            if (result is null)
+            if (data is null)
             {
                 string? text = await esiHttp.GetSingle("markets/prices/");
 
@@ -29,16 +29,19 @@ namespace Fasciculus.Eve.Services
                             .Where(x => x.AveragePrice > 0)
                             .ToDictionary(x => x.TypeId, x => x.AveragePrice);
 
-                        EveMarketPrices.Data data = new(prices);
-                        EveTypes types = (await resources.Data).Types;
+                        data = new(prices);
 
-                        result = new(data, types);
-                        cache.MarketPrices = result;
+                        EveTypes types = (await resources.Data).Types;
+                        EveMarketPrices result = new(data, types);
+
+                        cache.SetMarketPrices(data);
+
+                        return result;
                     }
                 }
             }
 
-            return result;
+            return null;
         }
     }
 }

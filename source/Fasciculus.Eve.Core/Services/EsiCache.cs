@@ -7,7 +7,8 @@ namespace Fasciculus.Eve.Services
 {
     public interface IEsiCache
     {
-        public EveMarketPrices? MarketPrices { get; set; }
+        public EveMarketPrices.Data? GetMarketPrices();
+        public void SetMarketPrices(EveMarketPrices.Data data);
     }
 
     public class EsiCache : IEsiCache
@@ -26,17 +27,17 @@ namespace Fasciculus.Eve.Services
 
         private readonly EveTypes types;
 
-        public EveMarketPrices? MarketPrices
-        {
-            get => Read(marketDirectory.File("MarketPrices"), MarketPricesMaxAge, s => new EveMarketPrices(s, types));
-            set { if (value is not null) Write(marketDirectory.File("MarketPrices"), value.Write); }
-        }
-
         public EsiCache(IEveFileSystem fileSystem, IEveResources resources)
         {
             marketDirectory = fileSystem.EsiCache.Combine("Market").CreateIfNotExists();
             types = Tasks.Wait(resources.Data).Types;
         }
+
+        public EveMarketPrices.Data? GetMarketPrices()
+            => Read(marketDirectory.File("MarketPrices"), MarketPricesMaxAge, s => new EveMarketPrices.Data(s));
+
+        public void SetMarketPrices(EveMarketPrices.Data data)
+            => Write(marketDirectory.File("MarketPrices"), data.Write);
 
         private T? Read<T>(FileInfo file, TimeSpan maxAge, Func<Stream, T> read)
             where T : notnull
