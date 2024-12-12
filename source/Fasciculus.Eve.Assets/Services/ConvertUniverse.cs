@@ -110,7 +110,7 @@ namespace Fasciculus.Eve.Assets.Services
             return new(id, celestialIndex, stations);
         }
 
-        private static EveMoonStation.Data ConvertMoonStation(KeyValuePair<int, SdeMoonStation> kvp)
+        private static EveStation.Data ConvertMoonStation(KeyValuePair<int, SdeMoonStation> kvp)
         {
             SdeMoonStation sdeMoonStation = kvp.Value;
 

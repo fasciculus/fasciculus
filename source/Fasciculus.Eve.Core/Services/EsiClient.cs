@@ -19,7 +19,7 @@ namespace Fasciculus.Eve.Services
         private readonly IEsiHttp esiHttp;
 
         private readonly EveTypes types;
-        private readonly EveMoonStations stations;
+        private readonly EveStations stations;
 
         private readonly TaskSafeMutex mutex = new();
 
@@ -29,7 +29,7 @@ namespace Fasciculus.Eve.Services
             this.esiHttp = esiHttp;
 
             types = Tasks.Wait(resources.Data).Types;
-            stations = Tasks.Wait(resources.Universe).NpcStations;
+            stations = Tasks.Wait(resources.Universe).Stations;
         }
     }
 }

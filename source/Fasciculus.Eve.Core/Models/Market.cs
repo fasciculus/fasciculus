@@ -130,13 +130,13 @@ namespace Fasciculus.Eve.Models
         protected readonly Data data;
 
         protected readonly EveTypes types;
-        protected readonly EveMoonStations stations;
+        protected readonly EveStations stations;
 
         private readonly Lazy<EveMarketOrder[]> orders;
         private readonly Lazy<Dictionary<EveType, EveMarketOrder[]>> byType;
-        private readonly Lazy<Dictionary<EveMoonStation, EveMarketOrder[]>> byStation;
+        private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
 
-        protected EveRegionOrders(Data data, EveTypes types, EveMoonStations stations)
+        protected EveRegionOrders(Data data, EveTypes types, EveStations stations)
         {
             this.data = data;
             this.types = types;
@@ -150,7 +150,7 @@ namespace Fasciculus.Eve.Models
         protected EveMarketOrder[] GetOrders(EveType type)
             => byType.Value.TryGetValue(type, out EveMarketOrder[]? orders) ? orders : [];
 
-        protected EveMarketOrder[] GetOrders(EveMoonStation station)
+        protected EveMarketOrder[] GetOrders(EveStation station)
             => byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : [];
 
         private EveMarketOrder[] FetchOrders()
@@ -164,7 +164,7 @@ namespace Fasciculus.Eve.Models
                 .ToDictionary();
         }
 
-        private Dictionary<EveMoonStation, EveMarketOrder[]> FetchByStation()
+        private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
         {
             return orders.Value.GroupBy(x => x.Location)
                 .Where(x => stations.Contains(x.Key))
@@ -176,33 +176,33 @@ namespace Fasciculus.Eve.Models
     public class EveRegionBuyOrders : EveRegionOrders
     {
         public EveTypeBuyOrders this[EveType type] => new(type, stations, GetOrders(type));
-        public EveStationBuyOrders this[EveMoonStation station] => new(station, types, GetOrders(station));
+        public EveStationBuyOrders this[EveStation station] => new(station, types, GetOrders(station));
 
-        public EveRegionBuyOrders(Data data, EveTypes types, EveMoonStations stations)
+        public EveRegionBuyOrders(Data data, EveTypes types, EveStations stations)
             : base(data, types, stations) { }
     }
 
     public class EveRegionSellOrders : EveRegionOrders
     {
         public EveTypeSellOrders this[EveType type] => new(type, stations, GetOrders(type));
-        public EveStationSellOrders this[EveMoonStation station] => new(station, types, GetOrders(station));
+        public EveStationSellOrders this[EveStation station] => new(station, types, GetOrders(station));
 
-        public EveRegionSellOrders(Data data, EveTypes types, EveMoonStations stations)
+        public EveRegionSellOrders(Data data, EveTypes types, EveStations stations)
             : base(data, types, stations) { }
     }
 
     public class EveTypeBuyOrders
     {
         private readonly EveType type;
-        private readonly EveMoonStations stations;
+        private readonly EveStations stations;
         private readonly EveMarketOrder[] orders;
 
-        private readonly Lazy<Dictionary<EveMoonStation, EveMarketOrder[]>> byStation;
+        private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
 
-        public EveDemand this[EveMoonStation station]
+        public EveDemand this[EveStation station]
             => new(type, station, byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : []);
 
-        internal EveTypeBuyOrders(EveType type, EveMoonStations stations, EveMarketOrder[] orders)
+        internal EveTypeBuyOrders(EveType type, EveStations stations, EveMarketOrder[] orders)
         {
             this.type = type;
             this.stations = stations;
@@ -211,7 +211,7 @@ namespace Fasciculus.Eve.Models
             byStation = new(FetchByStation, true);
         }
 
-        private Dictionary<EveMoonStation, EveMarketOrder[]> FetchByStation()
+        private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
         {
             return orders.GroupBy(x => x.Location)
                 .Where(x => stations.Contains(x.Key))
@@ -223,15 +223,15 @@ namespace Fasciculus.Eve.Models
     public class EveTypeSellOrders
     {
         private readonly EveType type;
-        private readonly EveMoonStations stations;
+        private readonly EveStations stations;
         private readonly EveMarketOrder[] orders;
 
-        private readonly Lazy<Dictionary<EveMoonStation, EveMarketOrder[]>> byStation;
+        private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
 
-        public EveSupply this[EveMoonStation station]
+        public EveSupply this[EveStation station]
             => new(type, station, byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : []);
 
-        internal EveTypeSellOrders(EveType type, EveMoonStations stations, EveMarketOrder[] orders)
+        internal EveTypeSellOrders(EveType type, EveStations stations, EveMarketOrder[] orders)
         {
             this.type = type;
             this.stations = stations;
@@ -240,7 +240,7 @@ namespace Fasciculus.Eve.Models
             byStation = new(FetchByStation, true);
         }
 
-        private Dictionary<EveMoonStation, EveMarketOrder[]> FetchByStation()
+        private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
         {
             return orders.GroupBy(x => x.Location)
                 .Where(x => stations.Contains(x.Key))
@@ -251,7 +251,7 @@ namespace Fasciculus.Eve.Models
 
     public class EveStationBuyOrders
     {
-        private readonly EveMoonStation station;
+        private readonly EveStation station;
         private readonly EveTypes types;
         private readonly EveMarketOrder[] orders;
 
@@ -260,7 +260,7 @@ namespace Fasciculus.Eve.Models
         public EveDemand this[EveType type]
             => new(type, station, byType.Value.TryGetValue(type, out EveMarketOrder[]? orders) ? orders : []);
 
-        internal EveStationBuyOrders(EveMoonStation station, EveTypes types, EveMarketOrder[] orders)
+        internal EveStationBuyOrders(EveStation station, EveTypes types, EveMarketOrder[] orders)
         {
             this.station = station;
             this.types = types;
@@ -280,7 +280,7 @@ namespace Fasciculus.Eve.Models
 
     public class EveStationSellOrders
     {
-        private readonly EveMoonStation station;
+        private readonly EveStation station;
         private readonly EveTypes types;
         private readonly EveMarketOrder[] orders;
 
@@ -289,7 +289,7 @@ namespace Fasciculus.Eve.Models
         public EveSupply this[EveType type]
             => new(type, station, byType.Value.TryGetValue(type, out EveMarketOrder[]? orders) ? orders : []);
 
-        internal EveStationSellOrders(EveMoonStation station, EveTypes types, EveMarketOrder[] orders)
+        internal EveStationSellOrders(EveStation station, EveTypes types, EveMarketOrder[] orders)
         {
             this.station = station;
             this.types = types;
@@ -310,11 +310,11 @@ namespace Fasciculus.Eve.Models
     public class EveDemand
     {
         public EveType Type { get; }
-        public EveMoonStation Station { get; }
+        public EveStation Station { get; }
 
         private readonly EveMarketOrder[] orders;
 
-        internal EveDemand(EveType type, EveMoonStation station, EveMarketOrder[] orders)
+        internal EveDemand(EveType type, EveStation station, EveMarketOrder[] orders)
         {
             Type = type;
             Station = station;
@@ -344,11 +344,11 @@ namespace Fasciculus.Eve.Models
     public class EveSupply
     {
         public EveType Type { get; }
-        public EveMoonStation Station { get; }
+        public EveStation Station { get; }
 
         private readonly EveMarketOrder[] orders;
 
-        internal EveSupply(EveType type, EveMoonStation station, EveMarketOrder[] orders)
+        internal EveSupply(EveType type, EveStation station, EveMarketOrder[] orders)
         {
             Type = type;
             Station = station;

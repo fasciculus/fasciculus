@@ -27,6 +27,7 @@ namespace Fasciculus.Eve
             services.TryAddSingleton<IEsiCache, EsiCache>();
             services.TryAddSingleton<IEsiClient, EsiClient>();
 
+            services.TryAddSingleton<IMarket, Market>();
             services.TryAddSingleton<IPlanets, Planets>();
             services.TryAddSingleton<ITrades, Trades>();
 
