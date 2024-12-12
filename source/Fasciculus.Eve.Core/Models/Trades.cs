@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
@@ -107,151 +103,100 @@ namespace Fasciculus.Eve.Models
             => data.GetHashCode();
     }
 
-    public class EveMarketOrder
-    {
-        public class Data
-        {
-            public int Type { get; }
-            public long Location { get; }
-            public bool IsBuy { get; }
-            public double Price { get; }
-            public int Quantity { get; }
+    //public class EveMarketOrders : IEnumerable<EveMarketOrder>
+    //{
+    //    public class Data
+    //    {
+    //        private readonly EveMarketOrder.Data[] orders;
+    //        public IReadOnlyList<EveMarketOrder.Data> Orders => orders;
 
-            public Data(int type, long location, bool isBuy, double price, int quantity)
-            {
-                Type = type;
-                Location = location;
-                IsBuy = isBuy;
-                Price = price;
-                Quantity = quantity;
-            }
+    //        public Data(IEnumerable<EveMarketOrder.Data> orders)
+    //        {
+    //            this.orders = orders.ToArray();
+    //        }
 
-            public Data(Stream stream)
-            {
-                Type = stream.ReadInt();
-                Location = stream.ReadLong();
-                IsBuy = stream.ReadBool();
-                Price = stream.ReadDouble();
-                Quantity = stream.ReadInt();
-            }
+    //        public Data(Stream stream)
+    //        {
+    //            orders = stream.ReadArray(s => new EveMarketOrder.Data(s));
+    //        }
 
-            public void Write(Stream stream)
-            {
-                stream.WriteInt(Type);
-                stream.WriteLong(Location);
-                stream.WriteBool(IsBuy);
-                stream.WriteDouble(Price);
-                stream.WriteInt(Quantity);
-            }
-        }
+    //        public void Write(Stream stream)
+    //        {
+    //            stream.WriteArray(orders, x => x.Write(stream));
+    //        }
+    //    }
 
-        internal readonly Data data;
+    //    private readonly Data data;
 
-        public int Type => data.Type;
-        public long Location => data.Location;
-        public double Price => data.Price;
-        public int Quantity => data.Quantity;
+    //    private readonly EveMarketOrder[] orders;
 
-        public EveMarketOrder(Data data)
-        {
-            this.data = data;
-        }
-    }
+    //    public EveMarketOrders(Data data)
+    //    {
+    //        this.data = data;
 
-    public class EveMarketOrders : IEnumerable<EveMarketOrder>
-    {
-        public class Data
-        {
-            private readonly EveMarketOrder.Data[] orders;
-            public IReadOnlyList<EveMarketOrder.Data> Orders => orders;
+    //        orders = data.Orders.Select(x => new EveMarketOrder(x)).ToArray();
+    //    }
 
-            public Data(IEnumerable<EveMarketOrder.Data> orders)
-            {
-                this.orders = orders.ToArray();
-            }
+    //    public EveMarketOrders(IEnumerable<EveMarketOrder> orders)
+    //    {
+    //        this.orders = orders.ToArray();
 
-            public Data(Stream stream)
-            {
-                orders = stream.ReadArray(s => new EveMarketOrder.Data(s));
-            }
+    //        data = new(orders.Select(x => x.data));
+    //    }
 
-            public void Write(Stream stream)
-            {
-                stream.WriteArray(orders, x => x.Write(stream));
-            }
-        }
+    //    public EveMarketOrders(Stream stream)
+    //        : this(new Data(stream)) { }
 
-        private readonly Data data;
+    //    public void Write(Stream stream)
+    //    {
+    //        data.Write(stream);
+    //    }
 
-        private readonly EveMarketOrder[] orders;
+    //    public static EveMarketOrders Empty
+    //        => new(new Data([]));
 
-        public EveMarketOrders(Data data)
-        {
-            this.data = data;
+    //    public IEnumerator<EveMarketOrder> GetEnumerator()
+    //        => orders.AsEnumerable().GetEnumerator();
 
-            orders = data.Orders.Select(x => new EveMarketOrder(x)).ToArray();
-        }
+    //    IEnumerator IEnumerable.GetEnumerator()
+    //        => orders.GetEnumerator();
+    //}
 
-        public EveMarketOrders(IEnumerable<EveMarketOrder> orders)
-        {
-            this.orders = orders.ToArray();
+    //public class EveDemandOrSupply
+    //{
+    //    public EveMoonStation Station { get; }
+    //    public EveType Type { get; }
+    //    public double Price { get; }
+    //    public int Quantity { get; }
 
-            data = new(orders.Select(x => x.data));
-        }
+    //    public EveDemandOrSupply(EveMoonStation station, EveType type, double price, int quantity)
+    //    {
+    //        Station = station;
+    //        Type = type;
+    //        Price = price;
+    //        Quantity = quantity;
+    //    }
+    //}
 
-        public EveMarketOrders(Stream stream)
-            : this(new Data(stream)) { }
+    //[DebuggerDisplay("{ProfitText}")]
+    //public class EveTrade
+    //{
+    //    public EveDemandOrSupply Supply { get; }
+    //    public EveDemandOrSupply Demand { get; }
+    //    public int Quantity { get; }
+    //    public double Profit { get; }
 
-        public void Write(Stream stream)
-        {
-            data.Write(stream);
-        }
+    //    public string QuantityText => Quantity.ToString("#,###,###,##0");
+    //    public string BuyPriceText => Supply.Price.ToString("#,###,###,##0.00");
+    //    public string SellPriceText => Demand.Price.ToString("#,###,###,##0.00");
+    //    public string ProfitText => Profit.ToString("#,###,###,##0.00");
 
-        public static EveMarketOrders Empty
-            => new(new Data([]));
-
-        public IEnumerator<EveMarketOrder> GetEnumerator()
-            => orders.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => orders.GetEnumerator();
-    }
-
-    public class EveDemandOrSupply
-    {
-        public EveMoonStation Station { get; }
-        public EveType Type { get; }
-        public double Price { get; }
-        public int Quantity { get; }
-
-        public EveDemandOrSupply(EveMoonStation station, EveType type, double price, int quantity)
-        {
-            Station = station;
-            Type = type;
-            Price = price;
-            Quantity = quantity;
-        }
-    }
-
-    [DebuggerDisplay("{ProfitText}")]
-    public class EveTrade
-    {
-        public EveDemandOrSupply Supply { get; }
-        public EveDemandOrSupply Demand { get; }
-        public int Quantity { get; }
-        public double Profit { get; }
-
-        public string QuantityText => Quantity.ToString("#,###,###,##0");
-        public string BuyPriceText => Supply.Price.ToString("#,###,###,##0.00");
-        public string SellPriceText => Demand.Price.ToString("#,###,###,##0.00");
-        public string ProfitText => Profit.ToString("#,###,###,##0.00");
-
-        public EveTrade(EveDemandOrSupply supply, EveDemandOrSupply demand, int quantity, double profit)
-        {
-            Supply = supply;
-            Demand = demand;
-            Quantity = quantity;
-            Profit = profit;
-        }
-    }
+    //    public EveTrade(EveDemandOrSupply supply, EveDemandOrSupply demand, int quantity, double profit)
+    //    {
+    //        Supply = supply;
+    //        Demand = demand;
+    //        Quantity = quantity;
+    //        Profit = profit;
+    //    }
+    //}
 }

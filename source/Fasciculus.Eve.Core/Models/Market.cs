@@ -56,4 +56,103 @@ namespace Fasciculus.Eve.Models
         public static EveMarketPrices Empty(EveTypes types)
             => new(new Data([]), types);
     }
+
+    public class EveMarketOrder
+    {
+        public class Data
+        {
+            public int Type { get; }
+            public long Location { get; }
+            public double Price { get; }
+            public int Quantity { get; }
+
+            public Data(int type, long location, double price, int quantity)
+            {
+                Type = type;
+                Location = location;
+                Price = price;
+                Quantity = quantity;
+            }
+
+            public Data(Stream stream)
+            {
+                Type = stream.ReadInt();
+                Location = stream.ReadLong();
+                Price = stream.ReadDouble();
+                Quantity = stream.ReadInt();
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteInt(Type);
+                stream.WriteLong(Location);
+                stream.WriteDouble(Price);
+                stream.WriteInt(Quantity);
+            }
+        }
+
+        internal readonly Data data;
+
+        public int Type => data.Type;
+        public long Location => data.Location;
+        public double Price => data.Price;
+        public int Quantity => data.Quantity;
+
+        public EveMarketOrder(Data data)
+        {
+            this.data = data;
+        }
+    }
+
+    public abstract class EveRegionOrders
+    {
+        public class Data
+        {
+            private readonly EveMarketOrder.Data[] orders;
+
+            public Data(IEnumerable<EveMarketOrder.Data> orders)
+            {
+                this.orders = orders.ToArray();
+            }
+
+            public Data(Stream stream)
+            {
+                orders = stream.ReadArray(s => new EveMarketOrder.Data(s));
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteArray(orders, x => x.Write(stream));
+            }
+        }
+
+        protected readonly Data data;
+
+        protected readonly EveTypes types;
+        protected readonly EveMoonStations stations;
+
+        protected EveRegionOrders(Data data, EveTypes types, EveMoonStations stations)
+        {
+            this.data = data;
+            this.types = types;
+            this.stations = stations;
+        }
+    }
+
+    public class EveRegionBuyOrders : EveRegionOrders
+    {
+        public EveRegionBuyOrders(Data data, EveTypes types, EveMoonStations stations)
+            : base(data, types, stations)
+        {
+        }
+    }
+
+    public class EveRegionSellOrders : EveRegionOrders
+    {
+        public EveRegionSellOrders(Data data, EveTypes types, EveMoonStations stations)
+            : base(data, types, stations)
+        {
+
+        }
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Eve.Models;
+using Fasciculus.Support;
 using Fasciculus.Threading;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Fasciculus.Eve.Services
         {
             using Locker locker = Locker.Lock(mutex);
 
-            EveMarketPrices.Data? data = cache.GetMarketPrices();
+            EveMarketPrices.Data? data = esiCache.GetMarketPrices();
 
             if (data is null)
             {
@@ -30,18 +31,76 @@ namespace Fasciculus.Eve.Services
                             .ToDictionary(x => x.TypeId, x => x.AveragePrice);
 
                         data = new(prices);
+                        esiCache.SetMarketPrices(data);
 
-                        EveTypes types = (await resources.Data).Types;
-                        EveMarketPrices result = new(data, types);
-
-                        cache.SetMarketPrices(data);
-
-                        return result;
+                        return new(data, types);
                     }
                 }
             }
 
             return null;
         }
+
+        public async Task<EveRegionBuyOrders?> GetRegionBuyOrdersAsync(EveRegion region, IAccumulatingLongProgress progress)
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            EveRegionOrders.Data? data = esiCache.GetRegionBuyOrders(region);
+
+            if (data is null)
+            {
+                data = await GetRegionOrders(region, "buy", progress);
+
+                if (data is not null)
+                {
+                    esiCache.SetRegionBuyOrders(region, data);
+
+                    return new(data, types, stations);
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<EveRegionSellOrders?> GetRegionSellOrdersAsync(EveRegion region, IAccumulatingLongProgress progress)
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            EveRegionOrders.Data? data = esiCache.GetRegionSellOrders(region);
+
+            if (data is null)
+            {
+                data = await GetRegionOrders(region, "sell", progress);
+
+                if (data is not null)
+                {
+                    esiCache.SetRegionSellOrders(region, data);
+
+                    return new(data, types, stations);
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<EveRegionOrders.Data?> GetRegionOrders(EveRegion region, string orderType, IAccumulatingLongProgress progress)
+        {
+            string uri = $"markets/{region.Id}/orders/?order_type={orderType}";
+            string[] texts = await esiHttp.GetPaged(uri, progress);
+            EsiMarketOrder[] esiOrders = [.. texts.SelectMany(text => JsonSerializer.Deserialize<EsiMarketOrder[]>(text) ?? [])];
+
+            if (esiOrders.Length > 0)
+            {
+                EveMarketOrder.Data[] orders = [.. esiOrders.Select(ConvertMarketOrder)];
+
+                return new(orders);
+            }
+
+            return null;
+        }
+
+        private static EveMarketOrder.Data ConvertMarketOrder(EsiMarketOrder order)
+            => new(order.Type, order.LocationId, order.Price, order.Quantity);
     }
 }
+

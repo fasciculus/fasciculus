@@ -9,6 +9,12 @@ namespace Fasciculus.Eve.Services
     {
         public EveMarketPrices.Data? GetMarketPrices();
         public void SetMarketPrices(EveMarketPrices.Data data);
+
+        public EveRegionOrders.Data? GetRegionBuyOrders(EveRegion region);
+        public void SetRegionBuyOrders(EveRegion region, EveRegionOrders.Data data);
+
+        public EveRegionOrders.Data? GetRegionSellOrders(EveRegion region);
+        public void SetRegionSellOrders(EveRegion region, EveRegionOrders.Data data);
     }
 
     public class EsiCache : IEsiCache
@@ -33,11 +39,32 @@ namespace Fasciculus.Eve.Services
             types = Tasks.Wait(resources.Data).Types;
         }
 
+        private FileInfo GetMarketPricesFile()
+            => marketDirectory.File("MarketPrices");
+
         public EveMarketPrices.Data? GetMarketPrices()
-            => Read(marketDirectory.File("MarketPrices"), MarketPricesMaxAge, s => new EveMarketPrices.Data(s));
+            => Read(GetMarketPricesFile(), MarketPricesMaxAge, s => new EveMarketPrices.Data(s));
 
         public void SetMarketPrices(EveMarketPrices.Data data)
-            => Write(marketDirectory.File("MarketPrices"), data.Write);
+            => Write(GetMarketPricesFile(), data.Write);
+
+        private FileInfo GetRegionBuyOrdersFile(EveRegion region)
+            => marketDirectory.File($"{region.Id}_b");
+
+        public EveRegionOrders.Data? GetRegionBuyOrders(EveRegion region)
+            => Read(GetRegionBuyOrdersFile(region), MarketOrdersMaxAge, s => new EveRegionOrders.Data(s));
+
+        public void SetRegionBuyOrders(EveRegion region, EveRegionOrders.Data data)
+            => Write(GetRegionBuyOrdersFile(region), data.Write);
+
+        private FileInfo GetRegionSellOrdersFile(EveRegion region)
+            => marketDirectory.File($"{region.Id}_s");
+
+        public EveRegionOrders.Data? GetRegionSellOrders(EveRegion region)
+            => Read(GetRegionSellOrdersFile(region), MarketOrdersMaxAge, s => new EveRegionOrders.Data(s));
+
+        public void SetRegionSellOrders(EveRegion region, EveRegionOrders.Data data)
+            => Write(GetRegionSellOrdersFile(region), data.Write);
 
         private T? Read<T>(FileInfo file, TimeSpan maxAge, Func<Stream, T> read)
             where T : notnull
