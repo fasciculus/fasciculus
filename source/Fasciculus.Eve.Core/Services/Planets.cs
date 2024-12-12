@@ -1,27 +1,62 @@
-﻿using Fasciculus.Eve.Models;
-using Fasciculus.Maui.Services;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Fasciculus.Eve.Models;
+using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Support;
 using Fasciculus.Threading;
-using System;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Services
 {
-    public interface IPlanets
+    public interface IPlanets : INotifyPropertyChanged
     {
+        public EveStation Hub { get; }
+
+        public LongProgressInfo BuyProgressInfo { get; }
+        public LongProgressInfo SellProgressInfo { get; }
+
+        public EvePlanetProduction[] Productions { get; }
+
         public Task StartAsync();
     }
 
-    public class Planets : IPlanets
+    public partial class Planets : MainThreadObservable, IPlanets
     {
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly IExceptions exceptions;
         private readonly IEveResources resources;
+        private readonly IEsiClient esiClient;
 
-        public Planets(IExceptions exceptions, IEveResources resources)
+        private readonly EvePlanetSchematics schematics;
+
+        public EveStation Hub { get; }
+        private readonly EveRegion hubRegion;
+
+        [ObservableProperty]
+        private LongProgressInfo buyProgressInfo = LongProgressInfo.Start;
+
+        [ObservableProperty]
+        private LongProgressInfo sellProgressInfo = LongProgressInfo.Start;
+
+        private readonly AccumulatingLongProgress buyProgress;
+        private readonly AccumulatingLongProgress sellProgress;
+
+        [ObservableProperty]
+        private EvePlanetProduction[] productions = [];
+
+        public Planets(IEveResources resources, IEsiClient esiClient)
         {
-            this.exceptions = exceptions;
             this.resources = resources;
+            this.esiClient = esiClient;
+
+            schematics = Tasks.Wait(resources.Data).PlanetSchematics;
+
+            Hub = Tasks.Wait(resources.Universe).Stations[60003760];
+            hubRegion = Hub.GetRegion();
+
+            buyProgress = new(_ => { BuyProgressInfo = buyProgress!.Progress; });
+            sellProgress = new(_ => { SellProgressInfo = sellProgress!.Progress; });
         }
 
         public Task StartAsync()
@@ -33,23 +68,19 @@ namespace Fasciculus.Eve.Services
 
         private void Start()
         {
-            exceptions.Clear();
+            EveRegionBuyOrders? regionBuyOrders = Tasks.Wait(esiClient.GetRegionBuyOrdersAsync(hubRegion, buyProgress));
+            EveRegionSellOrders? regionSellOrders = Tasks.Wait(esiClient.GetRegionSellOrdersAsync(hubRegion, sellProgress));
 
-            EvePlanetSchematics schematics = GetSchematics();
+            if (regionBuyOrders is null || regionSellOrders is null)
+            {
+                return;
+            }
 
-            EveType[] p0 = [.. schematics.P0];
-            EvePlanetSchematic[] p1 = [.. schematics.P1];
-            EvePlanetSchematic[] p2 = [.. schematics.P2];
-            EvePlanetSchematic[] p3 = [.. schematics.P3];
-            EvePlanetSchematic[] p4 = [.. schematics.P4];
+            EveStationBuyOrders buyOrders = regionBuyOrders[Hub];
+            EveStationSellOrders sellOrders = regionSellOrders[Hub];
+            EvePlanetProductions productions = new(schematics, buyOrders, sellOrders);
 
-            Tasks.Sleep(2000);
-            exceptions.Add(new Exception("Not (yet) implemented"));
-        }
-
-        private EvePlanetSchematics GetSchematics()
-        {
-            return Tasks.Wait(resources.Data).PlanetSchematics;
+            Productions = productions.Take(6).ToArray();
         }
     }
 }

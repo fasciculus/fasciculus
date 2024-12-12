@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:fasciculus="http://fasciculus.github.io/2024/maui"
+             xmlns:models="clr-namespace:Fasciculus.Eve.Models;assembly=Fasciculus.Eve.Core"
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
              xmlns:views="clr-namespace:Fasciculus.Eve.Views"
              x:Class="Fasciculus.Eve.Pages.PlanetsPage"
@@ -11,9 +13,41 @@
         <FlexLayout FlexLayout.Grow="1">
             <views:NavBarView FlexLayout.Basis="44" />
             <ScrollView FlexLayout.Grow="1" Padding="14">
-                <VerticalStackLayout>
-                    <Label Text="Planets" />
-                    <Button Text="Start" Command="{Binding StartCommand}" />
+                <VerticalStackLayout Spacing="14">
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="60,240,240" RowSpacing="7" ColumnSpacing="14">
+                        <Label Text="Hub"
+                               Grid.Row="0" Grid.Column="0" />
+                        <Label Text="{Binding Hub}"
+                               Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" />
+                        <Button Text="Start" Command="{Binding StartCommand}"
+                               Grid.Row="1" Grid.Column="0" />
+                        <fasciculus:LongProgressInfoBar Source="{Binding BuyProgress}" 
+                                                        Grid.Row="1" Grid.Column="1" />
+                        <fasciculus:LongProgressInfoBar Source="{Binding SellProgress}" 
+                                                        Grid.Row="1" Grid.Column="2" />
+                    </Grid>
+                    <CollectionView ItemsSource="{Binding Productions}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:EvePlanetProduction">
+                                <Grid RowDefinitions="Auto" ColumnDefinitions="160,160,320" RowSpacing="7" ColumnSpacing="14">
+                                    <Label Text="{Binding Output.Type.Name}"
+                                           Grid.Row="0" Grid.Column="0" />
+                                    <Label Text="{Binding ProfitString}" HorizontalTextAlignment="End"
+                                           Grid.Row="0" Grid.Column="1" />
+                                    <!--<CollectionView ItemsSource="{Binding Inputs}" Grid.Row="0" Grid.Column="2">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="models:EvePlanetInput">
+                                                <HorizontalStackLayout Spacing="14">
+                                                    <Label Text="{Binding Quantity}" HorizontalTextAlignment="End" />
+                                                    <Label Text="{Binding Type.Name}" />
+                                                </HorizontalStackLayout>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>-->
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </VerticalStackLayout>
             </ScrollView>
         </FlexLayout>

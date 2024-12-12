@@ -64,11 +64,15 @@ namespace Fasciculus.Eve.Services
                 }
 
                 result.Add(textAndPages.Item1);
-                pages = Math.Min(pages, textAndPages.Item2);
 
                 if (page == 1)
                 {
+                    pages = textAndPages.Item2;
                     progress.Begin(pages);
+                }
+                else
+                {
+                    pages = Math.Min(pages, textAndPages.Item2);
                 }
 
                 ++page;

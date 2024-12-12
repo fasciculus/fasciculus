@@ -32,18 +32,18 @@ namespace Fasciculus.Eve.Services
 
                         data = new(prices);
                         esiCache.SetMarketPrices(data);
-
-                        return new(data, types);
                     }
                 }
             }
 
-            return null;
+            return data is null ? null : new(data, types);
         }
 
         public async Task<EveRegionBuyOrders?> GetRegionBuyOrdersAsync(EveRegion region, IAccumulatingLongProgress progress)
         {
             using Locker locker = Locker.Lock(mutex);
+
+            progress.Begin(1);
 
             EveRegionOrders.Data? data = esiCache.GetRegionBuyOrders(region);
 
@@ -54,17 +54,19 @@ namespace Fasciculus.Eve.Services
                 if (data is not null)
                 {
                     esiCache.SetRegionBuyOrders(region, data);
-
-                    return new(data, types, stations);
                 }
             }
 
-            return null;
+            progress.End();
+
+            return data is null ? null : new(data, types, stations);
         }
 
         public async Task<EveRegionSellOrders?> GetRegionSellOrdersAsync(EveRegion region, IAccumulatingLongProgress progress)
         {
             using Locker locker = Locker.Lock(mutex);
+
+            progress.Begin(1);
 
             EveRegionOrders.Data? data = esiCache.GetRegionSellOrders(region);
 
@@ -75,12 +77,12 @@ namespace Fasciculus.Eve.Services
                 if (data is not null)
                 {
                     esiCache.SetRegionSellOrders(region, data);
-
-                    return new(data, types, stations);
                 }
             }
 
-            return null;
+            progress.End();
+
+            return data is null ? null : new(data, types, stations);
         }
 
         private async Task<EveRegionOrders.Data?> GetRegionOrders(EveRegion region, string orderType, IAccumulatingLongProgress progress)
