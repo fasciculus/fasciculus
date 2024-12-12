@@ -30,6 +30,8 @@ namespace Fasciculus.Eve.Models
 
         private readonly Data data;
 
+        public int Count => data.Prices.Count;
+
         public double this[EveType type]
             => data.Prices.TryGetValue(type.Id, out var price) ? price : 0;
 
