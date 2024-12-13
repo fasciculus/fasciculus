@@ -268,7 +268,8 @@ namespace Fasciculus.Eve.Models
         public int Quantity { get; }
         public double BuyPrice { get; }
         public double ImportTax { get; }
-        public double TotalCost => BuyPrice + ImportTax;
+        public double TotalCost => Quantity * BuyPrice + ImportTax;
+        public string TotalCostText => TotalCost.ToString("#,###,###,##0");
 
         public EvePlanetInput(EveType type, EvePlanetSchematicLevel level, int quantity, double buyPrice, double importTax)
         {
@@ -283,18 +284,21 @@ namespace Fasciculus.Eve.Models
     public class EvePlanetOutput
     {
         public EveType Type { get; }
+        public EvePlanetSchematicLevel Level { get; }
         public int Quantity { get; }
         public double ExportTax { get; }
-        public double GrossIncome { get; }
+        public double SellPrice { get; }
+        public double GrossIncome => Quantity * SellPrice;
         public double SalesTax { get; }
         public double NetIncome => GrossIncome - ExportTax - SalesTax;
 
-        public EvePlanetOutput(EveType type, int quantity, double exportTax, double grossIncome, double salesTax)
+        public EvePlanetOutput(EveType type, EvePlanetSchematicLevel level, int quantity, double exportTax, double sellPrice, double salesTax)
         {
             Type = type;
+            Level = level;
             Quantity = quantity;
             ExportTax = exportTax;
-            GrossIncome = grossIncome;
+            SellPrice = sellPrice;
             SalesTax = salesTax;
         }
     }
@@ -306,8 +310,14 @@ namespace Fasciculus.Eve.Models
         private readonly EvePlanetInput[] inputs;
         public IReadOnlyList<EvePlanetInput> Inputs => inputs;
 
-        public double Profit { get; }
-        public string ProfitString => Profit.ToString("#,###,###,##0");
+        public double Cost { get; }
+        public string CostText => Cost.ToString("#,###,###,##0");
+
+        public double Income { get; }
+        public string IncomeText => Income.ToString("#,###,###,##0");
+
+        public double Profit => Income - Cost;
+        public string ProfitText => Profit.ToString("#,###,###,##0");
 
         public EvePlanetProduction(EvePlanetSchematic schematic, EvePlanetSchematics schematics, EvePlanetSchematicLevel importLevel,
             EvePlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders)
@@ -317,7 +327,8 @@ namespace Fasciculus.Eve.Models
             inputs = CreateInputs(schematic, count, schematics, importLevel, baseCosts, sellOrders);
             Output = CreateOutput(schematic, baseCosts, buyOrders);
 
-            Profit = Output.NetIncome - inputs.Sum(x => x.TotalCost);
+            Cost = inputs.Sum(x => x.TotalCost);
+            Income = Output.NetIncome;
         }
 
         private static EvePlanetInput[] CreateInputs(EvePlanetSchematic output, int count, EvePlanetSchematics schematics,
@@ -350,7 +361,7 @@ namespace Fasciculus.Eve.Models
         {
             EveType type = schematic.OutputType;
             EvePlanetSchematicLevel level = schematic.Level;
-            double buyPrice = sellOrders[type].PriceFor(quantity);
+            double buyPrice = sellOrders[type].PriceFor(quantity * 1000);
             double importTax = quantity * baseCosts[type] * 0.06;
 
             return new(type, level, quantity, buyPrice, importTax);
@@ -359,12 +370,13 @@ namespace Fasciculus.Eve.Models
         private static EvePlanetOutput CreateOutput(EvePlanetSchematic schematic, EvePlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders)
         {
             EveType type = schematic.OutputType;
+            EvePlanetSchematicLevel level = schematic.Level;
             int quantity = schematic.Output.Quantity * 3600 / schematic.CycleTime;
             double exportTax = quantity * baseCosts[type] * 0.12;
-            double grossIncome = quantity * buyOrders[type].PriceFor(quantity);
-            double salesTax = grossIncome * 0.03;
+            double sellPrice = buyOrders[type].PriceFor(quantity * 1000);
+            double salesTax = sellPrice * 0.03;
 
-            return new(type, quantity, exportTax, grossIncome, salesTax);
+            return new(type, level, quantity, exportTax, sellPrice, salesTax);
         }
     }
 

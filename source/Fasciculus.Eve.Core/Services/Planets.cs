@@ -68,6 +68,8 @@ namespace Fasciculus.Eve.Services
 
         private void Start()
         {
+            Productions = [];
+
             EveRegionBuyOrders? regionBuyOrders = Tasks.Wait(esiClient.GetRegionBuyOrdersAsync(hubRegion, buyProgress));
             EveRegionSellOrders? regionSellOrders = Tasks.Wait(esiClient.GetRegionSellOrdersAsync(hubRegion, sellProgress));
 
@@ -80,7 +82,7 @@ namespace Fasciculus.Eve.Services
             EveStationSellOrders sellOrders = regionSellOrders[Hub];
             EvePlanetProductions productions = new(schematics, buyOrders, sellOrders);
 
-            Productions = productions.Take(6).ToArray();
+            Productions = productions.Take(10).ToArray();
         }
     }
 }

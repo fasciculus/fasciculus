@@ -22,7 +22,16 @@ namespace Fasciculus.Eve.PageModels
         private LongProgressInfo sellProgress = LongProgressInfo.Start;
 
         [ObservableProperty]
+        private bool hasProductions = false;
+
+        [ObservableProperty]
         private EvePlanetProduction[] productions = [];
+
+        [ObservableProperty]
+        private EvePlanetProduction? production = null;
+
+        [ObservableProperty]
+        private EvePlanetInput[] inputs = [];
 
         public PlanetsPageModel(IPlanets planets)
         {
@@ -37,11 +46,28 @@ namespace Fasciculus.Eve.PageModels
             SellProgress = planets.SellProgressInfo;
             BuyProgress = planets.BuyProgressInfo;
             Productions = planets.Productions;
+            HasProductions = Productions.Length > 0;
+
+            if (HasProductions)
+            {
+                Production = Productions[0];
+            }
+        }
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs ev)
+        {
+            base.OnPropertyChanged(ev);
+
+            if (ev.PropertyName == nameof(Production))
+            {
+                Inputs = Production is null ? [] : [.. Production.Inputs];
+            }
         }
 
         [RelayCommand]
         private Task Start()
         {
+            Production = null;
             return planets.StartAsync();
         }
     }

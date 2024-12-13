@@ -9,45 +9,80 @@
              x:DataType="pageModels:PlanetsPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
+    <ContentPage.Resources>
+        <Style TargetType="HorizontalStackLayout">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="{StaticResource Gray600}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
     <FlexLayout Direction="Column">
         <FlexLayout FlexLayout.Grow="1">
             <views:NavBarView FlexLayout.Basis="44" />
             <ScrollView FlexLayout.Grow="1" Padding="14">
-                <VerticalStackLayout Spacing="14">
-                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="60,240,240" RowSpacing="7" ColumnSpacing="14">
-                        <Label Text="Hub"
-                               Grid.Row="0" Grid.Column="0" />
-                        <Label Text="{Binding Hub}"
-                               Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" />
-                        <Button Text="Start" Command="{Binding StartCommand}"
-                               Grid.Row="1" Grid.Column="0" />
-                        <fasciculus:LongProgressInfoBar Source="{Binding BuyProgress}" 
-                                                        Grid.Row="1" Grid.Column="1" />
-                        <fasciculus:LongProgressInfoBar Source="{Binding SellProgress}" 
-                                                        Grid.Row="1" Grid.Column="2" />
-                    </Grid>
-                    <CollectionView ItemsSource="{Binding Productions}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:EvePlanetProduction">
-                                <Grid RowDefinitions="Auto" ColumnDefinitions="160,160,320" RowSpacing="7" ColumnSpacing="14">
-                                    <Label Text="{Binding Output.Type.Name}"
-                                           Grid.Row="0" Grid.Column="0" />
-                                    <Label Text="{Binding ProfitString}" HorizontalTextAlignment="End"
-                                           Grid.Row="0" Grid.Column="1" />
-                                    <!--<CollectionView ItemsSource="{Binding Inputs}" Grid.Row="0" Grid.Column="2">
-                                        <CollectionView.ItemTemplate>
-                                            <DataTemplate x:DataType="models:EvePlanetInput">
-                                                <HorizontalStackLayout Spacing="14">
-                                                    <Label Text="{Binding Quantity}" HorizontalTextAlignment="End" />
-                                                    <Label Text="{Binding Type.Name}" />
-                                                </HorizontalStackLayout>
-                                            </DataTemplate>
-                                        </CollectionView.ItemTemplate>
-                                    </CollectionView>-->
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                <VerticalStackLayout>
+                    <HorizontalStackLayout Spacing="14">
+                        <Label Text="Hub" WidthRequest="60" />
+                        <Label Text="{Binding Hub}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
+                        <Button Text="Start" Command="{Binding StartCommand}" WidthRequest="60" />
+                        <fasciculus:LongProgressInfoBar Source="{Binding BuyProgress}" WidthRequest="200" />
+                        <fasciculus:LongProgressInfoBar Source="{Binding SellProgress}" WidthRequest="200" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="14" Padding="0,14,0,4" IsVisible="{Binding HasProductions}">
+                        <Label Text="Output" FontAttributes="Bold" WidthRequest="200" />
+                        <Label Text="Lvl" FontAttributes="Bold" WidthRequest="30" />
+                        <Label Text="Qty" FontAttributes="Bold" WidthRequest="30" HorizontalTextAlignment="End" />
+                        <Label Text="Cost" FontAttributes="Bold" WidthRequest="60" HorizontalTextAlignment="End" />
+                        <Label Text="Income" FontAttributes="Bold" WidthRequest="60" HorizontalTextAlignment="End" />
+                        <Label Text="Profit" FontAttributes="Bold" WidthRequest="60" HorizontalTextAlignment="End" />
+                        <Label Text="Input" FontAttributes="Bold" WidthRequest="200" Padding="60,0,0,0" />
+                        <Label Text="Lvl" FontAttributes="Bold" WidthRequest="30" />
+                        <Label Text="Qty" FontAttributes="Bold" WidthRequest="30" HorizontalTextAlignment="End" />
+                        <Label Text="Cost" FontAttributes="Bold" WidthRequest="60" HorizontalTextAlignment="End" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="14" >
+                        <CollectionView ItemsSource="{Binding Productions}" SelectionMode="Single" SelectedItem="{Binding Production}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:EvePlanetProduction">
+                                    <HorizontalStackLayout Spacing="14" Padding="0,3,0,4">
+                                        <Label Text="{Binding Output.Type.Name}" WidthRequest="200" />
+                                        <Label Text="{Binding Output.Level}" WidthRequest="30" HorizontalTextAlignment="Center" />
+                                        <Label Text="{Binding Output.Quantity}" WidthRequest="30" HorizontalTextAlignment="End" />
+                                        <Label Text="{Binding CostText}" WidthRequest="60" HorizontalTextAlignment="End" />
+                                        <Label Text="{Binding IncomeText}" WidthRequest="60" HorizontalTextAlignment="End" />
+                                        <Label Text="{Binding ProfitText}" WidthRequest="60" HorizontalTextAlignment="End" />
+                                    </HorizontalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <CollectionView ItemsSource="{Binding Inputs}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:EvePlanetInput">
+                                    <HorizontalStackLayout Spacing="14" Padding="0,3,0,4">
+                                        <Label Text="{Binding Type.Name}" WidthRequest="200" Padding="60,0,0,0" />
+                                        <Label Text="{Binding Level}" WidthRequest="30" />
+                                        <Label Text="{Binding Quantity}" WidthRequest="30" HorizontalTextAlignment="End" />
+                                        <Label Text="{Binding TotalCostText}" WidthRequest="60" HorizontalTextAlignment="End" />
+                                    </HorizontalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </HorizontalStackLayout>
+                    <Border WidthRequest="440" HeightRequest="200" HorizontalOptions="Start" StrokeThickness="0">
+                        <ActivityIndicator IsRunning="{Binding StartCommand.IsRunning}" />
+                    </Border>
                 </VerticalStackLayout>
             </ScrollView>
         </FlexLayout>
