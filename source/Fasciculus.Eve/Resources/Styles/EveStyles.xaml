@@ -3,8 +3,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:fasciculus="http://fasciculus.github.io/2024/maui"
-    xmlns:eveControls="clr-namespace:Fasciculus.Eve.Pages.Controls">
+    xmlns:fasciculus="http://fasciculus.github.io/2024/maui">
 
     <Style TargetType="fasciculus:LongProgressInfoBar">
         <Setter Property="BackgroundColor" Value="LightGray" />
@@ -22,12 +21,4 @@
         <Setter Property="DoneColor" Value="LightGreen" />
     </Style>
 
-    <Style TargetType="eveControls:StatusBar">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="ReadyColor" Value="DarkGreen" />
-        <Setter Property="ErrorColor" Value="DarkRed" />
-    </Style>
-  
 </ResourceDictionary>
