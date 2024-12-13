@@ -10,14 +10,20 @@
     <FlexLayout Direction="Column">
         <FlexLayout FlexLayout.Grow="1">
             <views:NavBarView FlexLayout.Basis="44" />
-            <ScrollView FlexLayout.Grow="1">
-                <VerticalStackLayout Padding="14">
-                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="100,*" RowSpacing="7" ColumnSpacing="14">
-                        <Label Text="Application" Grid.Row="0" Grid.Column="0" />
-                        <Label Text="{Binding ApplicationVersion}" Grid.Row="0" Grid.Column="1" />
-                        <Label Text="SDE" Grid.Row="1" Grid.Column="0" />
-                        <Label Text="{Binding SdeVersion}" Grid.Row="1" Grid.Column="1" />
-                    </Grid>
+            <ScrollView FlexLayout.Grow="1" Padding="14">
+                <VerticalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="Component" FontAttributes="Bold" WidthRequest="100" />
+                        <Label Text="Version" FontAttributes="Bold" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="Application" WidthRequest="100" />
+                        <Label Text="{Binding ApplicationVersion}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="SDE" WidthRequest="100" />
+                        <Label Text="{Binding SdeVersion}" />
+                    </HorizontalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
         </FlexLayout>
