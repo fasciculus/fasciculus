@@ -13,15 +13,10 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private string sdeVersion = "0";
 
-        [ObservableProperty]
-        private SideBarModel sideBar;
-
-        public InfoPageModel(IEveResources resources, SideBarModel sideBar)
+        public InfoPageModel(IEveResources resources)
         {
             ApplicationVersion = Assembly.GetEntryAssembly().GetVersion();
             SdeVersion = Tasks.Wait(resources.Data).Version.ToString("yyyy-MM-dd");
-
-            SideBar = sideBar;
         }
     }
 }

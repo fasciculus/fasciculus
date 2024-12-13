@@ -67,9 +67,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <MauiXaml Update="Pages\Controls\SideBar.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
     <MauiXaml Update="Pages\IndustryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

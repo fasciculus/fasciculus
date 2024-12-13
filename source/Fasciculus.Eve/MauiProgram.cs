@@ -31,9 +31,6 @@ namespace Fasciculus.Eve
             services.TryAddSingleton<NavBarViewModel>();
             services.TryAddSingleton<StatusBarViewModel>();
 
-            services.TryAddSingleton<SideBarModel>();
-            services.TryAddSingleton<StatusBarModel>();
-
             services.TryAddSingleton<LoadingPageModel>();
             services.TryAddSingleton<IndustryPageModel>();
             services.TryAddSingleton<InfoPageModel>();
