@@ -5,6 +5,7 @@
              xmlns:models="clr-namespace:Fasciculus.Eve.Models;assembly=Fasciculus.Eve.Core"
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
              xmlns:views="clr-namespace:Fasciculus.Eve.Views"
+             xmlns:controls="clr-namespace:Fasciculus.Eve.Controls"
              x:Class="Fasciculus.Eve.Pages.PlanetsPage"
              x:DataType="pageModels:PlanetsPageModel"
              Title="" Shell.NavBarIsVisible="False">
@@ -60,7 +61,8 @@
                                         <Label Text="{Binding Output.Type.Name}" WidthRequest="200" />
                                         <Label Text="{Binding Output.Level}" WidthRequest="30" HorizontalTextAlignment="Center" />
                                         <Label Text="{Binding Output.Quantity}" WidthRequest="30" HorizontalTextAlignment="End" />
-                                        <Label Text="{Binding CostText}" WidthRequest="60" HorizontalTextAlignment="End" />
+                                        <!--<Label Text="{Binding CostText}" WidthRequest="60" HorizontalTextAlignment="End" />-->
+                                        <controls:IskLabel Value="{Binding Cost}" WidthRequest="60" />
                                         <Label Text="{Binding IncomeText}" WidthRequest="60" HorizontalTextAlignment="End" />
                                         <Label Text="{Binding ProfitText}" WidthRequest="60" HorizontalTextAlignment="End" />
                                     </HorizontalStackLayout>
