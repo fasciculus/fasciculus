@@ -59,12 +59,11 @@
                                 <DataTemplate x:DataType="models:EvePlanetProduction">
                                     <HorizontalStackLayout Spacing="14" Padding="0,3,0,4">
                                         <Label Text="{Binding Output.Type.Name}" WidthRequest="200" />
-                                        <Label Text="{Binding Output.Level}" WidthRequest="30" HorizontalTextAlignment="Center" />
+                                        <Label Text="{Binding Output.Level}" WidthRequest="30" />
                                         <Label Text="{Binding Output.Quantity}" WidthRequest="30" HorizontalTextAlignment="End" />
-                                        <!--<Label Text="{Binding CostText}" WidthRequest="60" HorizontalTextAlignment="End" />-->
                                         <controls:IskLabel Value="{Binding Cost}" WidthRequest="60" />
-                                        <Label Text="{Binding IncomeText}" WidthRequest="60" HorizontalTextAlignment="End" />
-                                        <Label Text="{Binding ProfitText}" WidthRequest="60" HorizontalTextAlignment="End" />
+                                        <controls:IskLabel Value="{Binding Income}" WidthRequest="60" />
+                                        <controls:IskLabel Value="{Binding Profit}" WidthRequest="60" />
                                     </HorizontalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
@@ -76,7 +75,7 @@
                                         <Label Text="{Binding Type.Name}" WidthRequest="200" Padding="60,0,0,0" />
                                         <Label Text="{Binding Level}" WidthRequest="30" />
                                         <Label Text="{Binding Quantity}" WidthRequest="30" HorizontalTextAlignment="End" />
-                                        <Label Text="{Binding TotalCostText}" WidthRequest="60" HorizontalTextAlignment="End" />
+                                        <controls:IskLabel Value="{Binding TotalCost}" WidthRequest="60" />
                                     </HorizontalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>

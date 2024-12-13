@@ -269,7 +269,6 @@ namespace Fasciculus.Eve.Models
         public double BuyPrice { get; }
         public double ImportTax { get; }
         public double TotalCost => Quantity * BuyPrice + ImportTax;
-        public string TotalCostText => TotalCost.ToString("#,###,###,##0");
 
         public EvePlanetInput(EveType type, EvePlanetSchematicLevel level, int quantity, double buyPrice, double importTax)
         {
@@ -311,13 +310,8 @@ namespace Fasciculus.Eve.Models
         public IReadOnlyList<EvePlanetInput> Inputs => inputs;
 
         public double Cost { get; }
-        public string CostText => Cost.ToString("#,###,###,##0");
-
         public double Income { get; }
-        public string IncomeText => Income.ToString("#,###,###,##0");
-
         public double Profit => Income - Cost;
-        public string ProfitText => Profit.ToString("#,###,###,##0");
 
         public EvePlanetProduction(EvePlanetSchematic schematic, EvePlanetSchematics schematics, EvePlanetSchematicLevel importLevel,
             EvePlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders)
