@@ -45,7 +45,7 @@ namespace Fasciculus.Eve.Services
         [ObservableProperty]
         private EvePlanetProduction[] productions = [];
 
-        public Planets(IEveResources resources, IEsiClient esiClient)
+        public Planets(IEveResources resources, IEveSettings settings, IEsiClient esiClient)
         {
             this.resources = resources;
             this.esiClient = esiClient;

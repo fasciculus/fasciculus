@@ -18,6 +18,7 @@ namespace Fasciculus.Eve
             services.AddHttpClientPool();
 
             services.TryAddSingleton<IEveFileSystem, EveFileSystem>();
+            services.TryAddSingleton<IEveSettings, EveSettings>();
 
             services.TryAddSingleton<IEveResourcesProgress, EveResourcesProgress>();
             services.TryAddSingleton<IEveResources, EveResources>();

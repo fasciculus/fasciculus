@@ -10,6 +10,7 @@ namespace Fasciculus.Eve.PageModels
 {
     public partial class PlanetsPageModel : MainThreadObservable
     {
+        private readonly IEveSettings settings;
         private readonly IPlanets planets;
 
         [ObservableProperty]
@@ -33,8 +34,9 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private EvePlanetInput[] inputs = [];
 
-        public PlanetsPageModel(IPlanets planets)
+        public PlanetsPageModel(IEveSettings settings, IPlanets planets)
         {
+            this.settings = settings;
             this.planets = planets;
             this.planets.PropertyChanged += OnPlanetsChanged;
 
