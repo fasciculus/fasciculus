@@ -96,4 +96,8 @@
     </MauiXaml>
   </ItemGroup>
 
+  <Target Name="MessageBeforePublish" BeforeTargets="Publish">
+    <Message Importance="high" Text="$(outdir)" />
+  </Target>
+
 </Project>

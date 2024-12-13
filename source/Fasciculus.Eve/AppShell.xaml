@@ -3,38 +3,38 @@
     x:Class="Fasciculus.Eve.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:p="clr-namespace:Fasciculus.Eve.Pages"
+    xmlns:pages="clr-namespace:Fasciculus.Eve.Pages"
     Shell.FlyoutBehavior="Disabled"
     Title="Fasciculus.Eve">
 
     <ShellContent
         Title="Loading"
-        ContentTemplate="{DataTemplate p:LoadingPage}"
+        ContentTemplate="{DataTemplate pages:LoadingPage}"
         Route="Loading" />
 
     <ShellContent
         Title="Info"
-        ContentTemplate="{DataTemplate p:InfoPage}"
+        ContentTemplate="{DataTemplate pages:InfoPage}"
         Route="Info" />
 
     <ShellContent
         Title="Industry"
-        ContentTemplate="{DataTemplate p:IndustryPage}"
+        ContentTemplate="{DataTemplate pages:IndustryPage}"
         Route="Industry" />
 
     <ShellContent
         Title="Market"
-        ContentTemplate="{DataTemplate p:TradesPage}"
+        ContentTemplate="{DataTemplate pages:TradesPage}"
         Route="Trades" />
 
     <ShellContent
         Title="Map"
-        ContentTemplate="{DataTemplate p:MapPage}"
+        ContentTemplate="{DataTemplate pages:MapPage}"
         Route="Map" />
 
     <ShellContent
         Title="Planetary Industry"
-        ContentTemplate="{DataTemplate p:PlanetsPage}"
+        ContentTemplate="{DataTemplate pages:PlanetsPage}"
         Route="Planets" />
 
 </Shell>
