@@ -45,6 +45,10 @@ namespace Fasciculus.Eve.Assets.Services
                 EvePlanetSchematic.Data[] planetSchematics = ConvertPlanetSchematics(sdeData.PlanetSchematics);
                 EveBlueprint.Data[] blueprints = ConvertBlueprints(sdeData.Blueprints);
 
+                SortedSet<int> typeIds = new(types.Select(x => x.Id));
+
+                blueprints = [.. blueprints.Where(x => IsValid(x, typeIds))];
+
                 data = new(version, marketGroups, types, stationOperations, npcCorporations, planetSchematics, blueprints);
 
                 progress.ConvertDataProgress.Report(WorkState.Done);
@@ -183,6 +187,28 @@ namespace Fasciculus.Eve.Assets.Services
             int level = skill.Level;
 
             return new(id, level);
+        }
+
+        private static bool IsValid(EveBlueprint.Data blueprint, SortedSet<int> types)
+        {
+            EveManufacturing.Data manufacturing = blueprint.Manufacturing;
+
+            if (manufacturing.Materials.Any(x => !types.Contains(x.Type)))
+            {
+                return false;
+            }
+
+            if (manufacturing.Products.Any(x => !types.Contains(x.Type)))
+            {
+                return false;
+            }
+
+            if (manufacturing.Skills.Any(x => !types.Contains(x.Id)))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 

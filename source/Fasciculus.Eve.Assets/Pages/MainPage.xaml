@@ -18,7 +18,7 @@
                 <Label Text="SDE Download &amp; Extract" FontAttributes="Bold" />
             </HorizontalStackLayout>
 
-            <HorizontalStackLayout Padding="0,0,0,0">
+            <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="File" WidthRequest="140" />
                 <controls:DownloadSdeStatusLabel Source="{Binding DownloadSde}" WidthRequest="140" />
                 <Label Text="Extract" WidthRequest="140" />
@@ -29,7 +29,7 @@
                 <Label Text="SDE Parsing" FontAttributes="Bold" />
             </HorizontalStackLayout>
 
-            <HorizontalStackLayout Padding="0,0,0,0">
+            <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="Names" WidthRequest="140" />
                 <fasciculus:WorkStateLabel Source="{Binding ParseNames}" WidthRequest="140" />
                 <Label Text="Market Groups" WidthRequest="140" />
@@ -40,7 +40,7 @@
                 <fasciculus:WorkStateLabel Source="{Binding ParseStationOperations}" WidthRequest="140" />
             </HorizontalStackLayout>
 
-            <HorizontalStackLayout Padding="0,0,0,0">
+            <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="NPC Corporations" WidthRequest="140" />
                 <fasciculus:WorkStateLabel Source="{Binding ParseNpcCorporations}" WidthRequest="140" />
                 <Label Text="Planet Schematics" WidthRequest="140" />
@@ -49,49 +49,59 @@
                 <fasciculus:WorkStateLabel Source="{Binding ParseBlueprints}" WidthRequest="140" />
             </HorizontalStackLayout>
 
-            <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="Regions" Grid.Row="3" Grid.Column="0" />
-                <fasciculus:LongProgressInfoBar Source="{Binding ParseRegions}" Grid.Row="3" Grid.Column="1" />
-                <Label Text="Constellations" Grid.Row="3" Grid.Column="2" />
-                <fasciculus:LongProgressInfoBar Source="{Binding ParseConstellations}" Grid.Row="3" Grid.Column="3" />
-                <Label Text="Solar Systems" Grid.Row="3" Grid.Column="4" />
-                <fasciculus:LongProgressInfoBar Source="{Binding ParseSolarSystems}" Grid.Row="3" Grid.Column="5" />
-            </Grid>
+            <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
+                <Label Text="Regions" WidthRequest="140" />
+                <fasciculus:LongProgressInfoBar Source="{Binding ParseRegions}" WidthRequest="140" />
+                <Label Text="Constellations" WidthRequest="140" />
+                <fasciculus:LongProgressInfoBar Source="{Binding ParseConstellations}" WidthRequest="140" />
+                <Label Text="Solar Systems" WidthRequest="140" />
+                <fasciculus:LongProgressInfoBar Source="{Binding ParseSolarSystems}" WidthRequest="140" />
+            </HorizontalStackLayout>
 
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="SDE Conversion" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="Data" Grid.Row="1" Grid.Column="0" />
-                <fasciculus:WorkStateLabel Source="{Binding ConvertData}" Grid.Row="1" Grid.Column="1" />
-                <Label Text="Universe" Grid.Row="1" Grid.Column="2" />
-                <fasciculus:WorkStateLabel Source="{Binding ConvertUniverse}" Grid.Row="1" Grid.Column="3" />
-            </Grid>
+            <HorizontalStackLayout Padding="0,14,0,0">
+                <Label Text="SDE Conversion" FontAttributes="Bold" />
+            </HorizontalStackLayout>
 
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="Navigation" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="Connections" Grid.Row="1" Grid.Column="0" />
-                <fasciculus:WorkStateLabel Source="{Binding CreateConnections}" Grid.Row="1" Grid.Column="1" />
-                <Label Text="Distances" Grid.Row="1" Grid.Column="2" />
-                <fasciculus:LongProgressInfoBar Source="{Binding CreateDistances}" Grid.Row="1" Grid.Column="3" />
-            </Grid>
+            <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
+                <Label Text="Data" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding ConvertData}" WidthRequest="140" />
+                <Label Text="Universe" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding ConvertUniverse}" WidthRequest="140" />
+            </HorizontalStackLayout>
 
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="Images" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="Copy" Grid.Row="1" Grid.Column="0" />
-                <fasciculus:LongProgressInfoBar Source="{Binding CopyImages}" Grid.Row="1" Grid.Column="1" />
-                <Label Text="Create" Grid.Row="1" Grid.Column="2" />
-                <fasciculus:WorkStateLabel Source="{Binding CreateImages}" Grid.Row="1" Grid.Column="3" />
-            </Grid>
+            <HorizontalStackLayout Padding="0,14,0,0">
+                <Label Text="Navigation" FontAttributes="Bold" />
+            </HorizontalStackLayout>
 
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="Changed Resources" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
-                <CollectionView ItemsSource="{Binding ChangedResources}" Grid.Row="1" Grid.Column="0">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="x:String">
-                            <Label Text="{Binding .}" TextColor="Orange" />
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Grid>
+            <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
+                <Label Text="Connections" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding CreateConnections}" WidthRequest="140" />
+                <Label Text="Distances" WidthRequest="140" />
+                <fasciculus:LongProgressInfoBar Source="{Binding CreateDistances}" WidthRequest="140" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Padding="0,14,0,0">
+                <Label Text="Images" FontAttributes="Bold" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
+                <Label Text="Copy" WidthRequest="140" />
+                <fasciculus:LongProgressInfoBar Source="{Binding CopyImages}" WidthRequest="140" />
+                <Label Text="Create" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding CreateImages}" WidthRequest="140" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Padding="0,14,0,0">
+                <Label Text="Changed Resources" FontAttributes="Bold" />
+            </HorizontalStackLayout>
+
+            <CollectionView ItemsSource="{Binding ChangedResources}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Label Text="{Binding .}" TextColor="Orange" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
         </VerticalStackLayout>
     </ScrollView>

@@ -346,7 +346,7 @@ namespace Fasciculus.Eve.Models
             StationOperations = new(data.StationOperations.Select(x => new EveStationOperation(x)));
             NpcCorporations = new(data.NpcCorporations.Select(x => new EveNpcCorporation(x)));
             PlanetSchematics = new(data.PlanetSchematics.Select(x => new EvePlanetSchematic(x, Types)), Types);
-            Blueprints = new(data.Blueprints.Select(x => new EveBlueprint(x)));
+            Blueprints = new(data.Blueprints.Select(x => new EveBlueprint(x, Types)));
         }
 
         public EveData(Stream stream)

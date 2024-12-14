@@ -30,6 +30,18 @@ namespace Fasciculus.Eve.Models
                 stream.WriteInt(Quantity);
             }
         }
+
+        private readonly Data data;
+
+        public EveType Type { get; }
+        public int Quantity => data.Quantity;
+
+        public EveMaterial(Data data, EveTypes types)
+        {
+            this.data = data;
+
+            Type = types[data.Type];
+        }
     }
 
     public class EveManufacturing
@@ -75,6 +87,25 @@ namespace Fasciculus.Eve.Models
                 stream.WriteArray(skills, x => x.Write(stream));
             }
         }
+
+        private readonly Data data;
+        private readonly EveMaterial[] materials;
+        private readonly EveMaterial[] products;
+        private readonly EveSkill[] skills;
+
+        public int Time => data.Time;
+        public IReadOnlyList<EveMaterial> Materials => materials;
+        public IReadOnlyList<EveMaterial> Products => products;
+        public IReadOnlyList<EveSkill> Skills => skills;
+
+        public EveManufacturing(Data data, EveTypes types)
+        {
+            this.data = data;
+
+            materials = [.. data.Materials.Select(x => new EveMaterial(x, types))];
+            products = [.. data.Products.Select(x => new EveMaterial(x, types))];
+            skills = [.. data.Skills.Select(x => new EveSkill(x, types))];
+        }
     }
 
     public class EveBlueprint
@@ -105,9 +136,13 @@ namespace Fasciculus.Eve.Models
 
         private readonly Data data;
 
-        public EveBlueprint(Data data)
+        public EveManufacturing Manufacturing { get; }
+
+        public EveBlueprint(Data data, EveTypes types)
         {
             this.data = data;
+
+            Manufacturing = new(data.Manufacturing, types);
         }
     }
 

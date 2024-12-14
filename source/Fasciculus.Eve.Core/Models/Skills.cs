@@ -27,5 +27,17 @@ namespace Fasciculus.Eve.Models
                 stream.WriteInt(Level);
             }
         }
+
+        private readonly Data data;
+
+        public EveType Type { get; }
+        public int Level => data.Level;
+
+        public EveSkill(Data data, EveTypes types)
+        {
+            this.data = data;
+
+            Type = types[data.Id];
+        }
     }
 }
