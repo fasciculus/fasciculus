@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Eve.Support;
@@ -24,6 +25,12 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private int selectedHauler;
 
+        [ObservableProperty]
+        private bool isRunning = false;
+
+        [ObservableProperty]
+        private bool notRunning = true;
+
         public IndustryPageModel(IEveSettings settings, IEveResources resources)
         {
             this.settings = settings.IndustrySettings;
@@ -34,6 +41,8 @@ namespace Fasciculus.Eve.PageModels
 
             haulers = [.. EveHaulers.Values.Select(x => x.Caption())];
             selectedHauler = GetHaulerIndex(this.settings.MaxVolume);
+
+            StartCommand.PropertyChanged += OnStartCommandChanged;
         }
 
         private static int GetHaulerIndex(int volume)
@@ -59,6 +68,18 @@ namespace Fasciculus.Eve.PageModels
                     settings.MaxVolume = EveHaulers.Values[SelectedHauler].Volume();
                     break;
             }
+        }
+
+        private void OnStartCommandChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            IsRunning = StartCommand.IsRunning;
+            NotRunning = !StartCommand.IsRunning;
+        }
+
+        [RelayCommand]
+        private Task Start()
+        {
+            return Tasks.LongRunning(() => Tasks.Wait(Task.Delay(2000)));
         }
     }
 }

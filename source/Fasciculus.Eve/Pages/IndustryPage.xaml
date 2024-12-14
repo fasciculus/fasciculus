@@ -15,14 +15,17 @@
                     <HorizontalStackLayout Spacing="14">
                         <Label Text="Industry System" VerticalTextAlignment="Center" WidthRequest="120" />
                         <Border Padding="0">
-                            <Picker ItemsSource="{Binding SolarSystems}" SelectedItem="{Binding SelectedSolarSystem}" WidthRequest="280" />
+                            <Picker ItemsSource="{Binding SolarSystems}" SelectedItem="{Binding SelectedSolarSystem}" IsEnabled="{Binding NotRunning}" WidthRequest="280" />
                         </Border>
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="14" Padding="0,7,0,0">
                         <Label Text="Hauler" VerticalTextAlignment="Center" WidthRequest="120" />
                         <Border Padding="0">
-                            <Picker ItemsSource="{Binding Haulers}" SelectedIndex="{Binding SelectedHauler}" WidthRequest="280" />
+                            <Picker ItemsSource="{Binding Haulers}" SelectedIndex="{Binding SelectedHauler}" IsEnabled="{Binding NotRunning}" WidthRequest="280" />
                         </Border>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Padding="0,7,0,0">
+                        <Button Text="Start" Command="{Binding StartCommand}" WidthRequest="60" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
