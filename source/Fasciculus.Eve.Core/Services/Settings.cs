@@ -7,6 +7,7 @@ namespace Fasciculus.Eve.Services
 {
     public interface IEveSettings
     {
+        public EveIndustrySettings IndustrySettings { get; }
         public EvePlanetsSettings PlanetsSettings { get; }
     }
 
@@ -21,6 +22,7 @@ namespace Fasciculus.Eve.Services
         private readonly IEveFileSystem fileSystem;
         private readonly EveCombinedSettings settings;
 
+        public EveIndustrySettings IndustrySettings => settings.Industry;
         public EvePlanetsSettings PlanetsSettings => settings.Planets;
 
         public EveSettings(IEveFileSystem fileSystem)
@@ -28,6 +30,7 @@ namespace Fasciculus.Eve.Services
             this.fileSystem = fileSystem;
 
             settings = Read(fileSystem.UserSettings);
+            settings.Industry.PropertyChanged += OnSettingsChanged;
             settings.Planets.PropertyChanged += OnSettingsChanged;
         }
 

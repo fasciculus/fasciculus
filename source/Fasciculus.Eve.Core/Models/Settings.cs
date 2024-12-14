@@ -4,6 +4,13 @@ using System.Text.Json.Serialization;
 
 namespace Fasciculus.Eve.Models
 {
+    public partial class EveIndustrySettings : MainThreadObservable
+    {
+        [JsonIgnore]
+        [ObservableProperty]
+        private string solarSystem = "Jita";
+    }
+
     public partial class EvePlanetsSettings : MainThreadObservable
     {
         [JsonIgnore]
@@ -17,6 +24,7 @@ namespace Fasciculus.Eve.Models
 
     public partial class EveCombinedSettings
     {
+        public EveIndustrySettings Industry { get; set; } = new();
         public EvePlanetsSettings Planets { get; set; } = new();
     }
 }
