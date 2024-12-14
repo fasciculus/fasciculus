@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -101,9 +102,28 @@ namespace Fasciculus.Eve.Models
                 Manufacturing.Write(stream);
             }
         }
+
+        private readonly Data data;
+
+        public EveBlueprint(Data data)
+        {
+            this.data = data;
+        }
     }
 
-    public class EveBlueprints
+    public class EveBlueprints : IEnumerable<EveBlueprint>
     {
+        private readonly EveBlueprint[] blueprints;
+
+        public EveBlueprints(IEnumerable<EveBlueprint> blueprints)
+        {
+            this.blueprints = blueprints.ToArray();
+        }
+
+        public IEnumerator<EveBlueprint> GetEnumerator()
+            => blueprints.AsEnumerable().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => blueprints.GetEnumerator();
     }
 }

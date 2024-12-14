@@ -336,6 +336,7 @@ namespace Fasciculus.Eve.Models
         public EveStationOperations StationOperations { get; }
         public EveNpcCorporations NpcCorporations { get; }
         public EvePlanetSchematics PlanetSchematics { get; }
+        public EveBlueprints Blueprints { get; }
 
         public EveData(Data data)
         {
@@ -345,6 +346,7 @@ namespace Fasciculus.Eve.Models
             StationOperations = new(data.StationOperations.Select(x => new EveStationOperation(x)));
             NpcCorporations = new(data.NpcCorporations.Select(x => new EveNpcCorporation(x)));
             PlanetSchematics = new(data.PlanetSchematics.Select(x => new EvePlanetSchematic(x, Types)), Types);
+            Blueprints = new(data.Blueprints.Select(x => new EveBlueprint(x)));
         }
 
         public EveData(Stream stream)
