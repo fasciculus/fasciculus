@@ -20,7 +20,7 @@ namespace Fasciculus.Eve.PageModels
         private string customsTaxRate = string.Empty;
 
         [ObservableProperty]
-        private string sellTaxRate = string.Empty;
+        private string salesTaxRate = string.Empty;
 
         [ObservableProperty]
         private LongProgressInfo buyProgress = LongProgressInfo.Start;
@@ -41,7 +41,10 @@ namespace Fasciculus.Eve.PageModels
         private EvePlanetInput[] inputs = [];
 
         [ObservableProperty]
-        private bool isRunning;
+        private bool isRunning = false;
+
+        [ObservableProperty]
+        private bool notRunning = true;
 
         public PlanetsPageModel(IEveSettings settings, IPlanets planets)
         {
@@ -54,20 +57,28 @@ namespace Fasciculus.Eve.PageModels
             hub = planets.Hub.FullName;
 
             FormatSettings();
+
+            StartCommand.PropertyChanged += OnStartCommandChanged;
         }
 
         private void FormatSettings()
         {
             double customsTaxRate = settings.CustomsTaxRate / 10.0;
-            double sellTaxRate = settings.SellTaxRate / 10.0;
+            double sellTaxRate = settings.SalesTaxRate / 10.0;
 
             CustomsTaxRate = customsTaxRate.ToString("0.0") + " %";
-            SellTaxRate = sellTaxRate.ToString("0.0") + " %";
+            SalesTaxRate = sellTaxRate.ToString("0.0") + " %";
         }
 
         private void OnSettingsChanged(object? sender, PropertyChangedEventArgs ev)
         {
             FormatSettings();
+        }
+
+        private void OnStartCommandChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            IsRunning = StartCommand.IsRunning;
+            NotRunning = !StartCommand.IsRunning;
         }
 
         private void OnPlanetsChanged(object? sender, PropertyChangedEventArgs ev)
@@ -76,11 +87,7 @@ namespace Fasciculus.Eve.PageModels
             BuyProgress = planets.BuyProgressInfo;
             Productions = planets.Productions;
             HasProductions = Productions.Length > 0;
-
-            if (HasProductions)
-            {
-                Production = Productions[0];
-            }
+            Production = HasProductions ? Productions[0] : null;
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs ev)
@@ -93,19 +100,10 @@ namespace Fasciculus.Eve.PageModels
             }
         }
 
-        private void SetRunning(bool running)
-        {
-            IsRunning = running;
-        }
-
         [RelayCommand]
         private Task Start()
         {
-            Production = null;
-            SetRunning(true);
-
-            return planets.StartAsync()
-                .ContinueWith(_ => { SetRunning(false); });
+            return planets.StartAsync();
         }
 
         [RelayCommand]
@@ -123,13 +121,13 @@ namespace Fasciculus.Eve.PageModels
         [RelayCommand]
         private void DecrementSellTaxRate()
         {
-            settings.SellTaxRate = Math.Max(0, settings.SellTaxRate - 1);
+            settings.SalesTaxRate = Math.Max(0, settings.SalesTaxRate - 1);
         }
 
         [RelayCommand]
         private void IncrementSellTaxRate()
         {
-            settings.SellTaxRate += 1;
+            settings.SalesTaxRate += 1;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Fasciculus.Eve.Assets.Services
     {
         private readonly ISpecialDirectories specialDirectories;
 
-        public DirectoryInfo Documents => specialDirectories.Documents.Combine("Eve.Assets").CreateIfNotExists();
+        public DirectoryInfo Documents => specialDirectories.Documents.Combine("Fasciculus.Eve.Assets").CreateIfNotExists();
         public DirectoryInfo Downloads => Documents.Combine("Downloads").CreateIfNotExists();
 
         public DirectoryInfo Sde => Documents.Combine("Sde").CreateIfNotExists();

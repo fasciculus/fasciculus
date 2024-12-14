@@ -314,23 +314,25 @@ namespace Fasciculus.Eve.Models
         public double Profit => Income - Cost;
 
         public EvePlanetProduction(EvePlanetSchematic schematic, EvePlanetSchematics schematics, EvePlanetSchematicLevel importLevel,
-            EvePlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders)
+            EvePlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders, double customsTaxRate,
+            double salesTaxRate)
         {
             int count = 3600 / schematic.CycleTime;
 
-            inputs = CreateInputs(schematic, count, schematics, importLevel, baseCosts, sellOrders);
-            Output = CreateOutput(schematic, baseCosts, buyOrders);
+            inputs = CreateInputs(schematic, count, schematics, importLevel, baseCosts, sellOrders, customsTaxRate);
+            Output = CreateOutput(schematic, baseCosts, buyOrders, customsTaxRate, salesTaxRate);
 
             Cost = inputs.Sum(x => x.TotalCost);
             Income = Output.NetIncome;
         }
 
         private static EvePlanetInput[] CreateInputs(EvePlanetSchematic output, int count, EvePlanetSchematics schematics,
-            EvePlanetSchematicLevel importLevel, EvePlanetBaseCosts baseCosts, EveStationSellOrders sellOrders)
+            EvePlanetSchematicLevel importLevel, EvePlanetBaseCosts baseCosts, EveStationSellOrders sellOrders,
+            double customsTaxRate)
         {
             EvePlanetInput[] inputs = output.Inputs
                 .Select(x => Tuple.Create(schematics[x.Type], count * x.Quantity))
-                .Select(x => CreateInput(x.Item1, x.Item2, baseCosts, sellOrders))
+                .Select(x => CreateInput(x.Item1, x.Item2, baseCosts, sellOrders, customsTaxRate))
                 .ToArray();
 
             EvePlanetInput[] result = inputs.Where(x => x.Level == importLevel).ToArray();
@@ -340,7 +342,7 @@ namespace Fasciculus.Eve.Models
             {
                 inputs = todo.Select(x => Tuple.Create(schematics[x.Type], x.Quantity))
                     .Select(x => Tuple.Create(x.Item1, x.Item2 / x.Item1.Output.Quantity))
-                    .SelectMany(x => CreateInputs(x.Item1, x.Item2, schematics, importLevel, baseCosts, sellOrders))
+                    .SelectMany(x => CreateInputs(x.Item1, x.Item2, schematics, importLevel, baseCosts, sellOrders, customsTaxRate))
                     .ToArray();
 
                 result = result.Concat(inputs.Where(x => x.Level == importLevel)).ToArray();
@@ -351,24 +353,25 @@ namespace Fasciculus.Eve.Models
         }
 
         private static EvePlanetInput CreateInput(EvePlanetSchematic schematic, int quantity, EvePlanetBaseCosts baseCosts,
-            EveStationSellOrders sellOrders)
+            EveStationSellOrders sellOrders, double customsTaxRate)
         {
             EveType type = schematic.OutputType;
             EvePlanetSchematicLevel level = schematic.Level;
             double buyPrice = sellOrders[type].PriceFor(quantity * 1000);
-            double importTax = quantity * baseCosts[type] * 0.06;
+            double importTax = quantity * baseCosts[type] * customsTaxRate / 2;
 
             return new(type, level, quantity, buyPrice, importTax);
         }
 
-        private static EvePlanetOutput CreateOutput(EvePlanetSchematic schematic, EvePlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders)
+        private static EvePlanetOutput CreateOutput(EvePlanetSchematic schematic, EvePlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders,
+            double customsTaxRate, double salesTaxRate)
         {
             EveType type = schematic.OutputType;
             EvePlanetSchematicLevel level = schematic.Level;
             int quantity = schematic.Output.Quantity * 3600 / schematic.CycleTime;
-            double exportTax = quantity * baseCosts[type] * 0.12;
+            double exportTax = quantity * baseCosts[type] * customsTaxRate;
             double sellPrice = buyOrders[type].PriceFor(quantity * 1000);
-            double salesTax = sellPrice * 0.03;
+            double salesTax = sellPrice * salesTaxRate;
 
             return new(type, level, quantity, exportTax, sellPrice, salesTax);
         }
@@ -378,19 +381,16 @@ namespace Fasciculus.Eve.Models
     {
         private readonly EvePlanetProduction[] productions;
 
-        public EvePlanetProductions(EvePlanetSchematics schematics, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders)
+        public EvePlanetProductions(EvePlanetSchematics schematics, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders,
+            double customsTaxRate, double salesTaxRate)
         {
             EvePlanetBaseCosts baseCosts = new(schematics);
             EvePlanetSchematicLevel p1 = EvePlanetSchematicLevel.P1;
             EvePlanetSchematicLevel p2 = EvePlanetSchematicLevel.P2;
-            //EvePlanetSchematicLevel p3 = EvePlanetSchematicLevel.P3;
 
-            var p12 = schematics.P2.Select(x => new EvePlanetProduction(x, schematics, p1, baseCosts, buyOrders, sellOrders));
-            var p13 = schematics.P3.Select(x => new EvePlanetProduction(x, schematics, p1, baseCosts, buyOrders, sellOrders));
-            //var p14 = schematics.P4.Select(x => new EvePlanetProduction(x, schematics, p1, baseCosts, buyOrders, sellOrders));
-            var p23 = schematics.P3.Select(x => new EvePlanetProduction(x, schematics, p2, baseCosts, buyOrders, sellOrders));
-            //var p24 = schematics.P4.Select(x => new EvePlanetProduction(x, schematics, p2, baseCosts, buyOrders, sellOrders));
-            //var p34 = schematics.P4.Select(x => new EvePlanetProduction(x, schematics, p3, baseCosts, buyOrders, sellOrders));
+            var p12 = schematics.P2.Select(x => new EvePlanetProduction(x, schematics, p1, baseCosts, buyOrders, sellOrders, customsTaxRate, salesTaxRate));
+            var p13 = schematics.P3.Select(x => new EvePlanetProduction(x, schematics, p1, baseCosts, buyOrders, sellOrders, customsTaxRate, salesTaxRate));
+            var p23 = schematics.P3.Select(x => new EvePlanetProduction(x, schematics, p2, baseCosts, buyOrders, sellOrders, customsTaxRate, salesTaxRate));
 
             productions = [.. p12.Concat(p13).Concat(p23).OrderByDescending(x => x.Profit)];
         }

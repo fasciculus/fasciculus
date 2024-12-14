@@ -25,7 +25,7 @@ namespace Fasciculus.Eve.Services
     {
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly IEveResources resources;
+        private readonly EvePlanetsSettings settings;
         private readonly IEsiClient esiClient;
 
         private readonly EvePlanetSchematics schematics;
@@ -47,7 +47,7 @@ namespace Fasciculus.Eve.Services
 
         public Planets(IEveResources resources, IEveSettings settings, IEsiClient esiClient)
         {
-            this.resources = resources;
+            this.settings = settings.PlanetsSettings;
             this.esiClient = esiClient;
 
             schematics = Tasks.Wait(resources.Data).PlanetSchematics;
@@ -66,9 +66,14 @@ namespace Fasciculus.Eve.Services
             return Tasks.LongRunning(Start);
         }
 
-        private void Start()
+        private void Reset()
         {
             Productions = [];
+        }
+
+        private void Start()
+        {
+            Reset();
 
             EveRegionBuyOrders? regionBuyOrders = Tasks.Wait(esiClient.GetRegionBuyOrdersAsync(hubRegion, buyProgress));
             EveRegionSellOrders? regionSellOrders = Tasks.Wait(esiClient.GetRegionSellOrdersAsync(hubRegion, sellProgress));
@@ -78,9 +83,11 @@ namespace Fasciculus.Eve.Services
                 return;
             }
 
+            double customsTaxRate = settings.CustomsTaxRate / 1000.0;
+            double salesTaxRate = settings.SalesTaxRate / 1000.0;
             EveStationBuyOrders buyOrders = regionBuyOrders[Hub];
             EveStationSellOrders sellOrders = regionSellOrders[Hub];
-            EvePlanetProductions productions = new(schematics, buyOrders, sellOrders);
+            EvePlanetProductions productions = new(schematics, buyOrders, sellOrders, customsTaxRate, salesTaxRate);
 
             Productions = productions.Take(10).ToArray();
         }

@@ -12,7 +12,7 @@ namespace Fasciculus.Eve.Models
 
         [JsonIgnore]
         [ObservableProperty]
-        private int sellTaxRate = 30;
+        private int salesTaxRate = 30;
     }
 
     public partial class EveCombinedSettings
