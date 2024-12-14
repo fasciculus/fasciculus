@@ -11,7 +11,14 @@
         <FlexLayout FlexLayout.Grow="1">
             <views:NavBarView FlexLayout.Basis="44" />
             <ScrollView FlexLayout.Grow="1" Padding="14">
-                <Label Text="Industry" />
+                <VerticalStackLayout>
+                    <HorizontalStackLayout Spacing="14">
+                        <Label Text="Industry System" VerticalTextAlignment="Center" />
+                        <Border Padding="0">
+                            <Picker ItemsSource="{Binding SolarSystems}" SelectedItem="{Binding SelectedSolarSystem}" WidthRequest="120" />
+                        </Border>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
             </ScrollView>
         </FlexLayout>
         <views:StatusBarView FlexLayout.Shrink="1" />
