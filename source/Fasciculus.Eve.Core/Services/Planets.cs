@@ -48,6 +48,8 @@ namespace Fasciculus.Eve.Services
         public Planets(IEveResources resources, IEveSettings settings, IEsiClient esiClient)
         {
             this.settings = settings.PlanetsSettings;
+            this.settings.PropertyChanged += OnSettingsChanged;
+
             this.esiClient = esiClient;
 
             schematics = Tasks.Wait(resources.Data).PlanetSchematics;
@@ -57,6 +59,11 @@ namespace Fasciculus.Eve.Services
 
             buyProgress = new(_ => { BuyProgressInfo = buyProgress!.Progress; });
             sellProgress = new(_ => { SellProgressInfo = sellProgress!.Progress; });
+        }
+
+        private void OnSettingsChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            Reset();
         }
 
         public Task StartAsync()
