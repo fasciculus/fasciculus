@@ -40,6 +40,9 @@ namespace Fasciculus.Eve.Assets.PageModels
         private WorkState parsePlanetSchematics = WorkState.Pending;
 
         [ObservableProperty]
+        private WorkState parseBlueprints = WorkState.Pending;
+
+        [ObservableProperty]
         private LongProgressInfo parseRegions = LongProgressInfo.Start;
 
         [ObservableProperty]
@@ -92,6 +95,7 @@ namespace Fasciculus.Eve.Assets.PageModels
             ParseStationOperations = assetsProgress.ParseStationOperationsInfo;
             ParseNpcCorporations = assetsProgress.ParseNpcCorporationsInfo;
             ParsePlanetSchematics = assetsProgress.ParsePlanetSchematicsInfo;
+            ParseBlueprints = assetsProgress.ParseBlueprintsInfo;
 
             ParseRegions = assetsProgress.ParseRegionsInfo;
             ParseConstellations = assetsProgress.ParseConstellationsInfo;

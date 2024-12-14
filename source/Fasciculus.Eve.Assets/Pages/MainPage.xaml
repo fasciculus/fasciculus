@@ -9,33 +9,47 @@
              x:DataType="p:MainPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16,16" Spacing="32">
+    <ScrollView Padding="14">
+        <VerticalStackLayout >
 
             <Button x:Name="StartBtn" Text="Start" Command="{Binding StartCommand}" />
 
-            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="SDE Download &amp; Extract" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="File" Grid.Row="1" Grid.Column="0" />
-                <controls:DownloadSdeStatusLabel Source="{Binding DownloadSde}" Grid.Row="1" Grid.Column="1" />
-                <Label Text="Extract" Grid.Row="1" Grid.Column="2" />
-                <fasciculus:LongProgressInfoBar Source="{Binding ExtractSde}" Grid.Row="1" Grid.Column="3" />
-            </Grid>
+            <HorizontalStackLayout Padding="0,14,0,0">
+                <Label Text="SDE Download &amp; Extract" FontAttributes="Bold" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Padding="0,0,0,0">
+                <Label Text="File" WidthRequest="140" />
+                <controls:DownloadSdeStatusLabel Source="{Binding DownloadSde}" WidthRequest="140" />
+                <Label Text="Extract" WidthRequest="140" />
+                <fasciculus:LongProgressInfoBar Source="{Binding ExtractSde}" WidthRequest="140" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Padding="0,14,0,0">
+                <Label Text="SDE Parsing" FontAttributes="Bold" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Padding="0,0,0,0">
+                <Label Text="Names" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseNames}" WidthRequest="140" />
+                <Label Text="Market Groups" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseMarketGroups}" WidthRequest="140" />
+                <Label Text="Types" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseTypes}" WidthRequest="140" />
+                <Label Text="Station Operations" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseStationOperations}" WidthRequest="140" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Padding="0,0,0,0">
+                <Label Text="NPC Corporations" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseNpcCorporations}" WidthRequest="140" />
+                <Label Text="Planet Schematics" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding ParsePlanetSchematics}" WidthRequest="140" />
+                <Label Text="Blueprints" WidthRequest="140" />
+                <fasciculus:WorkStateLabel Source="{Binding ParseBlueprints}" WidthRequest="140" />
+            </HorizontalStackLayout>
 
             <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="140,*,140,*,140,*" ColumnSpacing="16" RowSpacing="8">
-                <Label Text="SDE Parsing" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" />
-                <Label Text="Names" Grid.Row="1" Grid.Column="0" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseNames}" Grid.Row="1" Grid.Column="1" />
-                <Label Text="Market Groups" Grid.Row="1" Grid.Column="2" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseMarketGroups}" Grid.Row="1" Grid.Column="3" />
-                <Label Text="Types" Grid.Row="1" Grid.Column="4" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseTypes}" Grid.Row="1" Grid.Column="5" />
-                <Label Text="Station Operations" Grid.Row="2" Grid.Column="0" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseStationOperations}" Grid.Row="2" Grid.Column="1" />
-                <Label Text="NPC Corporations" Grid.Row="2" Grid.Column="2" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseNpcCorporations}" Grid.Row="2" Grid.Column="3" />
-                <Label Text="Planet Schematics" Grid.Row="2" Grid.Column="4" />
-                <fasciculus:WorkStateLabel Source="{Binding ParsePlanetSchematics}" Grid.Row="2" Grid.Column="5" />
                 <Label Text="Regions" Grid.Row="3" Grid.Column="0" />
                 <fasciculus:LongProgressInfoBar Source="{Binding ParseRegions}" Grid.Row="3" Grid.Column="1" />
                 <Label Text="Constellations" Grid.Row="3" Grid.Column="2" />

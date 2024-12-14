@@ -14,6 +14,7 @@ namespace Fasciculus.Eve.Assets.Services
         public Task<Dictionary<int, SdeStationOperation>> StationOperations { get; }
         public Task<Dictionary<int, SdeNpcCorporation>> NpcCorporations { get; }
         public Task<Dictionary<int, SdePlanetSchematic>> PlanetSchematics { get; }
+        public Task<Dictionary<int, SdeBlueprint>> Blueprints { get; }
 
         public Task<SdeData> Data { get; }
     }
@@ -46,6 +47,9 @@ namespace Fasciculus.Eve.Assets.Services
         private Dictionary<int, SdePlanetSchematic>? planetSchematics = null;
         private readonly TaskSafeMutex planetSchematicsMutex = new();
 
+        private Dictionary<int, SdeBlueprint>? blueprints = null;
+        private readonly TaskSafeMutex blueprintsMutex = new();
+
         private SdeData? data = null;
         private readonly TaskSafeMutex dataMutex = new();
 
@@ -56,6 +60,7 @@ namespace Fasciculus.Eve.Assets.Services
         public Task<Dictionary<int, SdeStationOperation>> StationOperations => GetStationOperationsAsync();
         public Task<Dictionary<int, SdeNpcCorporation>> NpcCorporations => GetNpcCorporationsAsync();
         public Task<Dictionary<int, SdePlanetSchematic>> PlanetSchematics => GetPlanetSchematicsAsync();
+        public Task<Dictionary<int, SdeBlueprint>> Blueprints => GetBlueprintsAsync();
 
         public Task<SdeData> Data => GetDataAsync();
 
@@ -204,6 +209,25 @@ namespace Fasciculus.Eve.Assets.Services
             return planetSchematics;
         }
 
+        private Task<Dictionary<int, SdeBlueprint>> GetBlueprintsAsync()
+        {
+            using Locker locker = Locker.Lock(blueprintsMutex);
+
+            return Tasks.Start(() => GetBlueprints(GetSdeFiles()));
+        }
+
+        private Dictionary<int, SdeBlueprint> GetBlueprints(SdeFiles sdeFiles)
+        {
+            if (blueprints is null)
+            {
+                progress.ParseBlueprintsProgress.Report(WorkState.Working);
+                blueprints = yaml.Deserialize<Dictionary<int, SdeBlueprint>>(sdeFiles.BlueprintsYaml);
+                progress.ParseBlueprintsProgress.Report(WorkState.Done);
+            }
+
+            return blueprints;
+        }
+
         private Task<SdeData> GetDataAsync()
         {
             return Tasks.LongRunning(GetData);
@@ -215,7 +239,17 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (data is null)
             {
-                Task.WaitAll([Version, Names, MarketGroups, Types, StationOperations, NpcCorporations, PlanetSchematics]);
+                Task.WaitAll(
+                [
+                    Version,
+                    Names,
+                    MarketGroups,
+                    Types,
+                    StationOperations,
+                    NpcCorporations,
+                    PlanetSchematics,
+                    Blueprints,
+                ]);
 
                 data = new()
                 {
@@ -226,6 +260,7 @@ namespace Fasciculus.Eve.Assets.Services
                     StationOperations = StationOperations.Result,
                     NpcCorporations = NpcCorporations.Result,
                     PlanetSchematics = PlanetSchematics.Result,
+                    Blueprints = Blueprints.Result,
                 };
             }
 

@@ -5,17 +5,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:fasciculus="http://fasciculus.github.io/2024/maui">
 
-  <Style TargetType="fasciculus:LongProgressInfoBar">
-    <Setter Property="BackgroundColor" Value="LightGray" />
-    <Setter Property="MinimumHeightRequest" Value="8" />
-    <Setter Property="BusyColor" Value="#FFD0D000" />
-    <Setter Property="DoneColor" Value="LightGreen" />
-  </Style>
+    <Style TargetType="fasciculus:LongProgressInfoBar">
+        <Setter Property="BackgroundColor" Value="LightGray" />
+        <Setter Property="MinimumHeightRequest" Value="8" />
+        <Setter Property="BusyColor" Value="#FFD0D000" />
+        <Setter Property="DoneColor" Value="LightGreen" />
+    </Style>
 
-  <Style TargetType="fasciculus:WorkStateLabel">
-    <Setter Property="PendingColor" Value="#FFFF6060" />
-    <Setter Property="WorkingColor" Value="#FFD0D000" />
-    <Setter Property="DoneColor" Value="LightGreen" />
-  </Style>
+    <Style TargetType="fasciculus:WorkStateLabel">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="PendingColor" Value="#FFFF6060" />
+        <Setter Property="WorkingColor" Value="#FFD0D000" />
+        <Setter Property="DoneColor" Value="LightGreen" />
+    </Style>
   
 </ResourceDictionary>
