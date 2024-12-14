@@ -9,6 +9,10 @@ namespace Fasciculus.Eve.Models
         [JsonIgnore]
         [ObservableProperty]
         private string solarSystem = "Jita";
+
+        [JsonIgnore]
+        [ObservableProperty]
+        private int maxVolume = 0;
     }
 
     public partial class EvePlanetsSettings : MainThreadObservable

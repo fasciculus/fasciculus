@@ -49,6 +49,75 @@
         public Dictionary<int, SdePlanetSchematicType> Types { get; set; } = [];
     }
 
+    public class SdeBlueprintMaterial
+    {
+        public int Quantity { get; set; }
+        public int TypeID { get; set; }
+    }
+
+    public class SdeBlueprintSkill
+    {
+        public int Level { get; set; }
+        public int TypeID { get; set; }
+    }
+
+    public class SdeBlueprintCopying
+    {
+        public int Time { get; set; }
+    }
+
+    public class SdeBlueprintInventionProduct
+    {
+        public double Probability { get; set; }
+        public int Quantity { get; set; }
+        public int TypeID { get; set; }
+    }
+
+    public class SdeBlueprintInvention
+    {
+        public int Time { get; set; }
+
+        public SdeBlueprintMaterial[] Materials { get; set; } = [];
+        public SdeBlueprintInventionProduct[] Products { get; set; } = [];
+        public SdeBlueprintSkill[] Skills { get; set; } = [];
+    }
+
+    public class SdeBlueprintManufacturing
+    {
+        public int Time { get; set; }
+
+        public SdeBlueprintMaterial[] Materials { get; set; } = [];
+        public SdeBlueprintMaterial[] Products { get; set; } = [];
+        public SdeBlueprintSkill[] Skills { get; set; } = [];
+    }
+
+    public class SdeBlueprintResearchMaterial
+    {
+        public int Time { get; set; }
+    }
+
+    public class SdeBlueprintResearchTime
+    {
+        public int Time { get; set; }
+    }
+
+    public class SdeBlueprintActivities
+    {
+        public SdeBlueprintCopying Copying { get; set; } = new();
+        public SdeBlueprintManufacturing Manufacturing { get; set; } = new();
+        public SdeBlueprintInvention? Invention { get; set; } = null;
+        public SdeBlueprintResearchMaterial Research_Material { get; set; } = new();
+        public SdeBlueprintResearchTime Research_Time { get; set; } = new();
+    }
+
+    public class SdeBlueprint
+    {
+        public int BlueprintTypeID { get; set; }
+        public int MaxProductionLimit { get; set; }
+
+        public SdeBlueprintActivities Activities { get; set; } = new();
+    }
+
     public class SdeData
     {
         public DateTime Version { get; set; } = DateTime.MinValue;
@@ -58,5 +127,6 @@
         public Dictionary<int, SdeStationOperation> StationOperations { get; init; } = [];
         public Dictionary<int, SdeNpcCorporation> NpcCorporations { get; init; } = [];
         public Dictionary<int, SdePlanetSchematic> PlanetSchematics { get; init; } = [];
+        public Dictionary<int, SdeBlueprint> Blueprints { get; init; } = [];
     }
 }
