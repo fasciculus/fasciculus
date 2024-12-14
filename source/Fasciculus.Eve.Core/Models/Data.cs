@@ -290,9 +290,12 @@ namespace Fasciculus.Eve.Models
             private readonly EvePlanetSchematic.Data[] planetSchematics;
             public IReadOnlyList<EvePlanetSchematic.Data> PlanetSchematics => planetSchematics;
 
+            private readonly EveBlueprint.Data[] blueprints;
+            public IReadOnlyList<EveBlueprint.Data> Blueprints => blueprints;
+
             public Data(DateTime version, IEnumerable<EveMarketGroup.Data> marketGroups, IEnumerable<EveType.Data> types,
                 IEnumerable<EveStationOperation.Data> stationOperations, IEnumerable<EveNpcCorporation.Data> npcCorporations,
-                IEnumerable<EvePlanetSchematic.Data> planetSchematics)
+                IEnumerable<EvePlanetSchematic.Data> planetSchematics, IEnumerable<EveBlueprint.Data> blueprints)
             {
                 Version = version;
                 this.marketGroups = marketGroups.ToArray();
@@ -300,6 +303,7 @@ namespace Fasciculus.Eve.Models
                 this.stationOperations = stationOperations.ToArray();
                 this.npcCorporations = npcCorporations.ToArray();
                 this.planetSchematics = planetSchematics.ToArray();
+                this.blueprints = blueprints.ToArray();
             }
 
             public Data(Stream stream)
@@ -310,6 +314,7 @@ namespace Fasciculus.Eve.Models
                 stationOperations = stream.ReadArray(s => new EveStationOperation.Data(s));
                 npcCorporations = stream.ReadArray(s => new EveNpcCorporation.Data(s));
                 planetSchematics = stream.ReadArray(s => new EvePlanetSchematic.Data(s));
+                blueprints = stream.ReadArray(s => new EveBlueprint.Data(s));
             }
 
             public void Write(Stream stream)
@@ -320,6 +325,7 @@ namespace Fasciculus.Eve.Models
                 stream.WriteArray(stationOperations, x => x.Write(stream));
                 stream.WriteArray(npcCorporations, x => x.Write(stream));
                 stream.WriteArray(planetSchematics, x => x.Write(stream));
+                stream.WriteArray(blueprints, x => x.Write(stream));
             }
         }
 

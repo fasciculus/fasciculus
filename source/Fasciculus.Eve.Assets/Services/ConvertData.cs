@@ -43,8 +43,9 @@ namespace Fasciculus.Eve.Assets.Services
                 EveStationOperation.Data[] stationOperations = ConvertStationOperations(sdeData.StationOperations);
                 EveNpcCorporation.Data[] npcCorporations = ConvertNpcCorporations(sdeData.NpcCorporations);
                 EvePlanetSchematic.Data[] planetSchematics = ConvertPlanetSchematics(sdeData.PlanetSchematics);
+                EveBlueprint.Data[] blueprints = ConvertBlueprints(sdeData.Blueprints);
 
-                data = new(version, marketGroups, types, stationOperations, npcCorporations, planetSchematics);
+                data = new(version, marketGroups, types, stationOperations, npcCorporations, planetSchematics, blueprints);
 
                 progress.ConvertDataProgress.Report(WorkState.Done);
             }
@@ -118,11 +119,10 @@ namespace Fasciculus.Eve.Assets.Services
             string name = sdePlanetSchematic.NameID.En;
             int cycleTime = sdePlanetSchematic.CycleTime;
 
-            EvePlanetSchematicType.Data[] inputs = sdePlanetSchematic.Types
+            EvePlanetSchematicType.Data[] inputs = [.. sdePlanetSchematic.Types
                 .Where(x => x.Value.IsInput)
                 .Select(ConvertPlanetSchematicType)
-                .OrderBy(x => x.Type)
-                .ToArray();
+                .OrderBy(x => x.Type)];
 
             EvePlanetSchematicType.Data output = ConvertPlanetSchematicType(sdePlanetSchematic.Types.Single(x => !x.Value.IsInput));
 
@@ -137,6 +137,16 @@ namespace Fasciculus.Eve.Assets.Services
             int quantity = sdePlanetSchematicType.Quantity;
 
             return new(id, quantity);
+        }
+
+        private static EveBlueprint.Data[] ConvertBlueprints(Dictionary<int, SdeBlueprint> blueprints)
+            => [.. blueprints.Select(ConvertBlueprint)/*.OrderBy(t => t.Id)*/];
+
+        private static EveBlueprint.Data ConvertBlueprint(KeyValuePair<int, SdeBlueprint> kvp)
+        {
+            SdeBlueprint sdeBlueprint = kvp.Value;
+
+            return new();
         }
     }
 
