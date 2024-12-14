@@ -82,7 +82,7 @@
         public SdeBlueprintSkill[] Skills { get; set; } = [];
     }
 
-    public class SdeBlueprintManufacturing
+    public class SdeManufacturing
     {
         public int Time { get; set; }
 
@@ -104,7 +104,7 @@
     public class SdeBlueprintActivities
     {
         public SdeBlueprintCopying Copying { get; set; } = new();
-        public SdeBlueprintManufacturing Manufacturing { get; set; } = new();
+        public SdeManufacturing Manufacturing { get; set; } = new();
         public SdeBlueprintInvention? Invention { get; set; } = null;
         public SdeBlueprintResearchMaterial Research_Material { get; set; } = new();
         public SdeBlueprintResearchTime Research_Time { get; set; } = new();

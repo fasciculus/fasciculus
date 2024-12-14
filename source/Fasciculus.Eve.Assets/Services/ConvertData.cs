@@ -140,13 +140,23 @@ namespace Fasciculus.Eve.Assets.Services
         }
 
         private static EveBlueprint.Data[] ConvertBlueprints(Dictionary<int, SdeBlueprint> blueprints)
-            => [.. blueprints.Select(ConvertBlueprint)/*.OrderBy(t => t.Id)*/];
+            => [.. blueprints.Select(ConvertBlueprint).OrderBy(t => t.Id)];
 
         private static EveBlueprint.Data ConvertBlueprint(KeyValuePair<int, SdeBlueprint> kvp)
         {
-            SdeBlueprint sdeBlueprint = kvp.Value;
+            SdeBlueprint blueprint = kvp.Value;
 
-            return new();
+            int id = kvp.Key;
+            EveManufacturing.Data manufacturing = ConvertManufacturing(blueprint.Activities.Manufacturing);
+
+            return new(id, manufacturing);
+        }
+
+        private static EveManufacturing.Data ConvertManufacturing(SdeManufacturing manufacturing)
+        {
+            int time = manufacturing.Time;
+
+            return new(time);
         }
     }
 
