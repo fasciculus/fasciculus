@@ -49,13 +49,13 @@
         public Dictionary<int, SdePlanetSchematicType> Types { get; set; } = [];
     }
 
-    public class SdeBlueprintMaterial
+    public class SdeMaterial
     {
         public int Quantity { get; set; }
         public int TypeID { get; set; }
     }
 
-    public class SdeBlueprintSkill
+    public class SdeSkill
     {
         public int Level { get; set; }
         public int TypeID { get; set; }
@@ -77,18 +77,18 @@
     {
         public int Time { get; set; }
 
-        public SdeBlueprintMaterial[] Materials { get; set; } = [];
+        public SdeMaterial[] Materials { get; set; } = [];
         public SdeBlueprintInventionProduct[] Products { get; set; } = [];
-        public SdeBlueprintSkill[] Skills { get; set; } = [];
+        public SdeSkill[] Skills { get; set; } = [];
     }
 
     public class SdeManufacturing
     {
         public int Time { get; set; }
 
-        public SdeBlueprintMaterial[] Materials { get; set; } = [];
-        public SdeBlueprintMaterial[] Products { get; set; } = [];
-        public SdeBlueprintSkill[] Skills { get; set; } = [];
+        public SdeMaterial[] Materials { get; set; } = [];
+        public SdeMaterial[] Products { get; set; } = [];
+        public SdeSkill[] Skills { get; set; } = [];
     }
 
     public class SdeBlueprintResearchMaterial

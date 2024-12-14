@@ -155,8 +155,34 @@ namespace Fasciculus.Eve.Assets.Services
         private static EveManufacturing.Data ConvertManufacturing(SdeManufacturing manufacturing)
         {
             int time = manufacturing.Time;
+            EveMaterial.Data[] materials = ConvertMaterials(manufacturing.Materials);
+            EveMaterial.Data[] products = ConvertMaterials(manufacturing.Products);
+            EveSkill.Data[] skills = ConvertSkills(manufacturing.Skills);
 
-            return new(time);
+            return new(time, materials, products, skills);
+        }
+
+        private static EveMaterial.Data[] ConvertMaterials(IEnumerable<SdeMaterial> materials)
+            => [.. materials.Select(ConvertMaterial).OrderBy(x => x.Type)];
+
+
+        private static EveMaterial.Data ConvertMaterial(SdeMaterial material)
+        {
+            int type = material.TypeID;
+            int quantity = material.Quantity;
+
+            return new(type, quantity);
+        }
+
+        private static EveSkill.Data[] ConvertSkills(IEnumerable<SdeSkill> skills)
+            => [.. skills.Select(ConvertSkill).OrderBy(x => x.Id)];
+
+        private static EveSkill.Data ConvertSkill(SdeSkill skill)
+        {
+            int id = skill.TypeID;
+            int level = skill.Level;
+
+            return new(id, level);
         }
     }
 
