@@ -7,15 +7,21 @@ namespace Fasciculus.Eve.Services
 {
     public interface IEveSettings
     {
-
+        public EvePlanetsSettings PlanetsSettings { get; }
     }
 
     public class EveSettings : IEveSettings
     {
-        private static readonly EveSettingsContext settingsContext = new();
+        private static readonly JsonSerializerOptions serializerOptions = new()
+        {
+            IndentSize = 2,
+            WriteIndented = true,
+        };
 
         private readonly IEveFileSystem fileSystem;
         private readonly EveCombinedSettings settings;
+
+        public EvePlanetsSettings PlanetsSettings => settings.Planets;
 
         public EveSettings(IEveFileSystem fileSystem)
         {
@@ -32,26 +38,23 @@ namespace Fasciculus.Eve.Services
 
         private static EveCombinedSettings Read(FileInfo file)
         {
+            EveCombinedSettings? settings = null;
+
             if (file.Exists)
             {
                 using Stream stream = file.OpenRead();
 
-                object? obj = JsonSerializer.Deserialize(stream, typeof(EveCombinedSettings), settingsContext);
-
-                if (obj is not null && obj is EveCombinedSettings settings)
-                {
-                    return settings;
-                }
+                settings = JsonSerializer.Deserialize<EveCombinedSettings>(stream);
             }
 
-            return new();
+            return settings ?? new();
         }
 
         private static void Write(FileInfo file, EveCombinedSettings settings)
         {
             using Stream stream = file.Create();
 
-            JsonSerializer.Serialize(stream, settings, typeof(EveCombinedSettings), settingsContext);
+            JsonSerializer.Serialize(stream, settings, serializerOptions);
         }
     }
 }

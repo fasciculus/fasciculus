@@ -8,21 +8,15 @@ namespace Fasciculus.Eve.Models
     {
         [JsonIgnore]
         [ObservableProperty]
-        private double customsTaxRate = 0.10;
+        private int customsTaxRate = 100;
 
         [JsonIgnore]
         [ObservableProperty]
-        private double sellTaxRate = 0.03;
+        private int sellTaxRate = 30;
     }
 
     public partial class EveCombinedSettings
     {
         public EvePlanetsSettings Planets { get; set; } = new();
-    }
-
-    [JsonSerializable(typeof(EveCombinedSettings))]
-    [JsonSourceGenerationOptions(WriteIndented = true)]
-    public partial class EveSettingsContext : JsonSerializerContext
-    {
     }
 }

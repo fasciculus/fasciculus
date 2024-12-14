@@ -10,11 +10,17 @@ namespace Fasciculus.Eve.PageModels
 {
     public partial class PlanetsPageModel : MainThreadObservable
     {
-        private readonly IEveSettings settings;
+        private readonly EvePlanetsSettings settings;
         private readonly IPlanets planets;
 
         [ObservableProperty]
         private string hub;
+
+        [ObservableProperty]
+        private string customsTaxRate = string.Empty;
+
+        [ObservableProperty]
+        private string sellTaxRate = string.Empty;
 
         [ObservableProperty]
         private LongProgressInfo buyProgress = LongProgressInfo.Start;
@@ -34,13 +40,34 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private EvePlanetInput[] inputs = [];
 
+        [ObservableProperty]
+        private bool isRunning;
+
         public PlanetsPageModel(IEveSettings settings, IPlanets planets)
         {
-            this.settings = settings;
+            this.settings = settings.PlanetsSettings;
+            this.settings.PropertyChanged += OnSettingsChanged;
+
             this.planets = planets;
             this.planets.PropertyChanged += OnPlanetsChanged;
 
             hub = planets.Hub.FullName;
+
+            FormatSettings();
+        }
+
+        private void FormatSettings()
+        {
+            double customsTaxRate = settings.CustomsTaxRate / 10.0;
+            double sellTaxRate = settings.SellTaxRate / 10.0;
+
+            CustomsTaxRate = customsTaxRate.ToString("0.0") + " %";
+            SellTaxRate = sellTaxRate.ToString("0.0") + " %";
+        }
+
+        private void OnSettingsChanged(object? sender, PropertyChangedEventArgs ev)
+        {
+            FormatSettings();
         }
 
         private void OnPlanetsChanged(object? sender, PropertyChangedEventArgs ev)
@@ -66,11 +93,43 @@ namespace Fasciculus.Eve.PageModels
             }
         }
 
+        private void SetRunning(bool running)
+        {
+            IsRunning = running;
+        }
+
         [RelayCommand]
         private Task Start()
         {
             Production = null;
-            return planets.StartAsync();
+            SetRunning(true);
+
+            return planets.StartAsync()
+                .ContinueWith(_ => { SetRunning(false); });
+        }
+
+        [RelayCommand]
+        private void DecrementCustomsTaxRate()
+        {
+            settings.CustomsTaxRate = Math.Max(0, settings.CustomsTaxRate - 10);
+        }
+
+        [RelayCommand]
+        private void IncrementCustomsTaxRate()
+        {
+            settings.CustomsTaxRate += 10;
+        }
+
+        [RelayCommand]
+        private void DecrementSellTaxRate()
+        {
+            settings.SellTaxRate = Math.Max(0, settings.SellTaxRate - 1);
+        }
+
+        [RelayCommand]
+        private void IncrementSellTaxRate()
+        {
+            settings.SellTaxRate += 1;
         }
     }
 }
