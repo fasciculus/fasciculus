@@ -5,56 +5,98 @@ using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
-    public class EveMarketPrices
+    public class EveMarketPrice
     {
         public class Data
         {
-            private readonly Dictionary<int, double> prices;
-            public IReadOnlyDictionary<int, double> Prices => prices;
+            public int TypeId { get; }
+            public double AveragePrice { get; }
+            public double AdjustedPrice { get; }
 
-            public Data(Dictionary<int, double> prices)
+            public Data(int typeId, double averagePrice, double adjustedPrice)
             {
-                this.prices = prices.ToDictionary(x => x.Key, x => x.Value);
+                TypeId = typeId;
+                AveragePrice = averagePrice;
+                AdjustedPrice = adjustedPrice;
             }
 
             public Data(Stream stream)
             {
-                prices = stream.ReadDictionary(s => s.ReadInt(), s => s.ReadDouble());
+                TypeId = stream.ReadInt();
+                AveragePrice = stream.ReadDouble();
+                AdjustedPrice = stream.ReadDouble();
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteDictionary(prices, stream.WriteInt, stream.WriteDouble);
+                stream.WriteInt(TypeId);
+                stream.WriteDouble(AveragePrice);
+                stream.WriteDouble(AdjustedPrice);
             }
         }
 
         private readonly Data data;
+        private readonly EveTypes types;
 
-        public int Count => data.Prices.Count;
+        public EveType Type => types[data.TypeId];
+        public double AveragePrice => data.AveragePrice;
+        public double AdjustedPrice => data.AdjustedPrice;
 
-        public double this[EveType type]
-            => data.Prices.TryGetValue(type.Id, out var price) ? price : 0;
+        public EveMarketPrice(Data data, EveTypes types)
+        {
+            this.data = data;
+            this.types = types;
+        }
+    }
 
-        private readonly Lazy<EveType[]> tradedTypes;
-        public IEnumerable<EveType> TradedTypes => tradedTypes.Value;
+    public class EveMarketPrices
+    {
+        public class Data
+        {
+            private EveMarketPrice.Data[] prices;
+
+            public IReadOnlyList<EveMarketPrice.Data> Prices => prices;
+
+            public Data(IEnumerable<EveMarketPrice.Data> prices)
+            {
+                this.prices = prices.ToArray();
+            }
+
+            public Data(Stream stream)
+            {
+                prices = stream.ReadArray(s => new EveMarketPrice.Data(s));
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteArray(prices, x => x.Write(stream));
+            }
+        }
+
+        private readonly Data data;
+        private readonly EveTypes types;
+
+        private readonly Lazy<Dictionary<EveType, EveMarketPrice>> byType;
+
+        public IEnumerable<EveType> Types => byType.Value.Keys;
+        public bool Contains(EveType type) => byType.Value.ContainsKey(type);
+        public EveMarketPrice this[EveType type] => byType.Value[type];
 
         public EveMarketPrices(Data data, EveTypes types)
         {
             this.data = data;
+            this.types = types;
 
-            tradedTypes = new(() => data.Prices.Keys
-                .Where(x => types.Contains(x))
-                .Select(id => types[id]).ToArray(), true);
+            byType = new(FetchByType, true);
         }
 
-        public EveMarketPrices(Stream stream, EveTypes types)
-            : this(new Data(stream), types) { }
-
-        public void Write(Stream stream)
-            => data.Write(stream);
-
-        public static EveMarketPrices Empty(EveTypes types)
-            => new(new Data([]), types);
+        private Dictionary<EveType, EveMarketPrice> FetchByType()
+        {
+            return data.Prices
+                .Where(x => types.Contains(x.TypeId))
+                .Select(x => Tuple.Create(types[x.TypeId], new EveMarketPrice(x, types)))
+                .ToDictionary();
+        }
     }
 
     public class EveMarketOrder

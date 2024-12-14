@@ -1,7 +1,6 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Support;
 using Fasciculus.Threading;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -26,9 +25,7 @@ namespace Fasciculus.Eve.Services
 
                     if (esiMarketPrices.Length > 0)
                     {
-                        Dictionary<int, double> prices = esiMarketPrices
-                            .Where(x => x.AveragePrice > 0)
-                            .ToDictionary(x => x.TypeId, x => x.AveragePrice);
+                        EveMarketPrice.Data[] prices = [.. esiMarketPrices.Select(ConvertMarketPrice)];
 
                         data = new(prices);
                         esiCache.SetMarketPrices(data);
@@ -38,6 +35,9 @@ namespace Fasciculus.Eve.Services
 
             return data is null ? null : new(data, types);
         }
+
+        private static EveMarketPrice.Data ConvertMarketPrice(EsiMarketPrice price)
+            => new(price.TypeId, price.AveragePrice, price.AdjustedPrice);
 
         public async Task<EveRegionBuyOrders?> GetRegionBuyOrdersAsync(EveRegion region, IAccumulatingLongProgress progress)
         {
