@@ -45,7 +45,7 @@ namespace Fasciculus.Eve.Models
         }
     }
 
-    public class EveManufacturing
+    public class EveManufacturing : ISkillAffected
     {
         public class Data
         {
@@ -107,6 +107,9 @@ namespace Fasciculus.Eve.Models
             products = [.. data.Products.Select(x => new EveMaterial(x, types))];
             skills = [.. data.Skills.Select(x => new EveSkill(x, types))];
         }
+
+        public bool IsAffectedBySkill(EveType skillType)
+            => skills.Any(x => x.Type == skillType);
     }
 
     [DebuggerDisplay("{Type.Name}")]

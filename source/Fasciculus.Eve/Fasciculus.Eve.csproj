@@ -80,6 +80,9 @@
     <MauiXaml Update="Pages\PlanetsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Pages\SkillsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Pages\TradesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

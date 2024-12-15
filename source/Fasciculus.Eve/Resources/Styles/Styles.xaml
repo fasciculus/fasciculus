@@ -31,9 +31,9 @@
         <Setter Property="BorderWidth" Value="0"/>
         <Setter Property="CornerRadius" Value="2"/>
         <Setter Property="Padding" Value="2,2"/>
-        <Setter Property="MinimumHeightRequest" Value="24"/>
+        <Setter Property="MinimumHeightRequest" Value="10"/>
         <Setter Property="MaximumHeightRequest" Value="24"/>
-        <Setter Property="MinimumWidthRequest" Value="20"/>
+        <Setter Property="MinimumWidthRequest" Value="10"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">

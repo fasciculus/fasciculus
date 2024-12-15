@@ -25,6 +25,9 @@
     <MauiXaml Update="Pages\PlanetsPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
+    <MauiXaml Update="Pages\SkillsPage.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
     <MauiXaml Update="Pages\TradesPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>

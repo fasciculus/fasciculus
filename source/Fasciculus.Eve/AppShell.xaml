@@ -37,4 +37,9 @@
         ContentTemplate="{DataTemplate pages:PlanetsPage}"
         Route="Planets" />
 
+    <ShellContent
+        Title="Skills"
+        ContentTemplate="{DataTemplate pages:SkillsPage}"
+        Route="Skills" />
+
 </Shell>

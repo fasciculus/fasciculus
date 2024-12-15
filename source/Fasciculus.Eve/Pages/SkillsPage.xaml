@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Fasciculus.Eve.Models;assembly=Fasciculus.Eve.Core"
+             xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
+             xmlns:views="clr-namespace:Fasciculus.Eve.Views"
+             x:Class="Fasciculus.Eve.Pages.SkillsPage"
+             x:DataType="pageModels:SkillsPageModel"
+             x:Name="SkillsContentPage"
+             Title="" Shell.NavBarIsVisible="False">
+
+    <FlexLayout Direction="Column">
+        <FlexLayout FlexLayout.Grow="1">
+            <views:NavBarView FlexLayout.Basis="44" />
+            <ScrollView FlexLayout.Grow="1" Padding="14">
+                <CollectionView ItemsSource="{Binding Skills}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:EveSkillInfo">
+                            <HorizontalStackLayout Spacing="14">
+                                <Label Text="{Binding Name}" WidthRequest="280" />
+                                <Label Text="{Binding Level}" WidthRequest="10" />
+                                <HorizontalStackLayout Spacing="2">
+                                    <Button Text="-" IsEnabled="{Binding CanDecrement}" Command="{Binding DecrementCommand}" HeightRequest="16" WidthRequest="16" />
+                                    <Button Text="+" IsEnabled="{Binding CanIncrement}" Command="{Binding IncrementCommand}" HeightRequest="16" WidthRequest="16" />
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Affects}" WidthRequest="40" HorizontalTextAlignment="End" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </FlexLayout>
+        <views:StatusBarView FlexLayout.Shrink="1" />
+    </FlexLayout>
+
+</ContentPage>
