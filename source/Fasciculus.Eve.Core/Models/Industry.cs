@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -108,6 +109,7 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    [DebuggerDisplay("{Type.Name}")]
     public class EveBlueprint
     {
         public class Data
@@ -136,12 +138,14 @@ namespace Fasciculus.Eve.Models
 
         private readonly Data data;
 
+        public EveType Type { get; }
         public EveManufacturing Manufacturing { get; }
 
         public EveBlueprint(Data data, EveTypes types)
         {
             this.data = data;
 
+            Type = types[data.Id];
             Manufacturing = new(data.Manufacturing, types);
         }
     }

@@ -193,6 +193,11 @@ namespace Fasciculus.Eve.Assets.Services
         {
             EveManufacturing.Data manufacturing = blueprint.Manufacturing;
 
+            if (!types.Contains(blueprint.Id))
+            {
+                return false;
+            }
+
             if (manufacturing.Materials.Any(x => !types.Contains(x.Type)))
             {
                 return false;

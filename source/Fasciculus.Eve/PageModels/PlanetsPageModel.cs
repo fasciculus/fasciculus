@@ -83,8 +83,8 @@ namespace Fasciculus.Eve.PageModels
 
         private void OnPlanetsChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            SellProgress = planets.SellProgressInfo;
             BuyProgress = planets.BuyProgressInfo;
+            SellProgress = planets.SellProgressInfo;
             Productions = planets.Productions;
             HasProductions = Productions.Length > 0;
             Production = HasProductions ? Productions[0] : null;

@@ -4,6 +4,7 @@ using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Eve.Support;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Support;
 using Fasciculus.Threading;
 using System.ComponentModel;
 
@@ -12,6 +13,10 @@ namespace Fasciculus.Eve.PageModels
     public partial class IndustryPageModel : MainThreadObservable
     {
         private readonly EveIndustrySettings settings;
+        private readonly IIndustry industry;
+
+        [ObservableProperty]
+        private string hub;
 
         [ObservableProperty]
         private List<string> solarSystems;
@@ -26,15 +31,26 @@ namespace Fasciculus.Eve.PageModels
         private int selectedHauler;
 
         [ObservableProperty]
+        private LongProgressInfo buyProgress = LongProgressInfo.Start;
+
+        [ObservableProperty]
+        private LongProgressInfo sellProgress = LongProgressInfo.Start;
+
+        [ObservableProperty]
         private bool isRunning = false;
 
         [ObservableProperty]
         private bool notRunning = true;
 
-        public IndustryPageModel(IEveSettings settings, IEveResources resources)
+        public IndustryPageModel(IEveSettings settings, IEveResources resources, IIndustry industry)
         {
             this.settings = settings.IndustrySettings;
             this.settings.PropertyChanged += OnSettingsChanged;
+
+            this.industry = industry;
+            this.industry.PropertyChanged += OnIndustryChanged;
+
+            hub = industry.Hub.FullName;
 
             solarSystems = [.. Tasks.Wait(resources.Universe).SolarSystems.Select(x => x.Name).OrderBy(x => x)];
             selectedSolarSystem = this.settings.SolarSystem;
@@ -52,6 +68,12 @@ namespace Fasciculus.Eve.PageModels
         {
             SelectedSolarSystem = settings.SolarSystem;
             SelectedHauler = GetHaulerIndex(settings.MaxVolume);
+        }
+
+        private void OnIndustryChanged(object? sender, PropertyChangedEventArgs ev)
+        {
+            BuyProgress = industry.BuyProgressInfo;
+            SellProgress = industry.SellProgressInfo;
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs ev)
@@ -79,7 +101,7 @@ namespace Fasciculus.Eve.PageModels
         [RelayCommand]
         private Task Start()
         {
-            return Tasks.LongRunning(() => Tasks.Wait(Task.Delay(2000)));
+            return industry.StartAsync();
         }
     }
 }

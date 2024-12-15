@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
@@ -39,5 +41,24 @@ namespace Fasciculus.Eve.Models
 
             Type = types[data.Id];
         }
+    }
+
+    public class EveSkills
+    {
+        private readonly EveSkill[] skills;
+        private readonly Dictionary<EveType, EveSkill> byType;
+
+        public EveSkills(IEnumerable<EveSkill> skills)
+        {
+            this.skills = skills.ToArray();
+
+            byType = this.skills.ToDictionary(x => x.Type);
+        }
+
+        public bool Fulfills(IEnumerable<EveSkill> requirements)
+            => requirements.All(Fulfills);
+
+        private bool Fulfills(EveSkill requirement)
+            => byType.TryGetValue(requirement.Type, out EveSkill? skill) && skill.Level >= requirement.Level;
     }
 }
