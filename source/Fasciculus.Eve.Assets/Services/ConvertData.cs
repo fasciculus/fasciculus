@@ -151,9 +151,10 @@ namespace Fasciculus.Eve.Assets.Services
             SdeBlueprint blueprint = kvp.Value;
 
             int id = kvp.Key;
+            int maxRuns = blueprint.MaxProductionLimit;
             EveManufacturing.Data manufacturing = ConvertManufacturing(blueprint.Activities.Manufacturing);
 
-            return new(id, manufacturing);
+            return new(id, maxRuns, manufacturing);
         }
 
         private static EveManufacturing.Data ConvertManufacturing(SdeManufacturing manufacturing)
@@ -194,6 +195,11 @@ namespace Fasciculus.Eve.Assets.Services
             EveManufacturing.Data manufacturing = blueprint.Manufacturing;
 
             if (!types.Contains(blueprint.Id))
+            {
+                return false;
+            }
+
+            if (manufacturing.Time < 1)
             {
                 return false;
             }

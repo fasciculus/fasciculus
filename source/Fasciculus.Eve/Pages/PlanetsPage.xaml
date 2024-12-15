@@ -67,7 +67,7 @@
                         <Label Text="Qty" FontAttributes="Bold" WidthRequest="30" HorizontalTextAlignment="End" />
                         <Label Text="Cost" FontAttributes="Bold" WidthRequest="60" HorizontalTextAlignment="End" />
                     </HorizontalStackLayout>
-                    <HorizontalStackLayout Spacing="14" >
+                    <HorizontalStackLayout Spacing="14">
                         <CollectionView ItemsSource="{Binding Productions}" SelectionMode="Single" SelectedItem="{Binding Production}">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="models:EvePlanetProduction">

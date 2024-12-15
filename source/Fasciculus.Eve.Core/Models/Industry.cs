@@ -115,23 +115,28 @@ namespace Fasciculus.Eve.Models
         public class Data
         {
             public int Id { get; }
+            public int MaxRuns { get; }
+
             public EveManufacturing.Data Manufacturing { get; }
 
-            public Data(int id, EveManufacturing.Data manufacturing)
+            public Data(int id, int maxRuns, EveManufacturing.Data manufacturing)
             {
                 Id = id;
+                MaxRuns = maxRuns;
                 Manufacturing = manufacturing;
             }
 
             public Data(Stream stream)
             {
                 Id = stream.ReadInt();
+                MaxRuns = stream.ReadInt();
                 Manufacturing = new EveManufacturing.Data(stream);
             }
 
             public void Write(Stream stream)
             {
                 stream.WriteInt(Id);
+                stream.WriteInt(MaxRuns);
                 Manufacturing.Write(stream);
             }
         }
@@ -139,6 +144,7 @@ namespace Fasciculus.Eve.Models
         private readonly Data data;
 
         public EveType Type { get; }
+        public int MaxRuns => data.MaxRuns;
         public EveManufacturing Manufacturing { get; }
 
         public EveBlueprint(Data data, EveTypes types)
@@ -164,5 +170,63 @@ namespace Fasciculus.Eve.Models
 
         IEnumerator IEnumerable.GetEnumerator()
             => blueprints.GetEnumerator();
+    }
+
+    public class EveProductionInput
+    {
+        public EveType Type { get; }
+        public int Quantity { get; }
+        public double Cost { get; }
+
+        public EveProductionInput(EveType type, int quantity, double cost)
+        {
+            Type = type;
+            Quantity = quantity;
+            Cost = cost;
+        }
+    }
+
+    public class EveProductionOutput
+    {
+        public EveType Type { get; }
+        public int Quantity { get; }
+        public double Income { get; }
+
+        public EveProductionOutput(EveType type, int quantity, double income)
+        {
+            Type = type;
+            Quantity = quantity;
+            Income = income;
+        }
+    }
+
+    [DebuggerDisplay("{Name}")]
+    public class EveProduction
+    {
+        public EveBlueprint Blueprint { get; }
+
+        private readonly EveProductionInput[] inputs;
+        public IReadOnlyList<EveProductionInput> Inputs => inputs;
+
+        private readonly EveProductionOutput[] outputs;
+        public IReadOnlyList<EveProductionOutput> Outputs => outputs;
+
+        public string Name => outputs.Length > 0 ? outputs[0].Type.Name : Blueprint.Type.Name;
+
+        public double Cost { get; }
+        public double Income { get; }
+        public double Profit { get; }
+
+        public EveProduction(EveBlueprint blueprint, IEnumerable<EveProductionInput> inputs, IEnumerable<EveProductionOutput> outputs)
+        {
+            Blueprint = blueprint;
+
+            this.inputs = inputs.ToArray();
+            this.outputs = outputs.ToArray();
+
+            Cost = inputs.Sum(x => x.Cost);
+            Income = outputs.Sum(x => x.Income);
+            Profit = Income - Cost;
+        }
     }
 }

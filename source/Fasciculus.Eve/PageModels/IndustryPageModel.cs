@@ -31,6 +31,12 @@ namespace Fasciculus.Eve.PageModels
         private int selectedHauler;
 
         [ObservableProperty]
+        private bool hasProductions = false;
+
+        [ObservableProperty]
+        private EveProduction[] productions = [];
+
+        [ObservableProperty]
         private LongProgressInfo buyProgress = LongProgressInfo.Start;
 
         [ObservableProperty]
@@ -74,6 +80,8 @@ namespace Fasciculus.Eve.PageModels
         {
             BuyProgress = industry.BuyProgressInfo;
             SellProgress = industry.SellProgressInfo;
+            Productions = industry.Productions;
+            HasProductions = Productions.Length > 0;
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs ev)

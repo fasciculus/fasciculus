@@ -153,6 +153,8 @@ namespace Fasciculus.Eve.Models
             private readonly EveMarketOrder.Data[] orders;
             public IReadOnlyList<EveMarketOrder.Data> Orders => orders;
 
+            public int Count => orders.Length;
+
             public Data(IEnumerable<EveMarketOrder.Data> orders)
             {
                 this.orders = orders.ToArray();
@@ -177,6 +179,8 @@ namespace Fasciculus.Eve.Models
         private readonly Lazy<EveMarketOrder[]> orders;
         private readonly Lazy<Dictionary<EveType, EveMarketOrder[]>> byType;
         private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
+
+        public int Count => data.Count;
 
         protected EveRegionOrders(Data data, EveTypes types, EveStations stations)
         {
@@ -241,6 +245,8 @@ namespace Fasciculus.Eve.Models
 
         private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
 
+        public int Count => orders.Length;
+
         public EveDemand this[EveStation station]
             => new(type, station, byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : []);
 
@@ -269,6 +275,8 @@ namespace Fasciculus.Eve.Models
         private readonly EveMarketOrder[] orders;
 
         private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
+
+        public int Count => orders.Length;
 
         public EveSupply this[EveStation station]
             => new(type, station, byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : []);
