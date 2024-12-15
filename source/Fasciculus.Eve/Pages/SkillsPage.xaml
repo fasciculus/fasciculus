@@ -7,27 +7,31 @@
              x:Class="Fasciculus.Eve.Pages.SkillsPage"
              x:DataType="pageModels:SkillsPageModel"
              x:Name="SkillsContentPage"
-             Title="" Shell.NavBarIsVisible="False">
+             Title="" Shell.NavBarIsVisible="False"
+             Loaded="OnLoaded">
 
     <FlexLayout Direction="Column">
         <FlexLayout FlexLayout.Grow="1">
             <views:NavBarView FlexLayout.Basis="44" />
             <ScrollView FlexLayout.Grow="1" Padding="14">
-                <CollectionView ItemsSource="{Binding Skills}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:EveSkillInfo">
-                            <HorizontalStackLayout Spacing="14">
-                                <Label Text="{Binding Name}" WidthRequest="280" />
-                                <Label Text="{Binding Level}" WidthRequest="10" />
-                                <HorizontalStackLayout Spacing="2">
-                                    <Button Text="-" IsEnabled="{Binding CanDecrement}" Command="{Binding DecrementCommand}" HeightRequest="16" WidthRequest="16" />
-                                    <Button Text="+" IsEnabled="{Binding CanIncrement}" Command="{Binding IncrementCommand}" HeightRequest="16" WidthRequest="16" />
+                <VerticalStackLayout>
+                    <CollectionView ItemsSource="{Binding Skills}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:EveSkillInfo">
+                                <HorizontalStackLayout Spacing="14">
+                                    <Label Text="{Binding Name}" WidthRequest="280" />
+                                    <Label Text="{Binding Level}" WidthRequest="10" />
+                                    <HorizontalStackLayout Spacing="2">
+                                        <Button Text="-" IsEnabled="{Binding CanDecrement}" Command="{Binding DecrementCommand}" HeightRequest="16" WidthRequest="16" />
+                                        <Button Text="+" IsEnabled="{Binding CanIncrement}" Command="{Binding IncrementCommand}" HeightRequest="16" WidthRequest="16" />
+                                    </HorizontalStackLayout>
+                                    <Label Text="{Binding Affects}" WidthRequest="40" HorizontalTextAlignment="End" />
                                 </HorizontalStackLayout>
-                                <Label Text="{Binding Affects}" WidthRequest="40" HorizontalTextAlignment="End" />
-                            </HorizontalStackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <ActivityIndicator IsRunning="{Binding Loading}" />
+                </VerticalStackLayout>
             </ScrollView>
         </FlexLayout>
         <views:StatusBarView FlexLayout.Shrink="1" />

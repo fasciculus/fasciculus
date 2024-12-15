@@ -1,34 +1,37 @@
-﻿using Fasciculus.Eve.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Threading;
+using System.Collections.ObjectModel;
 
 namespace Fasciculus.Eve.PageModels
 {
     public partial class SkillsPageModel : MainThreadObservable
     {
-        public EveSkillInfo[] Skills { get; }
+        private readonly ISkillManager skillManager;
 
-        public SkillsPageModel(IDataProvider data)
+        [ObservableProperty]
+        private bool loading = true;
+
+        public ObservableCollection<EveSkillInfo> Skills { get; } = [];
+
+        public SkillsPageModel(ISkillManager skillManager)
         {
-            Skills = GetSkills(data);
+            this.skillManager = skillManager;
         }
 
-        private static EveSkillInfo[] GetSkills(IDataProvider data)
+        public void OnLoaded()
         {
-            EveTypes types = data.Types;
-            EveBlueprints blueprints = data.Blueprints;
-            EveManufacturing[] manufacturings = [.. blueprints.Select(x => x.Manufacturing)];
+            if (Loading)
+            {
+                Tasks.LongRunning(AddSkills).ContinueWith(_ => { Loading = false; });
+            }
+        }
 
-            EveType[] skillTypes = manufacturings
-                .SelectMany(x => x.Skills)
-                .Select(x => x.Type)
-                .Distinct()
-                .OrderBy(x => x.Name)
-                .ToArray();
-
-            return skillTypes
-                .Select(x => new EveSkillInfo(x, 0, manufacturings))
-                .ToArray();
+        private void AddSkills()
+        {
+            Tasks.Wait(MainThread.InvokeOnMainThreadAsync(() => { skillManager.Skills.Apply(Skills.Add); }));
         }
     }
 }
