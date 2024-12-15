@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Services;
-using Fasciculus.Threading;
 using System.Reflection;
 
 namespace Fasciculus.Eve.PageModels
@@ -8,15 +7,15 @@ namespace Fasciculus.Eve.PageModels
     public partial class InfoPageModel : ObservableObject
     {
         [ObservableProperty]
-        private string applicationVersion = "0";
+        private string applicationVersion;
 
         [ObservableProperty]
-        private string sdeVersion = "0";
+        private string sdeVersion;
 
-        public InfoPageModel(IEveResources resources)
+        public InfoPageModel(IDataProvider data)
         {
-            ApplicationVersion = Assembly.GetEntryAssembly().GetVersion();
-            SdeVersion = Tasks.Wait(resources.Data).Version.ToString("yyyy-MM-dd");
+            applicationVersion = Assembly.GetEntryAssembly().GetVersion();
+            sdeVersion = data.Version.ToString("yyyy-MM-dd");
         }
     }
 }

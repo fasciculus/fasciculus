@@ -12,7 +12,7 @@ namespace Fasciculus.Eve.Assets
             var builder = MauiApp.CreateBuilder();
 
             builder.UseMauiApp<App>();
-            builder.UseMauiFasciculus();
+            builder.UseFasciculusMaui();
 
             ConfigureFonts(builder);
             ConfigureLogging(builder.Logging);

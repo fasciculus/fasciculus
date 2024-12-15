@@ -22,6 +22,9 @@ namespace Fasciculus.Eve
 
             services.TryAddSingleton<IEveResourcesProgress, EveResourcesProgress>();
             services.TryAddSingleton<IEveResources, EveResources>();
+            services.TryAddSingleton<IDataProvider, DataProvider>();
+            services.TryAddSingleton<IUniverseProvider, UniverseProvider>();
+            services.TryAddSingleton<INavigationProvider, NavigationProvider>();
 
             services.TryAddKeyedSingleton(EsiHttp.UserAgentKey, esiUserAgent);
             services.TryAddSingleton<IEsiHttp, EsiHttp>();

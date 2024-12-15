@@ -5,7 +5,6 @@ using Fasciculus.Eve.Services;
 using Fasciculus.Eve.Support;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Support;
-using Fasciculus.Threading;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.PageModels
@@ -48,7 +47,7 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private bool notRunning = true;
 
-        public IndustryPageModel(IEveSettings settings, IEveResources resources, IIndustry industry)
+        public IndustryPageModel(IEveSettings settings, IUniverseProvider universe, IIndustry industry)
         {
             this.settings = settings.IndustrySettings;
             this.settings.PropertyChanged += OnSettingsChanged;
@@ -58,7 +57,7 @@ namespace Fasciculus.Eve.PageModels
 
             hub = industry.Hub.FullName;
 
-            solarSystems = [.. Tasks.Wait(resources.Universe).SolarSystems.Select(x => x.Name).OrderBy(x => x)];
+            solarSystems = [.. universe.SolarSystems.Select(x => x.Name).OrderBy(x => x)];
             selectedSolarSystem = this.settings.SolarSystem;
 
             haulers = [.. EveHaulers.Values.Select(x => x.Caption())];

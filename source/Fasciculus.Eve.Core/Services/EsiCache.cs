@@ -31,12 +31,9 @@ namespace Fasciculus.Eve.Services
 
         private readonly DirectoryInfo marketDirectory;
 
-        private readonly EveTypes types;
-
-        public EsiCache(IEveFileSystem fileSystem, IEveResources resources)
+        public EsiCache(IEveFileSystem fileSystem)
         {
             marketDirectory = fileSystem.EsiCache.Combine("Market").CreateIfNotExists();
-            types = Tasks.Wait(resources.Data).Types;
         }
 
         private FileInfo GetMarketPricesFile()

@@ -11,14 +11,20 @@
     <VerticalStackLayout Margin="120" Spacing="40">
         <ActivityIndicator IsRunning="true" />
         <Label Text="Loading Resources..." HorizontalOptions="Center" />
-        <Grid RowDefinitions="Auto" ColumnDefinitions="110,*,110,*,110,*" ColumnSpacing="16">
-            <Label Text="Common Data" Grid.Row="0" Grid.Column="0" />
-            <fasciculus:WorkStateLabel Source="{Binding Data}" Grid.Row="0" Grid.Column="1" />
-            <Label Text="Universe" Grid.Row="0" Grid.Column="2" />
-            <fasciculus:WorkStateLabel Source="{Binding Universe}" Grid.Row="0" Grid.Column="3" />
-            <Label Text="Navigation" Grid.Row="0" Grid.Column="4" />
-            <fasciculus:WorkStateLabel Source="{Binding Navigation}" Grid.Row="0" Grid.Column="5" />
-        </Grid>
+        <HorizontalStackLayout Spacing="42" HorizontalOptions="Center">
+            <HorizontalStackLayout Spacing="14">
+                <Label Text="Common Data" />
+                <fasciculus:WorkStateLabel Source="{Binding Data}" WidthRequest="100" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="14">
+                <Label Text="Universe" />
+                <fasciculus:WorkStateLabel Source="{Binding Universe}" WidthRequest="100" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="14">
+                <Label Text="Navigation" />
+                <fasciculus:WorkStateLabel Source="{Binding Navigation}" WidthRequest="100" />
+            </HorizontalStackLayout>
+        </HorizontalStackLayout>
     </VerticalStackLayout>
     
 </ContentPage>

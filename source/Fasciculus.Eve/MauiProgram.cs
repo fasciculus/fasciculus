@@ -2,7 +2,7 @@
 using Fasciculus.Eve.PageModels;
 using Fasciculus.Eve.ViewModels;
 using Fasciculus.Maui;
-using Fasciculus.Maui.Support;
+using Fasciculus.Support;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -16,14 +16,18 @@ namespace Fasciculus.Eve
 
             builder.UseMauiApp<App>();
             builder.UseMauiCommunityToolkit();
-            builder.UseMauiFasciculus();
+            builder.UseFasciculusMaui();
             builder.UseEveCore("Fasciculus.Eve (rhj1)");
 
             ConfigureFonts(builder);
             ConfigureLogging(builder.Logging);
             ConfigureServices(builder.Services);
 
-            return builder.Build().InitializeServices();
+            MauiApp app = builder.Build();
+
+            GlobalServices.Initialize(app.Services);
+
+            return app;
         }
 
         private static void ConfigureServices(IServiceCollection services)

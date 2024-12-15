@@ -45,16 +45,16 @@ namespace Fasciculus.Eve.Services
         [ObservableProperty]
         private EvePlanetProduction[] productions = [];
 
-        public Planets(IEveResources resources, IEveSettings settings, IEsiClient esiClient)
+        public Planets(IEveSettings settings, IEsiClient esiClient, IDataProvider data, IUniverseProvider universe)
         {
             this.settings = settings.PlanetsSettings;
             this.settings.PropertyChanged += OnSettingsChanged;
 
             this.esiClient = esiClient;
 
-            schematics = Tasks.Wait(resources.Data).PlanetSchematics;
+            schematics = data.PlanetSchematics;
 
-            Hub = Tasks.Wait(resources.Universe).Stations[60003760];
+            Hub = universe.Stations[60003760];
             hubRegion = Hub.GetRegion();
 
             buyProgress = new(_ => { BuyProgressInfo = buyProgress!.Progress; });

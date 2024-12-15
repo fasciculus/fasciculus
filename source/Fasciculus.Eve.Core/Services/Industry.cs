@@ -49,14 +49,14 @@ namespace Fasciculus.Eve.Services
         [ObservableProperty]
         private EveProduction[] productions = [];
 
-        public Industry(IEveResources resources, IEveSettings settings, IEsiClient esiClient)
+        public Industry(IEveSettings settings, IEsiClient esiClient, IDataProvider data, IUniverseProvider universe)
         {
             this.settings = settings.IndustrySettings;
             this.esiClient = esiClient;
 
-            blueprints = Tasks.Wait(resources.Data).Blueprints;
+            blueprints = data.Blueprints;
 
-            Hub = Tasks.Wait(resources.Universe).Stations[60003760];
+            Hub = universe.Stations[60003760];
             hubRegion = Hub.GetRegion();
 
             buyProgress = new(_ => { BuyProgressInfo = buyProgress!.Progress; });

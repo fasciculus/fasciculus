@@ -1,5 +1,5 @@
 using Fasciculus.Eve.ViewModels;
-using Fasciculus.Maui.Support;
+using Fasciculus.Support;
 
 namespace Fasciculus.Eve.Views;
 
@@ -9,6 +9,6 @@ public partial class NavBarView : ContentView
     {
         InitializeComponent();
 
-        BindingContext = MauiAppServices.GetRequiredService<NavBarViewModel>();
+        BindingContext = GlobalServices.GetRequiredService<NavBarViewModel>();
     }
 }

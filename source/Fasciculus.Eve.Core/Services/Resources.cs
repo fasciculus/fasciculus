@@ -139,4 +139,75 @@ namespace Fasciculus.Eve.Services
             return navigation;
         }
     }
+
+    public interface IDataProvider
+    {
+        public DateTime Version { get; }
+        public EveTypes Types { get; }
+        public EveStationOperations StationOperations { get; }
+        public EveNpcCorporations NpcCorporations { get; }
+        public EvePlanetSchematics PlanetSchematics { get; }
+        public EveBlueprints Blueprints { get; }
+    }
+
+    public class DataProvider : IDataProvider
+    {
+        private readonly EveData data;
+
+        public DateTime Version => data.Version;
+        public EveTypes Types => data.Types;
+        public EveStationOperations StationOperations => data.StationOperations;
+        public EveNpcCorporations NpcCorporations => data.NpcCorporations;
+        public EvePlanetSchematics PlanetSchematics => data.PlanetSchematics;
+        public EveBlueprints Blueprints => data.Blueprints;
+
+        public DataProvider(IEveResources resources)
+        {
+            data = Tasks.Wait(resources.Data);
+        }
+    }
+
+    public interface IUniverseProvider
+    {
+        public EveRegions Regions { get; }
+        public EveConstellations Constellations { get; }
+        public EveSolarSystems SolarSystems { get; }
+        public EveAllPlanets Planets { get; }
+        public EveAllMoons Moons { get; }
+        public EveStations Stations { get; }
+        public EveStargates Stargates { get; }
+    }
+
+    public class UniverseProvider : IUniverseProvider
+    {
+        private readonly EveUniverse universe;
+
+        public EveRegions Regions => universe.Regions;
+        public EveConstellations Constellations => universe.Constellations;
+        public EveSolarSystems SolarSystems => universe.SolarSystems;
+        public EveAllPlanets Planets => universe.Planets;
+        public EveAllMoons Moons => universe.Moons;
+        public EveStations Stations => universe.Stations;
+        public EveStargates Stargates => universe.Stargates;
+
+        public UniverseProvider(IEveResources resources)
+        {
+            universe = Tasks.Wait(resources.Universe);
+        }
+    }
+
+    public interface INavigationProvider
+    {
+        public EveNavigation Navigation { get; }
+    }
+
+    public class NavigationProvider : INavigationProvider
+    {
+        public EveNavigation Navigation { get; }
+
+        public NavigationProvider(IEveResources resources)
+        {
+            Navigation = Tasks.Wait(resources.Navigation);
+        }
+    }
 }

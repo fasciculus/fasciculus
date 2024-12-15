@@ -9,9 +9,9 @@ using Microsoft.Maui.Hosting;
 
 namespace Fasciculus.Maui
 {
-    public static class EveMauiConfiguration
+    public static class FasciculusMauiConfiguration
     {
-        public static MauiAppBuilder UseMauiFasciculus(this MauiAppBuilder builder)
+        public static MauiAppBuilder UseFasciculusMaui(this MauiAppBuilder builder)
         {
             IServiceCollection services = builder.Services;
 

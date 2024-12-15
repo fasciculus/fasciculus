@@ -1,7 +1,6 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
-using Fasciculus.Threading;
 
 namespace Fasciculus.Eve.PageModels
 {
@@ -9,15 +8,15 @@ namespace Fasciculus.Eve.PageModels
     {
         public EveSkillInfo[] Skills { get; }
 
-        public SkillsPageModel(IEveResources resources)
+        public SkillsPageModel(IDataProvider data)
         {
-            Skills = GetSkills(resources);
+            Skills = GetSkills(data);
         }
 
-        private static EveSkillInfo[] GetSkills(IEveResources resources)
+        private static EveSkillInfo[] GetSkills(IDataProvider data)
         {
-            EveTypes types = Tasks.Wait(resources.Data).Types;
-            EveBlueprints blueprints = Tasks.Wait(resources.Data).Blueprints;
+            EveTypes types = data.Types;
+            EveBlueprints blueprints = data.Blueprints;
             EveManufacturing[] manufacturings = [.. blueprints.Select(x => x.Manufacturing)];
 
             EveType[] skillTypes = manufacturings
