@@ -45,7 +45,7 @@ namespace Fasciculus.Eve.Models
         }
     }
 
-    public class EveManufacturing : ISkillAffected
+    public class EveManufacturing : ISkillConsumer
     {
         public class Data
         {
@@ -97,7 +97,7 @@ namespace Fasciculus.Eve.Models
         public int Time => data.Time;
         public IReadOnlyList<EveMaterial> Materials => materials;
         public IReadOnlyList<EveMaterial> Products => products;
-        public IReadOnlyList<EveSkill> Skills => skills;
+        public IEnumerable<ISkill> RequiredSkills => skills;
 
         public EveManufacturing(Data data, EveTypes types)
         {
@@ -108,7 +108,7 @@ namespace Fasciculus.Eve.Models
             skills = [.. data.Skills.Select(x => new EveSkill(x, types))];
         }
 
-        public bool IsAffectedBySkill(EveType skillType)
+        public bool RequiresSkill(EveType skillType)
             => skills.Any(x => x.Type == skillType);
     }
 

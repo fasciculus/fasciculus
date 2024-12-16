@@ -1,34 +1,31 @@
 ﻿using Fasciculus.Eve.Models;
+using Fasciculus.Maui.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Eve.Services
 {
-    public interface ISkillManager
+    public interface ISkillManager : ISkillInfoProvider
     {
-        public IEnumerable<EveSkillInfo> Skills { get; }
     }
 
-    public class SkillManager : ISkillManager
+    public class SkillManager : MainThreadObservable, ISkillManager
     {
-        public IEnumerable<EveSkillInfo> Skills { get; }
+        private readonly EveSkillInfos skills;
+
+        public IEnumerable<ISkillInfo> Skills => skills.Skills;
+        IEnumerable<IMutableSkill> IMutableSkillProvider.Skills => skills.Skills;
+        IEnumerable<ISkill> ISkillProvider.Skills => skills.Skills;
 
         public SkillManager(IDataProvider data)
         {
-            Skills = GetSkills(data.Blueprints);
+            skills = new(GetSkillConsumers(data));
         }
 
-        private static EveSkillInfo[] GetSkills(EveBlueprints blueprints)
-        {
-            EveManufacturing[] manufacturings = [.. blueprints.Select(x => x.Manufacturing)];
+        private static IEnumerable<ISkillConsumer> GetSkillConsumers(IDataProvider data)
+            => data.Blueprints.Select(x => x.Manufacturing);
 
-            return manufacturings
-                .SelectMany(x => x.Skills)
-                .Select(x => x.Type)
-                .Distinct()
-                .OrderBy(x => x.Name)
-                .Select(x => new EveSkillInfo(x, 0, manufacturings))
-                .ToArray();
-        }
+        public bool Fulfills(IEnumerable<ISkill> requiredSkills)
+            => skills.Fulfills(requiredSkills);
     }
 }

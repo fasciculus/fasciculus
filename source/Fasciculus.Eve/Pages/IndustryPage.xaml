@@ -45,10 +45,10 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="models:EveProduction">
                                     <HorizontalStackLayout Spacing="14" Padding="0,3,0,4">
-                                        <Label Text="{Binding Name}" WidthRequest="200" />
-                                        <controls:IskLabel Value="{Binding Cost}" WidthRequest="60" />
-                                        <controls:IskLabel Value="{Binding Income}" WidthRequest="60" />
-                                        <controls:IskLabel Value="{Binding Profit}" WidthRequest="60" />
+                                        <Label Text="{Binding Name}" WidthRequest="260" />
+                                        <controls:IskLabel Value="{Binding Cost}" WidthRequest="80" />
+                                        <controls:IskLabel Value="{Binding Income}" WidthRequest="80" />
+                                        <controls:IskLabel Value="{Binding Profit}" WidthRequest="80" />
                                     </HorizontalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>

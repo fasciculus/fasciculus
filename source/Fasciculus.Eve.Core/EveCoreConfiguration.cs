@@ -1,4 +1,5 @@
-﻿using Fasciculus.Eve.Services;
+﻿using Fasciculus.Eve.Models;
+using Fasciculus.Eve.Services;
 using Fasciculus.IO;
 using Fasciculus.Net;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,11 @@ namespace Fasciculus.Eve
             services.TryAddSingleton<IUniverseProvider, UniverseProvider>();
             services.TryAddSingleton<INavigationProvider, NavigationProvider>();
 
-            services.TryAddSingleton<ISkillManager, SkillManager>();
+            services.TryAddSingleton<SkillManager>();
+            services.TryAddSingleton<ISkillManager>(x => x.GetRequiredService<SkillManager>());
+            services.TryAddSingleton<ISkillInfoProvider>(x => x.GetRequiredService<SkillManager>());
+            services.TryAddSingleton<IMutableSkillProvider>(x => x.GetRequiredService<SkillManager>());
+            services.TryAddSingleton<ISkillProvider>(x => x.GetRequiredService<SkillManager>());
 
             services.TryAddKeyedSingleton(EsiHttp.UserAgentKey, esiUserAgent);
             services.TryAddSingleton<IEsiHttp, EsiHttp>();

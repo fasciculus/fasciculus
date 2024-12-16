@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Maui.ComponentModel;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
@@ -17,14 +18,41 @@ namespace Fasciculus.Eve.Models
         public bool CanIncrement { get; }
     }
 
-    public interface IMutableSkill : ISkill
+    public interface IMutableSkill : ISkill, INotifyPropertyChanged
     {
         public new int Level { get; set; }
+
+        public IRelayCommand DecrementCommand { get; }
+        public IRelayCommand IncrementCommand { get; }
     }
 
-    public interface ISkillAffected
+    public interface ISkillInfo : IMutableSkill
     {
-        public bool IsAffectedBySkill(EveType skillType);
+        public int Affects { get; }
+    }
+
+    public interface ISkillProvider
+    {
+        public IEnumerable<ISkill> Skills { get; }
+
+        public bool Fulfills(IEnumerable<ISkill> requiredSkills);
+    }
+
+    public interface IMutableSkillProvider : ISkillProvider, INotifyPropertyChanged
+    {
+        public new IEnumerable<IMutableSkill> Skills { get; }
+    }
+
+    public interface ISkillInfoProvider : IMutableSkillProvider
+    {
+        public new IEnumerable<ISkillInfo> Skills { get; }
+    }
+
+    public interface ISkillConsumer
+    {
+        public IEnumerable<ISkill> RequiredSkills { get; }
+
+        public bool RequiresSkill(EveType skillType);
     }
 
     public class EveSkill : ISkill
@@ -70,23 +98,26 @@ namespace Fasciculus.Eve.Models
         }
     }
 
-    public class EveSkills
+    public class EveSkills : ISkillProvider
     {
         private readonly EveSkill[] skills;
         private readonly Dictionary<EveType, EveSkill> byType;
 
+        public IEnumerable<ISkill> Skills => skills;
+
         public EveSkills(IEnumerable<EveSkill> skills)
         {
             this.skills = skills.ToArray();
+            this.skills.Apply(x => { });
 
             byType = this.skills.ToDictionary(x => x.Type);
         }
 
-        public bool Fulfills(IEnumerable<EveSkill> requirements)
-            => requirements.All(Fulfills);
+        public bool Fulfills(IEnumerable<ISkill> requiredSkills)
+            => requiredSkills.All(Fulfills);
 
-        private bool Fulfills(EveSkill requirement)
-            => byType.TryGetValue(requirement.Type, out EveSkill? skill) && skill.Level >= requirement.Level;
+        private bool Fulfills(ISkill requiredSkill)
+            => byType.TryGetValue(requiredSkill.Type, out EveSkill? skill) && skill.Level >= requiredSkill.Level;
     }
 
     public partial class EveMutableSkill : MainThreadObservable, IMutableSkill
@@ -138,14 +169,54 @@ namespace Fasciculus.Eve.Models
         }
     }
 
-    public partial class EveSkillInfo : EveMutableSkill
+    public partial class EveSkillInfo : EveMutableSkill, ISkillInfo
     {
         public int Affects { get; }
 
-        public EveSkillInfo(EveType type, int level, IEnumerable<ISkillAffected> affecteds)
+        public EveSkillInfo(EveType type, int level, IEnumerable<ISkillConsumer> consumers)
             : base(type, level)
         {
-            Affects = affecteds.Where(x => x.IsAffectedBySkill(type)).Count();
+            Affects = consumers.Where(x => x.RequiresSkill(type)).Count();
         }
+    }
+
+    public class EveSkillInfos : ObservableObject, ISkillInfoProvider
+    {
+        private readonly ISkillInfo[] skills;
+        private readonly Dictionary<EveType, ISkillInfo> byType;
+
+        public IEnumerable<ISkillInfo> Skills => skills;
+        IEnumerable<IMutableSkill> IMutableSkillProvider.Skills => skills;
+        IEnumerable<ISkill> ISkillProvider.Skills => skills;
+
+        public EveSkillInfos(IEnumerable<ISkillConsumer> skillConsumers)
+        {
+            skills = [.. CreateSkills(skillConsumers)];
+            skills.Apply(x => { x.PropertyChanged += OnSkillChanged; });
+
+            byType = skills.ToDictionary(x => x.Type);
+        }
+
+        private void OnSkillChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(Skills));
+        }
+
+        private static IEnumerable<EveSkillInfo> CreateSkills(IEnumerable<ISkillConsumer> skillConsumers)
+        {
+            return skillConsumers
+                .SelectMany(x => x.RequiredSkills)
+                .Select(x => x.Type)
+                .Distinct()
+                .OrderBy(x => x.Name)
+                .Select(x => new EveSkillInfo(x, 0, skillConsumers));
+        }
+
+        public bool Fulfills(IEnumerable<ISkill> requiredSkills)
+            => requiredSkills.All(Fulfills);
+
+        private bool Fulfills(ISkill requiredSkill)
+            => byType.TryGetValue(requiredSkill.Type, out ISkillInfo? skill) && skill.Level >= requiredSkill.Level;
+
     }
 }

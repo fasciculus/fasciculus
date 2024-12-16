@@ -30,6 +30,7 @@ namespace Fasciculus.Eve.Services
         private readonly TaskSafeMutex mutex = new();
 
         private readonly EveIndustrySettings settings;
+        private readonly ISkillProvider skills;
         private readonly IEsiClient esiClient;
 
         private readonly EveBlueprints blueprints;
@@ -49,9 +50,10 @@ namespace Fasciculus.Eve.Services
         [ObservableProperty]
         private EveProduction[] productions = [];
 
-        public Industry(IEveSettings settings, IEsiClient esiClient, IDataProvider data, IUniverseProvider universe)
+        public Industry(IEveSettings settings, ISkillProvider skills, IEsiClient esiClient, IDataProvider data, IUniverseProvider universe)
         {
             this.settings = settings.IndustrySettings;
+            this.skills = skills;
             this.esiClient = esiClient;
 
             blueprints = data.Blueprints;
@@ -142,13 +144,12 @@ namespace Fasciculus.Eve.Services
         private EveBlueprint[] GetCandidates(EveRegionSellOrders regionSellOrders)
         {
             int maxVolume = settings.MaxVolume;
-            EveSkills skills = new([]);
 
             return blueprints
                 .Where(x => x.Manufacturing.Time <= SecondsPerDay)
                 .Where(x => regionSellOrders[x.Type].Count > 0)
                 .Where(x => x.Manufacturing.Products.All(y => y.Type.Volume <= maxVolume))
-                .Where(x => skills.Fulfills(x.Manufacturing.Skills))
+                .Where(x => skills.Fulfills(x.Manufacturing.RequiredSkills))
                 .ToArray();
         }
     }

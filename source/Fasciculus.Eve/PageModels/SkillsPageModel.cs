@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
-using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Threading;
 using System.Collections.ObjectModel;
@@ -9,29 +8,36 @@ namespace Fasciculus.Eve.PageModels
 {
     public partial class SkillsPageModel : MainThreadObservable
     {
-        private readonly ISkillManager skillManager;
+        private readonly ISkillInfoProvider skillsProvider;
 
         [ObservableProperty]
         private bool loading = true;
 
-        public ObservableCollection<EveSkillInfo> Skills { get; } = [];
+        public ObservableCollection<ISkillInfo> Skills { get; } = [];
 
-        public SkillsPageModel(ISkillManager skillManager)
+        public SkillsPageModel(ISkillInfoProvider skillsProvider)
         {
-            this.skillManager = skillManager;
+            this.skillsProvider = skillsProvider;
+
+            Skills.CollectionChanged += OnSkillsChanged;
+        }
+
+        private void OnSkillsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Loading = Skills.Count == 0;
         }
 
         public void OnLoaded()
         {
             if (Loading)
             {
-                Tasks.LongRunning(AddSkills).ContinueWith(_ => { Loading = false; });
+                Tasks.LongRunning(AddSkills);
             }
         }
 
         private void AddSkills()
         {
-            Tasks.Wait(MainThread.InvokeOnMainThreadAsync(() => { skillManager.Skills.Apply(Skills.Add); }));
+            Tasks.Wait(MainThread.InvokeOnMainThreadAsync(() => { skillsProvider.Skills.Apply(Skills.Add); }));
         }
     }
 }

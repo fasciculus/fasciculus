@@ -15,22 +15,30 @@
             <views:NavBarView FlexLayout.Basis="44" />
             <ScrollView FlexLayout.Grow="1" Padding="14">
                 <VerticalStackLayout>
+                    <HorizontalStackLayout Spacing="14">
+                        <Label Text="Skill" FontAttributes="Bold" WidthRequest="280" />
+                        <Label Text="Level" FontAttributes="Bold" WidthRequest="40" />
+                        <Label Text="" WidthRequest="34" />
+                        <Label Text="Importance" FontAttributes="Bold" />
+                    </HorizontalStackLayout>
                     <CollectionView ItemsSource="{Binding Skills}">
                         <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:EveSkillInfo">
+                            <DataTemplate x:DataType="models:ISkillInfo">
                                 <HorizontalStackLayout Spacing="14">
                                     <Label Text="{Binding Name}" WidthRequest="280" />
-                                    <Label Text="{Binding Level}" WidthRequest="10" />
+                                    <Label Text="{Binding Level}" WidthRequest="40" HorizontalTextAlignment="Center" />
                                     <HorizontalStackLayout Spacing="2">
                                         <Button Text="-" IsEnabled="{Binding CanDecrement}" Command="{Binding DecrementCommand}" HeightRequest="16" WidthRequest="16" />
                                         <Button Text="+" IsEnabled="{Binding CanIncrement}" Command="{Binding IncrementCommand}" HeightRequest="16" WidthRequest="16" />
                                     </HorizontalStackLayout>
-                                    <Label Text="{Binding Affects}" WidthRequest="40" HorizontalTextAlignment="End" />
+                                    <Label Text="{Binding Affects}" WidthRequest="50" HorizontalTextAlignment="End" />
                                 </HorizontalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <ActivityIndicator IsRunning="{Binding Loading}" />
+                    <VerticalStackLayout Padding="0,40,0,0">
+                        <ActivityIndicator IsRunning="{Binding Loading}" />
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
         </FlexLayout>
