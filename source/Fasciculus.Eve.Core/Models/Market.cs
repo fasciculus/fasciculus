@@ -158,8 +158,6 @@ namespace Fasciculus.Eve.Models
             private readonly EveMarketOrder.Data[] orders;
             public IReadOnlyList<EveMarketOrder.Data> Orders => orders;
 
-            public int Count => orders.Length;
-
             public Data(IEnumerable<EveMarketOrder.Data> orders)
             {
                 this.orders = orders.ToArray();
@@ -176,24 +174,21 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        protected readonly Data data;
-
         protected readonly EveTypes types;
         protected readonly EveStations stations;
 
-        private readonly Lazy<EveMarketOrder[]> orders;
+        private readonly EveMarketOrder[] orders;
         private readonly Lazy<Dictionary<EveType, EveMarketOrder[]>> byType;
         private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
 
-        public int Count => data.Count;
+        public int Count => orders.Length;
 
         protected EveRegionOrders(Data data, EveTypes types, EveStations stations)
         {
-            this.data = data;
             this.types = types;
             this.stations = stations;
 
-            orders = new(FetchOrders, true);
+            orders = FetchOrders(data, stations);
             byType = new(FetchByType, true);
             byStation = new(FetchByStation, true);
         }
@@ -204,12 +199,12 @@ namespace Fasciculus.Eve.Models
         protected EveMarketOrder[] GetOrders(EveStation station)
             => byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : [];
 
-        private EveMarketOrder[] FetchOrders()
+        private static EveMarketOrder[] FetchOrders(Data data, EveStations stations)
             => [.. data.Orders.Where(x => stations.Contains(x.Location)).Select(x => new EveMarketOrder(x, stations))];
 
         private Dictionary<EveType, EveMarketOrder[]> FetchByType()
         {
-            return orders.Value.GroupBy(x => x.Type)
+            return orders.GroupBy(x => x.Type)
                 .Where(x => types.Contains(x.Key))
                 .Select(x => Tuple.Create(types[x.Key], x.ToArray()))
                 .ToDictionary();
@@ -217,7 +212,7 @@ namespace Fasciculus.Eve.Models
 
         private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
         {
-            return orders.Value.GroupBy(x => x.Station)
+            return orders.GroupBy(x => x.Station)
                 .Select(x => Tuple.Create(x.Key, x.ToArray()))
                 .ToDictionary();
         }
