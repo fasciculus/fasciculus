@@ -215,12 +215,14 @@ namespace Fasciculus.Eve.Models
         public EveType Type { get; }
         public int Quantity { get; }
         public double Cost { get; }
+        public double Volume { get; }
 
         public EveProductionInput(EveType type, int quantity, double cost)
         {
             Type = type;
             Quantity = quantity;
             Cost = cost;
+            Volume = Math.Ceiling(type.Volume * Quantity);
         }
     }
 
@@ -229,12 +231,14 @@ namespace Fasciculus.Eve.Models
         public EveType Type { get; }
         public int Quantity { get; }
         public double Income { get; }
+        public double Volume { get; }
 
         public EveProductionOutput(EveType type, int quantity, double income)
         {
             Type = type;
             Quantity = quantity;
             Income = income;
+            Volume = Math.Ceiling(Type.Volume * Quantity);
         }
     }
 
@@ -259,6 +263,7 @@ namespace Fasciculus.Eve.Models
         public double Income { get; }
         public double Profit { get; }
         public double Margin { get; }
+        public double OutputVolume { get; }
 
         public EveProduction(EveBlueprint blueprint, double blueprintPrice, int runs,
             IEnumerable<EveProductionInput> inputs, IEnumerable<EveProductionOutput> outputs,
@@ -277,6 +282,7 @@ namespace Fasciculus.Eve.Models
             Income = outputs.Sum(x => x.Income);
             Profit = Income - Cost;
             Margin = Profit / Math.Max(1, Cost) * 100;
+            OutputVolume = outputs.Sum(x => x.Volume);
         }
     }
 }

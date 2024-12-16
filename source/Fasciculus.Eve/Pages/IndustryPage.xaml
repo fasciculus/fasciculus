@@ -66,6 +66,7 @@
                                 <Label Text="Cost" FontAttributes="Bold" WidthRequest="80" HorizontalTextAlignment="End" />
                                 <Label Text="Income" FontAttributes="Bold" WidthRequest="80" HorizontalTextAlignment="End" />
                                 <Label Text="Profit" FontAttributes="Bold" WidthRequest="80" HorizontalTextAlignment="End" />
+                                <Label Text="Margin" FontAttributes="Bold" WidthRequest="60" HorizontalTextAlignment="End" />
                             </HorizontalStackLayout>
                             <CollectionView ItemsSource="{Binding Productions}" SelectionMode="Single" SelectedItem="{Binding Production}">
                                 <CollectionView.ItemTemplate>
@@ -94,18 +95,24 @@
                                 <Label Text="Job Cost:" WidthRequest="120" />
                                 <controls:IskLabel Value="{Binding JobCost}" WidthRequest="120" />
                             </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="14">
+                                <Label Text="Output Volume:" WidthRequest="120" />
+                                <controls:IskLabel Value="{Binding OutputVolume}" WidthRequest="120" />
+                            </HorizontalStackLayout>
                             <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
-                                <Label Text="Input" FontAttributes="Bold" WidthRequest="120" />
+                                <Label Text="Input" FontAttributes="Bold" WidthRequest="260" />
                                 <Label Text="Quantity" FontAttributes="Bold" WidthRequest="120" HorizontalTextAlignment="End" />
                                 <Label Text="Cost" FontAttributes="Bold" WidthRequest="120" HorizontalTextAlignment="End" />
+                                <Label Text="Volume" FontAttributes="Bold" WidthRequest="80" HorizontalTextAlignment="End" />
                             </HorizontalStackLayout>
                             <CollectionView ItemsSource="{Binding Inputs}">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate x:DataType="models:EveProductionInput">
                                         <HorizontalStackLayout Spacing="14" Padding="0,3,0,4">
-                                            <Label Text="{Binding Type.Name}" WidthRequest="120" />
+                                            <Label Text="{Binding Type.Name}" WidthRequest="260" />
                                             <controls:IskLabel Value="{Binding Quantity}" WidthRequest="120" />
                                             <controls:IskLabel Value="{Binding Cost}" WidthRequest="120" />
+                                            <controls:IskLabel Value="{Binding Volume}" WidthRequest="80" />
                                         </HorizontalStackLayout>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>

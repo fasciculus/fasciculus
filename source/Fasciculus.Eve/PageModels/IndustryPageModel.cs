@@ -49,6 +49,9 @@ namespace Fasciculus.Eve.PageModels
         private double jobCost;
 
         [ObservableProperty]
+        private double outputVolume;
+
+        [ObservableProperty]
         private EveProductionInput[] inputs = [];
 
         [ObservableProperty]
@@ -137,12 +140,14 @@ namespace Fasciculus.Eve.PageModels
                 BlueprintPrice = 0;
                 Runs = 0;
                 JobCost = 0;
+                OutputVolume = 0;
                 Inputs = [];
             }
             else
             {
                 BlueprintPrice = Production.BlueprintPrice;
-                JobCost += Production.JobCost;
+                JobCost = Production.JobCost;
+                OutputVolume = Production.OutputVolume;
                 Runs = Production.Runs;
                 Inputs = [.. Production.Inputs];
             }
