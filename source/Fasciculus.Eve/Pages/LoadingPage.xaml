@@ -24,10 +24,6 @@
                 <Label Text="Navigation" />
                 <fasciculus:WorkStateLabel Source="{Binding Navigation}" WidthRequest="100" />
             </HorizontalStackLayout>
-            <HorizontalStackLayout Spacing="14">
-                <Label Text="Skills" />
-                <fasciculus:WorkStateLabel Source="{Binding Skills}" WidthRequest="100" />
-            </HorizontalStackLayout>
         </HorizontalStackLayout>
     </VerticalStackLayout>
     

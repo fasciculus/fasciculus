@@ -3,7 +3,6 @@ using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Services;
 using Fasciculus.Maui.Support;
-using Fasciculus.Support;
 using Fasciculus.Threading;
 
 namespace Fasciculus.Eve.PageModels
@@ -22,9 +21,6 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private WorkState navigation = WorkState.Pending;
 
-        [ObservableProperty]
-        private WorkState skills = WorkState.Pending;
-
         public LoadingPageModel(IEveResources resources, INavigator navigator)
         {
             this.resources = resources;
@@ -35,7 +31,7 @@ namespace Fasciculus.Eve.PageModels
         {
             Tasks.LongRunning(LoadResources)
                 .ContinueWith(_ => Tasks.Sleep(500))
-                .ContinueWith(_ => Tasks.Wait(GoToInfoPage()));
+                .ContinueWith(_ => Tasks.Wait(navigator.GoTo("//Info")));
         }
 
         private void LoadResources()
@@ -51,15 +47,6 @@ namespace Fasciculus.Eve.PageModels
             Navigation = WorkState.Working;
             Tasks.Wait(resources.Navigation);
             Navigation = WorkState.Done;
-
-            Skills = WorkState.Working;
-            GlobalServices.GetRequiredService<ISkillManager>();
-            Skills = WorkState.Done;
-        }
-
-        private Task GoToInfoPage()
-        {
-            return navigator.GoTo("//Info");
         }
     }
 }
