@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Fasciculus.Maui.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,14 +31,14 @@ namespace Fasciculus.Eve.Models
         public int Affects { get; }
     }
 
-    public interface ISkillProvider
+    public interface ISkillProvider : INotifyPropertyChanged
     {
         public IEnumerable<ISkill> Skills { get; }
 
         public bool Fulfills(IEnumerable<ISkill> requiredSkills);
     }
 
-    public interface IMutableSkillProvider : ISkillProvider, INotifyPropertyChanged
+    public interface IMutableSkillProvider : ISkillProvider
     {
         public new IEnumerable<IMutableSkill> Skills { get; }
     }
@@ -99,7 +98,7 @@ namespace Fasciculus.Eve.Models
         }
     }
 
-    public class EveSkills : ISkillProvider
+    public class EveSkills : ObservableObject, ISkillProvider
     {
         private readonly EveSkill[] skills;
         private readonly Dictionary<EveType, EveSkill> byType;
@@ -121,7 +120,7 @@ namespace Fasciculus.Eve.Models
             => byType.TryGetValue(requiredSkill.Type, out EveSkill? skill) && skill.Level >= requiredSkill.Level;
     }
 
-    public partial class EveMutableSkill : MainThreadObservable, IMutableSkill
+    public partial class EveMutableSkill : ObservableObject, IMutableSkill
     {
         public EveType Type { get; }
         public string Name => Type.Name;

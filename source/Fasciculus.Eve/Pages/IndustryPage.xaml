@@ -49,6 +49,7 @@
                                         <controls:IskLabel Value="{Binding Cost}" WidthRequest="80" />
                                         <controls:IskLabel Value="{Binding Income}" WidthRequest="80" />
                                         <controls:IskLabel Value="{Binding Profit}" WidthRequest="80" />
+                                        <Label Text="{Binding Margin, StringFormat='{0:F1} %'}" HorizontalTextAlignment="End" WidthRequest="60" />
                                     </HorizontalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>

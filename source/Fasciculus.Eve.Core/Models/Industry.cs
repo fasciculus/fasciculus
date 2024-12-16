@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -219,6 +220,7 @@ namespace Fasciculus.Eve.Models
         public double Cost { get; }
         public double Income { get; }
         public double Profit { get; }
+        public double Margin { get; }
 
         public EveProduction(EveBlueprint blueprint, IEnumerable<EveProductionInput> inputs, IEnumerable<EveProductionOutput> outputs)
         {
@@ -230,6 +232,7 @@ namespace Fasciculus.Eve.Models
             Cost = inputs.Sum(x => x.Cost);
             Income = outputs.Sum(x => x.Income);
             Profit = Income - Cost;
+            Margin = Profit / Math.Max(1, Cost) * 100;
         }
     }
 }

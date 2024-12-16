@@ -63,6 +63,9 @@ namespace Fasciculus.Eve.Services
 
             buyProgress = new(_ => { BuyProgressInfo = buyProgress!.Progress; });
             sellProgress = new(_ => { SellProgressInfo = sellProgress!.Progress; });
+
+            this.settings.PropertyChanged += OnSettingsChanged;
+            this.skills.PropertyChanged += OnSkillsChanged;
         }
 
         public Task StartAsync()
@@ -70,6 +73,11 @@ namespace Fasciculus.Eve.Services
             using Locker locker = Locker.Lock(mutex);
 
             return Tasks.LongRunning(Start);
+        }
+
+        private void Reset()
+        {
+            Productions = [];
         }
 
         private void Start()
@@ -152,5 +160,10 @@ namespace Fasciculus.Eve.Services
                 .Where(x => skills.Fulfills(x.Manufacturing.RequiredSkills))
                 .ToArray();
         }
+        private void OnSkillsChanged(object? sender, PropertyChangedEventArgs e)
+            => Reset();
+
+        private void OnSettingsChanged(object? sender, PropertyChangedEventArgs e)
+            => Reset();
     }
 }
