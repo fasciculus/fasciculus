@@ -124,9 +124,13 @@ namespace Fasciculus.Eve.Models
         public string Name => data.Name;
         public double Volume => data.Volume;
 
-        public EveType(Data data)
+        public EveMarketGroup? MarketGroup { get; }
+
+        public EveType(Data data, EveMarketGroups marketGroups)
         {
             this.data = data;
+
+            MarketGroup = marketGroups[data.MarketGroupId];
         }
     }
 
@@ -332,6 +336,7 @@ namespace Fasciculus.Eve.Models
         private readonly Data data;
 
         public DateTime Version => data.Version;
+        public EveMarketGroups MarketGroups { get; }
         public EveTypes Types { get; }
         public EveStationOperations StationOperations { get; }
         public EveNpcCorporations NpcCorporations { get; }
@@ -342,7 +347,8 @@ namespace Fasciculus.Eve.Models
         {
             this.data = data;
 
-            Types = new(data.Types.Select(x => new EveType(x)));
+            MarketGroups = new(data.MarketGroups.Select(x => new EveMarketGroup(x)));
+            Types = new(data.Types.Select(x => new EveType(x, MarketGroups)));
             StationOperations = new(data.StationOperations.Select(x => new EveStationOperation(x)));
             NpcCorporations = new(data.NpcCorporations.Select(x => new EveNpcCorporation(x)));
             PlanetSchematics = new(data.PlanetSchematics.Select(x => new EvePlanetSchematic(x, Types)), Types);
