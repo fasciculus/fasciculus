@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Maui.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -140,6 +141,16 @@ namespace Fasciculus.Eve.Models
             Level = level;
 
             UpdateCrements();
+
+            PropertyChanged += OnThisPropertyChanged;
+        }
+
+        private void OnThisPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (nameof(Level) == e.PropertyName)
+            {
+                UpdateCrements();
+            }
         }
 
         private void UpdateCrements()
@@ -154,7 +165,6 @@ namespace Fasciculus.Eve.Models
             if (Level > 0)
             {
                 --Level;
-                UpdateCrements();
             }
         }
 
@@ -164,7 +174,6 @@ namespace Fasciculus.Eve.Models
             if (Level < 5)
             {
                 ++Level;
-                UpdateCrements();
             }
         }
     }
@@ -184,6 +193,7 @@ namespace Fasciculus.Eve.Models
     {
         private readonly ISkillInfo[] skills;
         private readonly Dictionary<EveType, ISkillInfo> byType;
+        private readonly Dictionary<int, ISkillInfo> byTypeId;
 
         public IEnumerable<ISkillInfo> Skills => skills;
         IEnumerable<IMutableSkill> IMutableSkillProvider.Skills => skills;
@@ -195,11 +205,15 @@ namespace Fasciculus.Eve.Models
             skills.Apply(x => { x.PropertyChanged += OnSkillChanged; });
 
             byType = skills.ToDictionary(x => x.Type);
+            byTypeId = skills.ToDictionary(x => x.Type.Id);
         }
 
         private void OnSkillChanged(object? sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(Skills));
+            if (nameof(ISkillInfo.Level) == e.PropertyName)
+            {
+                OnPropertyChanged(nameof(Skills));
+            }
         }
 
         private static IEnumerable<EveSkillInfo> CreateSkills(IEnumerable<ISkillConsumer> skillConsumers)
@@ -218,5 +232,14 @@ namespace Fasciculus.Eve.Models
         private bool Fulfills(ISkill requiredSkill)
             => byType.TryGetValue(requiredSkill.Type, out ISkillInfo? skill) && skill.Level >= requiredSkill.Level;
 
+        public void Set(int typeId, int level)
+        {
+            if (byTypeId.TryGetValue(typeId, out ISkillInfo? skillInfo))
+            {
+                level = Math.Max(0, Math.Min(5, level));
+
+                skillInfo.Level = level;
+            }
+        }
     }
 }

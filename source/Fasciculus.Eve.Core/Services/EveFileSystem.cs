@@ -7,6 +7,7 @@ namespace Fasciculus.Eve.Services
     {
         public DirectoryInfo Documents { get; }
         public FileInfo UserSettings { get; }
+        public FileInfo SkillSettings { get; }
 
         public DirectoryInfo EsiCache { get; }
     }
@@ -16,6 +17,7 @@ namespace Fasciculus.Eve.Services
         public DirectoryInfo Documents { get; }
 
         public FileInfo UserSettings => Documents.File("Settings.json");
+        public FileInfo SkillSettings => Documents.File("Skills.json");
 
         public DirectoryInfo EsiCache => Documents.Combine("EsiCache").CreateIfNotExists();
 
