@@ -93,6 +93,8 @@ namespace Fasciculus.Eve.Services
         {
             Reset();
 
+            buyProgress.Begin(1);
+            sellProgress.Begin(1);
             MarketPricesState = WorkState.Pending;
             IndustryIndicesState = WorkState.Pending;
 
