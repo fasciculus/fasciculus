@@ -37,6 +37,21 @@ namespace Fasciculus.Eve.PageModels
         private EveProduction[] productions = [];
 
         [ObservableProperty]
+        private EveProduction? production;
+
+        [ObservableProperty]
+        private double blueprintPrice;
+
+        [ObservableProperty]
+        private int runs;
+
+        [ObservableProperty]
+        private double jobCost;
+
+        [ObservableProperty]
+        private EveProductionInput[] inputs = [];
+
+        [ObservableProperty]
         private LongProgressInfo buyProgress = LongProgressInfo.Start;
 
         [ObservableProperty]
@@ -92,6 +107,7 @@ namespace Fasciculus.Eve.PageModels
 
             Productions = industry.Productions;
             HasProductions = Productions.Length > 0;
+            Production = HasProductions ? Productions[0] : null;
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs ev)
@@ -107,6 +123,28 @@ namespace Fasciculus.Eve.PageModels
                 case nameof(SelectedHauler):
                     settings.MaxVolume = EveHaulers.Values[SelectedHauler].Volume();
                     break;
+
+                case nameof(Production):
+                    UpdateProduction();
+                    break;
+            }
+        }
+
+        private void UpdateProduction()
+        {
+            if (Production is null)
+            {
+                BlueprintPrice = 0;
+                Runs = 0;
+                JobCost = 0;
+                Inputs = [];
+            }
+            else
+            {
+                BlueprintPrice = Production.BlueprintPrice;
+                JobCost += Production.JobCost;
+                Runs = Production.Runs;
+                Inputs = [.. Production.Inputs];
             }
         }
 

@@ -85,6 +85,7 @@ namespace Fasciculus.Eve.PageModels
         {
             BuyProgress = planets.BuyProgressInfo;
             SellProgress = planets.SellProgressInfo;
+
             Productions = planets.Productions;
             HasProductions = Productions.Length > 0;
             Production = HasProductions ? Productions[0] : null;

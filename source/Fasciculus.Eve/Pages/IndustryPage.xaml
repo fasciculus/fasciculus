@@ -10,10 +10,27 @@
              x:DataType="pageModels:IndustryPageModel"
              Title="" Shell.NavBarIsVisible="False">
 
+    <ContentPage.Resources>
+        <Style TargetType="HorizontalStackLayout">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="{StaticResource Gray600}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
     <FlexLayout Direction="Column">
         <FlexLayout FlexLayout.Grow="1">
             <views:NavBarView FlexLayout.Basis="44" />
-            <ScrollView FlexLayout.Grow="1" Padding="14">
+            <ScrollView FlexLayout.Grow="1" Padding="14" VerticalScrollBarVisibility="Always">
                 <VerticalStackLayout>
                     <HorizontalStackLayout Spacing="14" Padding="0,0,0,7">
                         <Label Text="Hub" WidthRequest="120" />
@@ -42,22 +59,58 @@
                         <Label Text="Indices" IsVisible="{Binding IsRunning}" />
                         <fasciculus:WorkStateLabel Source="{Binding IndustryIndicesState}" WidthRequest="100" IsVisible="{Binding IsRunning}" />
                     </HorizontalStackLayout>
-                    <HorizontalStackLayout Spacing="14" Padding="0,14,0,4" IsVisible="{Binding HasProductions}">
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout Spacing="14">
-                        <CollectionView ItemsSource="{Binding Productions}">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="models:EveProduction">
-                                    <HorizontalStackLayout Spacing="14" Padding="0,3,0,4">
-                                        <Label Text="{Binding Name}" WidthRequest="260" />
-                                        <controls:IskLabel Value="{Binding Cost}" WidthRequest="80" />
-                                        <controls:IskLabel Value="{Binding Income}" WidthRequest="80" />
-                                        <controls:IskLabel Value="{Binding Profit}" WidthRequest="80" />
-                                        <Label Text="{Binding Margin, StringFormat='{0:F1} %'}" HorizontalTextAlignment="End" WidthRequest="60" />
-                                    </HorizontalStackLayout>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
+                    <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
+                        <VerticalStackLayout>
+                            <HorizontalStackLayout Spacing="14">
+                                <Label Text="Product" FontAttributes="Bold" WidthRequest="260" />
+                                <Label Text="Cost" FontAttributes="Bold" WidthRequest="80" HorizontalTextAlignment="End" />
+                                <Label Text="Income" FontAttributes="Bold" WidthRequest="80" HorizontalTextAlignment="End" />
+                                <Label Text="Profit" FontAttributes="Bold" WidthRequest="80" HorizontalTextAlignment="End" />
+                            </HorizontalStackLayout>
+                            <CollectionView ItemsSource="{Binding Productions}" SelectionMode="Single" SelectedItem="{Binding Production}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:EveProduction">
+                                        <HorizontalStackLayout Spacing="14" Padding="0,3,0,4">
+                                            <Label Text="{Binding Name}" WidthRequest="260" />
+                                            <controls:IskLabel Value="{Binding Cost}" WidthRequest="80" />
+                                            <controls:IskLabel Value="{Binding Income}" WidthRequest="80" />
+                                            <controls:IskLabel Value="{Binding Profit}" WidthRequest="80" />
+                                            <Label Text="{Binding Margin, StringFormat='{0:F1} %'}" HorizontalTextAlignment="End" WidthRequest="60" />
+                                        </HorizontalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout IsVisible="{Binding HasProductions}" Padding="40,3,0,0" Spacing="7">
+                            <HorizontalStackLayout Spacing="14">
+                                <Label Text="Blueprint Price:" WidthRequest="120" />
+                                <controls:IskLabel Value="{Binding BlueprintPrice}" WidthRequest="120" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
+                                <Label Text="Runs:" WidthRequest="120" />
+                                <Label Text="{Binding Runs}" WidthRequest="120" HorizontalTextAlignment="End" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="14">
+                                <Label Text="Job Cost:" WidthRequest="120" />
+                                <controls:IskLabel Value="{Binding JobCost}" WidthRequest="120" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
+                                <Label Text="Input" FontAttributes="Bold" WidthRequest="120" />
+                                <Label Text="Quantity" FontAttributes="Bold" WidthRequest="120" HorizontalTextAlignment="End" />
+                                <Label Text="Cost" FontAttributes="Bold" WidthRequest="120" HorizontalTextAlignment="End" />
+                            </HorizontalStackLayout>
+                            <CollectionView ItemsSource="{Binding Inputs}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:EveProductionInput">
+                                        <HorizontalStackLayout Spacing="14" Padding="0,3,0,4">
+                                            <Label Text="{Binding Type.Name}" WidthRequest="120" />
+                                            <controls:IskLabel Value="{Binding Quantity}" WidthRequest="120" />
+                                            <controls:IskLabel Value="{Binding Cost}" WidthRequest="120" />
+                                        </HorizontalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
