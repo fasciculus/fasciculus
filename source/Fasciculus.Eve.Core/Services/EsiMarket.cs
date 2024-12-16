@@ -25,7 +25,9 @@ namespace Fasciculus.Eve.Services
 
                     if (esiMarketPrices.Length > 0)
                     {
-                        EveMarketPrice.Data[] prices = [.. esiMarketPrices.Select(ConvertMarketPrice)];
+                        EveMarketPrice.Data[] prices = [.. esiMarketPrices
+                            .Select(ConvertMarketPrice)
+                            .Where(x => types.Contains(x.TypeId))];
 
                         data = new(prices);
                         esiCache.SetMarketPrices(data);
@@ -93,7 +95,9 @@ namespace Fasciculus.Eve.Services
 
             if (esiOrders.Length > 0)
             {
-                EveMarketOrder.Data[] orders = [.. esiOrders.Select(ConvertMarketOrder)];
+                EveMarketOrder.Data[] orders = [.. esiOrders
+                    .Select(ConvertMarketOrder)
+                    .Where(x => stations.Contains(x.Location) && types.Contains(x.Type))];
 
                 return new(orders);
             }

@@ -26,14 +26,14 @@ namespace Fasciculus.Eve.Services
 
         private readonly TaskSafeMutex mutex = new();
 
-        public EsiClient(IEsiCache esiCache, IEsiHttp esiHttp, IDataProvider data, IUniverseProvider universe)
+        public EsiClient(IEsiCache esiCache, IEsiHttp esiHttp, IEveProvider provider)
         {
             this.esiCache = esiCache;
             this.esiHttp = esiHttp;
 
-            types = data.Types;
-            solarSystems = universe.SolarSystems;
-            stations = universe.Stations;
+            types = provider.Types;
+            solarSystems = provider.SolarSystems;
+            stations = provider.Stations;
         }
     }
 }
