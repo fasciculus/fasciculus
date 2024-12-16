@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Maui.Support;
 using Fasciculus.Support;
 using Fasciculus.Threading;
 using System;
@@ -17,6 +18,7 @@ namespace Fasciculus.Eve.Services
 
         public LongProgressInfo BuyProgressInfo { get; }
         public LongProgressInfo SellProgressInfo { get; }
+        public WorkState MarketPricesState { get; }
 
         public EveProduction[] Productions { get; }
 
@@ -43,6 +45,9 @@ namespace Fasciculus.Eve.Services
 
         [ObservableProperty]
         private LongProgressInfo sellProgressInfo = LongProgressInfo.Start;
+
+        [ObservableProperty]
+        private WorkState marketPricesState = WorkState.Pending;
 
         private readonly AccumulatingLongProgress buyProgress;
         private readonly AccumulatingLongProgress sellProgress;
@@ -82,10 +87,15 @@ namespace Fasciculus.Eve.Services
 
         private void Start()
         {
+            MarketPricesState = WorkState.Working;
+
             EveRegionBuyOrders? regionBuyOrders = Tasks.Wait(esiClient.GetRegionBuyOrdersAsync(hubRegion, buyProgress));
             EveRegionSellOrders? regionSellOrders = Tasks.Wait(esiClient.GetRegionSellOrdersAsync(hubRegion, sellProgress));
 
-            if (regionBuyOrders is null || regionSellOrders is null)
+            EveMarketPrices? marketPrices = Tasks.Wait(esiClient.GetMarketPricesAsync());
+            MarketPricesState = WorkState.Done;
+
+            if (regionBuyOrders is null || regionSellOrders is null || marketPrices is null)
             {
                 return;
             }

@@ -4,6 +4,7 @@ using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Eve.Support;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Maui.Support;
 using Fasciculus.Support;
 using System.ComponentModel;
 
@@ -40,6 +41,9 @@ namespace Fasciculus.Eve.PageModels
 
         [ObservableProperty]
         private LongProgressInfo sellProgress = LongProgressInfo.Start;
+
+        [ObservableProperty]
+        private WorkState marketPricesState = WorkState.Pending;
 
         [ObservableProperty]
         private bool isRunning = false;
@@ -79,6 +83,9 @@ namespace Fasciculus.Eve.PageModels
         {
             BuyProgress = industry.BuyProgressInfo;
             SellProgress = industry.SellProgressInfo;
+
+            MarketPricesState = industry.MarketPricesState;
+
             Productions = industry.Productions;
             HasProductions = Productions.Length > 0;
         }
