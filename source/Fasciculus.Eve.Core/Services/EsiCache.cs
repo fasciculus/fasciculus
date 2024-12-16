@@ -15,6 +15,9 @@ namespace Fasciculus.Eve.Services
 
         public EveRegionOrders.Data? GetRegionSellOrders(EveRegion region);
         public void SetRegionSellOrders(EveRegion region, EveRegionOrders.Data data);
+
+        public EveIndustryIndices.Data? GetIndustryIndices();
+        public void SetIndustryIndices(EveIndustryIndices.Data data);
     }
 
     public class EsiCache : IEsiCache
@@ -22,18 +25,22 @@ namespace Fasciculus.Eve.Services
 #if DEBUG
         public static readonly TimeSpan MarketPricesMaxAge = TimeSpan.FromSeconds(360000);
         public static readonly TimeSpan MarketOrdersMaxAge = TimeSpan.FromSeconds(360000);
+        public static readonly TimeSpan IndustryIndicesMaxAge = TimeSpan.FromSeconds(360000);
 #else
         public static readonly TimeSpan MarketPricesMaxAge = TimeSpan.FromSeconds(3600);
         public static readonly TimeSpan MarketOrdersMaxAge = TimeSpan.FromSeconds(300);
+        public static readonly TimeSpan IndustryIndicesMaxAge = TimeSpan.FromSeconds(3600);
 #endif
 
         private readonly TaskSafeMutex mutex = new();
 
         private readonly DirectoryInfo marketDirectory;
+        private readonly DirectoryInfo industryDirectory;
 
         public EsiCache(IEveFileSystem fileSystem)
         {
             marketDirectory = fileSystem.EsiCache.Combine("Market").CreateIfNotExists();
+            industryDirectory = fileSystem.EsiCache.Combine("Industry").CreateIfNotExists();
         }
 
         private FileInfo GetMarketPricesFile()
@@ -62,6 +69,15 @@ namespace Fasciculus.Eve.Services
 
         public void SetRegionSellOrders(EveRegion region, EveRegionOrders.Data data)
             => Write(GetRegionSellOrdersFile(region), data.Write);
+
+        private FileInfo GetIndustryIndicesFile()
+            => industryDirectory.File("IndustryIndices");
+
+        public EveIndustryIndices.Data? GetIndustryIndices()
+            => Read(GetIndustryIndicesFile(), IndustryIndicesMaxAge, s => new EveIndustryIndices.Data(s));
+
+        public void SetIndustryIndices(EveIndustryIndices.Data data)
+            => Write(GetIndustryIndicesFile(), data.Write);
 
         private T? Read<T>(FileInfo file, TimeSpan maxAge, Func<Stream, T> read)
             where T : notnull

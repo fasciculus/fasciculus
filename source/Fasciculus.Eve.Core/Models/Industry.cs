@@ -7,6 +7,40 @@ using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
+    public class EveIndustryIndices
+    {
+        public class Data
+        {
+            private readonly Dictionary<int, double> indices;
+            public IReadOnlyDictionary<int, double> Indices => indices;
+
+            public Data(IReadOnlyDictionary<int, double> indices)
+            {
+                this.indices = new(indices);
+            }
+
+            public Data(Stream stream)
+            {
+                indices = stream.ReadDictionary(s => s.ReadInt(), s => s.ReadDouble());
+            }
+
+            public void Write(Stream stream)
+            {
+                stream.WriteDictionary(indices, stream.WriteInt, stream.WriteDouble);
+            }
+        }
+
+        private readonly Data data;
+
+        public double this[EveSolarSystem solarSystem]
+            => data.Indices.TryGetValue(solarSystem.Id, out double value) ? value : 0;
+
+        public EveIndustryIndices(Data data)
+        {
+            this.data = data;
+        }
+    }
+
     public class EveMaterial
     {
         public class Data
@@ -55,7 +89,7 @@ namespace Fasciculus.Eve.Models
             private EveMaterial.Data[] materials;
             public IReadOnlyList<EveMaterial.Data> Materials => materials;
 
-            private EveMaterial.Data[] products;
+            private readonly EveMaterial.Data[] products;
             public IReadOnlyList<EveMaterial.Data> Products => products;
 
             private EveSkill.Data[] skills;
@@ -208,6 +242,7 @@ namespace Fasciculus.Eve.Models
     public class EveProduction
     {
         public EveBlueprint Blueprint { get; }
+        public double BlueprintPrice { get; }
 
         private readonly EveProductionInput[] inputs;
         public IReadOnlyList<EveProductionInput> Inputs => inputs;
@@ -217,19 +252,28 @@ namespace Fasciculus.Eve.Models
 
         public string Name => outputs.Length > 0 ? outputs[0].Type.Name : Blueprint.Type.Name;
 
+        public int Runs { get; }
+        public double MaterialCost { get; }
+        public double JobCost { get; }
         public double Cost { get; }
         public double Income { get; }
         public double Profit { get; }
         public double Margin { get; }
 
-        public EveProduction(EveBlueprint blueprint, IEnumerable<EveProductionInput> inputs, IEnumerable<EveProductionOutput> outputs)
+        public EveProduction(EveBlueprint blueprint, double blueprintPrice, int runs,
+            IEnumerable<EveProductionInput> inputs, IEnumerable<EveProductionOutput> outputs,
+            double jobCost)
         {
             Blueprint = blueprint;
+            BlueprintPrice = blueprintPrice;
+            Runs = runs;
 
             this.inputs = inputs.ToArray();
             this.outputs = outputs.ToArray();
 
-            Cost = inputs.Sum(x => x.Cost);
+            MaterialCost = inputs.Sum(x => x.Cost);
+            JobCost = jobCost;
+            Cost = MaterialCost + JobCost;
             Income = outputs.Sum(x => x.Income);
             Profit = Income - Cost;
             Margin = Profit / Math.Max(1, Cost) * 100;

@@ -46,6 +46,9 @@ namespace Fasciculus.Eve.PageModels
         private WorkState marketPricesState = WorkState.Pending;
 
         [ObservableProperty]
+        private WorkState industryIndicesState = WorkState.Pending;
+
+        [ObservableProperty]
         private bool isRunning = false;
 
         [ObservableProperty]
@@ -85,6 +88,7 @@ namespace Fasciculus.Eve.PageModels
             SellProgress = industry.SellProgressInfo;
 
             MarketPricesState = industry.MarketPricesState;
+            IndustryIndicesState = industry.IndustryIndicesState;
 
             Productions = industry.Productions;
             HasProductions = Productions.Length > 0;

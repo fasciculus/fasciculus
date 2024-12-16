@@ -290,6 +290,21 @@ namespace Fasciculus.Eve.Models
             byStation = new(FetchByStation, true);
         }
 
+        public double PriceFor(int quantity)
+        {
+            EveSupply[] supplies = byStation.Value.Keys
+                .Where(x => x.Moon.Planet.SolarSystem.Security >= 0.5)
+                .Select(x => this[x])
+                .ToArray();
+
+            if (supplies.Length > 0)
+            {
+                return supplies.Select(x => x.PriceFor(quantity)).Min();
+            }
+
+            return double.MaxValue;
+        }
+
         private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
         {
             return orders.GroupBy(x => x.Location)

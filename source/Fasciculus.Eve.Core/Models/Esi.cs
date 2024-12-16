@@ -28,4 +28,22 @@ namespace Fasciculus.Eve.Models
         [JsonPropertyName("volume_remain")]
         public int Quantity { get; set; }
     }
+
+    public class EsiIndustryCostIndex
+    {
+        [JsonPropertyName("activity")]
+        public string Activity { get; set; } = string.Empty;
+
+        [JsonPropertyName("cost_index")]
+        public double CostIndex { get; set; }
+    }
+
+    public class EsiIndustrySystem
+    {
+        [JsonPropertyName("solar_system_id")]
+        public int SolarSystem { get; set; }
+
+        [JsonPropertyName("cost_indices")]
+        public EsiIndustryCostIndex[] CostIndices { get; set; } = [];
+    }
 }

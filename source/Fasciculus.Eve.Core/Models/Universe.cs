@@ -465,6 +465,7 @@ namespace Fasciculus.Eve.Models
 
         public int Id => data.Id;
         public string Name => data.Name;
+        public double Security => data.Security;
 
         public EveConstellation Constellation { get; }
 
@@ -491,6 +492,8 @@ namespace Fasciculus.Eve.Models
         private readonly Lazy<Dictionary<string, EveSolarSystem>> byName;
 
         public int Count => solarSystems.Length;
+
+        public bool Contains(int id) => byId.Value.ContainsKey(id);
 
         public EveSolarSystem this[int id] => byId.Value[id];
         public EveSolarSystem this[string name] => byName.Value[name];

@@ -11,6 +11,8 @@ namespace Fasciculus.Eve.Services
 
         public Task<EveRegionBuyOrders?> GetRegionBuyOrdersAsync(EveRegion region, IAccumulatingLongProgress progress);
         public Task<EveRegionSellOrders?> GetRegionSellOrdersAsync(EveRegion region, IAccumulatingLongProgress progress);
+
+        public Task<EveIndustryIndices?> GetIndustryIndicesAsync();
     }
 
     public partial class EsiClient : IEsiClient
@@ -19,6 +21,7 @@ namespace Fasciculus.Eve.Services
         private readonly IEsiHttp esiHttp;
 
         private readonly EveTypes types;
+        private readonly EveSolarSystems solarSystems;
         private readonly EveStations stations;
 
         private readonly TaskSafeMutex mutex = new();
@@ -29,6 +32,7 @@ namespace Fasciculus.Eve.Services
             this.esiHttp = esiHttp;
 
             types = data.Types;
+            solarSystems = universe.SolarSystems;
             stations = universe.Stations;
         }
     }

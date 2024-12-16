@@ -19,6 +19,7 @@ namespace Fasciculus.Eve.Services
         public LongProgressInfo BuyProgressInfo { get; }
         public LongProgressInfo SellProgressInfo { get; }
         public WorkState MarketPricesState { get; }
+        public WorkState IndustryIndicesState { get; }
 
         public EveProduction[] Productions { get; }
 
@@ -48,6 +49,9 @@ namespace Fasciculus.Eve.Services
 
         [ObservableProperty]
         private WorkState marketPricesState = WorkState.Pending;
+
+        [ObservableProperty]
+        private WorkState industryIndicesState = WorkState.Pending;
 
         private readonly AccumulatingLongProgress buyProgress;
         private readonly AccumulatingLongProgress sellProgress;
@@ -87,46 +91,61 @@ namespace Fasciculus.Eve.Services
 
         private void Start()
         {
-            MarketPricesState = WorkState.Working;
+            Reset();
+
+            MarketPricesState = WorkState.Pending;
+            IndustryIndicesState = WorkState.Pending;
 
             EveRegionBuyOrders? regionBuyOrders = Tasks.Wait(esiClient.GetRegionBuyOrdersAsync(hubRegion, buyProgress));
             EveRegionSellOrders? regionSellOrders = Tasks.Wait(esiClient.GetRegionSellOrdersAsync(hubRegion, sellProgress));
 
+            MarketPricesState = WorkState.Working;
             EveMarketPrices? marketPrices = Tasks.Wait(esiClient.GetMarketPricesAsync());
             MarketPricesState = WorkState.Done;
 
-            if (regionBuyOrders is null || regionSellOrders is null || marketPrices is null)
+            IndustryIndicesState = WorkState.Working;
+            EveIndustryIndices? industryIndices = Tasks.Wait(esiClient.GetIndustryIndicesAsync());
+            IndustryIndicesState = WorkState.Done;
+
+            if (regionBuyOrders is null || regionSellOrders is null || marketPrices is null || industryIndices is null)
             {
                 return;
             }
 
-            EveBlueprint[] candidates = GetCandidates(regionSellOrders);
+            EveBlueprint[] candidates = GetCandidates(regionSellOrders, marketPrices);
             EveStationBuyOrders buyOrders = regionBuyOrders[Hub];
             EveStationSellOrders sellOrders = regionSellOrders[Hub];
-            EveProduction[] productions = CreateProductions(candidates, sellOrders, buyOrders);
+            double systemCostIndex = industryIndices[Hub.Moon.Planet.SolarSystem];
+            EveProduction[] productions = CreateProductions(candidates, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex);
             int count = Math.Min(20, productions.Length);
 
             Productions = productions.OrderByDescending(x => x.Profit).Take(count).ToArray();
         }
 
-        private static EveProduction[] CreateProductions(IEnumerable<EveBlueprint> blueprints,
-            EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders)
+        private static EveProduction[] CreateProductions(EveBlueprint[] blueprints,
+            EveRegionSellOrders regionSellOrders,
+            EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
+            EveMarketPrices marketPrices, double systemCostIndex)
         {
             return blueprints
-                .Select(x => CreateProduction(x, sellOrders, buyOrders))
-                .Where(x => x.Cost < 1_000_000_000)
+                .Select(x => CreateProduction(x, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex))
+                //.Where(x => x.Cost < 1_000_000_000)
                 .Where(x => x.Income < 1_000_000_000)
                 .ToArray();
         }
 
-        private static EveProduction CreateProduction(EveBlueprint blueprint, EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders)
+        private static EveProduction CreateProduction(EveBlueprint blueprint, EveRegionSellOrders regionSellOrders,
+            EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
+            EveMarketPrices marketPrices, double systemCostIndex)
         {
+            double blueprintPrice = GetBlueprintPrice(blueprint, regionSellOrders, marketPrices);
             EveManufacturing manufacturing = blueprint.Manufacturing;
             int runs = Math.Min(blueprint.MaxRuns, SecondsPerDay / manufacturing.Time);
             EveProductionInput[] inputs = CreateInputs(manufacturing.Materials, runs, sellOrders);
             EveProductionOutput[] outputs = CreateOutputs(manufacturing.Products, runs, buyOrders);
+            double jobCost = GetJobCost(inputs, marketPrices, systemCostIndex);
 
-            return new(blueprint, inputs, outputs);
+            return new(blueprint, blueprintPrice, runs, inputs, outputs, jobCost);
         }
 
         private static EveProductionInput[] CreateInputs(IEnumerable<EveMaterial> materials, int runs, EveStationSellOrders sellOrders)
@@ -159,14 +178,31 @@ namespace Fasciculus.Eve.Services
             return new(type, quantity, income);
         }
 
-        private EveBlueprint[] GetCandidates(EveRegionSellOrders regionSellOrders)
+        private static double GetBlueprintPrice(EveBlueprint blueprint, EveRegionSellOrders regionSellOrders, EveMarketPrices marketPrices)
+        {
+            EveType type = blueprint.Type;
+            double regionPrice = regionSellOrders[type].PriceFor(1);
+            double averagePrice = marketPrices.Contains(type) ? marketPrices[type].AveragePrice : double.MaxValue;
+
+            return Math.Min(regionPrice, averagePrice);
+        }
+
+        private static double GetJobCost(EveProductionInput[] inputs, EveMarketPrices marketPrices, double systemCostIndex)
+        {
+            double itemValue = inputs.Select(x => x.Quantity * marketPrices[x.Type].AdjustedPrice).Sum();
+
+            return itemValue * (systemCostIndex + 0.0025 + 0.04);
+        }
+
+        private EveBlueprint[] GetCandidates(EveRegionSellOrders regionSellOrders, EveMarketPrices marketPrices)
         {
             int maxVolume = settings.MaxVolume;
 
             return blueprints
                 .Where(x => x.Manufacturing.Time <= SecondsPerDay)
-                .Where(x => regionSellOrders[x.Type].Count > 0)
+                .Where(x => regionSellOrders[x.Type].Count > 0 || marketPrices.Contains(x.Type))
                 .Where(x => x.Manufacturing.Products.All(y => y.Type.Volume <= maxVolume))
+                .Where(x => x.Manufacturing.Materials.All(y => marketPrices.Contains(y.Type)))
                 .Where(x => skills.Fulfills(x.Manufacturing.RequiredSkills))
                 .ToArray();
         }

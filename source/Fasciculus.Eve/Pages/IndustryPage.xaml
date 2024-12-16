@@ -39,6 +39,8 @@
                         <fasciculus:LongProgressInfoBar Source="{Binding SellProgress}" WidthRequest="100" IsVisible="{Binding IsRunning}" />
                         <Label Text="Estimates" IsVisible="{Binding IsRunning}" />
                         <fasciculus:WorkStateLabel Source="{Binding MarketPricesState}" WidthRequest="100" IsVisible="{Binding IsRunning}" />
+                        <Label Text="Indices" IsVisible="{Binding IsRunning}" />
+                        <fasciculus:WorkStateLabel Source="{Binding IndustryIndicesState}" WidthRequest="100" IsVisible="{Binding IsRunning}" />
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="14" Padding="0,14,0,4" IsVisible="{Binding HasProductions}">
                     </HorizontalStackLayout>
