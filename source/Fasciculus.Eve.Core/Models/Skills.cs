@@ -11,6 +11,7 @@ namespace Fasciculus.Eve.Models
     public interface ISkill
     {
         public EveType Type { get; }
+        public string MarketGroup { get; }
         public string Name { get; }
         public int Level { get; }
 
@@ -84,6 +85,7 @@ namespace Fasciculus.Eve.Models
         private readonly Data data;
 
         public EveType Type { get; }
+        public string MarketGroup => Type.MarketGroup?.Name ?? string.Empty;
         public string Name => Type.Name;
         public int Level => data.Level;
 
@@ -123,6 +125,7 @@ namespace Fasciculus.Eve.Models
     public partial class EveMutableSkill : ObservableObject, IMutableSkill
     {
         public EveType Type { get; }
+        public string MarketGroup => Type.MarketGroup?.Name ?? string.Empty;
         public string Name => Type.Name;
 
         [ObservableProperty]

@@ -21,7 +21,7 @@
                         <Label Text="" WidthRequest="34" />
                         <Label Text="Importance" FontAttributes="Bold" />
                     </HorizontalStackLayout>
-                    <CollectionView ItemsSource="{Binding Skills}">
+                    <CollectionView ItemsSource="{Binding Skills}" VerticalScrollBarVisibility="Always">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:ISkillInfo">
                                 <HorizontalStackLayout Spacing="14">
@@ -32,6 +32,7 @@
                                         <Button Text="+" IsEnabled="{Binding CanIncrement}" Command="{Binding IncrementCommand}" HeightRequest="16" WidthRequest="16" />
                                     </HorizontalStackLayout>
                                     <Label Text="{Binding Affects}" WidthRequest="50" HorizontalTextAlignment="End" />
+                                    <Label Text="{Binding MarketGroup}" />
                                 </HorizontalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
