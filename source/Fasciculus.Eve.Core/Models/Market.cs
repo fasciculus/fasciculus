@@ -136,13 +136,18 @@ namespace Fasciculus.Eve.Models
         internal readonly Data data;
 
         public int Type => data.Type;
-        public long Location => data.Location;
         public double Price => data.Price;
         public int Quantity => data.Quantity;
 
-        public EveMarketOrder(Data data)
+        public EveStation Station { get; }
+        public double Security { get; }
+
+        public EveMarketOrder(Data data, EveStations stations)
         {
             this.data = data;
+
+            Station = stations[data.Location];
+            Security = Station.Security;
         }
     }
 
@@ -200,7 +205,7 @@ namespace Fasciculus.Eve.Models
             => byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : [];
 
         private EveMarketOrder[] FetchOrders()
-            => [.. data.Orders.Select(x => new EveMarketOrder(x))];
+            => [.. data.Orders.Where(x => stations.Contains(x.Location)).Select(x => new EveMarketOrder(x, stations))];
 
         private Dictionary<EveType, EveMarketOrder[]> FetchByType()
         {
@@ -212,9 +217,8 @@ namespace Fasciculus.Eve.Models
 
         private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
         {
-            return orders.Value.GroupBy(x => x.Location)
-                .Where(x => stations.Contains(x.Key))
-                .Select(x => Tuple.Create(stations[x.Key], x.ToArray()))
+            return orders.Value.GroupBy(x => x.Station)
+                .Select(x => Tuple.Create(x.Key, x.ToArray()))
                 .ToDictionary();
         }
     }
@@ -261,9 +265,8 @@ namespace Fasciculus.Eve.Models
 
         private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
         {
-            return orders.GroupBy(x => x.Location)
-                .Where(x => stations.Contains(x.Key))
-                .Select(x => Tuple.Create(stations[x.Key], x.ToArray()))
+            return orders.GroupBy(x => x.Station)
+                .Select(x => Tuple.Create(x.Key, x.ToArray()))
                 .ToDictionary();
         }
     }
@@ -307,9 +310,8 @@ namespace Fasciculus.Eve.Models
 
         private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
         {
-            return orders.GroupBy(x => x.Location)
-                .Where(x => stations.Contains(x.Key))
-                .Select(x => Tuple.Create(stations[x.Key], x.ToArray()))
+            return orders.GroupBy(x => x.Station)
+                .Select(x => Tuple.Create(x.Key, x.ToArray()))
                 .ToDictionary();
         }
     }
