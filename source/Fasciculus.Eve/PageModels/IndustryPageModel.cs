@@ -53,6 +53,9 @@ namespace Fasciculus.Eve.PageModels
         private int runs;
 
         [ObservableProperty]
+        private string runsPerDay = string.Empty;
+
+        [ObservableProperty]
         private double jobCost;
 
         [ObservableProperty]
@@ -178,6 +181,7 @@ namespace Fasciculus.Eve.PageModels
             {
                 BlueprintPrice = 0;
                 Runs = 0;
+                RunsPerDay = "0.00";
                 JobCost = 0;
                 SalesTax = 0;
                 OutputVolume = 0;
@@ -190,6 +194,7 @@ namespace Fasciculus.Eve.PageModels
                 SalesTax = Production.SalesTax;
                 OutputVolume = Production.OutputVolume;
                 Runs = Production.Runs;
+                RunsPerDay = Production.RunsPerDay.ToString("0.00");
                 Inputs = [.. Production.Inputs];
             }
 

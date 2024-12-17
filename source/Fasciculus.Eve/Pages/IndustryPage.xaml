@@ -100,6 +100,8 @@
                             <HorizontalStackLayout Spacing="14">
                                 <Label Text="Runs:" WidthRequest="120" />
                                 <Label Text="{Binding Runs}" WidthRequest="120" HorizontalTextAlignment="End" />
+                                <Label Text="per Day:" />
+                                <Label Text="{Binding RunsPerDay}" />
                             </HorizontalStackLayout>
                             <HorizontalStackLayout Spacing="14">
                                 <Label Text="Job Cost:" WidthRequest="120" />
