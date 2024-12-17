@@ -12,10 +12,10 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private string sdeVersion;
 
-        public InfoPageModel(IDataProvider data)
+        public InfoPageModel(IEveProvider provider)
         {
             applicationVersion = Assembly.GetEntryAssembly().GetVersion();
-            sdeVersion = data.Version.ToString("yyyy-MM-dd");
+            sdeVersion = provider.Version.ToString("yyyy-MM-dd");
         }
     }
 }

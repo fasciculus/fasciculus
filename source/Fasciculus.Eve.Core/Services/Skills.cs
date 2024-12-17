@@ -27,11 +27,11 @@ namespace Fasciculus.Eve.Services
         IEnumerable<IMutableSkill> IMutableSkillProvider.Skills => skills.Skills;
         IEnumerable<ISkill> ISkillProvider.Skills => skills.Skills;
 
-        public SkillManager(IEveFileSystem fileSystem, IDataProvider data)
+        public SkillManager(IEveFileSystem fileSystem, IEveProvider provider)
         {
             this.fileSystem = fileSystem;
 
-            skills = LoadSkills(fileSystem.SkillSettings, GetSkillConsumers(data));
+            skills = LoadSkills(fileSystem.SkillSettings, GetSkillConsumers(provider));
             skills.PropertyChanged += OnSkillsChanged;
         }
 
@@ -68,7 +68,7 @@ namespace Fasciculus.Eve.Services
         public bool Fulfills(IEnumerable<ISkill> requiredSkills)
             => skills.Fulfills(requiredSkills);
 
-        private static IEnumerable<ISkillConsumer> GetSkillConsumers(IDataProvider data)
-            => data.Blueprints.Select(x => x.Manufacturing);
+        private static IEnumerable<ISkillConsumer> GetSkillConsumers(IEveProvider provider)
+            => provider.Blueprints.Select(x => x.Manufacturing);
     }
 }

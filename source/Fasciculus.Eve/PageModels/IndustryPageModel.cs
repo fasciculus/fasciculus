@@ -72,7 +72,7 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private bool notRunning = true;
 
-        public IndustryPageModel(IEveSettings settings, IUniverseProvider universe, IIndustry industry)
+        public IndustryPageModel(IEveSettings settings, IEveProvider provider, IIndustry industry)
         {
             this.settings = settings.IndustrySettings;
             this.settings.PropertyChanged += OnSettingsChanged;
@@ -82,7 +82,7 @@ namespace Fasciculus.Eve.PageModels
 
             hub = industry.Hub.FullName;
 
-            solarSystems = [.. universe.SolarSystems.Select(x => x.Name).OrderBy(x => x)];
+            solarSystems = [.. provider.SolarSystems.Select(x => x.Name).OrderBy(x => x)];
             selectedSolarSystem = this.settings.SolarSystem;
 
             haulers = [.. EveHaulers.Values.Select(x => x.Caption())];

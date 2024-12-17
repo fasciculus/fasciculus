@@ -26,6 +26,7 @@ namespace Fasciculus.Eve
             services.TryAddSingleton<IDataProvider, DataProvider>();
             services.TryAddSingleton<IUniverseProvider, UniverseProvider>();
             services.TryAddSingleton<INavigationProvider, NavigationProvider>();
+            services.TryAddSingleton<IEveProvider, EveProvider>();
 
             services.TryAddSingleton<SkillManager>();
             services.TryAddSingleton<ISkillManager>(x => x.GetRequiredService<SkillManager>());

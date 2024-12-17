@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -135,23 +136,67 @@ namespace Fasciculus.Eve.Models
 
         internal readonly Data data;
 
-        public int Type => data.Type;
         public double Price => data.Price;
         public int Quantity => data.Quantity;
 
+        public EveType Type { get; }
         public EveStation Station { get; }
         public double Security { get; }
 
-        public EveMarketOrder(Data data, EveStations stations)
+        public EveMarketOrder(Data data, EveTypes types, EveStations stations)
         {
             this.data = data;
 
+            Type = types[data.Type];
             Station = stations[data.Location];
             Security = Station.Security;
         }
     }
 
-    public abstract class EveRegionOrders
+    public abstract class EveMarketOrders : IEnumerable<EveMarketOrder>
+    {
+        private readonly EveMarketOrder[] orders;
+
+        private readonly Lazy<Dictionary<EveType, EveMarketOrder[]>> byType;
+        private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
+
+        public int Count => orders.Length;
+
+        protected EveMarketOrders(EveMarketOrder[] orders)
+        {
+            this.orders = orders;
+
+            byType = new(FetchByType, true);
+            byStation = new(FetchByStation, true);
+        }
+
+        public IEnumerator<EveMarketOrder> GetEnumerator()
+            => orders.AsEnumerable().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => orders.GetEnumerator();
+
+        protected EveMarketOrder[] OfType(EveType type)
+            => byType.Value.TryGetValue(type, out EveMarketOrder[]? orders) ? orders : [];
+
+        protected EveMarketOrder[] OfStation(EveStation station)
+            => byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : [];
+
+        protected EveMarketOrder[] OfSecurity(EveSecurity.Level level)
+        {
+            EveSecurity.Filter filter = EveSecurity.Filters[level];
+
+            return orders.Where(x => filter(x.Security)).ToArray();
+        }
+
+        private Dictionary<EveType, EveMarketOrder[]> FetchByType()
+            => orders.GroupBy(x => x.Type).ToDictionary(x => x.Key, x => x.ToArray());
+
+        private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
+            => orders.GroupBy(x => x.Station).ToDictionary(x => x.Key, x => x.ToArray());
+    }
+
+    public abstract class EveRegionOrders : EveMarketOrders
     {
         public class Data
         {
@@ -174,116 +219,75 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        protected readonly EveTypes types;
-        protected readonly EveStations stations;
-
-        private readonly EveMarketOrder[] orders;
-        private readonly Lazy<Dictionary<EveType, EveMarketOrder[]>> byType;
-        private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
-
-        public int Count => orders.Length;
-
         protected EveRegionOrders(Data data, EveTypes types, EveStations stations)
+            : this(FetchOrders(data, types, stations)) { }
+
+        protected EveRegionOrders(EveMarketOrder[] orders)
+            : base(orders) { }
+
+        private static EveMarketOrder[] FetchOrders(Data data, EveTypes types, EveStations stations)
         {
-            this.types = types;
-            this.stations = stations;
-
-            orders = FetchOrders(data, stations);
-            byType = new(FetchByType, true);
-            byStation = new(FetchByStation, true);
-        }
-
-        protected EveMarketOrder[] GetOrders(EveType type)
-            => byType.Value.TryGetValue(type, out EveMarketOrder[]? orders) ? orders : [];
-
-        protected EveMarketOrder[] GetOrders(EveStation station)
-            => byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : [];
-
-        private static EveMarketOrder[] FetchOrders(Data data, EveStations stations)
-            => [.. data.Orders.Where(x => stations.Contains(x.Location)).Select(x => new EveMarketOrder(x, stations))];
-
-        private Dictionary<EveType, EveMarketOrder[]> FetchByType()
-        {
-            return orders.GroupBy(x => x.Type)
-                .Where(x => types.Contains(x.Key))
-                .Select(x => Tuple.Create(types[x.Key], x.ToArray()))
-                .ToDictionary();
-        }
-
-        private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
-        {
-            return orders.GroupBy(x => x.Station)
-                .Select(x => Tuple.Create(x.Key, x.ToArray()))
-                .ToDictionary();
+            return data.Orders
+                .Where(x => types.Contains(x.Type))
+                .Where(x => stations.Contains(x.Location))
+                .Select(x => new EveMarketOrder(x, types, stations))
+                .ToArray();
         }
     }
 
     public class EveRegionBuyOrders : EveRegionOrders
     {
-        public EveTypeBuyOrders this[EveType type] => new(type, stations, GetOrders(type));
-        public EveStationBuyOrders this[EveStation station] => new(station, types, GetOrders(station));
+        public EveTypeBuyOrders this[EveType type] => new(OfType(type), type);
+        public EveStationBuyOrders this[EveStation station] => new(OfStation(station), station);
+        public EveRegionBuyOrders this[EveSecurity.Level security] => new(OfSecurity(security));
 
         public EveRegionBuyOrders(Data data, EveTypes types, EveStations stations)
             : base(data, types, stations) { }
+
+        private EveRegionBuyOrders(EveMarketOrder[] orders)
+            : base(orders) { }
     }
 
     public class EveRegionSellOrders : EveRegionOrders
     {
-        public EveTypeSellOrders this[EveType type] => new(type, stations, GetOrders(type));
-        public EveStationSellOrders this[EveStation station] => new(station, types, GetOrders(station));
+        public EveTypeSellOrders this[EveType type] => new(OfType(type), type);
+        public EveStationSellOrders this[EveStation station] => new(OfStation(station), station);
+        public EveRegionSellOrders this[EveSecurity.Level security] => new(OfSecurity(security));
 
         public EveRegionSellOrders(Data data, EveTypes types, EveStations stations)
             : base(data, types, stations) { }
+
+        private EveRegionSellOrders(EveMarketOrder[] orders)
+            : base(orders) { }
     }
 
-    public class EveTypeBuyOrders
+    public class EveTypeBuyOrders : EveMarketOrders
     {
         private readonly EveType type;
-        private readonly EveStations stations;
-        private readonly EveMarketOrder[] orders;
-
-        private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
-
-        public int Count => orders.Length;
 
         public EveDemand this[EveStation station]
-            => new(type, station, byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : []);
+            => new(type, station, OfStation(station));
 
-        internal EveTypeBuyOrders(EveType type, EveStations stations, EveMarketOrder[] orders)
+        internal EveTypeBuyOrders(EveMarketOrder[] orders, EveType type)
+            : base(orders)
         {
             this.type = type;
-            this.stations = stations;
-            this.orders = orders;
-
-            byStation = new(FetchByStation, true);
-        }
-
-        private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
-        {
-            return orders.GroupBy(x => x.Station)
-                .Select(x => Tuple.Create(x.Key, x.ToArray()))
-                .ToDictionary();
         }
     }
 
-    public class EveTypeSellOrders
+    public class EveTypeSellOrders : EveMarketOrders
     {
         private readonly EveType type;
-        private readonly EveStations stations;
-        private readonly EveMarketOrder[] orders;
 
         private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
 
-        public int Count => orders.Length;
-
         public EveSupply this[EveStation station]
-            => new(type, station, byStation.Value.TryGetValue(station, out EveMarketOrder[]? orders) ? orders : []);
+            => new(type, station, OfStation(station));
 
-        internal EveTypeSellOrders(EveType type, EveStations stations, EveMarketOrder[] orders)
+        internal EveTypeSellOrders(EveMarketOrder[] orders, EveType type)
+            : base(orders)
         {
             this.type = type;
-            this.stations = stations;
-            this.orders = orders;
 
             byStation = new(FetchByStation, true);
         }
@@ -291,7 +295,6 @@ namespace Fasciculus.Eve.Models
         public double PriceFor(int quantity)
         {
             EveSupply[] supplies = byStation.Value.Keys
-                .Where(x => x.Moon.Planet.SolarSystem.Security >= 0.5)
                 .Select(x => this[x])
                 .ToArray();
 
@@ -304,68 +307,34 @@ namespace Fasciculus.Eve.Models
         }
 
         private Dictionary<EveStation, EveMarketOrder[]> FetchByStation()
-        {
-            return orders.GroupBy(x => x.Station)
-                .Select(x => Tuple.Create(x.Key, x.ToArray()))
-                .ToDictionary();
-        }
+            => this.GroupBy(x => x.Station).ToDictionary(x => x.Key, x => x.ToArray());
     }
 
-    public class EveStationBuyOrders
+    public class EveStationBuyOrders : EveMarketOrders
     {
         private readonly EveStation station;
-        private readonly EveTypes types;
-        private readonly EveMarketOrder[] orders;
-
-        private readonly Lazy<Dictionary<EveType, EveMarketOrder[]>> byType;
 
         public EveDemand this[EveType type]
-            => new(type, station, byType.Value.TryGetValue(type, out EveMarketOrder[]? orders) ? orders : []);
+            => new(type, station, OfType(type));
 
-        internal EveStationBuyOrders(EveStation station, EveTypes types, EveMarketOrder[] orders)
+        internal EveStationBuyOrders(EveMarketOrder[] orders, EveStation station)
+            : base(orders)
         {
             this.station = station;
-            this.types = types;
-            this.orders = orders;
-
-            byType = new(FetchByType, true);
-        }
-
-        private Dictionary<EveType, EveMarketOrder[]> FetchByType()
-        {
-            return orders.GroupBy(x => x.Type)
-                .Where(x => types.Contains(x.Key))
-                .Select(x => Tuple.Create(types[x.Key], x.ToArray()))
-                .ToDictionary();
         }
     }
 
-    public class EveStationSellOrders
+    public class EveStationSellOrders : EveMarketOrders
     {
         private readonly EveStation station;
-        private readonly EveTypes types;
-        private readonly EveMarketOrder[] orders;
-
-        private readonly Lazy<Dictionary<EveType, EveMarketOrder[]>> byType;
 
         public EveSupply this[EveType type]
-            => new(type, station, byType.Value.TryGetValue(type, out EveMarketOrder[]? orders) ? orders : []);
+            => new(type, station, OfType(type));
 
-        internal EveStationSellOrders(EveStation station, EveTypes types, EveMarketOrder[] orders)
+        internal EveStationSellOrders(EveMarketOrder[] orders, EveStation station)
+            : base(orders)
         {
             this.station = station;
-            this.types = types;
-            this.orders = orders;
-
-            byType = new(FetchByType, true);
-        }
-
-        private Dictionary<EveType, EveMarketOrder[]> FetchByType()
-        {
-            return orders.GroupBy(x => x.Type)
-                .Where(x => types.Contains(x.Key))
-                .Select(x => Tuple.Create(types[x.Key], x.ToArray()))
-                .ToDictionary();
         }
     }
 
