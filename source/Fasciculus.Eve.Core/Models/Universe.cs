@@ -510,6 +510,8 @@ namespace Fasciculus.Eve.Models
         public EveSolarSystem this[int id] => byId.Value[id];
         public EveSolarSystem this[string name] => byName.Value[name];
 
+        public EveSolarSystems this[EveSecurity.Level level] => new(OfSecurity(level));
+
         public EveSolarSystems(IEnumerable<EveSolarSystem> solarSystems)
         {
             this.solarSystems = solarSystems.ToArray();
@@ -523,6 +525,13 @@ namespace Fasciculus.Eve.Models
 
         IEnumerator IEnumerable.GetEnumerator()
             => solarSystems.GetEnumerator();
+
+        private EveSolarSystem[] OfSecurity(EveSecurity.Level level)
+        {
+            EveSecurity.Filter filter = EveSecurity.Filters[level];
+
+            return solarSystems.Where(x => filter(x.Security)).ToArray();
+        }
     }
 
     [DebuggerDisplay("{Name}")]

@@ -82,7 +82,7 @@ namespace Fasciculus.Eve.PageModels
 
             hub = industry.Hub.FullName;
 
-            solarSystems = [.. provider.SolarSystems.Select(x => x.Name).OrderBy(x => x)];
+            solarSystems = [.. provider.SolarSystems[EveSecurity.Level.High].Select(x => x.Name).OrderBy(x => x)];
             selectedSolarSystem = this.settings.SolarSystem;
 
             haulers = [.. EveHaulers.Values.Select(x => x.Caption())];
