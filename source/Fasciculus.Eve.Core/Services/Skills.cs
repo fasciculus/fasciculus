@@ -27,6 +27,10 @@ namespace Fasciculus.Eve.Services
         IEnumerable<IMutableSkill> IMutableSkillProvider.Skills => skills.Skills;
         IEnumerable<ISkill> ISkillProvider.Skills => skills.Skills;
 
+        public ISkillInfo this[EveType type] => skills[type];
+        IMutableSkill IMutableSkillProvider.this[EveType type] => skills[type];
+        ISkill ISkillProvider.this[EveType type] => skills[type];
+
         public SkillManager(IEveFileSystem fileSystem, IEveProvider provider)
         {
             this.fileSystem = fileSystem;

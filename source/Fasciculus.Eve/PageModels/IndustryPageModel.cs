@@ -14,6 +14,7 @@ namespace Fasciculus.Eve.PageModels
     {
         private readonly EveIndustrySettings settings;
         private readonly IIndustry industry;
+        private readonly ISkillProvider skillProvider;
 
         [ObservableProperty]
         private string hub;
@@ -55,6 +56,9 @@ namespace Fasciculus.Eve.PageModels
         private EveProductionInput[] inputs = [];
 
         [ObservableProperty]
+        private EveSkillRequirement[] skillRequirements = [];
+
+        [ObservableProperty]
         private LongProgressInfo buyProgress = LongProgressInfo.Start;
 
         [ObservableProperty]
@@ -72,13 +76,16 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         private bool notRunning = true;
 
-        public IndustryPageModel(IEveSettings settings, IEveProvider provider, IIndustry industry)
+        public IndustryPageModel(IEveSettings settings, IEveProvider provider, IIndustry industry, ISkillProvider skillProvider)
         {
             this.settings = settings.IndustrySettings;
             this.settings.PropertyChanged += OnSettingsChanged;
 
             this.industry = industry;
             this.industry.PropertyChanged += OnIndustryChanged;
+
+            this.skillProvider = skillProvider;
+            this.settings.PropertyChanged += OnSkillsChanged;
 
             hub = industry.Hub.FullName;
 
@@ -111,6 +118,11 @@ namespace Fasciculus.Eve.PageModels
             Productions = industry.Productions;
             HasProductions = Productions.Length > 0;
             Production = HasProductions ? Productions[0] : null;
+        }
+
+        private void OnSkillsChanged(object? sender, PropertyChangedEventArgs ev)
+        {
+            UpdateSkills();
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs ev)
@@ -150,6 +162,22 @@ namespace Fasciculus.Eve.PageModels
                 OutputVolume = Production.OutputVolume;
                 Runs = Production.Runs;
                 Inputs = [.. Production.Inputs];
+            }
+
+            UpdateSkills();
+        }
+
+        private void UpdateSkills()
+        {
+            if (Production is null)
+            {
+                SkillRequirements = [];
+            }
+            else
+            {
+                EveSkillRequirements requirements = new(skillProvider, Production.Blueprint.Manufacturing);
+
+                SkillRequirements = requirements.OrderBy(x => x.Name).ToArray();
             }
         }
 

@@ -117,6 +117,16 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
+                            <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
+                                <Label Text="Required Skills" FontAttributes="Bold" WidthRequest="260" />
+                            </HorizontalStackLayout>
+                            <CollectionView ItemsSource="{Binding SkillRequirements}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:EveSkillRequirement">
+                                        <Label Text="{Binding Text}" />
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>

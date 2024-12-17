@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -35,18 +36,20 @@ namespace Fasciculus.Eve.Models
     public interface ISkillProvider : INotifyPropertyChanged
     {
         public IEnumerable<ISkill> Skills { get; }
-
+        public ISkill this[EveType type] { get; }
         public bool Fulfills(IEnumerable<ISkill> requiredSkills);
     }
 
     public interface IMutableSkillProvider : ISkillProvider
     {
         public new IEnumerable<IMutableSkill> Skills { get; }
+        public new IMutableSkill this[EveType type] { get; }
     }
 
     public interface ISkillInfoProvider : IMutableSkillProvider
     {
         public new IEnumerable<ISkillInfo> Skills { get; }
+        public new ISkillInfo this[EveType type] { get; }
     }
 
     public interface ISkillConsumer
@@ -82,21 +85,21 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        private readonly Data data;
-
         public EveType Type { get; }
         public string MarketGroup => Type.MarketGroup?.Name ?? string.Empty;
         public string Name => Type.Name;
-        public int Level => data.Level;
+        public int Level { get; }
 
         public bool CanDecrement => false;
         public bool CanIncrement => false;
 
         public EveSkill(Data data, EveTypes types)
-        {
-            this.data = data;
+            : this(types[data.Id], data.Level) { }
 
-            Type = types[data.Id];
+        public EveSkill(EveType type, int level = 0)
+        {
+            Type = type;
+            Level = level;
         }
     }
 
@@ -106,6 +109,7 @@ namespace Fasciculus.Eve.Models
         private readonly Dictionary<EveType, EveSkill> byType;
 
         public IEnumerable<ISkill> Skills => skills;
+        public ISkill this[EveType type] => byType.TryGetValue(type, out var skill) ? skill : new EveSkill(type);
 
         public EveSkills(IEnumerable<EveSkill> skills)
         {
@@ -201,6 +205,10 @@ namespace Fasciculus.Eve.Models
         IEnumerable<IMutableSkill> IMutableSkillProvider.Skills => skills;
         IEnumerable<ISkill> ISkillProvider.Skills => skills;
 
+        public ISkillInfo this[EveType type] => GetSkill(type);
+        IMutableSkill IMutableSkillProvider.this[EveType type] => GetSkill(type);
+        ISkill ISkillProvider.this[EveType type] => GetSkill(type);
+
         public EveSkillInfos(IEnumerable<ISkillConsumer> skillConsumers)
         {
             skills = [.. CreateSkills(skillConsumers)];
@@ -217,6 +225,9 @@ namespace Fasciculus.Eve.Models
                 OnPropertyChanged(nameof(Skills));
             }
         }
+
+        private ISkillInfo GetSkill(EveType type)
+            => byType.TryGetValue(type, out var skill) ? skill : new EveSkillInfo(type, 0, []);
 
         private static IEnumerable<EveSkillInfo> CreateSkills(IEnumerable<ISkillConsumer> skillConsumers)
         {
@@ -243,5 +254,40 @@ namespace Fasciculus.Eve.Models
                 skillInfo.Level = level;
             }
         }
+    }
+
+    public class EveSkillRequirement
+    {
+        public EveType Type { get; }
+        public string Name => Type.Name;
+        public int CurrentLevel { get; }
+        public int RequiredLevel { get; }
+
+        public string Text { get; }
+
+        public EveSkillRequirement(EveType type, int currentLevel, int requiredLevel)
+        {
+            Type = type;
+            CurrentLevel = currentLevel;
+            RequiredLevel = requiredLevel;
+
+            Text = $"{CurrentLevel}/{RequiredLevel} {Type.Name}";
+        }
+    }
+
+    public class EveSkillRequirements : IEnumerable<EveSkillRequirement>
+    {
+        private readonly EveSkillRequirement[] requirements;
+
+        public EveSkillRequirements(ISkillProvider provider, ISkillConsumer consumer)
+        {
+            requirements = [.. consumer.RequiredSkills.Select(x => new EveSkillRequirement(x.Type, provider[x.Type].Level, x.Level))];
+        }
+
+        public IEnumerator<EveSkillRequirement> GetEnumerator()
+            => requirements.AsEnumerable().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => requirements.GetEnumerator();
     }
 }
