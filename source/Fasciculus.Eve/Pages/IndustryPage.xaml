@@ -32,18 +32,12 @@
             <views:NavBarView FlexLayout.Basis="44" />
             <ScrollView FlexLayout.Grow="1" Padding="14" VerticalScrollBarVisibility="Always">
                 <VerticalStackLayout>
-                    <HorizontalStackLayout Spacing="14" Padding="0,0,0,7">
-                        <Label Text="Hub" WidthRequest="120" />
-                        <Label Text="{Binding Hub}" WidthRequest="320" />
-                    </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="14">
-                        <Label Text="Industry System" VerticalTextAlignment="Center" WidthRequest="120" />
+                        <Label Text="Industry System" VerticalTextAlignment="Center" />
                         <Border Padding="0">
-                            <Picker ItemsSource="{Binding SolarSystems}" SelectedItem="{Binding SelectedSolarSystem}" IsEnabled="{Binding NotRunning}" WidthRequest="320" />
+                            <Picker ItemsSource="{Binding SolarSystems}" SelectedItem="{Binding SelectedSolarSystem}" IsEnabled="{Binding NotRunning}" WidthRequest="160" />
                         </Border>
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout Spacing="14" Padding="0,7,0,0">
-                        <Label Text="Hauler" VerticalTextAlignment="Center" WidthRequest="120" />
+                        <Label Text="Hauler" VerticalTextAlignment="Center" />
                         <Border Padding="0">
                             <Picker ItemsSource="{Binding Haulers}" SelectedIndex="{Binding SelectedHauler}" IsEnabled="{Binding NotRunning}" WidthRequest="320" />
                         </Border>
@@ -84,10 +78,14 @@
                         </VerticalStackLayout>
                         <VerticalStackLayout IsVisible="{Binding HasProductions}" Padding="40,3,0,0" Spacing="7">
                             <HorizontalStackLayout Spacing="14">
+                                <Label Text="Hub:" />
+                                <Label Text="{Binding Hub}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
                                 <Label Text="Blueprint Price:" WidthRequest="120" />
                                 <controls:IskLabel Value="{Binding BlueprintPrice}" WidthRequest="120" />
                             </HorizontalStackLayout>
-                            <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
+                            <HorizontalStackLayout Spacing="14">
                                 <Label Text="Runs:" WidthRequest="120" />
                                 <Label Text="{Binding Runs}" WidthRequest="120" HorizontalTextAlignment="End" />
                             </HorizontalStackLayout>
@@ -123,7 +121,7 @@
                             <CollectionView ItemsSource="{Binding SkillRequirements}">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate x:DataType="models:EveSkillRequirement">
-                                        <Label Text="{Binding Text}" />
+                                        <controls:SkillRequirement Source="{Binding .}" />
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>

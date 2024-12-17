@@ -263,15 +263,11 @@ namespace Fasciculus.Eve.Models
         public int CurrentLevel { get; }
         public int RequiredLevel { get; }
 
-        public string Text { get; }
-
         public EveSkillRequirement(EveType type, int currentLevel, int requiredLevel)
         {
             Type = type;
             CurrentLevel = currentLevel;
             RequiredLevel = requiredLevel;
-
-            Text = $"{CurrentLevel}/{RequiredLevel} {Type.Name}";
         }
     }
 
