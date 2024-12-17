@@ -22,6 +22,8 @@ namespace Fasciculus.Eve.Services
 
     public class EsiCache : IEsiCache
     {
+        public const int Version = 0;
+
 #if DEBUG
         public static readonly TimeSpan MarketPricesMaxAge = TimeSpan.FromSeconds(360000);
         public static readonly TimeSpan MarketOrdersMaxAge = TimeSpan.FromSeconds(360000);
@@ -88,7 +90,13 @@ namespace Fasciculus.Eve.Services
 
             if (file.Exists && file.IsNewerThan(DateTime.UtcNow - maxAge))
             {
-                result = file.Read(read);
+                using Stream stream = file.OpenRead();
+                int version = stream.ReadInt();
+
+                if (version == Version)
+                {
+                    result = read(stream);
+                }
             }
 
             return result;
@@ -98,7 +106,12 @@ namespace Fasciculus.Eve.Services
         {
             using Locker locker = Locker.Lock(mutex);
 
-            file.Write(write);
+            file.DeleteIfExists();
+
+            using Stream stream = file.Create();
+
+            stream.WriteInt(Version);
+            write(stream);
         }
     }
 }
