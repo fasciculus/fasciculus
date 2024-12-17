@@ -114,7 +114,7 @@ namespace Fasciculus.Eve.Services
                 return;
             }
 
-            EveBlueprint[] candidates = GetCandidates(regionSellOrders, marketPrices);
+            EveBlueprint[] candidates = GetCandidates(regionSellOrders, marketPrices, settings.IgnoreSkills);
             EveStationBuyOrders buyOrders = regionBuyOrders[Hub];
             EveStationSellOrders sellOrders = regionSellOrders[Hub];
             double systemCostIndex = industryIndices[Hub.Moon.Planet.SolarSystem];
@@ -196,7 +196,7 @@ namespace Fasciculus.Eve.Services
             return itemValue * (systemCostIndex + 0.0025 + 0.04);
         }
 
-        private EveBlueprint[] GetCandidates(EveRegionSellOrders regionSellOrders, EveMarketPrices marketPrices)
+        private EveBlueprint[] GetCandidates(EveRegionSellOrders regionSellOrders, EveMarketPrices marketPrices, bool ignoreSkills)
         {
             int maxVolume = settings.MaxVolume;
 
@@ -205,7 +205,7 @@ namespace Fasciculus.Eve.Services
                 .Where(x => regionSellOrders[x.Type].Count > 0 || marketPrices.Contains(x.Type))
                 .Where(x => x.Manufacturing.Products.All(y => y.Type.Volume <= maxVolume))
                 .Where(x => x.Manufacturing.Materials.All(y => marketPrices.Contains(y.Type)))
-                .Where(x => skills.Fulfills(x.Manufacturing.RequiredSkills))
+                .Where(x => ignoreSkills || skills.Fulfills(x.Manufacturing.RequiredSkills))
                 .ToArray();
         }
         private void OnSkillsChanged(object? sender, PropertyChangedEventArgs e)

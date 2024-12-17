@@ -32,6 +32,9 @@ namespace Fasciculus.Eve.PageModels
         private int selectedHauler;
 
         [ObservableProperty]
+        private bool ignoreSkills;
+
+        [ObservableProperty]
         private bool hasProductions = false;
 
         [ObservableProperty]
@@ -95,6 +98,8 @@ namespace Fasciculus.Eve.PageModels
             haulers = [.. EveHaulers.Values.Select(x => x.Caption())];
             selectedHauler = GetHaulerIndex(this.settings.MaxVolume);
 
+            ignoreSkills = this.settings.IgnoreSkills;
+
             StartCommand.PropertyChanged += OnStartCommandChanged;
         }
 
@@ -105,6 +110,7 @@ namespace Fasciculus.Eve.PageModels
         {
             SelectedSolarSystem = settings.SolarSystem;
             SelectedHauler = GetHaulerIndex(settings.MaxVolume);
+            IgnoreSkills = settings.IgnoreSkills;
         }
 
         private void OnIndustryChanged(object? sender, PropertyChangedEventArgs ev)
@@ -137,6 +143,10 @@ namespace Fasciculus.Eve.PageModels
 
                 case nameof(SelectedHauler):
                     settings.MaxVolume = EveHaulers.Values[SelectedHauler].Volume();
+                    break;
+
+                case nameof(IgnoreSkills):
+                    settings.IgnoreSkills = IgnoreSkills;
                     break;
 
                 case nameof(Production):

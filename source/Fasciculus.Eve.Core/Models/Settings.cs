@@ -13,6 +13,10 @@ namespace Fasciculus.Eve.Models
         [JsonIgnore]
         [ObservableProperty]
         private int maxVolume = 0;
+
+        [JsonIgnore]
+        [ObservableProperty]
+        private bool ignoreSkills = false;
     }
 
     public partial class EvePlanetsSettings : MainThreadObservable
