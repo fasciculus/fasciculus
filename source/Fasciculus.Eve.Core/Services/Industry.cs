@@ -118,7 +118,8 @@ namespace Fasciculus.Eve.Services
             EveStationBuyOrders buyOrders = regionBuyOrders[Hub];
             EveStationSellOrders sellOrders = regionSellOrders[Hub];
             double systemCostIndex = industryIndices[Hub.Moon.Planet.SolarSystem];
-            EveProduction[] productions = CreateProductions(candidates, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex);
+            double salesTaxRate = settings.SalesTaxRate / 1000.0;
+            EveProduction[] productions = CreateProductions(candidates, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex, salesTaxRate);
             int count = Math.Min(20, productions.Length);
 
             Productions = productions.OrderByDescending(x => x.Profit).Take(count).ToArray();
@@ -127,18 +128,17 @@ namespace Fasciculus.Eve.Services
         private static EveProduction[] CreateProductions(EveBlueprint[] blueprints,
             EveRegionSellOrders regionSellOrders,
             EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
-            EveMarketPrices marketPrices, double systemCostIndex)
+            EveMarketPrices marketPrices, double systemCostIndex, double salesTaxRate)
         {
             return blueprints
-                .Select(x => CreateProduction(x, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex))
-                //.Where(x => x.Cost < 1_000_000_000)
+                .Select(x => CreateProduction(x, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex, salesTaxRate))
                 .Where(x => x.Income < 1_000_000_000)
                 .ToArray();
         }
 
         private static EveProduction CreateProduction(EveBlueprint blueprint, EveRegionSellOrders regionSellOrders,
             EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
-            EveMarketPrices marketPrices, double systemCostIndex)
+            EveMarketPrices marketPrices, double systemCostIndex, double salesTaxRate)
         {
             double blueprintPrice = GetBlueprintPrice(blueprint, regionSellOrders, marketPrices);
             EveManufacturing manufacturing = blueprint.Manufacturing;
@@ -147,7 +147,7 @@ namespace Fasciculus.Eve.Services
             EveProductionOutput[] outputs = CreateOutputs(manufacturing.Products, runs, buyOrders);
             double jobCost = GetJobCost(inputs, marketPrices, systemCostIndex);
 
-            return new(blueprint, blueprintPrice, runs, inputs, outputs, jobCost);
+            return new(blueprint, blueprintPrice, runs, inputs, outputs, jobCost, salesTaxRate);
         }
 
         private static EveProductionInput[] CreateInputs(IEnumerable<EveMaterial> materials, int runs, EveStationSellOrders sellOrders)

@@ -17,6 +17,10 @@ namespace Fasciculus.Eve.Models
         [JsonIgnore]
         [ObservableProperty]
         private bool ignoreSkills = false;
+
+        [JsonIgnore]
+        [ObservableProperty]
+        private int salesTaxRate = 30;
     }
 
     public partial class EvePlanetsSettings : MainThreadObservable

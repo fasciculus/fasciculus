@@ -259,6 +259,7 @@ namespace Fasciculus.Eve.Models
         public int Runs { get; }
         public double MaterialCost { get; }
         public double JobCost { get; }
+        public double SalesTax { get; }
         public double Cost { get; }
         public double Income { get; }
         public double Profit { get; }
@@ -267,8 +268,10 @@ namespace Fasciculus.Eve.Models
 
         public EveProduction(EveBlueprint blueprint, double blueprintPrice, int runs,
             IEnumerable<EveProductionInput> inputs, IEnumerable<EveProductionOutput> outputs,
-            double jobCost)
+            double jobCost, double salesTaxRate)
         {
+            double untaxedIncome = outputs.Sum(x => x.Income);
+
             Blueprint = blueprint;
             BlueprintPrice = blueprintPrice;
             Runs = runs;
@@ -278,8 +281,9 @@ namespace Fasciculus.Eve.Models
 
             MaterialCost = inputs.Sum(x => x.Cost);
             JobCost = jobCost;
-            Cost = MaterialCost + JobCost;
-            Income = outputs.Sum(x => x.Income);
+            SalesTax = untaxedIncome * salesTaxRate;
+            Cost = MaterialCost + JobCost + SalesTax;
+            Income = untaxedIncome;
             Profit = Income - Cost;
             Margin = Profit / Math.Max(1, Cost) * 100;
             OutputVolume = outputs.Sum(x => x.Volume);

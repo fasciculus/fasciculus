@@ -32,7 +32,7 @@
             <views:NavBarView FlexLayout.Basis="44" />
             <ScrollView FlexLayout.Grow="1" Padding="14" VerticalScrollBarVisibility="Always">
                 <VerticalStackLayout>
-                    <HorizontalStackLayout Spacing="28">
+                    <HorizontalStackLayout Spacing="42">
                         <HorizontalStackLayout Spacing="14">
                             <Label Text="Industry System" VerticalTextAlignment="Center" />
                             <Border Padding="0">
@@ -44,6 +44,10 @@
                             <Border Padding="0">
                                 <Picker ItemsSource="{Binding Haulers}" SelectedIndex="{Binding SelectedHauler}" IsEnabled="{Binding NotRunning}" WidthRequest="300" />
                             </Border>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="14">
+                            <Label Text="Sales Tax" VerticalTextAlignment="Center" />
+                            <Label Text="{Binding SalesTaxRate}" VerticalTextAlignment="Center" />
                         </HorizontalStackLayout>
                         <HorizontalStackLayout Spacing="14">
                             <Label Text="Ignore Skills" VerticalTextAlignment="Center" />
@@ -100,6 +104,10 @@
                             <HorizontalStackLayout Spacing="14">
                                 <Label Text="Job Cost:" WidthRequest="120" />
                                 <controls:IskLabel Value="{Binding JobCost}" WidthRequest="120" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="14">
+                                <Label Text="Sales Tax:" WidthRequest="120" />
+                                <controls:IskLabel Value="{Binding SalesTax}" WidthRequest="120" />
                             </HorizontalStackLayout>
                             <HorizontalStackLayout Spacing="14">
                                 <Label Text="Output Volume:" WidthRequest="120" />

@@ -32,6 +32,9 @@ namespace Fasciculus.Eve.PageModels
         private int selectedHauler;
 
         [ObservableProperty]
+        private string salesTaxRate = string.Empty;
+
+        [ObservableProperty]
         private bool ignoreSkills;
 
         [ObservableProperty]
@@ -51,6 +54,9 @@ namespace Fasciculus.Eve.PageModels
 
         [ObservableProperty]
         private double jobCost;
+
+        [ObservableProperty]
+        private double salesTax;
 
         [ObservableProperty]
         private double outputVolume;
@@ -100,6 +106,8 @@ namespace Fasciculus.Eve.PageModels
 
             ignoreSkills = this.settings.IgnoreSkills;
 
+            FormatSettings();
+
             StartCommand.PropertyChanged += OnStartCommandChanged;
         }
 
@@ -111,6 +119,15 @@ namespace Fasciculus.Eve.PageModels
             SelectedSolarSystem = settings.SolarSystem;
             SelectedHauler = GetHaulerIndex(settings.MaxVolume);
             IgnoreSkills = settings.IgnoreSkills;
+
+            FormatSettings();
+        }
+
+        private void FormatSettings()
+        {
+            double sellTaxRate = settings.SalesTaxRate / 10.0;
+
+            SalesTaxRate = sellTaxRate.ToString("0.0") + " %";
         }
 
         private void OnIndustryChanged(object? sender, PropertyChangedEventArgs ev)
@@ -162,6 +179,7 @@ namespace Fasciculus.Eve.PageModels
                 BlueprintPrice = 0;
                 Runs = 0;
                 JobCost = 0;
+                SalesTax = 0;
                 OutputVolume = 0;
                 Inputs = [];
             }
@@ -169,6 +187,7 @@ namespace Fasciculus.Eve.PageModels
             {
                 BlueprintPrice = Production.BlueprintPrice;
                 JobCost = Production.JobCost;
+                SalesTax = Production.SalesTax;
                 OutputVolume = Production.OutputVolume;
                 Runs = Production.Runs;
                 Inputs = [.. Production.Inputs];
