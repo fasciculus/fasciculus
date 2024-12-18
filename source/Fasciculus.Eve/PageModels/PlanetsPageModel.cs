@@ -23,6 +23,12 @@ namespace Fasciculus.Eve.PageModels
         public partial string SalesTaxRate { get; private set; }
 
         [ObservableProperty]
+        public partial int ProductionLines { get; private set; }
+
+        [ObservableProperty]
+        public partial int HoursPerDay { get; private set; }
+
+        [ObservableProperty]
         public partial LongProgressInfo BuyProgress { get; private set; }
 
         [ObservableProperty]
@@ -56,6 +62,8 @@ namespace Fasciculus.Eve.PageModels
             Hub = planets.Hub.FullName;
             CustomsTaxRate = string.Empty;
             SalesTaxRate = string.Empty;
+            ProductionLines = this.settings.ProductionLines;
+            HoursPerDay = this.settings.HoursPerDay;
             BuyProgress = LongProgressInfo.Start;
             SellProgress = LongProgressInfo.Start;
             HasProductions = false;
@@ -81,6 +89,9 @@ namespace Fasciculus.Eve.PageModels
 
         private void OnSettingsChanged(object? sender, PropertyChangedEventArgs ev)
         {
+            ProductionLines = settings.ProductionLines;
+            HoursPerDay = settings.HoursPerDay;
+
             FormatSettings();
         }
 
@@ -129,15 +140,39 @@ namespace Fasciculus.Eve.PageModels
         }
 
         [RelayCommand]
-        private void DecrementSellTaxRate()
+        private void DecrementSalesTaxRate()
         {
             settings.SalesTaxRate = Math.Max(0, settings.SalesTaxRate - 1);
         }
 
         [RelayCommand]
-        private void IncrementSellTaxRate()
+        private void IncrementSalesTaxRate()
         {
             settings.SalesTaxRate += 1;
+        }
+
+        [RelayCommand]
+        private void DecrementProductionLines()
+        {
+            settings.ProductionLines = Math.Max(1, settings.ProductionLines - 1);
+        }
+
+        [RelayCommand]
+        private void IncrementProductionLines()
+        {
+            settings.ProductionLines = Math.Min(4, settings.ProductionLines + 1);
+        }
+
+        [RelayCommand]
+        private void DecrementHoursPerDay()
+        {
+            settings.HoursPerDay = Math.Max(1, settings.HoursPerDay - 1);
+        }
+
+        [RelayCommand]
+        private void IncrementHoursPerDay()
+        {
+            settings.HoursPerDay = Math.Min(23, settings.HoursPerDay + 1);
         }
     }
 }

@@ -36,23 +36,41 @@
                         <Label Text="Hub" WidthRequest="60" />
                         <Label Text="{Binding Hub}" />
                     </HorizontalStackLayout>
-                    <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
-                        <Label Text="Customs Tax Rate" WidthRequest="120" />
-                        <Label Text="{Binding CustomsTaxRate}" WidthRequest="60" HorizontalTextAlignment="End" />
-                        <HorizontalStackLayout Spacing="4">
-                            <Button Text="-" Command="{Binding DecrementCustomsTaxRateCommand}" IsVisible="{Binding NotRunning}" WidthRequest="20" />
-                            <Button Text="+" Command="{Binding IncrementCustomsTaxRateCommand}" IsVisible="{Binding NotRunning}" WidthRequest="20" />
+                    <HorizontalStackLayout Spacing="42" Padding="0,14,0,0">
+                        <HorizontalStackLayout Spacing="14">
+                            <Label Text="Customs Tax Rate" />
+                            <Label Text="{Binding CustomsTaxRate}" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Button Text="-" Command="{Binding DecrementCustomsTaxRateCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                                <Button Text="+" Command="{Binding IncrementCustomsTaxRateCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="14">
+                            <Label Text="Sales Tax Rate" />
+                            <Label Text="{Binding SalesTaxRate}" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Button Text="-" Command="{Binding DecrementSalesTaxRateCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                                <Button Text="+" Command="{Binding IncrementSalesTaxRateCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="14">
+                            <Label Text="Production Lines" />
+                            <Label Text="{Binding ProductionLines}" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Button Text="-" Command="{Binding DecrementProductionLinesCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                                <Button Text="+" Command="{Binding IncrementProductionLinesCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="14">
+                            <Label Text="Hours / Day" />
+                            <Label Text="{Binding HoursPerDay}" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Button Text="-" Command="{Binding DecrementHoursPerDayCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                                <Button Text="+" Command="{Binding IncrementHoursPerDayCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                            </HorizontalStackLayout>
                         </HorizontalStackLayout>
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
-                        <Label Text="Sales Tax Rate" WidthRequest="120" />
-                        <Label Text="{Binding SalesTaxRate}" WidthRequest="60" HorizontalTextAlignment="End" />
-                        <HorizontalStackLayout Spacing="4">
-                            <Button Text="-" Command="{Binding DecrementSellTaxRateCommand}" IsVisible="{Binding NotRunning}" WidthRequest="20" />
-                            <Button Text="+" Command="{Binding IncrementSellTaxRateCommand}" IsVisible="{Binding NotRunning}" WidthRequest="20" />
-                        </HorizontalStackLayout>
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout Spacing="14" Padding="0,28,0,0">
                         <Button Text="Start" Command="{Binding StartCommand}" WidthRequest="60" />
                         <Label Text="Buy Orders" IsVisible="{Binding IsRunning}" />
                         <fasciculus:LongProgressInfoBar Source="{Binding BuyProgress}" WidthRequest="100" IsVisible="{Binding IsRunning}" />
