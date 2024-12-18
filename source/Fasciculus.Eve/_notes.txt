@@ -1,3 +1,8 @@
 dotnet publish -f net9.0-windows10.0.19041.0
 
 // dotnet publish -f net9.0-windows10.0.19041.0 -p:RuntimeIdentifierOverride=win10-x64
+
++ pi2
+- Plasmoids [5280]
+- Precious Metals [5280]
+- Water [5280]

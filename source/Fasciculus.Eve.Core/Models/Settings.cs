@@ -6,37 +6,67 @@ namespace Fasciculus.Eve.Models
 {
     public partial class EveIndustrySettings : MainThreadObservable
     {
-        [JsonIgnore]
+        [field: JsonIgnore]
         [ObservableProperty]
-        private string solarSystem = "Jita";
+        public partial string SolarSystem { get; set; }
 
-        [JsonIgnore]
+        [field: JsonIgnore]
         [ObservableProperty]
-        private int maxVolume = 0;
+        public partial int MaxVolume { get; set; }
 
-        [JsonIgnore]
+        [field: JsonIgnore]
         [ObservableProperty]
-        private bool ignoreSkills = false;
+        public partial bool IgnoreSkills { get; set; }
 
-        [JsonIgnore]
+        [field: JsonIgnore]
         [ObservableProperty]
-        private int salesTaxRate = 30;
+        public partial int SalesTaxRate { get; set; }
+
+        public EveIndustrySettings()
+        {
+            SolarSystem = "Jita";
+            MaxVolume = 0;
+            IgnoreSkills = false;
+            SalesTaxRate = 30;
+        }
     }
 
     public partial class EvePlanetsSettings : MainThreadObservable
     {
-        [JsonIgnore]
+        [field: JsonIgnore]
         [ObservableProperty]
-        private int customsTaxRate = 100;
+        public partial int CustomsTaxRate { get; set; }
 
-        [JsonIgnore]
+        [field: JsonIgnore]
         [ObservableProperty]
-        private int salesTaxRate = 30;
+        public partial int SalesTaxRate { get; set; }
+
+        [field: JsonIgnore]
+        [ObservableProperty]
+        public partial int ProductionLines { get; set; }
+
+        [field: JsonIgnore]
+        [ObservableProperty]
+        public partial int HoursPerDay { get; set; }
+
+        public EvePlanetsSettings()
+        {
+            CustomsTaxRate = 30;
+            SalesTaxRate = 30;
+            ProductionLines = 1;
+            HoursPerDay = 22;
+        }
     }
 
     public partial class EveCombinedSettings
     {
-        public EveIndustrySettings Industry { get; set; } = new();
-        public EvePlanetsSettings Planets { get; set; } = new();
+        public EveIndustrySettings Industry { get; set; }
+        public EvePlanetsSettings Planets { get; set; }
+
+        public EveCombinedSettings()
+        {
+            Industry = new();
+            Planets = new();
+        }
     }
 }
