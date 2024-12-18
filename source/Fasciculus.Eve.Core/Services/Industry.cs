@@ -42,22 +42,22 @@ namespace Fasciculus.Eve.Services
         private readonly EveRegion hubRegion;
 
         [ObservableProperty]
-        private LongProgressInfo buyProgressInfo = LongProgressInfo.Start;
+        public partial LongProgressInfo BuyProgressInfo { get; set; }
 
         [ObservableProperty]
-        private LongProgressInfo sellProgressInfo = LongProgressInfo.Start;
+        public partial LongProgressInfo SellProgressInfo { get; set; }
 
         [ObservableProperty]
-        private WorkState marketPricesState = WorkState.Pending;
+        public partial WorkState MarketPricesState { get; set; }
 
         [ObservableProperty]
-        private WorkState industryIndicesState = WorkState.Pending;
+        public partial WorkState IndustryIndicesState { get; set; }
 
         private readonly AccumulatingLongProgress buyProgress;
         private readonly AccumulatingLongProgress sellProgress;
 
         [ObservableProperty]
-        private EveProduction[] productions = [];
+        public partial EveProduction[] Productions { get; set; }
 
         public Industry(IEveSettings settings, ISkillProvider skills, IEsiClient esiClient, IEveProvider provider)
         {
@@ -70,8 +70,15 @@ namespace Fasciculus.Eve.Services
             Hub = provider.Stations[60003760];
             hubRegion = Hub.GetRegion();
 
+            BuyProgressInfo = LongProgressInfo.Start;
+            SellProgressInfo = LongProgressInfo.Start;
+            MarketPricesState = WorkState.Pending;
+            IndustryIndicesState = WorkState.Pending;
+
             buyProgress = new(_ => { BuyProgressInfo = buyProgress!.Progress; });
             sellProgress = new(_ => { SellProgressInfo = sellProgress!.Progress; });
+
+            Productions = [];
 
             this.settings.PropertyChanged += OnSettingsChanged;
             this.skills.PropertyChanged += OnSkillsChanged;

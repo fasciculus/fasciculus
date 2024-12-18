@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fasciculus.Eve.Services;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -45,15 +46,6 @@ namespace Fasciculus.Eve.Models
 
             Type = types[data.Type];
         }
-    }
-
-    public enum EvePlanetSchematicLevel
-    {
-        P0,
-        P1,
-        P2,
-        P3,
-        P4
     }
 
     [DebuggerDisplay("{Name}")]
@@ -106,19 +98,26 @@ namespace Fasciculus.Eve.Models
 
         private readonly EvePlanetSchematicType[] inputs;
         public IReadOnlyList<EvePlanetSchematicType> Inputs => inputs;
-        public IEnumerable<EveType> InputTypes => Inputs.Select(x => x.Type);
+
+        private readonly EveType[] inputTypes;
+        public IReadOnlyList<EveType> InputTypes => inputTypes;
 
         public EvePlanetSchematicType Output { get; }
-        public EveType OutputType => Output.Type;
+        public EveType OutputType { get; }
 
-        public EvePlanetSchematicLevel Level { get; internal set; } = EvePlanetSchematicLevel.P0;
+        public int Level { get; internal set; }
 
         public EvePlanetSchematic(Data data, EveTypes types)
         {
             this.data = data;
 
             inputs = data.Inputs.Select(x => new EvePlanetSchematicType(x, types)).ToArray();
+            inputTypes = [.. inputs.Select(x => x.Type)];
+
             Output = new EvePlanetSchematicType(data.Output, types);
+            OutputType = Output.Type;
+
+            Level = 0;
         }
     }
 
@@ -130,20 +129,8 @@ namespace Fasciculus.Eve.Models
         private readonly EveType[] inputTypes;
         private readonly EveType[] outputTypes;
 
-        private readonly EvePlanetSchematic[] p0;
-        private readonly EvePlanetSchematic[] p1;
-        private readonly EvePlanetSchematic[] p2;
-        private readonly EvePlanetSchematic[] p3;
-        private readonly EvePlanetSchematic[] p4;
-
         public IReadOnlyList<EveType> InputTypes => inputTypes;
         public IReadOnlyList<EveType> OutputTypes => outputTypes;
-
-        public IReadOnlyList<EvePlanetSchematic> P0 => p0;
-        public IReadOnlyList<EvePlanetSchematic> P1 => p1;
-        public IReadOnlyList<EvePlanetSchematic> P2 => p2;
-        public IReadOnlyList<EvePlanetSchematic> P3 => p3;
-        public IReadOnlyList<EvePlanetSchematic> P4 => p4;
 
         public EvePlanetSchematic this[EveType type] => byOutput[type];
 
@@ -151,95 +138,17 @@ namespace Fasciculus.Eve.Models
         {
             this.planetSchematics = planetSchematics.ToArray();
 
-            inputTypes = FetchInputTypes(this.planetSchematics);
-            outputTypes = FetchOutputTypes(this.planetSchematics);
+            inputTypes = [.. this.planetSchematics.SelectMany(x => x.InputTypes).Distinct().OrderBy(x => x.Id)];
+            outputTypes = [.. this.planetSchematics.Select(x => x.OutputType).OrderBy(x => x.Id)];
 
-            p0 = FetchP0(inputTypes, outputTypes, types);
-            p0.Apply(x => { x.Level = EvePlanetSchematicLevel.P0; });
-
-            p1 = FetchP1(this.planetSchematics, p0);
-            p1.Apply(x => { x.Level = EvePlanetSchematicLevel.P1; });
-
-            p2 = FetchP2(this.planetSchematics, p0, p1);
-            p2.Apply(x => { x.Level = EvePlanetSchematicLevel.P2; });
-
-            p3 = FetchP3(this.planetSchematics, p0, p1, p2);
-            p3.Apply(x => { x.Level = EvePlanetSchematicLevel.P3; });
-
-            p4 = FetchP4(this.planetSchematics, p0, p1, p2, p3);
-            p4.Apply(x => { x.Level = EvePlanetSchematicLevel.P4; });
-
-            byOutput = p0.Select(x => Tuple.Create(x.OutputType, x))
-                .Concat(this.planetSchematics.Select(x => Tuple.Create(x.OutputType, x)))
-                .ToDictionary();
+            byOutput = this.planetSchematics.ToDictionary(x => x.OutputType);
         }
 
         public IEnumerator<EvePlanetSchematic> GetEnumerator()
-            => p0.Concat(planetSchematics).GetEnumerator();
+            => planetSchematics.AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => p0.Concat(planetSchematics).GetEnumerator();
-
-        private static EveType[] FetchInputTypes(EvePlanetSchematic[] planetSchematics)
-            => [.. planetSchematics.SelectMany(x => x.InputTypes).Distinct().OrderBy(x => x.Id)];
-
-        private static EveType[] FetchOutputTypes(EvePlanetSchematic[] planetSchematics)
-            => [.. planetSchematics.Select(x => x.OutputType).OrderBy(x => x.Id)];
-
-        private EvePlanetSchematic[] FetchP0(EveType[] inputTypes, EveType[] outputTypes, EveTypes types)
-        {
-            bool filter(EveType x) => !outputTypes.Contains(x);
-            EveType[] outputs = [.. inputTypes.Where(filter).OrderBy(x => x.Id)];
-            EvePlanetSchematic.Data[] datas = [.. outputs.Select(x => new EvePlanetSchematic.Data(x.Id, x.Name, 1, [], new(x.Id, 1)))];
-
-            return [.. datas.Select(x => new EvePlanetSchematic(x, types))];
-        }
-
-        private static EvePlanetSchematic[] FetchP1(EvePlanetSchematic[] planetSchematics, EvePlanetSchematic[] p0)
-        {
-            EveType[] t0 = [.. p0.Select(x => x.OutputType)];
-            bool filter(EvePlanetSchematic x) => x.InputTypes.All(t => t0.Contains(t));
-
-            return [.. planetSchematics.Where(filter).OrderBy(x => x.Id)];
-        }
-
-        private static EvePlanetSchematic[] FetchP2(EvePlanetSchematic[] planetSchematics, EvePlanetSchematic[] p0, EvePlanetSchematic[] p1)
-        {
-            EveType[] t0 = [.. p0.Select(x => x.OutputType)];
-            EveType[] t1 = [.. p1.Select(x => x.OutputType)];
-            bool filter1(EvePlanetSchematic x) => x.InputTypes.Any(t => t1.Contains(t));
-            bool filter01(EvePlanetSchematic x) => x.InputTypes.All(t => t0.Contains(t) || t1.Contains(t));
-            bool filter(EvePlanetSchematic x) => filter1(x) && filter01(x);
-
-            return [.. planetSchematics.Where(filter).OrderBy(x => x.Id)];
-        }
-
-        private static EvePlanetSchematic[] FetchP3(EvePlanetSchematic[] planetSchematics, EvePlanetSchematic[] p0, EvePlanetSchematic[] p1,
-            EvePlanetSchematic[] p2)
-        {
-            EveType[] t0 = [.. p0.Select(x => x.OutputType)];
-            EveType[] t1 = [.. p1.Select(x => x.OutputType)];
-            EveType[] t2 = [.. p2.Select(x => x.OutputType)];
-            bool filter2(EvePlanetSchematic x) => x.InputTypes.Any(t => t2.Contains(t));
-            bool filter012(EvePlanetSchematic x) => x.InputTypes.All(t => t0.Contains(t) || t1.Contains(t) || t2.Contains(t));
-            bool filter(EvePlanetSchematic x) => filter2(x) && filter012(x);
-
-            return [.. planetSchematics.Where(filter).OrderBy(x => x.Id)];
-        }
-
-        private static EvePlanetSchematic[] FetchP4(EvePlanetSchematic[] planetSchematics, EvePlanetSchematic[] p0, EvePlanetSchematic[] p1,
-            EvePlanetSchematic[] p2, EvePlanetSchematic[] p3)
-        {
-            EveType[] t0 = [.. p0.Select(x => x.OutputType)];
-            EveType[] t1 = [.. p1.Select(x => x.OutputType)];
-            EveType[] t2 = [.. p2.Select(x => x.OutputType)];
-            EveType[] t3 = [.. p3.Select(x => x.OutputType)];
-            bool filter3(EvePlanetSchematic x) => x.InputTypes.Any(t => t3.Contains(t));
-            bool filter0123(EvePlanetSchematic x) => x.InputTypes.All(t => t0.Contains(t) || t1.Contains(t) || t2.Contains(t) || t3.Contains(t));
-            bool filter(EvePlanetSchematic x) => filter3(x) && filter0123(x);
-
-            return [.. planetSchematics.Where(filter).OrderBy(x => x.Id)];
-        }
+            => planetSchematics.GetEnumerator();
     }
 
     public class EvePlanetChain
@@ -247,35 +156,17 @@ namespace Fasciculus.Eve.Models
 
     }
 
-    public class EvePlanetBaseCosts
-    {
-        private readonly Dictionary<EveType, double> costs;
-
-        public double this[EveType type]
-            => costs.TryGetValue(type, out double result) ? result : 0.0;
-
-        public EvePlanetBaseCosts(EvePlanetSchematics schematics)
-        {
-            costs = schematics.P0.Select(x => Tuple.Create(x.OutputType, 5.0))
-                .Concat(schematics.P1.Select(x => Tuple.Create(x.OutputType, 400.0)))
-                .Concat(schematics.P2.Select(x => Tuple.Create(x.OutputType, 7_200.0)))
-                .Concat(schematics.P3.Select(x => Tuple.Create(x.OutputType, 60_000.0)))
-                .Concat(schematics.P4.Select(x => Tuple.Create(x.OutputType, 1_200_000.0)))
-                .ToDictionary();
-        }
-    }
-
     [DebuggerDisplay("{Type.Name} (x {Quantity})")]
     public class EvePlanetInput
     {
         public EveType Type { get; }
-        public EvePlanetSchematicLevel Level { get; }
+        public int Level { get; }
         public int Quantity { get; }
         public double BuyPrice { get; }
         public double ImportTax { get; }
         public double Cost { get; }
 
-        public EvePlanetInput(EveType type, EvePlanetSchematicLevel level, int quantity, double buyPrice, double importTax)
+        public EvePlanetInput(EveType type, int level, int quantity, double buyPrice, double importTax)
         {
             Type = type;
             Level = level;
@@ -289,7 +180,7 @@ namespace Fasciculus.Eve.Models
     public class EvePlanetOutput
     {
         public EveType Type { get; }
-        public EvePlanetSchematicLevel Level { get; }
+        public int Level { get; }
         public int Quantity { get; }
         public double ExportTax { get; }
         public double SellPrice { get; }
@@ -297,7 +188,7 @@ namespace Fasciculus.Eve.Models
         public double SalesTax { get; }
         public double NetIncome => GrossIncome - ExportTax - SalesTax;
 
-        public EvePlanetOutput(EveType type, EvePlanetSchematicLevel level, int quantity, double exportTax, double sellPrice, double salesTax)
+        public EvePlanetOutput(EveType type, int level, int quantity, double exportTax, double sellPrice, double salesTax)
         {
             Type = type;
             Level = level;
@@ -342,8 +233,8 @@ namespace Fasciculus.Eve.Models
         public double Income { get; }
         public double Profit => Income - Cost;
 
-        public EvePlanetProduction(EvePlanetSchematic schematic, EvePlanetSchematics schematics, EvePlanetSchematicLevel importLevel,
-            EvePlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders, double customsTaxRate,
+        public EvePlanetProduction(EvePlanetSchematic schematic, EvePlanetSchematics schematics, int importLevel,
+            IPlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders, double customsTaxRate,
             double salesTaxRate)
         {
             int count = 3600 / schematic.CycleTime;
@@ -356,7 +247,7 @@ namespace Fasciculus.Eve.Models
         }
 
         private static EvePlanetInput[] CreateInputs(EvePlanetSchematic output, int count, EvePlanetSchematics schematics,
-            EvePlanetSchematicLevel importLevel, EvePlanetBaseCosts baseCosts, EveStationSellOrders sellOrders,
+            int importLevel, IPlanetBaseCosts baseCosts, EveStationSellOrders sellOrders,
             double customsTaxRate)
         {
             EvePlanetInput[] inputs = output.Inputs
@@ -381,22 +272,22 @@ namespace Fasciculus.Eve.Models
             return [.. result];
         }
 
-        private static EvePlanetInput CreateInput(EvePlanetSchematic schematic, int quantity, EvePlanetBaseCosts baseCosts,
+        private static EvePlanetInput CreateInput(EvePlanetSchematic schematic, int quantity, IPlanetBaseCosts baseCosts,
             EveStationSellOrders sellOrders, double customsTaxRate)
         {
             EveType type = schematic.OutputType;
-            EvePlanetSchematicLevel level = schematic.Level;
+            int level = schematic.Level;
             double buyPrice = sellOrders[type].PriceFor(quantity * 1000);
             double importTax = quantity * baseCosts[type] * customsTaxRate / 2;
 
             return new(type, level, quantity, buyPrice, importTax);
         }
 
-        private static EvePlanetOutput CreateOutput(EvePlanetSchematic schematic, EvePlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders,
+        private static EvePlanetOutput CreateOutput(EvePlanetSchematic schematic, IPlanetBaseCosts baseCosts, EveStationBuyOrders buyOrders,
             double customsTaxRate, double salesTaxRate)
         {
             EveType type = schematic.OutputType;
-            EvePlanetSchematicLevel level = schematic.Level;
+            int level = schematic.Level;
             int quantity = schematic.Output.Quantity * 3600 / schematic.CycleTime;
             double exportTax = quantity * baseCosts[type] * customsTaxRate;
             double sellPrice = buyOrders[type].PriceFor(quantity * 1000);
@@ -406,28 +297,26 @@ namespace Fasciculus.Eve.Models
         }
     }
 
-    public class EvePlanetProductions : IEnumerable<EvePlanetProduction>
-    {
-        private readonly EvePlanetProduction[] productions;
+    //public class EvePlanetProductions : IEnumerable<EvePlanetProduction>
+    //{
+    //    private readonly EvePlanetProduction[] productions;
 
-        public EvePlanetProductions(EvePlanetSchematics schematics, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders,
-            double customsTaxRate, double salesTaxRate)
-        {
-            EvePlanetBaseCosts baseCosts = new(schematics);
-            EvePlanetSchematicLevel p1 = EvePlanetSchematicLevel.P1;
-            EvePlanetSchematicLevel p2 = EvePlanetSchematicLevel.P2;
+    //    public EvePlanetProductions(EvePlanetSchematics schematics, EveStationBuyOrders buyOrders, EveStationSellOrders sellOrders,
+    //        double customsTaxRate, double salesTaxRate)
+    //    {
+    //        EvePlanetBaseCosts baseCosts = new(schematics);
 
-            var p12 = schematics.P2.Select(x => new EvePlanetProduction(x, schematics, p1, baseCosts, buyOrders, sellOrders, customsTaxRate, salesTaxRate));
-            var p13 = schematics.P3.Select(x => new EvePlanetProduction(x, schematics, p1, baseCosts, buyOrders, sellOrders, customsTaxRate, salesTaxRate));
-            var p23 = schematics.P3.Select(x => new EvePlanetProduction(x, schematics, p2, baseCosts, buyOrders, sellOrders, customsTaxRate, salesTaxRate));
+    //        var p12 = schematics.P2.Select(x => new EvePlanetProduction(x, schematics, 1, baseCosts, buyOrders, sellOrders, customsTaxRate, salesTaxRate));
+    //        var p13 = schematics.P3.Select(x => new EvePlanetProduction(x, schematics, 1, baseCosts, buyOrders, sellOrders, customsTaxRate, salesTaxRate));
+    //        var p23 = schematics.P3.Select(x => new EvePlanetProduction(x, schematics, 2, baseCosts, buyOrders, sellOrders, customsTaxRate, salesTaxRate));
 
-            productions = [.. p12.Concat(p13).Concat(p23).OrderByDescending(x => x.Profit)];
-        }
+    //        productions = [.. p12.Concat(p13).Concat(p23).OrderByDescending(x => x.Profit)];
+    //    }
 
-        public IEnumerator<EvePlanetProduction> GetEnumerator()
-            => productions.AsEnumerable().GetEnumerator();
+    //    public IEnumerator<EvePlanetProduction> GetEnumerator()
+    //        => productions.AsEnumerable().GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => productions.GetEnumerator();
-    }
+    //    IEnumerator IEnumerable.GetEnumerator()
+    //        => productions.GetEnumerator();
+    //}
 }

@@ -40,8 +40,12 @@ namespace Fasciculus.Eve
             services.TryAddSingleton<IEsiClient, EsiClient>();
 
             services.TryAddSingleton<IMarket, Market>();
-            services.TryAddSingleton<IPlanets, Planets>();
+
+            services.TryAddSingleton<IPlanetSchematics, PlanetSchematics>();
+            services.TryAddSingleton<IPlanetBaseCosts, PlanetBaseCosts>();
             services.TryAddSingleton<IPlanetChains, PlanetChains>();
+            services.TryAddSingleton<IPlanets, Planets>();
+
             services.TryAddSingleton<IIndustry, Industry>();
             services.TryAddSingleton<ITrades, Trades>();
 

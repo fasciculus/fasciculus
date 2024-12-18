@@ -4,7 +4,6 @@ using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Support;
 using Fasciculus.Threading;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,57 +12,11 @@ namespace Fasciculus.Eve.Services
 {
     public interface IPlanetChains
     {
-        public EvePlanetChain[] GetChains(EvePlanetSchematicLevel inputLevel, EvePlanetSchematicLevel outputLevel);
     }
 
     public class PlanetChains : IPlanetChains
     {
-        private readonly EvePlanetSchematics schematics;
-        private readonly Dictionary<EvePlanetSchematicLevel, Dictionary<EvePlanetSchematicLevel, EvePlanetChain[]>> chains;
 
-        public PlanetChains(IEveProvider provider)
-        {
-            schematics = provider.PlanetSchematics;
-            chains = [];
-
-            AddChains();
-        }
-
-        public EvePlanetChain[] GetChains(EvePlanetSchematicLevel inputLevel, EvePlanetSchematicLevel outputLevel)
-        {
-            if (chains.TryGetValue(outputLevel, out Dictionary<EvePlanetSchematicLevel, EvePlanetChain[]>? byInput))
-            {
-                if (byInput.TryGetValue(inputLevel, out EvePlanetChain[]? result))
-                {
-                    return result;
-                }
-            }
-
-            return [];
-        }
-
-        private void AddChains()
-        {
-            Dictionary<EvePlanetSchematicLevel, EvePlanetChain[]> p13 = [];
-            List<EvePlanetChain> list = [];
-
-            foreach (EvePlanetSchematic schematic in schematics.P3)
-            {
-                foreach (EvePlanetSchematicType input in schematic.Inputs)
-                {
-                    EvePlanetSchematic inputSchematic = schematics[input.Type];
-                    int providedQuantity = inputSchematic.Output.Quantity;
-                    int requiredQuantity = input.Quantity;
-                    int runs = requiredQuantity / providedQuantity;
-                    EvePlanetChain chain = new();
-
-                    list.Add(chain);
-                }
-            }
-
-            p13.Add(EvePlanetSchematicLevel.P1, [.. list]);
-            chains.Add(EvePlanetSchematicLevel.P3, p13);
-        }
     }
 
     public interface IPlanets : INotifyPropertyChanged
@@ -86,8 +39,8 @@ namespace Fasciculus.Eve.Services
         private readonly IEsiClient esiClient;
 
         private readonly EvePlanetSchematics schematics;
+        private readonly IPlanetBaseCosts baseCosts;
         private readonly IPlanetChains chains;
-        private readonly EvePlanetBaseCosts baseCosts;
 
         public EveStation Hub { get; }
         private readonly EveRegion hubRegion;
@@ -104,7 +57,7 @@ namespace Fasciculus.Eve.Services
         [ObservableProperty]
         private EvePlanetProduction[] productions = [];
 
-        public Planets(IEveSettings settings, IEsiClient esiClient, IEveProvider provider, IPlanetChains chains)
+        public Planets(IEveSettings settings, IEsiClient esiClient, IEveProvider provider, IPlanetBaseCosts baseCosts, IPlanetChains chains)
         {
             this.settings = settings.PlanetsSettings;
             this.settings.PropertyChanged += OnSettingsChanged;
@@ -113,7 +66,7 @@ namespace Fasciculus.Eve.Services
 
             schematics = provider.PlanetSchematics;
             this.chains = chains;
-            baseCosts = new(schematics);
+            this.baseCosts = baseCosts;
 
             Hub = provider.Stations[60003760];
             hubRegion = Hub.GetRegion();
@@ -155,12 +108,12 @@ namespace Fasciculus.Eve.Services
             double salesTaxRate = settings.SalesTaxRate / 1000.0;
             EveStationBuyOrders buyOrders = regionBuyOrders[Hub];
             EveStationSellOrders sellOrders = regionSellOrders[Hub];
-            EvePlanetProductions productions = new(schematics, buyOrders, sellOrders, customsTaxRate, salesTaxRate);
+            // EvePlanetProductions productions = new(schematics, buyOrders, sellOrders, customsTaxRate, salesTaxRate);
 
-            Productions = productions.Take(10).ToArray();
+            Productions = []; // productions.Take(10).ToArray();
         }
 
-        private EvePlanetInput[] CreateInputs(EvePlanetSchematic output, EvePlanetSchematicLevel importLevel, int runs,
+        private EvePlanetInput[] CreateInputs(EvePlanetSchematic output, int importLevel, int runs,
             EveStationSellOrders sellOrders, double customsTaxRate)
         {
             EvePlanetInput[] inputs = output.Inputs
@@ -189,7 +142,7 @@ namespace Fasciculus.Eve.Services
             double customsTaxRate)
         {
             EveType type = schematic.OutputType;
-            EvePlanetSchematicLevel level = schematic.Level;
+            int level = schematic.Level;
             double buyPrice = sellOrders[type].PriceFor(quantity * 7);
             double importTax = quantity * baseCosts[type] * customsTaxRate / 2;
 
