@@ -92,7 +92,7 @@
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </VerticalStackLayout>
-                        <VerticalStackLayout IsVisible="{Binding HasProductions}" Padding="40,3,0,0" Spacing="7">
+                        <VerticalStackLayout IsVisible="{Binding HasProduction}" Padding="40,3,0,0" Spacing="7">
                             <HorizontalStackLayout Spacing="14">
                                 <Label Text="Hub:" />
                                 <Label Text="{Binding Hub}" />
@@ -139,6 +139,9 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
+                            <HorizontalStackLayout HorizontalOptions="Center">
+                                <Button Text="Copy To Clipboard" Command="{Binding CopyToClipboardCommand}" WidthRequest="160" />
+                            </HorizontalStackLayout>
                             <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
                                 <Label Text="Required Skills" FontAttributes="Bold" WidthRequest="260" />
                             </HorizontalStackLayout>

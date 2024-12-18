@@ -6,6 +6,7 @@ using Fasciculus.Eve.Support;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Support;
 using Fasciculus.Support;
+using Fasciculus.Threading;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.PageModels
@@ -42,6 +43,9 @@ namespace Fasciculus.Eve.PageModels
 
         [ObservableProperty]
         public partial EveProduction[] Productions { get; private set; }
+
+        [ObservableProperty]
+        public partial bool HasProduction { get; private set; }
 
         [ObservableProperty]
         public partial EveProduction? Production { get; set; }
@@ -187,6 +191,8 @@ namespace Fasciculus.Eve.PageModels
         {
             if (Production is null)
             {
+                HasProduction = false;
+
                 BlueprintPrice = 0;
                 Runs = 0;
                 Time = TimeSpan.Zero;
@@ -197,6 +203,8 @@ namespace Fasciculus.Eve.PageModels
             }
             else
             {
+                HasProduction = true;
+
                 BlueprintPrice = Production.BlueprintPrice;
                 JobCost = Production.JobCost;
                 SalesTax = Production.SalesTax;
@@ -245,6 +253,16 @@ namespace Fasciculus.Eve.PageModels
         private void IncrementSalesTaxRate()
         {
             settings.SalesTaxRate += 1;
+        }
+
+        [RelayCommand]
+        private Task CopyToClipboard()
+        {
+            string[] lines = [.. Inputs.Select(x => $"{x.Type.Name} [{x.Quantity}]")];
+            string text = string.Join(Environment.NewLine, lines);
+
+            return Clipboard.SetTextAsync(text)
+                .ContinueWith(_ => Tasks.Sleep(200));
         }
     }
 }

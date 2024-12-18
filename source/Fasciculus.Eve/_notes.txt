@@ -6,3 +6,7 @@ dotnet publish -f net9.0-windows10.0.19041.0
 - Plasmoids [5280]
 - Precious Metals [5280]
 - Water [5280]
+
+Tritanium [64656]
+Pyerite [60048]
+Mexallon [1008]
