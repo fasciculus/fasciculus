@@ -12,6 +12,7 @@
         <ImageButton Source="planets.png" Command="{Binding GoToCommand}" CommandParameter="//Planets" />
         <ImageButton Source="map.png" Command="{Binding GoToCommand}" CommandParameter="//Map" />
         <ImageButton Source="skills.png" Command="{Binding GoToCommand}" CommandParameter="//Skills" />
+        <ImageButton Source="warning.png" Command="{Binding GoToCommand}" CommandParameter="//Debug" />
     </VerticalStackLayout>
 
 </ContentView>

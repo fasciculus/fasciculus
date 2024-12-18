@@ -57,6 +57,7 @@
     <MauiImage Update="Resources\Images\map.png" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\planets.png" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\skills.png" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\warning.png" Resize="True" BaseSize="32,32" />
     <MauiFont Include="Resources\Fonts\*" />
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
@@ -68,6 +69,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <MauiXaml Update="Pages\DebugPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Pages\IndustryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

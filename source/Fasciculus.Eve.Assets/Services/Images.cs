@@ -123,6 +123,7 @@ namespace Fasciculus.Eve.Assets.Services
             { "market.png", "ui/texture/windowicons/market.png"},
             { "planets.png", "ui/texture/windowicons/planets.png"},
             { "skills.png", "ui/texture/windowicons/skills.png"},
+            { "warning.png", "ui/texture/windowicons/warning.png"},
         };
 
         private readonly ICopyImages copyImages;

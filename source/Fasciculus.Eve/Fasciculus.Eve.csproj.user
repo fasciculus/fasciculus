@@ -7,6 +7,9 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <MauiXaml Update="Pages\DebugPage.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
     <MauiXaml Update="Pages\IndustryPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>

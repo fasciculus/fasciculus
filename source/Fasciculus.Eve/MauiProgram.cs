@@ -42,6 +42,7 @@ namespace Fasciculus.Eve
             services.TryAddSingleton<MapPageModel>();
             services.TryAddSingleton<PlanetsPageModel>();
             services.TryAddSingleton<SkillsPageModel>();
+            services.TryAddSingleton<DebugPageModel>();
         }
 
         private static void ConfigureFonts(MauiAppBuilder builder)

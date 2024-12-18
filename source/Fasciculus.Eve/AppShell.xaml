@@ -42,4 +42,9 @@
         ContentTemplate="{DataTemplate pages:SkillsPage}"
         Route="Skills" />
 
+    <ShellContent
+        Title="Debug"
+        ContentTemplate="{DataTemplate pages:DebugPage}"
+        Route="Debug" />
+
 </Shell>

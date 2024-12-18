@@ -198,6 +198,8 @@ namespace Fasciculus.Eve.Models
     {
         private readonly EveBlueprint[] blueprints;
 
+        public int Count => blueprints.Length;
+
         public EveBlueprints(IEnumerable<EveBlueprint> blueprints)
         {
             this.blueprints = blueprints.ToArray();
