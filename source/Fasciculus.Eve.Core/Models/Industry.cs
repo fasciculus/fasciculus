@@ -247,8 +247,6 @@ namespace Fasciculus.Eve.Models
     [DebuggerDisplay("{Name}")]
     public class EveProduction
     {
-        private const int SecondsPerDay = 24 * 60 * 60;
-
         public EveBlueprint Blueprint { get; }
         public double BlueprintPrice { get; }
 

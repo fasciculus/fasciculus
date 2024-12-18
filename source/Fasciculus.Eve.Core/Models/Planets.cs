@@ -242,6 +242,11 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    public class EvePlanetChain
+    {
+
+    }
+
     public class EvePlanetBaseCosts
     {
         private readonly Dictionary<EveType, double> costs;
@@ -268,7 +273,7 @@ namespace Fasciculus.Eve.Models
         public int Quantity { get; }
         public double BuyPrice { get; }
         public double ImportTax { get; }
-        public double TotalCost => Quantity * BuyPrice + ImportTax;
+        public double Cost { get; }
 
         public EvePlanetInput(EveType type, EvePlanetSchematicLevel level, int quantity, double buyPrice, double importTax)
         {
@@ -277,6 +282,7 @@ namespace Fasciculus.Eve.Models
             Quantity = quantity;
             BuyPrice = buyPrice;
             ImportTax = importTax;
+            Cost = Quantity * BuyPrice + ImportTax;
         }
     }
 
@@ -302,6 +308,29 @@ namespace Fasciculus.Eve.Models
         }
     }
 
+    public class EvePlanetProduction2
+    {
+        private readonly EvePlanetInput[] inputs;
+        public IReadOnlyList<EvePlanetInput> Inputs => inputs;
+
+        public EvePlanetOutput Output { get; }
+
+        public double Cost { get; }
+        public double Income { get; }
+        public double Profit { get; }
+
+        public EvePlanetProduction2(IEnumerable<EvePlanetInput> inputs, EvePlanetOutput output)
+        {
+            this.inputs = [.. inputs];
+
+            Output = output;
+
+            Cost = inputs.Sum(x => x.Cost);
+            Income = Output.NetIncome;
+            Profit = Income - Cost;
+        }
+    }
+
     public class EvePlanetProduction
     {
         public EvePlanetOutput Output { get; }
@@ -322,7 +351,7 @@ namespace Fasciculus.Eve.Models
             inputs = CreateInputs(schematic, count, schematics, importLevel, baseCosts, sellOrders, customsTaxRate);
             Output = CreateOutput(schematic, baseCosts, buyOrders, customsTaxRate, salesTaxRate);
 
-            Cost = inputs.Sum(x => x.TotalCost);
+            Cost = inputs.Sum(x => x.Cost);
             Income = Output.NetIncome;
         }
 

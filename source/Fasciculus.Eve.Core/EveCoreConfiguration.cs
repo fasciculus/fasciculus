@@ -41,6 +41,7 @@ namespace Fasciculus.Eve
 
             services.TryAddSingleton<IMarket, Market>();
             services.TryAddSingleton<IPlanets, Planets>();
+            services.TryAddSingleton<IPlanetChains, PlanetChains>();
             services.TryAddSingleton<IIndustry, Industry>();
             services.TryAddSingleton<ITrades, Trades>();
 
