@@ -261,7 +261,7 @@ namespace Fasciculus.Eve.Models
         public string Name => outputs.Length > 0 ? outputs[0].Type.Name : Blueprint.Type.Name;
 
         public int Runs { get; }
-        public double RunsPerDay { get; }
+        public int Time { get; }
         public double MaterialCost { get; }
         public double JobCost { get; }
         public double SalesTax { get; }
@@ -281,7 +281,7 @@ namespace Fasciculus.Eve.Models
             BlueprintPrice = blueprintPrice;
 
             Runs = runs;
-            RunsPerDay = (1.0 * SecondsPerDay) / Math.Max(1, blueprint.Manufacturing.Time);
+            Time = runs * blueprint.Manufacturing.Time;
 
             this.inputs = inputs.ToArray();
             this.outputs = outputs.ToArray();

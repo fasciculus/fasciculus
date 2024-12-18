@@ -48,6 +48,10 @@
                         <HorizontalStackLayout Spacing="14">
                             <Label Text="Sales Tax" VerticalTextAlignment="Center" />
                             <Label Text="{Binding SalesTaxRate}" VerticalTextAlignment="Center" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Button Text="-" Command="{Binding DecrementSalesTaxRateCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                                <Button Text="+" Command="{Binding IncrementSalesTaxRateCommand}" IsEnabled="{Binding NotRunning}" WidthRequest="20" />
+                            </HorizontalStackLayout>
                         </HorizontalStackLayout>
                         <HorizontalStackLayout Spacing="14">
                             <Label Text="Ignore Skills" VerticalTextAlignment="Center" />
@@ -66,7 +70,7 @@
                         <fasciculus:WorkStateLabel Source="{Binding IndustryIndicesState}" WidthRequest="100" IsVisible="{Binding IsRunning}" />
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="14" Padding="0,14,0,0">
-                        <VerticalStackLayout>
+                        <VerticalStackLayout IsVisible="{Binding HasProductions}">
                             <HorizontalStackLayout Spacing="14">
                                 <Label Text="Product" FontAttributes="Bold" WidthRequest="260" />
                                 <Label Text="Cost" FontAttributes="Bold" WidthRequest="80" HorizontalTextAlignment="End" />
@@ -100,8 +104,10 @@
                             <HorizontalStackLayout Spacing="14">
                                 <Label Text="Runs:" WidthRequest="120" />
                                 <Label Text="{Binding Runs}" WidthRequest="120" HorizontalTextAlignment="End" />
-                                <Label Text="per Day:" />
-                                <Label Text="{Binding RunsPerDay}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="14">
+                                <Label Text="Time:" WidthRequest="120" />
+                                <Label Text="{Binding Time}" WidthRequest="120" HorizontalTextAlignment="End" />
                             </HorizontalStackLayout>
                             <HorizontalStackLayout Spacing="14">
                                 <Label Text="Job Cost:" WidthRequest="120" />

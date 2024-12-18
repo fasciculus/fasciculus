@@ -44,7 +44,7 @@ namespace Fasciculus.Eve.PageModels
         public partial EveProduction[] Productions { get; private set; }
 
         [ObservableProperty]
-        public partial EveProduction? Production { get; private set; }
+        public partial EveProduction? Production { get; set; }
 
         [ObservableProperty]
         public partial double BlueprintPrice { get; private set; }
@@ -53,7 +53,7 @@ namespace Fasciculus.Eve.PageModels
         public partial int Runs { get; private set; }
 
         [ObservableProperty]
-        public partial string RunsPerDay { get; private set; }
+        public partial TimeSpan Time { get; private set; }
 
         [ObservableProperty]
         public partial double JobCost { get; private set; }
@@ -110,7 +110,6 @@ namespace Fasciculus.Eve.PageModels
             IgnoreSkills = this.settings.IgnoreSkills;
             HasProductions = false;
             Productions = [];
-            RunsPerDay = string.Empty;
             BuyProgress = LongProgressInfo.Start;
             SellProgress = LongProgressInfo.Start;
             MarketPricesState = WorkState.Pending;
@@ -190,7 +189,7 @@ namespace Fasciculus.Eve.PageModels
             {
                 BlueprintPrice = 0;
                 Runs = 0;
-                RunsPerDay = "0.00";
+                Time = TimeSpan.Zero;
                 JobCost = 0;
                 SalesTax = 0;
                 OutputVolume = 0;
@@ -203,7 +202,7 @@ namespace Fasciculus.Eve.PageModels
                 SalesTax = Production.SalesTax;
                 OutputVolume = Production.OutputVolume;
                 Runs = Production.Runs;
-                RunsPerDay = Production.RunsPerDay.ToString("0.00");
+                Time = TimeSpan.FromSeconds(Production.Time);
                 Inputs = [.. Production.Inputs];
             }
 
@@ -234,6 +233,18 @@ namespace Fasciculus.Eve.PageModels
         private Task Start()
         {
             return industry.StartAsync();
+        }
+
+        [RelayCommand]
+        private void DecrementSalesTaxRate()
+        {
+            settings.SalesTaxRate = Math.Max(0, settings.SalesTaxRate - 1);
+        }
+
+        [RelayCommand]
+        private void IncrementSalesTaxRate()
+        {
+            settings.SalesTaxRate += 1;
         }
     }
 }

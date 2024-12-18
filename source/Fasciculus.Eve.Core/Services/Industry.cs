@@ -132,7 +132,7 @@ namespace Fasciculus.Eve.Services
         {
             return blueprints
                 .Select(x => CreateProduction(x, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex, salesTaxRate))
-                .Where(x => x.Income < 1_000_000_000)
+                //.Where(x => x.Income < 1_000_000_000)
                 .ToArray();
         }
 
