@@ -17,76 +17,76 @@ namespace Fasciculus.Eve.PageModels
         private readonly ISkillProvider skillProvider;
 
         [ObservableProperty]
-        private string hub;
+        public partial string Hub { get; private set; }
 
         [ObservableProperty]
-        private List<string> solarSystems;
+        public partial List<string> SolarSystems { get; private set; }
 
         [ObservableProperty]
-        private string selectedSolarSystem;
+        public partial string SelectedSolarSystem { get; set; }
 
         [ObservableProperty]
-        private List<string> haulers;
+        public partial List<string> Haulers { get; private set; }
 
         [ObservableProperty]
-        private int selectedHauler;
+        public partial int SelectedHauler { get; set; }
 
         [ObservableProperty]
-        private string salesTaxRate = string.Empty;
+        public partial string SalesTaxRate { get; private set; }
 
         [ObservableProperty]
-        private bool ignoreSkills;
+        public partial bool IgnoreSkills { get; set; }
 
         [ObservableProperty]
-        private bool hasProductions = false;
+        public partial bool HasProductions { get; private set; }
 
         [ObservableProperty]
-        private EveProduction[] productions = [];
+        public partial EveProduction[] Productions { get; private set; }
 
         [ObservableProperty]
-        private EveProduction? production;
+        public partial EveProduction? Production { get; private set; }
 
         [ObservableProperty]
-        private double blueprintPrice;
+        public partial double BlueprintPrice { get; private set; }
 
         [ObservableProperty]
-        private int runs;
+        public partial int Runs { get; private set; }
 
         [ObservableProperty]
-        private string runsPerDay = string.Empty;
+        public partial string RunsPerDay { get; private set; }
 
         [ObservableProperty]
-        private double jobCost;
+        public partial double JobCost { get; private set; }
 
         [ObservableProperty]
-        private double salesTax;
+        public partial double SalesTax { get; private set; }
 
         [ObservableProperty]
-        private double outputVolume;
+        public partial double OutputVolume { get; private set; }
 
         [ObservableProperty]
-        private EveProductionInput[] inputs = [];
+        public partial EveProductionInput[] Inputs { get; private set; }
 
         [ObservableProperty]
-        private EveSkillRequirement[] skillRequirements = [];
+        public partial EveSkillRequirement[] SkillRequirements { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo buyProgress = LongProgressInfo.Start;
+        public partial LongProgressInfo BuyProgress { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo sellProgress = LongProgressInfo.Start;
+        public partial LongProgressInfo SellProgress { get; private set; }
 
         [ObservableProperty]
-        private WorkState marketPricesState = WorkState.Pending;
+        public partial WorkState MarketPricesState { get; private set; }
 
         [ObservableProperty]
-        private WorkState industryIndicesState = WorkState.Pending;
+        public partial WorkState IndustryIndicesState { get; private set; }
 
         [ObservableProperty]
-        private bool isRunning = false;
+        public partial bool IsRunning { get; private set; }
 
         [ObservableProperty]
-        private bool notRunning = true;
+        public partial bool NotRunning { get; private set; }
 
         public IndustryPageModel(IEveSettings settings, IEveProvider provider, IIndustry industry, ISkillProvider skillProvider)
         {
@@ -99,15 +99,24 @@ namespace Fasciculus.Eve.PageModels
             this.skillProvider = skillProvider;
             this.settings.PropertyChanged += OnSkillsChanged;
 
-            hub = industry.Hub.FullName;
-
-            solarSystems = [.. provider.SolarSystems[EveSecurity.Level.High].Select(x => x.Name).OrderBy(x => x)];
-            selectedSolarSystem = this.settings.SolarSystem;
-
-            haulers = [.. EveHaulers.Values.Select(x => x.Caption())];
-            selectedHauler = GetHaulerIndex(this.settings.MaxVolume);
-
-            ignoreSkills = this.settings.IgnoreSkills;
+            Hub = industry.Hub.FullName;
+            SolarSystems = [.. provider.SolarSystems[EveSecurity.Level.High].Select(x => x.Name).OrderBy(x => x)];
+            SelectedSolarSystem = this.settings.SolarSystem;
+            Haulers = [.. EveHaulers.Values.Select(x => x.Caption())];
+            SelectedHauler = GetHaulerIndex(this.settings.MaxVolume);
+            SalesTaxRate = string.Empty;
+            Inputs = [];
+            SkillRequirements = [];
+            IgnoreSkills = this.settings.IgnoreSkills;
+            HasProductions = false;
+            Productions = [];
+            RunsPerDay = string.Empty;
+            BuyProgress = LongProgressInfo.Start;
+            SellProgress = LongProgressInfo.Start;
+            MarketPricesState = WorkState.Pending;
+            IndustryIndicesState = WorkState.Pending;
+            IsRunning = false;
+            NotRunning = true;
 
             FormatSettings();
 

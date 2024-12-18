@@ -14,37 +14,37 @@ namespace Fasciculus.Eve.PageModels
         private readonly IPlanets planets;
 
         [ObservableProperty]
-        private string hub;
+        public partial string Hub { get; private set; }
 
         [ObservableProperty]
-        private string customsTaxRate = string.Empty;
+        public partial string CustomsTaxRate { get; private set; }
 
         [ObservableProperty]
-        private string salesTaxRate = string.Empty;
+        public partial string SalesTaxRate { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo buyProgress = LongProgressInfo.Start;
+        public partial LongProgressInfo BuyProgress { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo sellProgress = LongProgressInfo.Start;
+        public partial LongProgressInfo SellProgress { get; private set; }
 
         [ObservableProperty]
-        private bool hasProductions = false;
+        public partial bool HasProductions { get; private set; }
 
         [ObservableProperty]
-        private EvePlanetProduction[] productions = [];
+        public partial EvePlanetProduction[] Productions { get; private set; }
 
         [ObservableProperty]
-        private EvePlanetProduction? production = null;
+        public partial EvePlanetProduction? Production { get; set; }
 
         [ObservableProperty]
-        private EvePlanetInput[] inputs = [];
+        public partial EvePlanetInput[] Inputs { get; private set; }
 
         [ObservableProperty]
-        private bool isRunning = false;
+        public partial bool IsRunning { get; set; }
 
         [ObservableProperty]
-        private bool notRunning = true;
+        public partial bool NotRunning { get; set; }
 
         public PlanetsPageModel(IEveSettings settings, IPlanets planets)
         {
@@ -53,8 +53,17 @@ namespace Fasciculus.Eve.PageModels
 
             this.planets = planets;
             this.planets.PropertyChanged += OnPlanetsChanged;
-
-            hub = planets.Hub.FullName;
+            Hub = planets.Hub.FullName;
+            CustomsTaxRate = string.Empty;
+            SalesTaxRate = string.Empty;
+            BuyProgress = LongProgressInfo.Start;
+            SellProgress = LongProgressInfo.Start;
+            HasProductions = false;
+            Productions = [];
+            Production = null;
+            Inputs = [];
+            IsRunning = false;
+            NotRunning = true;
 
             FormatSettings();
 

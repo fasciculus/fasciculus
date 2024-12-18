@@ -11,13 +11,15 @@ namespace Fasciculus.Eve.PageModels
         private readonly ISkillInfoProvider skillsProvider;
 
         [ObservableProperty]
-        private bool loading = true;
+        public partial bool Loading { get; private set; }
 
         public ObservableCollection<ISkillInfo> Skills { get; } = [];
 
         public SkillsPageModel(ISkillInfoProvider skillsProvider)
         {
             this.skillsProvider = skillsProvider;
+
+            Loading = true;
 
             Skills.CollectionChanged += OnSkillsChanged;
         }

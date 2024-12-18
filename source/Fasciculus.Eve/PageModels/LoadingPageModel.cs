@@ -13,18 +13,21 @@ namespace Fasciculus.Eve.PageModels
         private readonly INavigator navigator;
 
         [ObservableProperty]
-        private WorkState data = WorkState.Pending;
+        public partial WorkState Data { get; private set; }
 
         [ObservableProperty]
-        private WorkState universe = WorkState.Pending;
+        public partial WorkState Universe { get; private set; }
 
         [ObservableProperty]
-        private WorkState navigation = WorkState.Pending;
+        public partial WorkState Navigation { get; private set; }
 
         public LoadingPageModel(IEveResources resources, INavigator navigator)
         {
             this.resources = resources;
             this.navigator = navigator;
+            Data = WorkState.Pending;
+            Universe = WorkState.Pending;
+            Navigation = WorkState.Pending;
         }
 
         public void OnLoaded()

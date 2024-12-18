@@ -7,15 +7,15 @@ namespace Fasciculus.Eve.PageModels
     public partial class InfoPageModel : ObservableObject
     {
         [ObservableProperty]
-        private string applicationVersion;
+        public partial string ApplicationVersion { get; private set; }
 
         [ObservableProperty]
-        private string sdeVersion;
+        public partial string SdeVersion { get; private set; }
 
         public InfoPageModel(IEveProvider provider)
         {
-            applicationVersion = Assembly.GetEntryAssembly().GetVersion();
-            sdeVersion = provider.Version.ToString("yyyy-MM-dd");
+            ApplicationVersion = Assembly.GetEntryAssembly().GetVersion();
+            SdeVersion = provider.Version.ToString("yyyy-MM-dd");
         }
     }
 }

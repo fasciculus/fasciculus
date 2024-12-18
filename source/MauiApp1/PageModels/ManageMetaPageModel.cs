@@ -1,8 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MauiApp1.Data;
 using MauiApp1.Models;
-using MauiApp1.Services;
 using System.Collections.ObjectModel;
 
 namespace MauiApp1.PageModels
@@ -14,16 +12,18 @@ namespace MauiApp1.PageModels
         private readonly SeedDataService _seedDataService;
 
         [ObservableProperty]
-        private ObservableCollection<Category> _categories = [];
+        public partial ObservableCollection<Category> Categories { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<Tag> _tags = [];
+        public partial ObservableCollection<Tag> Tags { get; set; }
 
         public ManageMetaPageModel(CategoryRepository categoryRepository, TagRepository tagRepository, SeedDataService seedDataService)
         {
             _categoryRepository = categoryRepository;
             _tagRepository = tagRepository;
             _seedDataService = seedDataService;
+            Categories = [];
+            Tags = [];
         }
 
         private async Task LoadData()

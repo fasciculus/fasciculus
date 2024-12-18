@@ -1,9 +1,7 @@
 #nullable disable
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MauiApp1.Data;
 using MauiApp1.Models;
-using MauiApp1.Services;
 
 namespace MauiApp1.PageModels
 {
@@ -12,11 +10,12 @@ namespace MauiApp1.PageModels
         private readonly ProjectRepository _projectRepository;
 
         [ObservableProperty]
-        private List<Project> _projects = [];
+        public partial List<Project> Projects { get; set; }
 
         public ProjectListPageModel(ProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;
+            Projects = [];
         }
 
         [RelayCommand]

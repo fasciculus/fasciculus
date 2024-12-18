@@ -16,58 +16,58 @@ namespace Fasciculus.Eve.Assets.PageModels
         private readonly ICreateResources createResources;
 
         [ObservableProperty]
-        private DownloadSdeStatus downloadSde = DownloadSdeStatus.Pending;
+        public partial DownloadSdeStatus DownloadSde { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo extractSde = LongProgressInfo.Start;
+        public partial LongProgressInfo ExtractSde { get; private set; }
 
         [ObservableProperty]
-        private WorkState parseNames = WorkState.Pending;
+        public partial WorkState ParseNames { get; private set; }
 
         [ObservableProperty]
-        private WorkState parseMarketGroups = WorkState.Pending;
+        public partial WorkState ParseMarketGroups { get; private set; }
 
         [ObservableProperty]
-        private WorkState parseTypes = WorkState.Pending;
+        public partial WorkState ParseTypes { get; private set; }
 
         [ObservableProperty]
-        private WorkState parseStationOperations = WorkState.Pending;
+        public partial WorkState ParseStationOperations { get; private set; }
 
         [ObservableProperty]
-        private WorkState parseNpcCorporations = WorkState.Pending;
+        public partial WorkState ParseNpcCorporations { get; private set; }
 
         [ObservableProperty]
-        private WorkState parsePlanetSchematics = WorkState.Pending;
+        public partial WorkState ParsePlanetSchematics { get; private set; }
 
         [ObservableProperty]
-        private WorkState parseBlueprints = WorkState.Pending;
+        public partial WorkState ParseBlueprints { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo parseRegions = LongProgressInfo.Start;
+        public partial LongProgressInfo ParseRegions { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo parseConstellations = LongProgressInfo.Start;
+        public partial LongProgressInfo ParseConstellations { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo parseSolarSystems = LongProgressInfo.Start;
+        public partial LongProgressInfo ParseSolarSystems { get; private set; }
 
         [ObservableProperty]
-        private WorkState convertData = WorkState.Pending;
+        public partial WorkState ConvertData { get; private set; }
 
         [ObservableProperty]
-        private WorkState convertUniverse = WorkState.Pending;
+        public partial WorkState ConvertUniverse { get; private set; }
 
         [ObservableProperty]
-        private WorkState createConnections = WorkState.Pending;
+        public partial WorkState CreateConnections { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo createDistances = LongProgressInfo.Start;
+        public partial LongProgressInfo CreateDistances { get; private set; }
 
         [ObservableProperty]
-        private LongProgressInfo copyImages = LongProgressInfo.Start;
+        public partial LongProgressInfo CopyImages { get; private set; }
 
         [ObservableProperty]
-        private WorkState createImages = WorkState.Pending;
+        public partial WorkState CreateImages { get; private set; }
 
         public ObservableCollection<string> ChangedResources { get; } = [];
 
@@ -82,6 +82,30 @@ namespace Fasciculus.Eve.Assets.PageModels
             this.assetsDirectories = assetsDirectories;
             this.createResources = createResources;
             this.logger = logger;
+
+            DownloadSde = DownloadSdeStatus.Pending;
+            ExtractSde = LongProgressInfo.Start;
+
+            ParseNames = WorkState.Pending;
+            ParseMarketGroups = WorkState.Pending;
+            ParseTypes = WorkState.Pending;
+            ParseStationOperations = WorkState.Pending;
+            ParseNpcCorporations = WorkState.Pending;
+            ParsePlanetSchematics = WorkState.Pending;
+            ParseBlueprints = WorkState.Pending;
+
+            ParseRegions = LongProgressInfo.Start;
+            ParseConstellations = LongProgressInfo.Start;
+            ParseSolarSystems = LongProgressInfo.Start;
+
+            ConvertData = WorkState.Pending;
+            ConvertUniverse = WorkState.Pending;
+
+            CreateConnections = WorkState.Pending;
+            CreateDistances = LongProgressInfo.Start;
+
+            CopyImages = LongProgressInfo.Start;
+            CreateImages = WorkState.Pending;
         }
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)

@@ -15,25 +15,25 @@ namespace MauiApp1.PageModels
         private readonly SeedDataService _seedDataService;
 
         [ObservableProperty]
-        private List<CategoryChartData> _todoCategoryData = [];
+        public partial List<CategoryChartData> TodoCategoryData { get; set; }
 
         [ObservableProperty]
-        private List<Brush> _todoCategoryColors = [];
+        public partial List<Brush> TodoCategoryColors { get; set; }
 
         [ObservableProperty]
-        private List<ProjectTask> _tasks = [];
+        public partial List<ProjectTask> Tasks { get; set; }
 
         [ObservableProperty]
-        private List<Project> _projects = [];
+        public partial List<Project> Projects { get; set; }
 
         [ObservableProperty]
-        bool _isBusy;
+        public partial bool IsBusy { get; set; }
 
         [ObservableProperty]
-        bool _isRefreshing;
+        public partial bool IsRefreshing { get; set; }
 
         [ObservableProperty]
-        private string _today = DateTime.Now.ToString("dddd, MMM d");
+        public partial string Today { get; set; }
 
         public bool HasCompletedTasks
             => Tasks?.Any(t => t.IsCompleted) ?? false;
@@ -46,6 +46,14 @@ namespace MauiApp1.PageModels
             _categoryRepository = categoryRepository;
             _errorHandler = errorHandler;
             _seedDataService = seedDataService;
+
+            TodoCategoryData = [];
+            TodoCategoryColors = [];
+            Tasks = [];
+            Projects = [];
+            IsBusy = false;
+            IsRefreshing = false;
+            Today = DateTime.Now.ToString("dddd, MMM d");
         }
 
         private async Task LoadData()

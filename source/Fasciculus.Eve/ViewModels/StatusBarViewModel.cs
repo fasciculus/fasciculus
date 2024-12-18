@@ -13,15 +13,18 @@ namespace Fasciculus.Eve.ViewModels
         private readonly IExceptions exceptions;
 
         [ObservableProperty]
-        private string text = NoError;
+        public partial string Text { get; private set; }
 
         [ObservableProperty]
-        private bool isError = false;
+        public partial bool IsError { get; private set; }
 
         public StatusBarViewModel(IExceptions exceptions)
         {
             this.exceptions = exceptions;
             this.exceptions.PropertyChanged += OnExceptionsChanged;
+
+            Text = NoError;
+            IsError = false;
         }
 
         private void OnExceptionsChanged(object? sender, PropertyChangedEventArgs e)

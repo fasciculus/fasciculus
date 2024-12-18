@@ -14,43 +14,34 @@ namespace MauiApp1.PageModels
         private readonly ModalErrorHandler _errorHandler;
 
         [ObservableProperty]
-        private string _name = string.Empty;
+        public partial string Name { get; set; }
 
         [ObservableProperty]
-        private string _description = string.Empty;
+        public partial string Description { get; set; }
 
         [ObservableProperty]
-        private List<ProjectTask> _tasks = [];
+        public partial List<ProjectTask> Tasks { get; set; }
 
         [ObservableProperty]
-        private List<Category> _categories = [];
+        public partial List<Category> Categories { get; set; }
 
         [ObservableProperty]
-        private Category? _category;
+        public partial Category? Category { get; set; }
 
         [ObservableProperty]
-        private int _categoryIndex = -1;
+        public partial int CategoryIndex { get; set; }
 
         [ObservableProperty]
-        private List<Tag> _allTags = [];
+        public partial List<Tag> AllTags { get; set; }
 
         [ObservableProperty]
-        private string _icon = FluentUI.ribbon_24_regular;
+        public partial string Icon { get; set; }
 
         [ObservableProperty]
-        bool _isBusy;
+        public partial bool IsBusy { get; set; }
 
         [ObservableProperty]
-        private List<string> _icons =
-        [
-            FluentUI.ribbon_24_regular,
-            FluentUI.ribbon_star_24_regular,
-            FluentUI.trophy_24_regular,
-            FluentUI.badge_24_regular,
-            FluentUI.book_24_regular,
-            FluentUI.people_24_regular,
-            FluentUI.bot_24_regular
-        ];
+        public partial List<string> Icons { get; set; }
 
         public bool HasCompletedTasks
             => _project?.Tasks.Any(t => t.IsCompleted) ?? false;
@@ -62,8 +53,25 @@ namespace MauiApp1.PageModels
             _categoryRepository = categoryRepository;
             _tagRepository = tagRepository;
             _errorHandler = errorHandler;
-
+            Name = string.Empty;
+            Description = string.Empty;
             Tasks = [];
+            Categories = [];
+            Category = null;
+            CategoryIndex = -1;
+            AllTags = [];
+            Icon = FluentUI.ribbon_24_regular;
+            IsBusy = false;
+            Icons =
+            [
+                FluentUI.ribbon_24_regular,
+                FluentUI.ribbon_star_24_regular,
+                FluentUI.trophy_24_regular,
+                FluentUI.badge_24_regular,
+                FluentUI.book_24_regular,
+                FluentUI.people_24_regular,
+                FluentUI.bot_24_regular
+            ];
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)

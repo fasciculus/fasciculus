@@ -1,8 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MauiApp1.Data;
 using MauiApp1.Models;
-using MauiApp1.Services;
 
 namespace MauiApp1.PageModels
 {
@@ -16,29 +14,34 @@ namespace MauiApp1.PageModels
         private readonly ModalErrorHandler _errorHandler;
 
         [ObservableProperty]
-        private string _title = string.Empty;
+        public partial string Title { get; set; }
 
         [ObservableProperty]
-        private bool _isCompleted;
+        public partial bool IsCompleted { get; set; }
 
         [ObservableProperty]
-        private List<Project> _projects = [];
+        public partial List<Project> Projects { get; set; }
 
         [ObservableProperty]
-        private Project? _project;
+        public partial Project? Project { get; set; }
 
         [ObservableProperty]
-        private int _selectedProjectIndex = -1;
-
+        public partial int SelectedProjectIndex { get; set; }
 
         [ObservableProperty]
-        private bool _isExistingProject;
+        public partial bool IsExistingProject { get; set; }
 
         public TaskDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, ModalErrorHandler errorHandler)
         {
             _projectRepository = projectRepository;
             _taskRepository = taskRepository;
             _errorHandler = errorHandler;
+            Title = string.Empty;
+            IsCompleted = false;
+            Projects = [];
+            Project = null;
+            SelectedProjectIndex = -1;
+            IsExistingProject = false;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
