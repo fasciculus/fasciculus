@@ -6,6 +6,8 @@ namespace Fasciculus.Eve.Services
 {
     public interface IPlanetSchematics
     {
+        public EvePlanetSchematic this[EveType type] { get; }
+
         public IReadOnlyList<EvePlanetSchematic> P0 { get; }
         public IReadOnlyList<EvePlanetSchematic> P1 { get; }
         public IReadOnlyList<EvePlanetSchematic> P2 { get; }
@@ -27,6 +29,10 @@ namespace Fasciculus.Eve.Services
         public IReadOnlyList<EvePlanetSchematic> P3 => p3;
         public IReadOnlyList<EvePlanetSchematic> P4 => p4;
 
+        private readonly Dictionary<EveType, EvePlanetSchematic> byOutputType;
+
+        public EvePlanetSchematic this[EveType type] => byOutputType[type];
+
         public PlanetSchematics(IEveProvider provider)
         {
             EvePlanetSchematics schematics = provider.PlanetSchematics;
@@ -46,6 +52,8 @@ namespace Fasciculus.Eve.Services
 
             p4 = FetchP4(schematics, p0, p1, p2, p3);
             p4.Apply(x => { x.Level = 4; });
+
+            byOutputType = p0.Concat(schematics).ToDictionary(x => x.OutputType);
         }
 
         private static EvePlanetSchematic[] FetchP0(IEnumerable<EveType> inputTypes, IEnumerable<EveType> outputTypes, EveTypes types)

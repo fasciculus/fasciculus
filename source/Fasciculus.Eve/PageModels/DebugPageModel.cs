@@ -16,7 +16,7 @@ namespace Fasciculus.Eve.PageModels
         public int ShortBlueprints { get; private set; }
         public int LongBlueprints { get; private set; }
 
-        public DebugPageModel(IEveProvider provider, IEsiClient esiClient)
+        public DebugPageModel(IEveProvider provider, IEsiClient esiClient, IPlanetChains planetChains)
         {
             EveMarketPrices? marketPrices = Tasks.Wait(esiClient.GetMarketPricesAsync());
             EveBlueprints blueprints = provider.Blueprints;

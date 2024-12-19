@@ -8,47 +8,7 @@ using System.Linq;
 
 namespace Fasciculus.Eve.Models
 {
-    [DebuggerDisplay("{Type.Name} (x{Quantity})")]
-    public class EvePlanetSchematicType
-    {
-        public class Data
-        {
-            public int Type { get; }
-            public int Quantity { get; }
-
-            public Data(int id, int quantity)
-            {
-                Type = id;
-                Quantity = quantity;
-            }
-
-            public Data(Stream stream)
-            {
-                Type = stream.ReadInt();
-                Quantity = stream.ReadInt();
-            }
-
-            public void Write(Stream stream)
-            {
-                stream.WriteInt(Type);
-                stream.WriteInt(Quantity);
-            }
-        }
-
-        private readonly Data data;
-
-        public EveType Type { get; }
-        public int Quantity => data.Quantity;
-
-        public EvePlanetSchematicType(Data data, EveTypes types)
-        {
-            this.data = data;
-
-            Type = types[data.Type];
-        }
-    }
-
-    [DebuggerDisplay("{Name}")]
+    [DebuggerDisplay("{Name} (P{Level})")]
     public class EvePlanetSchematic
     {
         public class Data
@@ -57,12 +17,12 @@ namespace Fasciculus.Eve.Models
             public string Name { get; }
             public int CycleTime { get; }
 
-            private readonly EvePlanetSchematicType.Data[] inputs;
-            public IReadOnlyList<EvePlanetSchematicType.Data> Inputs => inputs;
+            private readonly EvePlanetTypeQuantity.Data[] inputs;
+            public IReadOnlyList<EvePlanetTypeQuantity.Data> Inputs => inputs;
 
-            public EvePlanetSchematicType.Data Output { get; }
+            public EvePlanetTypeQuantity.Data Output { get; }
 
-            public Data(int id, string name, int cycleTime, IEnumerable<EvePlanetSchematicType.Data> inputs, EvePlanetSchematicType.Data output)
+            public Data(int id, string name, int cycleTime, IEnumerable<EvePlanetTypeQuantity.Data> inputs, EvePlanetTypeQuantity.Data output)
             {
                 Id = id;
                 Name = name;
@@ -76,8 +36,8 @@ namespace Fasciculus.Eve.Models
                 Id = stream.ReadInt();
                 Name = stream.ReadString();
                 CycleTime = stream.ReadInt();
-                inputs = stream.ReadArray(s => new EvePlanetSchematicType.Data(s));
-                Output = new EvePlanetSchematicType.Data(stream);
+                inputs = stream.ReadArray(s => new EvePlanetTypeQuantity.Data(s));
+                Output = new EvePlanetTypeQuantity.Data(stream);
             }
 
             public void Write(Stream stream)
@@ -96,13 +56,13 @@ namespace Fasciculus.Eve.Models
         public string Name => data.Name;
         public int CycleTime => data.CycleTime;
 
-        private readonly EvePlanetSchematicType[] inputs;
-        public IReadOnlyList<EvePlanetSchematicType> Inputs => inputs;
+        private readonly EvePlanetTypeQuantity[] inputs;
+        public IReadOnlyList<EvePlanetTypeQuantity> Inputs => inputs;
 
         private readonly EveType[] inputTypes;
         public IReadOnlyList<EveType> InputTypes => inputTypes;
 
-        public EvePlanetSchematicType Output { get; }
+        public EvePlanetTypeQuantity Output { get; }
         public EveType OutputType { get; }
 
         public int Level { get; internal set; }
@@ -111,10 +71,10 @@ namespace Fasciculus.Eve.Models
         {
             this.data = data;
 
-            inputs = data.Inputs.Select(x => new EvePlanetSchematicType(x, types)).ToArray();
+            inputs = data.Inputs.Select(x => new EvePlanetTypeQuantity(x, types)).ToArray();
             inputTypes = [.. inputs.Select(x => x.Type)];
 
-            Output = new EvePlanetSchematicType(data.Output, types);
+            Output = new EvePlanetTypeQuantity(data.Output, types);
             OutputType = Output.Type;
 
             Level = 0;
@@ -149,11 +109,6 @@ namespace Fasciculus.Eve.Models
 
         IEnumerator IEnumerable.GetEnumerator()
             => planetSchematics.GetEnumerator();
-    }
-
-    public class EvePlanetChain
-    {
-
     }
 
     [DebuggerDisplay("{Type.Name} (x {Quantity})")]

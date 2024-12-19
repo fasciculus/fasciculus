@@ -123,17 +123,17 @@ namespace Fasciculus.Eve.Assets.Services
             string name = sdePlanetSchematic.NameID.En;
             int cycleTime = sdePlanetSchematic.CycleTime;
 
-            EvePlanetSchematicType.Data[] inputs = [.. sdePlanetSchematic.Types
+            EvePlanetTypeQuantity.Data[] inputs = [.. sdePlanetSchematic.Types
                 .Where(x => x.Value.IsInput)
                 .Select(ConvertPlanetSchematicType)
                 .OrderBy(x => x.Type)];
 
-            EvePlanetSchematicType.Data output = ConvertPlanetSchematicType(sdePlanetSchematic.Types.Single(x => !x.Value.IsInput));
+            EvePlanetTypeQuantity.Data output = ConvertPlanetSchematicType(sdePlanetSchematic.Types.Single(x => !x.Value.IsInput));
 
             return new(id, name, cycleTime, inputs, output);
         }
 
-        private static EvePlanetSchematicType.Data ConvertPlanetSchematicType(KeyValuePair<int, SdePlanetSchematicType> kvp)
+        private static EvePlanetTypeQuantity.Data ConvertPlanetSchematicType(KeyValuePair<int, SdePlanetSchematicType> kvp)
         {
             SdePlanetSchematicType sdePlanetSchematicType = kvp.Value;
 

@@ -10,15 +10,6 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Services
 {
-    public interface IPlanetChains
-    {
-    }
-
-    public class PlanetChains : IPlanetChains
-    {
-
-    }
-
     public interface IPlanets : INotifyPropertyChanged
     {
         public EveStation Hub { get; }
