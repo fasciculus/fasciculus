@@ -81,9 +81,10 @@ namespace Fasciculus.Eve.Assets.Services
             int id = kvp.Key;
             string name = sdeType.Name.En;
             double volume = sdeType.Volume;
+            int metaGroupId = (int)sdeType.MetaGroupId;
             int marketGroupId = sdeType.MarketGroupID;
 
-            return new(id, name, volume, marketGroupId);
+            return new(id, name, volume, metaGroupId, marketGroupId);
         }
 
         private static EveStationOperation.Data[] ConvertStationOperations(Dictionary<int, SdeStationOperation> stationOperations)
