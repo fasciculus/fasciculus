@@ -15,7 +15,7 @@ namespace Fasciculus.Eve.Services
     public interface IEsiHttp
     {
         public Task<string?> GetSingle(string uri);
-        public Task<string[]> GetPaged(string uri, IAccumulatingLongProgress progress);
+        public Task<Tuple<string[], bool>> GetPaged(string uri, IAccumulatingLongProgress progress);
     }
 
     public class EsiHttp : IEsiHttp
@@ -43,11 +43,12 @@ namespace Fasciculus.Eve.Services
             return textAndPages?.Item1;
         }
 
-        public async Task<string[]> GetPaged(string uri, IAccumulatingLongProgress progress)
+        public async Task<Tuple<string[], bool>> GetPaged(string uri, IAccumulatingLongProgress progress)
         {
             using Locker locker = Locker.Lock(mutex);
 
             List<string> result = [];
+            bool success = true;
             int page = 1;
             int pages = 1;
 
@@ -60,6 +61,7 @@ namespace Fasciculus.Eve.Services
 
                 if (textAndPages is null)
                 {
+                    success = false;
                     break;
                 }
 
@@ -81,7 +83,7 @@ namespace Fasciculus.Eve.Services
 
             progress.End();
 
-            return [.. result];
+            return Tuple.Create(result.ToArray(), success);
         }
 
         private async Task<Tuple<string, int>?> Get(string uri)

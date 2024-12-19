@@ -1,6 +1,7 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Support;
 using Fasciculus.Threading;
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -51,9 +52,11 @@ namespace Fasciculus.Eve.Services
 
             if (data is null)
             {
-                data = await GetRegionOrders(region, "buy", progress);
+                Tuple<EveRegionOrders.Data?, bool> response = await GetRegionOrders(region, "buy", progress);
 
-                if (data is not null)
+                data = response.Item1;
+
+                if (data is not null && response.Item2)
                 {
                     esiCache.SetRegionBuyOrders(region, data);
                 }
@@ -74,9 +77,11 @@ namespace Fasciculus.Eve.Services
 
             if (data is null)
             {
-                data = await GetRegionOrders(region, "sell", progress);
+                Tuple<EveRegionOrders.Data?, bool> response = await GetRegionOrders(region, "sell", progress);
 
-                if (data is not null)
+                data = response.Item1;
+
+                if (data is not null && response.Item2)
                 {
                     esiCache.SetRegionSellOrders(region, data);
                 }
@@ -87,11 +92,11 @@ namespace Fasciculus.Eve.Services
             return data is null ? null : new(data, types, stations);
         }
 
-        private async Task<EveRegionOrders.Data?> GetRegionOrders(EveRegion region, string orderType, IAccumulatingLongProgress progress)
+        private async Task<Tuple<EveRegionOrders.Data?, bool>> GetRegionOrders(EveRegion region, string orderType, IAccumulatingLongProgress progress)
         {
             string uri = $"markets/{region.Id}/orders/?order_type={orderType}";
-            string[] texts = await esiHttp.GetPaged(uri, progress);
-            EsiMarketOrder[] esiOrders = [.. texts.SelectMany(text => JsonSerializer.Deserialize<EsiMarketOrder[]>(text) ?? [])];
+            Tuple<string[], bool> response = await esiHttp.GetPaged(uri, progress);
+            EsiMarketOrder[] esiOrders = [.. response.Item1.SelectMany(text => JsonSerializer.Deserialize<EsiMarketOrder[]>(text) ?? [])];
 
             if (esiOrders.Length > 0)
             {
@@ -99,10 +104,13 @@ namespace Fasciculus.Eve.Services
                     .Select(ConvertMarketOrder)
                     .Where(x => stations.Contains(x.Location) && types.Contains(x.Type))];
 
-                return new(orders);
+                EveRegionOrders.Data data = new(orders);
+                Tuple<EveRegionOrders.Data?, bool> result = new(data, response.Item2);
+
+                return result;
             }
 
-            return null;
+            return new Tuple<EveRegionOrders.Data?, bool>(null, false);
         }
 
         private static EveMarketOrder.Data ConvertMarketOrder(EsiMarketOrder order)
