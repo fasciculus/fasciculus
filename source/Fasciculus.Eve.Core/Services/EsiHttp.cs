@@ -2,6 +2,7 @@
 using Fasciculus.Net;
 using Fasciculus.Support;
 using Fasciculus.Threading;
+using Fasciculus.Threading.Synchronization;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

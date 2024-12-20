@@ -3,6 +3,7 @@ using Fasciculus.Steam.Models;
 using Fasciculus.Steam.Services;
 using Fasciculus.Support;
 using Fasciculus.Threading;
+using Fasciculus.Threading.Synchronization;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services

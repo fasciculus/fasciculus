@@ -14,7 +14,7 @@
     <PackageReference Include="Microsoft.Win32.Registry" />
   </ItemGroup>
 
-  <Import Project="../../MultiTargeting.props"/>
+  <Import Project="../../MultiTargeting.props" />
 
   <Target Name="DisableWinRTSourceGenerator" BeforeTargets="CoreCompile">
     <ItemGroup>
