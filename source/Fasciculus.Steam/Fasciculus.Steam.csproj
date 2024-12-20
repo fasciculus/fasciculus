@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0-windows</TargetFrameworks>
+    <TargetFrameworks>net9.0-windows10.0.19041.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Extensions/Fasciculus.Extensions.csproj" />
-    <ProjectReference Include="../Fasciculus.Windows/Fasciculus.Windows.csproj" />
   </ItemGroup>
 
 </Project>

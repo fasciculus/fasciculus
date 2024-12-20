@@ -1,5 +1,5 @@
 ﻿using Fasciculus.Steam.Models;
-using Fasciculus.Windows;
+using Fasciculus.Windows.WindowsRegistry;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.IO;
