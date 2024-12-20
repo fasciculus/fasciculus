@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;$(_FasciculusDotNetTfm);$(FasciculusPlatforms)</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;$(FasciculusDotNetTfm);$(FasciculusPlatforms)</TargetFrameworks>
     <RootNamespace>Fasciculus</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -10,7 +10,7 @@
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(_FasciculusTargetPlatformIsWindows)' == 'true'">
+  <ItemGroup Condition="'$(FasciculusTargetPlatformIsWindows)' == 'true'">
     <PackageReference Include="Microsoft.Win32.Registry" />
   </ItemGroup>
 
@@ -26,7 +26,8 @@
     <Message Importance="high" Text="----- Build Info -----" />
     <Message Importance="high" Text="TargetFramework = '$(TargetFramework)'" />
     <Message Importance="high" Text="TargetPlatformIdentifier = '$(TargetPlatformIdentifier)'" />
-    <Message Importance="high" Text="DefineConstants = '$(DefineConstants)'" />
+    <Message Importance="high" Text="FasciculusTargetPlatformIsWindows = '$(FasciculusTargetPlatformIsWindows)'" />
+    <Message Importance="high" Text="FasciculusDotNetWindowsTfm = '$(FasciculusDotNetWindowsTfm)'" />
     <Message Importance="high" Text="----------------------" />
   </Target>
 

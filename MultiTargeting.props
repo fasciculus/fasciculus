@@ -6,4 +6,9 @@
     <None Include="**/*.windows.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == '$(FasciculusDotNetTfm)' OR $(TargetFramework.StartsWith('netstandard'))">
+    <Compile Remove="**/*.netstandard.cs" />
+    <None Include="**/*.netstandard.cs" />
+  </ItemGroup>
+
 </Project>

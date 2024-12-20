@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-windows$(WindowsTargetFrameworkVersion)</TargetFrameworks>
+		<TargetFrameworks>$(FasciculusDotNetWindowsTfm)</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Fasciculus.Eve.Assets</RootNamespace>
 		<UseMaui>true</UseMaui>

@@ -46,6 +46,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <FasciculusTargetPlatformIsWindows Condition="'$(FasciculusTargetPlatformIsWindows)' == ''">$(_FasciculusTargetPlatformIsWindows)</FasciculusTargetPlatformIsWindows>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <DefineConstants Condition="'$(_FasciculusTargetPlatformIsWindows)' == 'true'">$(DefineConstants);WINDOWS</DefineConstants>
   </PropertyGroup>
 
@@ -62,8 +66,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <FasciculusWindowsPlatforms Condition="'$(FasciculusWindowsPlatforms)' == ''">net$(_FasciculusDotNetVersion)-windows$(WindowsTargetFrameworkVersion)</FasciculusWindowsPlatforms>
-    <FasciculusPlatforms Condition="'$(IncludeWindowsTargetFrameworks)' == 'true'">$(FasciculusWindowsPlatforms);$(FasciculusPlatforms)</FasciculusPlatforms>
+    <FasciculusDotNetTfm Condition="'$(FasciculusDotNetTfm)' == ''">$(_FasciculusDotNetTfm)</FasciculusDotNetTfm>
+    <FasciculusDotNetWindowsTfm Condition="'$(FasciculusDotNetWindowsTfm)' == ''">$(FasciculusDotNetTfm)-windows$(WindowsTargetFrameworkVersion)</FasciculusDotNetWindowsTfm>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <FasciculusPlatforms Condition="'$(IncludeWindowsTargetFrameworks)' == 'true'">$(FasciculusDotNetWindowsTfm);$(FasciculusPlatforms)</FasciculusPlatforms>
   </PropertyGroup>
 
 </Project>
