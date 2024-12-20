@@ -1,7 +1,5 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
-using Fasciculus.IO;
-using Fasciculus.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Maui.Hosting;

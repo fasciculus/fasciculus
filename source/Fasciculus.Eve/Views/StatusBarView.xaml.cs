@@ -1,5 +1,4 @@
 using Fasciculus.Eve.ViewModels;
-using Fasciculus.Support;
 
 namespace Fasciculus.Eve.Views;
 
@@ -9,6 +8,6 @@ public partial class StatusBarView : ContentView
     {
         InitializeComponent();
 
-        BindingContext = GlobalServices.GetRequiredService<StatusBarViewModel>();
+        BindingContext = ServiceRegistry.GetRequiredService<StatusBarViewModel>();
     }
 }

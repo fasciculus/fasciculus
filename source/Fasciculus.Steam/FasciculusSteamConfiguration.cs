@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Fasciculus.Steam.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Fasciculus.Steam.Services
+namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class SteamServices
+    public static class FasciculusSteamConfiguration
     {
         public static IServiceCollection AddSteam(this IServiceCollection services)
         {

@@ -1,6 +1,4 @@
 ﻿using Fasciculus.Interop;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.IO;
 using static System.Environment;
@@ -56,20 +54,5 @@ namespace Fasciculus.IO
 
     public static class FileSystemServices
     {
-        public static IServiceCollection AddSpecialPaths(this IServiceCollection services)
-        {
-            services.TryAddSingleton<ISpecialPaths, SpecialPaths>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddSpecialDirectories(this IServiceCollection services)
-        {
-            services.AddSpecialPaths();
-
-            services.TryAddSingleton<ISpecialDirectories, SpecialDirectories>();
-
-            return services;
-        }
     }
 }

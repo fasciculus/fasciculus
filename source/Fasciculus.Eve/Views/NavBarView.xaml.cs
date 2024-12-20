@@ -1,5 +1,4 @@
 using Fasciculus.Eve.ViewModels;
-using Fasciculus.Support;
 
 namespace Fasciculus.Eve.Views;
 
@@ -9,6 +8,6 @@ public partial class NavBarView : ContentView
     {
         InitializeComponent();
 
-        BindingContext = GlobalServices.GetRequiredService<NavBarViewModel>();
+        BindingContext = ServiceRegistry.GetRequiredService<NavBarViewModel>();
     }
 }

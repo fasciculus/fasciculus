@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Fasciculus.Eve.PageModels;
 using Fasciculus.Eve.ViewModels;
-using Fasciculus.Maui;
-using Fasciculus.Support;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +23,7 @@ namespace Fasciculus.Eve
 
             MauiApp app = builder.Build();
 
-            GlobalServices.Initialize(app.Services);
+            ServiceRegistry.Initialize(app.Services);
 
             return app;
         }

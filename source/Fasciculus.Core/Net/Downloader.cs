@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -63,17 +61,6 @@ namespace Fasciculus.Net
             }
 
             return new(destination, notModified);
-        }
-    }
-
-    public static class DownloaderServices
-    {
-        public static IServiceCollection AddDownloader(this IServiceCollection services)
-        {
-            services.AddHttpClientPool();
-            services.TryAddSingleton<IDownloader, Downloader>();
-
-            return services;
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using Fasciculus.Support;
 using Fasciculus.Threading;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,16 +75,6 @@ namespace Fasciculus.IO
             using GZipStream gzStream = new(compressed, CompressionMode.Decompress);
 
             gzStream.CopyTo(uncompressed);
-        }
-    }
-
-    public static class CompressionServices
-    {
-        public static IServiceCollection AddCompression(this IServiceCollection services)
-        {
-            services.TryAddSingleton<ICompression, Compression>();
-
-            return services;
         }
     }
 

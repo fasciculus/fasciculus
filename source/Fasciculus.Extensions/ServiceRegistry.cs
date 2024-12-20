@@ -1,12 +1,12 @@
-﻿using Fasciculus.Threading;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Fasciculus.Support;
+using Fasciculus.Threading;
 using System;
 
-namespace Fasciculus.Support
+namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class GlobalServices
+    public static class ServiceRegistry
     {
-        private static readonly TaskSafeMutex mutex = new TaskSafeMutex();
+        private static readonly TaskSafeMutex mutex = new();
 
         private static IServiceProvider? services = null;
 
@@ -14,9 +14,9 @@ namespace Fasciculus.Support
         {
             using Locker locker = Locker.Lock(mutex);
 
-            Cond.IsNull(GlobalServices.services);
+            Cond.IsNull(ServiceRegistry.services);
 
-            GlobalServices.services = services;
+            ServiceRegistry.services = services;
         }
 
         public static T GetRequiredService<T>()

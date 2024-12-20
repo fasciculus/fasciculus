@@ -1,6 +1,4 @@
 ﻿using Fasciculus.Support;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.IO;
 using System.Linq;
@@ -81,18 +79,6 @@ namespace Fasciculus.IO
             }
 
             throw Ex.ResourceNotFound(name);
-        }
-    }
-
-    public static class ResourceServices
-    {
-        public static IServiceCollection AddEmbeddedResources(this IServiceCollection services)
-        {
-            services.AddCompression();
-
-            services.TryAddSingleton<IEmbeddedResources, EmbeddedResources>();
-
-            return services;
         }
     }
 }
