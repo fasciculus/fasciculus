@@ -1,6 +1,6 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Support;
-using Fasciculus.Threading;
+using Fasciculus.Threading.Synchronization;
 using System;
 using System.Linq;
 using System.Text.Json;

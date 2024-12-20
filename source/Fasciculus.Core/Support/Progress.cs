@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Threading;
+using Fasciculus.Threading.Synchronization;
 using System;
 
 namespace Fasciculus.Support
