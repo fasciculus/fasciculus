@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 
-namespace Fasciculus.Windows
+namespace Fasciculus.Windows.WindowsRegistry
 {
     public class RegistryValue
     {
@@ -60,8 +60,8 @@ namespace Fasciculus.Windows
             {
                 case RegistryValueKind.None: return new(name, kind);
                 case RegistryValueKind.Unknown: return new(name, kind);
-                case RegistryValueKind.String: return new(name, kind, Convert.ToString(value));
-                case RegistryValueKind.ExpandString: return new(name, kind, Convert.ToString(value));
+                case RegistryValueKind.String: return new(name, kind, Convert.ToString(value) ?? string.Empty);
+                case RegistryValueKind.ExpandString: return new(name, kind, Convert.ToString(value) ?? string.Empty);
                 case RegistryValueKind.Binary: return new(name, kind);
                 case RegistryValueKind.DWord: return new(name, kind, Convert.ToUInt32(value));
                 case RegistryValueKind.MultiString: return new(name, kind);

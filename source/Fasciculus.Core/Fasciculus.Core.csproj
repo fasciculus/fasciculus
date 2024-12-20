@@ -10,20 +10,24 @@
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(_FasciculusTargetPlatformIsWindows)' == 'true'">
+    <PackageReference Include="Microsoft.Win32.Registry" />
+  </ItemGroup>
+
+  <Import Project="../../MultiTargeting.props"/>
+
   <Target Name="DisableWinRTSourceGenerator" BeforeTargets="CoreCompile">
     <ItemGroup>
-      <Analyzer Remove="@(Analyzer)" Condition="'%(FileName)%(Extension)' == 'WinRT.SourceGenerator.dll'"/>
+      <Analyzer Remove="@(Analyzer)" Condition="'%(FileName)%(Extension)' == 'WinRT.SourceGenerator.dll'" />
     </ItemGroup>
   </Target>
 
   <Target Name="LogBuildInfo" BeforeTargets="BeforeResolveReferences">
+    <Message Importance="high" Text="----- Build Info -----" />
     <Message Importance="high" Text="TargetFramework = '$(TargetFramework)'" />
-    <Message Importance="high" Text="_FasciculusTargetPlatformIdentifier = '$(_FasciculusTargetPlatformIdentifier)'" />
+    <Message Importance="high" Text="TargetPlatformIdentifier = '$(TargetPlatformIdentifier)'" />
     <Message Importance="high" Text="DefineConstants = '$(DefineConstants)'" />
-    <Message Importance="high" Text="WindowsSdkPackageVersion = '$(WindowsSdkPackageVersion)'" />
-    <Message Importance="high" Text="IncludeWindowsTargetFrameworks = '$(IncludeWindowsTargetFrameworks)'" />
-    <Message Importance="high" Text="FasciculusWindowsPlatforms = '$(FasciculusWindowsPlatforms)'" />
-    <Message Importance="high" Text="FasciculusPlatforms = '$(FasciculusPlatforms)'" />
+    <Message Importance="high" Text="----------------------" />
   </Target>
 
 </Project>

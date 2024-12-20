@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <ItemGroup Condition="'$(_FasciculusTargetPlatformIsWindows)' != 'true'">
+    <Compile Remove="**/*.windows.cs" />
+    <None Include="**/*.windows.cs" />
+  </ItemGroup>
+
+</Project>
