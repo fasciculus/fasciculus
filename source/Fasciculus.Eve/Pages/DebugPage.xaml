@@ -25,6 +25,8 @@
                         <Label Text="{Binding ShortBlueprints}" />
                         <Label Text="&gt; 1 day" />
                         <Label Text="{Binding LongBlueprints}" />
+                        <Label Text="T2" />
+                        <Label Text="{Binding T2Blueprints}" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>

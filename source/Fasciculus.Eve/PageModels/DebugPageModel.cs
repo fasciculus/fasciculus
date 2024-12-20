@@ -15,6 +15,7 @@ namespace Fasciculus.Eve.PageModels
         public TimeSpan MaxTime { get; private set; }
         public int ShortBlueprints { get; private set; }
         public int LongBlueprints { get; private set; }
+        public int T2Blueprints { get; private set; }
 
         public DebugPageModel(IEveProvider provider, IEsiClient esiClient, IPlanetChains planetChains)
         {
@@ -33,6 +34,10 @@ namespace Fasciculus.Eve.PageModels
                 ShortBlueprints = buyable.Count(x => x.Manufacturing.Time <= SecondsPerDay);
                 LongBlueprints = buyable.Length - ShortBlueprints;
             }
+
+            EveBlueprint[] withProduct = [.. blueprints.Where(x => x.Manufacturing.Products.Count > 0)];
+
+            T2Blueprints = withProduct.Where(x => x.Manufacturing.Products[0].Type.MetaGroup == 2).Count();
         }
     }
 }
