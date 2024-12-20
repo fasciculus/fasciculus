@@ -15,11 +15,11 @@ namespace Fasciculus.Models
         public override bool Equals(object? obj)
             => obj is Id<T> id && Value.Equals(id.Value);
 
-        public bool Equals(Id<T> other)
-            => Value.Equals(other.Value);
+        public bool Equals(Id<T>? other)
+            => other is not null && Value.Equals(other.Value);
 
-        public int CompareTo(Id<T> other)
-            => Value.CompareTo(other.Value);
+        public int CompareTo(Id<T>? other)
+            => other is null ? -1 : Value.CompareTo(other.Value);
 
         public override int GetHashCode()
             => Value.GetHashCode();

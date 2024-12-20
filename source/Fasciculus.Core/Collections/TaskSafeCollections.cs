@@ -37,7 +37,18 @@ namespace Fasciculus.Collections
         public object SyncRoot => mutex;
         public bool IsFixedSize => false;
 
-        object IList.this[int index] { get => GetAt(index); set => SetAt(index, (T)value); }
+        object? IList.this[int index]
+        {
+            get => GetAt(index);
+            set
+            {
+                if (value is not null && value is T t)
+                {
+                    SetAt(index, t);
+                }
+            }
+        }
+
         public T this[int index] { get => GetAt(index); set => SetAt(index, value); }
 
         private T GetAt(int index) => Locker.Locked(mutex, () => list[index]);
@@ -76,25 +87,45 @@ namespace Fasciculus.Collections
         public void CopyTo(Array array, int index)
             => Locker.Locked(mutex, () => list.CopyTo((T[])array, index));
 
-        public int Add(object value)
+        public int Add(object? value)
         {
             using Locker locker = Locker.Lock(mutex);
 
-            list.Add((T)value);
+            if (value is not null)
+            {
+                list.Add((T)value);
+            }
 
             return list.Count - 1;
         }
 
-        public bool Contains(object value)
-            => Locker.Locked(mutex, () => list.Contains((T)value));
+        public bool Contains(object? value)
+            => value is not null && value is T t && Locker.Locked(mutex, () => list.Contains(t));
 
-        public int IndexOf(object value)
-            => Locker.Locked(mutex, () => list.IndexOf((T)value));
+        public int IndexOf(object? value)
+        {
+            if (value is null)
+            {
+                return -1;
+            }
 
-        public void Insert(int index, object value)
-            => Locker.Locked(mutex, () => list.Insert(index, (T)value));
+            return value is T t ? Locker.Locked(mutex, () => list.IndexOf(t)) : -1;
+        }
 
-        public void Remove(object value)
-            => Locker.Locked(mutex, () => list.Remove((T)value));
+        public void Insert(int index, object? value)
+        {
+            if (value is not null && value is T t)
+            {
+                Locker.Locked(mutex, () => list.Insert(index, t));
+            }
+        }
+
+        public void Remove(object? value)
+        {
+            if (value is not null && value is T t)
+            {
+                Locker.Locked(mutex, () => list.Remove(t));
+            }
+        }
     }
 }

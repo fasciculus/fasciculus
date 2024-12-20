@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Fasciculus.Support;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -10,7 +11,10 @@ namespace System.IO
         {
             byte[] buffer = new byte[1];
 
-            stream.Read(buffer, 0, buffer.Length);
+            if (stream.Read(buffer, 0, buffer.Length) != 1)
+            {
+                throw Ex.EndOfStream();
+            }
 
             return BitConverter.ToBoolean(buffer, 0);
         }
@@ -26,7 +30,10 @@ namespace System.IO
         {
             byte[] buffer = new byte[2];
 
-            stream.Read(buffer, 0, buffer.Length);
+            if (stream.Read(buffer, 0, buffer.Length) != 2)
+            {
+                throw Ex.EndOfStream();
+            }
 
             return BitConverter.ToInt16(buffer, 0);
         }
@@ -42,7 +49,10 @@ namespace System.IO
         {
             byte[] buffer = new byte[4];
 
-            stream.Read(buffer, 0, buffer.Length);
+            if (stream.Read(buffer, 0, buffer.Length) != 4)
+            {
+                throw Ex.EndOfStream();
+            }
 
             return BitConverter.ToInt32(buffer, 0);
         }
@@ -58,7 +68,10 @@ namespace System.IO
         {
             byte[] buffer = new byte[8];
 
-            stream.Read(buffer, 0, buffer.Length);
+            if (stream.Read(buffer, 0, buffer.Length) != 8)
+            {
+                throw Ex.EndOfStream();
+            }
 
             return BitConverter.ToInt64(buffer, 0);
         }
@@ -84,7 +97,10 @@ namespace System.IO
         {
             byte[] buffer = new byte[8];
 
-            stream.Read(buffer, 0, buffer.Length);
+            if (stream.Read(buffer, 0, buffer.Length) != 8)
+            {
+                throw Ex.EndOfStream();
+            }
 
             return BitConverter.ToDouble(buffer, 0);
         }
@@ -100,7 +116,11 @@ namespace System.IO
         {
             int length = stream.ReadInt();
             byte[] buffer = new byte[length];
-            stream.Read(buffer, 0, buffer.Length);
+
+            if (stream.Read(buffer, 0, buffer.Length) != length)
+            {
+                throw Ex.EndOfStream();
+            }
 
             return Encoding.UTF8.GetString(buffer, 0, length);
         }
@@ -154,6 +174,7 @@ namespace System.IO
         }
 
         public static Dictionary<K, V> ReadDictionary<K, V>(this Stream stream, Func<Stream, K> readKey, Func<Stream, V> readValue)
+            where K : notnull
         {
             int length = stream.ReadInt();
             Dictionary<K, V> dictionary = [];
@@ -170,6 +191,7 @@ namespace System.IO
         }
 
         public static void WriteDictionary<K, V>(this Stream stream, Dictionary<K, V> dictionary, Action<K> writeKey, Action<V> writeValue)
+            where K : notnull
         {
             K[] keys = dictionary.Keys.OrderBy(k => k).ToArray();
 

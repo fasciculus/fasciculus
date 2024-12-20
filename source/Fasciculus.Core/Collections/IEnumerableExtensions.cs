@@ -16,10 +16,14 @@ namespace System.Collections.Generic
             }
         }
 
+#if NETSTANDARD
         public static Dictionary<K, V> ToDictionary<K, V>(this IEnumerable<KeyValuePair<K, V>> kvps)
+            where K : notnull
             => kvps.ToDictionary(x => x.Key, x => x.Value);
+#endif
 
         public static Dictionary<K, V> ToDictionary<K, V>(this IEnumerable<Tuple<K, V>> kvps)
+            where K : notnull
             => kvps.ToDictionary(x => x.Item1, x => x.Item2);
     }
 }

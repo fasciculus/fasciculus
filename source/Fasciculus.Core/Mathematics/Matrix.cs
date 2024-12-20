@@ -38,11 +38,11 @@ namespace Fasciculus.Mathematics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
-            => obj is MatrixKey mk && Equals(mk);
+        public override bool Equals(object? obj)
+            => obj is not null && obj is MatrixKey mk && Equals(mk);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
             => Row.GetHashCode() + Column.GetHashCode();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,7 +82,7 @@ namespace Fasciculus.Mathematics
         }
 
         public SparseBoolVector this[int index]
-            => rows.TryGetValue(index, out SparseBoolVector row) ? row : SparseBoolVector.Empty;
+            => rows.TryGetValue(index, out SparseBoolVector? row) ? row : SparseBoolVector.Empty;
 
         public static SparseBoolVector operator *(SparseBoolMatrix m, SparseBoolVector v)
             => SparseBoolVector.Create(m.indices.Where(i => m[i] * v));
@@ -94,7 +94,7 @@ namespace Fasciculus.Mathematics
         private readonly SortedSet<int> indices;
 
         public SparseShortVector this[int index]
-            => rows.TryGetValue(index, out SparseShortVector row) ? row : SparseShortVector.Empty;
+            => rows.TryGetValue(index, out SparseShortVector? row) ? row : SparseShortVector.Empty;
 
         public SparseShortMatrix(Dictionary<int, SparseShortVector> rows)
         {

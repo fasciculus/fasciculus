@@ -33,7 +33,12 @@ namespace Fasciculus.IO
 
         public T Read<T>(Func<Stream, T> read, bool compressed)
         {
-            using Stream stream = assembly.GetManifestResourceStream(name);
+            using Stream? stream = assembly.GetManifestResourceStream(name);
+
+            if (stream is null)
+            {
+                throw Ex.ResourceNotFound(name);
+            }
 
             if (compressed)
             {

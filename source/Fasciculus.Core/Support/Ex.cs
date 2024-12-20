@@ -15,6 +15,9 @@ namespace Fasciculus.Support
         public static FileNotFoundException FileNotFound(FileInfo? fileInfo = null)
             => new(Format(fileInfo?.FullName));
 
+        public static EndOfStreamException EndOfStream()
+            => new();
+
         public static ResourceNotFoundException ResourceNotFound(string? name = null)
             => new(Format(name));
     }

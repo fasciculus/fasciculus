@@ -1,13 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;$(_FasciculusDotNetTfm);$(FasciculusPlatforms)</TargetFrameworks>
     <RootNamespace>Fasciculus</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   
-  <ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <PackageReference Include="System.Memory" />
   </ItemGroup>
+
+  <Target Name="DisableWinRTSourceGenerator" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="'%(FileName)%(Extension)' == 'WinRT.SourceGenerator.dll'"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="LogBuildInfo" BeforeTargets="BeforeResolveReferences">
+    <Message Importance="high" Text="TargetFramework = '$(TargetFramework)'" />
+    <Message Importance="high" Text="_FasciculusTargetPlatformIdentifier = '$(_FasciculusTargetPlatformIdentifier)'" />
+    <Message Importance="high" Text="DefineConstants = '$(DefineConstants)'" />
+    <Message Importance="high" Text="WindowsSdkPackageVersion = '$(WindowsSdkPackageVersion)'" />
+    <Message Importance="high" Text="IncludeWindowsTargetFrameworks = '$(IncludeWindowsTargetFrameworks)'" />
+    <Message Importance="high" Text="FasciculusWindowsPlatforms = '$(FasciculusWindowsPlatforms)'" />
+    <Message Importance="high" Text="FasciculusPlatforms = '$(FasciculusPlatforms)'" />
+  </Target>
 
 </Project>

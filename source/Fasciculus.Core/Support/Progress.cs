@@ -117,11 +117,13 @@ namespace Fasciculus.Support
             Value = value;
         }
 
-        public bool Equals(LongProgressInfo other)
-            => Done == other.Done && Value == other.Value;
+        public bool Equals(LongProgressInfo? other)
+            => other is not null && Done == other.Done && Value == other.Value;
 
-        public int CompareTo(LongProgressInfo other)
+        public int CompareTo(LongProgressInfo? other)
         {
+            if (other is null) return -1;
+
             int result = Done.CompareTo(other.Done);
 
             if (result == 0)
@@ -132,8 +134,8 @@ namespace Fasciculus.Support
             return result;
         }
 
-        public override bool Equals(object obj)
-            => obj is LongProgressInfo other && Equals(other);
+        public override bool Equals(object? obj)
+            => obj is not null && obj is LongProgressInfo other && Equals(other);
 
         public override int GetHashCode()
             => Done.GetHashCode() + Value.GetHashCode();

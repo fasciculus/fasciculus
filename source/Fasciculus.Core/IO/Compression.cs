@@ -36,20 +36,23 @@ namespace Fasciculus.IO
 
         private void UnzipEntry(ZipArchive archive, string name, DirectoryInfo target, IAccumulatingLongProgress progress)
         {
-            ZipArchiveEntry entry = archive.GetEntry(name);
-            FileInfo outputFile = PrepareUnzipTarget(name, target);
+            ZipArchiveEntry? entry = archive.GetEntry(name);
 
-            entry.ExtractToFile(outputFile.FullName);
-            outputFile.CreationTimeUtc = outputFile.LastWriteTimeUtc = entry.LastWriteTime.UtcDateTime;
+            if (entry is not null)
+            {
+                FileInfo outputFile = PrepareUnzipTarget(name, target);
 
-            progress.Report(entry.Length);
+                entry.ExtractToFile(outputFile.FullName);
+                outputFile.CreationTimeUtc = outputFile.LastWriteTimeUtc = entry.LastWriteTime.UtcDateTime;
+                progress.Report(entry.Length);
+            }
         }
 
         private FileInfo PrepareUnzipTarget(string name, DirectoryInfo target)
         {
             FileInfo outputFile = target.File(name);
 
-            outputFile.Directory.Create();
+            outputFile.Directory?.Create();
             outputFile.DeleteIfExists();
 
             return outputFile;
@@ -99,7 +102,7 @@ namespace Fasciculus.IO
                 FileInfo outputFile = outputDirectory.File(entry.FullName);
 
                 outputFile.DeleteIfExists();
-                outputFile.Directory.Create();
+                outputFile.Directory?.Create();
 
                 using Stream entryStream = entry.Open();
                 using Stream outputStream = outputFile.Create();

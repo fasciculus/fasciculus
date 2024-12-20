@@ -31,5 +31,39 @@
     <Company>The Fasciculus Project</Company>
     <Copyright>The Fasciculus Project</Copyright>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <_FasciculusDotNetVersionMajor Condition="'$(_FasciculusDotNetVersionMajor)' == ''">9</_FasciculusDotNetVersionMajor>
+    <_FasciculusDotNetVersionMinor Condition="'$(_FasciculusDotNetVersionMinor)' == ''">0</_FasciculusDotNetVersionMinor>
+    <_FasciculusDotNetVersion Condition="'$(_FasciculusDotNetVersion)' == ''">$(_FasciculusDotNetVersionMajor).$(_FasciculusDotNetVersionMinor)</_FasciculusDotNetVersion>
+    <_FasciculusDotNetTfm Condition="'$(_FasciculusDotNetTfm)' == ''">net$(_FasciculusDotNetVersion)</_FasciculusDotNetTfm>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_FasciculusTargetPlatformIdentifier>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</_FasciculusTargetPlatformIdentifier>
+    <_FasciculusTargetPlatformIsWindows>false</_FasciculusTargetPlatformIsWindows>
+    <_FasciculusTargetPlatformIsWindows Condition="$(_FasciculusTargetPlatformIdentifier.Contains('windows')) == 'True'">True</_FasciculusTargetPlatformIsWindows>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants Condition="'$(_FasciculusTargetPlatformIsWindows)' == 'True'">$(DefineConstants);WINDOWS</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(_FasciculusTargetPlatformIsWindows)' == 'True'">
+    <WindowsSdkPackageVersion>10.0.19041.44</WindowsSdkPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <WindowsTargetFrameworkVersion>10.0.19041.0</WindowsTargetFrameworkVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeWindowsTargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">true</IncludeWindowsTargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <FasciculusWindowsPlatforms Condition="'$(FasciculusWindowsPlatforms)' == ''">net$(_FasciculusDotNetVersion)-windows$(WindowsTargetFrameworkVersion)</FasciculusWindowsPlatforms>
+    <FasciculusPlatforms Condition="'$(IncludeWindowsTargetFrameworks)' == 'true'">$(FasciculusWindowsPlatforms);$(FasciculusPlatforms)</FasciculusPlatforms>
+  </PropertyGroup>
   
 </Project>
