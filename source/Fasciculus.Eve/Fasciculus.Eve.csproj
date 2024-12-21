@@ -14,8 +14,8 @@
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <ApplicationTitle>Fasciculus.Eve</ApplicationTitle>
     <ApplicationId>io.github.fasciculus.eve</ApplicationId>
-    <ApplicationDisplayVersion>0.1.1</ApplicationDisplayVersion>
-    <ApplicationVersion>0</ApplicationVersion>
+    <!--<ApplicationDisplayVersion>0.1.1</ApplicationDisplayVersion>
+    <ApplicationVersion>0</ApplicationVersion>-->
     <SelfContained>true</SelfContained>
     <WindowsPackageType>None</WindowsPackageType>
     <PublishReadyToRun>true</PublishReadyToRun>
@@ -24,8 +24,8 @@
   <PropertyGroup>
     <ApplicationTitle>Fasciculus.Eve</ApplicationTitle>
     <ApplicationId>ch.rhjoerg.fasciculus.eve</ApplicationId>
-    <ApplicationVersion>0</ApplicationVersion>
-    <ApplicationDisplayVersion>0.1.100</ApplicationDisplayVersion>
+    <!--<ApplicationVersion>0</ApplicationVersion>
+    <ApplicationDisplayVersion>0.1.100</ApplicationDisplayVersion>-->
   </PropertyGroup>
 
   <PropertyGroup>
@@ -39,6 +39,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+    <PackageReference Include="NuGet.Versioning" />
   </ItemGroup>
 
   <ItemGroup>

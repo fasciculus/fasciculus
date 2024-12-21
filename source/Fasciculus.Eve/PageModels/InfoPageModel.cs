@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Services;
+using NuGet.Versioning;
+
 using System.Reflection;
 
 namespace Fasciculus.Eve.PageModels
@@ -14,7 +16,7 @@ namespace Fasciculus.Eve.PageModels
 
         public InfoPageModel(IEveProvider provider)
         {
-            ApplicationVersion = Assembly.GetEntryAssembly().GetVersion();
+            ApplicationVersion = SemanticVersion.Parse(Assembly.GetEntryAssembly().GetSemanticVersion()).ToString();
             SdeVersion = provider.Version.ToString("yyyy-MM-dd");
         }
     }
