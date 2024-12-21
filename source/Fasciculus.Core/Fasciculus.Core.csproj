@@ -10,10 +10,6 @@
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(FasciculusTargetPlatformIsWindows)' == 'true'">
-    <PackageReference Include="Microsoft.Win32.Registry" />
-  </ItemGroup>
-
   <Import Project="../../MultiTargeting.props" />
 
   <Target Name="DisableWinRTSourceGenerator" BeforeTargets="CoreCompile">
