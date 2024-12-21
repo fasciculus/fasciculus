@@ -20,6 +20,10 @@ namespace Fasciculus.Eve.Models
 
         [field: JsonIgnore]
         [ObservableProperty]
+        public partial bool IncludeT2 { get; set; }
+
+        [field: JsonIgnore]
+        [ObservableProperty]
         public partial int SalesTaxRate { get; set; }
 
         public EveIndustrySettings()

@@ -57,6 +57,10 @@
                             <Label Text="Ignore Skills" VerticalTextAlignment="Center" />
                             <CheckBox IsChecked="{Binding IgnoreSkills}" IsEnabled="{Binding NotRunning}" />
                         </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="14">
+                            <Label Text="Include T2" VerticalTextAlignment="Center" />
+                            <CheckBox IsChecked="{Binding IncludeT2}" IsEnabled="{Binding NotRunning}" />
+                        </HorizontalStackLayout>
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="14" Padding="0,7,0,0">
                         <Button Text="Start" Command="{Binding StartCommand}" WidthRequest="60" />

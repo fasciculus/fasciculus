@@ -17,6 +17,8 @@ namespace Fasciculus.Eve.Controls
         public IskLabel()
         {
             HorizontalTextAlignment = TextAlignment.End;
+
+            UpdateText(this, 0);
         }
 
         private static void OnValuePropertyChanged(BindableObject bindable, object oldvalue, object newvalue)
@@ -25,9 +27,14 @@ namespace Fasciculus.Eve.Controls
             {
                 if (newvalue is double value)
                 {
-                    label.Text = value.ToString("#,###,###,##0", EveFormats.Isk);
+                    UpdateText(label, value);
                 }
             }
+        }
+
+        private static void UpdateText(IskLabel label, double value)
+        {
+            label.Text = value.ToString("#,###,###,##0", EveFormats.Isk);
         }
     }
 }

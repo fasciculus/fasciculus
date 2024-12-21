@@ -36,18 +36,22 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        private readonly Data data;
-        private readonly EveTypes types;
+        public EveType Type { get; }
+        public double AveragePrice { get; }
+        public double AdjustedPrice { get; }
 
-        public EveType Type => types[data.TypeId];
-        public double AveragePrice => data.AveragePrice;
-        public double AdjustedPrice => data.AdjustedPrice;
+        public EveMarketPrice(EveType type, double averagePrice, double adjustedPrice)
+        {
+            Type = type;
+            AveragePrice = averagePrice;
+            AdjustedPrice = adjustedPrice;
+        }
+
+        public EveMarketPrice(EveType type)
+            : this(type, 0.0, 0.0) { }
 
         public EveMarketPrice(Data data, EveTypes types)
-        {
-            this.data = data;
-            this.types = types;
-        }
+            : this(types[data.TypeId], data.AveragePrice, data.AdjustedPrice) { }
     }
 
     public class EveMarketPrices
@@ -81,7 +85,7 @@ namespace Fasciculus.Eve.Models
 
         public IEnumerable<EveType> Types => byType.Value.Keys;
         public bool Contains(EveType type) => byType.Value.ContainsKey(type);
-        public EveMarketPrice this[EveType type] => byType.Value[type];
+        public EveMarketPrice this[EveType type] => byType.Value.TryGetValue(type, out EveMarketPrice? result) ? result : new(type);
 
         public EveMarketPrices(Data data, EveTypes types)
         {
@@ -161,6 +165,7 @@ namespace Fasciculus.Eve.Models
         private readonly Lazy<Dictionary<EveStation, EveMarketOrder[]>> byStation;
 
         public int Count => orders.Length;
+        public bool Contains(EveType type) => byType.Value.ContainsKey(type);
 
         protected EveMarketOrders(EveMarketOrder[] orders)
         {

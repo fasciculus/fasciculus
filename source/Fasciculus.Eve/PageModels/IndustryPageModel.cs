@@ -39,6 +39,9 @@ namespace Fasciculus.Eve.PageModels
         public partial bool IgnoreSkills { get; set; }
 
         [ObservableProperty]
+        public partial bool IncludeT2 { get; set; }
+
+        [ObservableProperty]
         public partial bool HasProductions { get; private set; }
 
         [ObservableProperty]
@@ -109,9 +112,11 @@ namespace Fasciculus.Eve.PageModels
             Haulers = [.. EveHaulers.Values.Select(x => x.Caption())];
             SelectedHauler = GetHaulerIndex(this.settings.MaxVolume);
             SalesTaxRate = string.Empty;
+            IgnoreSkills = this.settings.IgnoreSkills;
+            IncludeT2 = this.settings.IncludeT2;
+
             Inputs = [];
             SkillRequirements = [];
-            IgnoreSkills = this.settings.IgnoreSkills;
             HasProductions = false;
             Productions = [];
             BuyProgress = LongProgressInfo.Start;
@@ -122,6 +127,7 @@ namespace Fasciculus.Eve.PageModels
             NotRunning = true;
 
             FormatSettings();
+            UpdateProduction();
 
             StartCommand.PropertyChanged += OnStartCommandChanged;
         }
@@ -134,6 +140,7 @@ namespace Fasciculus.Eve.PageModels
             SelectedSolarSystem = settings.SolarSystem;
             SelectedHauler = GetHaulerIndex(settings.MaxVolume);
             IgnoreSkills = settings.IgnoreSkills;
+            IncludeT2 = settings.IncludeT2;
 
             FormatSettings();
         }
@@ -179,6 +186,10 @@ namespace Fasciculus.Eve.PageModels
 
                 case nameof(IgnoreSkills):
                     settings.IgnoreSkills = IgnoreSkills;
+                    break;
+
+                case nameof(IncludeT2):
+                    settings.IncludeT2 = IncludeT2;
                     break;
 
                 case nameof(Production):

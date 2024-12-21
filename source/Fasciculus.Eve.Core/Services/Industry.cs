@@ -122,40 +122,46 @@ namespace Fasciculus.Eve.Services
                 return;
             }
 
-            EveBlueprint[] candidates = GetCandidates(regionSellOrders, marketPrices, settings.IgnoreSkills);
-            EveStationBuyOrders buyOrders = regionBuyOrders[Hub];
-            EveStationSellOrders sellOrders = regionSellOrders[Hub];
+            regionSellOrders = regionSellOrders[EveSecurity.Level.High];
+            regionBuyOrders = regionBuyOrders[EveSecurity.Level.High];
+
+            EveStationBuyOrders hubBuyOrders = regionBuyOrders[Hub];
+            EveStationSellOrders hubSellOrders = regionSellOrders[Hub];
+            EveBlueprint[] candidates = GetCandidates(marketPrices, hubSellOrders);
             double systemCostIndex = industryIndices[Hub.Moon.Planet.SolarSystem];
             double salesTaxRate = settings.SalesTaxRate / 1000.0;
-            EveProduction[] productions = CreateProductions(candidates, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex, salesTaxRate);
+            EveProduction[] productions = CreateProductions(candidates, regionSellOrders, hubSellOrders, hubBuyOrders, marketPrices, systemCostIndex, salesTaxRate);
             int count = Math.Min(20, productions.Length);
 
             Productions = productions.OrderByDescending(x => x.Profit).Take(count).ToArray();
         }
 
-        private static EveProduction[] CreateProductions(EveBlueprint[] blueprints,
+        private EveProduction[] CreateProductions(EveBlueprint[] blueprints,
             EveRegionSellOrders regionSellOrders,
             EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
             EveMarketPrices marketPrices, double systemCostIndex, double salesTaxRate)
         {
             return blueprints
                 .Select(x => CreateProduction(x, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex, salesTaxRate))
-                //.Where(x => x.Income < 1_000_000_000)
                 .ToArray();
         }
 
-        private static EveProduction CreateProduction(EveBlueprint blueprint, EveRegionSellOrders regionSellOrders,
+        private EveProduction CreateProduction(EveBlueprint blueprint, EveRegionSellOrders regionSellOrders,
             EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
             EveMarketPrices marketPrices, double systemCostIndex, double salesTaxRate)
         {
-            double blueprintPrice = GetBlueprintPrice(blueprint, regionSellOrders, marketPrices);
+            double blueprintPrice = marketPrices[blueprint.Type].AveragePrice;
             EveManufacturing manufacturing = blueprint.Manufacturing;
-            int runs = Math.Min(blueprint.MaxRuns, SecondsPerDay / manufacturing.Time);
+            int runsByTime = Math.Min(blueprint.MaxRuns, SecondsPerDay / manufacturing.Time);
+            double outputVolume = blueprint.Manufacturing.Products.Select(x => x.Quantity * x.Type.Volume).Sum();
+            int runsByVolume = (int)Math.Floor(settings.MaxVolume / outputVolume);
+            int runs = Math.Min(runsByTime, runsByVolume);
             EveProductionInput[] inputs = CreateInputs(manufacturing.Materials, runs, sellOrders);
             EveProductionOutput[] outputs = CreateOutputs(manufacturing.Products, runs, buyOrders);
             double jobCost = GetJobCost(inputs, marketPrices, systemCostIndex);
+            EveProduction production = new(blueprint, blueprintPrice, runs, inputs, outputs, jobCost, salesTaxRate);
 
-            return new(blueprint, blueprintPrice, runs, inputs, outputs, jobCost, salesTaxRate);
+            return production;
         }
 
         private static EveProductionInput[] CreateInputs(IEnumerable<EveMaterial> materials, int runs, EveStationSellOrders sellOrders)
@@ -188,15 +194,6 @@ namespace Fasciculus.Eve.Services
             return new(type, quantity, income);
         }
 
-        private static double GetBlueprintPrice(EveBlueprint blueprint, EveRegionSellOrders regionSellOrders, EveMarketPrices marketPrices)
-        {
-            EveType type = blueprint.Type;
-            double regionPrice = regionSellOrders[type].PriceFor(1);
-            double averagePrice = marketPrices.Contains(type) ? marketPrices[type].AveragePrice : double.MaxValue;
-
-            return Math.Min(regionPrice, averagePrice);
-        }
-
         private static double GetJobCost(EveProductionInput[] inputs, EveMarketPrices marketPrices, double systemCostIndex)
         {
             double itemValue = inputs.Select(x => x.Quantity * marketPrices[x.Type].AdjustedPrice).Sum();
@@ -204,17 +201,29 @@ namespace Fasciculus.Eve.Services
             return itemValue * (systemCostIndex + 0.0025 + 0.04);
         }
 
-        private EveBlueprint[] GetCandidates(EveRegionSellOrders regionSellOrders, EveMarketPrices marketPrices, bool ignoreSkills)
+        private EveBlueprint[] GetCandidates(EveMarketPrices marketPrices, EveStationSellOrders hubSellOrders)
         {
             int maxVolume = settings.MaxVolume;
 
-            return blueprints
-                .Where(x => x.Manufacturing.Time <= SecondsPerDay)
-                .Where(x => regionSellOrders[x.Type].Count > 0 || marketPrices.Contains(x.Type))
-                .Where(x => x.Manufacturing.Products.All(y => y.Type.Volume <= maxVolume))
-                .Where(x => x.Manufacturing.Materials.All(y => marketPrices.Contains(y.Type)))
-                .Where(x => ignoreSkills || skills.Fulfills(x.Manufacturing.RequiredSkills))
-                .ToArray();
+            EveBlueprint[] candidates = [.. blueprints];
+
+            candidates = [.. candidates.Where(x => x.Manufacturing.Time <= SecondsPerDay)];
+            candidates = [.. candidates.Where(x => x.Manufacturing.Products.All(y => y.Type.Volume <= maxVolume))];
+
+            EveBlueprint[] t1 = [.. candidates.Where(x => x.Manufacturing.Products.All(y => y.Type.MetaGroup == 1))];
+            EveBlueprint[] t2 = [.. candidates.Where(x => x.Manufacturing.Products.All(y => y.Type.MetaGroup == 2))];
+
+            t1 = [.. t1.Where(x => marketPrices.Contains(x.Type))];
+            candidates = settings.IncludeT2 ? [.. t1.Concat(t2)] : t1;
+
+            if (!settings.IgnoreSkills)
+            {
+                candidates = [.. candidates.Where(x => skills.Fulfills(x.Manufacturing.RequiredSkills))];
+            }
+
+            candidates = [.. candidates.Where(x => x.Manufacturing.Materials.All(y => hubSellOrders.Contains(y.Type)))];
+
+            return candidates;
         }
         private void OnSkillsChanged(object? sender, PropertyChangedEventArgs e)
             => Reset();

@@ -75,7 +75,7 @@ namespace Fasciculus.Eve.Models
         public EveStationOperation Operation { get; }
         public EveNpcCorporation Owner { get; }
 
-        public double Security { get; }
+        public double Security => Moon.Security;
 
         public EveStation(Data data, EveMoon moon, EveData eveData)
         {
@@ -87,8 +87,6 @@ namespace Fasciculus.Eve.Models
 
             Name = $"{Owner.Name} {Operation.Name}";
             FullName = $"{Moon.Name} - {Name}";
-
-            Security = Moon.Security;
         }
     }
 
@@ -161,7 +159,7 @@ namespace Fasciculus.Eve.Models
         public EvePlanet Planet { get; }
         public EveStations Stations { get; }
 
-        public double Security { get; }
+        public double Security => Planet.Security;
 
         public EveMoon(Data data, EvePlanet planet, EveData eveData)
         {
@@ -171,8 +169,6 @@ namespace Fasciculus.Eve.Models
 
             Planet = planet;
             Stations = new(data.Stations.Select(d => new EveStation(d, this, eveData)));
-
-            Security = Planet.Security;
         }
     }
 
@@ -287,7 +283,7 @@ namespace Fasciculus.Eve.Models
         public EveSolarSystem SolarSystem { get; }
         public EvePlanetMoons Moons { get; }
 
-        public double Security { get; }
+        public double Security => SolarSystem.Security;
 
         public EvePlanet(Data data, EveSolarSystem solarSystem, EveData eveData)
         {
@@ -297,8 +293,6 @@ namespace Fasciculus.Eve.Models
 
             SolarSystem = solarSystem;
             Moons = new(data.Moons.Select(d => new EveMoon(d, this, eveData)));
-
-            Security = SolarSystem.Security;
         }
     }
 
