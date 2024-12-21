@@ -4,7 +4,7 @@ using System;
 
 namespace Fasciculus.Windows.WindowsRegistry
 {
-    public class RegistryStack : IDisposable
+    public partial class RegistryStack : IDisposable
     {
         private DisposableStack<RegistryKey> stack;
 
