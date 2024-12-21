@@ -10,7 +10,7 @@ namespace Fasciculus.Eve.ViewModels
     {
         private const string NoError = "No Error";
 
-        private readonly IExceptions exceptions;
+        private readonly IExceptionCollector exceptions;
 
         [ObservableProperty]
         public partial string Text { get; private set; }
@@ -18,7 +18,7 @@ namespace Fasciculus.Eve.ViewModels
         [ObservableProperty]
         public partial bool IsError { get; private set; }
 
-        public StatusBarViewModel(IExceptions exceptions)
+        public StatusBarViewModel(IExceptionCollector exceptions)
         {
             this.exceptions = exceptions;
             this.exceptions.PropertyChanged += OnExceptionsChanged;

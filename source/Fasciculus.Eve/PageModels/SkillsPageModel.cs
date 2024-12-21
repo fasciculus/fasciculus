@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Maui.Threading;
 using Fasciculus.Threading;
 using System.Collections.ObjectModel;
 
@@ -39,7 +40,7 @@ namespace Fasciculus.Eve.PageModels
 
         private void AddSkills()
         {
-            Tasks.Wait(MainThread.InvokeOnMainThreadAsync(() => { skillsProvider.Skills.Apply(Skills.Add); }));
+            Threads.RunInMainThread(() => { skillsProvider.Skills.Apply(Skills.Add); });
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             IServiceCollection services = builder.Services;
 
-            services.TryAddSingleton<IExceptions, Exceptions>();
+            services.TryAddSingleton<IExceptionCollector, ExceptionCollector>();
             services.TryAddSingleton<INavigator, Navigator>();
 
             return builder;

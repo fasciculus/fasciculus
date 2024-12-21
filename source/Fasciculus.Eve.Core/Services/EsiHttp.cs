@@ -1,7 +1,6 @@
 ﻿using Fasciculus.Maui.Services;
 using Fasciculus.Net;
 using Fasciculus.Support;
-using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -25,11 +24,11 @@ namespace Fasciculus.Eve.Services
         private static readonly Uri BaseUri = new("https://esi.evetech.net/latest/");
 
         private readonly HttpClient httpClient;
-        private readonly IExceptions exceptions;
+        private readonly IExceptionCollector exceptions;
 
         private readonly TaskSafeMutex mutex = new();
 
-        public EsiHttp(IHttpClientPool httpClientPool, [FromKeyedServices(UserAgentKey)] string userAgent, IExceptions exceptions)
+        public EsiHttp(IHttpClientPool httpClientPool, [FromKeyedServices(UserAgentKey)] string userAgent, IExceptionCollector exceptions)
         {
             httpClient = CreateHttpClient(httpClientPool, userAgent);
             this.exceptions = exceptions;
