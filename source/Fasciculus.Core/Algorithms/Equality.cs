@@ -10,8 +10,6 @@ namespace Fasciculus.Algorithms
         /// <summary>
         /// Returns whether the given arrays have the same size and contain the same values.
         /// </summary>
-        /// <param name="a">The first array.</param>
-        /// <param name="b">The second array.</param>
         /// <returns>Whether the two arrays are identical.</returns>
         public static unsafe bool AreEqual(ReadOnlySpan<byte> a, ReadOnlySpan<byte> b)
         {

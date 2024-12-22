@@ -12,7 +12,6 @@ namespace Fasciculus.Algorithms
         /// <summary>
         /// Counts the number of bits set to <c>1</c> in the given value.
         /// </summary>
-        /// <param name="value">The value to inspect.</param>
         /// <returns>The count of bits set to <c>1</c> (range 0 to 8).</returns>
         public static int CountOnes(byte value)
         {
@@ -38,7 +37,6 @@ namespace Fasciculus.Algorithms
         /// The least significant bit has index <c>0</c>, the most significant bit has index <c>7</c>.
         /// </para>
         /// </summary>
-        /// <param name="value">The value to inspect.</param>
         /// <returns>The indices of the bits set to <c>1</c>.</returns>
         public static IEnumerable<uint> Indices(byte value)
         {
@@ -62,7 +60,6 @@ namespace Fasciculus.Algorithms
         /// Indices <c>&gt;7</c> are ignored.
         /// </para>
         /// </summary>
-        /// <param name="indices">The indices of the bits to set.</param>
         /// <returns>The value with the according bits set to <c>1</c>.</returns>
         public static byte IndicesToByte(IEnumerable<ulong> indices)
         {
@@ -84,7 +81,6 @@ namespace Fasciculus.Algorithms
         /// <summary>
         /// Counts the leading zeroes of the given value.
         /// </summary>
-        /// <param name="value">The value to inspect.</param>
         /// <returns>The count of leading zeroes (range 0 to 64).</returns>
         public static int CountLeadingZeros(uint value)
         {
@@ -104,7 +100,6 @@ namespace Fasciculus.Algorithms
         /// Returns the floored binary logarithm of the given value.
         /// <para>Note: <c>Log2(0)</c> returns <c>-1</c>.</para>
         /// </summary>
-        /// <param name="value">The value.</param>
         /// <returns>The logarithm (range -1 to 31)</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Log2(uint value)
@@ -114,7 +109,6 @@ namespace Fasciculus.Algorithms
         /// Returns the floored binary logarithm of the <b>absolute</b> value of the given value.
         /// <para>Note: <c>Log2(0)</c> returns <c>-1</c>.</para>
         /// </summary>
-        /// <param name="value">The value.</param>
         /// <returns>The logarithm (range -1 to 31)</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Log2(int value)

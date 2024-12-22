@@ -10,8 +10,7 @@ namespace Fasciculus.Algorithms
         /// <summary>
         /// Searches the position of an occurrance of the given value in the given array.
         /// </summary>
-        /// <param name="sorted">The sorted array of values to be searched.</param>
-        /// <param name="value">The value to srarch for.</param>
+        /// <param name="sorted">The <b>sorted</b> array of values to be searched.</param>
         /// <returns>The index within the array at which <c>value</c> occurs or <c>-1</c> if not found.</returns>
         public static unsafe int IndexOf(ReadOnlySpan<int> sorted, int value)
         {
@@ -24,8 +23,7 @@ namespace Fasciculus.Algorithms
         /// <summary>
         /// Searches the position of an occurrance of the given value in the given array.
         /// </summary>
-        /// <param name="sorted">The sorted array of values to be searched.</param>
-        /// <param name="value">The value to srarch for.</param>
+        /// <param name="sorted">The <b>sorted</b> array of values to be searched.</param>
         /// <returns>The index within the array at which <c>value</c> occurs or <c>-1</c> if not found.</returns>
         public static unsafe int IndexOf(ReadOnlySpan<uint> sorted, uint value)
         {
