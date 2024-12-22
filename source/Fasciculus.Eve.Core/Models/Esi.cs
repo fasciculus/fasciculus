@@ -41,7 +41,7 @@ namespace Fasciculus.Eve.Models
     public class EsiIndustrySystem
     {
         [JsonPropertyName("solar_system_id")]
-        public int SolarSystem { get; set; }
+        public uint SolarSystem { get; set; }
 
         [JsonPropertyName("cost_indices")]
         public EsiIndustryCostIndex[] CostIndices { get; set; } = [];

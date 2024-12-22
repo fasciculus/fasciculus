@@ -37,13 +37,13 @@ namespace Fasciculus.Eve.Assets.Services
         private EveSolarSystem.Data[]? systems = null;
         private readonly TaskSafeMutex systemsMutex = new();
 
-        private Dictionary<int, int>? stargateSystems = null;
+        private Dictionary<uint, uint>? stargateSystems = null;
         private readonly TaskSafeMutex stargatesSystemsMutex = new();
 
-        private Dictionary<int, int[]>? neighbours = null;
+        private Dictionary<uint, uint[]>? neighbours = null;
         private readonly TaskSafeMutex neighboursMutex = new();
 
-        private Dictionary<int, double>? systemSecurities = null;
+        private Dictionary<uint, double>? systemSecurities = null;
         private readonly TaskSafeMutex systemSecuritiesMutex = new();
 
         private SparseBoolVector? allowedSystems = null;
@@ -98,7 +98,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             SparseBoolMatrix connections = GetConnections()[level];
 
-            Tuple<int, SparseShortVector>[] rows = GetSystems()
+            Tuple<uint, SparseShortVector>[] rows = GetSystems()
                 .AsParallel()
                 .Select(s => Tuple.Create(s.Id, GetDistances(s, connections)))
                 .ToArray();
@@ -112,7 +112,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             SparseShortVector distances = SparseShortVector.Empty;
             SparseBoolVector visited = SparseBoolVector.Empty;
-            SparseBoolVector front = SparseBoolVector.Create(solarSystem.Id);
+            SparseBoolVector front = new([solarSystem.Id]);
             short distance = 0;
 
             while (front.Indices.Any())
@@ -149,61 +149,61 @@ namespace Fasciculus.Eve.Assets.Services
 
         private SparseBoolMatrix GetConnections(EveSecurity.Level level)
         {
-            Dictionary<int, double> security = GetSecurity();
+            Dictionary<uint, double> security = GetSecurity();
             EveSecurity.Filter filter = EveSecurity.Filters[level];
             SparseBoolVector forbidden = GetForbiddenSystems();
 
-            Dictionary<int, SparseBoolVector> rows = GetSystems()
+            Dictionary<uint, SparseBoolVector> rows = GetSystems()
                 .Select(s => Tuple.Create(s.Id, GetConnections(s, security, filter, forbidden)))
                 .ToDictionary();
 
             return new(rows);
         }
 
-        private SparseBoolVector GetConnections(EveSolarSystem.Data system, Dictionary<int, double> security, EveSecurity.Filter filter,
+        private SparseBoolVector GetConnections(EveSolarSystem.Data system, Dictionary<uint, double> security, EveSecurity.Filter filter,
             SparseBoolVector forbidden)
         {
-            SparseBoolVector all = SparseBoolVector.Create(GetNeighbours()[system.Id].Where(x => filter(security[x])));
+            SparseBoolVector all = new(GetNeighbours()[system.Id].Where(x => filter(security[x])));
 
             return all - forbidden;
         }
 
-        private Dictionary<int, double> GetSecurity()
+        private Dictionary<uint, double> GetSecurity()
         {
             using Locker locker = Locker.Lock(systemSecuritiesMutex);
 
             return systemSecurities ??= GetSystems().ToDictionary(x => x.Id, x => x.Security);
         }
 
-        private Dictionary<int, int[]> GetNeighbours()
+        private Dictionary<uint, uint[]> GetNeighbours()
         {
             using Locker locker = Locker.Lock(neighboursMutex);
 
             return neighbours ??= GetSystems().Select(GetNeighbours).ToDictionary();
         }
 
-        private Tuple<int, int[]> GetNeighbours(EveSolarSystem.Data solarSystem)
+        private Tuple<uint, uint[]> GetNeighbours(EveSolarSystem.Data solarSystem)
         {
-            Dictionary<int, int> stargateSystems = GetStargateSystems();
+            Dictionary<uint, uint> stargateSystems = GetStargateSystems();
 
-            int[] neighbours = solarSystem.Stargates
+            uint[] neighbours = solarSystem.Stargates
                 .Select(x => stargateSystems[x.Destination])
                 .ToArray();
 
             return Tuple.Create(solarSystem.Id, neighbours);
         }
 
-        private Dictionary<int, int> GetStargateSystems()
+        private Dictionary<uint, uint> GetStargateSystems()
         {
             using Locker locker = Locker.Lock(stargatesSystemsMutex);
 
             EveSolarSystem.Data[] systems = GetSystems();
-            SortedSet<int> allowed = new(systems.Select(s => s.Id));
+            SortedSet<uint> allowed = new(systems.Select(s => s.Id));
 
             return stargateSystems ??= systems.SelectMany(GetStargateSystems).ToDictionary();
         }
 
-        private static IEnumerable<Tuple<int, int>> GetStargateSystems(EveSolarSystem.Data solarSystem)
+        private static IEnumerable<Tuple<uint, uint>> GetStargateSystems(EveSolarSystem.Data solarSystem)
             => solarSystem.Stargates.Select(x => Tuple.Create(x.Id, solarSystem.Id));
 
         private EveUniverse.Data GetUniverse()
@@ -233,7 +233,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (allowedSystems is null)
             {
-                allowedSystems = SparseBoolVector.Create(GetUniverse().Regions
+                allowedSystems = new(GetUniverse().Regions
                     .Where(r => ALLOWED_REGIONS.Contains(r.Name))
                     .SelectMany(GetSystems)
                     .Select(s => s.Id));
@@ -248,7 +248,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (forbiddenSystems is null)
             {
-                SparseBoolVector all = SparseBoolVector.Create(GetSystems().Select(s => s.Id));
+                SparseBoolVector all = new(GetSystems().Select(s => s.Id));
 
                 forbiddenSystems = all - GetAllowedSystems();
             }

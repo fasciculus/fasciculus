@@ -10,8 +10,8 @@ namespace Fasciculus.Core.Tests.Collections
         [TestMethod]
         public void TestCreate()
         {
-            BitSet a = BitSet.Create();
-            BitSet b = BitSet.Create(1, 3);
+            BitSet a = BitSet.Empty;
+            BitSet b = new([1, 3]);
 
             Assert.AreEqual(0, a.Count);
             Assert.AreEqual(2, b.Count);
@@ -28,20 +28,20 @@ namespace Fasciculus.Core.Tests.Collections
         [TestMethod]
         public void TestOperations()
         {
-            BitSet a = BitSet.Create(1, 3, 5);
-            BitSet b = BitSet.Create(0, 3, 6);
+            BitSet a = new([1, 3, 5]);
+            BitSet b = new([0, 3, 6]);
 
             BitSet c = a + b;
 
-            AssertEqual(BitSet.Create(0, 1, 3, 5, 6), c);
+            AssertEqual(new([0, 1, 3, 5, 6]), c);
 
             BitSet d = a - b;
 
-            AssertEqual(BitSet.Create(1, 5), d);
+            AssertEqual(new([1, 5]), d);
 
             BitSet e = a * b;
 
-            AssertEqual(BitSet.Create(3), e);
+            AssertEqual(new([3]), e);
 
             Assert.IsTrue(a.Intersects(b));
             Assert.IsTrue(a.Intersects(c));
@@ -51,8 +51,8 @@ namespace Fasciculus.Core.Tests.Collections
         [TestMethod]
         public void TestEmpty()
         {
-            BitSet a = BitSet.Create();
-            BitSet b = BitSet.Create(1, 3);
+            BitSet a = BitSet.Empty;
+            BitSet b = new([1, 3]);
 
             BitSet c = a + b;
             BitSet d = b + a;
@@ -77,13 +77,10 @@ namespace Fasciculus.Core.Tests.Collections
         {
             Assert.AreEqual(a.Count, b.Count);
 
-            int[] aa = a.ToArray();
-            int[] bb = b.ToArray();
+            uint[] aa = a.ToArray();
+            uint[] bb = b.ToArray();
 
-            for (int i = 0, n = a.Count; i < n; ++i)
-            {
-                Assert.AreEqual(aa[i], bb[i]);
-            }
+            CollectionAssert.AreEqual(aa, bb);
         }
     }
 }

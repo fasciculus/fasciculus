@@ -368,10 +368,10 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public int Id { get; }
-            public int Destination { get; }
+            public uint Id { get; }
+            public uint Destination { get; }
 
-            public Data(int id, int destination)
+            public Data(uint id, uint destination)
             {
                 Id = id;
                 Destination = destination;
@@ -379,20 +379,20 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
             {
-                Id = stream.ReadInt();
-                Destination = stream.ReadInt();
+                Id = stream.ReadUInt();
+                Destination = stream.ReadUInt();
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteInt(Id);
-                stream.WriteInt(Destination);
+                stream.WriteUInt(Id);
+                stream.WriteUInt(Destination);
             }
         }
 
         private readonly Data data;
 
-        public int Id => data.Id;
+        public uint Id => data.Id;
 
         public EveStargate(Data data)
         {
@@ -404,11 +404,11 @@ namespace Fasciculus.Eve.Models
     public class EveStargates : IEnumerable<EveStargate>
     {
         private readonly EveStargate[] stargates;
-        private readonly Lazy<Dictionary<int, EveStargate>> byId;
+        private readonly Lazy<Dictionary<uint, EveStargate>> byId;
 
         public int Count => stargates.Length;
 
-        public EveStargate this[int id] => byId.Value[id];
+        public EveStargate this[uint id] => byId.Value[id];
 
         public EveStargates(IEnumerable<EveStargate> stargates)
         {
@@ -429,7 +429,7 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public int Id { get; }
+            public uint Id { get; }
             public string Name { get; }
             public double Security { get; }
 
@@ -439,7 +439,7 @@ namespace Fasciculus.Eve.Models
             private readonly EveStargate.Data[] stargates;
             public IReadOnlyList<EveStargate.Data> Stargates => stargates;
 
-            public Data(int id, string name, double security, IEnumerable<EvePlanet.Data> planets, IEnumerable<EveStargate.Data> stargates)
+            public Data(uint id, string name, double security, IEnumerable<EvePlanet.Data> planets, IEnumerable<EveStargate.Data> stargates)
             {
                 Id = id;
                 Name = name;
@@ -450,7 +450,7 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
             {
-                Id = stream.ReadInt();
+                Id = stream.ReadUInt();
                 Name = stream.ReadString();
                 Security = stream.ReadDouble();
                 planets = stream.ReadArray(s => new EvePlanet.Data(s));
@@ -459,7 +459,7 @@ namespace Fasciculus.Eve.Models
 
             public void Write(Stream stream)
             {
-                stream.WriteInt(Id);
+                stream.WriteUInt(Id);
                 stream.WriteString(Name);
                 stream.WriteDouble(Security);
                 stream.WriteArray(planets, p => p.Write(stream));
@@ -469,7 +469,7 @@ namespace Fasciculus.Eve.Models
 
         private readonly Data data;
 
-        public int Id => data.Id;
+        public uint Id => data.Id;
         public string Name => data.Name;
         public double Security => data.Security;
 
@@ -494,14 +494,14 @@ namespace Fasciculus.Eve.Models
     {
         private readonly EveSolarSystem[] solarSystems;
 
-        private readonly Lazy<Dictionary<int, EveSolarSystem>> byId;
+        private readonly Lazy<Dictionary<uint, EveSolarSystem>> byId;
         private readonly Lazy<Dictionary<string, EveSolarSystem>> byName;
 
         public int Count => solarSystems.Length;
 
-        public bool Contains(int id) => byId.Value.ContainsKey(id);
+        public bool Contains(uint id) => byId.Value.ContainsKey(id);
 
-        public EveSolarSystem this[int id] => byId.Value[id];
+        public EveSolarSystem this[uint id] => byId.Value[id];
         public EveSolarSystem this[string name] => byName.Value[name];
 
         public EveSolarSystems this[EveSecurity.Level level] => new(OfSecurity(level));
@@ -533,13 +533,13 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public int Id { get; }
+            public uint Id { get; }
             public string Name { get; }
 
             private EveSolarSystem.Data[] solarSystems;
             public IReadOnlyList<EveSolarSystem.Data> SolarSystems => solarSystems;
 
-            public Data(int id, string name, IEnumerable<EveSolarSystem.Data> solarSystems)
+            public Data(uint id, string name, IEnumerable<EveSolarSystem.Data> solarSystems)
             {
                 Id = id;
                 Name = name;
@@ -548,14 +548,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
             {
-                Id = stream.ReadInt();
+                Id = stream.ReadUInt();
                 Name = stream.ReadString();
                 solarSystems = stream.ReadArray(s => new EveSolarSystem.Data(s));
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteInt(Id);
+                stream.WriteUInt(Id);
                 stream.WriteString(Name);
                 stream.WriteArray(solarSystems, s => s.Write(stream));
             }
@@ -563,7 +563,7 @@ namespace Fasciculus.Eve.Models
 
         private readonly Data data;
 
-        public int Id => data.Id;
+        public uint Id => data.Id;
         public string Name => data.Name;
 
         public EveRegion Region { get; }
@@ -582,12 +582,12 @@ namespace Fasciculus.Eve.Models
     public class EveConstellations : IEnumerable<EveConstellation>
     {
         private readonly EveConstellation[] constellations;
-        private readonly Lazy<Dictionary<int, EveConstellation>> byId;
+        private readonly Lazy<Dictionary<uint, EveConstellation>> byId;
         private readonly Lazy<Dictionary<string, EveConstellation>> byName;
 
         public int Count => constellations.Length;
 
-        public EveConstellation this[int id] => byId.Value[id];
+        public EveConstellation this[uint id] => byId.Value[id];
         public EveConstellation this[string name] => byName.Value[name];
 
         public EveConstellations(IEnumerable<EveConstellation> constellations)
@@ -610,13 +610,13 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            public int Id { get; }
+            public uint Id { get; }
             public string Name { get; }
 
             private readonly EveConstellation.Data[] constellations;
             public IReadOnlyList<EveConstellation.Data> Constellations => constellations;
 
-            public Data(int id, string name, IEnumerable<EveConstellation.Data> constellations)
+            public Data(uint id, string name, IEnumerable<EveConstellation.Data> constellations)
             {
                 Id = id;
                 Name = name;
@@ -625,14 +625,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(Stream stream)
             {
-                Id = stream.ReadInt();
+                Id = stream.ReadUInt();
                 Name = stream.ReadString();
                 constellations = stream.ReadArray(s => new EveConstellation.Data(s));
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteInt(Id);
+                stream.WriteUInt(Id);
                 stream.WriteString(Name);
                 stream.WriteArray(constellations, c => c.Write(stream));
             }
@@ -640,7 +640,7 @@ namespace Fasciculus.Eve.Models
 
         private readonly Data data;
 
-        public int Id => data.Id;
+        public uint Id => data.Id;
         public string Name => data.Name;
 
         public EveConstellations Constellations { get; }
@@ -658,12 +658,12 @@ namespace Fasciculus.Eve.Models
     {
         private readonly EveRegion[] regions;
 
-        private readonly Lazy<Dictionary<int, EveRegion>> byId;
+        private readonly Lazy<Dictionary<uint, EveRegion>> byId;
         private readonly Lazy<Dictionary<string, EveRegion>> byName;
 
         public int Count => regions.Length;
 
-        public EveRegion this[int id] => byId.Value[id];
+        public EveRegion this[uint id] => byId.Value[id];
         public EveRegion this[string name] => byName.Value[name];
 
         public EveRegions(IEnumerable<EveRegion> regions)

@@ -11,22 +11,22 @@ namespace Fasciculus.Eve.Models
     {
         public class Data
         {
-            private readonly Dictionary<int, double> indices;
-            public IReadOnlyDictionary<int, double> Indices => indices;
+            private readonly Dictionary<uint, double> indices;
+            public IReadOnlyDictionary<uint, double> Indices => indices;
 
-            public Data(IReadOnlyDictionary<int, double> indices)
+            public Data(IReadOnlyDictionary<uint, double> indices)
             {
                 this.indices = new(indices);
             }
 
             public Data(Stream stream)
             {
-                indices = stream.ReadDictionary(s => s.ReadInt(), s => s.ReadDouble());
+                indices = stream.ReadDictionary(s => s.ReadUInt(), s => s.ReadDouble());
             }
 
             public void Write(Stream stream)
             {
-                stream.WriteDictionary(indices, stream.WriteInt, stream.WriteDouble);
+                stream.WriteDictionary(indices, stream.WriteUInt, stream.WriteDouble);
             }
         }
 

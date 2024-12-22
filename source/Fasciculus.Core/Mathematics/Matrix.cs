@@ -72,31 +72,31 @@ namespace Fasciculus.Mathematics
 
     public class SparseBoolMatrix
     {
-        private readonly Dictionary<int, SparseBoolVector> rows;
-        private readonly SortedSet<int> indices;
+        private readonly Dictionary<uint, SparseBoolVector> rows;
+        private readonly SortedSet<uint> indices;
 
-        public SparseBoolMatrix(Dictionary<int, SparseBoolVector> rows)
+        public SparseBoolMatrix(Dictionary<uint, SparseBoolVector> rows)
         {
             this.rows = rows.Where(r => r.Value.Length()).ToDictionary();
             indices = new(this.rows.Keys);
         }
 
-        public SparseBoolVector this[int index]
+        public SparseBoolVector this[uint index]
             => rows.TryGetValue(index, out SparseBoolVector? row) ? row : SparseBoolVector.Empty;
 
         public static SparseBoolVector operator *(SparseBoolMatrix m, SparseBoolVector v)
-            => SparseBoolVector.Create(m.indices.Where(i => m[i] * v));
+            => new(m.indices.Where(i => m[i] * v));
     }
 
     public class SparseShortMatrix
     {
-        private readonly Dictionary<int, SparseShortVector> rows;
-        private readonly SortedSet<int> indices;
+        private readonly Dictionary<uint, SparseShortVector> rows;
+        private readonly SortedSet<uint> indices;
 
-        public SparseShortVector this[int index]
+        public SparseShortVector this[uint index]
             => rows.TryGetValue(index, out SparseShortVector? row) ? row : SparseShortVector.Empty;
 
-        public SparseShortMatrix(Dictionary<int, SparseShortVector> rows)
+        public SparseShortMatrix(Dictionary<uint, SparseShortVector> rows)
         {
             this.rows = rows.Where(r => r.Value.Indices.Any()).ToDictionary();
             indices = new(this.rows.Keys);
@@ -104,13 +104,13 @@ namespace Fasciculus.Mathematics
 
         public SparseShortMatrix(Stream stream)
         {
-            rows = stream.ReadDictionary(s => s.ReadInt(), s => new SparseShortVector(s));
+            rows = stream.ReadDictionary(s => s.ReadUInt(), s => new SparseShortVector(s));
             indices = new(this.rows.Keys);
         }
 
         public void Write(Stream stream)
         {
-            stream.WriteDictionary(rows, k => stream.WriteInt(k), v => v.Write(stream));
+            stream.WriteDictionary(rows, stream.WriteUInt, v => v.Write(stream));
         }
     }
 

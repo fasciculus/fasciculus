@@ -12,23 +12,23 @@ namespace Fasciculus.Mathematics
     {
         public static readonly SparseShortVector Empty = new([], []);
 
-        private readonly int[] indices;
+        private readonly uint[] indices;
         private readonly short[] values;
 
-        public IEnumerable<int> Indices
+        public IEnumerable<uint> Indices
             => indices;
 
-        public short this[int index]
+        public short this[uint index]
         {
             get
             {
-                index = BinarySearch.IndexOf(indices, index);
+                int i = BinarySearch.IndexOf(indices, index);
 
-                return index >= 0 ? values[index] : default;
+                return i >= 0 ? values[i] : default;
             }
         }
 
-        internal SparseShortVector(int[] indices, short[] values)
+        internal SparseShortVector(uint[] indices, short[] values)
         {
             this.indices = indices;
             this.values = values;
@@ -36,24 +36,24 @@ namespace Fasciculus.Mathematics
 
         public SparseShortVector(Stream stream)
         {
-            indices = stream.ReadIntArray();
+            indices = stream.ReadUIntArray();
             values = stream.ReadShortArray();
         }
 
         public void Write(Stream stream)
         {
-            stream.WriteIntArray(indices);
+            stream.WriteUIntArray(indices);
             stream.WriteShortArray(values);
         }
 
         public static SparseShortVector Create(short[] source)
         {
             int n = source.Length;
-            int[] indices = new int[n];
+            uint[] indices = new uint[n];
             short[] values = new short[n];
             int k = 0;
 
-            for (int i = 0; i < n; ++i)
+            for (uint i = 0; i < n; ++i)
             {
                 if (source[i] != 0)
                 {
@@ -63,12 +63,12 @@ namespace Fasciculus.Mathematics
                 }
             }
 
-            return new(new Span<int>(indices, 0, k).ToArray(), new Span<short>(values, 0, k).ToArray());
+            return new(new Span<uint>(indices, 0, k).ToArray(), new Span<short>(values, 0, k).ToArray());
         }
 
         public static SparseShortVector operator +(SparseShortVector lhs, SparseShortVector rhs)
         {
-            SortedSet<int> indices = new(lhs.indices.Concat(rhs.indices));
+            SortedSet<uint> indices = new(lhs.indices.Concat(rhs.indices));
             short[] values = indices.Select(i => (short)(lhs[i] + rhs[i])).ToArray();
 
             return new([.. indices], values);
@@ -137,28 +137,19 @@ namespace Fasciculus.Mathematics
 
         public static readonly SparseBoolVector Empty = new(BitSet.Empty);
 
-        public IEnumerable<int> Indices
+        public IEnumerable<uint> Indices
             => entries;
+
+        public bool this[uint index]
+            => entries[index];
 
         private SparseBoolVector(BitSet entries)
         {
             this.entries = entries;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static SparseBoolVector Create(BitSet entries)
-            => new(entries);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SparseBoolVector Create(IEnumerable<int> entries)
-            => Create(BitSet.Create(entries));
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SparseBoolVector Create(params int[] entries)
-            => Create(BitSet.Create(entries));
-
-        public bool this[int index]
-            => entries[index];
+        public SparseBoolVector(IEnumerable<uint> entries)
+            : this(new BitSet(entries)) { }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Length()
@@ -178,7 +169,7 @@ namespace Fasciculus.Mathematics
 
         public static SparseShortVector operator *(SparseBoolVector v, short f)
         {
-            int[] indices = v.Indices.ToArray();
+            uint[] indices = v.Indices.ToArray();
             short[] values = indices.Select(_ => f).ToArray();
 
             return new(indices, values);

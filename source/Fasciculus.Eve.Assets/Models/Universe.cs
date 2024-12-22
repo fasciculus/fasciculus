@@ -2,7 +2,7 @@
 {
     public class SdeStargate
     {
-        public int Destination { get; set; }
+        public uint Destination { get; set; }
     }
 
     public class SdeMoonStation
@@ -42,23 +42,23 @@
 
     public class SdeSolarSystem
     {
-        public int SolarSystemID { get; set; }
+        public uint SolarSystemID { get; set; }
         public double Security { get; set; }
 
         public Dictionary<int, SdePlanet> Planets { get; set; } = [];
-        public Dictionary<int, SdeStargate> Stargates { get; set; } = [];
+        public Dictionary<uint, SdeStargate> Stargates { get; set; } = [];
     }
 
     public class SdeConstellation
     {
-        public int ConstellationID { get; set; }
+        public uint ConstellationID { get; set; }
 
         public SdeSolarSystem[] SolarSystems { get; set; } = [];
     }
 
     public class SdeRegion
     {
-        public int RegionID { get; set; }
+        public uint RegionID { get; set; }
         public SdeConstellation[] Constellations { get; set; } = [];
     }
 }

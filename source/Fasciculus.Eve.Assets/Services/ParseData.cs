@@ -9,7 +9,7 @@ namespace Fasciculus.Eve.Assets.Services
     public interface IParseData
     {
         public Task<DateTime> Version { get; }
-        public Task<Dictionary<int, string>> Names { get; }
+        public Task<Dictionary<uint, string>> Names { get; }
         public Task<Dictionary<int, SdeMarketGroup>> MarketGroups { get; }
         public Task<Dictionary<int, SdeType>> Types { get; }
         public Task<Dictionary<int, SdeStationOperation>> StationOperations { get; }
@@ -30,7 +30,7 @@ namespace Fasciculus.Eve.Assets.Services
         private DateTime? version = null;
         private readonly TaskSafeMutex versionMutex = new();
 
-        private Dictionary<int, string>? names = null;
+        private Dictionary<uint, string>? names = null;
         private readonly TaskSafeMutex namesMutex = new();
 
         private Dictionary<int, SdeMarketGroup>? marketGroups = null;
@@ -55,7 +55,7 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly TaskSafeMutex dataMutex = new();
 
         public Task<DateTime> Version => GetVersionAsync();
-        public Task<Dictionary<int, string>> Names => GetNamesAsync();
+        public Task<Dictionary<uint, string>> Names => GetNamesAsync();
         public Task<Dictionary<int, SdeMarketGroup>> MarketGroups => GetMarketGroupsAsync();
         public Task<Dictionary<int, SdeType>> Types => GetTypesAsync();
         public Task<Dictionary<int, SdeStationOperation>> StationOperations => GetStationOperationsAsync();
@@ -92,14 +92,14 @@ namespace Fasciculus.Eve.Assets.Services
             return version.Value;
         }
 
-        private Task<Dictionary<int, string>> GetNamesAsync()
+        private Task<Dictionary<uint, string>> GetNamesAsync()
         {
             using Locker locker = Locker.Lock(namesMutex);
 
             return Tasks.LongRunning(() => GetNames(GetSdeFiles()));
         }
 
-        private Dictionary<int, string> GetNames(SdeFiles sdeFiles)
+        private Dictionary<uint, string> GetNames(SdeFiles sdeFiles)
         {
             if (names is null)
             {

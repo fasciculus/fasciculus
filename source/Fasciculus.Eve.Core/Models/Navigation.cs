@@ -47,7 +47,7 @@ namespace Fasciculus.Eve.Models
             }
 
             SparseShortVector distances = data.Distances[(int)security][origin.Id];
-            IEnumerable<int> ids = distances.Indices.Where(i => distances[i] == distance);
+            IEnumerable<uint> ids = distances.Indices.Where(i => distances[i] == distance);
 
             return ids.Select(id => solarSystems[id]);
         }

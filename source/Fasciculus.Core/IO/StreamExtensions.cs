@@ -64,6 +64,25 @@ namespace System.IO
             stream.Write(bytes, 0, bytes.Length);
         }
 
+        public static uint ReadUInt(this Stream stream)
+        {
+            byte[] buffer = new byte[4];
+
+            if (stream.Read(buffer, 0, buffer.Length) != 4)
+            {
+                throw Ex.EndOfStream();
+            }
+
+            return BitConverter.ToUInt32(buffer, 0);
+        }
+
+        public static void WriteUInt(this Stream stream, uint value)
+        {
+            byte[] bytes = BitConverter.GetBytes(value);
+
+            stream.Write(bytes, 0, bytes.Length);
+        }
+
         public static long ReadLong(this Stream stream)
         {
             byte[] buffer = new byte[8];
@@ -157,6 +176,19 @@ namespace System.IO
         {
             stream.WriteInt(values.Length);
             values.Apply(stream.WriteInt);
+        }
+
+        public static uint[] ReadUIntArray(this Stream stream)
+        {
+            int length = stream.ReadInt();
+
+            return Enumerable.Range(0, length).Select(_ => stream.ReadUInt()).ToArray();
+        }
+
+        public static void WriteUIntArray(this Stream stream, uint[] values)
+        {
+            stream.WriteInt(values.Length);
+            values.Apply(stream.WriteUInt);
         }
 
         public static T[] ReadArray<T>(this Stream stream, Func<Stream, T> read)

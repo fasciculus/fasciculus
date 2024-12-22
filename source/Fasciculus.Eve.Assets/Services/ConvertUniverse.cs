@@ -43,7 +43,7 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 var results = Tasks.Wait(parseUniverse.Regions, parseData.Names);
                 SdeRegion[] sdeRegions = results.Item1;
-                Dictionary<int, string> names = results.Item2;
+                Dictionary<uint, string> names = results.Item2;
 
                 progress.ConvertUniverseProgress.Report(WorkState.Working);
                 universe = ConvertRegions(sdeRegions, names);
@@ -53,34 +53,34 @@ namespace Fasciculus.Eve.Assets.Services
             return universe;
         }
 
-        private static EveUniverse.Data ConvertRegions(SdeRegion[] sdeRegions, Dictionary<int, string> names)
+        private static EveUniverse.Data ConvertRegions(SdeRegion[] sdeRegions, Dictionary<uint, string> names)
         {
             var regions = sdeRegions.Select(r => ConvertRegion(r, names)).OrderBy(r => r.Id);
 
             return new EveUniverse.Data(regions);
         }
 
-        private static EveRegion.Data ConvertRegion(SdeRegion sdeRegion, Dictionary<int, string> names)
+        private static EveRegion.Data ConvertRegion(SdeRegion sdeRegion, Dictionary<uint, string> names)
         {
-            int id = sdeRegion.RegionID;
+            uint id = sdeRegion.RegionID;
             string name = names[id];
             var constellations = sdeRegion.Constellations.Select(c => ConvertConstellation(c, names)).OrderBy(c => c.Id);
 
             return new(id, name, constellations);
         }
 
-        private static EveConstellation.Data ConvertConstellation(SdeConstellation sdeConstellation, Dictionary<int, string> names)
+        private static EveConstellation.Data ConvertConstellation(SdeConstellation sdeConstellation, Dictionary<uint, string> names)
         {
-            int id = sdeConstellation.ConstellationID;
+            uint id = sdeConstellation.ConstellationID;
             string name = names[id];
             var solarSystems = sdeConstellation.SolarSystems.Select(s => ConvertSolarSystem(s, names)).OrderBy(s => s.Id);
 
             return new(id, name, solarSystems);
         }
 
-        private static EveSolarSystem.Data ConvertSolarSystem(SdeSolarSystem sdeSolarSystem, Dictionary<int, string> names)
+        private static EveSolarSystem.Data ConvertSolarSystem(SdeSolarSystem sdeSolarSystem, Dictionary<uint, string> names)
         {
-            int id = sdeSolarSystem.SolarSystemID;
+            uint id = sdeSolarSystem.SolarSystemID;
             string name = names[id];
             double security = sdeSolarSystem.Security;
             var planets = sdeSolarSystem.Planets.Select(ConvertPlanet).OrderBy(p => p.Id);
@@ -122,10 +122,10 @@ namespace Fasciculus.Eve.Assets.Services
             return new(id, operation, owner);
         }
 
-        private static EveStargate.Data ConvertStargate(KeyValuePair<int, SdeStargate> kvp)
+        private static EveStargate.Data ConvertStargate(KeyValuePair<uint, SdeStargate> kvp)
         {
-            int id = kvp.Key;
-            int destination = kvp.Value.Destination;
+            uint id = kvp.Key;
+            uint destination = kvp.Value.Destination;
 
             return new(id, destination);
         }

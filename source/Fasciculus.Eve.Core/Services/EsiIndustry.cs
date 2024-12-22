@@ -37,7 +37,7 @@ namespace Fasciculus.Eve.Services
 
         private EveIndustryIndices.Data ConvertIndustrySystems(EsiIndustrySystem[] systems)
         {
-            Dictionary<int, double> data = systems
+            Dictionary<uint, double> data = systems
                 .Where(x => solarSystems.Contains(x.SolarSystem))
                 .Select(x => Tuple.Create(x.SolarSystem, ConvertIndustryCostIndices(x.CostIndices)))
                 .ToDictionary();

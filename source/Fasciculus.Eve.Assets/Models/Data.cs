@@ -9,7 +9,7 @@
 
     public class SdeName
     {
-        public int ItemID { get; set; }
+        public uint ItemID { get; set; }
         public string ItemName { get; set; } = string.Empty;
     }
 
@@ -122,7 +122,7 @@
     public class SdeData
     {
         public DateTime Version { get; set; } = DateTime.MinValue;
-        public Dictionary<int, string> Names { get; init; } = [];
+        public Dictionary<uint, string> Names { get; init; } = [];
         public Dictionary<int, SdeMarketGroup> MarketGroups { get; init; } = [];
         public Dictionary<int, SdeType> Types { get; init; } = [];
         public Dictionary<int, SdeStationOperation> StationOperations { get; init; } = [];
