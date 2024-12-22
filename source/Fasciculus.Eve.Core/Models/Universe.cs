@@ -1,4 +1,4 @@
-﻿using Fasciculus.Algorithms;
+﻿using Fasciculus.Text;
 using System;
 using System.Collections;
 using System.Collections.Generic;

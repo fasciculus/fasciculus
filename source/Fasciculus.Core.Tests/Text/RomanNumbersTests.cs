@@ -1,7 +1,7 @@
-﻿using Fasciculus.Algorithms;
+﻿using Fasciculus.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Fasciculus.Core.Tests.Algorithms
+namespace Fasciculus.Core.Tests.Text
 {
     [TestClass]
     public class RomanNumbersTests
