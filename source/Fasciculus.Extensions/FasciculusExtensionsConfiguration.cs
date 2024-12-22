@@ -4,8 +4,14 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    /// <summary>
+    /// Utilities to add Fasciculus.Extensions services to a service collection.
+    /// </summary>
     public static class FasciculusExtensionsConfiguration
     {
+        /// <summary>
+        /// Adds <see cref="ISpecialPaths"/> implementation.
+        /// </summary>
         public static IServiceCollection AddSpecialPaths(this IServiceCollection services)
         {
             services.TryAddSingleton<ISpecialPaths, SpecialPaths>();
@@ -13,6 +19,9 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Adds <see cref="ISpecialDirectories"/> implementation, including it's dependencies.
+        /// </summary>
         public static IServiceCollection AddSpecialDirectories(this IServiceCollection services)
         {
             services.AddSpecialPaths();
@@ -22,6 +31,9 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Adds <see cref="ICompression"/> implementation.
+        /// </summary>
         public static IServiceCollection AddCompression(this IServiceCollection services)
         {
             services.TryAddSingleton<ICompression, Compression>();
@@ -29,6 +41,9 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Adds <see cref="IEmbeddedResources"/> implementation, including it's dependencies.
+        /// </summary>
         public static IServiceCollection AddEmbeddedResources(this IServiceCollection services)
         {
             services.AddCompression();
@@ -38,6 +53,9 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Adds <see cref="IHttpClientHandlers"/> implementation, including it's dependencies.
+        /// </summary>
         public static IServiceCollection AddHttpClientHandlers(this IServiceCollection services)
         {
             services.TryAddSingleton<IHttpClientHandlers, HttpClientHandlers>();
@@ -45,6 +63,9 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Adds <see cref="IHttpClientPool"/> implementation, including it's dependencies.
+        /// </summary>
         public static IServiceCollection AddHttpClientPool(this IServiceCollection services)
         {
             services.AddHttpClientHandlers();
@@ -54,6 +75,9 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Adds <see cref="IDownloader"/> implementation, including it's dependencies.
+        /// </summary>
         public static IServiceCollection AddDownloader(this IServiceCollection services)
         {
             services.AddHttpClientPool();

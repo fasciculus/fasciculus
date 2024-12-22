@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <PropertyGroup>
+    <Description>
+      This package includes a bunch of utilities.
+    </Description>
+  </PropertyGroup>
+  
+</Project>
