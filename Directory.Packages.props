@@ -25,6 +25,7 @@
     <PackageVersion Include="Microsoft.Maui.Core" Version="9.0.21" />
     <PackageVersion Include="Microsoft.Maui.Essentials" Version="9.0.21" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.6" />
     <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageVersion Include="MSTest.TestAdapter" Version="3.6.3" />

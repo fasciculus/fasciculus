@@ -5,6 +5,15 @@
     <RootNamespace>Fasciculus</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <Import Project="Docs/Description.props" />
+  <Import Project="Docs/ReleaseNotes.props" />
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
   
   <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <PackageReference Include="System.Memory" />
@@ -17,6 +26,10 @@
       <Analyzer Remove="@(Analyzer)" Condition="'%(FileName)%(Extension)' == 'WinRT.SourceGenerator.dll'" />
     </ItemGroup>
   </Target>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
 
   <Target Name="LogBuildInfo" BeforeTargets="BeforeResolveReferences">
     <Message Importance="high" Text="----- Build Info -----" />
