@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fasciculus.IO;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,18 +24,18 @@ namespace Fasciculus.Eve.Models
                 ParentId = parentId;
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                Id = stream.ReadInt();
-                Name = stream.ReadString();
-                ParentId = stream.ReadInt();
+                Id = bin.ReadInt();
+                Name = bin.ReadString();
+                ParentId = bin.ReadInt();
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(Id);
-                stream.WriteString(Name);
-                stream.WriteInt(ParentId);
+                bin.WriteInt(Id);
+                bin.WriteString(Name);
+                bin.WriteInt(ParentId);
             }
         }
 
@@ -97,16 +98,16 @@ namespace Fasciculus.Eve.Models
                 Name = name;
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                Id = stream.ReadInt();
-                Name = stream.ReadString();
+                Id = bin.ReadInt();
+                Name = bin.ReadString();
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(Id);
-                stream.WriteString(Name);
+                bin.WriteInt(Id);
+                bin.WriteString(Name);
             }
         }
 
@@ -155,16 +156,16 @@ namespace Fasciculus.Eve.Models
                 Name = name;
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                Id = stream.ReadInt();
-                Name = stream.ReadString();
+                Id = bin.ReadInt();
+                Name = bin.ReadString();
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(Id);
-                stream.WriteString(Name);
+                bin.WriteInt(Id);
+                bin.WriteString(Name);
             }
         }
 

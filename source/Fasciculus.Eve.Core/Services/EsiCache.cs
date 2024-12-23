@@ -1,5 +1,5 @@
 ﻿using Fasciculus.Eve.Models;
-using Fasciculus.Threading;
+using Fasciculus.IO;
 using Fasciculus.Threading.Synchronization;
 using System;
 using System.IO;
@@ -53,7 +53,7 @@ namespace Fasciculus.Eve.Services
             => Read(GetMarketPricesFile(), MarketPricesMaxAge, s => new EveMarketPrices.Data(s));
 
         public void SetMarketPrices(EveMarketPrices.Data data)
-            => Write(GetMarketPricesFile(), data.Write);
+            => WriteStream(GetMarketPricesFile(), data.Write);
 
         private FileInfo GetRegionBuyOrdersFile(EveRegion region)
             => marketDirectory.File($"{region.Id}_b");
@@ -62,7 +62,7 @@ namespace Fasciculus.Eve.Services
             => Read(GetRegionBuyOrdersFile(region), MarketOrdersMaxAge, s => new EveRegionOrders.Data(s));
 
         public void SetRegionBuyOrders(EveRegion region, EveRegionOrders.Data data)
-            => Write(GetRegionBuyOrdersFile(region), data.Write);
+            => WriteStream(GetRegionBuyOrdersFile(region), data.Write);
 
         private FileInfo GetRegionSellOrdersFile(EveRegion region)
             => marketDirectory.File($"{region.Id}_s");
@@ -71,7 +71,7 @@ namespace Fasciculus.Eve.Services
             => Read(GetRegionSellOrdersFile(region), MarketOrdersMaxAge, s => new EveRegionOrders.Data(s));
 
         public void SetRegionSellOrders(EveRegion region, EveRegionOrders.Data data)
-            => Write(GetRegionSellOrdersFile(region), data.Write);
+            => WriteStream(GetRegionSellOrdersFile(region), data.Write);
 
         private FileInfo GetIndustryIndicesFile()
             => industryDirectory.File("IndustryIndices");
@@ -103,7 +103,7 @@ namespace Fasciculus.Eve.Services
             return result;
         }
 
-        private void Write(FileInfo file, Action<Stream> write)
+        private void WriteStream(FileInfo file, Action<Stream> write)
         {
             using Locker locker = Locker.Lock(mutex);
 
@@ -113,6 +113,19 @@ namespace Fasciculus.Eve.Services
 
             stream.WriteInt(Version);
             write(stream);
+        }
+
+        private void Write(FileInfo file, Action<Binary> write)
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            file.DeleteIfExists();
+
+            using Stream stream = file.Create();
+            Binary binary = stream;
+
+            binary.WriteInt(Version);
+            write(binary);
         }
     }
 }

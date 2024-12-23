@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Fasciculus.IO;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -27,22 +27,22 @@ namespace Fasciculus.Eve.Models
                 MarketGroupId = marketGroupId;
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                Id = stream.ReadInt();
-                Name = stream.ReadString();
-                Volume = stream.ReadDouble();
-                MetaGroupId = stream.ReadInt();
-                MarketGroupId = stream.ReadInt();
+                Id = bin.ReadInt();
+                Name = bin.ReadString();
+                Volume = bin.ReadDouble();
+                MetaGroupId = bin.ReadInt();
+                MarketGroupId = bin.ReadInt();
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(Id);
-                stream.WriteString(Name);
-                stream.WriteDouble(Volume);
-                stream.WriteInt(MetaGroupId);
-                stream.WriteInt(MarketGroupId);
+                bin.WriteInt(Id);
+                bin.WriteString(Name);
+                bin.WriteDouble(Volume);
+                bin.WriteInt(MetaGroupId);
+                bin.WriteInt(MarketGroupId);
             }
         }
 

@@ -1,8 +1,8 @@
 ﻿using Fasciculus.Algorithms;
 using Fasciculus.Collections;
+using Fasciculus.IO;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -34,16 +34,16 @@ namespace Fasciculus.Mathematics
             this.values = values;
         }
 
-        public SparseShortVector(Stream stream)
+        public SparseShortVector(Binary bin)
         {
-            indices = stream.ReadUIntArray();
-            values = stream.ReadShortArray();
+            indices = bin.ReadUIntArray();
+            values = bin.ReadShortArray();
         }
 
-        public void Write(Stream stream)
+        public void Write(Binary bin)
         {
-            stream.WriteUIntArray(indices);
-            stream.WriteShortArray(values);
+            bin.WriteUIntArray(indices);
+            bin.WriteShortArray(values);
         }
 
         public static SparseShortVector Create(short[] source)
@@ -90,16 +90,9 @@ namespace Fasciculus.Mathematics
             this.entries = entries.ShallowCopy();
         }
 
-        public void Write(Stream stream)
+        public void Write(Binary bin)
         {
-            stream.WriteShortArray(entries);
-        }
-
-        public static DenseShortVector Read(Stream stream)
-        {
-            short[] entries = stream.ReadShortArray();
-
-            return new(entries);
+            bin.WriteShortArray(entries);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

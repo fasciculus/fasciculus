@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fasciculus.IO;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,14 +20,14 @@ namespace Fasciculus.Eve.Models
                 this.indices = new(indices);
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                indices = stream.ReadDictionary(s => s.ReadUInt(), s => s.ReadDouble());
+                indices = bin.ReadDictionary(bin.ReadUInt, bin.ReadDouble);
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteDictionary(indices, stream.WriteUInt, stream.WriteDouble);
+                bin.WriteDictionary(indices, bin.WriteUInt, bin.WriteDouble);
             }
         }
 
@@ -54,16 +55,16 @@ namespace Fasciculus.Eve.Models
                 Quantity = quantity;
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                Type = stream.ReadInt();
-                Quantity = stream.ReadInt();
+                Type = bin.ReadInt();
+                Quantity = bin.ReadInt();
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(Type);
-                stream.WriteInt(Quantity);
+                bin.WriteInt(Type);
+                bin.WriteInt(Quantity);
             }
         }
 
@@ -105,22 +106,22 @@ namespace Fasciculus.Eve.Models
                 this.skills = skills.ToArray();
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                Time = stream.ReadInt();
+                Time = bin.ReadInt();
 
-                materials = stream.ReadArray(s => new EveMaterial.Data(s));
-                products = stream.ReadArray(s => new EveMaterial.Data(s));
-                skills = stream.ReadArray(s => new EveSkill.Data(s));
+                materials = bin.ReadArray(() => new EveMaterial.Data(bin));
+                products = bin.ReadArray(() => new EveMaterial.Data(bin));
+                skills = bin.ReadArray(() => new EveSkill.Data(bin));
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(Time);
+                bin.WriteInt(Time);
 
-                stream.WriteArray(materials, x => x.Write(stream));
-                stream.WriteArray(products, x => x.Write(stream));
-                stream.WriteArray(skills, x => x.Write(stream));
+                bin.WriteArray(materials, x => x.Write(bin));
+                bin.WriteArray(products, x => x.Write(bin));
+                bin.WriteArray(skills, x => x.Write(bin));
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fasciculus.IO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -102,15 +103,15 @@ namespace Fasciculus.Mathematics
             indices = new(this.rows.Keys);
         }
 
-        public SparseShortMatrix(Stream stream)
+        public SparseShortMatrix(Binary bin)
         {
-            rows = stream.ReadDictionary(s => s.ReadUInt(), s => new SparseShortVector(s));
-            indices = new(this.rows.Keys);
+            rows = bin.ReadDictionary(bin.ReadUInt, () => new SparseShortVector(bin));
+            indices = new(rows.Keys);
         }
 
-        public void Write(Stream stream)
+        public void Write(Binary bin)
         {
-            stream.WriteDictionary(rows, stream.WriteUInt, v => v.Write(stream));
+            bin.WriteDictionary(rows, bin.WriteUInt, v => v.Write(bin));
         }
     }
 
@@ -130,18 +131,10 @@ namespace Fasciculus.Mathematics
             this.rows = rows.ShallowCopy();
         }
 
-        public void Write(Stream stream)
+        public void Write(Binary bin)
         {
-            stream.WriteInt(ColumnCount);
-            stream.WriteArray(rows, row => row.Write(stream));
-        }
-
-        public static DenseShortMatrix Read(Stream stream)
-        {
-            int columnCount = stream.ReadInt();
-            DenseShortVector[] rows = stream.ReadArray(DenseShortVector.Read);
-
-            return new(columnCount, rows);
+            bin.WriteInt(ColumnCount);
+            bin.WriteArray(rows, row => row.Write(bin));
         }
 
         public DenseShortMatrix Transpose()
