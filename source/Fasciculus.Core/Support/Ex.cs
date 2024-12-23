@@ -12,6 +12,9 @@ namespace Fasciculus.Support
         public static NotImplementedException NotImplemented()
             => new();
 
+        public static IndexOutOfRangeException IndexOutOfRange()
+            => new();
+
         public static FileNotFoundException FileNotFound(FileInfo? fileInfo = null)
             => new(Format(fileInfo?.FullName));
 
