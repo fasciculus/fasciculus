@@ -3,7 +3,12 @@
 
   <PropertyGroup>
     <Description>
-      This package includes a bunch of utilities.
+      This package includes a bunch of utilities:
+      - Algorithms
+      - IO
+      - Synchronization
+      
+      See the README for more information.
     </Description>
   </PropertyGroup>
   

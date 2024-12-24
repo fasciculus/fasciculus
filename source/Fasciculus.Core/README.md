@@ -12,3 +12,8 @@ This package includes a bunch of utilities.
 
 - Converters to and from byte arrays for little-endian and big-endian.
 - Read and write binary data from or to a stream.
+
+## Synchronization
+
+- Non-reentrant and reentrant task-safe mutexes
+- Support for locking and auto-unlocking synchronization objects.

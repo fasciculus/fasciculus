@@ -2,10 +2,16 @@
 
 namespace Fasciculus.Threading.Synchronization
 {
+    /// <summary>
+    /// Non-reentrant task-safe mutex.
+    /// </summary>
     public class TaskSafeMutex : ILockable
     {
         private long locked = 0;
 
+        /// <summary>
+        /// Locks this mutex.
+        /// </summary>
         public void Lock(CancellationToken ctk)
         {
             while (true)
@@ -21,6 +27,9 @@ namespace Fasciculus.Threading.Synchronization
             }
         }
 
+        /// <summary>
+        /// Unlocks this mutex.
+        /// </summary>
         public void Unlock()
         {
             Interlocked.Exchange(ref locked, 0);
