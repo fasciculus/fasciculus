@@ -31,7 +31,7 @@ namespace Fasciculus.Eve.Services
         public static readonly TimeSpan IndustryIndicesMaxAge = TimeSpan.FromSeconds(360000);
 #else
         public static readonly TimeSpan MarketPricesMaxAge = TimeSpan.FromSeconds(3600);
-        public static readonly TimeSpan MarketOrdersMaxAge = TimeSpan.FromSeconds(300);
+        public static readonly TimeSpan MarketOrdersMaxAge = TimeSpan.FromSeconds(3600); // not using 600
         public static readonly TimeSpan IndustryIndicesMaxAge = TimeSpan.FromSeconds(3600);
 #endif
 
@@ -53,7 +53,7 @@ namespace Fasciculus.Eve.Services
             => Read(GetMarketPricesFile(), MarketPricesMaxAge, s => new EveMarketPrices.Data(s));
 
         public void SetMarketPrices(EveMarketPrices.Data data)
-            => WriteStream(GetMarketPricesFile(), data.Write);
+            => Write(GetMarketPricesFile(), data.Write);
 
         private FileInfo GetRegionBuyOrdersFile(EveRegion region)
             => marketDirectory.File($"{region.Id}_b");
@@ -62,7 +62,7 @@ namespace Fasciculus.Eve.Services
             => Read(GetRegionBuyOrdersFile(region), MarketOrdersMaxAge, s => new EveRegionOrders.Data(s));
 
         public void SetRegionBuyOrders(EveRegion region, EveRegionOrders.Data data)
-            => WriteStream(GetRegionBuyOrdersFile(region), data.Write);
+            => Write(GetRegionBuyOrdersFile(region), data.Write);
 
         private FileInfo GetRegionSellOrdersFile(EveRegion region)
             => marketDirectory.File($"{region.Id}_s");
@@ -71,7 +71,7 @@ namespace Fasciculus.Eve.Services
             => Read(GetRegionSellOrdersFile(region), MarketOrdersMaxAge, s => new EveRegionOrders.Data(s));
 
         public void SetRegionSellOrders(EveRegion region, EveRegionOrders.Data data)
-            => WriteStream(GetRegionSellOrdersFile(region), data.Write);
+            => Write(GetRegionSellOrdersFile(region), data.Write);
 
         private FileInfo GetIndustryIndicesFile()
             => industryDirectory.File("IndustryIndices");
@@ -82,7 +82,7 @@ namespace Fasciculus.Eve.Services
         public void SetIndustryIndices(EveIndustryIndices.Data data)
             => Write(GetIndustryIndicesFile(), data.Write);
 
-        private T? Read<T>(FileInfo file, TimeSpan maxAge, Func<Stream, T> read)
+        private T? Read<T>(FileInfo file, TimeSpan maxAge, Func<Binary, T> read)
             where T : notnull
         {
             using Locker locker = Locker.Lock(mutex);
@@ -92,27 +92,16 @@ namespace Fasciculus.Eve.Services
             if (file.Exists && file.IsNewerThan(DateTime.UtcNow - maxAge))
             {
                 using Stream stream = file.OpenRead();
-                int version = stream.ReadInt();
+                Binary bin = stream;
+                int version = bin.ReadInt();
 
                 if (version == Version)
                 {
-                    result = read(stream);
+                    result = read(bin);
                 }
             }
 
             return result;
-        }
-
-        private void WriteStream(FileInfo file, Action<Stream> write)
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            file.DeleteIfExists();
-
-            using Stream stream = file.Create();
-
-            stream.WriteInt(Version);
-            write(stream);
         }
 
         private void Write(FileInfo file, Action<Binary> write)

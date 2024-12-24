@@ -1,6 +1,6 @@
-﻿using Fasciculus.Mathematics;
+﻿using Fasciculus.IO;
+using Fasciculus.Mathematics;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -18,12 +18,12 @@ namespace Fasciculus.Eve.Models
                 this.distances = distances.ToArray();
             }
 
-            public Data(Stream stream)
-                : this(stream.ReadArray(s => new SparseShortMatrix(s))) { }
+            public Data(Binary bin)
+                : this(bin.ReadArray(() => new SparseShortMatrix(bin))) { }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteArray(distances, x => x.Write(stream));
+                bin.WriteArray(distances, x => x.Write(bin));
             }
         }
 
@@ -36,8 +36,8 @@ namespace Fasciculus.Eve.Models
             this.solarSystems = solarSystems;
         }
 
-        public EveNavigation(Stream stream, EveSolarSystems solarSystems)
-            : this(new Data(stream), solarSystems) { }
+        public EveNavigation(Binary bin, EveSolarSystems solarSystems)
+            : this(new Data(bin), solarSystems) { }
 
         public IEnumerable<EveSolarSystem> AtDistance(EveSolarSystem origin, int distance, EveSecurity.Level security)
         {

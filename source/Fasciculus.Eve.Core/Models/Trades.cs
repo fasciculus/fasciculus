@@ -1,5 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using Fasciculus.IO;
+using System;
 
 namespace Fasciculus.Eve.Models
 {
@@ -29,18 +29,18 @@ namespace Fasciculus.Eve.Models
             public Data(Data data)
                 : this(data.MaxDistance, data.MaxVolumePerType, data.MaxIskPerType) { }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                MaxDistance = stream.ReadInt();
-                MaxVolumePerType = stream.ReadInt();
-                MaxIskPerType = stream.ReadInt();
+                MaxDistance = bin.ReadInt();
+                MaxVolumePerType = bin.ReadInt();
+                MaxIskPerType = bin.ReadInt();
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(MaxDistance);
-                stream.WriteInt(MaxVolumePerType);
-                stream.WriteInt(MaxIskPerType);
+                bin.WriteInt(MaxDistance);
+                bin.WriteInt(MaxVolumePerType);
+                bin.WriteInt(MaxIskPerType);
             }
 
             public bool Equals(Data? other)
@@ -81,12 +81,12 @@ namespace Fasciculus.Eve.Models
         public EveTradeOptions(EveTradeOptions options)
             : this(options.data, options.stations) { }
 
-        public EveTradeOptions(Stream stream, EveStations stations)
-            : this(new Data(stream), stations) { }
+        public EveTradeOptions(Binary bin, EveStations stations)
+            : this(new Data(bin), stations) { }
 
-        public void Write(Stream stream)
+        public void Write(Binary bin)
         {
-            data.Write(stream);
+            data.Write(bin);
         }
 
         public bool Equals(EveTradeOptions? other)

@@ -1,9 +1,9 @@
 ﻿using Fasciculus.Eve.Services;
+using Fasciculus.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -31,22 +31,22 @@ namespace Fasciculus.Eve.Models
                 Output = output;
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                Id = stream.ReadInt();
-                Name = stream.ReadString();
-                CycleTime = stream.ReadInt();
-                inputs = stream.ReadArray(s => new EvePlanetTypeQuantity.Data(s));
-                Output = new EvePlanetTypeQuantity.Data(stream);
+                Id = bin.ReadInt();
+                Name = bin.ReadString();
+                CycleTime = bin.ReadInt();
+                inputs = bin.ReadArray(() => new EvePlanetTypeQuantity.Data(bin));
+                Output = new EvePlanetTypeQuantity.Data(bin);
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(Id);
-                stream.WriteString(Name);
-                stream.WriteInt(CycleTime);
-                stream.WriteArray(inputs, x => x.Write(stream));
-                Output.Write(stream);
+                bin.WriteInt(Id);
+                bin.WriteString(Name);
+                bin.WriteInt(CycleTime);
+                bin.WriteArray(inputs, x => x.Write(bin));
+                Output.Write(bin);
             }
         }
 

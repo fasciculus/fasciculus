@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -165,18 +164,18 @@ namespace Fasciculus.Eve.Models
                 Manufacturing = manufacturing;
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                Id = stream.ReadInt();
-                MaxRuns = stream.ReadInt();
-                Manufacturing = new EveManufacturing.Data(stream);
+                Id = bin.ReadInt();
+                MaxRuns = bin.ReadInt();
+                Manufacturing = new EveManufacturing.Data(bin);
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(Id);
-                stream.WriteInt(MaxRuns);
-                Manufacturing.Write(stream);
+                bin.WriteInt(Id);
+                bin.WriteInt(MaxRuns);
+                Manufacturing.Write(bin);
             }
         }
 

@@ -666,7 +666,7 @@ namespace Fasciculus.IO
         /// Reads a dictionary using the given <paramref name="endian"/>.
         /// </summary>
         public Dictionary<K, V> ReadDictionary<K, V>(Func<Endian, K> readKey, Func<Endian, V> readValue, Endian endian)
-            where K : notnull
+            where K : notnull, IComparable<K>
         {
             int length = ReadInt(endian);
             Dictionary<K, V> result = [];
@@ -689,14 +689,14 @@ namespace Fasciculus.IO
         /// </para>
         /// </summary>
         public Dictionary<K, V> ReadDictionary<K, V>(Func<K> readKey, Func<V> readValue)
-            where K : notnull
+            where K : notnull, IComparable<K>
             => ReadDictionary(_1 => readKey(), _2 => readValue(), Endian.Little);
 
         /// <summary>
         /// Writes a dictionary using the given <paramref name="endian"/>.
         /// </summary>
         public void WriteDictionary<K, V>(Dictionary<K, V> dictionary, Action<K, Endian> writeKey, Action<V, Endian> writeValue, Endian endian)
-            where K : notnull
+            where K : notnull, IComparable<K>
         {
             KeyValuePair<K, V>[] kvps = [.. dictionary.OrderBy(x => x.Key)];
 
@@ -711,7 +711,7 @@ namespace Fasciculus.IO
         /// </para>
         /// </summary>
         public void WriteDictionary<K, V>(Dictionary<K, V> dictionary, Action<K> writeKey, Action<V> writeValue)
-            where K : notnull
+            where K : notnull, IComparable<K>
             => WriteDictionary(dictionary, (k, e) => { writeKey(k); }, (v, e) => { writeValue(v); }, Endian.Little);
 
         private byte[] ReadCore(int byteCount)

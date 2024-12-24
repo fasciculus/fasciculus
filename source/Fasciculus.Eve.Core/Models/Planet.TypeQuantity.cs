@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using Fasciculus.IO;
+using System.Diagnostics;
 
 namespace Fasciculus.Eve.Models
 {
@@ -17,16 +17,16 @@ namespace Fasciculus.Eve.Models
                 Quantity = quantity;
             }
 
-            public Data(Stream stream)
+            public Data(Binary bin)
             {
-                Type = stream.ReadInt();
-                Quantity = stream.ReadInt();
+                Type = bin.ReadInt();
+                Quantity = bin.ReadInt();
             }
 
-            public void Write(Stream stream)
+            public void Write(Binary bin)
             {
-                stream.WriteInt(Type);
-                stream.WriteInt(Quantity);
+                bin.WriteInt(Type);
+                bin.WriteInt(Quantity);
             }
         }
 
