@@ -23,7 +23,7 @@ namespace Fasciculus.Threading.Synchronization
                     return;
                 }
 
-                Tasks.Sleep(0);
+                Tasks.Yield();
             }
         }
 

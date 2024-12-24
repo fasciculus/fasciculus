@@ -63,13 +63,28 @@ namespace Fasciculus.Threading
             => Wait(Task.Delay(milliseconds));
 
         /// <summary>
+        /// Synchronously yields the current task.
+        /// <para>
+        /// Shorthand for <c>Task.Yield().GetAwaiter().GetResult()</c>.
+        /// </para>
+        /// </summary>
+        public static void Yield()
+            => Task.Yield().GetAwaiter().GetResult();
+
+        /// <summary>
         /// Synchronously waits for the given <paramref name="task"/> to finish.
+        /// <para>
+        /// Shorthand for <c>task.GetAwaiter().GetResult()</c>.
+        /// </para>
         /// </summary>
         public static void Wait(Task task)
             => task.GetAwaiter().GetResult();
 
         /// <summary>
         /// Synchronously waits for the given <paramref name="task"/> to finish.
+        /// <para>
+        /// Shorthand for <c>task.GetAwaiter().GetResult()</c>.
+        /// </para>
         /// </summary>
         public static T Wait<T>(Task<T> task)
             => task.GetAwaiter().GetResult();

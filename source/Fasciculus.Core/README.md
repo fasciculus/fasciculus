@@ -17,3 +17,4 @@ This package includes a bunch of utilities.
 
 - Non-reentrant and reentrant task-safe mutexes
 - Support for locking and auto-unlocking synchronization objects.
+- Named reentrant task-safe mutexes.
