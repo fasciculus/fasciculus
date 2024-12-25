@@ -1,7 +1,6 @@
 ﻿using Fasciculus.IO;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -113,58 +112,5 @@ namespace Fasciculus.Mathematics
         {
             bin.WriteDictionary(rows, bin.WriteUInt, v => v.Write(bin));
         }
-    }
-
-    public class DenseShortMatrix
-    {
-        public int RowCount => rows.Length;
-        public int ColumnCount { get; }
-
-        private readonly DenseShortVector[] rows;
-
-        public DenseShortVector this[int row]
-            => rows[row];
-
-        public DenseShortMatrix(int columnCount, DenseShortVector[] rows)
-        {
-            ColumnCount = columnCount;
-            this.rows = rows.ShallowCopy();
-        }
-
-        public void Write(Binary bin)
-        {
-            bin.WriteInt(ColumnCount);
-            bin.WriteArray(rows, row => row.Write(bin));
-        }
-
-        public DenseShortMatrix Transpose()
-            => new(RowCount, Enumerable.Range(0, ColumnCount).Select(Transpose).ToArray());
-
-        private DenseShortVector Transpose(int col)
-            => new(Enumerable.Range(0, RowCount).Select(row => rows[row][col]).ToArray());
-
-        public static DenseShortMatrix operator +(DenseShortMatrix lhs, DenseShortMatrix rhs)
-            => new(lhs.ColumnCount, Enumerable.Range(0, lhs.RowCount).Select(row => lhs.rows[row] + rhs.rows[row]).ToArray());
-    }
-
-    public class DenseIntMatrix
-    {
-        public int RowCount => rows.Length;
-        public int ColumnCount { get; }
-
-        private readonly DenseIntVector[] rows;
-
-        public DenseIntVector this[int row]
-            => rows[row];
-
-        public DenseIntMatrix(int columnCount, DenseIntVector[] rows)
-        {
-            ColumnCount = columnCount;
-            this.rows = rows.ShallowCopy();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DenseIntMatrix operator +(DenseIntMatrix lhs, DenseIntMatrix rhs)
-            => new(lhs.ColumnCount, Enumerable.Range(0, lhs.RowCount).Select(row => lhs.rows[row] + rhs.rows[row]).ToArray());
     }
 }

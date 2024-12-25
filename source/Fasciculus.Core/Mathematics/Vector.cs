@@ -75,55 +75,6 @@ namespace Fasciculus.Mathematics
         }
     }
 
-    public class DenseShortVector
-    {
-        private readonly short[] entries;
-
-        public int Count
-            => entries.Length;
-
-        public short this[int index]
-            => entries[index];
-
-        public DenseShortVector(short[] entries)
-        {
-            this.entries = entries.ShallowCopy();
-        }
-
-        public void Write(Binary bin)
-        {
-            bin.WriteShortArray(entries);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public SparseShortVector ToSparse()
-            => SparseShortVector.Create(entries);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DenseShortVector operator +(DenseShortVector lhs, DenseShortVector rhs)
-            => new(Enumerable.Range(0, lhs.Count).Select(index => (short)(lhs.entries[index] + rhs.entries[index])).ToArray());
-    }
-
-    public class DenseIntVector
-    {
-        private readonly int[] entries;
-
-        public int Count
-            => entries.Length;
-
-        public int this[int index]
-            => entries[index];
-
-        public DenseIntVector(int[] entries)
-        {
-            this.entries = entries.ShallowCopy();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DenseIntVector operator +(DenseIntVector lhs, DenseIntVector rhs)
-            => new(Enumerable.Range(0, lhs.Count).Select(index => lhs.entries[index] + rhs.entries[index]).ToArray());
-    }
-
     public class SparseBoolVector
     {
         private readonly BitSet entries;
