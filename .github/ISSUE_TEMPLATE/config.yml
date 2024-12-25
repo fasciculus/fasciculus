@@ -1,1 +1,4 @@
 blank_issues_enabled: true
+contact_links:
+  - name: Issue with Fasciculus
+    url:  https://github.com/fasciculus/fasciculus/issues/new/choose
