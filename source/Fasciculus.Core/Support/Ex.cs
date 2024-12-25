@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO;
+﻿using Fasciculus.IO.Resources;
 using System;
 using System.IO;
 
