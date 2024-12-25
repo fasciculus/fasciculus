@@ -10,16 +10,6 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class FasciculusExtensionsConfiguration
     {
         /// <summary>
-        /// Adds <see cref="ISpecialDirectories"/> implementation, including it's dependencies.
-        /// </summary>
-        public static IServiceCollection AddSpecialDirectories(this IServiceCollection services)
-        {
-            services.TryAddSingleton<ISpecialDirectories, SpecialDirectories>();
-
-            return services;
-        }
-
-        /// <summary>
         /// Adds <see cref="IEmbeddedResources"/> implementation, including it's dependencies.
         /// </summary>
         public static IServiceCollection AddEmbeddedResources(this IServiceCollection services)

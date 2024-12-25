@@ -17,9 +17,7 @@ namespace Fasciculus.Eve.Assets.Services
 
     public class AssetsDirectories : IAssetsDirectories
     {
-        private readonly ISpecialDirectories specialDirectories;
-
-        public DirectoryInfo Documents => specialDirectories.Documents.Combine("Fasciculus.Eve.Assets").CreateIfNotExists();
+        public DirectoryInfo Documents => SpecialDirectories.Documents.Combine("Fasciculus.Eve.Assets").CreateIfNotExists();
         public DirectoryInfo Downloads => Documents.Combine("Downloads").CreateIfNotExists();
 
         public DirectoryInfo Sde => Documents.Combine("Sde").CreateIfNotExists();
@@ -27,19 +25,12 @@ namespace Fasciculus.Eve.Assets.Services
 
         public DirectoryInfo Resources => Documents.Combine("Resources").CreateIfNotExists();
         public DirectoryInfo Images => Resources.Combine("Images").CreateIfNotExists();
-
-        public AssetsDirectories(ISpecialDirectories specialDirectories)
-        {
-            this.specialDirectories = specialDirectories;
-        }
     }
 
     public static class AssetsFileSystemServices
     {
         public static IServiceCollection AddAssetsDirectories(this IServiceCollection services)
         {
-            services.AddSpecialDirectories();
-
             services.TryAddSingleton<IAssetsDirectories, AssetsDirectories>();
 
             return services;

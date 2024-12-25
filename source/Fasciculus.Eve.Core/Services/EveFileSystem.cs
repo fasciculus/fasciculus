@@ -21,9 +21,9 @@ namespace Fasciculus.Eve.Services
 
         public DirectoryInfo EsiCache => Documents.Combine("EsiCache").CreateIfNotExists();
 
-        public EveFileSystem(ISpecialDirectories specialDirectories)
+        public EveFileSystem()
         {
-            Documents = specialDirectories.Documents.Combine("Fasciculus.Eve").CreateIfNotExists();
+            Documents = SpecialDirectories.Documents.Combine("Fasciculus.Eve").CreateIfNotExists();
         }
     }
 }
