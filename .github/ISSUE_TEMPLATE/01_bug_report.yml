@@ -2,6 +2,10 @@ name: Bug Report
 description: Create a report to help us improve
 labels: []
 body:
+  - type: markdown
+    attributes:
+      value: |
+        We welcome bug reports!
   - type: textarea
     id: background
     attributes:

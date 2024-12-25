@@ -2,6 +2,10 @@ name: API Suggestion
 description: Propose adding a new API to the public API surface
 title: "[API Proposal]: "
 labels: [api-suggestion]
+  - type: markdown
+    attributes:
+      value: |
+        We welcome API proposals!
   - type: textarea
     id: background
     attributes:
