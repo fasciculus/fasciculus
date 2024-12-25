@@ -76,7 +76,7 @@ namespace Fasciculus.IO.Compressing
             FileInfo file = target.File(entry.FullName);
             DateTime dateTime = entry.LastWriteTime.UtcDateTime;
 
-            return file.NeedsOverwrite(dateTime, overwrite);
+            return file.RequiresOverwrite(dateTime, overwrite);
         }
 
         private static void ReportBegin(ReadOnlyCollection<ZipArchiveEntry> entries,
