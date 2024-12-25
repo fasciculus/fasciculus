@@ -2,12 +2,21 @@
 
 namespace System.Collections.Generic
 {
+    /// <summary>
+    /// Extensions for <see cref="IEnumerable{T}"/>
+    /// </summary>
     public static class IEnumerableExtensions
     {
-        public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> collection)
+        /// <summary>
+        /// Returns an enumeration with those entries of the given <paramref name="values"/> that are not <c>null</c>.
+        /// </summary>
+        public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> values)
             where T : notnull
-            => collection.Where(x => x is not null).Cast<T>();
+            => values.Where(x => x is not null).Cast<T>();
 
+        /// <summary>
+        /// A "ForEach" for all <see cref="IEnumerable{T}"/>.
+        /// </summary>
         public static void Apply<T>(this IEnumerable<T> values, Action<T> action)
         {
             foreach (var value in values)
@@ -17,11 +26,21 @@ namespace System.Collections.Generic
         }
 
 #if NETSTANDARD
+        /// <summary>
+        /// Adds <c>ToDictionary</c> for <see cref="KeyValuePair{TKey, TValue}"/> collection missing in netstandard.
+        /// </summary>
         public static Dictionary<K, V> ToDictionary<K, V>(this IEnumerable<KeyValuePair<K, V>> kvps)
             where K : notnull
             => kvps.ToDictionary(x => x.Key, x => x.Value);
 #endif
 
+        /// <summary>
+        /// Converts the given key/value pairs into a dictionary.
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="kvps"></param>
+        /// <returns></returns>
         public static Dictionary<K, V> ToDictionary<K, V>(this IEnumerable<Tuple<K, V>> kvps)
             where K : notnull
             => kvps.ToDictionary(x => x.Item1, x => x.Item2);
