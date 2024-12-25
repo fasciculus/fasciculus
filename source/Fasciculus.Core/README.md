@@ -8,6 +8,11 @@ This package includes a bunch of utilities.
 - Bit related helper functions.
 - Fast implementation to check equality of base type arrays.
 
+## Collections
+
+- Immutable bit set.
+- Disposable stack of disposable entries.
+
 ## IO
 
 - Converters to and from byte arrays for little-endian and big-endian.
