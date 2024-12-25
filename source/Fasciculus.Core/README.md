@@ -18,6 +18,7 @@ This package includes a bunch of utilities.
 
 - Converters to and from byte arrays for little-endian and big-endian.
 - Read and write binary data from or to a stream.
+- Zip and GZip helpers.
 
 ## Synchronization
 

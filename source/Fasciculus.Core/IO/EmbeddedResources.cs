@@ -1,4 +1,5 @@
-﻿using Fasciculus.Support;
+﻿using Fasciculus.IO.Compressing;
+using Fasciculus.Support;
 using System;
 using System.IO;
 using System.Linq;
@@ -20,13 +21,11 @@ namespace Fasciculus.IO
 
     public class EmbeddedResource : IEmbeddedResource
     {
-        private readonly ICompression compression;
         private readonly Assembly assembly;
         private readonly string name;
 
-        public EmbeddedResource(ICompression compression, Assembly assembly, string name)
+        public EmbeddedResource(Assembly assembly, string name)
         {
-            this.compression = compression;
             this.assembly = assembly;
             this.name = name;
         }
@@ -44,7 +43,7 @@ namespace Fasciculus.IO
             {
                 using MemoryStream uncompressed = new();
 
-                compression.UnGZip(stream, uncompressed);
+                GZip.Extract(stream, uncompressed);
                 uncompressed.Position = 0;
                 return read(uncompressed);
             }
@@ -62,14 +61,7 @@ namespace Fasciculus.IO
 
     public class EmbeddedResources : IEmbeddedResources
     {
-        private readonly ICompression compression;
-
         public IEmbeddedResource this[string name] => Find(name);
-
-        public EmbeddedResources(ICompression compression)
-        {
-            this.compression = compression;
-        }
 
         private IEmbeddedResource Find(string name)
         {
@@ -79,7 +71,7 @@ namespace Fasciculus.IO
 
                 if (names.Contains(name))
                 {
-                    return new EmbeddedResource(compression, assembly, name);
+                    return new EmbeddedResource(assembly, name);
                 }
             }
 

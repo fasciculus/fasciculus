@@ -1,5 +1,5 @@
 ﻿using Fasciculus.Algorithms;
-using Fasciculus.IO;
+using Fasciculus.IO.Compressing;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
@@ -12,13 +12,6 @@ namespace Fasciculus.Eve.Assets.Services
 
     public class WriteResource : IWriteResource
     {
-        private readonly ICompression compression;
-
-        public WriteResource(ICompression compression)
-        {
-            this.compression = compression;
-        }
-
         public bool Copy(FileInfo source, FileInfo destination, bool compress)
         {
             byte[] bytes = source.ReadAllBytes();
@@ -40,7 +33,7 @@ namespace Fasciculus.Eve.Assets.Services
                     using Stream uncompressed = new MemoryStream(source);
                     using Stream compressed = destination.Open(FileMode.CreateNew);
 
-                    compression.GZip(uncompressed, compressed);
+                    GZip.Compress(uncompressed, compressed);
                 }
                 else
                 {
@@ -51,7 +44,7 @@ namespace Fasciculus.Eve.Assets.Services
             return writeRequired;
         }
 
-        private bool WriteRequired(byte[] source, FileInfo destination, bool compress)
+        private static bool WriteRequired(byte[] source, FileInfo destination, bool compress)
         {
             bool result = !destination.Exists;
 
@@ -65,7 +58,7 @@ namespace Fasciculus.Eve.Assets.Services
             return result;
         }
 
-        private byte[] Read(FileInfo destination, bool compress)
+        private static byte[] Read(FileInfo destination, bool compress)
         {
             byte[] result = destination.ReadAllBytes();
 
@@ -74,7 +67,7 @@ namespace Fasciculus.Eve.Assets.Services
                 using MemoryStream compressed = new(result);
                 using MemoryStream uncompressed = new();
 
-                compression.UnGZip(compressed, uncompressed);
+                GZip.Extract(compressed, compressed);
                 result = uncompressed.ToArray();
             }
 
@@ -86,8 +79,6 @@ namespace Fasciculus.Eve.Assets.Services
     {
         public static IServiceCollection AddWriteResource(this IServiceCollection services)
         {
-            services.AddCompression();
-
             services.TryAddSingleton<IWriteResource, WriteResource>();
 
             return services;

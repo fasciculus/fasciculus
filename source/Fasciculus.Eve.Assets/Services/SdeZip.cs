@@ -114,7 +114,7 @@ namespace Fasciculus.Eve.Assets.Services
             if (files is null)
             {
                 FileInfo file = await downloadSde.DownloadedFile;
-                DirectoryInfo directory = Zip.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSdeProgress);
+                DirectoryInfo directory = Zip.Extract(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSdeProgress);
 
                 files = new(directory);
             }
@@ -131,7 +131,6 @@ namespace Fasciculus.Eve.Assets.Services
             services.AddAssetsProgress();
 
             services.AddDownloader();
-            services.AddCompression();
 
             services.TryAddSingleton<IDownloadSde, DownloadSde>();
             services.TryAddSingleton<IExtractSde, ExtractSde>();

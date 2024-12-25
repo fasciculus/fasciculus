@@ -14,29 +14,29 @@ namespace Fasciculus.IO.Compressing
     public static class Zip
     {
         /// <summary>
-        /// Unzips the given <paramref name="file"/> into the given <paramref name="target"/> directory.
+        /// Extracts the given <paramref name="file"/> into the given <paramref name="target"/> directory.
         /// </summary>
-        public static DirectoryInfo Unzip(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite)
-            => Unzip(file, target, overwrite, null, null);
+        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite)
+            => Extract(file, target, overwrite, null, null);
 
         /// <summary>
-        /// Unzips the given <paramref name="file"/> into the given <paramref name="target"/> directory.
+        /// Extracts the given <paramref name="file"/> into the given <paramref name="target"/> directory.
         /// </summary>
-        public static DirectoryInfo Unzip(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite,
+        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite,
             IAccumulatingProgress<long> lengthProgress)
-            => Unzip(file, target, overwrite, lengthProgress, null);
+            => Extract(file, target, overwrite, lengthProgress, null);
 
         /// <summary>
-        /// Unzips the given <paramref name="file"/> into the given <paramref name="target"/> directory.
+        /// Extracts the given <paramref name="file"/> into the given <paramref name="target"/> directory.
         /// </summary>
-        public static DirectoryInfo Unzip(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite,
+        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite,
             IProgress<string> nameProgress)
-            => Unzip(file, target, overwrite, null, nameProgress);
+            => Extract(file, target, overwrite, null, nameProgress);
 
         /// <summary>
-        /// Unzips the given <paramref name="file"/> into the given <paramref name="target"/> directory.
+        /// Extracts the given <paramref name="file"/> into the given <paramref name="target"/> directory.
         /// </summary>
-        public static DirectoryInfo Unzip(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite,
+        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite,
             IAccumulatingProgress<long>? lengthProgress, IProgress<string>? nameProgress)
         {
             using Stream stream = file.OpenRead();
@@ -45,19 +45,19 @@ namespace Fasciculus.IO.Compressing
 
             ReportBegin(entries, lengthProgress, nameProgress);
 
-            entries.Apply(entry => { Unzip(entry, target, overwrite, lengthProgress, nameProgress); });
+            entries.Apply(entry => { Extract(entry, target, overwrite, lengthProgress, nameProgress); });
 
             ReportEnd(lengthProgress, nameProgress);
 
             return target;
         }
 
-        private static void Unzip(ZipArchiveEntry entry, DirectoryInfo target, FileOverwriteMode overwrite,
+        private static void Extract(ZipArchiveEntry entry, DirectoryInfo target, FileOverwriteMode overwrite,
             IAccumulatingProgress<long>? lengthProgress, IProgress<string>? nameProgress)
         {
             nameProgress?.Report(entry.FullName);
 
-            if (IsUnzipRequired(entry, target, overwrite))
+            if (IsExtractRequired(entry, target, overwrite))
             {
                 FileInfo outputFile = target.File(entry.FullName);
 
@@ -71,7 +71,7 @@ namespace Fasciculus.IO.Compressing
             lengthProgress?.Report(entry.Length);
         }
 
-        private static bool IsUnzipRequired(ZipArchiveEntry entry, DirectoryInfo target, FileOverwriteMode overwrite)
+        private static bool IsExtractRequired(ZipArchiveEntry entry, DirectoryInfo target, FileOverwriteMode overwrite)
         {
             FileInfo file = target.File(entry.FullName);
             DateTime dateTime = entry.LastWriteTime.UtcDateTime;

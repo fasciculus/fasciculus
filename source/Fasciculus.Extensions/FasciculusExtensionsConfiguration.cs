@@ -32,22 +32,10 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Adds <see cref="ICompression"/> implementation.
-        /// </summary>
-        public static IServiceCollection AddCompression(this IServiceCollection services)
-        {
-            services.TryAddSingleton<ICompression, Compression>();
-
-            return services;
-        }
-
-        /// <summary>
         /// Adds <see cref="IEmbeddedResources"/> implementation, including it's dependencies.
         /// </summary>
         public static IServiceCollection AddEmbeddedResources(this IServiceCollection services)
         {
-            services.AddCompression();
-
             services.TryAddSingleton<IEmbeddedResources, EmbeddedResources>();
 
             return services;
