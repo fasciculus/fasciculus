@@ -1,6 +1,5 @@
-﻿using Fasciculus.IO;
+﻿using Fasciculus.IO.Compressing;
 using Fasciculus.Net;
-using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -94,7 +93,6 @@ namespace Fasciculus.Eve.Assets.Services
     {
         private readonly IDownloadSde downloadSde;
         private readonly IAssetsDirectories assetsDirectories;
-        private readonly ICompression compression;
         private readonly IAssetsProgress progress;
 
         private SdeFiles? files = null;
@@ -102,12 +100,10 @@ namespace Fasciculus.Eve.Assets.Services
 
         public Task<SdeFiles> Files => GetFiles();
 
-        public ExtractSde(IDownloadSde downloadSde, IAssetsDirectories assetsDirectories, ICompression compression,
-            IAssetsProgress progress)
+        public ExtractSde(IDownloadSde downloadSde, IAssetsDirectories assetsDirectories, IAssetsProgress progress)
         {
             this.downloadSde = downloadSde;
             this.assetsDirectories = assetsDirectories;
-            this.compression = compression;
             this.progress = progress;
         }
 
@@ -118,7 +114,7 @@ namespace Fasciculus.Eve.Assets.Services
             if (files is null)
             {
                 FileInfo file = await downloadSde.DownloadedFile;
-                DirectoryInfo directory = compression.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSdeProgress);
+                DirectoryInfo directory = Zip.Unzip(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress.ExtractSdeProgress);
 
                 files = new(directory);
             }

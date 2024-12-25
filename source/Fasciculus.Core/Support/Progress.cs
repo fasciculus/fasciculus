@@ -1,5 +1,4 @@
-﻿using Fasciculus.Threading;
-using Fasciculus.Threading.Synchronization;
+﻿using Fasciculus.Threading.Synchronization;
 using System;
 
 namespace Fasciculus.Support
@@ -38,9 +37,6 @@ namespace Fasciculus.Support
         private readonly Func<T, T, T>? accumulate;
         private readonly T start;
 
-        private long stepSize;
-        private long count;
-
         public T Total { get; private set; }
         public T Current { get; protected set; }
 
@@ -50,14 +46,9 @@ namespace Fasciculus.Support
             this.accumulate = accumulate;
             this.start = start;
 
-            stepSize = 1;
-
             Total = total;
             Current = start;
         }
-
-        protected virtual long GetStepSize()
-            => 1;
 
         public void Begin(T total)
         {
@@ -66,17 +57,16 @@ namespace Fasciculus.Support
             Total = total;
             Current = start;
 
-            stepSize = GetStepSize();
-            count = 0;
-
-            DoReport(true);
+            DoReport();
         }
 
         public virtual void End()
         {
             using Locker locker = Locker.Lock(mutex);
 
-            DoReport(true);
+            Current = Total;
+
+            DoReport();
         }
 
         public override void Report(T value)
@@ -84,21 +74,13 @@ namespace Fasciculus.Support
             using Locker locker = Locker.Lock(mutex);
 
             Current = Accumulate(Current, value);
-            ++count;
 
-            DoReport(false);
+            DoReport();
         }
 
-        private void DoReport(bool forced)
+        private void DoReport()
         {
-            if (forced)
-            {
-                base.Report(Current);
-            }
-            else if ((count % stepSize) == 0)
-            {
-                base.Report(Current);
-            }
+            base.Report(Current);
         }
 
         protected virtual T Accumulate(T current, T value)
@@ -187,19 +169,5 @@ namespace Fasciculus.Support
 
         protected override long Accumulate(long current, long value)
             => current + value;
-
-        public override void End()
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            Current = Total;
-
-            base.End();
-        }
-
-        protected override long GetStepSize()
-        {
-            return Math.Max(1, Total / 100);
-        }
     }
 }
