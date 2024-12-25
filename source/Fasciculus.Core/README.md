@@ -12,7 +12,7 @@ This package includes a bunch of utilities.
 
 - Immutable bit set.
 - Disposable stack of disposable entries.
-- Extensions for <c>IEnumerable&lt;T&gt;</c>
+- Extensions for ``IEnumerable<T>``.
 
 ## IO
 
