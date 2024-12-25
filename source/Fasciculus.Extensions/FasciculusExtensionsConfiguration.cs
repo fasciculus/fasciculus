@@ -1,5 +1,4 @@
-﻿using Fasciculus.IO;
-using Fasciculus.Net;
+﻿using Fasciculus.Net;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -9,16 +8,6 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class FasciculusExtensionsConfiguration
     {
-        /// <summary>
-        /// Adds <see cref="IEmbeddedResources"/> implementation, including it's dependencies.
-        /// </summary>
-        public static IServiceCollection AddEmbeddedResources(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IEmbeddedResources, EmbeddedResources>();
-
-            return services;
-        }
-
         /// <summary>
         /// Adds <see cref="IHttpClientHandlers"/> implementation, including it's dependencies.
         /// </summary>

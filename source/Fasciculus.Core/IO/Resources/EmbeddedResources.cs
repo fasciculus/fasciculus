@@ -1,21 +1,19 @@
-﻿using Fasciculus.IO.Resources;
-using Fasciculus.Support;
+﻿using Fasciculus.Support;
 using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Fasciculus.IO
+namespace Fasciculus.IO.Resources
 {
-    public interface IEmbeddedResources
+    /// <summary>
+    /// Utility class to find embedded resources.
+    /// </summary>
+    public static class EmbeddedResources
     {
-        public EmbeddedResource this[string name] { get; }
-    }
-
-    public class EmbeddedResources : IEmbeddedResources
-    {
-        public EmbeddedResource this[string name] => Find(name);
-
-        private EmbeddedResource Find(string name)
+        /// <summary>
+        /// Finds an embedded resource in the assemblies loaded in <see cref="AppDomain.CurrentDomain"/>.
+        /// </summary>
+        public static EmbeddedResource Find(string name)
         {
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {

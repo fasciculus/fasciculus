@@ -12,7 +12,6 @@ namespace Fasciculus.Eve
         {
             IServiceCollection services = builder.Services;
 
-            services.AddEmbeddedResources();
             services.AddHttpClientPool();
 
             services.TryAddSingleton<IEveFileSystem, EveFileSystem>();

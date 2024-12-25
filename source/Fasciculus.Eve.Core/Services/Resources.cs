@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
-using Fasciculus.IO;
 using Fasciculus.IO.Resources;
 using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
@@ -60,7 +59,6 @@ namespace Fasciculus.Eve.Services
 
     public class EveResources : IEveResources
     {
-        private readonly IEmbeddedResources resources;
         private readonly IEveResourcesProgress progress;
 
         private EveData? data = null;
@@ -76,9 +74,8 @@ namespace Fasciculus.Eve.Services
         public Task<EveUniverse> Universe => GetUniverseAsync();
         public Task<EveNavigation> Navigation => GetNavigationAsync();
 
-        public EveResources(IEmbeddedResources resources, IEveResourcesProgress progress)
+        public EveResources(IEveResourcesProgress progress)
         {
-            this.resources = resources;
             this.progress = progress;
         }
 
@@ -91,7 +88,7 @@ namespace Fasciculus.Eve.Services
 
             if (data is null)
             {
-                EmbeddedResource resource = resources["EveData"];
+                EmbeddedResource resource = EmbeddedResources.Find("EveData");
 
                 progress.DataProgress.Report(WorkState.Working);
                 data = resource.Read(s => new EveData(s), true);
@@ -110,7 +107,7 @@ namespace Fasciculus.Eve.Services
 
             if (universe is null)
             {
-                EmbeddedResource resource = resources["EveUniverse"];
+                EmbeddedResource resource = EmbeddedResources.Find("EveUniverse");
                 EveData eveData = Tasks.Wait(Data);
 
                 progress.UniverseProgress.Report(WorkState.Working);
@@ -130,7 +127,7 @@ namespace Fasciculus.Eve.Services
 
             if (navigation is null)
             {
-                EmbeddedResource resource = resources["EveNavigation"];
+                EmbeddedResource resource = EmbeddedResources.Find("EveNavigation");
                 EveSolarSystems solarSystems = Tasks.Wait(Universe).SolarSystems;
 
                 progress.NavigationProgress.Report(WorkState.Working);
