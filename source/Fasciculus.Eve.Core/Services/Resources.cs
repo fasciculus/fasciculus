@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.IO;
+using Fasciculus.IO.Resources;
 using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
@@ -90,7 +91,7 @@ namespace Fasciculus.Eve.Services
 
             if (data is null)
             {
-                IEmbeddedResource resource = resources["EveData"];
+                EmbeddedResource resource = resources["EveData"];
 
                 progress.DataProgress.Report(WorkState.Working);
                 data = resource.Read(s => new EveData(s), true);
@@ -109,7 +110,7 @@ namespace Fasciculus.Eve.Services
 
             if (universe is null)
             {
-                IEmbeddedResource resource = resources["EveUniverse"];
+                EmbeddedResource resource = resources["EveUniverse"];
                 EveData eveData = Tasks.Wait(Data);
 
                 progress.UniverseProgress.Report(WorkState.Working);
@@ -129,7 +130,7 @@ namespace Fasciculus.Eve.Services
 
             if (navigation is null)
             {
-                IEmbeddedResource resource = resources["EveNavigation"];
+                EmbeddedResource resource = resources["EveNavigation"];
                 EveSolarSystems solarSystems = Tasks.Wait(Universe).SolarSystems;
 
                 progress.NavigationProgress.Report(WorkState.Working);
