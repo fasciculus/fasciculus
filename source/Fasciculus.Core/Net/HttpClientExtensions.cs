@@ -18,8 +18,5 @@ namespace System.Net.Http
 
         public static HttpContentHeaders Head(this HttpClient httpClient, Uri? requestUri)
             => Tasks.Wait(httpClient.HeadAsync(requestUri));
-
-        public static byte[] GetByteArray(this HttpClient httpClient, Uri? requestUri)
-            => Tasks.Wait(httpClient.GetByteArrayAsync(requestUri));
     }
 }

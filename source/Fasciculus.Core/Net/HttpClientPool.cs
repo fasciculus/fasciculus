@@ -1,5 +1,4 @@
-﻿using Fasciculus.Threading;
-using Fasciculus.Threading.Synchronization;
+﻿using Fasciculus.Threading.Synchronization;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -15,15 +14,8 @@ namespace Fasciculus.Net
 
     public class HttpClientPool : IHttpClientPool
     {
-        private readonly IHttpClientHandlers httpClientHandlers;
-
         private readonly Dictionary<string, HttpClient> httpClients = [];
         private readonly TaskSafeMutex httpClientsMutex = new();
-
-        public HttpClientPool(IHttpClientHandlers httpClientHandlers)
-        {
-            this.httpClientHandlers = httpClientHandlers;
-        }
 
         public HttpClient this[Uri uri]
         {
@@ -36,7 +28,7 @@ namespace Fasciculus.Net
                     return httpClient;
                 }
 
-                HttpClientHandler httpClientHandler = httpClientHandlers[uri];
+                HttpClientHandler httpClientHandler = HttpHandlerFactory.CreateHandler(null);
 
                 httpClient = CreateHttpClient(httpClientHandler);
                 httpClients[uri.Host] = httpClient;
