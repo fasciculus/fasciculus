@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -9,6 +11,20 @@ namespace Fasciculus.Net
     /// </summary>
     public class HttpClientOptions : HttpClientHandlerOptions
     {
+        /// <summary>
+        /// List of media types to accept.
+        /// </summary>
+        public List<string> Accept { get; set; } = [];
+
+        /// <summary>
+        /// The base address of Uniform Resource Identifier (URI) of the Internet resource used when sending requests.
+        /// </summary>
+        public Uri? BaseAddress { get; set; }
+
+        /// <summary>
+        /// The "X-User-Agent" request header value.
+        /// </summary>
+        public string? XUserAgent { get; set; }
     }
 
     /// <summary>
@@ -42,6 +58,20 @@ namespace Fasciculus.Net
             {
                 client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
             }
+
+            options ??= new();
+
+            if (options.BaseAddress is not null)
+            {
+                client.BaseAddress = options.BaseAddress;
+            }
+
+            if (options.XUserAgent is not null)
+            {
+                client.DefaultRequestHeaders.Add("X-User-Agent", options.XUserAgent);
+            }
+
+            options.Accept.Apply(x => { client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(x)); });
 
             return client;
         }

@@ -122,13 +122,14 @@ namespace Fasciculus.Eve.Services
 
         private static HttpClient CreateHttpClient(string userAgent)
         {
-            HttpClient httpClient = HttpClientFactory.Create(null);
+            HttpClientOptions options = new()
+            {
+                Accept = ["application/json"],
+                BaseAddress = BaseUri,
+                XUserAgent = userAgent
+            };
 
-            httpClient.BaseAddress = BaseUri;
-            httpClient.DefaultRequestHeaders.Add("X-User-Agent", userAgent);
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            return httpClient;
+            return HttpClientFactory.Create(options);
         }
     }
 }
