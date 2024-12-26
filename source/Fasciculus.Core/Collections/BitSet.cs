@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Algorithms;
+using Fasciculus.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,7 +25,13 @@ namespace Fasciculus.Collections
         /// </summary>
         public int Count => entries.Length;
 
-        internal BitSet(uint[] entries)
+        /// <summary>
+        /// Returns <c>true</c> if the bit set contains the given value.
+        /// </summary>
+        public bool this[uint value]
+            => BinarySearch.IndexOf(entries, value) >= 0;
+
+        private BitSet(uint[] entries)
         {
             this.entries = entries;
         }
@@ -35,7 +42,6 @@ namespace Fasciculus.Collections
         public BitSet(SortedSet<uint> entries)
             : this(entries.ToArray()) { }
 
-
         /// <summary>
         /// Initializes a new bit set with the given values.
         /// </summary>
@@ -43,10 +49,16 @@ namespace Fasciculus.Collections
             : this(new SortedSet<uint>(entries)) { }
 
         /// <summary>
-        /// Returns <c>true</c> if the bit set contains the given value.
+        /// Initializes new bit set from the given binary data.
         /// </summary>
-        public bool this[uint value]
-            => BinarySearch.IndexOf(entries, value) >= 0;
+        public BitSet(Binary bin)
+            : this(bin.ReadUIntArray()) { }
+
+        /// <summary>
+        /// Writes the vector to the given binary data.
+        /// </summary>
+        public void Write(Binary bin)
+            => bin.WriteUIntArray(entries);
 
         /// <summary>
         /// Returns <c>true</c> if this bit set shares a value with the given bit set.
@@ -92,12 +104,7 @@ namespace Fasciculus.Collections
             int na = a.Length;
             int nb = b.Length;
 
-            if (na == 0)
-            {
-                return false;
-            }
-
-            if (nb == 0)
+            if (na == 0 || nb == 0)
             {
                 return false;
             }
