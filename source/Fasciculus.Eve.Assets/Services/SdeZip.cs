@@ -39,7 +39,8 @@ namespace Fasciculus.Eve.Assets.Services
                 progress.DownloadSdeProgress.Report(DownloadSdeStatus.Downloading);
 
                 FileInfo destination = assetsDirectories.Downloads.File("sde.zip");
-                DownloaderResult result = await downloader.DownloadAsync(new(SdeZipUri), destination);
+                HttpClient httpClient = HttpClientFactory.Create(null);
+                DownloaderResult result = await downloader.DownloadAsync(httpClient, new(SdeZipUri), destination);
 
                 downloadedFile = result.DownloadedFile;
 

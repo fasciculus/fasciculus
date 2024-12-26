@@ -28,9 +28,9 @@ namespace Fasciculus.Eve.Services
 
         private readonly TaskSafeMutex mutex = new();
 
-        public EsiHttp(IHttpClientPool httpClientPool, [FromKeyedServices(UserAgentKey)] string userAgent, IExceptionCollector exceptions)
+        public EsiHttp([FromKeyedServices(UserAgentKey)] string userAgent, IExceptionCollector exceptions)
         {
-            httpClient = CreateHttpClient(httpClientPool, userAgent);
+            httpClient = CreateHttpClient(userAgent);
             this.exceptions = exceptions;
         }
 
@@ -120,15 +120,13 @@ namespace Fasciculus.Eve.Services
             return 1;
         }
 
-        private static HttpClient CreateHttpClient(IHttpClientPool httpClientPool, string userAgent)
+        private static HttpClient CreateHttpClient(string userAgent)
         {
-            HttpClient httpClient = httpClientPool[BaseUri];
+            HttpClient httpClient = HttpClientFactory.Create(null);
 
             httpClient.BaseAddress = BaseUri;
             httpClient.DefaultRequestHeaders.Add("X-User-Agent", userAgent);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-            httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
 
             return httpClient;
         }

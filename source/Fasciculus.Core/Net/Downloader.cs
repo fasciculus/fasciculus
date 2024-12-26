@@ -20,21 +20,13 @@ namespace Fasciculus.Net
 
     public interface IDownloader
     {
-        public Task<DownloaderResult> DownloadAsync(Uri uri, FileInfo destination);
+        public Task<DownloaderResult> DownloadAsync(HttpClient httpClient, Uri uri, FileInfo destination);
     }
 
     public class Downloader : IDownloader
     {
-        private readonly IHttpClientPool httpClientPool;
-
-        public Downloader(IHttpClientPool httpClientPool)
+        public async Task<DownloaderResult> DownloadAsync(HttpClient httpClient, Uri uri, FileInfo destination)
         {
-            this.httpClientPool = httpClientPool;
-        }
-
-        public async Task<DownloaderResult> DownloadAsync(Uri uri, FileInfo destination)
-        {
-            HttpClient httpClient = httpClientPool[uri];
             HttpRequestMessage httpRequest = new(HttpMethod.Get, uri);
             bool notModified = false;
 

@@ -9,22 +9,10 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class FasciculusExtensionsConfiguration
     {
         /// <summary>
-        /// Adds <see cref="IHttpClientPool"/> implementation, including it's dependencies.
-        /// </summary>
-        public static IServiceCollection AddHttpClientPool(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IHttpClientPool, HttpClientPool>();
-
-            return services;
-        }
-
-        /// <summary>
         /// Adds <see cref="IDownloader"/> implementation, including it's dependencies.
         /// </summary>
         public static IServiceCollection AddDownloader(this IServiceCollection services)
         {
-            services.AddHttpClientPool();
-
             services.TryAddSingleton<IDownloader, Downloader>();
 
             return services;
