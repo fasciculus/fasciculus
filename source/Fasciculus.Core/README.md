@@ -20,6 +20,10 @@ This package includes a bunch of utilities.
 - Read and write binary data from or to a stream.
 - Zip and GZip helpers.
 
+## Mathematics
+
+- Sparse vectors and matrices for `bool` and `short`.
+
 ## Synchronization
 
 - Non-reentrant and reentrant task-safe mutexes
