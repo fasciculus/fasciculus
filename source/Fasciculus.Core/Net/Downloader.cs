@@ -6,11 +6,24 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.Net
 {
+    /// <summary>
+    /// Result returned by <see cref="Downloader"/>.
+    /// </summary>
     public class DownloaderResult
     {
+        /// <summary>
+        /// The downloaded file.
+        /// </summary>
         public FileInfo DownloadedFile { get; }
+
+        /// <summary>
+        /// Whether the downloaded wasn't modified.
+        /// </summary>
         public bool NotModified { get; }
 
+        /// <summary>
+        /// Initializes a new downloader result.
+        /// </summary>
         public DownloaderResult(FileInfo downloadedFile, bool notModified)
         {
             DownloadedFile = downloadedFile;
@@ -18,14 +31,16 @@ namespace Fasciculus.Net
         }
     }
 
-    public interface IDownloader
+    /// <summary>
+    /// Downloader.
+    /// </summary>
+    public static class Downloader
     {
-        public Task<DownloaderResult> DownloadAsync(HttpClient httpClient, Uri uri, FileInfo destination);
-    }
-
-    public class Downloader : IDownloader
-    {
-        public async Task<DownloaderResult> DownloadAsync(HttpClient httpClient, Uri uri, FileInfo destination)
+        /// <summary>
+        /// Downloads the given <paramref name="uri"/> into the given <paramref name="destination"/> if the file doesn't exist
+        /// or is older than the server resource.
+        /// </summary>
+        public static async Task<DownloaderResult> DownloadAsync(HttpClient httpClient, Uri uri, FileInfo destination)
         {
             HttpRequestMessage httpRequest = new(HttpMethod.Get, uri);
             bool notModified = false;
