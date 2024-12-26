@@ -2,6 +2,7 @@
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Support;
 using Fasciculus.Support;
+using Fasciculus.Support.Progressing;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
 

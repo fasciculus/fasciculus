@@ -1,36 +1,9 @@
-﻿using Fasciculus.Threading.Synchronization;
+﻿using Fasciculus.Support.Progressing;
+using Fasciculus.Threading.Synchronization;
 using System;
 
 namespace Fasciculus.Support
 {
-    public class TaskSafeProgress<T> : IProgress<T>
-    {
-        protected readonly ReentrantTaskSafeMutex mutex = new();
-
-        protected Action<T>? report;
-
-        public TaskSafeProgress(Action<T>? report = null)
-        {
-            this.report = report;
-        }
-
-        public virtual void Report(T value)
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            Cond.NotNull(report)(value);
-        }
-    }
-
-    public interface IAccumulatingProgress<T> : IProgress<T>
-    {
-        public T Total { get; }
-        public T Current { get; }
-
-        public void Begin(T total);
-        public void End();
-    }
-
     public class AccumulatingProgress<T> : TaskSafeProgress<T>, IAccumulatingProgress<T>
         where T : notnull
     {
@@ -69,7 +42,7 @@ namespace Fasciculus.Support
             DoReport();
         }
 
-        public override void Report(T value)
+        public sealed override void Report(T value)
         {
             using Locker locker = Locker.Lock(mutex);
 
@@ -89,8 +62,10 @@ namespace Fasciculus.Support
         }
     }
 
-    public class LongProgressInfo : IEquatable<LongProgressInfo>, IComparable<LongProgressInfo>
+    public class LongProgressInfo : IEquatable<LongProgressInfo>
     {
+        public static LongProgressInfo Start => new(false, 0);
+
         public bool Done { get; }
         public double Value { get; }
 
@@ -103,36 +78,11 @@ namespace Fasciculus.Support
         public bool Equals(LongProgressInfo? other)
             => other is not null && Done == other.Done && Value == other.Value;
 
-        public int CompareTo(LongProgressInfo? other)
-        {
-            if (other is null) return -1;
-
-            int result = Done.CompareTo(other.Done);
-
-            if (result == 0)
-            {
-                result = Value.CompareTo(other.Value);
-            }
-
-            return result;
-        }
-
         public override bool Equals(object? obj)
             => obj is not null && obj is LongProgressInfo other && Equals(other);
 
         public override int GetHashCode()
             => Done.GetHashCode() + Value.GetHashCode();
-
-        public static bool operator ==(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.Equals(rhs);
-        public static bool operator !=(LongProgressInfo lhs, LongProgressInfo rhs) => !lhs.Equals(rhs);
-
-        public static bool operator <(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.CompareTo(rhs) < 0;
-        public static bool operator >(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.CompareTo(rhs) > 0;
-
-        public static bool operator <=(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.CompareTo(rhs) <= 0;
-        public static bool operator >=(LongProgressInfo lhs, LongProgressInfo rhs) => lhs.CompareTo(rhs) >= 0;
-
-        public static LongProgressInfo Start => new(false, 0);
     }
 
     public interface IAccumulatingLongProgress : IAccumulatingProgress<long>
