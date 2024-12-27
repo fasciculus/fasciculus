@@ -3,11 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:fasciculus="http://fasciculus.github.io/2024/maui"
              xmlns:p="clr-namespace:Fasciculus.Eve.Assets.PageModels"
-             xmlns:converters="clr-namespace:Fasciculus.Eve.Assets.Pages"
+             xmlns:converters="clr-namespace:Fasciculus.Eve.Assets.Converters"
              xmlns:controls="clr-namespace:Fasciculus.Eve.Assets.Pages.Controls"
              x:Class="Fasciculus.Eve.Assets.Pages.MainPage"
              x:DataType="p:MainPageModel"
              Title="" Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <converters:DoneToColor x:Key="doneToColor" />
+    </ContentPage.Resources>
 
     <ScrollView Padding="14">
         <VerticalStackLayout >
@@ -20,9 +24,13 @@
 
             <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="File" WidthRequest="140" />
-                <controls:DownloadSdeStatusLabel Source="{Binding DownloadSde}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding DownloadSde.Value}"
+                             ProgressColor="{Binding DownloadSde.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Extract" WidthRequest="140" />
-                <ProgressBar Progress="{Binding ExtractSde.Value}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ExtractSde.Value}"
+                             ProgressColor="{Binding ExtractSde.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Padding="0,14,0,0">
@@ -31,31 +39,51 @@
 
             <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="Names" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseNames}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParseNames.Value}"
+                             ProgressColor="{Binding ParseNames.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Market Groups" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseMarketGroups}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParseMarketGroups.Value}"
+                             ProgressColor="{Binding ParseMarketGroups.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Types" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseTypes}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParseTypes.Value}"
+                             ProgressColor="{Binding ParseTypes.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Station Operations" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseStationOperations}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParseStationOperations.Value}"
+                             ProgressColor="{Binding ParseStationOperations.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="NPC Corporations" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseNpcCorporations}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParseNpcCorporations.Value}"
+                             ProgressColor="{Binding ParseNpcCorporations.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Planet Schematics" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding ParsePlanetSchematics}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParsePlanetSchematics.Value}"
+                             ProgressColor="{Binding ParsePlanetSchematics.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Blueprints" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding ParseBlueprints}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParseBlueprints.Value}"
+                             ProgressColor="{Binding ParseBlueprints.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="Regions" WidthRequest="140" />
-                <fasciculus:LongProgressInfoBar Source="{Binding ParseRegions}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParseRegions.Value}"
+                             ProgressColor="{Binding ParseRegions.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Constellations" WidthRequest="140" />
-                <fasciculus:LongProgressInfoBar Source="{Binding ParseConstellations}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParseConstellations.Value}"
+                             ProgressColor="{Binding ParseConstellations.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Solar Systems" WidthRequest="140" />
-                <fasciculus:LongProgressInfoBar Source="{Binding ParseSolarSystems}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ParseSolarSystems.Value}"
+                             ProgressColor="{Binding ParseSolarSystems.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Padding="0,14,0,0">
@@ -64,9 +92,13 @@
 
             <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="Data" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding ConvertData}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ConvertData.Value}"
+                             ProgressColor="{Binding ConvertData.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Universe" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding ConvertUniverse}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ConvertUniverse.Value}"
+                             ProgressColor="{Binding ConvertUniverse.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Padding="0,14,0,0">
@@ -75,9 +107,13 @@
 
             <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="Connections" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding CreateConnections}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding CreateConnections.Value}"
+                             ProgressColor="{Binding CreateConnections.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Distances" WidthRequest="140" />
-                <fasciculus:LongProgressInfoBar Source="{Binding CreateDistances}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding CreateDistances.Value}"
+                             ProgressColor="{Binding CreateDistances.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Padding="0,14,0,0">
@@ -86,9 +122,13 @@
 
             <HorizontalStackLayout Padding="0,0,0,0" Spacing="14">
                 <Label Text="Copy" WidthRequest="140" />
-                <fasciculus:LongProgressInfoBar Source="{Binding CopyImages}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding CopyImages.Value}"
+                             ProgressColor="{Binding CopyImages.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
                 <Label Text="Create" WidthRequest="140" />
-                <fasciculus:WorkStateLabel Source="{Binding CreateImages}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding CreateImages.Value}"
+                             ProgressColor="{Binding CreateImages.Done, Converter={StaticResource doneToColor}}"
+                             WidthRequest="140" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Padding="0,14,0,0">

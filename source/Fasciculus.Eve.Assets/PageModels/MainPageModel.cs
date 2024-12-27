@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Assets.Services;
-using Fasciculus.Maui.Support;
 using Fasciculus.Maui.Support.Progressing;
-using Fasciculus.Support;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -16,58 +14,29 @@ namespace Fasciculus.Eve.Assets.PageModels
         private readonly IAssetsDirectories assetsDirectories;
         private readonly ICreateResources createResources;
 
-        [ObservableProperty]
-        public partial DownloadSdeStatus DownloadSde { get; private set; }
-
+        public ProgressBarProgress DownloadSde { get; }
         public ProgressBarProgress ExtractSde { get; }
 
-        [ObservableProperty]
-        public partial WorkState ParseNames { get; private set; }
+        public ProgressBarProgress ParseNames { get; }
+        public ProgressBarProgress ParseMarketGroups { get; }
+        public ProgressBarProgress ParseTypes { get; }
+        public ProgressBarProgress ParseStationOperations { get; }
+        public ProgressBarProgress ParseNpcCorporations { get; }
+        public ProgressBarProgress ParsePlanetSchematics { get; }
+        public ProgressBarProgress ParseBlueprints { get; }
 
-        [ObservableProperty]
-        public partial WorkState ParseMarketGroups { get; private set; }
+        public ProgressBarProgress ParseRegions { get; }
+        public ProgressBarProgress ParseConstellations { get; }
+        public ProgressBarProgress ParseSolarSystems { get; }
 
-        [ObservableProperty]
-        public partial WorkState ParseTypes { get; private set; }
+        public ProgressBarProgress ConvertData { get; }
+        public ProgressBarProgress ConvertUniverse { get; }
 
-        [ObservableProperty]
-        public partial WorkState ParseStationOperations { get; private set; }
+        public ProgressBarProgress CreateConnections { get; }
+        public ProgressBarProgress CreateDistances { get; }
 
-        [ObservableProperty]
-        public partial WorkState ParseNpcCorporations { get; private set; }
-
-        [ObservableProperty]
-        public partial WorkState ParsePlanetSchematics { get; private set; }
-
-        [ObservableProperty]
-        public partial WorkState ParseBlueprints { get; private set; }
-
-        [ObservableProperty]
-        public partial LongProgressInfo ParseRegions { get; private set; }
-
-        [ObservableProperty]
-        public partial LongProgressInfo ParseConstellations { get; private set; }
-
-        [ObservableProperty]
-        public partial LongProgressInfo ParseSolarSystems { get; private set; }
-
-        [ObservableProperty]
-        public partial WorkState ConvertData { get; private set; }
-
-        [ObservableProperty]
-        public partial WorkState ConvertUniverse { get; private set; }
-
-        [ObservableProperty]
-        public partial WorkState CreateConnections { get; private set; }
-
-        [ObservableProperty]
-        public partial LongProgressInfo CreateDistances { get; private set; }
-
-        [ObservableProperty]
-        public partial LongProgressInfo CopyImages { get; private set; }
-
-        [ObservableProperty]
-        public partial WorkState CreateImages { get; private set; }
+        public ProgressBarProgress CopyImages { get; }
+        public ProgressBarProgress CreateImages { get; }
 
         public ObservableCollection<string> ChangedResources { get; } = [];
 
@@ -83,56 +52,33 @@ namespace Fasciculus.Eve.Assets.PageModels
             this.createResources = createResources;
             this.logger = logger;
 
-            DownloadSde = DownloadSdeStatus.Pending;
+            DownloadSde = assetsProgress.DownloadSde;
             ExtractSde = assetsProgress.ExtractSde;
 
-            ParseNames = WorkState.Pending;
-            ParseMarketGroups = WorkState.Pending;
-            ParseTypes = WorkState.Pending;
-            ParseStationOperations = WorkState.Pending;
-            ParseNpcCorporations = WorkState.Pending;
-            ParsePlanetSchematics = WorkState.Pending;
-            ParseBlueprints = WorkState.Pending;
+            ParseNames = assetsProgress.ParseNames;
+            ParseMarketGroups = assetsProgress.ParseMarketGroups;
+            ParseTypes = assetsProgress.ParseTypes;
+            ParseStationOperations = assetsProgress.ParseStationOperations;
+            ParseNpcCorporations = assetsProgress.ParseNpcCorporations;
+            ParsePlanetSchematics = assetsProgress.ParsePlanetSchematics;
+            ParseBlueprints = assetsProgress.ParseBlueprints;
 
-            ParseRegions = LongProgressInfo.Start;
-            ParseConstellations = LongProgressInfo.Start;
-            ParseSolarSystems = LongProgressInfo.Start;
+            ParseRegions = assetsProgress.ParseRegions;
+            ParseConstellations = assetsProgress.ParseConstellations;
+            ParseSolarSystems = assetsProgress.ParseSolarSystems;
 
-            ConvertData = WorkState.Pending;
-            ConvertUniverse = WorkState.Pending;
+            ConvertData = assetsProgress.ConvertData;
+            ConvertUniverse = assetsProgress.ConvertUniverse;
 
-            CreateConnections = WorkState.Pending;
-            CreateDistances = LongProgressInfo.Start;
+            CreateConnections = assetsProgress.CreateConnections;
+            CreateDistances = assetsProgress.CreateDistances;
 
-            CopyImages = LongProgressInfo.Start;
-            CreateImages = WorkState.Pending;
+            CopyImages = assetsProgress.CopyImages;
+            CreateImages = assetsProgress.CreateImages;
         }
 
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            DownloadSde = assetsProgress.DownloadSdeInfo;
-
-            ParseNames = assetsProgress.ParseNamesInfo;
-            ParseMarketGroups = assetsProgress.ParseMarketGroupsInfo;
-            ParseTypes = assetsProgress.ParseTypesInfo;
-            ParseStationOperations = assetsProgress.ParseStationOperationsInfo;
-            ParseNpcCorporations = assetsProgress.ParseNpcCorporationsInfo;
-            ParsePlanetSchematics = assetsProgress.ParsePlanetSchematicsInfo;
-            ParseBlueprints = assetsProgress.ParseBlueprintsInfo;
-
-            ParseRegions = assetsProgress.ParseRegionsInfo;
-            ParseConstellations = assetsProgress.ParseConstellationsInfo;
-            ParseSolarSystems = assetsProgress.ParseSolarSystemsInfo;
-
-            ConvertData = assetsProgress.ConvertDataInfo;
-            ConvertUniverse = assetsProgress.ConvertUniverseInfo;
-
-            CreateConnections = assetsProgress.CreateConnectionsInfo;
-            CreateDistances = assetsProgress.CreateDistancesInfo;
-
-            CopyImages = assetsProgress.CopyImagesInfo;
-            CreateImages = assetsProgress.CreateImagesInfo;
-
             if (ev.PropertyName == nameof(IAssetsProgress.CreateResourcesInfo))
             {
                 UpdateChangedResources();

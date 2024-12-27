@@ -17,7 +17,7 @@ namespace Fasciculus.Maui.Support.Progressing
         private readonly ObservableLongProgress progress;
 
         /// <summary>
-        /// The current progress with value range of <c>0.0</c> to <c>1.0</c> in steps of <c>0.001</c>.
+        /// The current progress with value range of <c>0.0</c> to <c>1.0</c> in steps of <c>0.01</c>.
         /// </summary>
         [ObservableProperty]
         public partial double Value { get; private set; }
@@ -44,12 +44,24 @@ namespace Fasciculus.Maui.Support.Progressing
         {
             using Locker locker = Locker.Lock(mutex);
 
+            double oldValue = Value;
             long current = progress.Current;
             long total = Math.Max(1, progress.Total);
-            long permille = (current * 1000) / total;
+            long percents = (current * 100) / total;
+            double newValue = percents / 100.0;
 
-            Value = permille / 1000.0;
-            Done = current == total;
+            if (newValue != oldValue)
+            {
+                Value = newValue;
+            }
+
+            bool oldDone = Done;
+            bool newDone = current == total;
+
+            if (newDone != oldDone)
+            {
+                Done = newDone;
+            }
         }
 
         /// <summary>

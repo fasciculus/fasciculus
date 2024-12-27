@@ -1,5 +1,4 @@
 ﻿using Fasciculus.Eve.Assets.Models;
-using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 
@@ -102,13 +101,14 @@ namespace Fasciculus.Eve.Assets.Services
         {
             if (names is null)
             {
-                progress.ParseNamesProgress.Report(WorkState.Working);
+                progress.ParseNames.Begin(2);
+                progress.ParseNames.Report(1);
 
                 names = yaml
                     .Deserialize<SdeName[]>(sdeFiles.NamesYaml)
                     .ToDictionary(n => n.ItemID, n => n.ItemName);
 
-                progress.ParseNamesProgress.Report(WorkState.Done);
+                progress.ParseNames.End();
             }
 
             return names;
@@ -125,9 +125,10 @@ namespace Fasciculus.Eve.Assets.Services
         {
             if (marketGroups is null)
             {
-                progress.ParseMarketGroupsProgress.Report(WorkState.Working);
+                progress.ParseMarketGroups.Begin(2);
+                progress.ParseMarketGroups.Report(1);
                 marketGroups = yaml.Deserialize<Dictionary<int, SdeMarketGroup>>(sdeFiles.MarketGroupYaml);
-                progress.ParseMarketGroupsProgress.Report(WorkState.Done);
+                progress.ParseMarketGroups.End();
             }
 
             return marketGroups;
@@ -144,9 +145,10 @@ namespace Fasciculus.Eve.Assets.Services
         {
             if (types is null)
             {
-                progress.ParseTypesProgress.Report(WorkState.Working);
+                progress.ParseTypes.Begin(2);
+                progress.ParseTypes.Report(1);
                 types = yaml.Deserialize<Dictionary<int, SdeType>>(sdeFiles.TypesYaml);
-                progress.ParseTypesProgress.Report(WorkState.Done);
+                progress.ParseTypes.End();
             }
 
             return types;
@@ -163,9 +165,10 @@ namespace Fasciculus.Eve.Assets.Services
         {
             if (stationOperations is null)
             {
-                progress.ParseStationOperationsProgress.Report(WorkState.Working);
+                progress.ParseStationOperations.Begin(2);
+                progress.ParseStationOperations.Report(1);
                 stationOperations = yaml.Deserialize<Dictionary<int, SdeStationOperation>>(sdeFiles.StationOperationsYaml);
-                progress.ParseStationOperationsProgress.Report(WorkState.Done);
+                progress.ParseStationOperations.End();
             }
 
             return stationOperations;
@@ -182,9 +185,10 @@ namespace Fasciculus.Eve.Assets.Services
         {
             if (npcCorporations is null)
             {
-                progress.ParseNpcCorporationsProgress.Report(WorkState.Working);
+                progress.ParseNpcCorporations.Begin(2);
+                progress.ParseNpcCorporations.Report(1);
                 npcCorporations = yaml.Deserialize<Dictionary<int, SdeNpcCorporation>>(sdeFiles.NpcCorporationsYaml);
-                progress.ParseNpcCorporationsProgress.Report(WorkState.Done);
+                progress.ParseNpcCorporations.End();
             }
 
             return npcCorporations;
@@ -201,9 +205,10 @@ namespace Fasciculus.Eve.Assets.Services
         {
             if (planetSchematics is null)
             {
-                progress.ParsePlanetSchematicsProgress.Report(WorkState.Working);
+                progress.ParsePlanetSchematics.Begin(2);
+                progress.ParsePlanetSchematics.Report(1);
                 planetSchematics = yaml.Deserialize<Dictionary<int, SdePlanetSchematic>>(sdeFiles.PlanetSchematicsYaml);
-                progress.ParsePlanetSchematicsProgress.Report(WorkState.Done);
+                progress.ParsePlanetSchematics.End();
             }
 
             return planetSchematics;
@@ -220,9 +225,10 @@ namespace Fasciculus.Eve.Assets.Services
         {
             if (blueprints is null)
             {
-                progress.ParseBlueprintsProgress.Report(WorkState.Working);
+                progress.ParseBlueprints.Begin(2);
+                progress.ParseBlueprints.Report(1);
                 blueprints = yaml.Deserialize<Dictionary<int, SdeBlueprint>>(sdeFiles.BlueprintsYaml);
-                progress.ParseBlueprintsProgress.Report(WorkState.Done);
+                progress.ParseBlueprints.End();
             }
 
             return blueprints;

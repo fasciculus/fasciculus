@@ -1,6 +1,5 @@
 ﻿using Fasciculus.Eve.Assets.Models;
 using Fasciculus.Eve.Models;
-using Fasciculus.Maui.Support;
 using Fasciculus.Threading.Synchronization;
 
 namespace Fasciculus.Eve.Assets.Services
@@ -34,7 +33,8 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 SdeData sdeData = await parseData.Data;
 
-                progress.ConvertDataProgress.Report(WorkState.Working);
+                progress.ConvertData.Begin(2);
+                progress.ConvertData.Report(1);
 
                 DateTime version = sdeData.Version;
                 EveMarketGroup.Data[] marketGroups = ConvertMarketGroups(sdeData.MarketGroups);
@@ -50,7 +50,7 @@ namespace Fasciculus.Eve.Assets.Services
 
                 data = new(version, marketGroups, types, stationOperations, npcCorporations, planetSchematics, blueprints);
 
-                progress.ConvertDataProgress.Report(WorkState.Done);
+                progress.ConvertData.End();
             }
 
             return data;

@@ -66,7 +66,7 @@ namespace Fasciculus.Eve.Assets.Services
                 using MemoryStream compressed = new(result);
                 using MemoryStream uncompressed = new();
 
-                GZip.Extract(compressed, compressed);
+                GZip.Extract(compressed, uncompressed);
                 result = uncompressed.ToArray();
             }
 

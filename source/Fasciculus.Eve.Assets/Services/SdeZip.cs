@@ -15,7 +15,7 @@ namespace Fasciculus.Eve.Assets.Services
         public static readonly string SdeZipUri = "https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/sde.zip";
 
         private readonly IAssetsDirectories assetsDirectories;
-        private readonly IAssetsProgress progress;
+        private readonly IAccumulatingProgress<long> progress;
 
         private FileInfo? downloadedFile;
         private readonly TaskSafeMutex mutex = new();
@@ -25,7 +25,7 @@ namespace Fasciculus.Eve.Assets.Services
         public DownloadSde(IAssetsDirectories assetsDirectories, IAssetsProgress progress)
         {
             this.assetsDirectories = assetsDirectories;
-            this.progress = progress;
+            this.progress = progress.DownloadSde;
         }
 
         private async Task<FileInfo> GetDownloadedFileAsync()
@@ -34,7 +34,8 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (downloadedFile is null)
             {
-                progress.DownloadSdeProgress.Report(DownloadSdeStatus.Downloading);
+                progress.Begin(2);
+                progress.Report(1);
 
                 FileInfo destination = assetsDirectories.Downloads.File("sde.zip");
                 HttpClient httpClient = HttpClientFactory.Create(null);
@@ -42,7 +43,7 @@ namespace Fasciculus.Eve.Assets.Services
 
                 downloadedFile = result.DownloadedFile;
 
-                progress.DownloadSdeProgress.Report(result.NotModified ? DownloadSdeStatus.NotModified : DownloadSdeStatus.Downloaded);
+                progress.End();
             }
 
             return downloadedFile;

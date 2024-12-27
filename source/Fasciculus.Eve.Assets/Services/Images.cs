@@ -1,5 +1,4 @@
-﻿using Fasciculus.Maui.Support;
-using Fasciculus.Steam.Models;
+﻿using Fasciculus.Steam.Models;
 using Fasciculus.Steam.Services;
 using Fasciculus.Support;
 using Fasciculus.Threading;
@@ -43,9 +42,9 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 Tuple<FileInfo, FileInfo>[] entries = ParseIndex();
 
-                progress.CopyImagesProgress.Begin(entries.Length);
+                progress.CopyImages.Begin(entries.Length);
                 files = entries.AsParallel().Select(Copy).ToArray();
-                progress.CopyImagesProgress.End();
+                progress.CopyImages.End();
             }
 
             return files;
@@ -63,7 +62,7 @@ namespace Fasciculus.Eve.Assets.Services
                 source.CopyTo(destination.FullName);
             }
 
-            progress.CopyImagesProgress.Report(1);
+            progress.CopyImages.Report(1);
 
             return new(destination.FullName);
         }
@@ -158,9 +157,10 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 Tasks.Wait(copyImages.FilesCopied);
 
-                progress.CreateImagesProgress.Report(WorkState.Working);
+                progress.CreateImages.Begin(2);
+                progress.CreateImages.Report(1);
                 filesCreated = paths.Select(CreateImage).NotNull().ToList();
-                progress.CreateImagesProgress.Report(WorkState.Done);
+                progress.CreateImages.End();
             }
 
             return filesCreated;

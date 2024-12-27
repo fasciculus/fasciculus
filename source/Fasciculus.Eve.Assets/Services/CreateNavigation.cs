@@ -1,6 +1,5 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Mathematics;
-using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 
@@ -78,7 +77,7 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (navigation is null)
             {
-                progress.CreateDistancesProgress.Begin(EveSecurity.Levels.Length * GetSystems().Length);
+                progress.CreateDistances.Begin(EveSecurity.Levels.Length * GetSystems().Length);
 
                 Task<SparseShortMatrix>[] tasks = EveSecurity.Levels
                     .Select(x => Tasks.LongRunning(() => GetDistances(x)))
@@ -87,7 +86,7 @@ namespace Fasciculus.Eve.Assets.Services
                 Task.WaitAll(tasks);
                 navigation = new(tasks.Select(x => x.Result));
 
-                progress.CreateDistancesProgress.End();
+                progress.CreateDistances.End();
             }
 
             return navigation;
@@ -122,7 +121,7 @@ namespace Fasciculus.Eve.Assets.Services
                 distances += distance * front;
             }
 
-            progress.CreateDistancesProgress.Report(1);
+            progress.CreateDistances.Report(1);
 
             return distances;
         }
@@ -133,14 +132,15 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (connections is null)
             {
-                progress.CreateConnectionsProgress.Report(WorkState.Working);
+                progress.CreateConnections.Begin(2);
+                progress.CreateConnections.Report(1);
 
                 connections = EveSecurity.Levels
                     .AsParallel()
                     .Select(level => Tuple.Create(level, GetConnections(level)))
                     .ToDictionary(x => x.Item1, x => x.Item2);
 
-                progress.CreateConnectionsProgress.Report(WorkState.Done);
+                progress.CreateConnections.End();
             }
 
             return connections;
