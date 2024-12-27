@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Assets.Services;
 using Fasciculus.Maui.Support;
+using Fasciculus.Maui.Support.Progressing;
 using Fasciculus.Support;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -18,8 +19,7 @@ namespace Fasciculus.Eve.Assets.PageModels
         [ObservableProperty]
         public partial DownloadSdeStatus DownloadSde { get; private set; }
 
-        [ObservableProperty]
-        public partial LongProgressInfo ExtractSde { get; private set; }
+        public ProgressBarProgress ExtractSde { get; }
 
         [ObservableProperty]
         public partial WorkState ParseNames { get; private set; }
@@ -84,7 +84,7 @@ namespace Fasciculus.Eve.Assets.PageModels
             this.logger = logger;
 
             DownloadSde = DownloadSdeStatus.Pending;
-            ExtractSde = LongProgressInfo.Start;
+            ExtractSde = assetsProgress.ExtractSde;
 
             ParseNames = WorkState.Pending;
             ParseMarketGroups = WorkState.Pending;
@@ -111,7 +111,6 @@ namespace Fasciculus.Eve.Assets.PageModels
         private void OnProgressChanged(object? sender, PropertyChangedEventArgs ev)
         {
             DownloadSde = assetsProgress.DownloadSdeInfo;
-            ExtractSde = assetsProgress.ExtractSdeInfo;
 
             ParseNames = assetsProgress.ParseNamesInfo;
             ParseMarketGroups = assetsProgress.ParseMarketGroupsInfo;

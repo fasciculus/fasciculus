@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Support;
+using Fasciculus.Maui.Support.Progressing;
 using Fasciculus.Support;
 using Fasciculus.Support.Progressing;
 using System.ComponentModel;
@@ -27,8 +28,7 @@ namespace Fasciculus.Eve.Assets.Services
         public DownloadSdeStatus DownloadSdeInfo { get; }
         public IProgress<DownloadSdeStatus> DownloadSdeProgress { get; }
 
-        public LongProgressInfo ExtractSdeInfo { get; }
-        public IAccumulatingLongProgress ExtractSdeProgress { get; }
+        public ProgressBarProgress ExtractSde { get; }
 
         public WorkState ParseNamesInfo { get; }
         public IProgress<WorkState> ParseNamesProgress { get; }
@@ -88,9 +88,7 @@ namespace Fasciculus.Eve.Assets.Services
         public partial DownloadSdeStatus DownloadSdeInfo { get; private set; }
         public IProgress<DownloadSdeStatus> DownloadSdeProgress { get; }
 
-        [ObservableProperty]
-        public partial LongProgressInfo ExtractSdeInfo { get; private set; }
-        public IAccumulatingLongProgress ExtractSdeProgress { get; }
+        public ProgressBarProgress ExtractSde { get; }
 
         [ObservableProperty]
         public partial WorkState ParseNamesInfo { get; private set; }
@@ -165,8 +163,7 @@ namespace Fasciculus.Eve.Assets.Services
             DownloadSdeInfo = DownloadSdeStatus.Pending;
             DownloadSdeProgress = new TaskSafeProgress<DownloadSdeStatus>(x => { DownloadSdeInfo = x; });
 
-            ExtractSdeInfo = LongProgressInfo.Start;
-            ExtractSdeProgress = new AccumulatingLongProgress(_ => { ExtractSdeInfo = ExtractSdeProgress!.Progress; });
+            ExtractSde = new();
 
             ParseNamesInfo = WorkState.Pending;
             ParseNamesProgress = new WorkStateProgress(x => { ParseNamesInfo = x; });

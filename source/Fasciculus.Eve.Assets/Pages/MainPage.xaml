@@ -22,7 +22,7 @@
                 <Label Text="File" WidthRequest="140" />
                 <controls:DownloadSdeStatusLabel Source="{Binding DownloadSde}" WidthRequest="140" />
                 <Label Text="Extract" WidthRequest="140" />
-                <fasciculus:LongProgressInfoBar Source="{Binding ExtractSde}" WidthRequest="140" />
+                <ProgressBar Progress="{Binding ExtractSde.Value}" WidthRequest="140" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Padding="0,14,0,0">
