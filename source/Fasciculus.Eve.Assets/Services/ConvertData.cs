@@ -1,9 +1,7 @@
 ﻿using Fasciculus.Eve.Assets.Models;
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.Support;
-using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -222,19 +220,6 @@ namespace Fasciculus.Eve.Assets.Services
             }
 
             return true;
-        }
-    }
-
-    public static class ConvertDataServices
-    {
-        public static IServiceCollection AddConvertData(this IServiceCollection services)
-        {
-            services.AddParseData();
-            services.AddAssetsProgress();
-
-            services.TryAddSingleton<IConvertData, ConvertData>();
-
-            return services;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.IO;
-using YamlDotNet.Serialization;
+﻿using YamlDotNet.Serialization;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -22,16 +19,6 @@ namespace Fasciculus.Eve.Assets.Services
         public T Deserialize<T>(FileInfo file)
         {
             return deserializer.Deserialize<T>(file.ReadAllText());
-        }
-    }
-
-    public static class YamlServices
-    {
-        public static IServiceCollection AddYaml(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IYaml, Yaml>();
-
-            return services;
         }
     }
 }

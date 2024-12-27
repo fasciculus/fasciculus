@@ -1,6 +1,5 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Threading;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -80,23 +79,6 @@ namespace Fasciculus.Eve.Assets.Services
             navigation.Write(stream);
 
             return writeResource.Write(stream.ToArray(), file, true) ? [file] : [];
-        }
-    }
-
-    public static class CreateResourcesServices
-    {
-        public static IServiceCollection AddCreateResources(this IServiceCollection services)
-        {
-            services.AddImages();
-            services.AddConvertData();
-            services.AddConvertUniverse();
-            services.AddCreateNanigation();
-            services.AddWriteResource();
-            services.AddAssetsProgress();
-
-            services.TryAddSingleton<ICreateResources, CreateResources>();
-
-            return services;
         }
     }
 }

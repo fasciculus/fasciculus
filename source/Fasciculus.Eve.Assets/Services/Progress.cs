@@ -3,7 +3,6 @@ using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Support;
 using Fasciculus.Support;
 using Fasciculus.Support.Progressing;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.Assets.Services
@@ -220,16 +219,6 @@ namespace Fasciculus.Eve.Assets.Services
             CreateResourcesInfo = [];
             CreateResourcesProgress
                 = new AccumulatingProgress<List<FileInfo>>(x => { CreateResourcesInfo = [.. x]; }, (x, y) => [.. x, .. y], [], []);
-        }
-    }
-
-    public static class ProgressServices
-    {
-        public static IServiceCollection AddAssetsProgress(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
-
-            return services;
         }
     }
 }

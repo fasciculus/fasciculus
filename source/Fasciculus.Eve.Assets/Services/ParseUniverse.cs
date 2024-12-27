@@ -1,7 +1,5 @@
 ﻿using Fasciculus.Eve.Assets.Models;
-using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -94,21 +92,6 @@ namespace Fasciculus.Eve.Assets.Services
             progress.ParseRegionsProgress.End();
             progress.ParseConstellationsProgress.End();
             progress.ParseSolarSystemsProgress.End();
-        }
-    }
-
-    public static class ParseUniverseServices
-    {
-        public static IServiceCollection AddParseUniverse(this IServiceCollection services)
-        {
-            services.AddAssetsProgress();
-
-            services.AddSdeZip();
-            services.AddYaml();
-
-            services.TryAddSingleton<IParseUniverse, ParseUniverse>();
-
-            return services;
         }
     }
 }

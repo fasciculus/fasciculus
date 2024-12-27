@@ -3,7 +3,6 @@ using Fasciculus.Eve.Models;
 using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -128,20 +127,6 @@ namespace Fasciculus.Eve.Assets.Services
             uint destination = kvp.Value.Destination;
 
             return new(id, destination);
-        }
-    }
-
-    public static class ConvertUniverseServices
-    {
-        public static IServiceCollection AddConvertUniverse(this IServiceCollection services)
-        {
-            services.AddAssetsProgress();
-            services.AddParseData();
-            services.AddParseUniverse();
-
-            services.TryAddSingleton<IConvertUniverse, ConvertUniverse>();
-
-            return services;
         }
     }
 }

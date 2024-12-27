@@ -2,7 +2,6 @@
 using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -266,22 +265,6 @@ namespace Fasciculus.Eve.Assets.Services
             }
 
             return data;
-        }
-    }
-
-    public static class ParseDataServices
-    {
-        public static IServiceCollection AddParseData(this IServiceCollection services)
-        {
-            services.AddAssetsDirectories();
-            services.AddAssetsProgress();
-
-            services.AddSdeZip();
-            services.AddYaml();
-
-            services.TryAddSingleton<IParseData, ParseData>();
-
-            return services;
         }
     }
 }

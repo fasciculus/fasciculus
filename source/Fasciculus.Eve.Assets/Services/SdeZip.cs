@@ -1,7 +1,6 @@
 ﻿using Fasciculus.IO.Compressing;
 using Fasciculus.Net;
 using Fasciculus.Threading.Synchronization;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -119,20 +118,6 @@ namespace Fasciculus.Eve.Assets.Services
             }
 
             return files;
-        }
-    }
-
-    public static class SdeZipServices
-    {
-        public static IServiceCollection AddSdeZip(this IServiceCollection services)
-        {
-            services.AddAssetsDirectories();
-            services.AddAssetsProgress();
-
-            services.TryAddSingleton<IDownloadSde, DownloadSde>();
-            services.TryAddSingleton<IExtractSde, ExtractSde>();
-
-            return services;
         }
     }
 }

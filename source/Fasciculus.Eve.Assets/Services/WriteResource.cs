@@ -1,6 +1,5 @@
 ﻿using Fasciculus.Algorithms;
 using Fasciculus.IO.Compressing;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -72,16 +71,6 @@ namespace Fasciculus.Eve.Assets.Services
             }
 
             return result;
-        }
-    }
-
-    public static class WriteResourceServices
-    {
-        public static IServiceCollection AddWriteResource(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IWriteResource, WriteResource>();
-
-            return services;
         }
     }
 }

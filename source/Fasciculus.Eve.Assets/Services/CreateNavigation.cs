@@ -3,7 +3,6 @@ using Fasciculus.Mathematics;
 using Fasciculus.Maui.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -254,19 +253,6 @@ namespace Fasciculus.Eve.Assets.Services
             }
 
             return forbiddenSystems;
-        }
-    }
-
-    public static class CreateNanigationServices
-    {
-        public static IServiceCollection AddCreateNanigation(this IServiceCollection services)
-        {
-            services.AddConvertUniverse();
-            services.AddAssetsProgress();
-
-            services.TryAddSingleton<ICreateNavigation, CreateNavigation>();
-
-            return services;
         }
     }
 }

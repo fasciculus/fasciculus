@@ -4,7 +4,6 @@ using Fasciculus.Steam.Services;
 using Fasciculus.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Eve.Assets.Services
 {
@@ -173,22 +172,6 @@ namespace Fasciculus.Eve.Assets.Services
             FileInfo destination = assetsDirectories.Images.File(kvp.Key);
 
             return writeResource.Copy(source, destination, false) ? destination : null;
-        }
-    }
-
-    public static class ImageServices
-    {
-        public static IServiceCollection AddImages(this IServiceCollection services)
-        {
-            services.AddSteam();
-            services.AddAssetsDirectories();
-            services.AddAssetsProgress();
-            services.AddWriteResource();
-
-            services.TryAddSingleton<ICopyImages, CopyImages>();
-            services.TryAddSingleton<ICreateImages, CreateImages>();
-
-            return services;
         }
     }
 }

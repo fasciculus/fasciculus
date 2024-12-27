@@ -1,5 +1,4 @@
 ﻿using Fasciculus.Eve.Assets.Services;
-using Fasciculus.Maui;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -23,7 +22,27 @@ namespace Fasciculus.Eve.Assets
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddCreateResources();
+            services.AddSteam();
+
+            services.TryAddSingleton<IAssetsProgress, AssetsProgress>();
+            services.TryAddSingleton<IAssetsDirectories, AssetsDirectories>();
+            services.TryAddSingleton<IWriteResource, WriteResource>();
+
+            services.TryAddSingleton<IDownloadSde, DownloadSde>();
+            services.TryAddSingleton<IExtractSde, ExtractSde>();
+
+            services.TryAddSingleton<IYaml, Yaml>();
+            services.TryAddSingleton<IParseData, ParseData>();
+            services.TryAddSingleton<IParseUniverse, ParseUniverse>();
+
+            services.TryAddSingleton<IConvertData, ConvertData>();
+            services.TryAddSingleton<IConvertUniverse, ConvertUniverse>();
+            services.TryAddSingleton<ICreateNavigation, CreateNavigation>();
+
+            services.TryAddSingleton<ICopyImages, CopyImages>();
+            services.TryAddSingleton<ICreateImages, CreateImages>();
+
+            services.TryAddSingleton<ICreateResources, CreateResources>();
 
             services.TryAddSingleton<MainPageModel>();
         }

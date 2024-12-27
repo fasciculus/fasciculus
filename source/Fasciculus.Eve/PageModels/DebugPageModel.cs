@@ -38,6 +38,8 @@ namespace Fasciculus.Eve.PageModels
             EveBlueprint[] withProduct = [.. blueprints.Where(x => x.Manufacturing.Products.Count > 0)];
 
             T2Blueprints = withProduct.Where(x => x.Manufacturing.Products[0].Type.MetaGroup == 2).Count();
+
+            IMauiContext? context = Application.Current?.Handler.MauiContext;
         }
     }
 }
