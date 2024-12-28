@@ -1,5 +1,6 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Support;
+using Fasciculus.Support.Progressing;
 using Fasciculus.Threading.Synchronization;
 using System;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace Fasciculus.Eve.Services
         private static EveMarketPrice.Data ConvertMarketPrice(EsiMarketPrice price)
             => new(price.TypeId, price.AveragePrice, price.AdjustedPrice);
 
-        public async Task<EveRegionBuyOrders?> GetRegionBuyOrdersAsync(EveRegion region, IAccumulatingLongProgress progress)
+        public async Task<EveRegionBuyOrders?> GetRegionBuyOrdersAsync(EveRegion region, IAccumulatingProgress<long> progress)
         {
             using Locker locker = Locker.Lock(mutex);
 
@@ -92,7 +93,7 @@ namespace Fasciculus.Eve.Services
             return data is null ? null : new(data, types, stations);
         }
 
-        private async Task<Tuple<EveRegionOrders.Data?, bool>> GetRegionOrders(EveRegion region, string orderType, IAccumulatingLongProgress progress)
+        private async Task<Tuple<EveRegionOrders.Data?, bool>> GetRegionOrders(EveRegion region, string orderType, IAccumulatingProgress<long> progress)
         {
             string uri = $"markets/{region.Id}/orders/?order_type={orderType}";
             Tuple<string[], bool> response = await esiHttp.GetPaged(uri, progress);

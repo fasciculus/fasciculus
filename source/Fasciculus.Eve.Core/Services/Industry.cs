@@ -2,6 +2,7 @@
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Support;
+using Fasciculus.Maui.Support.Progressing;
 using Fasciculus.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
@@ -17,7 +18,9 @@ namespace Fasciculus.Eve.Services
     {
         public EveStation Hub { get; }
 
-        public LongProgressInfo BuyProgressInfo { get; }
+        public ProgressBarProgress BuyProgress { get; }
+
+        //public LongProgressInfo BuyProgressInfo { get; }
         public LongProgressInfo SellProgressInfo { get; }
         public WorkState MarketPricesState { get; }
         public WorkState IndustryIndicesState { get; }
@@ -42,8 +45,10 @@ namespace Fasciculus.Eve.Services
         public EveStation Hub { get; }
         private readonly EveRegion hubRegion;
 
-        [ObservableProperty]
-        public partial LongProgressInfo BuyProgressInfo { get; set; }
+        public ProgressBarProgress BuyProgress { get; }
+
+        //[ObservableProperty]
+        //public partial LongProgressInfo BuyProgressInfo { get; set; }
 
         [ObservableProperty]
         public partial LongProgressInfo SellProgressInfo { get; set; }
@@ -54,7 +59,7 @@ namespace Fasciculus.Eve.Services
         [ObservableProperty]
         public partial WorkState IndustryIndicesState { get; set; }
 
-        private readonly AccumulatingLongProgress buyProgress;
+        //private readonly AccumulatingLongProgress buyProgress;
         private readonly AccumulatingLongProgress sellProgress;
 
         [ObservableProperty]
@@ -71,12 +76,14 @@ namespace Fasciculus.Eve.Services
             Hub = provider.Stations[60003760];
             hubRegion = Hub.GetRegion();
 
-            BuyProgressInfo = LongProgressInfo.Start;
+            BuyProgress = new();
+
+            //BuyProgressInfo = LongProgressInfo.Start;
             SellProgressInfo = LongProgressInfo.Start;
             MarketPricesState = WorkState.Pending;
             IndustryIndicesState = WorkState.Pending;
 
-            buyProgress = new(_ => { BuyProgressInfo = buyProgress!.Progress; });
+            //buyProgress = new(_ => { BuyProgressInfo = buyProgress!.Progress; });
             sellProgress = new(_ => { SellProgressInfo = sellProgress!.Progress; });
 
             Productions = [];
@@ -101,12 +108,12 @@ namespace Fasciculus.Eve.Services
         {
             Reset();
 
-            buyProgress.Begin(1);
+            BuyProgress.Begin(1);
             sellProgress.Begin(1);
             MarketPricesState = WorkState.Pending;
             IndustryIndicesState = WorkState.Pending;
 
-            EveRegionBuyOrders? regionBuyOrders = Tasks.Wait(esiClient.GetRegionBuyOrdersAsync(hubRegion, buyProgress));
+            EveRegionBuyOrders? regionBuyOrders = Tasks.Wait(esiClient.GetRegionBuyOrdersAsync(hubRegion, BuyProgress));
             EveRegionSellOrders? regionSellOrders = Tasks.Wait(esiClient.GetRegionSellOrdersAsync(hubRegion, sellProgress));
 
             MarketPricesState = WorkState.Working;

@@ -5,6 +5,7 @@ using Fasciculus.Eve.Services;
 using Fasciculus.Eve.Support;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Support;
+using Fasciculus.Maui.Support.Progressing;
 using Fasciculus.Support;
 using Fasciculus.Threading;
 using System.ComponentModel;
@@ -77,8 +78,10 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         public partial EveSkillRequirement[] SkillRequirements { get; private set; }
 
-        [ObservableProperty]
-        public partial LongProgressInfo BuyProgress { get; private set; }
+        public ProgressBarProgress BuyProgress { get; }
+
+        //[ObservableProperty]
+        //public partial LongProgressInfo BuyProgress { get; private set; }
 
         [ObservableProperty]
         public partial LongProgressInfo SellProgress { get; private set; }
@@ -119,7 +122,7 @@ namespace Fasciculus.Eve.PageModels
             SkillRequirements = [];
             HasProductions = false;
             Productions = [];
-            BuyProgress = LongProgressInfo.Start;
+            BuyProgress = industry.BuyProgress;
             SellProgress = LongProgressInfo.Start;
             MarketPricesState = WorkState.Pending;
             IndustryIndicesState = WorkState.Pending;
@@ -154,7 +157,6 @@ namespace Fasciculus.Eve.PageModels
 
         private void OnIndustryChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            BuyProgress = industry.BuyProgressInfo;
             SellProgress = industry.SellProgressInfo;
 
             MarketPricesState = industry.MarketPricesState;

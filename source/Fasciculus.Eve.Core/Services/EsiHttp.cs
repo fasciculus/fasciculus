@@ -1,6 +1,6 @@
 ﻿using Fasciculus.Maui.Services;
 using Fasciculus.Net;
-using Fasciculus.Support;
+using Fasciculus.Support.Progressing;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -15,7 +15,7 @@ namespace Fasciculus.Eve.Services
     public interface IEsiHttp
     {
         public Task<string?> GetSingle(string uri);
-        public Task<Tuple<string[], bool>> GetPaged(string uri, IAccumulatingLongProgress progress);
+        public Task<Tuple<string[], bool>> GetPaged(string uri, IAccumulatingProgress<long> progress);
     }
 
     public class EsiHttp : IEsiHttp
@@ -43,7 +43,7 @@ namespace Fasciculus.Eve.Services
             return textAndPages?.Item1;
         }
 
-        public async Task<Tuple<string[], bool>> GetPaged(string uri, IAccumulatingLongProgress progress)
+        public async Task<Tuple<string[], bool>> GetPaged(string uri, IAccumulatingProgress<long> progress)
         {
             using Locker locker = Locker.Lock(mutex);
 

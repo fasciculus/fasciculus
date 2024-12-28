@@ -65,7 +65,10 @@
                     <HorizontalStackLayout Spacing="14" Padding="0,7,0,0">
                         <Button Text="Start" Command="{Binding StartCommand}" WidthRequest="60" />
                         <Label Text="Buy Orders" IsVisible="{Binding IsRunning}" />
-                        <fasciculus:LongProgressInfoBar Source="{Binding BuyProgress}" WidthRequest="100" IsVisible="{Binding IsRunning}" />
+                        <ProgressBar Progress="{Binding BuyProgress.Value}"
+                                     ProgressColor="{Binding BuyProgress.Done, Converter={StaticResource doneToColor}}"
+                                     WidthRequest="100" IsVisible="{Binding IsRunning}" />
+                        <!--<fasciculus:LongProgressInfoBar Source="{Binding BuyProgress}" WidthRequest="100" IsVisible="{Binding IsRunning}" />-->
                         <Label Text="Sell Orders" IsVisible="{Binding IsRunning}" />
                         <fasciculus:LongProgressInfoBar Source="{Binding SellProgress}" WidthRequest="100" IsVisible="{Binding IsRunning}" />
                         <Label Text="Estimates" IsVisible="{Binding IsRunning}" />

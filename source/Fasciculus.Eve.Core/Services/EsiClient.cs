@@ -1,5 +1,6 @@
 ﻿using Fasciculus.Eve.Models;
 using Fasciculus.Support;
+using Fasciculus.Support.Progressing;
 using Fasciculus.Threading.Synchronization;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace Fasciculus.Eve.Services
     {
         public Task<EveMarketPrices?> GetMarketPricesAsync();
 
-        public Task<EveRegionBuyOrders?> GetRegionBuyOrdersAsync(EveRegion region, IAccumulatingLongProgress progress);
+        public Task<EveRegionBuyOrders?> GetRegionBuyOrdersAsync(EveRegion region, IAccumulatingProgress<long> progress);
         public Task<EveRegionSellOrders?> GetRegionSellOrdersAsync(EveRegion region, IAccumulatingLongProgress progress);
 
         public Task<EveIndustryIndices?> GetIndustryIndicesAsync();
