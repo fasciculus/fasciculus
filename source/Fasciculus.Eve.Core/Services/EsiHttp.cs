@@ -1,11 +1,13 @@
 ﻿using Fasciculus.Maui.Services;
 using Fasciculus.Net;
 using Fasciculus.Support.Progressing;
+using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -90,15 +92,24 @@ namespace Fasciculus.Eve.Services
         {
             try
             {
-                using HttpRequestMessage request = new(HttpMethod.Get, uri);
-                using HttpResponseMessage response = await httpClient.SendAsync(request);
+                for (int retry = 0; retry < 4; ++retry)
+                {
+                    using HttpRequestMessage request = new(HttpMethod.Get, uri);
+                    using HttpResponseMessage response = await httpClient.SendAsync(request);
 
-                response.EnsureSuccessStatusCode();
+                    if (response.StatusCode == HttpStatusCode.GatewayTimeout)
+                    {
+                        Tasks.Sleep(2000);
+                        continue;
+                    }
 
-                string text = await response.Content.ReadAsStringAsync();
-                int pages = GetPages(response.Headers);
+                    response.EnsureSuccessStatusCode();
 
-                return Tuple.Create(text, pages);
+                    string text = await response.Content.ReadAsStringAsync();
+                    int pages = GetPages(response.Headers);
+
+                    return Tuple.Create(text, pages);
+                }
             }
             catch (Exception ex)
             {
