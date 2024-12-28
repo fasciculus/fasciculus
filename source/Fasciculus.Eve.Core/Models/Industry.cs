@@ -30,15 +30,22 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        private readonly Data data;
+        private readonly Dictionary<uint, double> indices;
 
         public double this[EveSolarSystem solarSystem]
-            => data.Indices.TryGetValue(solarSystem.Id, out double value) ? value : 0;
+            => indices.TryGetValue(solarSystem.Id, out double value) ? value : 0;
 
         public EveIndustryIndices(Data data)
         {
-            this.data = data;
+            indices = new(data.Indices);
         }
+
+        private EveIndustryIndices()
+        {
+            indices = [];
+        }
+
+        public static readonly EveIndustryIndices Empty = new();
     }
 
     public class EveMaterial

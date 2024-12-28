@@ -4,9 +4,7 @@ using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Eve.Support;
 using Fasciculus.Maui.ComponentModel;
-using Fasciculus.Maui.Support;
 using Fasciculus.Maui.Support.Progressing;
-using Fasciculus.Support;
 using Fasciculus.Threading;
 using System.ComponentModel;
 
@@ -78,19 +76,10 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         public partial EveSkillRequirement[] SkillRequirements { get; private set; }
 
-        public ProgressBarProgress BuyProgress { get; }
-
-        //[ObservableProperty]
-        //public partial LongProgressInfo BuyProgress { get; private set; }
-
-        [ObservableProperty]
-        public partial LongProgressInfo SellProgress { get; private set; }
-
-        [ObservableProperty]
-        public partial WorkState MarketPricesState { get; private set; }
-
-        [ObservableProperty]
-        public partial WorkState IndustryIndicesState { get; private set; }
+        public ProgressBarProgress BuyOrdersProgress { get; }
+        public ProgressBarProgress SellOrdersProgress { get; }
+        public ProgressBarProgress MarketPricesProgress { get; }
+        public ProgressBarProgress IndustryIndicesProgress { get; }
 
         [ObservableProperty]
         public partial bool IsRunning { get; private set; }
@@ -98,7 +87,8 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         public partial bool NotRunning { get; private set; }
 
-        public IndustryPageModel(IEveSettings settings, IEveProvider provider, IIndustry industry, ISkillProvider skillProvider)
+        public IndustryPageModel(IEveSettings settings, IEveProvider provider, IIndustry industry, ISkillProvider skillProvider,
+            EveProgress progress)
         {
             this.settings = settings.IndustrySettings;
             this.settings.PropertyChanged += OnSettingsChanged;
@@ -122,10 +112,12 @@ namespace Fasciculus.Eve.PageModels
             SkillRequirements = [];
             HasProductions = false;
             Productions = [];
-            BuyProgress = industry.BuyProgress;
-            SellProgress = LongProgressInfo.Start;
-            MarketPricesState = WorkState.Pending;
-            IndustryIndicesState = WorkState.Pending;
+
+            BuyOrdersProgress = progress.BuyOrdersProgress;
+            SellOrdersProgress = progress.SellOrdersProgress;
+            MarketPricesProgress = progress.MarketPricesProgress;
+            IndustryIndicesProgress = progress.IndustryIndicesProgress;
+
             IsRunning = false;
             NotRunning = true;
 
@@ -157,11 +149,6 @@ namespace Fasciculus.Eve.PageModels
 
         private void OnIndustryChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            SellProgress = industry.SellProgressInfo;
-
-            MarketPricesState = industry.MarketPricesState;
-            IndustryIndicesState = industry.IndustryIndicesState;
-
             Productions = industry.Productions;
             HasProductions = Productions.Length > 0;
             Production = HasProductions ? Productions[0] : null;

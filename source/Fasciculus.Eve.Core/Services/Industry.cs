@@ -1,9 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.ComponentModel;
-using Fasciculus.Maui.Support;
-using Fasciculus.Maui.Support.Progressing;
-using Fasciculus.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 using System;
@@ -17,13 +14,6 @@ namespace Fasciculus.Eve.Services
     public interface IIndustry : INotifyPropertyChanged
     {
         public EveStation Hub { get; }
-
-        public ProgressBarProgress BuyProgress { get; }
-
-        //public LongProgressInfo BuyProgressInfo { get; }
-        public LongProgressInfo SellProgressInfo { get; }
-        public WorkState MarketPricesState { get; }
-        public WorkState IndustryIndicesState { get; }
 
         public EveProduction[] Productions { get; }
 
@@ -39,52 +29,30 @@ namespace Fasciculus.Eve.Services
         private readonly EveIndustrySettings settings;
         private readonly ISkillProvider skills;
         private readonly IEsiClient esiClient;
+        private readonly EveProgress progress;
 
         private readonly EveBlueprints blueprints;
 
+        private EveRegionBuyOrders regionBuyOrders = EveRegionBuyOrders.Empty;
+        private EveRegionSellOrders regionSellOrders = EveRegionSellOrders.Empty;
+        private EveMarketPrices marketPrices = EveMarketPrices.Empty;
+        private EveIndustryIndices industryIndices = EveIndustryIndices.Empty;
+
         public EveStation Hub { get; }
-        private readonly EveRegion hubRegion;
-
-        public ProgressBarProgress BuyProgress { get; }
-
-        //[ObservableProperty]
-        //public partial LongProgressInfo BuyProgressInfo { get; set; }
-
-        [ObservableProperty]
-        public partial LongProgressInfo SellProgressInfo { get; set; }
-
-        [ObservableProperty]
-        public partial WorkState MarketPricesState { get; set; }
-
-        [ObservableProperty]
-        public partial WorkState IndustryIndicesState { get; set; }
-
-        //private readonly AccumulatingLongProgress buyProgress;
-        private readonly AccumulatingLongProgress sellProgress;
 
         [ObservableProperty]
         public partial EveProduction[] Productions { get; set; }
 
-        public Industry(IEveSettings settings, ISkillProvider skills, IEsiClient esiClient, IEveProvider provider)
+        public Industry(IEveSettings settings, ISkillProvider skills, IEsiClient esiClient, IEveProvider provider, EveProgress progress)
         {
             this.settings = settings.IndustrySettings;
             this.skills = skills;
             this.esiClient = esiClient;
+            this.progress = progress;
 
             blueprints = provider.Blueprints;
 
             Hub = provider.Stations[60003760];
-            hubRegion = Hub.GetRegion();
-
-            BuyProgress = new();
-
-            //BuyProgressInfo = LongProgressInfo.Start;
-            SellProgressInfo = LongProgressInfo.Start;
-            MarketPricesState = WorkState.Pending;
-            IndustryIndicesState = WorkState.Pending;
-
-            //buyProgress = new(_ => { BuyProgressInfo = buyProgress!.Progress; });
-            sellProgress = new(_ => { SellProgressInfo = sellProgress!.Progress; });
 
             Productions = [];
 
@@ -94,8 +62,6 @@ namespace Fasciculus.Eve.Services
 
         public Task StartAsync()
         {
-            using Locker locker = Locker.Lock(mutex);
-
             return Tasks.LongRunning(Start);
         }
 
@@ -106,56 +72,61 @@ namespace Fasciculus.Eve.Services
 
         private void Start()
         {
+            using Locker locker = Locker.Lock(mutex);
+
             Reset();
 
-            BuyProgress.Begin(1);
-            sellProgress.Begin(1);
-            MarketPricesState = WorkState.Pending;
-            IndustryIndicesState = WorkState.Pending;
-
-            EveRegionBuyOrders? regionBuyOrders = Tasks.Wait(esiClient.GetRegionBuyOrdersAsync(hubRegion, BuyProgress));
-            EveRegionSellOrders? regionSellOrders = Tasks.Wait(esiClient.GetRegionSellOrdersAsync(hubRegion, sellProgress));
-
-            MarketPricesState = WorkState.Working;
-            EveMarketPrices? marketPrices = Tasks.Wait(esiClient.GetMarketPricesAsync());
-            MarketPricesState = WorkState.Done;
-
-            IndustryIndicesState = WorkState.Working;
-            EveIndustryIndices? industryIndices = Tasks.Wait(esiClient.GetIndustryIndicesAsync());
-            IndustryIndicesState = WorkState.Done;
-
-            if (regionBuyOrders is null || regionSellOrders is null || marketPrices is null || industryIndices is null)
-            {
-                return;
-            }
-
-            regionSellOrders = regionSellOrders[EveSecurity.Level.High];
-            regionBuyOrders = regionBuyOrders[EveSecurity.Level.High];
+            RefreshEsiData();
 
             EveStationBuyOrders hubBuyOrders = regionBuyOrders[Hub];
             EveStationSellOrders hubSellOrders = regionSellOrders[Hub];
-            EveBlueprint[] candidates = GetCandidates(marketPrices, hubSellOrders);
-            double systemCostIndex = industryIndices[Hub.Moon.Planet.SolarSystem];
+            EveBlueprint[] candidates = GetCandidates(hubSellOrders);
+            double costIndex = industryIndices[Hub.Moon.Planet.SolarSystem];
             double salesTaxRate = settings.SalesTaxRate / 1000.0;
-            EveProduction[] productions = CreateProductions(candidates, regionSellOrders, hubSellOrders, hubBuyOrders, marketPrices, systemCostIndex, salesTaxRate);
+
+            EveProduction[] productions = CreateProductions(candidates, hubSellOrders, hubBuyOrders, costIndex, salesTaxRate);
             int count = Math.Min(20, productions.Length);
+
+            Tasks.Sleep(333);
 
             Productions = productions.OrderByDescending(x => x.Profit).Take(count).ToArray();
         }
 
-        private EveProduction[] CreateProductions(EveBlueprint[] blueprints,
-            EveRegionSellOrders regionSellOrders,
-            EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
-            EveMarketPrices marketPrices, double systemCostIndex, double salesTaxRate)
+        private void RefreshEsiData()
+        {
+            progress.BuyOrdersProgress.Begin(1);
+            progress.SellOrdersProgress.Begin(1);
+            progress.MarketPricesProgress.Begin(2);
+            progress.IndustryIndicesProgress.Begin(2);
+
+            EveRegion hubRegion = Hub.GetRegion();
+
+            regionBuyOrders = Tasks.Wait(esiClient.GetRegionBuyOrdersAsync(hubRegion, progress.BuyOrdersProgress)) ?? EveRegionBuyOrders.Empty;
+            regionSellOrders = Tasks.Wait(esiClient.GetRegionSellOrdersAsync(hubRegion, progress.SellOrdersProgress)) ?? EveRegionSellOrders.Empty;
+
+            progress.MarketPricesProgress.Report(1);
+            marketPrices = Tasks.Wait(esiClient.GetMarketPricesAsync()) ?? EveMarketPrices.Empty;
+            progress.MarketPricesProgress.End();
+
+            progress.IndustryIndicesProgress.Report(1);
+            industryIndices = Tasks.Wait(esiClient.GetIndustryIndicesAsync()) ?? EveIndustryIndices.Empty;
+            progress.IndustryIndicesProgress.End();
+
+            regionBuyOrders = regionBuyOrders[EveSecurity.Level.High];
+            regionSellOrders = regionSellOrders[EveSecurity.Level.High];
+        }
+
+        private EveProduction[] CreateProductions(EveBlueprint[] blueprints, EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
+            double systemCostIndex, double salesTaxRate)
         {
             return blueprints
-                .Select(x => CreateProduction(x, regionSellOrders, sellOrders, buyOrders, marketPrices, systemCostIndex, salesTaxRate))
+                .Select(x => CreateProduction(x, sellOrders, buyOrders, systemCostIndex, salesTaxRate))
                 .ToArray();
         }
 
-        private EveProduction CreateProduction(EveBlueprint blueprint, EveRegionSellOrders regionSellOrders,
+        private EveProduction CreateProduction(EveBlueprint blueprint,
             EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
-            EveMarketPrices marketPrices, double systemCostIndex, double salesTaxRate)
+            double systemCostIndex, double salesTaxRate)
         {
             double blueprintPrice = marketPrices[blueprint.Type].AveragePrice;
             EveManufacturing manufacturing = blueprint.Manufacturing;
@@ -165,7 +136,7 @@ namespace Fasciculus.Eve.Services
             int runs = Math.Min(runsByTime, runsByVolume);
             EveProductionInput[] inputs = CreateInputs(manufacturing.Materials, runs, sellOrders);
             EveProductionOutput[] outputs = CreateOutputs(manufacturing.Products, runs, buyOrders);
-            double jobCost = GetJobCost(inputs, marketPrices, systemCostIndex);
+            double jobCost = GetJobCost(inputs, systemCostIndex);
             EveProduction production = new(blueprint, blueprintPrice, runs, inputs, outputs, jobCost, salesTaxRate);
 
             return production;
@@ -201,14 +172,14 @@ namespace Fasciculus.Eve.Services
             return new(type, quantity, income);
         }
 
-        private static double GetJobCost(EveProductionInput[] inputs, EveMarketPrices marketPrices, double systemCostIndex)
+        private double GetJobCost(EveProductionInput[] inputs, double systemCostIndex)
         {
             double itemValue = inputs.Select(x => x.Quantity * marketPrices[x.Type].AdjustedPrice).Sum();
 
             return itemValue * (systemCostIndex + 0.0025 + 0.04);
         }
 
-        private EveBlueprint[] GetCandidates(EveMarketPrices marketPrices, EveStationSellOrders hubSellOrders)
+        private EveBlueprint[] GetCandidates(EveStationSellOrders hubSellOrders)
         {
             int maxVolume = settings.MaxVolume;
 

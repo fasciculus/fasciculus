@@ -1,5 +1,4 @@
 ﻿using Fasciculus.Eve.Models;
-using Fasciculus.Support;
 using Fasciculus.Support.Progressing;
 using Fasciculus.Threading.Synchronization;
 using System;
@@ -68,7 +67,7 @@ namespace Fasciculus.Eve.Services
             return data is null ? null : new(data, types, stations);
         }
 
-        public async Task<EveRegionSellOrders?> GetRegionSellOrdersAsync(EveRegion region, IAccumulatingLongProgress progress)
+        public async Task<EveRegionSellOrders?> GetRegionSellOrdersAsync(EveRegion region, IAccumulatingProgress<long> progress)
         {
             using Locker locker = Locker.Lock(mutex);
 

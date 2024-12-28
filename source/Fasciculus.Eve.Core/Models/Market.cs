@@ -78,30 +78,26 @@ namespace Fasciculus.Eve.Models
             }
         }
 
-        private readonly Data data;
-        private readonly EveTypes types;
+        private readonly EveMarketPrice[] marketPrices;
+        private readonly Dictionary<EveType, EveMarketPrice> byType;
 
-        private readonly Lazy<Dictionary<EveType, EveMarketPrice>> byType;
-
-        public IEnumerable<EveType> Types => byType.Value.Keys;
-        public bool Contains(EveType type) => byType.Value.ContainsKey(type);
-        public EveMarketPrice this[EveType type] => byType.Value.TryGetValue(type, out EveMarketPrice? result) ? result : new(type);
+        public IEnumerable<EveType> Types => byType.Keys;
+        public bool Contains(EveType type) => byType.ContainsKey(type);
+        public EveMarketPrice this[EveType type] => byType.TryGetValue(type, out EveMarketPrice? result) ? result : new(type);
 
         public EveMarketPrices(Data data, EveTypes types)
         {
-            this.data = data;
-            this.types = types;
-
-            byType = new(FetchByType, true);
+            marketPrices = [.. data.Prices.Where(x => types.Contains(x.TypeId)).Select(x => new EveMarketPrice(x, types))];
+            byType = marketPrices.ToDictionary(x => x.Type);
         }
 
-        private Dictionary<EveType, EveMarketPrice> FetchByType()
+        private EveMarketPrices()
         {
-            return data.Prices
-                .Where(x => types.Contains(x.TypeId))
-                .Select(x => Tuple.Create(types[x.TypeId], new EveMarketPrice(x, types)))
-                .ToDictionary();
+            marketPrices = [];
+            byType = [];
         }
+
+        public static readonly EveMarketPrices Empty = new();
     }
 
     public class EveMarketOrder
@@ -251,6 +247,8 @@ namespace Fasciculus.Eve.Models
 
         private EveRegionBuyOrders(EveMarketOrder[] orders)
             : base(orders) { }
+
+        public static readonly EveRegionBuyOrders Empty = new([]);
     }
 
     public class EveRegionSellOrders : EveRegionOrders
@@ -264,6 +262,8 @@ namespace Fasciculus.Eve.Models
 
         private EveRegionSellOrders(EveMarketOrder[] orders)
             : base(orders) { }
+
+        public static readonly EveRegionSellOrders Empty = new([]);
     }
 
     public class EveTypeBuyOrders : EveMarketOrders

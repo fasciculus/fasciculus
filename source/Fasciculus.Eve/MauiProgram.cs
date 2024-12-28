@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Fasciculus.Eve.PageModels;
+using Fasciculus.Eve.Services;
 using Fasciculus.Eve.ViewModels;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,8 @@ namespace Fasciculus.Eve
         {
             services.TryAddSingleton<NavBarViewModel>();
             services.TryAddSingleton<StatusBarViewModel>();
+
+            services.TryAddSingleton<EveProgress>();
 
             services.TryAddSingleton<LoadingPageModel>();
             services.TryAddSingleton<IndustryPageModel>();
