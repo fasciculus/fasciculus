@@ -40,6 +40,9 @@ namespace Fasciculus.Eve.Services
 
         public EveStation Hub { get; }
 
+        private EveStationBuyOrders hubBuyOrders;
+        private EveStationSellOrders hubSellOrders;
+
         [ObservableProperty]
         public partial EveProduction[] Productions { get; set; }
 
@@ -53,11 +56,13 @@ namespace Fasciculus.Eve.Services
             blueprints = provider.Blueprints;
 
             Hub = provider.Stations[60003760];
+            hubBuyOrders = new([], Hub);
+            hubSellOrders = new([], Hub);
 
             Productions = [];
 
-            this.settings.PropertyChanged += OnSettingsChanged;
-            this.skills.PropertyChanged += OnSkillsChanged;
+            this.settings.PropertyChanged += (_, _) => { Reset(); };
+            this.skills.PropertyChanged += (_, _) => { Reset(); };
         }
 
         public Task StartAsync()
@@ -78,13 +83,11 @@ namespace Fasciculus.Eve.Services
 
             RefreshEsiData();
 
-            EveStationBuyOrders hubBuyOrders = regionBuyOrders[Hub];
-            EveStationSellOrders hubSellOrders = regionSellOrders[Hub];
-            EveBlueprint[] candidates = GetCandidates(hubSellOrders);
+            EveBlueprint[] candidates = GetCandidates();
             double costIndex = industryIndices[Hub.Moon.Planet.SolarSystem];
             double salesTaxRate = settings.SalesTaxRate / 1000.0;
 
-            EveProduction[] productions = CreateProductions(candidates, hubSellOrders, hubBuyOrders, costIndex, salesTaxRate);
+            EveProduction[] productions = CreateProductions(candidates, costIndex, salesTaxRate);
             int count = Math.Min(20, productions.Length);
 
             Tasks.Sleep(333);
@@ -114,19 +117,19 @@ namespace Fasciculus.Eve.Services
 
             regionBuyOrders = regionBuyOrders[EveSecurity.Level.High];
             regionSellOrders = regionSellOrders[EveSecurity.Level.High];
+
+            hubBuyOrders = regionBuyOrders[Hub];
+            hubSellOrders = regionSellOrders[Hub];
         }
 
-        private EveProduction[] CreateProductions(EveBlueprint[] blueprints, EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
-            double systemCostIndex, double salesTaxRate)
+        private EveProduction[] CreateProductions(EveBlueprint[] blueprints, double systemCostIndex, double salesTaxRate)
         {
             return blueprints
-                .Select(x => CreateProduction(x, sellOrders, buyOrders, systemCostIndex, salesTaxRate))
+                .Select(x => CreateProduction(x, systemCostIndex, salesTaxRate))
                 .ToArray();
         }
 
-        private EveProduction CreateProduction(EveBlueprint blueprint,
-            EveStationSellOrders sellOrders, EveStationBuyOrders buyOrders,
-            double systemCostIndex, double salesTaxRate)
+        private EveProduction CreateProduction(EveBlueprint blueprint, double systemCostIndex, double salesTaxRate)
         {
             double blueprintPrice = marketPrices[blueprint.Type].AveragePrice;
             EveManufacturing manufacturing = blueprint.Manufacturing;
@@ -134,39 +137,39 @@ namespace Fasciculus.Eve.Services
             double outputVolume = blueprint.Manufacturing.Products.Select(x => x.Quantity * x.Type.Volume).Sum();
             int runsByVolume = (int)Math.Floor(settings.MaxVolume / outputVolume);
             int runs = Math.Min(runsByTime, runsByVolume);
-            EveProductionInput[] inputs = CreateInputs(manufacturing.Materials, runs, sellOrders);
-            EveProductionOutput[] outputs = CreateOutputs(manufacturing.Products, runs, buyOrders);
+            EveProductionInput[] inputs = CreateInputs(manufacturing.Materials, runs);
+            EveProductionOutput[] outputs = CreateOutputs(manufacturing.Products, runs);
             double jobCost = GetJobCost(inputs, systemCostIndex);
             EveProduction production = new(blueprint, blueprintPrice, runs, inputs, outputs, jobCost, salesTaxRate);
 
             return production;
         }
 
-        private static EveProductionInput[] CreateInputs(IEnumerable<EveMaterial> materials, int runs, EveStationSellOrders sellOrders)
+        private EveProductionInput[] CreateInputs(IEnumerable<EveMaterial> materials, int runs)
         {
-            return materials.Select(x => CreateInput(x, runs, sellOrders)).ToArray();
+            return materials.Select(x => CreateInput(x, runs)).ToArray();
         }
 
-        private static EveProductionOutput[] CreateOutputs(IEnumerable<EveMaterial> products, int runs, EveStationBuyOrders buyOrders)
+        private EveProductionOutput[] CreateOutputs(IEnumerable<EveMaterial> products, int runs)
         {
-            return products.Select(x => CreateOutput(x, runs, buyOrders)).ToArray();
+            return products.Select(x => CreateOutput(x, runs)).ToArray();
         }
 
-        private static EveProductionInput CreateInput(EveMaterial material, int runs, EveStationSellOrders sellOrders)
+        private EveProductionInput CreateInput(EveMaterial material, int runs)
         {
             EveType type = material.Type;
             int quantity = runs * material.Quantity;
-            double price = sellOrders[type].PriceFor(quantity * 7);
+            double price = hubSellOrders[type].PriceFor(quantity * 7);
             double cost = quantity * price;
 
             return new(type, quantity, cost);
         }
 
-        private static EveProductionOutput CreateOutput(EveMaterial product, int runs, EveStationBuyOrders buyOrders)
+        private EveProductionOutput CreateOutput(EveMaterial product, int runs)
         {
             EveType type = product.Type;
             int quantity = runs * product.Quantity;
-            double price = buyOrders[type].PriceFor(quantity * 7);
+            double price = hubBuyOrders[type].PriceFor(quantity * 7);
             double income = quantity * price;
 
             return new(type, quantity, income);
@@ -179,7 +182,7 @@ namespace Fasciculus.Eve.Services
             return itemValue * (systemCostIndex + 0.0025 + 0.04);
         }
 
-        private EveBlueprint[] GetCandidates(EveStationSellOrders hubSellOrders)
+        private EveBlueprint[] GetCandidates()
         {
             int maxVolume = settings.MaxVolume;
 
@@ -203,10 +206,5 @@ namespace Fasciculus.Eve.Services
 
             return candidates;
         }
-        private void OnSkillsChanged(object? sender, PropertyChangedEventArgs e)
-            => Reset();
-
-        private void OnSettingsChanged(object? sender, PropertyChangedEventArgs e)
-            => Reset();
     }
 }
