@@ -42,6 +42,7 @@ namespace Fasciculus.Eve.Assets
             services.TryAddSingleton<ICopyImages, CopyImages>();
             services.TryAddSingleton<ICreateImages, CreateImages>();
 
+            services.TryAddSingleton<ChangedResourcesSet>();
             services.TryAddSingleton<ICreateResources, CreateResources>();
 
             services.TryAddSingleton<MainPageModel>();

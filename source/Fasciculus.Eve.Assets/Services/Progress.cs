@@ -1,8 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Fasciculus.Maui.ComponentModel;
+﻿using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Support.Progressing;
-using Fasciculus.Support;
-using Fasciculus.Support.Progressing;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.Assets.Services
@@ -47,9 +44,6 @@ namespace Fasciculus.Eve.Assets.Services
 
         public ProgressBarProgress CopyImages { get; }
         public ProgressBarProgress CreateImages { get; }
-
-        public FileInfo[] CreateResourcesInfo { get; }
-        public IAccumulatingProgress<List<FileInfo>> CreateResourcesProgress { get; }
     }
 
     public partial class AssetsProgress : MainThreadObservable, IAssetsProgress
@@ -78,10 +72,6 @@ namespace Fasciculus.Eve.Assets.Services
         public ProgressBarProgress CopyImages { get; }
         public ProgressBarProgress CreateImages { get; }
 
-        [ObservableProperty]
-        public partial FileInfo[] CreateResourcesInfo { get; private set; }
-        public IAccumulatingProgress<List<FileInfo>> CreateResourcesProgress { get; }
-
         public AssetsProgress()
         {
             DownloadSde = new();
@@ -107,10 +97,6 @@ namespace Fasciculus.Eve.Assets.Services
 
             CopyImages = new();
             CreateImages = new();
-
-            CreateResourcesInfo = [];
-            CreateResourcesProgress
-                = new AccumulatingProgress<List<FileInfo>>(x => { CreateResourcesInfo = [.. x]; }, (x, y) => [.. x, .. y], [], []);
         }
     }
 }

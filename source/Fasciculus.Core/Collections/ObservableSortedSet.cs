@@ -53,14 +53,14 @@ namespace Fasciculus.Collections
         public override bool Add(T item)
         {
             using Locker locker = Locker.Lock(mutex);
-            bool result = base.Add(item);
+            int index = DoAdd(item);
 
-            if (result)
+            if (index >= 0)
             {
-                OnAdded(item);
+                OnAdded(item, index);
             }
 
-            return result;
+            return index >= 0;
         }
 
         /// <summary>
@@ -69,14 +69,14 @@ namespace Fasciculus.Collections
         public override bool Remove(T item)
         {
             using Locker locker = Locker.Lock(mutex);
-            bool result = base.Remove(item);
+            int index = DoRemove(item);
 
-            if (result)
+            if (index >= 0)
             {
-                OnRemoved(item);
+                OnRemoved(item, index);
             }
 
-            return result;
+            return index >= 0;
         }
 
         /// <summary>
@@ -89,9 +89,9 @@ namespace Fasciculus.Collections
             while (Count > 0)
             {
                 T item = this.First();
+                int index = DoRemove(item);
 
-                base.Remove(item);
-                OnRemoved(item);
+                OnRemoved(item, index);
             }
         }
 
@@ -104,9 +104,11 @@ namespace Fasciculus.Collections
 
             foreach (T item in other)
             {
-                if (base.Add(item))
+                int index = DoAdd(item);
+
+                if (index >= 0)
                 {
-                    OnAdded(item);
+                    OnAdded(item, index);
                 }
             }
         }
@@ -123,8 +125,9 @@ namespace Fasciculus.Collections
             {
                 if (!other.Contains(item))
                 {
-                    base.Remove(item);
-                    OnRemoved(item);
+                    int index = DoRemove(item);
+
+                    OnRemoved(item, index);
                 }
             }
         }
@@ -138,9 +141,11 @@ namespace Fasciculus.Collections
 
             foreach (T item in other)
             {
-                if (base.Remove(item))
+                int index = DoRemove(item);
+
+                if (index >= 0)
                 {
-                    OnRemoved(item);
+                    OnRemoved(item, index);
                 }
             }
         }
@@ -158,30 +163,47 @@ namespace Fasciculus.Collections
 
             foreach (T item in intersection)
             {
-                base.Remove(item);
-                OnRemoved(item);
+                int index = DoRemove(item);
+
+                OnRemoved(item, index);
             }
 
             foreach (T item in other)
             {
                 if (!intersection.Contains(item))
                 {
-                    base.Add(item);
-                    OnAdded(item);
+                    int index = DoAdd(item);
+
+                    OnAdded(item, index);
                 }
             }
         }
 
-        private void OnAdded(T item)
+        private int DoAdd(T item)
+            => base.Add(item) ? IndexOf(item) : -1;
+
+        private int DoRemove(T item)
         {
-            OnPropertyChanged(nameof(Count));
-            OnCollectionChanged(NotifyCollectionChangedAction.Add, item);
+            int index = IndexOf(item);
+
+            if (index >= 0)
+            {
+                base.Remove(item);
+            }
+
+            return index;
         }
 
-        private void OnRemoved(T item)
+        private void OnAdded(T item, int index)
         {
+            OnCollectionChanged(NotifyCollectionChangedAction.Add, item, index);
             OnPropertyChanged(nameof(Count));
-            OnCollectionChanged(NotifyCollectionChangedAction.Remove, item);
+        }
+
+        private void OnRemoved(T item, int index)
+        {
+            OnCollectionChanged(NotifyCollectionChangedAction.Remove, item, index);
+            OnPropertyChanged(nameof(Count));
         }
 
         /// <summary>
@@ -194,14 +216,17 @@ namespace Fasciculus.Collections
             PropertyChanged?.Invoke(this, args);
         }
 
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, T item, int index)
+        {
+            NotifyCollectionChangedEventArgs args = new(action, item, index);
+
+            OnCollectionChanged(args);
+        }
+
         /// <summary>
         /// Called when the contents of this set changed.
         /// </summary>
-        protected virtual void OnCollectionChanged(NotifyCollectionChangedAction action, T item)
-        {
-            NotifyCollectionChangedEventArgs args = new(action, item);
-
-            CollectionChanged?.Invoke(this, args);
-        }
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
+            => CollectionChanged?.Invoke(this, args);
     }
 }

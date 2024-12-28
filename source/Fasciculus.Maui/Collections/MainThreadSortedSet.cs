@@ -42,7 +42,7 @@ namespace Fasciculus.Maui.Collections
         /// <summary>
         /// Called when the contents of this set changed.
         /// </summary>
-        protected override void OnCollectionChanged(NotifyCollectionChangedAction action, T item)
-            => Threads.RunInMainThread(() => { base.OnCollectionChanged(action, item); });
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
+            => Threads.RunInMainThread(() => { base.OnCollectionChanged(args); });
     }
 }

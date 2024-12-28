@@ -18,10 +18,10 @@ namespace Fasciculus.Eve.Assets.Services
         private readonly IAssetsDirectories assetsDirectories;
         private readonly IWriteResource writeResource;
 
-        private readonly IAssetsProgress progress;
+        private readonly ChangedResourcesSet changedResources;
 
         public CreateResources(IConvertData convertData, IConvertUniverse convertUniverse, ICreateNavigation createNavigation,
-            ICreateImages createImages, IAssetsDirectories assetsDirectories, IWriteResource writeResource, IAssetsProgress progress)
+            ICreateImages createImages, IAssetsDirectories assetsDirectories, IWriteResource writeResource, ChangedResourcesSet changedResources)
         {
             this.convertData = convertData;
             this.convertUniverse = convertUniverse;
@@ -29,21 +29,25 @@ namespace Fasciculus.Eve.Assets.Services
             this.createImages = createImages;
             this.assetsDirectories = assetsDirectories;
             this.writeResource = writeResource;
-            this.progress = progress;
+            this.changedResources = changedResources;
         }
 
         private void Create()
         {
-            var result = Tasks.Wait(convertData.Data, convertUniverse.Universe, createNavigation.Navigation, createImages.FilesCreated);
-            EveData.Data data = result.Item1;
-            EveUniverse.Data universe = result.Item2;
-            EveNavigation.Data navigation = result.Item3;
-            List<FileInfo> images = result.Item4;
+            //Task<EveData.Data> data = convertData.Data;
+            //Task<EveUniverse.Data> universe = convertUniverse.Universe;
+            //Task<EveNavigation.Data> navigation = createNavigation.Navigation;
+            //Task<List<FileInfo>> images = createImages.FilesCreated;
 
-            progress.CreateResourcesProgress.Report(WriteData(data));
-            progress.CreateResourcesProgress.Report(WriteUniverse(universe));
-            progress.CreateResourcesProgress.Report(WriteNavigation(navigation));
-            progress.CreateResourcesProgress.Report(images);
+            //Task.WaitAll([data, universe, navigation, images]);
+            //Task.WaitAll([images]);
+
+            //WriteData(data.Result).Apply(changedResources.Add);
+            //WriteUniverse(universe.Result).Apply(changedResources.Add);
+            //WriteNavigation(navigation.Result).Apply(changedResources.Add);
+            //images.Result.Apply(changedResources.Add);
+            changedResources.Add(assetsDirectories.Resources.File("foo"));
+            changedResources.Add(assetsDirectories.Resources.File("bar"));
         }
 
         public Task CreateAsync()

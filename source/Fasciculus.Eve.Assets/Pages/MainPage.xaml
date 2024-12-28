@@ -135,7 +135,29 @@
                 <Label Text="Changed Resources" FontAttributes="Bold" />
             </HorizontalStackLayout>
 
-            <CollectionView ItemsSource="{Binding ChangedResources}">
+            <Label Text="CV1 ChangedResourcesSet" />
+
+            <CollectionView ItemsSource="{Binding ChangedResources}" x:Name="cv1">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Label Text="{Binding .}" TextColor="Orange" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Text="CV2 ObservableCollection" />
+
+            <CollectionView ItemsSource="{Binding ChangedResources2}" x:Name="cv2">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Label Text="{Binding .}" TextColor="Orange" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Text="CV3 NotifyingCollection" />
+
+            <CollectionView ItemsSource="{Binding ChangedResources3}" x:Name="cv3">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="x:String">
                         <Label Text="{Binding .}" TextColor="Orange" />
