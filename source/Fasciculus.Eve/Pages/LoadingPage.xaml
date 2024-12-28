@@ -2,29 +2,17 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:Fasciculus.Eve.PageModels"
-             xmlns:fasciculus="http://fasciculus.github.io/2024/maui"
              x:Class="Fasciculus.Eve.Pages.LoadingPage"
              x:DataType="pageModels:LoadingPageModel"
              Title="" Shell.NavBarIsVisible="False"
              Loaded="OnLoaded">
     
     <VerticalStackLayout Margin="120" Spacing="40">
-        <ActivityIndicator IsRunning="true" />
         <Label Text="Loading Resources..." HorizontalOptions="Center" />
-        <HorizontalStackLayout Spacing="42" HorizontalOptions="Center">
-            <HorizontalStackLayout Spacing="14">
-                <Label Text="Common Data" />
-                <fasciculus:WorkStateLabel Source="{Binding Data}" WidthRequest="100" />
-            </HorizontalStackLayout>
-            <HorizontalStackLayout Spacing="14">
-                <Label Text="Universe" />
-                <fasciculus:WorkStateLabel Source="{Binding Universe}" WidthRequest="100" />
-            </HorizontalStackLayout>
-            <HorizontalStackLayout Spacing="14">
-                <Label Text="Navigation" />
-                <fasciculus:WorkStateLabel Source="{Binding Navigation}" WidthRequest="100" />
-            </HorizontalStackLayout>
-        </HorizontalStackLayout>
+        <Label Text="{Binding State}" HorizontalOptions="Center" />
+        <ProgressBar Progress="{Binding Progress.Value}"
+                     ProgressColor="{Binding Progress.Done, Converter={StaticResource doneToColor}}"
+                     WidthRequest="200" HorizontalOptions="Center" />
     </VerticalStackLayout>
     
 </ContentPage>

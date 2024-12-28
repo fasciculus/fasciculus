@@ -2,7 +2,7 @@
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Services;
-using Fasciculus.Maui.Support;
+using Fasciculus.Maui.Support.Progressing;
 using Fasciculus.Threading;
 
 namespace Fasciculus.Eve.PageModels
@@ -13,43 +13,46 @@ namespace Fasciculus.Eve.PageModels
         private readonly INavigator navigator;
 
         [ObservableProperty]
-        public partial WorkState Data { get; private set; }
+        public partial string State { get; private set; }
 
-        [ObservableProperty]
-        public partial WorkState Universe { get; private set; }
-
-        [ObservableProperty]
-        public partial WorkState Navigation { get; private set; }
+        public ProgressBarProgress Progress { get; }
 
         public LoadingPageModel(IEveResources resources, INavigator navigator)
         {
             this.resources = resources;
             this.navigator = navigator;
-            Data = WorkState.Pending;
-            Universe = WorkState.Pending;
-            Navigation = WorkState.Pending;
+
+            State = string.Empty;
+            Progress = new();
         }
 
         public void OnLoaded()
         {
             Tasks.LongRunning(LoadResources)
-                .ContinueWith(_ => Tasks.Sleep(500))
                 .ContinueWith(_ => Tasks.Wait(navigator.GoTo("//Info")));
         }
 
         private void LoadResources()
         {
-            Data = WorkState.Working;
+            State = "Common Data";
+            Progress.Begin(4);
+            Progress.Report(1);
             Tasks.Wait(resources.Data);
-            Data = WorkState.Done;
+            Tasks.Sleep(250);
 
-            Universe = WorkState.Working;
+            State = "Universe";
+            Progress.Report(1);
             Tasks.Wait(resources.Universe);
-            Universe = WorkState.Done;
+            Tasks.Sleep(250);
 
-            Navigation = WorkState.Working;
+            State = "Navigation";
+            Progress.Report(1);
             Tasks.Wait(resources.Navigation);
-            Navigation = WorkState.Done;
+            Tasks.Sleep(250);
+
+            State = "Done";
+            Progress.End();
+            Tasks.Sleep(500);
         }
     }
 }
