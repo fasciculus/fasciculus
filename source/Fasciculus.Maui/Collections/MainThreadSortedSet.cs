@@ -6,7 +6,7 @@ using System.Collections.Specialized;
 namespace Fasciculus.Maui.Collections
 {
     /// <summary>
-    /// An observable sorted set propagating events on the main thread
+    /// An observable sorted set propagating events on the main thread.
     /// </summary>
     public class MainThreadSortedSet<T> : ObservableSortedSet<T>
     {

@@ -7,8 +7,5 @@ public partial class MainPage : ContentPage
         InitializeComponent();
 
         BindingContext = model;
-
-        model.CV1 = cv1;
-        model.CV2 = cv2;
     }
 }

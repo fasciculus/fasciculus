@@ -19,6 +19,18 @@ namespace Fasciculus.Support
             => new();
 
         /// <summary>
+        /// Creates a new <see cref="InvalidOperationException"/>.
+        /// </summary>
+        public static InvalidOperationException InvalidOperation()
+            => new();
+
+        /// <summary>
+        /// Creates a new <see cref="ArgumentException"/>.
+        /// </summary>
+        public static ArgumentException Argument()
+            => new();
+
+        /// <summary>
         /// Creates a new <see cref="IndexOutOfRangeException"/>.
         /// </summary>
         public static IndexOutOfRangeException IndexOutOfRange()

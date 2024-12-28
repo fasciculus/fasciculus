@@ -34,20 +34,17 @@ namespace Fasciculus.Eve.Assets.Services
 
         private void Create()
         {
-            //Task<EveData.Data> data = convertData.Data;
-            //Task<EveUniverse.Data> universe = convertUniverse.Universe;
-            //Task<EveNavigation.Data> navigation = createNavigation.Navigation;
-            //Task<List<FileInfo>> images = createImages.FilesCreated;
+            Task<EveData.Data> data = convertData.Data;
+            Task<EveUniverse.Data> universe = convertUniverse.Universe;
+            Task<EveNavigation.Data> navigation = createNavigation.Navigation;
+            Task<List<FileInfo>> images = createImages.FilesCreated;
 
-            //Task.WaitAll([data, universe, navigation, images]);
-            //Task.WaitAll([images]);
+            Task.WaitAll([data, universe, navigation, images]);
 
-            //WriteData(data.Result).Apply(changedResources.Add);
-            //WriteUniverse(universe.Result).Apply(changedResources.Add);
-            //WriteNavigation(navigation.Result).Apply(changedResources.Add);
-            //images.Result.Apply(changedResources.Add);
-            changedResources.Add(assetsDirectories.Resources.File("foo"));
-            changedResources.Add(assetsDirectories.Resources.File("bar"));
+            WriteData(data.Result).Apply(changedResources.Add);
+            WriteUniverse(universe.Result).Apply(changedResources.Add);
+            WriteNavigation(navigation.Result).Apply(changedResources.Add);
+            images.Result.Apply(changedResources.Add);
         }
 
         public Task CreateAsync()

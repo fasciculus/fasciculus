@@ -1,54 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Assets.Services;
+using Fasciculus.Maui.Collections;
 using Fasciculus.Maui.Support.Progressing;
-using Fasciculus.Support;
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 
 namespace Fasciculus.Eve.Assets.PageModels
 {
-    public class NotifyingCollection<T> : ObservableCollection<T>
-    {
-        public NotifyingCollection(IEnumerable<T> values, INotifyCollectionChanged notifier)
-            : base(values)
-        {
-            notifier.CollectionChanged += Notifier_CollectionChanged;
-        }
-
-        private void Notifier_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    Add(e.NewItems, e.NewStartingIndex);
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    Remove(e.OldItems, e.OldStartingIndex);
-                    break;
-            }
-        }
-
-        private void Add(IList? items, int startingIndex)
-        {
-            if (items is null) { return; }
-
-            for (int i = 0; i < items.Count; ++i)
-            {
-                T item = (T)Cond.NotNull(items[i]);
-
-                InsertItem(startingIndex + i, item);
-            }
-        }
-
-        private void Remove(IList? oldItems, int startingIndex)
-        {
-            throw Ex.NotImplemented();
-        }
-    }
-
     public partial class MainPageModel : ObservableObject
     {
         private readonly ICreateResources createResources;
@@ -77,14 +34,9 @@ namespace Fasciculus.Eve.Assets.PageModels
         public ProgressBarProgress CopyImages { get; }
         public ProgressBarProgress CreateImages { get; }
 
-        public ChangedResourcesSet ChangedResources { get; }
-        public ObservableCollection<string> ChangedResources2 { get; }
-        public NotifyingCollection<string> ChangedResources3 { get; }
+        public MainThreadNotifyingEnumerable<string> ChangedResources { get; }
 
-        public CollectionView? CV1 { get; set; }
-        public CollectionView? CV2 { get; set; }
-
-        public MainPageModel(IAssetsProgress assetsProgress, ICreateResources createResources, ChangedResourcesSet changedResources)
+        public MainPageModel(ICreateResources createResources, IAssetsProgress assetsProgress, ChangedResourcesSet changedResources)
         {
             this.createResources = createResources;
 
@@ -112,20 +64,7 @@ namespace Fasciculus.Eve.Assets.PageModels
             CopyImages = assetsProgress.CopyImages;
             CreateImages = assetsProgress.CreateImages;
 
-            ChangedResources = changedResources;
-            ChangedResources.CollectionChanged += ChangedResources_CollectionChanged;
-
-            ChangedResources2 = [];
-            ChangedResources3 = new(ChangedResources, ChangedResources);
-        }
-
-        private void ChangedResources_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            ChangedResources2.Clear();
-            //ChangedResources3.Clear();
-
-            ChangedResources.Apply(ChangedResources2.Add);
-            //ChangedResources.Apply(ChangedResources3.Add);
+            ChangedResources = new(changedResources);
         }
 
         [RelayCommand]

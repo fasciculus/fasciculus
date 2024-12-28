@@ -10,7 +10,8 @@ namespace Fasciculus.Collections
     /// Observable and task-safe sorted set.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ObservableSortedSet<T> : TaskSafeSortedSet<T>, INotifyPropertyChanged, INotifyCollectionChanged
+    public class ObservableSortedSet<T> : TaskSafeSortedSet<T>, INotifyPropertyChanged, INotifyingEnumerable<T>
+        where T : notnull
     {
         private readonly TaskSafeMutex mutex = new();
 
