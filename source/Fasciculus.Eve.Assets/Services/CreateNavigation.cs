@@ -12,7 +12,7 @@ namespace Fasciculus.Eve.Assets.Services
 
     public class CreateNavigation : ICreateNavigation
     {
-        private static SortedSet<string> ALLOWED_REGIONS =
+        private static readonly SortedSet<string> ALLOWED_REGIONS =
             [
                 // Caldari
                 "Black Rise", "Lonetrek", "The Citadel", "The Forge",
