@@ -40,6 +40,7 @@ namespace Fasciculus.FileServer
                 return;
             }
 
+            context.Response.StatusCode = 200;
             context.Request.Path += ".html";
 
             await next.Invoke();
