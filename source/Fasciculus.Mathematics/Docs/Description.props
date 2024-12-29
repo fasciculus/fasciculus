@@ -3,11 +3,8 @@
 
   <PropertyGroup>
     <Description>
-      This package includes a bunch of utilities:
-      - Algorithms
-      - Collections
-      - IO
-      - Synchronization
+      This package includes a bunch of mathematical utilities:
+      - Linear Algebra
       See the README for more information.
     </Description>
   </PropertyGroup>

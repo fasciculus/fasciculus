@@ -24,10 +24,6 @@ This package includes a bunch of utilities. Not all of them are listed below.
 - Support for embedded resources.
 - Extensions for `FileInfo`.
 
-## Mathematics
-
-- Sparse vectors and matrices for `bool` and `short`.
-
 ## Net
 
 - Factories for `HttpClientHandler` and `HttpClient`.

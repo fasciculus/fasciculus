@@ -3,7 +3,7 @@ using Fasciculus.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fasciculus.Mathematics
+namespace Fasciculus.Mathematics.LinearAlgebra
 {
     /// <summary>
     /// Immutable sparse vector of <see cref="short"/>.

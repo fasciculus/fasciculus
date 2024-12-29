@@ -1,5 +1,5 @@
 ﻿using Fasciculus.IO;
-using Fasciculus.Mathematics;
+using Fasciculus.Mathematics.LinearAlgebra;
 using System.Collections.Generic;
 using System.Linq;
 

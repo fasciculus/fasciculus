@@ -4,7 +4,6 @@
     <TargetFrameworks>netstandard2.0;$(FasciculusDotNetTfm);$(FasciculusPlatforms)</TargetFrameworks>
     <RootNamespace>Fasciculus</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);CS1591x</NoWarn>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 

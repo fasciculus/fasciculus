@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fasciculus.Mathematics
+namespace Fasciculus.Mathematics.LinearAlgebra
 {
     /// <summary>
     /// Sparse matrix of <see cref="short"/>.
