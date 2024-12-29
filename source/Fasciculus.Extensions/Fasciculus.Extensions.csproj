@@ -12,6 +12,7 @@
   <PropertyGroup>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>fasciculus.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
@@ -26,6 +27,7 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="Resources/fasciculus.png" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 </Project>
