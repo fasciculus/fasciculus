@@ -87,13 +87,8 @@ namespace Fasciculus.Collections
         {
             using Locker locker = Locker.Lock(mutex);
 
-            while (Count > 0)
-            {
-                T item = this.First();
-                int index = DoRemove(item);
-
-                OnRemoved(item, index);
-            }
+            base.Clear();
+            OnCleared();
         }
 
         /// <summary>
@@ -204,6 +199,14 @@ namespace Fasciculus.Collections
         private void OnRemoved(T item, int index)
         {
             OnCollectionChanged(NotifyCollectionChangedAction.Remove, item, index);
+            OnPropertyChanged(nameof(Count));
+        }
+
+        private void OnCleared()
+        {
+            NotifyCollectionChangedEventArgs args = new(NotifyCollectionChangedAction.Reset);
+
+            OnCollectionChanged(args);
             OnPropertyChanged(nameof(Count));
         }
 

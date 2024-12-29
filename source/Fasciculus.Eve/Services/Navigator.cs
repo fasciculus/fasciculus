@@ -1,3 +1,0 @@
-﻿namespace Fasciculus.Eve.Services
-{
-}

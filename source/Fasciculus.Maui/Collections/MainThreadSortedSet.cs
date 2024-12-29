@@ -9,6 +9,7 @@ namespace Fasciculus.Maui.Collections
     /// An observable sorted set propagating events on the main thread.
     /// </summary>
     public class MainThreadSortedSet<T> : ObservableSortedSet<T>
+        where T : notnull
     {
         /// <summary>
         /// Initializes a set with the given <paramref name="collection"/> and the given <paramref name="comparer"/>.

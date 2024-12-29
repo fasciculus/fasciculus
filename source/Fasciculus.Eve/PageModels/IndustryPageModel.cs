@@ -3,9 +3,11 @@ using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Eve.Support;
+using Fasciculus.Maui.Collections;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Support.Progressing;
 using Fasciculus.Threading;
+using System.Collections.Specialized;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.PageModels
@@ -40,11 +42,10 @@ namespace Fasciculus.Eve.PageModels
         [ObservableProperty]
         public partial bool IncludeT2 { get; set; }
 
-        [ObservableProperty]
-        public partial bool HasProductions { get; private set; }
+        public MainThreadNotifyingEnumerable<EveProduction> Productions { get; }
 
         [ObservableProperty]
-        public partial EveProduction[] Productions { get; private set; }
+        public partial bool HasProductions { get; private set; }
 
         [ObservableProperty]
         public partial bool HasProduction { get; private set; }
@@ -94,7 +95,6 @@ namespace Fasciculus.Eve.PageModels
             this.settings.PropertyChanged += OnSettingsChanged;
 
             this.industry = industry;
-            this.industry.PropertyChanged += OnIndustryChanged;
 
             this.skillProvider = skillProvider;
             this.settings.PropertyChanged += OnSkillsChanged;
@@ -110,8 +110,11 @@ namespace Fasciculus.Eve.PageModels
 
             Inputs = [];
             SkillRequirements = [];
-            HasProductions = false;
-            Productions = [];
+
+            Productions = new(industry.Productions);
+            HasProductions = Productions.Count > 0;
+            HasProduction = false;
+            Productions.CollectionChanged += OnProductionsChanged;
 
             BuyOrdersProgress = progress.BuyOrdersProgress;
             SellOrdersProgress = progress.SellOrdersProgress;
@@ -147,16 +150,25 @@ namespace Fasciculus.Eve.PageModels
             SalesTaxRate = sellTaxRate.ToString("0.0") + " %";
         }
 
-        private void OnIndustryChanged(object? sender, PropertyChangedEventArgs ev)
-        {
-            Productions = industry.Productions;
-            HasProductions = Productions.Length > 0;
-            Production = HasProductions ? Productions[0] : null;
-        }
-
         private void OnSkillsChanged(object? sender, PropertyChangedEventArgs ev)
         {
             UpdateSkills();
+        }
+
+        private void OnProductionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            HasProductions = Productions.Count > 0;
+
+            if (HasProductions)
+            {
+                Production = Productions[0];
+            }
+            else
+            {
+                Production = null;
+            }
+
+            UpdateProduction();
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs ev)
@@ -227,7 +239,7 @@ namespace Fasciculus.Eve.PageModels
             {
                 EveSkillRequirements requirements = new(skillProvider, Production.Blueprint.Manufacturing);
 
-                SkillRequirements = requirements.OrderBy(x => x.Name).ToArray();
+                SkillRequirements = [.. requirements.OrderBy(x => x.Name)];
             }
         }
 
@@ -261,8 +273,7 @@ namespace Fasciculus.Eve.PageModels
             string[] lines = [.. Inputs.Select(x => $"{x.Type.Name} [{x.Quantity}]")];
             string text = string.Join(Environment.NewLine, lines);
 
-            return Clipboard.SetTextAsync(text)
-                .ContinueWith(_ => Tasks.Sleep(200));
+            return Clipboard.SetTextAsync(text).ContinueWith(_ => Tasks.Sleep(200));
         }
     }
 }

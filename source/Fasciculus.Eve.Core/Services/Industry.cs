@@ -1,34 +1,62 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Fasciculus.Collections;
 using Fasciculus.Eve.Models;
-using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Support;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Eve.Services
 {
-    public interface IIndustry : INotifyPropertyChanged
+    public interface IIndustry
     {
         public EveStation Hub { get; }
 
-        public EveProduction[] Productions { get; }
+        public ObservableSortedSet<EveProduction> Productions { get; }
 
         public Task StartAsync();
     }
 
-    public partial class Industry : MainThreadObservable, IIndustry
+    public partial class Industry : IIndustry
     {
+        public class ProductionComparer : IComparer<EveProduction>
+        {
+            public int Compare(EveProduction? x, EveProduction? y)
+            {
+                EveProduction lhs = Cond.NotNull(x);
+                EveProduction rhs = Cond.NotNull(y);
+                int result = rhs.Profit.CompareTo(lhs.Profit);
+
+                if (result == 0)
+                {
+                    result = rhs.Margin.CompareTo(lhs.Margin);
+                }
+
+                if (result == 0)
+                {
+                    result = lhs.BlueprintPrice.CompareTo(rhs.BlueprintPrice);
+                }
+
+                if (result == 0)
+                {
+                    result = lhs.Name.CompareTo(rhs.Name);
+                }
+
+                return result;
+            }
+        }
+
         private const int SecondsPerDay = 24 * 60 * 60;
+        private static readonly ProductionComparer Comparer = new();
 
         private readonly TaskSafeMutex mutex = new();
 
         private readonly EveIndustrySettings settings;
         private readonly ISkillProvider skills;
         private readonly IEsiClient esiClient;
+        private readonly IEveProvider provider;
         private readonly EveProgress progress;
 
         private readonly EveBlueprints blueprints;
@@ -43,14 +71,19 @@ namespace Fasciculus.Eve.Services
         private EveStationBuyOrders hubBuyOrders;
         private EveStationSellOrders hubSellOrders;
 
-        [ObservableProperty]
-        public partial EveProduction[] Productions { get; set; }
+        private double systemCostIndex;
+        private double salesTaxRate;
+
+        private EveBlueprint[] candidates = [];
+
+        public ObservableSortedSet<EveProduction> Productions { get; }
 
         public Industry(IEveSettings settings, ISkillProvider skills, IEsiClient esiClient, IEveProvider provider, EveProgress progress)
         {
             this.settings = settings.IndustrySettings;
             this.skills = skills;
             this.esiClient = esiClient;
+            this.provider = provider;
             this.progress = progress;
 
             blueprints = provider.Blueprints;
@@ -59,21 +92,17 @@ namespace Fasciculus.Eve.Services
             hubBuyOrders = new([], Hub);
             hubSellOrders = new([], Hub);
 
-            Productions = [];
+            Productions = new(Comparer);
 
             this.settings.PropertyChanged += (_, _) => { Reset(); };
             this.skills.PropertyChanged += (_, _) => { Reset(); };
         }
 
         public Task StartAsync()
-        {
-            return Tasks.LongRunning(Start);
-        }
+            => Tasks.LongRunning(Start);
 
         private void Reset()
-        {
-            Productions = [];
-        }
+            => Productions.Clear();
 
         private void Start()
         {
@@ -82,17 +111,10 @@ namespace Fasciculus.Eve.Services
             Reset();
 
             RefreshEsiData();
+            RefreshParameters();
+            RefreshCandidates();
 
-            EveBlueprint[] candidates = GetCandidates();
-            double costIndex = industryIndices[Hub.Moon.Planet.SolarSystem];
-            double salesTaxRate = settings.SalesTaxRate / 1000.0;
-
-            EveProduction[] productions = CreateProductions(candidates, costIndex, salesTaxRate);
-            int count = Math.Min(20, productions.Length);
-
-            Tasks.Sleep(333);
-
-            Productions = productions.OrderByDescending(x => x.Profit).Take(count).ToArray();
+            FindProductions();
         }
 
         private void RefreshEsiData()
@@ -122,14 +144,68 @@ namespace Fasciculus.Eve.Services
             hubSellOrders = regionSellOrders[Hub];
         }
 
-        private EveProduction[] CreateProductions(EveBlueprint[] blueprints, double systemCostIndex, double salesTaxRate)
+        private void RefreshParameters()
         {
-            return blueprints
-                .Select(x => CreateProduction(x, systemCostIndex, salesTaxRate))
-                .ToArray();
+            EveSolarSystems solarSystems = provider.SolarSystems;
+            string solarSystemName = solarSystems.Contains(settings.SolarSystem) ? settings.SolarSystem : "Jita";
+            EveSolarSystem solarSystem = solarSystems[solarSystemName];
+
+            systemCostIndex = industryIndices[solarSystem];
+            salesTaxRate = settings.SalesTaxRate / 1000.0;
         }
 
-        private EveProduction CreateProduction(EveBlueprint blueprint, double systemCostIndex, double salesTaxRate)
+        private void RefreshCandidates()
+        {
+            int maxVolume = settings.MaxVolume;
+
+            candidates = [.. blueprints];
+
+            candidates = [.. candidates.Where(x => x.Manufacturing.Time <= SecondsPerDay)];
+            candidates = [.. candidates.Where(x => x.Manufacturing.Products.All(y => y.Type.Volume <= maxVolume))];
+
+            EveBlueprint[] buyable = [.. candidates.Where(x => marketPrices.Contains(x.Type))];
+            EveBlueprint[] t2 = [.. candidates.Where(x => x.Manufacturing.Products.All(y => y.Type.MetaGroup == 2))];
+
+            candidates = settings.IncludeT2 ? [.. buyable.Concat(t2)] : buyable;
+
+            if (!settings.IgnoreSkills)
+            {
+                candidates = [.. candidates.Where(x => skills.Fulfills(x.Manufacturing.RequiredSkills))];
+            }
+
+            candidates = [.. candidates.Where(x => x.Manufacturing.Materials.All(y => hubSellOrders.Contains(y.Type)))];
+        }
+
+        private void AddProduction(EveProduction production)
+        {
+            if (Productions.Count < 20)
+            {
+                Productions.Add(production);
+            }
+            else
+            {
+                if (Comparer.Compare(production, Productions.Last()) < 0)
+                {
+                    Productions.Remove(Productions.Last());
+                    Productions.Add(production);
+                }
+            }
+        }
+
+        private void FindProductions()
+        {
+            foreach (EveBlueprint blueprint in candidates)
+            {
+                EveProduction production = CreateProduction(blueprint);
+
+                if (production.Profit > 0)
+                {
+                    AddProduction(production);
+                }
+            }
+        }
+
+        private EveProduction CreateProduction(EveBlueprint blueprint)
         {
             double blueprintPrice = marketPrices[blueprint.Type].AveragePrice;
             EveManufacturing manufacturing = blueprint.Manufacturing;
@@ -137,22 +213,11 @@ namespace Fasciculus.Eve.Services
             double outputVolume = blueprint.Manufacturing.Products.Select(x => x.Quantity * x.Type.Volume).Sum();
             int runsByVolume = (int)Math.Floor(settings.MaxVolume / outputVolume);
             int runs = Math.Min(runsByTime, runsByVolume);
-            EveProductionInput[] inputs = CreateInputs(manufacturing.Materials, runs);
-            EveProductionOutput[] outputs = CreateOutputs(manufacturing.Products, runs);
-            double jobCost = GetJobCost(inputs, systemCostIndex);
-            EveProduction production = new(blueprint, blueprintPrice, runs, inputs, outputs, jobCost, salesTaxRate);
+            EveProductionInput[] inputs = [.. manufacturing.Materials.Select(x => CreateInput(x, runs))];
+            EveProductionOutput[] outputs = [.. manufacturing.Products.Select(x => CreateOutput(x, runs))];
+            double jobCost = GetJobCost(inputs);
 
-            return production;
-        }
-
-        private EveProductionInput[] CreateInputs(IEnumerable<EveMaterial> materials, int runs)
-        {
-            return materials.Select(x => CreateInput(x, runs)).ToArray();
-        }
-
-        private EveProductionOutput[] CreateOutputs(IEnumerable<EveMaterial> products, int runs)
-        {
-            return products.Select(x => CreateOutput(x, runs)).ToArray();
+            return new(blueprint, blueprintPrice, runs, inputs, outputs, jobCost, salesTaxRate);
         }
 
         private EveProductionInput CreateInput(EveMaterial material, int runs)
@@ -175,36 +240,11 @@ namespace Fasciculus.Eve.Services
             return new(type, quantity, income);
         }
 
-        private double GetJobCost(EveProductionInput[] inputs, double systemCostIndex)
+        private double GetJobCost(EveProductionInput[] inputs)
         {
             double itemValue = inputs.Select(x => x.Quantity * marketPrices[x.Type].AdjustedPrice).Sum();
 
             return itemValue * (systemCostIndex + 0.0025 + 0.04);
-        }
-
-        private EveBlueprint[] GetCandidates()
-        {
-            int maxVolume = settings.MaxVolume;
-
-            EveBlueprint[] candidates = [.. blueprints];
-
-            candidates = [.. candidates.Where(x => x.Manufacturing.Time <= SecondsPerDay)];
-            candidates = [.. candidates.Where(x => x.Manufacturing.Products.All(y => y.Type.Volume <= maxVolume))];
-
-            EveBlueprint[] t1 = [.. candidates.Where(x => x.Manufacturing.Products.All(y => y.Type.MetaGroup == 1))];
-            EveBlueprint[] t2 = [.. candidates.Where(x => x.Manufacturing.Products.All(y => y.Type.MetaGroup == 2))];
-
-            t1 = [.. t1.Where(x => marketPrices.Contains(x.Type))];
-            candidates = settings.IncludeT2 ? [.. t1.Concat(t2)] : t1;
-
-            if (!settings.IgnoreSkills)
-            {
-                candidates = [.. candidates.Where(x => skills.Fulfills(x.Manufacturing.RequiredSkills))];
-            }
-
-            candidates = [.. candidates.Where(x => x.Manufacturing.Materials.All(y => hubSellOrders.Contains(y.Type)))];
-
-            return candidates;
         }
     }
 }

@@ -500,6 +500,7 @@ namespace Fasciculus.Eve.Models
         public int Count => solarSystems.Length;
 
         public bool Contains(uint id) => byId.Value.ContainsKey(id);
+        public bool Contains(string name) => byName.Value.ContainsKey(name);
 
         public EveSolarSystem this[uint id] => byId.Value[id];
         public EveSolarSystem this[string name] => byName.Value[name];
