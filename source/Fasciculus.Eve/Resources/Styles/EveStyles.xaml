@@ -6,13 +6,6 @@
     xmlns:fasciculus="http://fasciculus.github.io/2024/maui"
     xmlns:controls="clr-namespace:Fasciculus.Eve.Controls">
 
-    <Style TargetType="fasciculus:LongProgressInfoBar">
-        <Setter Property="BackgroundColor" Value="LightGray" />
-        <Setter Property="MinimumHeightRequest" Value="8" />
-        <Setter Property="BusyColor" Value="#FFD0D000" />
-        <Setter Property="DoneColor" Value="LightGreen" />
-    </Style>
-
     <Style TargetType="fasciculus:WorkStateLabel">
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />

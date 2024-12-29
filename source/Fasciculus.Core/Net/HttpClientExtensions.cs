@@ -4,8 +4,14 @@ using System.Threading.Tasks;
 
 namespace System.Net.Http
 {
+    /// <summary>
+    /// Extensions for <see cref="HttpClient"/>
+    /// </summary>
     public static class HttpClientExtensions
     {
+        /// <summary>
+        /// Returns the response headers of a "HEAD" request.
+        /// </summary>
         public static async Task<HttpContentHeaders> HeadAsync(this HttpClient httpClient, Uri? requestUri)
         {
             using HttpRequestMessage request = new(HttpMethod.Head, requestUri);
@@ -16,6 +22,9 @@ namespace System.Net.Http
             return response.Content.Headers;
         }
 
+        /// <summary>
+        /// Returns the response headers of a "HEAD" request.
+        /// </summary>
         public static HttpContentHeaders Head(this HttpClient httpClient, Uri? requestUri)
             => Tasks.Wait(httpClient.HeadAsync(requestUri));
     }

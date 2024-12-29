@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace Fasciculus.Collections
 {
+    /// <summary>
+    /// Type-safe converter for <see cref="NotifyCollectionChangedEventArgs"/>.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class TypedNotifyCollectionChangedEventArgs<T> : EventArgs
         where T : notnull
     {

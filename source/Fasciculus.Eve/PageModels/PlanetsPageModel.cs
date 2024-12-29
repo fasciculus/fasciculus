@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
-using Fasciculus.Support;
 using System.ComponentModel;
 
 namespace Fasciculus.Eve.PageModels
@@ -27,12 +26,6 @@ namespace Fasciculus.Eve.PageModels
 
         [ObservableProperty]
         public partial int HoursPerDay { get; private set; }
-
-        [ObservableProperty]
-        public partial LongProgressInfo BuyProgress { get; private set; }
-
-        [ObservableProperty]
-        public partial LongProgressInfo SellProgress { get; private set; }
 
         [ObservableProperty]
         public partial bool HasProductions { get; private set; }
@@ -64,8 +57,7 @@ namespace Fasciculus.Eve.PageModels
             SalesTaxRate = string.Empty;
             ProductionLines = this.settings.ProductionLines;
             HoursPerDay = this.settings.HoursPerDay;
-            BuyProgress = LongProgressInfo.Start;
-            SellProgress = LongProgressInfo.Start;
+
             HasProductions = false;
             Productions = [];
             Production = null;
@@ -103,9 +95,6 @@ namespace Fasciculus.Eve.PageModels
 
         private void OnPlanetsChanged(object? sender, PropertyChangedEventArgs ev)
         {
-            BuyProgress = planets.BuyProgressInfo;
-            SellProgress = planets.SellProgressInfo;
-
             Productions = planets.Productions;
             HasProductions = Productions.Length > 0;
             Production = HasProductions ? Productions[0] : null;

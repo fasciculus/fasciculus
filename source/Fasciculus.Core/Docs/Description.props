@@ -5,9 +5,10 @@
     <Description>
       This package includes a bunch of utilities:
       - Algorithms
+      - Collections
       - IO
+      - Mathematics
       - Synchronization
-      
       See the README for more information.
     </Description>
   </PropertyGroup>

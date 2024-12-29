@@ -23,11 +23,13 @@
 
   <Import Project="../../MultiTargeting.props" />
 
+  <!--
   <Target Name="DisableWinRTSourceGenerator" BeforeTargets="CoreCompile">
     <ItemGroup>
       <Analyzer Remove="@(Analyzer)" Condition="'%(FileName)%(Extension)' == 'WinRT.SourceGenerator.dll'" />
     </ItemGroup>
   </Target>
+  -->
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="/" />
