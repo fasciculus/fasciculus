@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>$(FasciculusDotNetTfm)</TargetFramework>
+    <TargetFrameworks>$(FasciculusDotNetTfm);$(FasciculusPlatforms)</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <PublishAot>true</PublishAot>
     <InvariantGlobalization>true</InvariantGlobalization>

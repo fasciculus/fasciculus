@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\source\fasciculus\fasciculus\source\Fasciculus.FileServer\bin\Release\net9.0\publish\</_PublishTargetUrl>
+    <History>True|2024-12-29T17:47:06.7384472Z||;False|2024-12-29T18:37:01.9400561+01:00||;False|2024-12-29T18:15:21.4310565+01:00||;False|2024-12-29T18:11:45.0573688+01:00||;False|2024-12-29T18:10:48.2408781+01:00||;False|2024-12-29T18:10:13.1106640+01:00||;False|2024-12-29T18:07:05.8031697+01:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>
