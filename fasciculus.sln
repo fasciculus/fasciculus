@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.FileServer", "so
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Mathematics", "source\Fasciculus.Mathematics\Fasciculus.Mathematics.csproj", "{8F57EE95-6F1F-4035-8428-A3B9D3FE544D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Assets", "source\Fasciculus.Assets\Fasciculus.Assets.csproj", "{61A57DD0-4381-43DC-86F4-700FE0A8D979}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,10 @@ Global
 		{8F57EE95-6F1F-4035-8428-A3B9D3FE544D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F57EE95-6F1F-4035-8428-A3B9D3FE544D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F57EE95-6F1F-4035-8428-A3B9D3FE544D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61A57DD0-4381-43DC-86F4-700FE0A8D979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61A57DD0-4381-43DC-86F4-700FE0A8D979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61A57DD0-4381-43DC-86F4-700FE0A8D979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61A57DD0-4381-43DC-86F4-700FE0A8D979}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
