@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Fasciculus.FileServer (fasciculus.github.io)": {
+      "commandName": "Project",
+      "commandLineArgs": "urls=\"http://127.0.0.1:8000\" webroot=\".\"",
+      "workingDirectory": "..\\..\\..\\fasciculus.github.io",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:8000",
+      "hotReloadEnabled": false
+    }
+  }
+}
