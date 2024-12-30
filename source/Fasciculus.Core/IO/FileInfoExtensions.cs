@@ -233,14 +233,24 @@ namespace System.IO
         /// Writes the given <paramref name="bytes"/> to the given <paramref name="file"/> if
         /// <see cref="IsDifferent(FileInfo, byte[])"/> returns <c>true</c>.
         /// </summary>
-        public static FileInfo WriteIfDifferent(this FileInfo file, byte[] bytes)
+        public static FileInfo WriteIfDifferent(this FileInfo file, byte[] bytes, out bool written)
         {
+            written = false;
+
             if (file.IsDifferent(bytes))
             {
                 file.WriteAllBytes(bytes);
+                written = true;
             }
 
             return file.Update();
         }
+
+        /// <summary>
+        /// Writes the given <paramref name="bytes"/> to the given <paramref name="file"/> if
+        /// <see cref="IsDifferent(FileInfo, byte[])"/> returns <c>true</c>.
+        /// </summary>
+        public static FileInfo WriteIfDifferent(this FileInfo file, byte[] bytes)
+            => file.WriteIfDifferent(bytes, out bool _);
     }
 }
