@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using Fasciculus.Algorithms;
+using System.Collections.Generic;
+using System.Text;
 
 namespace System.IO
 {
@@ -8,14 +10,26 @@ namespace System.IO
     public static class FileInfoExtensions
     {
         /// <summary>
+        /// Calls <c>file.Refresh()</c> and returns the same file.
+        /// </summary>
+        public static FileInfo Update(this FileInfo file)
+        {
+            file.Refresh();
+
+            return file;
+        }
+
+        /// <summary>
         /// Deletes the given <paramref name="file"/> if it exists.
         /// </summary>
-        public static void DeleteIfExists(this FileInfo file)
+        public static FileInfo DeleteIfExists(this FileInfo file)
         {
-            if (File.Exists(file.FullName))
+            if (file.Update().Exists)
             {
                 file.Delete();
             }
+
+            return file.Update();
         }
 
         /// <summary>
@@ -36,6 +50,13 @@ namespace System.IO
         /// </summary>
         public static bool IsOlderThan(this FileInfo file, DateTime lastWriteTimeUtc)
             => file.LastWriteTimeUtc < lastWriteTimeUtc;
+
+        /// <summary>
+        /// Returns whether given <paramref name="file"/>'s last write time is older than the given <paramref name="target"/>'s
+        /// last write time.
+        /// </summary>
+        public static bool IsOlderThan(this FileInfo file, FileInfo target)
+            => !target.Exists || file.IsOlderThan(target.LastWriteTimeUtc);
 
         /// <summary>
         /// Returns <c>true</c> if:
@@ -65,7 +86,7 @@ namespace System.IO
         {
             file.Directory?.CreateIfNotExists();
 
-            return file;
+            return file.Update();
         }
 
         /// <summary>
@@ -83,8 +104,12 @@ namespace System.IO
         /// The encoding defaults to <see cref="Encoding.UTF8"/>.
         /// </para>
         /// </summary>
-        public static void WriteAllText(this FileInfo file, string text, Encoding? encoding = null)
-            => File.WriteAllText(file.CreateDirectoryIfNotExists().FullName, text, encoding ?? Encoding.UTF8);
+        public static FileInfo WriteAllText(this FileInfo file, string text, Encoding? encoding = null)
+        {
+            File.WriteAllText(file.CreateDirectoryIfNotExists().DeleteIfExists().FullName, text, encoding ?? Encoding.UTF8);
+
+            return file.Update();
+        }
 
         /// <summary>
         /// Reads all lines from the given <paramref name="file"/> using the given <paramref name="encoding"/>.
@@ -96,6 +121,26 @@ namespace System.IO
             => File.ReadAllLines(file.FullName, encoding ?? Encoding.UTF8);
 
         /// <summary>
+        /// Writes the given <paramref name="lines"/> to the given <paramref name="file"/> using the given <paramref name="encoding"/>.
+        /// </summary>
+        public static FileInfo WriteAllLines(this FileInfo file, string[] lines, Encoding? encoding = null)
+        {
+            File.WriteAllLines(file.CreateDirectoryIfNotExists().DeleteIfExists().FullName, lines, encoding ?? Encoding.UTF8);
+
+            return file.Update();
+        }
+
+        /// <summary>
+        /// Writes the given <paramref name="lines"/> to the given <paramref name="file"/> using the given <paramref name="encoding"/>.
+        /// </summary>
+        public static FileInfo WriteAllLines(this FileInfo file, IEnumerable<string> lines, Encoding? encoding = null)
+        {
+            File.WriteAllLines(file.CreateDirectoryIfNotExists().DeleteIfExists().FullName, lines, encoding ?? Encoding.UTF8);
+
+            return file.Update();
+        }
+
+        /// <summary>
         /// Reads all bytes from the given <paramref name="file"/>.
         /// </summary>
         public static byte[] ReadAllBytes(this FileInfo file)
@@ -104,8 +149,12 @@ namespace System.IO
         /// <summary>
         /// Writes the given <paramref name="bytes"/> to the given <paramref name="file"/>. 
         /// </summary>
-        public static void WriteAllBytes(this FileInfo file, byte[] bytes)
-            => File.WriteAllBytes(file.CreateDirectoryIfNotExists().FullName, bytes);
+        public static FileInfo WriteAllBytes(this FileInfo file, byte[] bytes)
+        {
+            File.WriteAllBytes(file.CreateDirectoryIfNotExists().DeleteIfExists().FullName, bytes);
+
+            return file.Update();
+        }
 
         /// <summary>
         /// Opens the given <paramref name="file"/> for reading and calls the given <paramref name="read"/> action to perform the actual
@@ -114,11 +163,13 @@ namespace System.IO
         /// The file is auto-closed after the read operation.
         /// </para>
         /// </summary>
-        public static void Read(this FileInfo file, Action<Stream> read)
+        public static FileInfo Read(this FileInfo file, Action<Stream> read)
         {
             using Stream stream = file.OpenRead();
 
             read(stream);
+
+            return file;
         }
 
         /// <summary>
@@ -150,12 +201,46 @@ namespace System.IO
         {
             file.DeleteIfExists();
 
-            using (Stream stream = file.CreateDirectoryIfNotExists().Create())
+            using (Stream stream = file.CreateDirectoryIfNotExists().DeleteIfExists().Create())
             {
                 write(stream);
             }
 
-            return new(file.FullName);
+            return file.Update();
+        }
+
+        /// <summary>
+        /// Returns <c>true</c> if:
+        /// <list type="bullet">
+        /// <item>the <paramref name="file"/> doesn't exist.</item>
+        /// <item>the <paramref name="file"/> has not the same length as the given <paramref name="bytes"/>.</item>
+        /// <item>the <paramref name="file"/>'s content differs from the given <paramref name="bytes"/>.</item>
+        /// </list>
+        /// </summary>
+        public static bool IsDifferent(this FileInfo file, byte[] bytes)
+        {
+            if (!file.Update().Exists || file.Length != bytes.Length)
+            {
+                return true;
+            }
+
+            byte[] existing = file.ReadAllBytes();
+
+            return !Equality.AreEqual(existing, bytes);
+        }
+
+        /// <summary>
+        /// Writes the given <paramref name="bytes"/> to the given <paramref name="file"/> if
+        /// <see cref="IsDifferent(FileInfo, byte[])"/> returns <c>true</c>.
+        /// </summary>
+        public static FileInfo WriteIfDifferent(this FileInfo file, byte[] bytes)
+        {
+            if (file.IsDifferent(bytes))
+            {
+                file.WriteAllBytes(bytes);
+            }
+
+            return file.Update();
         }
     }
 }
