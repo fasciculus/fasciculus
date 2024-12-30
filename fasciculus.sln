@@ -28,8 +28,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Steam.Tests", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Core.Tests", "source\Fasciculus.Core.Tests\Fasciculus.Core.Tests.csproj", "{5FDF13DC-8774-4DAB-A388-1269F82293FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauiApp1", "source\MauiApp1\MauiApp1.csproj", "{07AAB825-35A7-4C24-8127-D496F1A743A2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Eve.Assets", "source\Fasciculus.Eve.Assets\Fasciculus.Eve.Assets.csproj", "{1CC8DB81-B691-4BA4-923E-A2BD4D4CF49E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Maui", "source\Fasciculus.Maui\Fasciculus.Maui.csproj", "{1F7B8125-87D7-4DDD-B689-D883E177D8E9}"
@@ -82,10 +80,6 @@ Global
 		{5FDF13DC-8774-4DAB-A388-1269F82293FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FDF13DC-8774-4DAB-A388-1269F82293FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FDF13DC-8774-4DAB-A388-1269F82293FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{07AAB825-35A7-4C24-8127-D496F1A743A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07AAB825-35A7-4C24-8127-D496F1A743A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07AAB825-35A7-4C24-8127-D496F1A743A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07AAB825-35A7-4C24-8127-D496F1A743A2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1CC8DB81-B691-4BA4-923E-A2BD4D4CF49E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1CC8DB81-B691-4BA4-923E-A2BD4D4CF49E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CC8DB81-B691-4BA4-923E-A2BD4D4CF49E}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -7,7 +7,8 @@ namespace Fasciculus.Assets.Operations
     public static class CreateLogo
     {
         private static readonly FileInfo PngFile = AssetsDirectories.Documents.File("fasciculus.png");
-        private static readonly SKColor Color = new SKColor(48, 48, 160, 255);
+
+        private static readonly SKColor Color = new(48, 48, 160, 255);
 
         public static void Execute()
         {
@@ -45,10 +46,10 @@ namespace Fasciculus.Assets.Operations
             FillRect(canvas, 30, 22, 2, 1);
             FillRect(canvas, 31, 23, 1, 1);
 
-            using SKData data = bitmap.Encode(SKEncodedImageFormat.Png, 100);
-            using Stream stream = PngFile.OpenWrite();
+            using SKData pngData = bitmap.Encode(SKEncodedImageFormat.Png, 100);
+            using Stream pngStream = PngFile.OpenWrite();
 
-            data.SaveTo(stream);
+            pngData.SaveTo(pngStream);
         }
 
         private static void FillRect(SKCanvas canvas, int x, int y, int w, int h)
