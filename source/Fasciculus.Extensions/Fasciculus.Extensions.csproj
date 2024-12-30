@@ -6,8 +6,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <Import Project="Docs/Description.props" />
-  <Import Project="Docs/ReleaseNotes.props" />
+  <Import Project="Properties/Description.props" />
+  <Import Project="Properties/ReleaseNotes.props" />
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="/" />
-    <None Include="Resources/fasciculus.png" Pack="true" PackagePath="/" />
+    <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 </Project>
