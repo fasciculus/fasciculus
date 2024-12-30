@@ -3,10 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>$(FasciculusDotNetWindowsTfm)</TargetFrameworks>
     <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Svg.Skia" />
+    <PackageReference Include="SkiaSharp" />
   </ItemGroup>
 
   <ItemGroup>
