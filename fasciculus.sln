@@ -42,6 +42,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Mathematics", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Assets", "source\Fasciculus.Assets\Fasciculus.Assets.csproj", "{61A57DD0-4381-43DC-86F4-700FE0A8D979}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "source\WebApplication1\WebApplication1.csproj", "{B4EA4C12-2CA5-4BA2-B2DF-18C8C1E35C07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.GitHub.Io", "source\Fasciculus.GitHub.Io\Fasciculus.GitHub.Io.csproj", "{37AAF6C4-8BE8-4806-9AF0-31980C61D627}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +112,14 @@ Global
 		{61A57DD0-4381-43DC-86F4-700FE0A8D979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61A57DD0-4381-43DC-86F4-700FE0A8D979}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61A57DD0-4381-43DC-86F4-700FE0A8D979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4EA4C12-2CA5-4BA2-B2DF-18C8C1E35C07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4EA4C12-2CA5-4BA2-B2DF-18C8C1E35C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4EA4C12-2CA5-4BA2-B2DF-18C8C1E35C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4EA4C12-2CA5-4BA2-B2DF-18C8C1E35C07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37AAF6C4-8BE8-4806-9AF0-31980C61D627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37AAF6C4-8BE8-4806-9AF0-31980C61D627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37AAF6C4-8BE8-4806-9AF0-31980C61D627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37AAF6C4-8BE8-4806-9AF0-31980C61D627}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
