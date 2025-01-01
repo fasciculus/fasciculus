@@ -31,5 +31,10 @@ namespace Fasciculus.IO
         /// <see cref="DirectoryInfo"/> for <see cref="SpecialPaths.BaseDirectory"/>.
         /// </summary>
         public static DirectoryInfo BaseDirectory => new(SpecialPaths.BaseDirectory);
+
+        /// <summary>
+        /// <see cref="DirectoryInfo"/> for <see cref="SpecialPaths.WorkingDirectory"/>.
+        /// </summary>
+        public static DirectoryInfo WorkingDirectory => new(SpecialPaths.WorkingDirectory);
     }
 }

@@ -55,5 +55,13 @@ namespace Fasciculus.IO
         /// </para>
         /// </summary>
         public static string BaseDirectory => AppDomain.CurrentDomain.BaseDirectory;
+
+        /// <summary>
+        /// Working directory.
+        /// <para>
+        /// Shorthand for <c>Environment.CurrentDirectory</c>
+        /// </para>
+        /// </summary>
+        public static string WorkingDirectory => CurrentDirectory;
     }
 }
