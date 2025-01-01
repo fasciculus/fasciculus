@@ -1,13 +1,22 @@
 {
   "profiles": {
-    "Fasciculus.Site": {
-      "commandName": "Project"
-    },
-    "Fasciculus.Site - Preview": {
+    "http": {
       "commandName": "Project",
-      "commandLineArgs": "preview --port 5277",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5277"
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5016"
+    },
+    "generate": {
+      "commandName": "Project",
+      "commandLineArgs": "generate ../../../fasciculus.github.io",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true
     }
-  }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json"
 }

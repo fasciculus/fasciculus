@@ -16,7 +16,7 @@ namespace Fasciculus.GitHub.Controllers
             return View(document);
         }
 
-        [Route("/Privacy")]
+        [Route("/privacy.html")]
         public IActionResult Privacy()
         {
             Document document = new()

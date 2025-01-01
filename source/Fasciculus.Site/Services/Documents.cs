@@ -15,7 +15,7 @@ namespace Fasciculus.GitHub.Services
         private void AddGlobals()
         {
             Add("/");
-            Add("/Privacy");
+            Add("/privacy.html");
         }
 
         private void AddStatics()
