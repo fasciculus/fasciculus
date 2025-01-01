@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Fasciculus.GitHub.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Fasciculus.GitHub.Controllers
 {
@@ -7,13 +8,23 @@ namespace Fasciculus.GitHub.Controllers
         [Route("/")]
         public IActionResult Index()
         {
-            return View();
+            Document document = new()
+            {
+                Title = "Home"
+            };
+
+            return View(document);
         }
 
         [Route("/Privacy")]
         public IActionResult Privacy()
         {
-            return View();
+            Document document = new()
+            {
+                Title = "Privacy"
+            };
+
+            return View(document);
         }
     }
 }
