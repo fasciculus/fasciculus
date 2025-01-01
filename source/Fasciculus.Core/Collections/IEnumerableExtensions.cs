@@ -44,5 +44,12 @@ namespace System.Collections.Generic
         public static Dictionary<K, V> ToDictionary<K, V>(this IEnumerable<Tuple<K, V>> kvps)
             where K : notnull
             => kvps.ToDictionary(x => x.Item1, x => x.Item2);
+
+        /// <summary>
+        /// Returns those <paramref name="values"/> whose type's full name equals to <paramref name="fullName"/>.
+        /// </summary>
+        public static IEnumerable<T> OfType<T>(this IEnumerable<T> values, string fullName)
+            where T : notnull
+            => values.Where(x => fullName == x.GetType().FullName);
     }
 }

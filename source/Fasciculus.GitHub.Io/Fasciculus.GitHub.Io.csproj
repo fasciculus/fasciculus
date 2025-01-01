@@ -5,4 +5,8 @@
     <RootNamespace>Fasciculus.GitHub</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Extensions/Fasciculus.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>

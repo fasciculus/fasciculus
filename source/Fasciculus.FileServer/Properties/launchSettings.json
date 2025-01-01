@@ -6,7 +6,10 @@
       "workingDirectory": "..\\..\\..\\fasciculus.github.io",
       "launchBrowser": true,
       "launchUrl": "http://localhost:8000",
-      "hotReloadEnabled": false
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

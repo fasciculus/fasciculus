@@ -11,7 +11,7 @@
     },
     "generate": {
       "commandName": "Project",
-      "commandLineArgs": "generate",
+      "commandLineArgs": "generate ../../../fasciculus.github.io",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

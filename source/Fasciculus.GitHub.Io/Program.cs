@@ -1,20 +1,25 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Fasciculus.GitHub.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Diagnostics;
-using System.Linq;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.IO;
 
 namespace Fasciculus.GitHub
 {
     public static class Program
     {
+        private static bool generate = false;
+        private static DirectoryInfo outputDirectory = new("site");
+
         public static void Main(string[] args)
         {
+            ParseArguments(args);
+
             using WebApplication app = CreateWebApplication();
 
-            if (args.Contains("generate"))
+            if (generate)
             {
-                Generator.Generate(app);
+                app.Services.GetRequiredService<Generator>().Run();
             }
             else
             {
@@ -28,33 +33,39 @@ namespace Fasciculus.GitHub
 
             builder.Services.AddControllersWithViews();
 
-            LogServices(builder.Services);
+            if (generate)
+            {
+                builder.Services.AddGenerator();
+            }
 
             WebApplication app = builder.Build();
 
             app.UseRouting();
-
             app.MapStaticAssets();
             app.MapControllers();
-
-            LogServices(app.Services);
 
             return app;
         }
 
-        private static void LogServices(IServiceCollection services)
+        private static IServiceCollection AddGenerator(this IServiceCollection services)
         {
-            var typeNames = services.Select(s => s.ServiceType.FullName).Order();
+            services.TryAddKeyedSingleton(Writer.OutputDirectoryKey, outputDirectory);
 
-            foreach (var typeName in typeNames)
-            {
-                Debug.WriteLine(typeName);
-            }
+            services.TryAddSingleton<Documents>();
+            services.TryAddSingleton<Writer>();
+            services.TryAddSingleton<Generator>();
+
+            return services;
         }
 
-        private static void LogServices(IServiceProvider serviceProvider)
+        private static void ParseArguments(string[] args)
         {
-            Debug.WriteLine(serviceProvider.GetType().FullName);
+            generate = args.Length > 0 && "generate" == args[0];
+
+            if (generate && args.Length > 1)
+            {
+                outputDirectory = new(Path.GetFullPath(args[1]));
+            }
         }
     }
 }
