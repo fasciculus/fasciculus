@@ -1,12 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Fasciculus.ApiDoc.Models
+﻿namespace Fasciculus.ApiDoc.Models
 {
-    public class ApiPackage
+    public class ApiPackage : ApiElement
     {
-        public required string Name { get; init; }
         public string Description { get; set; } = string.Empty;
-
-        public List<string> TargetFrameworks { get; } = [];
     }
 }
