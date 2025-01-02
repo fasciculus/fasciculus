@@ -10,6 +10,7 @@ namespace Fasciculus.GitHub.Services
         {
             AddGlobals();
             AddStatics();
+            AddApi();
         }
 
         private void AddGlobals()
@@ -26,6 +27,11 @@ namespace Fasciculus.GitHub.Services
             string[] paths = [.. relative.Select(path => "/" + path.Replace("\\", "/"))];
 
             paths.Apply(Add);
+        }
+
+        private void AddApi()
+        {
+            Add("/api/");
         }
     }
 }
