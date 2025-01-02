@@ -1,1 +1,16 @@
-﻿<h1>API Documentation</h1>
+﻿@model ApiIndexDocument
+<h1>API Documentation</h1>
+
+<h2>Individual Packages</h2>
+
+<table class="table">
+    <tbody>
+@foreach (var package in Model.Packages)
+{
+        <tr>
+            <td><a href="~/api/pkg/@(package.Name).html">@package.Name</a></td>
+            <td>@package.Description</td>
+        </tr>
+}
+    </tbody>
+</table>

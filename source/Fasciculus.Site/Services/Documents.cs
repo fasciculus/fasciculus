@@ -6,11 +6,11 @@ namespace Fasciculus.GitHub.Services
 {
     public class Documents : List<string>
     {
-        public Documents()
+        public Documents(ApiProvider apiProvider)
         {
             AddGlobals();
             AddStatics();
-            AddApi();
+            AddApi(apiProvider);
         }
 
         private void AddGlobals()
@@ -29,9 +29,11 @@ namespace Fasciculus.GitHub.Services
             paths.Apply(Add);
         }
 
-        private void AddApi()
+        private void AddApi(ApiProvider apiProvider)
         {
             Add("/api/");
+
+            apiProvider.Packages.Apply(p => { Add($"/api/pkg/{p.Name}.html"); });
         }
     }
 }

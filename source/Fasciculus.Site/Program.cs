@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 using System.IO;
 
 namespace Fasciculus.GitHub
@@ -17,6 +18,8 @@ namespace Fasciculus.GitHub
 
             using WebApplication app = CreateWebApplication();
 
+            InitializeExpensiveServices(app.Services);
+
             if (generate)
             {
                 app.Services.GetRequiredService<Generator>().Run();
@@ -27,11 +30,17 @@ namespace Fasciculus.GitHub
             }
         }
 
+        private static void InitializeExpensiveServices(IServiceProvider services)
+        {
+            _ = services.GetRequiredService<ApiProvider>();
+        }
+
         private static WebApplication CreateWebApplication()
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder([]);
 
             builder.Services.AddControllersWithViews();
+            builder.Services.TryAddSingleton<ApiProvider>();
 
             if (generate)
             {

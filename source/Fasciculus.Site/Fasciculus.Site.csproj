@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../Fasciculus.ApiDoc/Fasciculus.ApiDoc.csproj" />
     <ProjectReference Include="../Fasciculus.Extensions/Fasciculus.Extensions.csproj" />
   </ItemGroup>
 

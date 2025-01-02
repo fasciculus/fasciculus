@@ -2,6 +2,6 @@
 {
     public class Document
     {
-        public string Title { get; set; } = string.Empty;
+        public required string Title { get; init; }
     }
 }
