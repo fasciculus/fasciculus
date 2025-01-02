@@ -1,6 +1,4 @@
 ﻿using Fasciculus.ApiDoc.Models;
-using Fasciculus.ApiDoc.Parsers;
-using Fasciculus.ApiDoc.Support;
 using System.Collections.Generic;
 using System.IO;
 
@@ -23,11 +21,12 @@ namespace Fasciculus.ApiDoc
 
             projectFiles.Apply(workspace.AddProjectFile);
 
-            ApiPackages packages = ProjectsParser.Parse(workspace.Projects);
+            ApiPackage[] packages = ApiParser.Parse(workspace.Projects);
+            ApiPackages mergedPackages = ApiMerger.Merge(packages);
 
             return new()
             {
-                Packages = packages
+                Packages = mergedPackages
             };
         }
     }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.ApiDoc.Support
+namespace Fasciculus.ApiDoc
 {
     public class ApiWorkspace : IDisposable
     {

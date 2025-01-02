@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.ApiDoc.Models
 {
@@ -7,19 +8,11 @@ namespace Fasciculus.ApiDoc.Models
     {
         private readonly Dictionary<string, ApiPackage> packages = [];
 
-        public ApiPackage this[string name] => GetPackage(name);
+        public ApiPackage this[string name] => packages[name];
 
-        private ApiPackage GetPackage(string name)
+        internal ApiPackages(IEnumerable<ApiPackage> packages)
         {
-            if (packages.TryGetValue(name, out ApiPackage? package))
-            {
-                return package;
-            }
-
-            package = new ApiPackage() { Name = name };
-            packages[name] = package;
-
-            return package;
+            this.packages = packages.ToDictionary(p => p.Name);
         }
 
         public IEnumerator<ApiPackage> GetEnumerator()
