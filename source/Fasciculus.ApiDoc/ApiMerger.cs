@@ -16,7 +16,7 @@ namespace Fasciculus.ApiDoc
                 Name = packageGroup.Key
             };
 
-            packageGroup.Apply(pg => { });
+            packageGroup.Apply(p => { result.TargetFrameworks.Add(p.TargetFrameworks); });
 
             return result;
         }

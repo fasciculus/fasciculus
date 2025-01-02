@@ -1,0 +1,20 @@
+﻿@model ApiTargetFrameworks
+<h2 id="applies-to">Applies To</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Versions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var group in Model.Groups)
+{
+        <tr>
+            <td>@group.Name</td>
+            <td>@(string.Join(", ", group.Monikers.Select(m => m.Version)))</td>
+        </tr>
+}
+    </tbody>
+</table>

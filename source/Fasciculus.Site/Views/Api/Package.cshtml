@@ -1,4 +1,15 @@
 ﻿@model ApiPackageDocument
-<h1>@Model.Package.Name</h1>
+<h1>@Model.Package.Name Package</h1>
+
+<h2>In this article</h2>
+
+<ul>
+    <li><a href="#definition">Definition</a></li>
+    <li><a href="#applies-to">Applies to</a></li>
+</ul>
+
+<h2 id="definition">Definition</h2>
 
 <p>@Model.Package.Description</p>
+
+<partial name="~/Views/Api/TargetFrameworks.cshtml" model=Model.Package.TargetFrameworks />
