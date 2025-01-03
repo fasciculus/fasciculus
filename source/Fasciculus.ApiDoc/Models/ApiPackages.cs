@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Fasciculus.ApiDoc.Models
@@ -8,7 +9,10 @@ namespace Fasciculus.ApiDoc.Models
     {
         private readonly Dictionary<string, ApiPackage> packages = [];
 
-        public ApiPackage this[string name] => packages[name];
+        public bool TryGetPackage(string name, [NotNullWhen(true)] out ApiPackage? package)
+            => packages.TryGetValue(name, out package);
+
+        //public ApiPackage this[string name] => packages[name];
 
         internal ApiPackages(IEnumerable<ApiPackage> packages)
         {

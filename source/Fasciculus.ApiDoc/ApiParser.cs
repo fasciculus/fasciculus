@@ -3,40 +3,44 @@ using Fasciculus.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.ApiDoc
 {
     public class ApiParser
     {
-        private static ApiPackage[] ParseProjects(IEnumerable<Project> projects)
+        private ApiPackage apiPackage = new() { Name = string.Empty };
+        private ApiNamespaces apiNamespaces = [];
+
+        private ApiPackage[] ParseProjects(IEnumerable<Project> projects)
             => [.. projects.Select(ParseProject)];
 
-        private static ApiPackage ParseProject(Project project)
+        private ApiPackage ParseProject(Project project)
         {
             string targetFramework = ParseTargetFramework(project);
 
-            ApiPackage package = new()
-            {
-                Name = project.AssemblyName
-            };
+            apiPackage = new() { Name = project.AssemblyName };
+            apiNamespaces = apiPackage.Namespaces;
+            apiPackage.TargetFrameworks.Add(targetFramework);
 
-            package.TargetFrameworks.Add(targetFramework);
+            Document document = project.Documents.First();
 
             if (Tasks.Wait(project.GetCompilationAsync()) is CSharpCompilation compilation)
             {
-                ParseSyntaxTrees(compilation.SyntaxTrees, package.Namespaces);
+                ParseSyntaxTrees(compilation.SyntaxTrees);
             }
 
-            return package;
+            return apiPackage;
         }
 
-        private static void ParseSyntaxTrees(ImmutableArray<SyntaxTree> syntaxTrees, ApiNamespaces namespaces)
-            => syntaxTrees.Apply(syntaxTree => { ParseSyntaxTree(syntaxTree, namespaces); });
+        private void ParseSyntaxTrees(ImmutableArray<SyntaxTree> syntaxTrees)
+            => syntaxTrees.Apply(ParseSyntaxTree);
 
-        private static void ParseSyntaxTree(SyntaxTree syntaxTree, ApiNamespaces namespaces)
+        private void ParseSyntaxTree(SyntaxTree syntaxTree)
         {
             if (IsGenerated(syntaxTree))
             {
@@ -47,17 +51,31 @@ namespace Fasciculus.ApiDoc
             {
                 if (root is CompilationUnitSyntax compilationUnit)
                 {
-                    ParseCompilationUnit(compilationUnit, namespaces);
+                    ParseCompilationUnit(compilationUnit);
                 }
             }
         }
 
+        private static readonly string[] GeneratedFileNameEndings = [".designer", ".generated", ".g", ".g.i"];
+
         private static bool IsGenerated(SyntaxTree syntaxTree)
         {
-            return syntaxTree.FilePath.EndsWith(".g.cs");
+            FileInfo file = new(syntaxTree.FilePath);
+            string name = file.Name;
+
+            if (name.StartsWith("TemporaryGeneratedFile_", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            string extension = file.Extension;
+
+            name = name[..^extension.Length];
+
+            return GeneratedFileNameEndings.Any(s => name.EndsWith(s, StringComparison.OrdinalIgnoreCase));
         }
 
-        private static void ParseCompilationUnit(CompilationUnitSyntax compilationUnit, ApiNamespaces namespaces)
+        private void ParseCompilationUnit(CompilationUnitSyntax compilationUnit)
         {
             foreach (MemberDeclarationSyntax member in compilationUnit.Members)
             {
@@ -65,7 +83,7 @@ namespace Fasciculus.ApiDoc
                 {
                     string name = namespaceDeclaration.Name.ToString();
 
-                    namespaces.Add(name);
+                    apiNamespaces.Add(name);
                 }
             }
         }
@@ -79,7 +97,9 @@ namespace Fasciculus.ApiDoc
 
         public static ApiPackage[] Parse(IEnumerable<Project> projects)
         {
-            return ParseProjects(projects);
+            ApiParser apiParser = new();
+
+            return apiParser.ParseProjects(projects);
         }
     }
 }

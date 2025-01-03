@@ -22,6 +22,7 @@ namespace Fasciculus.GitHub.Services
         };
 
         private readonly List<ApiPackage> packages = [];
+        private readonly Dictionary<string, ApiPackage> packagesByName = [];
 
         public IEnumerable<ApiPackage> Packages => packages;
 
@@ -29,23 +30,46 @@ namespace Fasciculus.GitHub.Services
         {
             ApiDocumentsBuilder builder = new();
 
-            AddPackages(builder);
+            AddBuilderPackages(builder);
 
             ApiDocuments documents = builder.Build();
-            ApiPackages packages = documents.Packages;
 
-            PackageNames.Apply(name => { packages[name].Description = PackageDescriptions[name]; });
-            PackageNames.Apply(name => { this.packages.Add(packages[name]); });
+            AddPackages(documents.Packages);
+
+            SetPackageDescriptions();
         }
 
-        private static void AddPackages(ApiDocumentsBuilder builder)
+        private void AddPackages(ApiPackages allPackages)
+        {
+            foreach (var name in PackageNames)
+            {
+                if (allPackages.TryGetPackage(name, out ApiPackage? package))
+                {
+                    packages.Add(package);
+                    packagesByName[name] = package;
+                }
+            }
+        }
+
+        private void SetPackageDescriptions()
+        {
+            foreach (var dsc in PackageDescriptions)
+            {
+                if (packagesByName.TryGetValue(dsc.Key, out ApiPackage? package))
+                {
+                    package.Description = dsc.Value;
+                }
+            }
+        }
+
+        private static void AddBuilderPackages(ApiDocumentsBuilder builder)
         {
             SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
 
-            PackageNames.Apply(name => { AddPackage(name, searchPath, builder); });
+            PackageNames.Apply(name => { AddBuilderPackage(name, searchPath, builder); });
         }
 
-        private static void AddPackage(string name, SearchPath searchPath, ApiDocumentsBuilder builder)
+        private static void AddBuilderPackage(string name, SearchPath searchPath, ApiDocumentsBuilder builder)
         {
             DirectoryInfo directory = DirectorySearch.Search(name, searchPath).First();
             FileInfo projectFile = directory.File($"{name}.csproj");
