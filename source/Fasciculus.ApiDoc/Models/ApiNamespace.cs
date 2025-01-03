@@ -4,6 +4,8 @@ namespace Fasciculus.ApiDoc.Models
 {
     public class ApiNamespace : ApiElement, IComparable<ApiNamespace>, IEquatable<ApiNamespace>
     {
+        public string Description { get; set; } = string.Empty;
+
         public int CompareTo(ApiNamespace? other)
             => other is null ? -1 : Name.CompareTo(other.Name);
 

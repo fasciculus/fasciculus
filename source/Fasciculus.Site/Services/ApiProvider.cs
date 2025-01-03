@@ -21,6 +21,15 @@ namespace Fasciculus.GitHub.Services
             { "Fasciculus.Extensions", "Extensions with MVVM and dependency injection." }
         };
 
+        private static readonly Dictionary<string, string> NamespaceDescriptions = new()
+        {
+            { "System", "Extensions to types in the 'System' namespace." },
+            { "System.Collections.Generic", "Extensions to types in the 'System.Collections.Generic' namespace." },
+            { "System.IO", "Extensions to types in the 'System.IO' namespace." },
+            { "System.Net.Http", "Extensions to types in the 'System.Net.Http' namespace." },
+            { "System.Reflection", "Extensions to types in the 'System.Reflection' namespace." },
+        };
+
         private readonly List<ApiPackage> packages = [];
         private readonly Dictionary<string, ApiPackage> packagesByName = [];
 
@@ -37,6 +46,7 @@ namespace Fasciculus.GitHub.Services
             AddPackages(documents.Packages);
 
             SetPackageDescriptions();
+            SetNamespaceDescriptions();
         }
 
         private void AddPackages(ApiPackages allPackages)
@@ -58,6 +68,20 @@ namespace Fasciculus.GitHub.Services
                 if (packagesByName.TryGetValue(dsc.Key, out ApiPackage? package))
                 {
                     package.Description = dsc.Value;
+                }
+            }
+        }
+
+        private void SetNamespaceDescriptions()
+        {
+            foreach (var pkg in packages)
+            {
+                foreach (var ns in pkg.Namespaces)
+                {
+                    if (NamespaceDescriptions.TryGetValue(ns.Name, out string? dsc))
+                    {
+                        ns.Description = dsc;
+                    }
                 }
             }
         }
