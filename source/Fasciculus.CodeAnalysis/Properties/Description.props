@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <PropertyGroup>
+    <Description>
+      This package includes utilities for code analysis.
+      See the README for more information.
+    </Description>
+  </PropertyGroup>
+  
+</Project>

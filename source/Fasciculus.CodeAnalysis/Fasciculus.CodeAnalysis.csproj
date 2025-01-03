@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(FasciculusDotNetTfm)</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <Import Project="Properties/Description.props" />
+  <Import Project="Properties/ReleaseNotes.props" />
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>fasciculus.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.Frameworks" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>

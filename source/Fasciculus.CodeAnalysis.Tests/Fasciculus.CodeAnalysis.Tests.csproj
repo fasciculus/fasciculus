@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(FasciculusDotNetTfm)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.CodeAnalysis/Fasciculus.CodeAnalysis.csproj" />
+    <ProjectReference Include="../Fasciculus.Testing/Fasciculus.Testing.csproj" />
+  </ItemGroup>
+
+</Project>
