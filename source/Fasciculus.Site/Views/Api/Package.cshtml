@@ -5,11 +5,30 @@
 
 <ul>
     <li><a href="#definition">Definition</a></li>
+    <li><a href="#namespaces">Namespaces</a></li>
     <li><a href="#applies-to">Applies to</a></li>
 </ul>
 
 <h2 id="definition">Definition</h2>
 
 <p>@Model.Package.Description</p>
+
+<h2 id="namespaces">Namespaces</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Namespace</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var ns in Model.Package.Namespaces)
+{
+        <tr>
+            <td>@ns.Name</td>
+        </tr>
+}
+    </tbody>
+</table>
 
 <partial name="~/Views/Api/TargetFrameworks.cshtml" model=Model.Package.TargetFrameworks />

@@ -17,6 +17,7 @@ namespace Fasciculus.ApiDoc
             };
 
             packageGroup.Apply(p => { result.TargetFrameworks.Add(p.TargetFrameworks); });
+            packageGroup.Apply(p => { result.Namespaces.Add(p.Namespaces); });
 
             return result;
         }
