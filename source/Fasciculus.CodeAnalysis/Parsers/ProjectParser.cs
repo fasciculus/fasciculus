@@ -1,6 +1,9 @@
 ﻿using Fasciculus.CodeAnalysis.Frameworks;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Support;
+using Fasciculus.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,31 +28,45 @@ namespace Fasciculus.CodeAnalysis.Parsers
         /// Parses the project.
         /// </summary>
         /// <returns></returns>
-        public PackageInfo Parse()
+        public PackageInfo Parse(bool includeGenerated)
         {
             PackageInfo result = new()
             {
                 Name = project.AssemblyName
             };
 
+            if (Tasks.Wait(project.GetCompilationAsync()) is CSharpCompilation compilation)
+            {
+                compilation.SyntaxTrees
+                    .Where(t => CheckGenerated(t, includeGenerated))
+                    .Where(t => t.HasCompilationUnitRoot)
+                    .Select(t => t.GetCompilationUnitRoot())
+                    .Select(cu => new CompilationUnitParser(cu))
+                    .Select(p => p.Parse())
+                    .Apply(result.Namespaces.Add);
+            }
+
             if (project.TryGetTargetFramework(out TargetFramework? framework))
             {
-                result.Frameworks.Add(framework);
+                result.Add(framework);
             }
 
             return result;
         }
 
+        private static bool CheckGenerated(SyntaxTree syntaxTree, bool includeGenerated)
+            => includeGenerated || !syntaxTree.IsGenerated();
+
         /// <summary>
         /// Parses the given projects.
         /// </summary>
-        public static Packages Parse(IEnumerable<Project> projects)
+        public static Packages Parse(IEnumerable<Project> projects, bool includeGenerated)
         {
             PackageInfo[] packages = [.. projects
                 .Where(p => p.HasDocuments)
                 .Select(p => new ProjectParser(p))
                 .AsParallel()
-                .Select(p => p.Parse())];
+                .Select(p => p.Parse(includeGenerated))];
 
             return new(packages);
         }

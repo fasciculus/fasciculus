@@ -27,9 +27,19 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
                 .Select(t => t.Item2.File(t.Item1 + ".csproj"))
                 .Apply(f => { workspace.AddProjectFile(f); });
 
-            Packages packages = ProjectParser.Parse(workspace.CurrentSolution.Projects);
+            Packages packages = ProjectParser.Parse(workspace.CurrentSolution.Projects, false);
 
             Assert.AreEqual(2, packages.Count());
+
+            foreach (PackageInfo package in packages)
+            {
+                Assert.AreEqual(3, package.Frameworks.Count());
+
+                foreach (NamespaceInfo @namespace in package.Namespaces)
+                {
+                    Assert.AreEqual(3, @namespace.Frameworks.Count());
+                }
+            }
         }
     }
 }

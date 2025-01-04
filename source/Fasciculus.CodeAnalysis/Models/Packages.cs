@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Fasciculus.CodeAnalysis.Frameworks;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
@@ -6,7 +7,7 @@ namespace Fasciculus.CodeAnalysis.Models
     /// <summary>
     /// Collection of packages.
     /// </summary>
-    public class Packages : IEnumerable<PackageInfo>
+    public class Packages : IElementCollection<PackageInfo>
     {
         private readonly Dictionary<string, PackageInfo> packages = [];
 
@@ -40,6 +41,12 @@ namespace Fasciculus.CodeAnalysis.Models
         /// </summary>
         public void Add(IEnumerable<PackageInfo> packages)
             => packages.Apply(Add);
+
+        /// <summary>
+        /// Adds the given <paramref name="framework"/>
+        /// </summary>
+        public void Add(TargetFramework framework)
+            => packages.Values.Apply(Add);
 
         /// <summary>
         /// Returns an enumerator that iterates through this collection.
