@@ -19,9 +19,9 @@ namespace Fasciculus.ApiDoc.Models
         }
 
         public IEnumerator<ApiPackage> GetEnumerator()
-            => packages.Values.GetEnumerator();
+            => packages.Values.OrderBy(p => p.Name).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => packages.Values.GetEnumerator();
+            => packages.Values.OrderBy(p => p.Name).GetEnumerator();
     }
 }

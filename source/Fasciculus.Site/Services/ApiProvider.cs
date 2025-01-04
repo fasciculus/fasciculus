@@ -30,75 +30,71 @@ namespace Fasciculus.GitHub.Services
             { "System.Reflection", "Extensions to types in the 'System.Reflection' namespace." },
         };
 
-        private readonly List<ApiPackage> packages = [];
-        private readonly Dictionary<string, ApiPackage> packagesByName = [];
-
-        public IEnumerable<ApiPackage> Packages => packages;
+        public ApiPackages Packages { get; }
 
         public ApiProvider()
         {
-            ApiDocumentsBuilder builder = new();
-
-            AddBuilderPackages(builder);
-
+            ApiDocBuilder builder = SetupApiDocBuilder();
             ApiDocuments documents = builder.Build();
 
-            AddPackages(documents.Packages);
+            Packages = documents.Packages;
 
             SetPackageDescriptions();
             SetNamespaceDescriptions();
         }
 
-        private void AddPackages(ApiPackages allPackages)
-        {
-            foreach (var name in PackageNames)
-            {
-                if (allPackages.TryGetPackage(name, out ApiPackage? package))
-                {
-                    packages.Add(package);
-                    packagesByName[name] = package;
-                }
-            }
-        }
-
         private void SetPackageDescriptions()
         {
-            foreach (var dsc in PackageDescriptions)
+            foreach (ApiPackage package in Packages)
             {
-                if (packagesByName.TryGetValue(dsc.Key, out ApiPackage? package))
+                if (PackageDescriptions.TryGetValue(package.Name, out string? description))
                 {
-                    package.Description = dsc.Value;
+                    package.Description = description;
                 }
             }
         }
 
         private void SetNamespaceDescriptions()
         {
-            foreach (var pkg in packages)
+            foreach (ApiPackage package in Packages)
             {
-                foreach (var ns in pkg.Namespaces)
+                foreach (ApiNamespace @namespace in package.Namespaces)
                 {
-                    if (NamespaceDescriptions.TryGetValue(ns.Name, out string? dsc))
+                    if (NamespaceDescriptions.TryGetValue(@namespace.Name, out string? description))
                     {
-                        ns.Description = dsc;
+                        @namespace.Description = description;
                     }
                 }
             }
         }
 
-        private static void AddBuilderPackages(ApiDocumentsBuilder builder)
+        private static ApiDocBuilder SetupApiDocBuilder()
+        {
+            ApiDocBuilder builder = new();
+
+            GetProjectFiles().Apply(f => { builder.AddProjectFile(f); });
+
+            return builder;
+        }
+
+        private static IEnumerable<FileInfo> GetProjectFiles()
         {
             SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
 
-            PackageNames.Apply(name => { AddBuilderPackage(name, searchPath, builder); });
-        }
+            foreach (string packageName in PackageNames)
+            {
+                DirectoryInfo? directory = DirectorySearch.Search(packageName, searchPath).FirstOrDefault();
 
-        private static void AddBuilderPackage(string name, SearchPath searchPath, ApiDocumentsBuilder builder)
-        {
-            DirectoryInfo directory = DirectorySearch.Search(name, searchPath).First();
-            FileInfo projectFile = directory.File($"{name}.csproj");
+                if (directory is not null)
+                {
+                    FileInfo file = directory.File($"{packageName}.csproj");
 
-            builder.AddProjectFile(projectFile);
+                    if (file.Exists)
+                    {
+                        yield return file;
+                    }
+                }
+            }
         }
     }
 }

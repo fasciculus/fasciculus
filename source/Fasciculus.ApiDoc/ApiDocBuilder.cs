@@ -8,11 +8,11 @@ using System.IO;
 
 namespace Fasciculus.ApiDoc
 {
-    public class ApiDocumentsBuilder
+    public class ApiDocBuilder
     {
         private readonly List<FileInfo> projectFiles = [];
 
-        public ApiDocumentsBuilder AddProjectFile(FileInfo projectFile)
+        public ApiDocBuilder AddProjectFile(FileInfo projectFile)
         {
             projectFiles.Add(projectFile);
 
