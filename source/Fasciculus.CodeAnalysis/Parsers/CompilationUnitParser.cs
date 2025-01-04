@@ -47,5 +47,13 @@ namespace Fasciculus.CodeAnalysis.Parsers
             //return base.OnNamespaceDeclaration(node);
             return false;
         }
+
+        /// <summary>
+        /// Handles a UsingDirective.
+        /// </summary>
+        protected override bool OnUsingDirective(UsingDirectiveSyntax node)
+        {
+            return false;
+        }
     }
 }

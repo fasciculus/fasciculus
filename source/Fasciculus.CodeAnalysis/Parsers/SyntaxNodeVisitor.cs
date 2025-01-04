@@ -47,7 +47,13 @@ namespace Fasciculus.CodeAnalysis.Parsers
             }
         }
 
-        private static bool On<T>(SyntaxNode node, Func<T, bool> handler)
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> if the given <paramref name="node"/> is of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <returns>
+        /// The handler's return value or <c>true</c> if the given <paramref name="node"/> is not of type <typeparamref name="T"/>.
+        /// </returns>
+        protected static bool On<T>(SyntaxNode node, Func<T, bool> handler)
             where T : notnull, SyntaxNode
         {
             if (node is T t)
