@@ -20,10 +20,16 @@ namespace Fasciculus.CodeAnalysis.Frameworks
         /// </summary>
         public string Product { get; }
 
-        private TargetFramework(NuGetFramework framework, string product)
+        /// <summary>
+        /// The short version of the wrapped framework.
+        /// </summary>
+        public string ProductVersion { get; }
+
+        private TargetFramework(NuGetFramework framework, string product, string productVersion)
         {
             NuGetFramework = framework;
             Product = product;
+            ProductVersion = productVersion;
         }
 
         /// <summary>
@@ -33,8 +39,9 @@ namespace Fasciculus.CodeAnalysis.Frameworks
         {
             NuGetFramework framework = NuGetFramework.Parse(moniker, frameworkNameProvider);
             string product = productMappings.GetProduct(framework);
+            string productVersion = productMappings.GetProductVersion(framework);
 
-            return new(framework, product);
+            return new(framework, product, productVersion);
         }
 
         /// <summary>

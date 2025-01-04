@@ -11,6 +11,11 @@ namespace Fasciculus.CodeAnalysis.Frameworks
         private readonly HashSet<TargetFramework> frameworks = [];
 
         /// <summary>
+        /// The products of this target frameworks collection.
+        /// </summary>
+        public TargetProducts Products => new(this);
+
+        /// <summary>
         /// Whether the given <paramref name="targetFramework"/> is already in this collection.
         /// </summary>
         /// <param name="targetFramework"></param>

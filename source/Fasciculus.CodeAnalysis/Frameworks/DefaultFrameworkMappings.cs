@@ -25,6 +25,21 @@ namespace Fasciculus.CodeAnalysis.Frameworks
             };
         }
 
+        /// <summary>
+        /// Returns the short version of the given <paramref name="framework"/>.
+        /// </summary>
+        public string GetProductVersion(NuGetFramework framework)
+        {
+            Version version = framework.Version;
+
+            return framework.Framework switch
+            {
+                FrameworkIdentifiers.NetCoreApp => version.ToString(1),
+                FrameworkIdentifiers.NetStandard => version.ToString(2),
+                _ => version.ToString(),
+            };
+        }
+
         private static readonly Lazy<DefaultFrameworkMappings> instance
             = new(() => new DefaultFrameworkMappings(), true);
 

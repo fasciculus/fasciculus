@@ -11,5 +11,10 @@ namespace Fasciculus.CodeAnalysis.Frameworks
         /// Returns the product name of the given <paramref name="framework"/>.
         /// </summary>
         public string GetProduct(NuGetFramework framework);
+
+        /// <summary>
+        /// Returns the short version of the given <paramref name="framework"/>.
+        /// </summary>
+        public string GetProductVersion(NuGetFramework framework);
     }
 }
