@@ -8,7 +8,7 @@ namespace Fasciculus.CodeAnalysis.Models
     /// <summary>
     /// Collection of namespaces.
     /// </summary>
-    public class Namespaces : IElementCollection<NamespaceInfo>
+    public class NamespaceCollection : IElementCollection<NamespaceInfo>
     {
         private readonly Dictionary<string, NamespaceInfo> namespaces = [];
 

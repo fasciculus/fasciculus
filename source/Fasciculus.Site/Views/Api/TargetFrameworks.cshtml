@@ -1,4 +1,4 @@
-﻿@model ApiTargetFrameworks
+﻿@model TargetFrameworks
 <h2 id="applies-to">Applies To</h2>
 
 <table class="table">
@@ -9,11 +9,11 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var group in Model.Groups)
+@foreach (TargetProduct product in Model.Products)
 {
         <tr>
-            <td>@group.Name</td>
-            <td>@(string.Join(", ", group.Monikers.Select(m => m.Version)))</td>
+            <td>@product.Name</td>
+            <td>@(string.Join(", ", product.Versions))</td>
         </tr>
 }
     </tbody>

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Fasciculus.CodeAnalysis.Models;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -7,16 +8,14 @@ namespace Fasciculus.ApiDoc.Models
 {
     public class ApiPackages : IEnumerable<ApiPackage>
     {
-        private readonly Dictionary<string, ApiPackage> packages = [];
+        private readonly Dictionary<string, ApiPackage> packages;
 
         public bool TryGetPackage(string name, [NotNullWhen(true)] out ApiPackage? package)
             => packages.TryGetValue(name, out package);
 
-        //public ApiPackage this[string name] => packages[name];
-
-        internal ApiPackages(IEnumerable<ApiPackage> packages)
+        public ApiPackages(PackageCollection packages)
         {
-            this.packages = packages.ToDictionary(p => p.Name);
+            this.packages = packages.Select(p => new ApiPackage(p)).ToDictionary(p => p.Name);
         }
 
         public IEnumerator<ApiPackage> GetEnumerator()

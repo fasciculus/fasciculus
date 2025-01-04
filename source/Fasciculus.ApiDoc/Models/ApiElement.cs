@@ -1,9 +1,18 @@
-﻿namespace Fasciculus.ApiDoc.Models
+﻿using Fasciculus.CodeAnalysis.Frameworks;
+using Fasciculus.CodeAnalysis.Models;
+
+namespace Fasciculus.ApiDoc.Models
 {
     public class ApiElement
     {
-        public required string Name { get; init; }
+        public string Name { get; }
 
-        public ApiTargetFrameworks TargetFrameworks { get; } = new();
+        public TargetFrameworks Frameworks { get; }
+
+        public ApiElement(ElementInfo element)
+        {
+            Name = element.Name;
+            Frameworks = element.Frameworks;
+        }
     }
 }

@@ -7,14 +7,14 @@ namespace Fasciculus.CodeAnalysis.Models
     /// <summary>
     /// Collection of packages.
     /// </summary>
-    public class Packages : IElementCollection<PackageInfo>
+    public class PackageCollection : IElementCollection<PackageInfo>
     {
         private readonly Dictionary<string, PackageInfo> packages = [];
 
         /// <summary>
         /// Creates a new collection for the given <paramref name="packages"/>.
         /// </summary>
-        public Packages(IEnumerable<PackageInfo> packages)
+        public PackageCollection(IEnumerable<PackageInfo> packages)
         {
             Add(packages);
         }

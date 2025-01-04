@@ -1,4 +1,8 @@
 ﻿using Fasciculus.ApiDoc.Models;
+using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Parsers;
+using Fasciculus.CodeAnalysis.Workspaces;
+using Microsoft.CodeAnalysis.MSBuild;
 using System.Collections.Generic;
 using System.IO;
 
@@ -17,17 +21,24 @@ namespace Fasciculus.ApiDoc
 
         public ApiDocuments Build()
         {
-            using ApiWorkspace workspace = new();
+            using MSBuildWorkspace workspace = LoadWorkspace();
 
-            projectFiles.Apply(workspace.AddProjectFile);
-
-            ApiPackage[] packages = ApiParser.Parse(workspace.Projects);
-            ApiPackages mergedPackages = ApiMerger.Merge(packages);
+            PackageCollection packages = ProjectParser.Parse(workspace.CurrentSolution.Projects, false);
+            ApiPackages apiPackages = new(packages);
 
             return new()
             {
-                Packages = mergedPackages
+                Packages = apiPackages
             };
+        }
+
+        private MSBuildWorkspace LoadWorkspace()
+        {
+            MSBuildWorkspace workspace = WorkspaceFactory.CreateWorkspace();
+
+            projectFiles.Apply(f => { workspace.AddProjectFile(f); });
+
+            return workspace;
         }
     }
 }

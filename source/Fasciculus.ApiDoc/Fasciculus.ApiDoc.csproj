@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
+    <ProjectReference Include="../Fasciculus.CodeAnalysis/Fasciculus.CodeAnalysis.csproj" />
   </ItemGroup>
 
 </Project>

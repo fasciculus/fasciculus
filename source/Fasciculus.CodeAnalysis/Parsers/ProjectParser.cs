@@ -60,12 +60,12 @@ namespace Fasciculus.CodeAnalysis.Parsers
         /// <summary>
         /// Parses the given projects.
         /// </summary>
-        public static Packages Parse(IEnumerable<Project> projects, bool includeGenerated)
+        public static PackageCollection Parse(IEnumerable<Project> projects, bool includeGenerated)
         {
             PackageInfo[] packages = [.. projects
                 .Where(p => p.HasDocuments)
                 .Select(p => new ProjectParser(p))
-                .AsParallel()
+                //.AsParallel()
                 .Select(p => p.Parse(includeGenerated))];
 
             return new(packages);

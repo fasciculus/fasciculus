@@ -10,7 +10,7 @@ namespace Fasciculus.CodeAnalysis.Models
         /// <summary>
         /// The namespaces of this package.
         /// </summary>
-        public Namespaces Namespaces { get; } = new();
+        public NamespaceCollection Namespaces { get; } = [];
 
         /// <summary>
         /// Merges this package with the given <paramref name="other"/> package.

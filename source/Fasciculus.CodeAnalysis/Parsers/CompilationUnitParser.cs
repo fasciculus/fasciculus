@@ -10,7 +10,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
     {
         private readonly CompilationUnitSyntax compilationUnit;
 
-        private Namespaces namespaces = [];
+        private NamespaceCollection namespaces = [];
 
         /// <summary>
         /// Initializes a new instance of this parser.
@@ -29,7 +29,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
         /// <summary>
         /// Parses the compilation unit.
         /// </summary>
-        public Namespaces Parse()
+        public NamespaceCollection Parse()
         {
             Clear();
             Visit(compilationUnit.ChildNodes());
@@ -44,16 +44,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
         {
             namespaces.Add(node.Name.ToString());
 
-            //return base.OnNamespaceDeclaration(node);
-            return false;
-        }
-
-        /// <summary>
-        /// Handles a UsingDirective.
-        /// </summary>
-        protected override bool OnUsingDirective(UsingDirectiveSyntax node)
-        {
-            return false;
+            return base.OnNamespaceDeclaration(node);
         }
     }
 }
