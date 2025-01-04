@@ -1,4 +1,5 @@
-﻿using Fasciculus.Collections;
+﻿using Fasciculus.ApiDoc.Models;
+using Fasciculus.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,7 +36,15 @@ namespace Fasciculus.GitHub.Services
         {
             Add("/api/");
 
-            apiProvider.Packages.Append(apiProvider.Combined).Apply(p => { Add($"/api/{p.Link}/"); });
+            foreach (ApiPackage package in apiProvider.Packages.Append(apiProvider.Combined))
+            {
+                Add($"/api/{package.Link}/");
+
+                foreach (ApiNamespace @namespace in package.Namespaces)
+                {
+                    Add($"/api/{@namespace.Link}/");
+                }
+            }
         }
     }
 }

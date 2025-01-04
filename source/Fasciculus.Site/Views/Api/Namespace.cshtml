@@ -1,0 +1,16 @@
+﻿@model ApiNamespaceDocument
+
+<h1>@Model.Namespace.Name Namespace</h1>
+
+<h2>In this article</h2>
+
+<ul>
+    <li><a href="#definition">Definition</a></li>
+    <li><a href="#applies-to">Applies to</a></li>
+</ul>
+
+<h2 id="definition">Definition</h2>
+
+<p>@Model.Namespace.Description</p>
+
+<partial name="~/Views/Api/TargetFrameworks.cshtml" model=Model.Namespace.Frameworks />

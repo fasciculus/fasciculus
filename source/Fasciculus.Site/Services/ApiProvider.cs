@@ -43,14 +43,19 @@ namespace Fasciculus.GitHub.Services
             SetNamespaceDescriptions();
         }
 
-        public ApiPackage GetPackage(string name)
+        public ApiPackage GetPackage(string packageName)
         {
-            if ("Combined" == name)
+            if ("Combined" == packageName)
             {
                 return Combined;
             }
 
-            return Packages.First(p => p.Name == name);
+            return Packages.First(p => p.Name == packageName);
+        }
+
+        public ApiNamespace GetNamespace(string packageName, string namespaceName)
+        {
+            return GetPackage(packageName).Namespaces.First(n => n.Name == namespaceName);
         }
 
         private void SetPackageDescriptions()

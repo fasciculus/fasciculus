@@ -26,7 +26,7 @@
 @foreach (var ns in Model.Package.Namespaces)
 {
         <tr>
-            <td>@ns.Name</td>
+            <td><a href="~/api/@(ns.Link)/">@ns.Name</a></td>
             <td>@ns.Description</td>
         </tr>
 }

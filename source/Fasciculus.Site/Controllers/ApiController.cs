@@ -39,5 +39,19 @@ namespace Fasciculus.GitHub.Controllers
 
             return View(document);
         }
+
+        [Route("/api/{packageName}/{namespaceName}/")]
+        public IActionResult Namespace(string packageName, string namespaceName)
+        {
+            ApiNamespace @namespace = apiProvider.GetNamespace(packageName, namespaceName);
+
+            ApiNamespaceDocument document = new()
+            {
+                Title = "Namespace " + @namespace.Name,
+                Namespace = @namespace
+            };
+
+            return View(document);
+        }
     }
 }
