@@ -26,11 +26,22 @@ namespace Fasciculus.ApiDoc
 
             PackageCollection packages = ProjectParser.Parse(workspace.CurrentSolution.Projects, false);
             ApiPackages apiPackages = new(packages);
+            ApiPackage combined = CreateCombined(packages);
 
             return new()
             {
-                Packages = apiPackages
+                Packages = apiPackages,
+                Combined = combined
             };
+        }
+
+        private static ApiPackage CreateCombined(PackageCollection packages)
+        {
+            PackageInfo package = new() { Name = "Combined" };
+
+            packages.Apply(p => { package.Add(p); });
+
+            return new(package);
         }
 
         private MSBuildWorkspace LoadWorkspace()

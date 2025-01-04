@@ -2,7 +2,6 @@
 using Fasciculus.GitHub.Models;
 using Fasciculus.GitHub.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace Fasciculus.GitHub.Controllers
 {
@@ -27,10 +26,10 @@ namespace Fasciculus.GitHub.Controllers
             return View(document);
         }
 
-        [Route("/api/{pkg}/")]
-        public IActionResult Package(string pkg)
+        [Route("/api/{packageName}/")]
+        public IActionResult Package(string packageName)
         {
-            ApiPackage package = apiProvider.Packages.First(package => package.Name == pkg);
+            ApiPackage package = apiProvider.GetPackage(packageName);
 
             ApiPackageDocument document = new()
             {

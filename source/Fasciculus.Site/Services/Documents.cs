@@ -34,7 +34,7 @@ namespace Fasciculus.GitHub.Services
         {
             Add("/api/");
 
-            apiProvider.Packages.Apply(p => { Add($"/api/{p.Name}/"); });
+            apiProvider.Packages.Append(apiProvider.Combined).Apply(p => { Add($"/api/{p.Name}/"); });
         }
     }
 }

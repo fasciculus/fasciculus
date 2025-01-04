@@ -25,13 +25,11 @@ namespace Fasciculus.GitHub.Services
 
         private static readonly Dictionary<string, string> NamespaceDescriptions = new()
         {
-            { "System.Collections.Generic", "Extensions to types in the 'System.Collections.Generic' namespace." },
-            { "System.IO", "Extensions to types in the 'System.IO' namespace." },
-            { "System.Net.Http", "Extensions to types in the 'System.Net.Http' namespace." },
-            { "System.Reflection", "Extensions to types in the 'System.Reflection' namespace." },
+            { "Fasciculus.Algorithms", "Fast binary search, bit operations, fast array equality." },
         };
 
         public ApiPackages Packages { get; }
+        public ApiPackage Combined { get; }
 
         public ApiProvider()
         {
@@ -39,9 +37,20 @@ namespace Fasciculus.GitHub.Services
             ApiDocuments documents = builder.Build();
 
             Packages = documents.Packages;
+            Combined = documents.Combined;
 
             SetPackageDescriptions();
             SetNamespaceDescriptions();
+        }
+
+        public ApiPackage GetPackage(string name)
+        {
+            if ("Combined" == name)
+            {
+                return Combined;
+            }
+
+            return Packages.First(p => p.Name == name);
         }
 
         private void SetPackageDescriptions()
@@ -57,7 +66,7 @@ namespace Fasciculus.GitHub.Services
 
         private void SetNamespaceDescriptions()
         {
-            foreach (ApiPackage package in Packages)
+            foreach (ApiPackage package in Packages.Append(Combined))
             {
                 foreach (ApiNamespace @namespace in package.Namespaces)
                 {
