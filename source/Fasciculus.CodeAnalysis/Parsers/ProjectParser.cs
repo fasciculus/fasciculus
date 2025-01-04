@@ -65,7 +65,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
             PackageInfo[] packages = [.. projects
                 .Where(p => p.HasDocuments)
                 .Select(p => new ProjectParser(p))
-                //.AsParallel()
+                .AsParallel()
                 .Select(p => p.Parse(includeGenerated))];
 
             return new(packages);

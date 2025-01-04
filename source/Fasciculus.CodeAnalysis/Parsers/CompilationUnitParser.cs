@@ -38,13 +38,26 @@ namespace Fasciculus.CodeAnalysis.Parsers
         }
 
         /// <summary>
+        /// Handles a AttributeList.
+        /// </summary>
+        protected override void OnAttributeList(AttributeListSyntax node) { }
+
+        /// <summary>
+        /// Handles a IdentifierName.
+        /// </summary>
+        protected override void OnIdentifierName(IdentifierNameSyntax node) { }
+
+        /// <summary>
         /// Handles a NamespaceDeclaration.
         /// </summary>
-        protected override bool OnNamespaceDeclaration(NamespaceDeclarationSyntax node)
+        protected override void OnNamespaceDeclaration(NamespaceDeclarationSyntax node)
         {
             namespaces.Add(node.Name.ToString());
-
-            return base.OnNamespaceDeclaration(node);
         }
+
+        /// <summary>
+        /// Handles a UsingDirective.
+        /// </summary>
+        protected override void OnUsingDirective(UsingDirectiveSyntax node) { }
     }
 }

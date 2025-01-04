@@ -13,73 +13,63 @@ namespace Fasciculus.CodeAnalysis.Parsers
     public class SyntaxNodeVisitor
     {
         /// <summary>
-        /// Visits the given <paramref name="nodes"/> and their children unless a handler returns <c>false</c>.
+        /// Visits the given <paramref name="nodes"/> and their children.
         /// </summary>
-        protected virtual bool Visit(IEnumerable<SyntaxNode> nodes)
-        {
-            foreach (SyntaxNode node in nodes)
-            {
-                if (!Visit(node))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
+        protected virtual void Visit(IEnumerable<SyntaxNode> nodes)
+            => nodes.Apply(Visit);
 
         /// <summary>
-        /// Visits the given <paramref name="node"/> and its children unless a handler returns <c>false</c>.
+        /// Visits the given <paramref name="node"/> and its children.
         /// </summary>
-        protected virtual bool Visit(SyntaxNode node)
+        protected virtual void Visit(SyntaxNode node)
         {
             SyntaxKind kind = node.Kind();
 
             switch (kind)
             {
-                case SyntaxKind.IdentifierName: return On<IdentifierNameSyntax>(node, OnIdentifierName);
-                case SyntaxKind.NamespaceDeclaration: return On<NamespaceDeclarationSyntax>(node, OnNamespaceDeclaration);
-                case SyntaxKind.UsingDirective: return On<UsingDirectiveSyntax>(node, OnUsingDirective);
+                case SyntaxKind.AttributeList: On<AttributeListSyntax>(node, OnAttributeList); break;
+                case SyntaxKind.IdentifierName: On<IdentifierNameSyntax>(node, OnIdentifierName); break;
+                case SyntaxKind.NamespaceDeclaration: On<NamespaceDeclarationSyntax>(node, OnNamespaceDeclaration); break;
+                case SyntaxKind.UsingDirective: On<UsingDirectiveSyntax>(node, OnUsingDirective); break;
 
-                default:
-                    Debug.WriteLine($"unhandled kind {kind}");
-                    return true;
+                default: Debug.WriteLine($"unhandled kind {kind}"); Visit(node.ChildNodes()); break;
             }
         }
 
         /// <summary>
         /// Calls the given <paramref name="handler"/> if the given <paramref name="node"/> is of type <typeparamref name="T"/>.
         /// </summary>
-        /// <returns>
-        /// The handler's return value or <c>true</c> if the given <paramref name="node"/> is not of type <typeparamref name="T"/>.
-        /// </returns>
-        protected static bool On<T>(SyntaxNode node, Func<T, bool> handler)
+        protected static void On<T>(SyntaxNode node, Action<T> handler)
             where T : notnull, SyntaxNode
         {
             if (node is T t)
             {
-                return handler(t);
+                handler(t);
             }
-
-            return true;
         }
+
+        /// <summary>
+        /// Handles a AttributeList.
+        /// </summary>
+        protected virtual void OnAttributeList(AttributeListSyntax node)
+            => Visit(node.ChildNodes());
 
         /// <summary>
         /// Handles a IdentifierName.
         /// </summary>
-        protected virtual bool OnIdentifierName(IdentifierNameSyntax node)
+        protected virtual void OnIdentifierName(IdentifierNameSyntax node)
             => Visit(node.ChildNodes());
 
         /// <summary>
         /// Handles a NamespaceDeclaration.
         /// </summary>
-        protected virtual bool OnNamespaceDeclaration(NamespaceDeclarationSyntax node)
+        protected virtual void OnNamespaceDeclaration(NamespaceDeclarationSyntax node)
             => Visit(node.ChildNodes());
 
         /// <summary>
         /// Handles a UsingDirective.
         /// </summary>
-        protected virtual bool OnUsingDirective(UsingDirectiveSyntax node)
+        protected virtual void OnUsingDirective(UsingDirectiveSyntax node)
             => Visit(node.ChildNodes());
     }
 }
