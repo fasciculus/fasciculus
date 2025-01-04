@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Fasciculus.Support.Versioning;
 using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Frameworks
@@ -9,30 +9,11 @@ namespace Fasciculus.CodeAnalysis.Frameworks
     public class TargetProduct
     {
         /// <summary>
-        /// Comparer to compare version strings
-        /// </summary>
-        public class VersionComparer : IComparer<string>
-        {
-            /// <summary>
-            /// Compares the given versions
-            /// </summary>
-            public int Compare(string? x, string? y)
-            {
-                Version a = VersionFactory.Create(x ?? string.Empty);
-                Version b = VersionFactory.Create(y ?? string.Empty);
-
-                return a.CompareTo(b);
-            }
-        }
-
-        private static readonly VersionComparer versionComparer = new();
-
-        /// <summary>
         /// Name
         /// </summary>
         public string Name { get; }
 
-        private readonly SortedSet<string> versions = new(versionComparer);
+        private readonly SortedSet<string> versions = new(VersionComparer.Instance);
 
         /// <summary>
         /// Versions

@@ -1,4 +1,6 @@
-﻿namespace System
+﻿using System;
+
+namespace Fasciculus.Support.Versioning
 {
     /// <summary>
     /// Utility to create valid versions.
