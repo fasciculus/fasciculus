@@ -27,10 +27,10 @@ namespace Fasciculus.GitHub.Controllers
             return View(document);
         }
 
-        [Route("/api/pkg/{name}.html")]
-        public IActionResult Package(string name)
+        [Route("/api/{pkg}/")]
+        public IActionResult Package(string pkg)
         {
-            ApiPackage package = apiProvider.Packages.First(package => package.Name == name);
+            ApiPackage package = apiProvider.Packages.First(package => package.Name == pkg);
 
             ApiPackageDocument document = new()
             {
