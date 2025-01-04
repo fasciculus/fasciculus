@@ -9,9 +9,9 @@ namespace Fasciculus.ApiDoc.Models
     {
         private readonly List<ApiNamespace> namespaces;
 
-        public ApiNamespaces(NamespaceCollection namespaces)
+        public ApiNamespaces(NamespaceCollection namespaces, ApiPackage package)
         {
-            this.namespaces = namespaces.Select(n => new ApiNamespace(n)).ToList();
+            this.namespaces = namespaces.Select(n => new ApiNamespace(n, package)).ToList();
         }
 
         public IEnumerator<ApiNamespace> GetEnumerator()

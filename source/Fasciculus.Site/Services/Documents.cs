@@ -17,6 +17,7 @@ namespace Fasciculus.GitHub.Services
         private void AddGlobals()
         {
             Add("/");
+            Add("/about.html");
             Add("/privacy.html");
         }
 
@@ -34,7 +35,7 @@ namespace Fasciculus.GitHub.Services
         {
             Add("/api/");
 
-            apiProvider.Packages.Append(apiProvider.Combined).Apply(p => { Add($"/api/{p.Name}/"); });
+            apiProvider.Packages.Append(apiProvider.Combined).Apply(p => { Add($"/api/{p.Link}/"); });
         }
     }
 }

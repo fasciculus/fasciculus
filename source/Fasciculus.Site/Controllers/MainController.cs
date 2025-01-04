@@ -26,5 +26,16 @@ namespace Fasciculus.GitHub.Controllers
 
             return View(document);
         }
+
+        [Route("/about.html")]
+        public IActionResult About()
+        {
+            Document document = new()
+            {
+                Title = "About"
+            };
+
+            return View(document);
+        }
     }
 }
