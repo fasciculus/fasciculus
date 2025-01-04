@@ -1,12 +1,12 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Parsers;
 using Fasciculus.CodeAnalysis.Workspaces;
+using Fasciculus.Collections;
+using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Tests.Parsers

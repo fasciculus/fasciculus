@@ -1,4 +1,5 @@
-﻿using Fasciculus.IO.Compressing;
+﻿using Fasciculus.IO;
+using Fasciculus.IO.Compressing;
 using Fasciculus.Net;
 using Fasciculus.Support.Progressing;
 using Fasciculus.Threading.Synchronization;

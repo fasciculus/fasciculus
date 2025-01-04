@@ -1,4 +1,5 @@
-﻿using Fasciculus.Eve.Models;
+﻿using Fasciculus.Collections;
+using Fasciculus.Eve.Models;
 using Fasciculus.Mathematics.LinearAlgebra;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;

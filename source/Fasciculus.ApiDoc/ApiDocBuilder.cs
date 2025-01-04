@@ -2,6 +2,7 @@
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Parsers;
 using Fasciculus.CodeAnalysis.Workspaces;
+using Fasciculus.Collections;
 using Microsoft.CodeAnalysis.MSBuild;
 using System.Collections.Generic;
 using System.IO;

@@ -1,8 +1,9 @@
 ﻿using Fasciculus.Support;
 using Fasciculus.Threading.Synchronization;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Fasciculus.Extensions
 {
     /// <summary>
     /// Global service provider.

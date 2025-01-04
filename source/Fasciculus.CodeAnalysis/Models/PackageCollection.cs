@@ -1,4 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Frameworks;
+using Fasciculus.Collections;
 using System.Collections;
 using System.Collections.Generic;
 

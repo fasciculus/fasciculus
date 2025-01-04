@@ -1,7 +1,8 @@
 ﻿using Fasciculus.Support;
+using System;
 using System.Reflection;
 
-namespace System
+namespace Fasciculus.Reflection
 {
     /// <summary>
     /// Extensions for <see cref="object"/>.

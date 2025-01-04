@@ -1,4 +1,5 @@
-﻿using Fasciculus.Support;
+﻿using Fasciculus.Collections;
+using Fasciculus.Support;
 using System;
 using System.Collections.Generic;
 using System.IO;

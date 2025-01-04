@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Fasciculus.IO;
+using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 
 namespace Fasciculus.GitHub.Services

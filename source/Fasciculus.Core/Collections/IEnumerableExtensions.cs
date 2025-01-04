@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace System.Collections.Generic
+namespace Fasciculus.Collections
 {
     /// <summary>
     /// Extensions for <see cref="IEnumerable{T}"/>

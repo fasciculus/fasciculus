@@ -1,4 +1,5 @@
 using Fasciculus.Eve.ViewModels;
+using Fasciculus.Extensions;
 
 namespace Fasciculus.Eve.Views;
 

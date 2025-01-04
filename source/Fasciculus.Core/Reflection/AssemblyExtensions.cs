@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
-namespace System.Reflection
+namespace Fasciculus.Reflection
 {
     /// <summary>
     /// <see cref="Assembly"/> extensions.

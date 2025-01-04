@@ -1,4 +1,5 @@
-﻿using Fasciculus.IO.Searching;
+﻿using Fasciculus.IO;
+using Fasciculus.IO.Searching;
 using Fasciculus.Threading;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;

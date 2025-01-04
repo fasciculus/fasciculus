@@ -1,4 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Workspaces;
+using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -1,4 +1,5 @@
-﻿using Fasciculus.Support.Versioning;
+﻿using Fasciculus.Collections;
+using Fasciculus.Support.Versioning;
 using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Frameworks

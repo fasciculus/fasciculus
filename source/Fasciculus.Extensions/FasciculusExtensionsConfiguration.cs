@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Fasciculus.Extensions
 {
     /// <summary>
     /// Utilities to add Fasciculus.Extensions services to a service collection.

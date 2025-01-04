@@ -1,7 +1,7 @@
-﻿using Fasciculus.Steam.Models;
+﻿using Fasciculus.Collections;
+using Fasciculus.Steam.Models;
 using Fasciculus.Windows.WindowsRegistry;
 using Microsoft.Win32;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 

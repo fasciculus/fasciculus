@@ -1,8 +1,10 @@
 ﻿using Fasciculus.Threading;
+using System;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace System.Net.Http
+namespace Fasciculus.Net
 {
     /// <summary>
     /// Extensions for <see cref="HttpClient"/>

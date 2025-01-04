@@ -1,8 +1,10 @@
 ﻿using Fasciculus.Algorithms;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
-namespace System.IO
+namespace Fasciculus.IO
 {
     /// <summary>
     /// Extensions for <see cref="FileInfo"/>.

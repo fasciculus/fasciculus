@@ -1,6 +1,6 @@
-﻿using Fasciculus.Support.Progressing;
+﻿using Fasciculus.Collections;
+using Fasciculus.Support.Progressing;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;

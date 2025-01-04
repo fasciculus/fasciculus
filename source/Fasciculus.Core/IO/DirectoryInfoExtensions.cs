@@ -1,4 +1,6 @@
-﻿namespace System.IO
+﻿using System.IO;
+
+namespace Fasciculus.IO
 {
     /// <summary>
     /// Extensions for <see cref="DirectoryInfo"/>.

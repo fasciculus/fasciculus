@@ -1,4 +1,5 @@
-﻿using Fasciculus.Eve.Models;
+﻿using Fasciculus.Collections;
+using Fasciculus.Eve.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Eve.Assets.Models;
+using Fasciculus.IO;
 using Fasciculus.Threading.Synchronization;
 
 namespace Fasciculus.Eve.Assets.Services

@@ -2,6 +2,7 @@
 using Fasciculus.Eve.PageModels;
 using Fasciculus.Eve.Services;
 using Fasciculus.Eve.ViewModels;
+using Fasciculus.Extensions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 

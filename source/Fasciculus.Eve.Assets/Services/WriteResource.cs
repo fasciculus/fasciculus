@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Algorithms;
+using Fasciculus.IO;
 using Fasciculus.IO.Compressing;
 
 namespace Fasciculus.Eve.Assets.Services

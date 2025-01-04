@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Fasciculus.Collections;
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Threading;

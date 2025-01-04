@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Services;
+using Fasciculus.Reflection;
 using NuGet.Versioning;
 
 using System.Reflection;

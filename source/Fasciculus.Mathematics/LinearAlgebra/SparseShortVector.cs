@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Algorithms;
+using Fasciculus.Collections;
 using Fasciculus.IO;
 using System.Collections.Generic;
 using System.Linq;

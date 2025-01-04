@@ -1,5 +1,7 @@
 ﻿using Fasciculus.ApiDoc;
 using Fasciculus.ApiDoc.Models;
+using Fasciculus.Collections;
+using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +25,6 @@ namespace Fasciculus.GitHub.Services
 
         private static readonly Dictionary<string, string> NamespaceDescriptions = new()
         {
-            { "System", "Extensions to types in the 'System' namespace." },
             { "System.Collections.Generic", "Extensions to types in the 'System.Collections.Generic' namespace." },
             { "System.IO", "Extensions to types in the 'System.IO' namespace." },
             { "System.Net.Http", "Extensions to types in the 'System.Net.Http' namespace." },
