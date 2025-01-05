@@ -23,6 +23,7 @@ namespace Fasciculus.GitHub
             if (generate)
             {
                 app.Services.GetRequiredService<Generator>().Run();
+                app.Services.GetRequiredService<Deleter>().Run();
             }
             else
             {
@@ -63,6 +64,7 @@ namespace Fasciculus.GitHub
             services.TryAddSingleton<Documents>();
             services.TryAddSingleton<Writer>();
             services.TryAddSingleton<Generator>();
+            services.TryAddSingleton<Deleter>();
 
             return services;
         }

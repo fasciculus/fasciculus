@@ -1,5 +1,6 @@
 ﻿using Fasciculus.IO;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Fasciculus.GitHub.Services
@@ -9,6 +10,12 @@ namespace Fasciculus.GitHub.Services
         public const string OutputDirectoryKey = "_OutputDirectory";
 
         private readonly DirectoryInfo outputDirectory;
+
+        private readonly SortedSet<string> allFiles = [];
+        private readonly SortedSet<string> modifiedFiles = [];
+
+        public IReadOnlySet<string> AllFiles => allFiles;
+        public IReadOnlySet<string> ModifiedFiles => modifiedFiles;
 
         public Writer([FromKeyedServices(OutputDirectoryKey)] DirectoryInfo outputDirectory)
         {
@@ -34,7 +41,14 @@ namespace Fasciculus.GitHub.Services
 
             FileInfo file = outputDirectory.File(document);
 
-            file.WriteIfDifferent(content);
+            file.WriteIfDifferent(content, out bool written);
+
+            allFiles.Add(document);
+
+            if (written)
+            {
+                modifiedFiles.Add(file.FullName);
+            }
         }
     }
 }
