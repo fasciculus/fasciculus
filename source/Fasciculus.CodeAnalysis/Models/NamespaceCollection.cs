@@ -43,10 +43,7 @@ namespace Fasciculus.CodeAnalysis.Models
                 return existing;
             }
 
-            NamespaceInfo @namespace = new()
-            {
-                Name = name,
-            };
+            NamespaceInfo @namespace = new(name);
 
             return Add(@namespace);
         }
@@ -63,6 +60,12 @@ namespace Fasciculus.CodeAnalysis.Models
         /// </summary>
         public void Add(TargetFramework framework)
             => namespaces.Values.Apply(n => { n.Add(framework); });
+
+        /// <summary>
+        /// Adds the given <paramref name="name"/> to the packages this namespaces occurs in.
+        /// </summary>
+        public void AddPackage(string name)
+            => namespaces.Values.Apply(n => { n.AddPackage(name); });
 
         /// <summary>
         /// Returns an enumerator that iterates through this collection.

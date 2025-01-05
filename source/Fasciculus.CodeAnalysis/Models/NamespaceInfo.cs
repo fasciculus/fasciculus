@@ -1,4 +1,6 @@
 ﻿using Fasciculus.CodeAnalysis.Frameworks;
+using Fasciculus.Collections;
+using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
@@ -7,6 +9,30 @@ namespace Fasciculus.CodeAnalysis.Models
     /// </summary>
     public class NamespaceInfo : ElementInfo
     {
+        private readonly SortedSet<string> packages = [];
+
+        /// <summary>
+        /// The packages this namespace occurs in.
+        /// </summary>
+        public IEnumerable<string> Packages => packages;
+
+        /// <summary>
+        /// Initiaizes a new namespace.
+        /// </summary>
+        /// <param name="name"></param>
+        public NamespaceInfo(string name)
+            : base(name)
+        {
+        }
+
+        /// <summary>
+        /// Adds the given <paramref name="name"/> to the packages this namespace occurs in.
+        /// </summary>
+        public void AddPackage(string name)
+        {
+            packages.Add(name);
+        }
+
         /// <summary>
         /// Adds the given <paramref name="framework"/> to this element and to contained elements.
         /// </summary>
@@ -21,6 +47,8 @@ namespace Fasciculus.CodeAnalysis.Models
         public void Add(NamespaceInfo @namespace)
         {
             Frameworks.Add(@namespace.Frameworks);
+
+            @namespace.packages.Apply(p => { packages.Add(p); });
         }
     }
 }

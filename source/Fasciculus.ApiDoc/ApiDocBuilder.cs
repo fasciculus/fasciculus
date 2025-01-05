@@ -37,9 +37,9 @@ namespace Fasciculus.ApiDoc
 
         private static ApiPackage CreateCombined(PackageCollection packages)
         {
-            PackageInfo package = new() { Name = "Combined" };
+            PackageInfo package = new("Combined");
 
-            packages.Apply(p => { package.Add(p); });
+            packages.Apply(package.Add);
 
             return new(package);
         }

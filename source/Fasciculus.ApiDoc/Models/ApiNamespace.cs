@@ -1,4 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
+using System.Collections.Generic;
 
 namespace Fasciculus.ApiDoc.Models
 {
@@ -6,14 +7,17 @@ namespace Fasciculus.ApiDoc.Models
     {
         public string Description { get; set; } = string.Empty;
 
-        public ApiPackage Package { get; }
+        private readonly SortedSet<string> packages;
+        public IEnumerable<string> Packages => packages;
+
         public override string Link { get; }
 
         public ApiNamespace(NamespaceInfo @namespace, ApiPackage package)
             : base(@namespace)
         {
-            Package = package;
-            Link = $"{Package.Link}/{Name}";
+            packages = new(@namespace.Packages);
+
+            Link = $"{package.Link}/{Name}";
         }
     }
 }

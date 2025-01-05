@@ -1,5 +1,10 @@
 ﻿@model ApiNamespaceDocument
 
+@{
+    var hasPackages = Model.Namespace.Packages.Any();
+    var packagesLabel = Model.Namespace.Packages.Count() > 1 ? "Packages" : "Package";
+}
+
 <h1>@Model.Namespace.Name Namespace</h1>
 
 <h2>In this article</h2>
@@ -10,6 +15,11 @@
 </ul>
 
 <h2 id="definition">Definition</h2>
+
+@if (hasPackages)
+{
+    <p>@(packagesLabel): @(string.Join(", ", Model.Namespace.Packages))</p>
+}
 
 <p>@Model.Namespace.Description</p>
 

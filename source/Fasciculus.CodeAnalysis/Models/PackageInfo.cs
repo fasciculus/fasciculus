@@ -13,6 +13,15 @@ namespace Fasciculus.CodeAnalysis.Models
         public NamespaceCollection Namespaces { get; } = [];
 
         /// <summary>
+        /// Initializes a new package.
+        /// </summary>
+        /// <param name="name"></param>
+        public PackageInfo(string name)
+            : base(name)
+        {
+        }
+
+        /// <summary>
         /// Merges this package with the given <paramref name="other"/> package.
         /// </summary>
         /// <param name="other"></param>

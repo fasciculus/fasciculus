@@ -10,12 +10,20 @@ namespace Fasciculus.CodeAnalysis.Models
         /// <summary>
         /// Name.
         /// </summary>
-        public required string Name { get; init; }
+        public string Name { get; }
 
         /// <summary>
         /// The target frameworks this element is valid for.
         /// </summary>
         public TargetFrameworks Frameworks { get; } = new();
+
+        /// <summary>
+        /// Initializes a new element
+        /// </summary>
+        protected ElementInfo(string name)
+        {
+            Name = name;
+        }
 
         /// <summary>
         /// Adds the given <paramref name="framework"/> to this element and to contained elements.

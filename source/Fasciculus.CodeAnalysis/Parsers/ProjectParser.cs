@@ -31,10 +31,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
         /// <returns></returns>
         public PackageInfo Parse(bool includeGenerated)
         {
-            PackageInfo result = new()
-            {
-                Name = project.AssemblyName
-            };
+            PackageInfo result = new(project.AssemblyName);
 
             if (Tasks.Wait(project.GetCompilationAsync()) is CSharpCompilation compilation)
             {
@@ -46,6 +43,8 @@ namespace Fasciculus.CodeAnalysis.Parsers
                     .Select(p => p.Parse())
                     .Apply(result.Namespaces.Add);
             }
+
+            result.Namespaces.AddPackage(result.Name);
 
             if (project.TryGetTargetFramework(out TargetFramework? framework))
             {
