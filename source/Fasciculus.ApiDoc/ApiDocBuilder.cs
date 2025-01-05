@@ -39,7 +39,7 @@ namespace Fasciculus.ApiDoc
         {
             PackageInfo package = new("Combined");
 
-            packages.Apply(package.Add);
+            packages.Apply(package.MergeWith);
 
             return new(package);
         }

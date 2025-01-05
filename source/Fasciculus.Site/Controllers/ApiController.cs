@@ -29,7 +29,8 @@ namespace Fasciculus.GitHub.Controllers
         [Route("/api/{packageName}/")]
         public IActionResult Package(string packageName)
         {
-            ApiPackage package = apiProvider.GetPackage(packageName);
+            ApiLink link = new(packageName);
+            ApiPackage package = apiProvider.GetPackage(link);
 
             ApiPackageDocument document = new()
             {
@@ -43,12 +44,29 @@ namespace Fasciculus.GitHub.Controllers
         [Route("/api/{packageName}/{namespaceName}/")]
         public IActionResult Namespace(string packageName, string namespaceName)
         {
-            ApiNamespace @namespace = apiProvider.GetNamespace(packageName, namespaceName);
+            ApiLink link = new(packageName, namespaceName);
+            ApiNamespace @namespace = apiProvider.GetNamespace(link);
 
             ApiNamespaceDocument document = new()
             {
                 Title = "Namespace " + @namespace.Name,
-                Namespace = @namespace
+                Namespace = @namespace,
+                Classes = @namespace.Classes
+            };
+
+            return View(document);
+        }
+
+        [Route("/api/{packageName}/{namespaceName}/{className}/")]
+        public IActionResult Class(string packageName, string namespaceName, string className)
+        {
+            ApiLink link = new(packageName, namespaceName, className);
+            ApiClass @class = apiProvider.GetClass(link);
+
+            ApiClassDocument document = new()
+            {
+                Title = "Class: " + @class.Name,
+                Class = @class,
             };
 
             return View(document);

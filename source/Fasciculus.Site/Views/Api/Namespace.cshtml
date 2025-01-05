@@ -5,12 +5,16 @@
     var packagesLabel = Model.Namespace.Packages.Count() > 1 ? "Packages" : "Package";
 }
 
-<h1>@Model.Namespace.Name Namespace</h1>
+<h1>Namespace: @Model.Namespace.Name</h1>
 
 <h2>In this article</h2>
 
 <ul>
     <li><a href="#definition">Definition</a></li>
+@if (Model.HasClasses)
+{
+    <li><a href="#classes">Classes</a></li>
+}
     <li><a href="#applies-to">Applies to</a></li>
 </ul>
 
@@ -22,5 +26,28 @@
 }
 
 <p>@Model.Namespace.Description</p>
+
+@if (Model.HasClasses)
+{
+<h2 id="classes">Classes</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Class</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var c in Model.Classes)
+{
+        <tr>
+            <td><a href="~/api/@(c.Link)/">@c.Name</a></td>
+            <td></td>
+        </tr>
+}
+    </tbody>
+</table>
+}
 
 <partial name="~/Views/Api/TargetFrameworks.cshtml" model=Model.Namespace.Frameworks />

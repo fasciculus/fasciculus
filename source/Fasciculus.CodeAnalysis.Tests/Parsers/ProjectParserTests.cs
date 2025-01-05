@@ -41,6 +41,15 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
                     Assert.AreEqual(3, @namespace.Frameworks.Count());
                 }
             }
+
+            PackageInfo corePackage = packages.First(p => p.Name == "Fasciculus.Core");
+            NamespaceInfo collectionsNamespace = corePackage.Namespaces.First(n => n.Name == "Fasciculus.Collections");
+            ClassInfo bitsetClass = collectionsNamespace.Classes.First(c => c.Name == "BitSet");
+            ClassInfo disposableStackClass = collectionsNamespace.Classes.First(c => c.Name == "DisposableStack<T>");
+
+            Assert.AreEqual(7, collectionsNamespace.Classes.Count());
+            Assert.AreEqual(3, bitsetClass.Frameworks.Count());
+            Assert.AreEqual(3, disposableStackClass.Frameworks.Count());
         }
     }
 }

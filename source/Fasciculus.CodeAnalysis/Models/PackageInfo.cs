@@ -25,19 +25,19 @@ namespace Fasciculus.CodeAnalysis.Models
         /// Merges this package with the given <paramref name="other"/> package.
         /// </summary>
         /// <param name="other"></param>
-        public void Add(PackageInfo other)
+        public void MergeWith(PackageInfo other)
         {
             Frameworks.Add(other.Frameworks);
-            Namespaces.Add(other.Namespaces);
+            Namespaces.MergeWith(other.Namespaces);
         }
 
         /// <summary>
         /// Adds the given <paramref name="framework"/> to this element and to contained elements.
         /// </summary>
-        public override void Add(TargetFramework framework)
+        public override void AddFramework(TargetFramework framework)
         {
             Frameworks.Add(framework);
-            Namespaces.Add(framework);
+            Namespaces.AddFramework(framework);
         }
     }
 }

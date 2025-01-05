@@ -29,11 +29,20 @@ namespace Fasciculus.CodeAnalysis.Parsers
             switch (kind)
             {
                 case SyntaxKind.AttributeList: On<AttributeListSyntax>(node, OnAttributeList); break;
+                case SyntaxKind.ClassDeclaration: On<ClassDeclarationSyntax>(node, OnClassDeclaration); break;
+                case SyntaxKind.EnumDeclaration: On<EnumDeclarationSyntax>(node, OnEnumDeclaration); break;
                 case SyntaxKind.IdentifierName: On<IdentifierNameSyntax>(node, OnIdentifierName); break;
+                case SyntaxKind.InterfaceDeclaration: On<InterfaceDeclarationSyntax>(node, OnInterfaceDeclaration); break;
                 case SyntaxKind.NamespaceDeclaration: On<NamespaceDeclarationSyntax>(node, OnNamespaceDeclaration); break;
+                case SyntaxKind.QualifiedName: On<QualifiedNameSyntax>(node, OnQualifiedName); break;
+                case SyntaxKind.TypeParameter: On<TypeParameterSyntax>(node, OnTypeParameter); break;
+                case SyntaxKind.TypeParameterList: On<TypeParameterListSyntax>(node, OnTypeParameterList); break;
                 case SyntaxKind.UsingDirective: On<UsingDirectiveSyntax>(node, OnUsingDirective); break;
 
-                default: Debug.WriteLine($"unhandled kind {kind}"); Visit(node.ChildNodes()); break;
+                default:
+                    Debug.WriteLine($"unhandled kind {kind}");
+                    Visit(node.ChildNodes());
+                    break;
             }
         }
 
@@ -56,15 +65,51 @@ namespace Fasciculus.CodeAnalysis.Parsers
             => Visit(node.ChildNodes());
 
         /// <summary>
+        /// Handles a ClassDeclaration.
+        /// </summary>
+        protected virtual void OnClassDeclaration(ClassDeclarationSyntax node)
+            => Visit(node.ChildNodes());
+
+        /// <summary>
+        /// Handles a EnumDeclaration.
+        /// </summary>
+        protected virtual void OnEnumDeclaration(EnumDeclarationSyntax node)
+            => Visit(node.ChildNodes());
+
+        /// <summary>
         /// Handles a IdentifierName.
         /// </summary>
         protected virtual void OnIdentifierName(IdentifierNameSyntax node)
             => Visit(node.ChildNodes());
 
         /// <summary>
+        /// Handles a InterfaceDeclaration.
+        /// </summary>
+        protected virtual void OnInterfaceDeclaration(InterfaceDeclarationSyntax node)
+            => Visit(node.ChildNodes());
+
+        /// <summary>
         /// Handles a NamespaceDeclaration.
         /// </summary>
         protected virtual void OnNamespaceDeclaration(NamespaceDeclarationSyntax node)
+            => Visit(node.ChildNodes());
+
+        /// <summary>
+        /// Handles a QualifiedName.
+        /// </summary>
+        protected virtual void OnQualifiedName(QualifiedNameSyntax node)
+            => Visit(node.ChildNodes());
+
+        /// <summary>
+        /// Handles a TypeParameter.
+        /// </summary>
+        protected virtual void OnTypeParameter(TypeParameterSyntax node)
+            => Visit(node.ChildNodes());
+
+        /// <summary>
+        /// Handles a TypeParameterList.
+        /// </summary>
+        protected virtual void OnTypeParameterList(TypeParameterListSyntax node)
             => Visit(node.ChildNodes());
 
         /// <summary>

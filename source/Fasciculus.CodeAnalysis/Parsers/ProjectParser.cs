@@ -41,14 +41,14 @@ namespace Fasciculus.CodeAnalysis.Parsers
                     .Select(t => t.GetCompilationUnitRoot())
                     .Select(cu => new CompilationUnitParser(cu))
                     .Select(p => p.Parse())
-                    .Apply(result.Namespaces.Add);
+                    .Apply(result.Namespaces.MergeWith);
             }
 
             result.Namespaces.AddPackage(result.Name);
 
             if (project.TryGetTargetFramework(out TargetFramework? framework))
             {
-                result.Add(framework);
+                result.AddFramework(framework);
             }
 
             return result;

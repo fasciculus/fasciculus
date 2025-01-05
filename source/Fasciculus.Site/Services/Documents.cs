@@ -43,6 +43,11 @@ namespace Fasciculus.GitHub.Services
                 foreach (ApiNamespace @namespace in package.Namespaces)
                 {
                     Add($"/api/{@namespace.Link}/");
+
+                    foreach (ApiClass @class in @namespace.Classes)
+                    {
+                        Add($"/api/{@class.Link}/");
+                    }
                 }
             }
         }

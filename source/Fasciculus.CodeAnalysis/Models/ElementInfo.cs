@@ -15,7 +15,7 @@ namespace Fasciculus.CodeAnalysis.Models
         /// <summary>
         /// The target frameworks this element is valid for.
         /// </summary>
-        public TargetFrameworks Frameworks { get; } = new();
+        public TargetFrameworks Frameworks { get; } = [];
 
         /// <summary>
         /// Initializes a new element
@@ -28,6 +28,6 @@ namespace Fasciculus.CodeAnalysis.Models
         /// <summary>
         /// Adds the given <paramref name="framework"/> to this element and to contained elements.
         /// </summary>
-        public abstract void Add(TargetFramework framework);
+        public abstract void AddFramework(TargetFramework framework);
     }
 }

@@ -4,14 +4,15 @@ namespace Fasciculus.ApiDoc.Models
 {
     public class ApiPackage : ApiElement
     {
-        public string Description { get; set; } = string.Empty;
+        public override ApiLink Link { get; }
         public ApiNamespaces Namespaces { get; }
 
-        public override string Link => Name;
+        public string Description { get; set; } = string.Empty;
 
         public ApiPackage(PackageInfo package)
             : base(package)
         {
+            Link = new ApiLink(Name);
             Namespaces = new(package.Namespaces, this);
         }
     }

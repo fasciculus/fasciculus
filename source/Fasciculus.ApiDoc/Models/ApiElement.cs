@@ -9,7 +9,7 @@ namespace Fasciculus.ApiDoc.Models
 
         public TargetFrameworks Frameworks { get; }
 
-        public abstract string Link { get; }
+        public abstract ApiLink Link { get; }
 
         public ApiElement(ElementInfo element)
         {

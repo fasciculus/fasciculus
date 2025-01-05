@@ -5,19 +5,21 @@ namespace Fasciculus.ApiDoc.Models
 {
     public class ApiNamespace : ApiElement
     {
-        public string Description { get; set; } = string.Empty;
+        public override ApiLink Link { get; }
+        public ApiClasses Classes { get; }
 
         private readonly SortedSet<string> packages;
         public IEnumerable<string> Packages => packages;
 
-        public override string Link { get; }
+        public string Description { get; set; } = string.Empty;
 
         public ApiNamespace(NamespaceInfo @namespace, ApiPackage package)
             : base(@namespace)
         {
-            packages = new(@namespace.Packages);
+            Link = package.Link.Combine(Name);
+            Classes = new(@namespace.Classes, this);
 
-            Link = $"{package.Link}/{Name}";
+            packages = new(@namespace.Packages);
         }
     }
 }

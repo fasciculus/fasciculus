@@ -5,10 +5,15 @@ using System.Collections.Generic;
 namespace Fasciculus.CodeAnalysis.Models
 {
     /// <summary>
-    /// Information of a namespace.
+    /// Information of a class.
     /// </summary>
-    public class NamespaceInfo : ElementInfo
+    public class ClassInfo : ElementInfo
     {
+        /// <summary>
+        /// Name without type parameters.
+        /// </summary>
+        public string UntypedName { get; }
+
         private readonly SortedSet<string> packages = [];
 
         /// <summary>
@@ -16,29 +21,32 @@ namespace Fasciculus.CodeAnalysis.Models
         /// </summary>
         public IEnumerable<string> Packages => packages;
 
-        /// <summary>
-        /// The classes in this namespace.
-        /// </summary>
-        public ClassCollection Classes = [];
+        private readonly string[] parameters;
 
         /// <summary>
-        /// Initiaizes a new namespace.
+        /// Type parameters of this class if generic.
         /// </summary>
-        /// <param name="name"></param>
-        public NamespaceInfo(string name)
+        public IEnumerable<string> Parameters => parameters;
+
+        /// <summary>
+        /// Initializes a new class.
+        /// </summary>
+        public ClassInfo(string name, string untypedName, IEnumerable<string> parameters)
             : base(name)
         {
+            UntypedName = untypedName;
+
+            this.parameters = [.. parameters];
         }
 
         /// <summary>
-        /// Merges the given <paramref name="namespace"/> into this namespace.
+        /// Merges the given <paramref name="class"/> into this namespace.
         /// </summary>
-        public void MergeWith(NamespaceInfo @namespace)
+        public void MergeWith(ClassInfo @class)
         {
-            Frameworks.Add(@namespace.Frameworks);
+            Frameworks.Add(@class.Frameworks);
 
-            @namespace.packages.Apply(p => { packages.Add(p); });
-            @namespace.Classes.Apply(c => { Classes.MergeWith(c); });
+            @class.packages.Apply(p => { packages.Add(p); });
         }
 
         /// <summary>
@@ -47,7 +55,6 @@ namespace Fasciculus.CodeAnalysis.Models
         public override void AddFramework(TargetFramework framework)
         {
             Frameworks.Add(framework);
-            Classes.AddFramework(framework);
         }
 
         /// <summary>
@@ -56,7 +63,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public void AddPackage(string name)
         {
             packages.Add(name);
-            Classes.AddPackage(name);
         }
+
     }
 }

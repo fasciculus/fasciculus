@@ -12,6 +12,6 @@ namespace Fasciculus.CodeAnalysis.Models
         /// <summary>
         /// Adds the given <paramref name="framework"/>
         /// </summary>
-        public void Add(TargetFramework framework);
+        public void AddFramework(TargetFramework framework);
     }
 }

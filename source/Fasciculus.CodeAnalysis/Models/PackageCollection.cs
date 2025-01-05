@@ -28,7 +28,7 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             if (packages.TryGetValue(package.Name, out PackageInfo? existing))
             {
-                existing.Add(package);
+                existing.MergeWith(package);
             }
             else
             {
@@ -46,7 +46,7 @@ namespace Fasciculus.CodeAnalysis.Models
         /// <summary>
         /// Adds the given <paramref name="framework"/>
         /// </summary>
-        public void Add(TargetFramework framework)
+        public void AddFramework(TargetFramework framework)
             => packages.Values.Apply(Add);
 
         /// <summary>

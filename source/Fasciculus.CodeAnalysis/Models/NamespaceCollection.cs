@@ -14,14 +14,29 @@ namespace Fasciculus.CodeAnalysis.Models
         private readonly Dictionary<string, NamespaceInfo> namespaces = [];
 
         /// <summary>
-        /// Adds the given <paramref name="namespace"/> to this collection, merging it into an existing package of the
+        /// Adds a new namespace with the given <paramref name="name"/> or returns an existing namespace with that name.
+        /// </summary>
+        public NamespaceInfo Add(string name)
+        {
+            if (namespaces.TryGetValue(name, out NamespaceInfo? existing))
+            {
+                return existing;
+            }
+
+            NamespaceInfo @namespace = new(name);
+
+            return MergeWith(@namespace);
+        }
+
+        /// <summary>
+        /// Adds the given <paramref name="namespace"/> to this collection, merging it into an existing namespace of the
         /// same name if such one exists.
         /// </summary>
-        public NamespaceInfo Add(NamespaceInfo @namespace)
+        public NamespaceInfo MergeWith(NamespaceInfo @namespace)
         {
             if (namespaces.TryGetValue(@namespace.Name, out NamespaceInfo? existing))
             {
-                existing.Add(@namespace);
+                existing.MergeWith(@namespace);
 
                 return existing;
             }
@@ -34,32 +49,17 @@ namespace Fasciculus.CodeAnalysis.Models
         }
 
         /// <summary>
-        /// Adds a new namespace with the given <paramref name="name"/> or returns an existing namespace with that name.
-        /// </summary>
-        public NamespaceInfo Add(string name)
-        {
-            if (namespaces.TryGetValue(name, out NamespaceInfo? existing))
-            {
-                return existing;
-            }
-
-            NamespaceInfo @namespace = new(name);
-
-            return Add(@namespace);
-        }
-
-        /// <summary>
         /// Adds the given <paramref name="namespaces"/> to this collection, merging them with existing packages of the
         /// same name if such exists.
         /// </summary>
-        public void Add(IEnumerable<NamespaceInfo> namespaces)
-            => namespaces.Apply(n => { Add(n); });
+        public void MergeWith(IEnumerable<NamespaceInfo> namespaces)
+            => namespaces.Apply(n => { MergeWith(n); });
 
         /// <summary>
         /// Adds the given <paramref name="framework"/>
         /// </summary>
-        public void Add(TargetFramework framework)
-            => namespaces.Values.Apply(n => { n.Add(framework); });
+        public void AddFramework(TargetFramework framework)
+            => namespaces.Values.Apply(n => { n.AddFramework(framework); });
 
         /// <summary>
         /// Adds the given <paramref name="name"/> to the packages this namespaces occurs in.
