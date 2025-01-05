@@ -1,4 +1,4 @@
-﻿namespace Fasciculus.GitHub.Models
+﻿namespace Fasciculus.Site.Models
 {
     public class Document
     {

@@ -1,7 +1,7 @@
-﻿using Fasciculus.GitHub.Models;
+﻿using Fasciculus.Site.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Fasciculus.GitHub.Controllers
+namespace Fasciculus.Site.Controllers
 {
     public class MainController : Controller
     {

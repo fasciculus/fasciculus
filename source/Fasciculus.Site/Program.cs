@@ -1,11 +1,11 @@
-﻿using Fasciculus.GitHub.Services;
+﻿using Fasciculus.Site.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.IO;
 
-namespace Fasciculus.GitHub
+namespace Fasciculus.Site
 {
     public static class Program
     {

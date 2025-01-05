@@ -1,15 +1,15 @@
 ﻿using Fasciculus.ApiDoc;
 using Fasciculus.ApiDoc.Models;
 using Fasciculus.Collections;
-using Fasciculus.GitHub.Models;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Fasciculus.Net;
+using Fasciculus.Site.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.GitHub.Services
+namespace Fasciculus.Site.Services
 {
     public class ApiProvider
     {

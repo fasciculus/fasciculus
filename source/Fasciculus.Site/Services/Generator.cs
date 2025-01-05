@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.GitHub.Services
+namespace Fasciculus.Site.Services
 {
     public class Generator
     {

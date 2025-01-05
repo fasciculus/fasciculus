@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(FasciculusDotNetTfm)</TargetFrameworks>
-    <RootNamespace>Fasciculus.GitHub</RootNamespace>
+    <RootNamespace>Fasciculus.Site</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

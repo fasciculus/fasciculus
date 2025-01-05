@@ -1,10 +1,10 @@
 ﻿using Fasciculus.ApiDoc.Models;
-using Fasciculus.GitHub.Models;
-using Fasciculus.GitHub.Services;
 using Fasciculus.Net;
+using Fasciculus.Site.Models;
+using Fasciculus.Site.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Fasciculus.GitHub.Controllers
+namespace Fasciculus.Site.Controllers
 {
     public class ApiController : Controller
     {

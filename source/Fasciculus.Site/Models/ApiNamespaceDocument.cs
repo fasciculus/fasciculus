@@ -1,7 +1,7 @@
 ﻿using Fasciculus.ApiDoc.Models;
 using System.Linq;
 
-namespace Fasciculus.GitHub.Models
+namespace Fasciculus.Site.Models
 {
     public class ApiNamespaceDocument : Document
     {

@@ -1,6 +1,6 @@
 ﻿using Fasciculus.ApiDoc.Models;
 
-namespace Fasciculus.GitHub.Models
+namespace Fasciculus.Site.Models
 {
     public class ApiPackageDocument : Document
     {
