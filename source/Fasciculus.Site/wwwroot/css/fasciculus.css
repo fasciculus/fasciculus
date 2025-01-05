@@ -1,3 +1,10 @@
 ﻿a  {
     text-decoration: none
 }
+
+a[href^="//"]:after, a[href^="http://"]:after, a[href^="https://"]:after {
+    content: url(/images/external.png);
+    position: relative;
+    top: -0.25rem;
+    left: 0.1rem;
+}
