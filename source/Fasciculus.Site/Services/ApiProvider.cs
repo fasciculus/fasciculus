@@ -1,8 +1,10 @@
 ﻿using Fasciculus.ApiDoc;
 using Fasciculus.ApiDoc.Models;
 using Fasciculus.Collections;
+using Fasciculus.GitHub.Models;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
+using Fasciculus.Net;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,9 +45,9 @@ namespace Fasciculus.GitHub.Services
             SetNamespaceDescriptions();
         }
 
-        public ApiPackage GetPackage(ApiLink link)
+        public ApiPackage GetPackage(UriPath link)
         {
-            string name = link.Parts[0];
+            string name = link[0];
 
             if ("Combined" == name)
             {
@@ -55,16 +57,21 @@ namespace Fasciculus.GitHub.Services
             return Packages.First(p => p.Name == name);
         }
 
-        public ApiNamespace GetNamespace(ApiLink link)
+        public ApiNamespace GetNamespace(UriPath link)
         {
-            string name = link.Parts[1];
+            string name = link[1];
 
             return GetPackage(link).Namespaces.First(n => n.Name == name);
         }
 
-        public ApiClass GetClass(ApiLink link)
+        public ApiClass GetClass(UriPath link)
         {
-            return GetNamespace(link).Classes.First(c => c.Link.Parts[2] == link.Parts[2]);
+            return GetNamespace(link).Classes.First(c => c.Link[2] == link[2]);
+        }
+
+        public NavTree GetNavigation(UriPath link)
+        {
+            return new();
         }
 
         private void SetPackageDescriptions()

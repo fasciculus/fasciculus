@@ -1,11 +1,12 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Net;
 using System.Collections.Generic;
 
 namespace Fasciculus.ApiDoc.Models
 {
     public class ApiNamespace : ApiElement
     {
-        public override ApiLink Link { get; }
+        public override UriPath Link { get; }
         public ApiClasses Classes { get; }
 
         private readonly SortedSet<string> packages;
@@ -16,7 +17,7 @@ namespace Fasciculus.ApiDoc.Models
         public ApiNamespace(NamespaceInfo @namespace, ApiPackage package)
             : base(@namespace)
         {
-            Link = package.Link.Combine(Name);
+            Link = package.Link.Append(Name);
             Classes = new(@namespace.Classes, this);
 
             packages = new(@namespace.Packages);

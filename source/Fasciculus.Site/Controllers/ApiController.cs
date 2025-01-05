@@ -1,6 +1,7 @@
 ﻿using Fasciculus.ApiDoc.Models;
 using Fasciculus.GitHub.Models;
 using Fasciculus.GitHub.Services;
+using Fasciculus.Net;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fasciculus.GitHub.Controllers
@@ -29,7 +30,7 @@ namespace Fasciculus.GitHub.Controllers
         [Route("/api/{packageName}/")]
         public IActionResult Package(string packageName)
         {
-            ApiLink link = new(packageName);
+            UriPath link = new(packageName);
             ApiPackage package = apiProvider.GetPackage(link);
 
             ApiPackageDocument document = new()
@@ -44,7 +45,7 @@ namespace Fasciculus.GitHub.Controllers
         [Route("/api/{packageName}/{namespaceName}/")]
         public IActionResult Namespace(string packageName, string namespaceName)
         {
-            ApiLink link = new(packageName, namespaceName);
+            UriPath link = new(packageName, namespaceName);
             ApiNamespace @namespace = apiProvider.GetNamespace(link);
 
             ApiNamespaceDocument document = new()
@@ -60,7 +61,7 @@ namespace Fasciculus.GitHub.Controllers
         [Route("/api/{packageName}/{namespaceName}/{className}/")]
         public IActionResult Class(string packageName, string namespaceName, string className)
         {
-            ApiLink link = new(packageName, namespaceName, className);
+            UriPath link = new(packageName, namespaceName, className);
             ApiClass @class = apiProvider.GetClass(link);
 
             ApiClassDocument document = new()

@@ -53,5 +53,40 @@ namespace Fasciculus.Collections
         public static IEnumerable<T> OfType<T>(this IEnumerable<T> values, string fullName)
             where T : notnull
             => values.Where(x => fullName == x.GetType().FullName);
+
+        /// <summary>
+        /// Accumulates the hash codes of the given values into a single hash code.
+        /// </summary>
+        public static int ToHashCode<T>(this IEnumerable<T> values)
+            where T : notnull
+            => values.Aggregate(0, (acc, val) => acc ^= val.GetHashCode());
+
+        /// <summary>
+        /// Compares the given sequences.
+        /// </summary>
+        public static int SequenceCompare<T>(this IEnumerable<T> values, IEnumerable<T> others, IComparer<T> comparer)
+            where T : notnull
+        {
+            IEnumerator<T> lhs = values.GetEnumerator();
+            IEnumerator<T> rhs = others.GetEnumerator();
+            bool lhsHasNext = lhs.MoveNext();
+            bool rhsHasNext = rhs.MoveNext();
+
+            while (lhsHasNext && rhsHasNext)
+            {
+                int result = comparer.Compare(lhs.Current, rhs.Current);
+
+                if (result != 0)
+                {
+                    return result;
+                }
+
+                lhsHasNext = lhs.MoveNext();
+                rhsHasNext = rhs.MoveNext();
+            }
+
+            return lhsHasNext ? 1 : (rhsHasNext ? -1 : 0);
+        }
     }
 }
+
