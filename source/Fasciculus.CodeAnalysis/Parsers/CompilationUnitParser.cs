@@ -1,4 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace Fasciculus.CodeAnalysis.Parsers
     {
         private readonly CompilationUnitSyntax compilationUnit;
 
-        private NamespaceCollection namespaces = [];
-        private ClassCollection classes = [];
+        private readonly Stack<NamespaceCollection> namespacesStack = [];
+        private readonly Stack<ClassCollection> classesStack = [];
 
         /// <summary>
         /// Initializes a new instance of this parser.
@@ -26,7 +27,8 @@ namespace Fasciculus.CodeAnalysis.Parsers
 
         private void Clear()
         {
-            namespaces = [];
+            namespacesStack.Clear();
+            classesStack.Clear();
         }
 
         /// <summary>
@@ -35,9 +37,10 @@ namespace Fasciculus.CodeAnalysis.Parsers
         public NamespaceCollection Parse()
         {
             Clear();
-            Visit(compilationUnit.ChildNodes());
 
-            return namespaces;
+            namespacesStack.Push([]);
+            Visit(compilationUnit.ChildNodes());
+            return namespacesStack.Pop();
         }
 
         /// <summary>
@@ -66,7 +69,9 @@ namespace Fasciculus.CodeAnalysis.Parsers
 
             string name = parameters.Any() ? $"{untypedName}<{string.Join(',', parameters)}>" : untypedName;
 
-            ClassInfo @class = classes.Add(name, untypedName, parameters);
+            Modifiers modifiers = new(node.Modifiers.Select(m => m.ToString()));
+            ClassCollection classes = classesStack.Peek();
+            ClassInfo @class = classes.Add(name, untypedName, parameters, modifiers);
         }
 
         /// <summary>
@@ -90,12 +95,13 @@ namespace Fasciculus.CodeAnalysis.Parsers
         /// </summary>
         protected override void OnNamespaceDeclaration(NamespaceDeclarationSyntax node)
         {
+            NamespaceCollection namespaces = namespacesStack.Peek();
             string name = node.Name.ToString();
             NamespaceInfo @namespace = namespaces.Add(name);
 
-            classes = @namespace.Classes;
+            classesStack.Push(@namespace.Classes);
             base.OnNamespaceDeclaration(node);
-            classes = [];
+            classesStack.Pop();
         }
 
         /// <summary>

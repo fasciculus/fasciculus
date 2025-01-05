@@ -16,14 +16,14 @@ namespace Fasciculus.CodeAnalysis.Models
         /// <summary>
         /// Adds a new class with the given <paramref name="name"/> or returns an existing class with that name.
         /// </summary>
-        public ClassInfo Add(string name, string untypedName, IEnumerable<string> parameters)
+        public ClassInfo Add(string name, string untypedName, IEnumerable<string> parameters, Modifiers modifiers)
         {
             if (classes.TryGetValue(name, out ClassInfo? existing))
             {
                 return existing;
             }
 
-            ClassInfo @class = new(name, untypedName, parameters);
+            ClassInfo @class = new(name, untypedName, parameters, modifiers);
 
             return MergeWith(@class);
         }

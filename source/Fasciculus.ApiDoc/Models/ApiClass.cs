@@ -7,10 +7,13 @@ namespace Fasciculus.ApiDoc.Models
     {
         public override ApiLink Link { get; }
 
+        public Modifiers Modifiers { get; }
+
         public ApiClass(ClassInfo @class, ApiNamespace @namespace)
             : base(@class)
         {
             Link = @namespace.Link.Combine(@class.UntypedName, @class.Parameters.Count());
+            Modifiers = @class.Modifiers;
         }
     }
 }

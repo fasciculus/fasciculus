@@ -11,7 +11,10 @@ namespace Fasciculus.ApiDoc.Models
 
         public ApiClasses(ClassCollection classes, ApiNamespace @namespace)
         {
-            this.classes = classes.Select(c => new ApiClass(c, @namespace)).ToList();
+            this.classes = classes
+                .Where(c => c.Modifiers.IsAccessible)
+                .Select(c => new ApiClass(c, @namespace))
+                .ToList();
         }
 
         public IEnumerator<ApiClass> GetEnumerator()

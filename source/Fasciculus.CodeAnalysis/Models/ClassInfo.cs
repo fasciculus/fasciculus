@@ -14,13 +14,6 @@ namespace Fasciculus.CodeAnalysis.Models
         /// </summary>
         public string UntypedName { get; }
 
-        private readonly SortedSet<string> packages = [];
-
-        /// <summary>
-        /// The packages this namespace occurs in.
-        /// </summary>
-        public IEnumerable<string> Packages => packages;
-
         private readonly string[] parameters;
 
         /// <summary>
@@ -29,14 +22,28 @@ namespace Fasciculus.CodeAnalysis.Models
         public IEnumerable<string> Parameters => parameters;
 
         /// <summary>
+        /// The modifiers of this class.
+        /// </summary>
+        public Modifiers Modifiers { get; }
+
+        private readonly SortedSet<string> packages = [];
+
+        /// <summary>
+        /// The packages this namespace occurs in.
+        /// </summary>
+        public IEnumerable<string> Packages => packages;
+
+        /// <summary>
         /// Initializes a new class.
         /// </summary>
-        public ClassInfo(string name, string untypedName, IEnumerable<string> parameters)
+        public ClassInfo(string name, string untypedName, IEnumerable<string> parameters, Modifiers modifiers)
             : base(name)
         {
             UntypedName = untypedName;
 
             this.parameters = [.. parameters];
+
+            Modifiers = modifiers;
         }
 
         /// <summary>
