@@ -61,8 +61,8 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
             SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
 
             projectNames
-                .Select(n => Tuple.Create(n, DirectorySearch.Search(n, searchPath).First()))
-                .Select(t => t.Item2.File(t.Item1 + ".csproj"))
+                .Select(n => Tuple.Create(DirectorySearch.Search(n, searchPath).First(), n))
+                .Select(t => t.Item1.File(t.Item2 + ".csproj"))
                 .Apply(f => { workspace.AddProjectFile(f); });
 
             return workspace;
