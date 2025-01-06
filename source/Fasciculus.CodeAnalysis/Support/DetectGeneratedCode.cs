@@ -10,7 +10,8 @@ namespace Fasciculus.CodeAnalysis.Support
     /// </summary>
     public static class DetectGeneratedCode
     {
-        private static readonly string[] GeneratedFileNameEndings = [".designer", ".generated", ".g", ".g.i"];
+        private static readonly string[] GeneratedFileNameEndings
+            = [".designer", ".generated", ".g", ".g.i", "AssemblyInfo", "AssemblyAttributes"];
 
         /// <summary>
         /// Determines whether the given <paramref name="file"/> is generated.

@@ -1,12 +1,15 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+﻿using Fasciculus.CodeAnalysis.Compilers;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Parsers;
 using Fasciculus.CodeAnalysis.Workspaces;
 using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Tests.Parsers
@@ -15,18 +18,9 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
     public class ProjectParserTests
     {
         [TestMethod]
-        public void TestParse()
+        public void TestOldParser()
         {
-            using MSBuildWorkspace workspace = WorkspaceFactory.CreateWorkspace();
-
-            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
-            string[] projectNames = ["Fasciculus.Core", "Fasciculus.Extensions"];
-
-            projectNames
-                .Select(n => Tuple.Create(n, DirectorySearch.Search(n, searchPath).First()))
-                .Select(t => t.Item2.File(t.Item1 + ".csproj"))
-                .Apply(f => { workspace.AddProjectFile(f); });
-
+            using MSBuildWorkspace workspace = LoadWorkspace(["Fasciculus.Core", "Fasciculus.Extensions"]);
             PackageCollection packages = ProjectParser.Parse(workspace.CurrentSolution.Projects, false);
 
             Assert.AreEqual(2, packages.Count());
@@ -50,6 +44,28 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
             Assert.AreEqual(7, collectionsNamespace.Classes.Count());
             Assert.AreEqual(3, bitsetClass.Frameworks.Count());
             Assert.AreEqual(3, disposableStackClass.Frameworks.Count());
+        }
+
+        [TestMethod]
+        public void TestParser()
+        {
+            using MSBuildWorkspace workspace = LoadWorkspace(["Fasciculus.Core", "Fasciculus.Extensions"]);
+            Project project = workspace.CurrentSolution.Projects.First(p => p.HasDocuments);
+            ParsedProject[] parsedProjects = ProjectParser2.Parse(workspace.CurrentSolution.Projects, false);
+            PackageList packages = PackageCompiler.Compile(parsedProjects);
+        }
+
+        private static MSBuildWorkspace LoadWorkspace(IEnumerable<string> projectNames)
+        {
+            MSBuildWorkspace workspace = WorkspaceFactory.CreateWorkspace();
+            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
+
+            projectNames
+                .Select(n => Tuple.Create(n, DirectorySearch.Search(n, searchPath).First()))
+                .Select(t => t.Item2.File(t.Item1 + ".csproj"))
+                .Apply(f => { workspace.AddProjectFile(f); });
+
+            return workspace;
         }
     }
 }
