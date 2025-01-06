@@ -6,9 +6,9 @@ namespace Fasciculus.CodeAnalysis.Models
     public class Symbol<T>
         where T : notnull, Symbol<T>
     {
-        public string Name { get; }
+        public SymbolName Name { get; }
 
-        public Symbol(string name)
+        public Symbol(SymbolName name)
         {
             Name = name;
         }

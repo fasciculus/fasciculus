@@ -11,9 +11,9 @@ namespace Fasciculus.CodeAnalysis.Frameworks
         /// <summary>
         /// Tries to parse the target framework of the given <paramref name="project"/>.
         /// </summary>
-        public static bool TryGetTargetFramework(this Project project, [NotNullWhen(true)] out TargetFramework? targetFramework)
+        public static bool TryGetTargetFramework(this Project project, [NotNullWhen(true)] out TargetFramework? framework)
         {
-            targetFramework = null;
+            framework = TargetFramework.UnsupportedFramework;
 
             string suffix = project.Name[project.AssemblyName.Length..];
 
@@ -27,9 +27,12 @@ namespace Fasciculus.CodeAnalysis.Frameworks
                 return false;
             }
 
-            targetFramework = TargetFramework.Parse(suffix[1..^1]);
+            framework = TargetFramework.Parse(suffix[1..^1]);
 
             return true;
         }
+
+        public static TargetFramework GetTargetFramework(this Project project)
+            => TryGetTargetFramework(project, out TargetFramework? framework) ? framework : TargetFramework.UnsupportedFramework;
     }
 }

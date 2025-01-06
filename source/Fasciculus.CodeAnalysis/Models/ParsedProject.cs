@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Fasciculus.CodeAnalysis.Frameworks;
+using Microsoft.CodeAnalysis;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +11,22 @@ namespace Fasciculus.CodeAnalysis.Models
     /// </summary>
     public class ParsedProject : IEnumerable<SyntaxTree>
     {
-        private readonly SyntaxTree[] syntaxTrees;
-
         public string Name { get; }
 
-        public ParsedProject(string name, IEnumerable<SyntaxTree> syntaxTrees)
-        {
-            this.syntaxTrees = [.. syntaxTrees];
+        public TargetFramework Framework { get; }
 
+        private readonly SyntaxTree[] syntaxTrees;
+
+        public ParsedProject(string name, TargetFramework framework, IEnumerable<SyntaxTree> syntaxTrees)
+        {
             Name = name;
+            Framework = framework;
+
+            this.syntaxTrees = [.. syntaxTrees];
         }
 
-        public ParsedProject(string name)
-            : this(name, []) { }
+        public ParsedProject(string name, TargetFramework framework)
+            : this(name, framework, []) { }
 
         public IEnumerator<SyntaxTree> GetEnumerator()
             => syntaxTrees.AsEnumerable().GetEnumerator();

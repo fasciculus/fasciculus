@@ -11,6 +11,11 @@ namespace Fasciculus.CodeAnalysis.Frameworks
     public class TargetFramework : IEquatable<TargetFramework>
     {
         /// <summary>
+        /// Unsupported framework.
+        /// </summary>
+        public static readonly TargetFramework UnsupportedFramework = new(NuGetFramework.UnsupportedFramework, "", "");
+
+        /// <summary>
         /// The wrapped <see cref="NuGetFramework"/>.
         /// </summary>
         public NuGetFramework NuGetFramework { get; }

@@ -8,7 +8,7 @@ namespace Fasciculus.CodeAnalysis.Models
     public class SymbolDictionary<T> : IEnumerable<T>
         where T : notnull, Symbol<T>
     {
-        private readonly Dictionary<string, T> symbols = [];
+        private readonly Dictionary<SymbolName, T> symbols = [];
 
         public SymbolDictionary(IEnumerable<T> symbols)
         {

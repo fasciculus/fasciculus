@@ -1,4 +1,5 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+﻿using Fasciculus.CodeAnalysis.Frameworks;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.Threading;
 using Microsoft.CodeAnalysis;
@@ -13,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
     /// </summary>
     public class ProjectParser2
     {
-        public ParsedProject ParseProject(Project project, bool includeGenerated)
+        public ParsedProject ParseProject(Project project, TargetFramework framework, bool includeGenerated)
         {
             IEnumerable<SyntaxTree> syntaxTrees = [];
 
@@ -22,7 +23,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
                 syntaxTrees = compilation.SyntaxTrees.Where(t => CheckGenerated(t, includeGenerated));
             }
 
-            return new(project.AssemblyName, syntaxTrees);
+            return new(project.AssemblyName, framework, syntaxTrees);
         }
 
         private static bool CheckGenerated(SyntaxTree syntaxTree, bool includeGenerated)
@@ -31,14 +32,16 @@ namespace Fasciculus.CodeAnalysis.Parsers
 
         public static ParsedProject Parse(Project project, bool includeGenerated)
         {
+            TargetFramework framework = project.GetTargetFramework();
+
             if (project.HasDocuments)
             {
                 ProjectParser2 parser = new();
 
-                return parser.ParseProject(project, includeGenerated);
+                return parser.ParseProject(project, framework, includeGenerated);
             }
 
-            return new(project.AssemblyName);
+            return new(project.AssemblyName, framework);
         }
 
         public static ParsedProject[] Parse(IEnumerable<Project> projects, bool includeGenerated)
@@ -52,7 +55,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
 
             ProjectParser2 parser = new();
 
-            return [.. projectsWithDocuments.AsParallel().Select(p => parser.ParseProject(p, includeGenerated))];
+            return [.. projectsWithDocuments.AsParallel().Select(p => Parse(p, includeGenerated))];
         }
     }
 }
