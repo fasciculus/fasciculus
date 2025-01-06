@@ -1,4 +1,8 @@
-﻿a  {
+﻿html {
+    font-size: .875rem;
+}
+
+a  {
     text-decoration: none
 }
 
@@ -7,4 +11,37 @@ a[href^="//"]:after, a[href^="http://"]:after, a[href^="https://"]:after {
     position: relative;
     top: -0.25rem;
     left: 0.1rem;
+}
+
+.container {
+    max-width: 100%;
+}
+
+.nav-link {
+    font-size: 1.25rem;
+}
+
+div.fsc-navigation-forest {
+    flex-grow: 0;
+    flex-basis: content;
+}
+
+.fsc-navigation-forest {
+    --spacing: 1.5rem;
+    --radius: 10px;
+}
+
+.fsc-navigation-forest li {
+    display: block;
+    position: relative;
+    padding-left: calc(2 * var(--spacing) - var(--radius));
+}
+
+.fsc-navigation-forest ul {
+    margin-left: calc(var(--radius) - var(--spacing));
+    padding-left: 0;
+}
+
+.footer {
+    padding-top: 1rem;
 }

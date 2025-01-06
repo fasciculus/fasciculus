@@ -2,7 +2,7 @@
 
 namespace Fasciculus.Site.Models
 {
-    public class ApiPackageDocument : Document
+    public class ApiPackageDocument : SiteDocument
     {
         public required ApiPackage Package { get; init; }
     }

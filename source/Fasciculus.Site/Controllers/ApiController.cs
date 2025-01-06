@@ -35,7 +35,8 @@ namespace Fasciculus.Site.Controllers
 
             ApiPackageDocument document = new()
             {
-                Title = "Package " + package.Name,
+                Title = package.Name + " Package",
+                Navigation = apiProvider.GetNavigation(link),
                 Package = package
             };
 
@@ -50,7 +51,8 @@ namespace Fasciculus.Site.Controllers
 
             ApiNamespaceDocument document = new()
             {
-                Title = "Namespace " + @namespace.Name,
+                Title = @namespace.Name + " Namespace",
+                Navigation = apiProvider.GetNavigation(link),
                 Namespace = @namespace,
                 Classes = @namespace.Classes
             };
@@ -66,7 +68,8 @@ namespace Fasciculus.Site.Controllers
 
             ApiClassDocument document = new()
             {
-                Title = "Class: " + @class.Name,
+                Title = @class.Name + " Class",
+                Navigation = apiProvider.GetNavigation(link),
                 Class = @class,
             };
 

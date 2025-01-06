@@ -69,9 +69,27 @@ namespace Fasciculus.Site.Services
             return GetNamespace(link).Classes.First(c => c.Link[2] == link[2]);
         }
 
-        public NavTree GetNavigation(UriPath link)
+        public NavigationForest GetNavigation(UriPath link)
         {
-            return new();
+            NavigationForest navigation = new(new("api"));
+            ApiPackage package = GetPackage(link);
+
+            foreach (ApiNamespace @namespace in package.Namespaces)
+            {
+                bool namespaceOpen = link.IsChildOf(@namespace.Link) || link.Equals(@namespace.Link);
+                NavigationNode namespaceNode = new(@namespace.Name, @namespace.Link, namespaceOpen);
+
+                foreach (var @class in @namespace.Classes)
+                {
+                    NavigationNode classNode = new(@class.Name, @class.Link, link.IsChildOf(@class.Link));
+
+                    namespaceNode.Add(classNode);
+                }
+
+                navigation.Add(namespaceNode);
+            }
+
+            return navigation;
         }
 
         private void SetPackageDescriptions()

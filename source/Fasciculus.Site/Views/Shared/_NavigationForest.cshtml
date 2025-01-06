@@ -1,0 +1,27 @@
+﻿@model NavigationForest
+<ul class="fsc-navigation-forest">
+    @foreach (var n1 in Model.Roots)
+    {
+        <li>
+            @if(n1.HasChildren)
+            {
+                <details @(n1.IsOpen ? "open" : "")>
+                    <summary>@n1.Label</summary>
+                    <ul>
+                        <li><a href="~/@Model.Prefix/@n1.Link">@n1.Label</a></li>
+                        @foreach (var n2 in n1.Children)
+                        {
+                            <li>
+                                <a href="~/@Model.Prefix/@n2.Link">@n2.Label</a>
+                            </li>
+                        }
+                    </ul>
+                </details>
+            }
+            else
+            {
+                <a href="~/@Model.Prefix/@n1.Link">@n1.Label</a>
+            }
+        </li>
+    }
+</ul>

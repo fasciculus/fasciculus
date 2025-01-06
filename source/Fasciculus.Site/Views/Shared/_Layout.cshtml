@@ -1,4 +1,4 @@
-﻿@model Document
+﻿@model SiteDocument
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,9 +19,19 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        <div class="row">
+            @if (Model.HasNavigation)
+            {
+                <div class="col fsc-navigation-forest">
+                    <partial name="~/Views/Shared/_NavigationForest.cshtml" model=Model.Navigation />
+                </div>
+            }
+            <div class="col">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
     </div>
     <footer class="border-top footer text-muted">
         <div class="container">

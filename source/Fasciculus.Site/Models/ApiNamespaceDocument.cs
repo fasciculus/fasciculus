@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fasciculus.Site.Models
 {
-    public class ApiNamespaceDocument : Document
+    public class ApiNamespaceDocument : SiteDocument
     {
         public required ApiNamespace Namespace { get; init; }
 
