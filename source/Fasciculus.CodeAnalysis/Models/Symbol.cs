@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Fasciculus.CodeAnalysis.Frameworks;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
@@ -8,13 +10,20 @@ namespace Fasciculus.CodeAnalysis.Models
     {
         public SymbolName Name { get; }
 
-        public Symbol(SymbolName name)
+        private readonly TargetFrameworks frameworks = [];
+
+        public IEnumerable<TargetFramework> Frameworks => frameworks;
+
+        public Symbol(SymbolName name, TargetFramework framework)
         {
             Name = name;
+
+            frameworks.Add(framework);
         }
 
         public virtual void MergeWith(Symbol<T> other)
         {
+            frameworks.Add(other.Frameworks);
         }
     }
 }

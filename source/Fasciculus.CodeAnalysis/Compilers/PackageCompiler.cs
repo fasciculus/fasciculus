@@ -14,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 .Where(t => t.HasCompilationUnitRoot)
                 .Select(t => t.GetCompilationUnitRoot());
 
-            return new(new(project.Name), compilationUnits.Select(CompilationUnitCompiler.Compile));
+            return new(new(project.Name), project.Framework, compilationUnits.Select(CompilationUnitCompiler.Compile));
         }
 
         public static PackageSymbol Compile(ParsedProject project)
