@@ -1,4 +1,5 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+﻿using Fasciculus.CodeAnalysis.Frameworks;
+using Fasciculus.CodeAnalysis.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -10,11 +11,16 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         public PackageSymbol CompileProject(ParsedProject project)
         {
-            IEnumerable<CompilationUnitSyntax> compilationUnits = project
+            IEnumerable<CompilationUnitSyntax> roots = project
                 .Where(t => t.HasCompilationUnitRoot)
                 .Select(t => t.GetCompilationUnitRoot());
 
-            return new(new(project.Name), project.Framework, compilationUnits.Select(CompilationUnitCompiler.Compile));
+            SymbolName name = new(project.Name);
+            TargetFramework framework = project.Framework;
+            CompilationCompiler compiler = new(framework);
+            IEnumerable<CompilationUnit> compilationUnits = roots.Select(compiler.Compile);
+
+            return new(name, framework, compilationUnits);
         }
 
         public static PackageSymbol Compile(ParsedProject project)
@@ -28,7 +34,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             PackageCompiler compiler = new();
 
-            return new(projects.AsParallel().Select(compiler.CompileProject));
+            return new(projects/*.AsParallel()*/.Select(compiler.CompileProject));
         }
     }
 }

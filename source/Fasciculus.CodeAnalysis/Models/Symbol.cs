@@ -21,7 +21,7 @@ namespace Fasciculus.CodeAnalysis.Models
             frameworks.Add(framework);
         }
 
-        public virtual void MergeWith(Symbol<T> other)
+        public virtual void MergeWith(T other)
         {
             frameworks.Add(other.Frameworks);
         }
