@@ -13,6 +13,20 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private static readonly SyntaxKind[] AcceptedKinds =
         [
+            SyntaxKind.AttributeList,
+            SyntaxKind.TypeParameterList,
+            SyntaxKind.TypeParameterConstraintClause,
+            SyntaxKind.BaseList,
+            SyntaxKind.FieldDeclaration,
+            SyntaxKind.PropertyDeclaration,
+            SyntaxKind.IndexerDeclaration,
+            SyntaxKind.EventFieldDeclaration,
+            SyntaxKind.ConstructorDeclaration,
+            SyntaxKind.DestructorDeclaration,
+            SyntaxKind.MethodDeclaration,
+            SyntaxKind.OperatorDeclaration,
+            SyntaxKind.ConversionOperatorDeclaration,
+            SyntaxKind.ClassDeclaration,
         ];
 
         private readonly TaskSafeMutex mutex = new();
@@ -38,7 +52,65 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             link = parentLink.Append(name.Mangled);
 
+            DefaultVisit(node);
+
             return new(name, link, framework);
+        }
+
+        public override void VisitAttributeList(AttributeListSyntax node)
+        {
+        }
+
+        public override void VisitTypeParameterList(TypeParameterListSyntax node)
+        {
+        }
+
+        public override void VisitTypeParameterConstraintClause(TypeParameterConstraintClauseSyntax node)
+        {
+        }
+
+        public override void VisitBaseList(BaseListSyntax node)
+        {
+        }
+
+        public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+        {
+        }
+
+        public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
+        {
+        }
+
+        public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
+        {
+        }
+
+        public override void VisitEventFieldDeclaration(EventFieldDeclarationSyntax node)
+        {
+        }
+
+        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+        {
+        }
+
+        public override void VisitDestructorDeclaration(DestructorDeclarationSyntax node)
+        {
+        }
+
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+        }
+
+        public override void VisitOperatorDeclaration(OperatorDeclarationSyntax node)
+        {
+        }
+
+        public override void VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node)
+        {
+        }
+
+        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+        {
         }
     }
 }
