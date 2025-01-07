@@ -8,9 +8,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public class CompilationCompiler : FilteredCompiler
     {
-        private static readonly SyntaxKind[] CompilationCompilerKinds =
+        private static readonly SyntaxKind[] AcceptedKinds =
         [
-            SyntaxKind.NamespaceDeclaration
+            SyntaxKind.NamespaceDeclaration,
+            SyntaxKind.UsingDirective
         ];
 
         private readonly TaskSafeMutex mutex = new();
@@ -20,7 +21,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private NamespaceList namespaces;
 
         public CompilationCompiler(TargetFramework framework)
-            : base(CompilationCompilerKinds)
+            : base(AcceptedKinds)
         {
             namespaceCompiler = new(framework);
         }
@@ -40,5 +41,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             namespaces.AddOrMergeWith(namespaceCompiler.Compile(node));
         }
+
+        public override void VisitUsingDirective(UsingDirectiveSyntax node) { }
     }
 }

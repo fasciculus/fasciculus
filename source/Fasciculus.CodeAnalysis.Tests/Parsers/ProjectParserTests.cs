@@ -1,6 +1,7 @@
 ﻿using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Parsers;
+using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.CodeAnalysis.Workspaces;
 using Fasciculus.Collections;
 using Fasciculus.IO;
@@ -10,7 +11,10 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Fasciculus.CodeAnalysis.Tests.Parsers
 {
@@ -53,6 +57,14 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
             Project project = workspace.CurrentSolution.Projects.First(p => p.HasDocuments);
             ParsedProject[] parsedProjects = ProjectParser2.Parse(workspace.CurrentSolution.Projects, false);
             PackageList packages = PackageCompiler.Compile(parsedProjects);
+
+            StringBuilder stringBuilder = new();
+            using StringWriter writer = new(stringBuilder);
+
+            if (NodeKindReporter.Instance.Report(writer))
+            {
+                Debug.WriteLine(stringBuilder.ToString());
+            }
         }
 
         private static MSBuildWorkspace LoadWorkspace(IEnumerable<string> projectNames)

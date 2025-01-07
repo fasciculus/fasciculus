@@ -3,19 +3,25 @@ using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class NamespaceCompiler : CSharpSyntaxWalker
+    public class NamespaceCompiler : FilteredCompiler
     {
+        private static readonly SyntaxKind[] AcceptedKinds =
+        [
+            SyntaxKind.ClassDeclaration,
+            SyntaxKind.InterfaceDeclaration,
+            SyntaxKind.EnumDeclaration,
+            SyntaxKind.QualifiedName,
+        ];
+
         private readonly TaskSafeMutex mutex = new();
 
         private readonly TargetFramework framework;
 
-        private readonly Stack<NamespaceList> namespacesStack = [];
-
         public NamespaceCompiler(TargetFramework framework)
+            : base(AcceptedKinds)
         {
             this.framework = framework;
         }
@@ -24,19 +30,30 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             using Locker locker = Locker.Lock(mutex);
 
-            namespacesStack.Push(new());
-            AddNamespace(node);
-
-            return namespacesStack.Pop();
-        }
-
-        private void AddNamespace(NamespaceDeclarationSyntax node)
-        {
+            NamespaceList namespaces = new();
             SymbolName name = new(node.Name.ToString());
             NamespaceSymbol @namespace = new(name, framework);
-            NamespaceList namespaces = namespacesStack.Peek();
 
-            namespaces.AddOrMergeWith(@namespace);
+            DefaultVisit(node);
+
+            return new([@namespace]);
         }
+
+        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+        {
+            //base.VisitClassDeclaration(node);
+        }
+
+        public override void VisitInterfaceDeclaration(InterfaceDeclarationSyntax node)
+        {
+            //base.VisitInterfaceDeclaration(node);
+        }
+
+        public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
+        {
+            //base.VisitEnumDeclaration(node);
+        }
+
+        public override void VisitQualifiedName(QualifiedNameSyntax node) { }
     }
 }
