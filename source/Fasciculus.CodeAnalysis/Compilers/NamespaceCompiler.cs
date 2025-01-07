@@ -21,12 +21,17 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly TargetFramework framework;
 
+        private readonly ClassCompiler classCompiler;
+
         private UriPath link = new();
+        private ClassList classes = new();
 
         public NamespaceCompiler(TargetFramework framework)
             : base(AcceptedKinds)
         {
             this.framework = framework;
+
+            classCompiler = new(framework);
         }
 
         public NamespaceSymbol Compile(NamespaceDeclarationSyntax node, UriPath parentLink)
@@ -36,17 +41,16 @@ namespace Fasciculus.CodeAnalysis.Compilers
             SymbolName name = new(node.Name.ToString());
 
             link = parentLink.Append(name.Name);
-
-            NamespaceSymbol @namespace = new(name, link, framework);
+            classes = new();
 
             DefaultVisit(node);
 
-            return @namespace;
+            return new(name, link, framework, classes);
         }
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
-            //base.VisitClassDeclaration(node);
+            classes.AddOrMergeWith(classCompiler.Compile(node, link));
         }
 
         public override void VisitInterfaceDeclaration(InterfaceDeclarationSyntax node)

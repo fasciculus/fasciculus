@@ -9,6 +9,8 @@ namespace Fasciculus.CodeAnalysis.Models
     {
         private readonly NamespaceList namespaces;
 
+        public IEnumerable<NamespaceSymbol> Namespaces => namespaces;
+
         public PackageSymbol(SymbolName name, UriPath link, TargetFramework framework, IEnumerable<CompilationUnit> compilationUnits)
             : base(name, link, framework)
         {
