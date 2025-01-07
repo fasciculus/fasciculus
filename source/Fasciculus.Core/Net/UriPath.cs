@@ -51,6 +51,18 @@ namespace Fasciculus.Net
             => new(parts.Append(part));
 
         /// <summary>
+        /// Replaces <paramref name="count"/> parts of this path starting from <paramref name="start"/> with the given
+        /// <paramref name="replacement"/>.
+        /// </summary>
+        public UriPath Replace(int start, int count, IEnumerable<string> replacement)
+        {
+            IEnumerable<string> prefix = parts.Take(start);
+            IEnumerable<string> suffix = parts.Skip(start + count);
+
+            return new(prefix.Concat(replacement).Concat(suffix));
+        }
+
+        /// <summary>
         /// Whether this link points to a parent of the given <paramref name="other"/> link.
         /// </summary>
         public bool IsParentOf(UriPath other)
