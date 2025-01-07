@@ -58,7 +58,19 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
             PackageList packages = PackageCompiler.Compile(parsedProjects);
             PackageSymbol merged = packages.Merge("Combined");
 
+            ReportComment(merged);
+
             ReportNodeKindReporter();
+        }
+
+        private void ReportComment(PackageSymbol merged)
+        {
+            NamespaceSymbol ns = merged.Namespaces.First(n => n.Name.Name == "Fasciculus.Collections");
+            ClassSymbol c = ns.Classes.First(c => c.Name.Name == "ObservableNotifyingEnumerable<T>");
+
+            Log("--- Comment ---");
+            Log(c.Comment);
+            Log("--- Comment ---");
         }
 
         private void ReportNodeKindReporter()
@@ -68,6 +80,7 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
 
             if (NodeKindReporter.Instance.Report(writer))
             {
+                Log("--- Unhandled SyntaxKind ---");
                 Log(stringBuilder.ToString());
             }
         }

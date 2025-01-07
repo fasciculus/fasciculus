@@ -2,6 +2,7 @@
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net;
 using Fasciculus.Threading.Synchronization;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -27,16 +28,21 @@ namespace Fasciculus.CodeAnalysis.Compilers
             SyntaxKind.OperatorDeclaration,
             SyntaxKind.ConversionOperatorDeclaration,
             SyntaxKind.ClassDeclaration,
+            SyntaxKind.SingleLineDocumentationCommentTrivia,
+            SyntaxKind.MultiLineDocumentationCommentTrivia,
         ];
 
         private readonly TaskSafeMutex mutex = new();
 
         private readonly TargetFramework framework;
 
+        private readonly CommentCompiler commentCompiler = new();
+
         private UriPath link = new();
+        private string comment = string.Empty;
 
         public ClassCompiler(TargetFramework framework)
-            : base(AcceptedKinds)
+            : base(AcceptedKinds, SyntaxWalkerDepth.StructuredTrivia)
         {
             this.framework = framework;
         }
@@ -51,10 +57,25 @@ namespace Fasciculus.CodeAnalysis.Compilers
             SymbolName name = new(untyped, parameters);
 
             link = parentLink.Append(name.Mangled);
+            comment = string.Empty;
 
             DefaultVisit(node);
 
-            return new(name, link, framework);
+            //if (node.HasStructuredTrivia && node.HasLeadingTrivia)
+            //{
+            //    DocumentationCommentTriviaSyntax? commentSyntax = commentParser.Parse(node.GetLeadingTrivia());
+
+            //    if (commentSyntax is not null)
+            //    {
+            //        commentCompiler.Compile(commentSyntax);
+            //    }
+            //}
+
+            ClassSymbol result = new(name, link, framework);
+
+            result.Comment = comment;
+
+            return result;
         }
 
         public override void VisitAttributeList(AttributeListSyntax node)
@@ -111,6 +132,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
+        }
+
+        public override void VisitDocumentationCommentTrivia(DocumentationCommentTriviaSyntax node)
+        {
+            comment = commentCompiler.Compile(node);
         }
     }
 }

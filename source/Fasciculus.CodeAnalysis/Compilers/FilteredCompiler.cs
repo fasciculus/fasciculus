@@ -9,7 +9,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private SortedSet<SyntaxKind> acceptedKinds;
 
-        public FilteredCompiler(IEnumerable<SyntaxKind> acceptedKinds)
+        public FilteredCompiler(IEnumerable<SyntaxKind> acceptedKinds, SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node)
+            : base(depth)
         {
             this.acceptedKinds = new(acceptedKinds);
 

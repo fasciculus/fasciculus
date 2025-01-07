@@ -13,6 +13,16 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public UriPath Link { get; private set; }
 
+        private string? comment;
+
+        public string Comment
+        {
+            get => comment ?? string.Empty;
+            set => comment = value;
+        }
+
+        public bool HasComment => comment is not null;
+
         private readonly TargetFrameworks frameworks;
 
         public IEnumerable<TargetFramework> Frameworks => frameworks;
@@ -29,6 +39,7 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             Name = other.Name;
             Link = other.Link;
+            Comment = other.Comment;
 
             frameworks = new(other.Frameworks);
         }
@@ -36,6 +47,11 @@ namespace Fasciculus.CodeAnalysis.Models
         public virtual void MergeWith(T other)
         {
             frameworks.Add(other.Frameworks);
+
+            if (string.IsNullOrEmpty(comment))
+            {
+                comment = other.comment;
+            }
         }
 
         public virtual void ReBase(UriPath newBase)
