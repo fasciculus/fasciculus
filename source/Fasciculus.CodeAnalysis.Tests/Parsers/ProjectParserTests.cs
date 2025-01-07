@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,7 +18,7 @@ using System.Text;
 namespace Fasciculus.CodeAnalysis.Tests.Parsers
 {
     [TestClass]
-    public class ProjectParserTests
+    public class ProjectParserTests : TestsBase
     {
         [TestMethod]
         public void TestOldParser()
@@ -57,13 +56,19 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
             Project project = workspace.CurrentSolution.Projects.First(p => p.HasDocuments);
             ParsedProject[] parsedProjects = ProjectParser2.Parse(workspace.CurrentSolution.Projects, false);
             PackageList packages = PackageCompiler.Compile(parsedProjects);
+            PackageSymbol merged = packages.Merge("Combined");
 
+            ReportNodeKindReporter();
+        }
+
+        private void ReportNodeKindReporter()
+        {
             StringBuilder stringBuilder = new();
             using StringWriter writer = new(stringBuilder);
 
             if (NodeKindReporter.Instance.Report(writer))
             {
-                Debug.WriteLine(stringBuilder.ToString());
+                Log(stringBuilder.ToString());
             }
         }
 

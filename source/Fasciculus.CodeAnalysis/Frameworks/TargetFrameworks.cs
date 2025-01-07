@@ -1,6 +1,7 @@
 ﻿using Fasciculus.Collections;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Frameworks
 {
@@ -15,6 +16,14 @@ namespace Fasciculus.CodeAnalysis.Frameworks
         /// The products of this target frameworks collection.
         /// </summary>
         public TargetProducts Products => new(this);
+
+        public TargetFrameworks(IEnumerable<TargetFramework> targetFrameworks)
+        {
+            Add(targetFrameworks);
+        }
+
+        public TargetFrameworks(params TargetFramework[] targetFrameworks)
+            : this(targetFrameworks.AsEnumerable()) { }
 
         /// <summary>
         /// Whether the given <paramref name="targetFramework"/> is already in this collection.

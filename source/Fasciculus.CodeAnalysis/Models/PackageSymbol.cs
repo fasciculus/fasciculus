@@ -17,11 +17,27 @@ namespace Fasciculus.CodeAnalysis.Models
             namespaces = new(compilationUnits.SelectMany(x => x.Namespaces));
         }
 
+        private PackageSymbol(PackageSymbol other, bool clone)
+            : base(other, clone)
+        {
+            namespaces = other.namespaces.Clone();
+        }
+
+        public PackageSymbol Clone()
+            => new(this, true);
+
         public override void MergeWith(PackageSymbol other)
         {
             base.MergeWith(other);
 
             namespaces.AddOrMergeWith(other.namespaces);
+        }
+
+        public override void ReBase(UriPath newBase)
+        {
+            base.ReBase(newBase);
+
+            namespaces.ReBase(newBase);
         }
     }
 }

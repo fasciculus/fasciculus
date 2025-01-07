@@ -5,13 +5,15 @@ using System.Diagnostics;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class Symbol
+    [DebuggerDisplay("{Name}")]
+    public class Symbol<T>
+        where T : notnull, Symbol<T>
     {
         public SymbolName Name { get; }
 
-        public UriPath Link { get; }
+        public UriPath Link { get; private set; }
 
-        private readonly TargetFrameworks frameworks = [];
+        private readonly TargetFrameworks frameworks;
 
         public IEnumerable<TargetFramework> Frameworks => frameworks;
 
@@ -20,25 +22,25 @@ namespace Fasciculus.CodeAnalysis.Models
             Name = name;
             Link = link;
 
-            frameworks.Add(framework);
+            frameworks = new(framework);
         }
 
-        public virtual void MergeWith(Symbol other)
+        protected Symbol(Symbol<T> other, bool _)
         {
-            frameworks.Add(other.Frameworks);
-        }
-    }
+            Name = other.Name;
+            Link = other.Link;
 
-    [DebuggerDisplay("{Name}")]
-    public class Symbol<T> : Symbol
-        where T : notnull, Symbol<T>
-    {
-        public Symbol(SymbolName name, UriPath link, TargetFramework framework)
-            : base(name, link, framework) { }
+            frameworks = new(other.Frameworks);
+        }
 
         public virtual void MergeWith(T other)
         {
-            base.MergeWith(other);
+            frameworks.Add(other.Frameworks);
+        }
+
+        public virtual void ReBase(UriPath newBase)
+        {
+            Link = Link.Replace(0, 1, newBase);
         }
     }
 }

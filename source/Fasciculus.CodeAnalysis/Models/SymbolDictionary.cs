@@ -1,4 +1,5 @@
 ﻿using Fasciculus.Collections;
+using Fasciculus.Net;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace Fasciculus.CodeAnalysis.Models
         where T : notnull, Symbol<T>
     {
         private readonly Dictionary<SymbolName, T> symbols = [];
+
+        public int Count => symbols.Count;
 
         public SymbolDictionary(IEnumerable<T> symbols)
         {
@@ -29,6 +32,11 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public void AddOrMergeWith(IEnumerable<T> symbols)
             => symbols.Apply(AddOrMergeWith);
+
+        public virtual void ReBase(UriPath newBase)
+        {
+            symbols.Values.Apply(s => { s.ReBase(newBase); });
+        }
 
         public IEnumerator<T> GetEnumerator()
             => symbols.Values.OrderBy(x => x.Name).GetEnumerator();

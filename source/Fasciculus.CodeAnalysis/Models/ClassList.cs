@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
@@ -9,5 +10,11 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public ClassList()
             : this([]) { }
+
+        private ClassList(ClassList other, bool clone)
+            : base(other.Select(c => c.Clone())) { }
+
+        public ClassList Clone()
+            => new(this, true);
     }
 }
