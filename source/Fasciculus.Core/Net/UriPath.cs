@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Fasciculus.Net
@@ -9,6 +10,7 @@ namespace Fasciculus.Net
     /// <summary>
     /// An immutable list of strings representing the path of an URI.
     /// </summary>
+    [DebuggerDisplay("{string.Join(\"/\", parts)}")]
     public partial class UriPath : IReadOnlyList<string>, IEquatable<UriPath>, IComparable<UriPath>
     {
         /// <summary>

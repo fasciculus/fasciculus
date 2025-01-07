@@ -1,5 +1,6 @@
 ﻿using Fasciculus.CodeAnalysis.Frameworks;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Net;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,6 +20,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private readonly NamespaceCompiler namespaceCompiler;
 
         private NamespaceList namespaces;
+        private UriPath link = new();
 
         public CompilationCompiler(TargetFramework framework)
             : base(AcceptedKinds)
@@ -26,11 +28,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
             namespaceCompiler = new(framework);
         }
 
-        public CompilationUnit Compile(CompilationUnitSyntax compilationUnit)
+        public CompilationUnit Compile(CompilationUnitSyntax compilationUnit, UriPath parentLink)
         {
             using Locker locker = Locker.Lock(mutex);
 
             namespaces = new();
+            link = parentLink;
 
             DefaultVisit(compilationUnit);
 
@@ -39,7 +42,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
         {
-            namespaces.AddOrMergeWith(namespaceCompiler.Compile(node));
+            namespaces.AddOrMergeWith(namespaceCompiler.Compile(node, link));
         }
 
         public override void VisitUsingDirective(UsingDirectiveSyntax node) { }

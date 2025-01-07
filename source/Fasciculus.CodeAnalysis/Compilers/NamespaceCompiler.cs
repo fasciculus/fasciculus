@@ -1,5 +1,6 @@
 ﻿using Fasciculus.CodeAnalysis.Frameworks;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Net;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -20,23 +21,27 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly TargetFramework framework;
 
+        private UriPath link = new();
+
         public NamespaceCompiler(TargetFramework framework)
             : base(AcceptedKinds)
         {
             this.framework = framework;
         }
 
-        public NamespaceList Compile(NamespaceDeclarationSyntax node)
+        public NamespaceSymbol Compile(NamespaceDeclarationSyntax node, UriPath parentLink)
         {
             using Locker locker = Locker.Lock(mutex);
 
-            NamespaceList namespaces = new();
             SymbolName name = new(node.Name.ToString());
-            NamespaceSymbol @namespace = new(name, framework);
+
+            link = parentLink.Append(name.Name);
+
+            NamespaceSymbol @namespace = new(name, link, framework);
 
             DefaultVisit(node);
 
-            return new([@namespace]);
+            return @namespace;
         }
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
