@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Xml;
+using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Commenting
 {
@@ -9,9 +9,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
         {
             try
             {
-                XmlDocument document = new();
-
-                document.LoadXml(xml);
+                XDocument document = XDocument.Parse(xml);
 
                 return new(document);
             }

@@ -1,39 +1,42 @@
 ﻿using System.Xml;
+using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Commenting
 {
     public class SymbolComment
     {
-        public XmlDocument Document { get; }
+        public XDocument Document { get; }
 
-        private XmlElement? summary;
+        private XElement? summary;
 
         public bool HasSummary => summary is not null;
 
-        public string Summary => summary?.InnerXml ?? string.Empty;
+        public string Summary => InnerXml(summary);
 
-        public SymbolComment(XmlDocument document)
+        public SymbolComment(XDocument document)
         {
             Document = document;
 
             summary = FindElement(document, "summary");
         }
 
-        private static XmlElement? FindElement(XmlDocument document, string name)
+        private static XElement? FindElement(XDocument document, string name)
         {
-            XmlNodeList nodes = document.GetElementsByTagName(name);
+            return document.Root?.Element(name);
+        }
 
-            if (nodes.Count > 0)
+        private static string InnerXml(XElement? element)
+        {
+            if (element is not null)
             {
-                XmlNode? node = nodes[0];
+                using XmlReader reader = element.CreateReader();
 
-                if (node is not null && node is XmlElement element)
-                {
-                    return element;
-                }
+                reader.MoveToContent();
+
+                return reader.ReadInnerXml();
             }
 
-            return null;
+            return string.Empty;
         }
 
         public static readonly SymbolComment Empty = SymbolCommentFactory.CreateEmpty();
