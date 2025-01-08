@@ -37,15 +37,20 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly TargetFrameworks frameworks;
 
+        private readonly ModifiersFactory modifiersFactory = new();
         private readonly CommentCompiler commentCompiler = new();
 
-        private UriPath link = new();
         private SymbolComment comment = SymbolComment.Empty;
 
         public ClassCompiler(TargetFramework framework)
             : base(AcceptedKinds, SyntaxWalkerDepth.StructuredTrivia)
         {
-            this.frameworks = new(framework);
+            frameworks = new(framework);
+        }
+
+        private void Clear()
+        {
+            comment = SymbolComment.Empty;
         }
 
         public ClassSymbol Compile(ClassDeclarationSyntax node, UriPath parentLink)
@@ -56,17 +61,17 @@ namespace Fasciculus.CodeAnalysis.Compilers
             TypeParameterListSyntax? parameterList = node.TypeParameterList;
             IEnumerable<string> parameters = parameterList is null ? [] : parameterList.Parameters.Select(p => p.Identifier.ToString());
             SymbolName name = new(untyped, parameters);
+            UriPath link = parentLink.Append(name.Mangled);
+            SymbolModifiers modifiers = modifiersFactory.Create(node.Modifiers);
 
-            link = parentLink.Append(name.Mangled);
-            comment = SymbolComment.Empty;
+            Clear();
 
             DefaultVisit(node);
 
-            ClassSymbol result = new(name, link, frameworks);
-
-            result.Comment = comment;
-
-            return result;
+            return new(name, link, frameworks)
+            {
+                Comment = comment
+            };
         }
 
         public override void VisitAttributeList(AttributeListSyntax node)

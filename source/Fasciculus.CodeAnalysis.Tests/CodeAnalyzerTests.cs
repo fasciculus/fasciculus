@@ -1,10 +1,12 @@
-﻿using Fasciculus.CodeAnalysis.Indexing;
+﻿using Fasciculus.CodeAnalysis.Compilers;
+using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Fasciculus.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,9 +27,10 @@ namespace Fasciculus.CodeAnalysis.Tests
                 .WithProjectFiles(GetProjectFiles())
                 .Build().Analyze();
 
-            LogComments(result.Indices);
+            LogUnhandledModifiers();
             LogNodeKindReporter();
             LogCommentElementReporter();
+            LogComments(result.Indices);
         }
 
         private void LogComments(SymbolIndices indices)
@@ -59,8 +62,19 @@ namespace Fasciculus.CodeAnalysis.Tests
 
             if (CommentElementReporter.Instance.Report(writer))
             {
-                Log("--- Unhandled comment elements ---");
+                Log("--- unhandled comment elements ---");
                 Log(stringBuilder.ToString());
+            }
+        }
+
+        private void LogUnhandledModifiers()
+        {
+            SortedSet<string> unhandled = UnhandledModifiers.Instance.Unhandled();
+
+            if (unhandled.Count > 0)
+            {
+                Log("--- unhandled modifiers ---");
+                Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
             }
         }
 
