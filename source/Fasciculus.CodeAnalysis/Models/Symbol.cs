@@ -35,13 +35,13 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<TargetFramework> Frameworks => frameworks;
 
-        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFramework framework)
+        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFrameworks frameworks)
         {
             Kind = kind;
             Name = name;
             Link = link;
 
-            frameworks = new([framework]);
+            this.frameworks = new(frameworks);
         }
 
         protected Symbol(Symbol other, bool _)
@@ -51,7 +51,7 @@ namespace Fasciculus.CodeAnalysis.Models
             Link = other.Link;
             Comment = other.Comment;
 
-            frameworks = new(other.Frameworks);
+            frameworks = new(other.frameworks);
         }
 
         public virtual void ReBase(UriPath newBase)
@@ -66,15 +66,15 @@ namespace Fasciculus.CodeAnalysis.Models
                 comment = other.comment;
             }
 
-            frameworks.Add(other.Frameworks);
+            frameworks.Add(other.frameworks);
         }
     }
 
     public class Symbol<T> : Symbol
         where T : notnull, Symbol<T>
     {
-        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFramework framework)
-            : base(kind, name, link, framework) { }
+        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFrameworks frameworks)
+            : base(kind, name, link, frameworks) { }
 
         protected Symbol(Symbol<T> other, bool clone)
             : base(other, clone) { }

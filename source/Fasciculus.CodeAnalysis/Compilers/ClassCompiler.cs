@@ -34,7 +34,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly TargetFramework framework;
+        private readonly TargetFrameworks frameworks;
 
         private readonly CommentCompiler commentCompiler = new();
 
@@ -44,7 +44,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public ClassCompiler(TargetFramework framework)
             : base(AcceptedKinds, SyntaxWalkerDepth.StructuredTrivia)
         {
-            this.framework = framework;
+            this.frameworks = new(framework);
         }
 
         public ClassSymbol Compile(ClassDeclarationSyntax node, UriPath parentLink)
@@ -61,17 +61,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             DefaultVisit(node);
 
-            //if (node.HasStructuredTrivia && node.HasLeadingTrivia)
-            //{
-            //    DocumentationCommentTriviaSyntax? commentSyntax = commentParser.Parse(node.GetLeadingTrivia());
-
-            //    if (commentSyntax is not null)
-            //    {
-            //        commentCompiler.Compile(commentSyntax);
-            //    }
-            //}
-
-            ClassSymbol result = new(name, link, framework);
+            ClassSymbol result = new(name, link, frameworks);
 
             result.Comment = comment;
 

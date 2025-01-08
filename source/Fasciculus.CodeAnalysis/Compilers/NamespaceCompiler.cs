@@ -19,7 +19,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly TargetFramework framework;
+        private readonly TargetFrameworks frameworks;
 
         private readonly ClassCompiler classCompiler;
 
@@ -29,7 +29,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public NamespaceCompiler(TargetFramework framework)
             : base(AcceptedKinds)
         {
-            this.framework = framework;
+            frameworks = new TargetFrameworks(framework);
 
             classCompiler = new(framework);
         }
@@ -45,7 +45,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             DefaultVisit(node);
 
-            return new(name, link, framework, classes);
+            return new(name, link, frameworks, classes);
         }
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)

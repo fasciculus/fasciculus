@@ -19,12 +19,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
             SymbolName name = new(project.Name);
             UriPath link = new(name.Name);
             TargetFramework framework = project.Framework;
+            TargetFrameworks frameworks = new(framework);
             CompilationCompiler compiler = new(framework);
 
             IEnumerable<CompilationUnit> compilationUnits = roots
                 .Select(root => compiler.Compile(root, link));
 
-            return new(name, link, framework, compilationUnits);
+            return new(name, link, frameworks, compilationUnits);
         }
 
         public static PackageSymbol Compile(ParsedProject project)

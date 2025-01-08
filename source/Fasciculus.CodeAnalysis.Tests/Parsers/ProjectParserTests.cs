@@ -59,7 +59,6 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
             PackageSymbol merged = packages.Merge("Combined");
 
             ReportComment(merged);
-
             ReportNodeKindReporter();
         }
 

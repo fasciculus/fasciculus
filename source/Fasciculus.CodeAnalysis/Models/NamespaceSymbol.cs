@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Frameworks;
+﻿using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Net;
 using System.Collections.Generic;
 
@@ -10,8 +10,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<ClassSymbol> Classes => classes;
 
-        public NamespaceSymbol(SymbolName name, UriPath link, TargetFramework framework, IEnumerable<ClassSymbol> classes)
-            : base(SymbolKind.Namespace, name, link, framework)
+        public NamespaceSymbol(SymbolName name, UriPath link, TargetFrameworks frameworks, IEnumerable<ClassSymbol> classes)
+            : base(SymbolKind.Namespace, name, link, frameworks)
         {
             this.classes = new(classes);
         }

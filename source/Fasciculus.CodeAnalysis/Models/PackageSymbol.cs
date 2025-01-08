@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Frameworks;
+﻿using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Net;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +11,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<NamespaceSymbol> Namespaces => namespaces;
 
-        public PackageSymbol(SymbolName name, UriPath link, TargetFramework framework, IEnumerable<CompilationUnit> compilationUnits)
-            : base(SymbolKind.Package, name, link, framework)
+        public PackageSymbol(SymbolName name, UriPath link, TargetFrameworks frameworks, IEnumerable<CompilationUnit> compilationUnits)
+            : base(SymbolKind.Package, name, link, frameworks)
         {
             namespaces = new(compilationUnits.SelectMany(x => x.Namespaces));
         }

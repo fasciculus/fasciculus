@@ -1,5 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Collections;
+﻿using Fasciculus.Collections;
 using Fasciculus.Net;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +17,10 @@ namespace Fasciculus.CodeAnalysis.Models
 
             if (Count == 0)
             {
-                return new(name, link, TargetFramework.UnsupportedFramework, []);
+                return new(name, link, [], []);
             }
 
-            TargetFramework framework = this.First().Frameworks.First();
-            PackageSymbol result = new(name, link, framework, []);
+            PackageSymbol result = new(name, link, [], []);
 
             this.Select(p => p.Clone()).Apply(result.MergeWith);
             result.ReBase(link);
