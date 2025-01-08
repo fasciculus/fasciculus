@@ -39,7 +39,9 @@ namespace Fasciculus.CodeAnalysis.Commenting
                     case "see": VisitSee(element); break;
                 }
 
-                element.Elements().Apply(Visit);
+                XElement[] children = [.. element.Elements()];
+
+                children.Apply(Visit);
             }
         }
 
@@ -54,7 +56,8 @@ namespace Fasciculus.CodeAnalysis.Commenting
 
             if (cref is not null)
             {
-                XElement code = new("c", cref.Value);
+                string content = cref.Value.Replace("{", "<").Replace("}", ">");
+                XElement code = new("c", content);
 
                 element.ReplaceWith(code);
             }
