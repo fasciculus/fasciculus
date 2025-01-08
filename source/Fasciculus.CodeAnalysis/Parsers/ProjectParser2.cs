@@ -14,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
     /// </summary>
     public class ProjectParser2
     {
-        public ParsedProject ParseProject(Project project, TargetFramework framework, bool includeGenerated)
+        public ParsedProject Parse(Project project, TargetFramework framework, bool includeGenerated)
         {
             IEnumerable<SyntaxTree> syntaxTrees = [];
 
@@ -28,34 +28,5 @@ namespace Fasciculus.CodeAnalysis.Parsers
 
         private static bool CheckGenerated(SyntaxTree syntaxTree, bool includeGenerated)
             => includeGenerated || !syntaxTree.IsGenerated();
-
-
-        public static ParsedProject Parse(Project project, bool includeGenerated)
-        {
-            TargetFramework framework = project.GetTargetFramework();
-
-            if (project.HasDocuments)
-            {
-                ProjectParser2 parser = new();
-
-                return parser.ParseProject(project, framework, includeGenerated);
-            }
-
-            return new(project.AssemblyName, framework);
-        }
-
-        public static ParsedProject[] Parse(IEnumerable<Project> projects, bool includeGenerated)
-        {
-            Project[] projectsWithDocuments = [.. projects.Where(p => p.HasDocuments)];
-
-            if (projectsWithDocuments.Length == 0)
-            {
-                return [];
-            }
-
-            ProjectParser2 parser = new();
-
-            return [.. projectsWithDocuments.AsParallel().Select(p => Parse(p, includeGenerated))];
-        }
     }
 }

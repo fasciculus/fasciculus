@@ -28,6 +28,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<TargetFramework> Frameworks => frameworks;
 
+        public TargetProducts Products => new(frameworks);
+
         public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFrameworks frameworks)
         {
             Kind = kind;

@@ -1,5 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.CodeAnalysis.Models;
+﻿using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis.CSharp;
@@ -22,10 +21,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private NamespaceList namespaces;
         private UriPath link = new();
 
-        public CompilationCompiler(TargetFramework framework)
+        public CompilationCompiler(CompilerContext context)
             : base(HandledSymbols)
         {
-            namespaceCompiler = new(framework);
+            namespaceCompiler = new(context);
         }
 
         public CompilationUnit Compile(CompilationUnitSyntax compilationUnit, UriPath parentLink)

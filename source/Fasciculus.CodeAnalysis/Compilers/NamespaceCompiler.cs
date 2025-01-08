@@ -1,5 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.CodeAnalysis.Models;
+﻿using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis.CSharp;
@@ -19,19 +18,19 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly TargetFrameworks frameworks;
+        private readonly CompilerContext context;
 
         private readonly ClassCompiler classCompiler;
 
         private UriPath link = new();
         private ClassList classes = new();
 
-        public NamespaceCompiler(TargetFramework framework)
+        public NamespaceCompiler(CompilerContext context)
             : base(HandledSymbols)
         {
-            frameworks = new TargetFrameworks(framework);
+            this.context = context;
 
-            classCompiler = new(framework);
+            classCompiler = new(context);
         }
 
         public NamespaceSymbol Compile(NamespaceDeclarationSyntax node, UriPath parentLink)
@@ -45,7 +44,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             DefaultVisit(node);
 
-            return new(name, link, frameworks, classes);
+            return new(name, link, context.Frameworks, classes);
         }
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)

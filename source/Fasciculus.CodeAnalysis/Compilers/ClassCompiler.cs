@@ -1,5 +1,4 @@
 ﻿using Fasciculus.CodeAnalysis.Commenting;
-using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net;
 using Fasciculus.Threading.Synchronization;
@@ -35,17 +34,17 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly TargetFrameworks frameworks;
+        private readonly CompilerContext context;
 
         private readonly ModifiersFactory modifiersFactory = new();
         private readonly CommentCompiler commentCompiler = new();
 
         private SymbolComment comment = SymbolComment.Empty;
 
-        public ClassCompiler(TargetFramework framework)
+        public ClassCompiler(CompilerContext context)
             : base(HandledSymbols, SyntaxWalkerDepth.StructuredTrivia)
         {
-            frameworks = new(framework);
+            this.context = context;
         }
 
         private void Clear()
@@ -68,7 +67,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             DefaultVisit(node);
 
-            return new(name, link, frameworks)
+            return new(name, link, context.Frameworks)
             {
                 Comment = comment
             };
