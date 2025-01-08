@@ -12,7 +12,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public IEnumerable<NamespaceSymbol> Namespaces => namespaces;
 
         public PackageSymbol(SymbolName name, UriPath link, TargetFramework framework, IEnumerable<CompilationUnit> compilationUnits)
-            : base(name, link, framework)
+            : base(SymbolKind.Package, name, link, framework)
         {
             namespaces = new(compilationUnits.SelectMany(x => x.Namespaces));
         }

@@ -5,9 +5,18 @@ using System.Diagnostics;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
+    public enum SymbolKind
+    {
+        Package,
+        Namespace,
+        Class
+    }
+
     [DebuggerDisplay("{Name}")]
     public class Symbol
     {
+        public SymbolKind Kind { get; }
+
         public SymbolName Name { get; }
 
         public UriPath Link { get; private set; }
@@ -26,8 +35,9 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<TargetFramework> Frameworks => frameworks;
 
-        public Symbol(SymbolName name, UriPath link, TargetFramework framework)
+        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFramework framework)
         {
+            Kind = kind;
             Name = name;
             Link = link;
 
@@ -36,6 +46,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         protected Symbol(Symbol other, bool _)
         {
+            Kind = other.Kind;
             Name = other.Name;
             Link = other.Link;
             Comment = other.Comment;
@@ -62,8 +73,8 @@ namespace Fasciculus.CodeAnalysis.Models
     public class Symbol<T> : Symbol
         where T : notnull, Symbol<T>
     {
-        public Symbol(SymbolName name, UriPath link, TargetFramework framework)
-            : base(name, link, framework) { }
+        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFramework framework)
+            : base(kind, name, link, framework) { }
 
         protected Symbol(Symbol<T> other, bool clone)
             : base(other, clone) { }

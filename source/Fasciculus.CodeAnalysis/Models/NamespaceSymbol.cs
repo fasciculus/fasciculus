@@ -11,7 +11,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public IEnumerable<ClassSymbol> Classes => classes;
 
         public NamespaceSymbol(SymbolName name, UriPath link, TargetFramework framework, IEnumerable<ClassSymbol> classes)
-            : base(name, link, framework)
+            : base(SymbolKind.Namespace, name, link, framework)
         {
             this.classes = new(classes);
         }
