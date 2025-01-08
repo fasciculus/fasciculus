@@ -6,8 +6,7 @@ using System.Diagnostics;
 namespace Fasciculus.CodeAnalysis.Models
 {
     [DebuggerDisplay("{Name}")]
-    public class Symbol<T>
-        where T : notnull, Symbol<T>
+    public class Symbol
     {
         public SymbolName Name { get; }
 
@@ -32,10 +31,10 @@ namespace Fasciculus.CodeAnalysis.Models
             Name = name;
             Link = link;
 
-            frameworks = new(framework);
+            frameworks = new([framework]);
         }
 
-        protected Symbol(Symbol<T> other, bool _)
+        protected Symbol(Symbol other, bool _)
         {
             Name = other.Name;
             Link = other.Link;
@@ -44,19 +43,34 @@ namespace Fasciculus.CodeAnalysis.Models
             frameworks = new(other.Frameworks);
         }
 
-        public virtual void MergeWith(T other)
+        public virtual void ReBase(UriPath newBase)
         {
-            frameworks.Add(other.Frameworks);
+            Link = Link.Replace(0, 1, newBase);
+        }
 
+        public virtual void MergeWith(Symbol other)
+        {
             if (string.IsNullOrEmpty(comment))
             {
                 comment = other.comment;
             }
-        }
 
-        public virtual void ReBase(UriPath newBase)
+            frameworks.Add(other.Frameworks);
+        }
+    }
+
+    public class Symbol<T> : Symbol
+        where T : notnull, Symbol<T>
+    {
+        public Symbol(SymbolName name, UriPath link, TargetFramework framework)
+            : base(name, link, framework) { }
+
+        protected Symbol(Symbol<T> other, bool clone)
+            : base(other, clone) { }
+
+        public virtual void MergeWith(T other)
         {
-            Link = Link.Replace(0, 1, newBase);
+            base.MergeWith(other);
         }
     }
 }
