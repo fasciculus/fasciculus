@@ -9,7 +9,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public class CompilationCompiler : FilteredCompiler
     {
-        private static readonly SyntaxKind[] AcceptedKinds =
+        private static readonly SyntaxKind[] HandledSymbols =
         [
             SyntaxKind.NamespaceDeclaration,
             SyntaxKind.UsingDirective
@@ -23,7 +23,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private UriPath link = new();
 
         public CompilationCompiler(TargetFramework framework)
-            : base(AcceptedKinds)
+            : base(HandledSymbols)
         {
             namespaceCompiler = new(framework);
         }

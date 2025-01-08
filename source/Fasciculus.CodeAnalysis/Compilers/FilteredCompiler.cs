@@ -1,5 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Support;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Generic;
 
@@ -7,14 +6,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public class FilteredCompiler : CSharpSyntaxWalker
     {
-        private SortedSet<SyntaxKind> acceptedKinds;
+        private SortedSet<SyntaxKind> handledSymbols;
 
-        public FilteredCompiler(IEnumerable<SyntaxKind> acceptedKinds, SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node)
+        public FilteredCompiler(IEnumerable<SyntaxKind> handledSymbols, SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node)
             : base(depth)
         {
-            this.acceptedKinds = new(acceptedKinds);
+            this.handledSymbols = new(handledSymbols);
 
-            NodeKindReporter.Instance.Add(GetType(), acceptedKinds);
+            UnhandledSymbols.Instance.Handled(GetType(), handledSymbols);
         }
 
         public override void Visit(SyntaxNode? node)
@@ -23,9 +22,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 SyntaxKind kind = node.Kind();
 
-                NodeKindReporter.Instance.Used(GetType(), kind);
+                UnhandledSymbols.Instance.Used(GetType(), kind);
 
-                if (acceptedKinds.Contains(kind))
+                if (handledSymbols.Contains(kind))
                 {
                     base.Visit(node);
                 }

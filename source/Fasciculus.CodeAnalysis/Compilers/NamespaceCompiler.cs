@@ -9,7 +9,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public class NamespaceCompiler : FilteredCompiler
     {
-        private static readonly SyntaxKind[] AcceptedKinds =
+        private static readonly SyntaxKind[] HandledSymbols =
         [
             SyntaxKind.ClassDeclaration,
             SyntaxKind.InterfaceDeclaration,
@@ -27,7 +27,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private ClassList classes = new();
 
         public NamespaceCompiler(TargetFramework framework)
-            : base(AcceptedKinds)
+            : base(HandledSymbols)
         {
             frameworks = new TargetFrameworks(framework);
 

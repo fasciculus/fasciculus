@@ -1,7 +1,6 @@
 ﻿using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Parsers;
-using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.CodeAnalysis.Workspaces;
 using Fasciculus.Collections;
 using Fasciculus.IO;
@@ -11,9 +10,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Fasciculus.CodeAnalysis.Tests.Parsers
 {
@@ -29,7 +26,6 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
             PackageSymbol merged = packages.Combine("Combined");
 
             ReportComment(merged);
-            ReportNodeKindReporter();
         }
 
         private void ReportComment(PackageSymbol merged)
@@ -40,18 +36,6 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
             Log("--- Comment ---");
             Log(c.Comment.Summary);
             Log("--- Comment ---");
-        }
-
-        private void ReportNodeKindReporter()
-        {
-            StringBuilder stringBuilder = new();
-            using StringWriter writer = new(stringBuilder);
-
-            if (NodeKindReporter.Instance.Report(writer))
-            {
-                Log("--- Unhandled SyntaxKind ---");
-                Log(stringBuilder.ToString());
-            }
         }
 
         private static MSBuildWorkspace LoadWorkspace(IEnumerable<string> projectNames)

@@ -9,7 +9,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public class CommentCompiler : FilteredCompiler
     {
-        private static readonly SyntaxKind[] AcceptedKinds =
+        private static readonly SyntaxKind[] HandledSymbols =
         [
             SyntaxKind.XmlElement,
             SyntaxKind.XmlElementStartTag,
@@ -42,7 +42,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private StringBuilder stringBuilder = new();
 
         public CommentCompiler()
-            : base(AcceptedKinds, SyntaxWalkerDepth.StructuredTrivia)
+            : base(HandledSymbols, SyntaxWalkerDepth.StructuredTrivia)
         {
         }
 

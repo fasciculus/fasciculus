@@ -1,16 +1,15 @@
 ﻿using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Fasciculus.Net;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Fasciculus.CodeAnalysis.Tests
 {
@@ -27,9 +26,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 .WithProjectFiles(GetProjectFiles())
                 .Build().Analyze();
 
+            LogUnhandledSymbols();
             LogUnhandledModifiers();
-            LogNodeKindReporter();
-            LogCommentElementReporter();
+            LogUnhandledCommentElements();
             LogComments(result.Indices);
         }
 
@@ -43,27 +42,19 @@ namespace Fasciculus.CodeAnalysis.Tests
             Log("~~~~~~~~~~~~~~~~~~~~~~~~");
         }
 
-        private void LogNodeKindReporter()
+        private void LogUnhandledSymbols()
         {
-            StringBuilder stringBuilder = new();
-            using StringWriter writer = new(stringBuilder);
+            Dictionary<string, SortedSet<SyntaxKind>> unhandled = UnhandledSymbols.Instance.Unhandled();
 
-            if (NodeKindReporter.Instance.Report(writer))
+            if (unhandled.Count > 0)
             {
-                Log("--- Unhandled SyntaxKind ---");
-                Log(stringBuilder.ToString());
-            }
-        }
+                Log("--- unhandled symbols ---");
 
-        private void LogCommentElementReporter()
-        {
-            StringBuilder stringBuilder = new();
-            using StringWriter writer = new(stringBuilder);
-
-            if (CommentElementReporter.Instance.Report(writer))
-            {
-                Log("--- unhandled comment elements ---");
-                Log(stringBuilder.ToString());
+                foreach (var entry in unhandled)
+                {
+                    Log(entry.Key);
+                    Log(string.Join(Environment.NewLine, entry.Value.Select(u => "- " + u)));
+                }
             }
         }
 
@@ -74,6 +65,17 @@ namespace Fasciculus.CodeAnalysis.Tests
             if (unhandled.Count > 0)
             {
                 Log("--- unhandled modifiers ---");
+                Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
+            }
+        }
+
+        private void LogUnhandledCommentElements()
+        {
+            SortedSet<string> unhandled = UnhandledCommentElements.Instance.Unhandled();
+
+            if (unhandled.Count > 0)
+            {
+                Log("--- unhandled comment elements ---");
                 Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
             }
         }

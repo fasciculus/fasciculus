@@ -13,7 +13,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public class ClassCompiler : FilteredCompiler
     {
-        private static readonly SyntaxKind[] AcceptedKinds =
+        private static readonly SyntaxKind[] HandledSymbols =
         [
             SyntaxKind.AttributeList,
             SyntaxKind.TypeParameterList,
@@ -43,7 +43,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private SymbolComment comment = SymbolComment.Empty;
 
         public ClassCompiler(TargetFramework framework)
-            : base(AcceptedKinds, SyntaxWalkerDepth.StructuredTrivia)
+            : base(HandledSymbols, SyntaxWalkerDepth.StructuredTrivia)
         {
             frameworks = new(framework);
         }

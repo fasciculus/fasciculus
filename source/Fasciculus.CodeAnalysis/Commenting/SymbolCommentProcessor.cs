@@ -1,6 +1,6 @@
-﻿using Fasciculus.CodeAnalysis.Indexing;
+﻿using Fasciculus.CodeAnalysis.Compilers;
+using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.Collections;
 using System.Xml.Linq;
 
@@ -8,11 +8,16 @@ namespace Fasciculus.CodeAnalysis.Commenting
 {
     public class SymbolCommentProcessor
     {
+        private static string[] HandledElements
+            = ["c", "code", "comment", "p", "para", "see", "summary", "typeparam"];
+
         private readonly SymbolIndices indices;
 
         public SymbolCommentProcessor(SymbolIndices indices)
         {
             this.indices = indices;
+
+            UnhandledCommentElements.Instance.Handled(HandledElements);
         }
 
         public void Process()
@@ -31,9 +36,11 @@ namespace Fasciculus.CodeAnalysis.Commenting
         {
             if (element is not null)
             {
-                CommentElementReporter.Instance.Used(element.Name.LocalName);
+                string name = element.Name.LocalName;
 
-                switch (element.Name.LocalName)
+                UnhandledCommentElements.Instance.Used(name);
+
+                switch (name)
                 {
                     case "para": VisitPara(element); break;
                     case "see": VisitSee(element); break;
