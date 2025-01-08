@@ -2,7 +2,7 @@
 using Fasciculus.Support.Versioning;
 using System.Collections.Generic;
 
-namespace Fasciculus.CodeAnalysis.Frameworks
+namespace Fasciculus.CodeAnalysis.Frameworking
 {
     /// <summary>
     /// Target product with versions

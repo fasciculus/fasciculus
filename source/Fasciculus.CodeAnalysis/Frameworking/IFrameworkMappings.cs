@@ -1,6 +1,6 @@
 ﻿using NuGet.Frameworks;
 
-namespace Fasciculus.CodeAnalysis.Frameworks
+namespace Fasciculus.CodeAnalysis.Frameworking
 {
     /// <summary>
     /// Maps frameworks to product names.

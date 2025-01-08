@@ -1,9 +1,9 @@
 ﻿using NuGet.Frameworks;
 using System;
-using static Fasciculus.CodeAnalysis.Frameworks.TargetFrameworkConstants;
+using static Fasciculus.CodeAnalysis.Frameworking.TargetFrameworkConstants;
 using static NuGet.Frameworks.FrameworkConstants;
 
-namespace Fasciculus.CodeAnalysis.Frameworks
+namespace Fasciculus.CodeAnalysis.Frameworking
 {
     /// <summary>
     /// Default implementation of <see cref="IFrameworkMappings"/>.

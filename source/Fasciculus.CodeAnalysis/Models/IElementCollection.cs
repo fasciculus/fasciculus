@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Frameworks;
+﻿using Fasciculus.CodeAnalysis.Frameworking;
 using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models

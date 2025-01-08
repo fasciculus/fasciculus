@@ -1,4 +1,4 @@
-﻿namespace Fasciculus.CodeAnalysis.Frameworks
+﻿namespace Fasciculus.CodeAnalysis.Frameworking
 {
     /// <summary>
     /// Constants.

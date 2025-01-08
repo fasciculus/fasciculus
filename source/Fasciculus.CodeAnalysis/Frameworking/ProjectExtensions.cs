@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Fasciculus.CodeAnalysis.Frameworks
+namespace Fasciculus.CodeAnalysis.Frameworking
 {
     /// <summary>
     /// Target framework related extensions for

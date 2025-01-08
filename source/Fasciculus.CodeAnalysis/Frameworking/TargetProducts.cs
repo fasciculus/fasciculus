@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fasciculus.CodeAnalysis.Frameworks
+namespace Fasciculus.CodeAnalysis.Frameworking
 {
     /// <summary>
     /// Collection of target products

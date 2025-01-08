@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Fasciculus.CodeAnalysis.Frameworks
+namespace Fasciculus.CodeAnalysis.Frameworking
 {
     /// <summary>
     /// A wrapper around a <see cref="NuGetFramework"/> with additional properties.
