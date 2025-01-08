@@ -10,7 +10,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public PackageList(IEnumerable<PackageSymbol> packages)
             : base(packages) { }
 
-        public PackageSymbol Merge(string packageName)
+        public PackageSymbol Combine(string packageName)
         {
             SymbolName name = new SymbolName(packageName);
             UriPath link = new(name.Name);
