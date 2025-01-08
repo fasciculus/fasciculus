@@ -1,6 +1,9 @@
-﻿using Fasciculus.CodeAnalysis.Support;
+﻿using Fasciculus.CodeAnalysis.Indexing;
+using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
+using Fasciculus.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +25,43 @@ namespace Fasciculus.CodeAnalysis.Tests
                 .WithProjectFiles(GetProjectFiles())
                 .Build().Analyze();
 
-            ReportNodeKindReporter();
+            LogComments(result.Indices);
+            LogNodeKindReporter();
+            LogCommentElementReporter();
+        }
+
+        private void LogComments(SymbolIndices indices)
+        {
+            UriPath path = new("Fasciculus.Core", "Fasciculus.Collections", "ObservableNotifyingEnumerable-1");
+            ClassSymbol @class = indices.Classes[path];
+
+            Log($"~~~~ {@class.Name} ~~~~");
+            Log(@class.Comment.Summary);
+            Log("~~~~~~~~~~~~~~~~~~~~~~~~");
+        }
+
+        private void LogNodeKindReporter()
+        {
+            StringBuilder stringBuilder = new();
+            using StringWriter writer = new(stringBuilder);
+
+            if (NodeKindReporter.Instance.Report(writer))
+            {
+                Log("--- Unhandled SyntaxKind ---");
+                Log(stringBuilder.ToString());
+            }
+        }
+
+        private void LogCommentElementReporter()
+        {
+            StringBuilder stringBuilder = new();
+            using StringWriter writer = new(stringBuilder);
+
+            if (CommentElementReporter.Instance.Report(writer))
+            {
+                Log("--- Unhandled comment elements ---");
+                Log(stringBuilder.ToString());
+            }
         }
 
         private static IEnumerable<FileInfo> GetProjectFiles()
@@ -32,18 +71,6 @@ namespace Fasciculus.CodeAnalysis.Tests
                 DirectoryInfo directory = DirectorySearch.Search(projectName, searchPath).First();
 
                 yield return directory.File(projectName + ".csproj");
-            }
-        }
-
-        private void ReportNodeKindReporter()
-        {
-            StringBuilder stringBuilder = new();
-            using StringWriter writer = new(stringBuilder);
-
-            if (NodeKindReporter.Instance.Report(writer))
-            {
-                Log("--- Unhandled SyntaxKind ---");
-                Log(stringBuilder.ToString());
             }
         }
     }

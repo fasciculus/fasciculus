@@ -1,4 +1,5 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
+﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Net;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,15 +22,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public UriPath Link { get; private set; }
 
-        private string? comment;
-
-        public string Comment
-        {
-            get => comment ?? string.Empty;
-            set => comment = value;
-        }
-
-        public bool HasComment => comment is not null;
+        public SymbolComment Comment { get; set; } = SymbolComment.Empty;
 
         private readonly TargetFrameworks frameworks;
 
@@ -61,11 +54,6 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public virtual void MergeWith(Symbol other)
         {
-            if (string.IsNullOrEmpty(comment))
-            {
-                comment = other.comment;
-            }
-
             frameworks.Add(other.frameworks);
         }
     }

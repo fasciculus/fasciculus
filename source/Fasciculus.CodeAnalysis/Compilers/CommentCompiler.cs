@@ -1,9 +1,9 @@
-﻿using Fasciculus.Threading.Synchronization;
+﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
-using System.Xml;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -37,6 +37,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly TaskSafeMutex mutex = new();
 
+        private readonly SymbolCommentFactory commentFactory = new();
+
         private StringBuilder stringBuilder = new();
 
         public CommentCompiler()
@@ -44,7 +46,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
         }
 
-        public string Compile(DocumentationCommentTriviaSyntax node)
+        public SymbolComment Compile(DocumentationCommentTriviaSyntax node)
         {
             using Locker locker = Locker.Lock(mutex);
 
@@ -54,18 +56,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             string xml = "<comment>\r\n" + stringBuilder.ToString() + "</comment>";
 
-            try
-            {
-                XmlDocument document = new();
-
-                document.LoadXml(xml);
-            }
-            catch
-            {
-                return string.Empty;
-            }
-
-            return xml;
+            return commentFactory.Create(xml);
         }
 
         public override void VisitPredefinedType(PredefinedTypeSyntax node)

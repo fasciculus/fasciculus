@@ -1,4 +1,5 @@
-﻿using Fasciculus.CodeAnalysis.Compilers;
+﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Parsers;
@@ -25,6 +26,8 @@ namespace Fasciculus.CodeAnalysis
             PackageSymbol combined = packages.Combine(options.CombinedPackageName);
             SymbolIndices indices = CreateIndices(packages, combined);
 
+            ProcessComments(indices);
+
             return new()
             {
                 Packages = packages,
@@ -40,12 +43,19 @@ namespace Fasciculus.CodeAnalysis
             return PackageCompiler.Compile(parsedProjects);
         }
 
-        private SymbolIndices CreateIndices(PackageList packages, PackageSymbol combined)
+        private static SymbolIndices CreateIndices(PackageList packages, PackageSymbol combined)
         {
             return SymbolIndices.Create()
                 .WithPackages(packages)
                 .WithPackages(combined)
                 .Build();
+        }
+
+        private static void ProcessComments(SymbolIndices indices)
+        {
+            SymbolCommentProcessor processor = new(indices);
+
+            processor.Process();
         }
 
         private MSBuildWorkspace LoadWorkspace()

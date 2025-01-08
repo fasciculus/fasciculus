@@ -11,6 +11,7 @@ namespace Fasciculus.CodeAnalysis.Support
         public static readonly NodeKindReporter Instance = new();
 
         private readonly TaskSafeMutex mutex = new();
+
         private readonly Dictionary<string, SortedSet<SyntaxKind>> accepted = [];
         private readonly Dictionary<string, SortedSet<SyntaxKind>> used = [];
 

@@ -38,7 +38,7 @@ namespace Fasciculus.CodeAnalysis.Tests.Parsers
             ClassSymbol c = ns.Classes.First(c => c.Name.Name == "ObservableNotifyingEnumerable<T>");
 
             Log("--- Comment ---");
-            Log(c.Comment);
+            Log(c.Comment.Summary);
             Log("--- Comment ---");
         }
 

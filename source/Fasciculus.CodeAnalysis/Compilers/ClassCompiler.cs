@@ -1,4 +1,5 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
+﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net;
 using Fasciculus.Threading.Synchronization;
@@ -39,7 +40,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private readonly CommentCompiler commentCompiler = new();
 
         private UriPath link = new();
-        private string comment = string.Empty;
+        private SymbolComment comment = SymbolComment.Empty;
 
         public ClassCompiler(TargetFramework framework)
             : base(AcceptedKinds, SyntaxWalkerDepth.StructuredTrivia)
@@ -57,7 +58,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             SymbolName name = new(untyped, parameters);
 
             link = parentLink.Append(name.Mangled);
-            comment = string.Empty;
+            comment = SymbolComment.Empty;
 
             DefaultVisit(node);
 

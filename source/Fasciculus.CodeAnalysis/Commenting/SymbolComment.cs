@@ -7,11 +7,11 @@ namespace Fasciculus.CodeAnalysis.Commenting
     {
         public XDocument Document { get; }
 
-        private XElement? summary;
+        private readonly XElement? summary;
 
         public bool HasSummary => summary is not null;
 
-        public string Summary => InnerXml(summary);
+        public string Summary => InnerXml(summary).Trim();
 
         public SymbolComment(XDocument document)
         {
