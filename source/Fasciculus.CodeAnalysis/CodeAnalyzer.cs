@@ -1,5 +1,6 @@
 ﻿using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Compilers;
+using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;

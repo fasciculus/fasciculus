@@ -1,6 +1,6 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
+﻿using Fasciculus.CodeAnalysis.Extensions;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;

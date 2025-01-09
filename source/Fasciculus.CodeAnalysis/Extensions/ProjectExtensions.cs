@@ -1,13 +1,32 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Fasciculus.CodeAnalysis.Frameworking;
+using Microsoft.CodeAnalysis;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
-namespace Fasciculus.CodeAnalysis.Frameworking
+namespace Fasciculus.CodeAnalysis.Extensions
 {
     /// <summary>
-    /// Target framework related extensions for
+    /// Extensions for <see cref="Project"/>.
     /// </summary>
     public static class ProjectExtensions
     {
+        public static FileInfo? GetFile(this Project project)
+        {
+            string? path = project.FilePath;
+
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                FileInfo file = new FileInfo(path);
+
+                return file.Exists ? file : null;
+            }
+
+            return null;
+        }
+
+        public static DirectoryInfo? GetDirectory(this Project project)
+            => project.GetFile()?.Directory;
+
         /// <summary>
         /// Tries to parse the target framework of the given <paramref name="project"/>.
         /// </summary>
@@ -33,6 +52,6 @@ namespace Fasciculus.CodeAnalysis.Frameworking
         }
 
         public static TargetFramework GetTargetFramework(this Project project)
-            => TryGetTargetFramework(project, out TargetFramework? framework) ? framework : TargetFramework.UnsupportedFramework;
+            => project.TryGetTargetFramework(out TargetFramework? framework) ? framework : TargetFramework.UnsupportedFramework;
     }
 }

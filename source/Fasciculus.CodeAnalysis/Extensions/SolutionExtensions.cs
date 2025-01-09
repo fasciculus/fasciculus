@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.CodeAnalysis.Workspaces
+namespace Fasciculus.CodeAnalysis.Extensions
 {
     /// <summary>
     /// Extensions for <see cref="Solution"/>.

@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fasciculus.CodeAnalysis.Workspaces
+namespace Fasciculus.CodeAnalysis.Extensions
 {
     /// <summary>
     /// Extensions for <see cref="MSBuildWorkspace"/>

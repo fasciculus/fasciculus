@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.IO;
 
-namespace Fasciculus.CodeAnalysis.Workspaces
+namespace Fasciculus.CodeAnalysis.Extensions
 {
     /// <summary>
     /// Extensions for <see cref="Workspace"/>.
