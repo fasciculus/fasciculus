@@ -1,5 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Net;
+using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Models
 {

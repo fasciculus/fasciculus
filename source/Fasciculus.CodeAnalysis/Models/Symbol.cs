@@ -1,6 +1,6 @@
 ﻿using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Net;
+using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 using System.Diagnostics;
 

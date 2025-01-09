@@ -1,5 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Net;
+using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Models;
 using Fasciculus.Site.Services;
 using Microsoft.AspNetCore.Http;

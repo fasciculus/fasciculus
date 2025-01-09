@@ -1,5 +1,5 @@
 ﻿using Fasciculus.Collections;
-using Fasciculus.Net;
+using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 using System.Linq;
 

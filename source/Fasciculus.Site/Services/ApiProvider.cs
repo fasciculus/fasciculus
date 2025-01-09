@@ -5,7 +5,7 @@ using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
-using Fasciculus.Net;
+using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Models;
 using System.Collections.Generic;
 using System.IO;

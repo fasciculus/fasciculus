@@ -1,4 +1,4 @@
-﻿using Fasciculus.Net;
+﻿using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 
 namespace Fasciculus.Site.Models

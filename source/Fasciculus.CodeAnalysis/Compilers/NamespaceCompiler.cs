@@ -1,7 +1,7 @@
 ﻿using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;
-using Fasciculus.Net;
+using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

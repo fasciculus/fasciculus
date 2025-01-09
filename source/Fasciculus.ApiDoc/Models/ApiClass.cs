@@ -1,5 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Net;
+using Fasciculus.Net.Navigating;
 using System.Linq;
 
 namespace Fasciculus.ApiDoc.Models

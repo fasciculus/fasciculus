@@ -1,6 +1,6 @@
 ﻿using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Net;
+using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.ApiDoc.Models
 {

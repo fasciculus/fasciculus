@@ -1,6 +1,6 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
-using Fasciculus.Net;
+using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
 using System.Collections.Generic;
 
