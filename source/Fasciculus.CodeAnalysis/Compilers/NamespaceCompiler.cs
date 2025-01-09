@@ -39,7 +39,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolName name = new(node.Name.ToString());
 
-            link = parentLink.Append(name.Name);
+            link = parentLink.Append(name);
             classes = new();
 
             DefaultVisit(node);

@@ -13,7 +13,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public PackageSymbol Combine(string packageName)
         {
             SymbolName name = new SymbolName(packageName);
-            UriPath link = new(name.Name);
+            UriPath link = new(name);
 
             if (Count == 0)
             {

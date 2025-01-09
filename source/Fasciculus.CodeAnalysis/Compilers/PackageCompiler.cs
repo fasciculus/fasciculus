@@ -23,7 +23,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 .Select(t => t.GetCompilationUnitRoot());
 
             SymbolName name = new(project.Name);
-            UriPath link = new(name.Name);
+            UriPath link = new(name);
             CompilationCompiler compiler = new(context.WithFramework(project.Framework));
 
             IEnumerable<CompilationUnit> compilationUnits = roots

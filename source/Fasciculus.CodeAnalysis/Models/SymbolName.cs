@@ -42,5 +42,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public override string? ToString()
             => Name;
+
+        public static implicit operator string(SymbolName name) => name.Name;
     }
 }
