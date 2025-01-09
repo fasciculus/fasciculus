@@ -1,4 +1,4 @@
-﻿using System.Xml;
+﻿using Fasciculus.Xml;
 using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Commenting
@@ -11,32 +11,13 @@ namespace Fasciculus.CodeAnalysis.Commenting
 
         public bool HasSummary => summary is not null;
 
-        public string Summary => InnerXml(summary).Trim();
+        public string Summary => summary.InnerXml().Trim();
 
         public SymbolComment(XDocument document)
         {
             Document = document;
 
-            summary = FindElement(document, "summary");
-        }
-
-        private static XElement? FindElement(XDocument document, string name)
-        {
-            return document.Root?.Element(name);
-        }
-
-        private static string InnerXml(XElement? element)
-        {
-            if (element is not null)
-            {
-                using XmlReader reader = element.CreateReader();
-
-                reader.MoveToContent();
-
-                return reader.ReadInnerXml();
-            }
-
-            return string.Empty;
+            summary = document.Root?.Element("summary");
         }
 
         public static readonly SymbolComment Empty = SymbolCommentFactory.CreateEmpty();
