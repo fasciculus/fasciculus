@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Fasciculus.Xml
@@ -9,9 +10,10 @@ namespace Fasciculus.Xml
     public static class XElementExtensions
     {
         /// <summary>
-        /// Returns the inner XML of the given <paramref name="element"/>.
+        /// Opens a reader for the given <paramref name="element"/>, passes it to the given <paramref name="read"/> function,
+        /// closes the reader and returns the <paramref name="read"/>'s result.
         /// </summary>
-        public static string InnerXml(this XElement? element)
+        public static string ReadContent(this XElement? element, Func<XmlReader, string> read)
         {
             if (element is not null)
             {
@@ -19,10 +21,16 @@ namespace Fasciculus.Xml
 
                 reader.MoveToContent();
 
-                return reader.ReadInnerXml();
+                return read(reader);
             }
 
             return string.Empty;
         }
+
+        /// <summary>
+        /// Returns the inner XML of the given <paramref name="element"/>.
+        /// </summary>
+        public static string InnerXml(this XElement? element)
+            => element.ReadContent(r => r.ReadInnerXml());
     }
 }

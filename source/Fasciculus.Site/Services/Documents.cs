@@ -36,7 +36,7 @@ namespace Fasciculus.Site.Services
         {
             Add("/api/");
 
-            foreach (ApiPackage package in apiProvider.Packages.Append(apiProvider.Combined))
+            foreach (ApiPackage package in apiProvider.OldPackages.Append(apiProvider.OldCombined))
             {
                 Add($"/api/{package.Link}/");
 

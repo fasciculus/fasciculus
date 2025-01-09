@@ -1,9 +1,9 @@
-﻿using Fasciculus.ApiDoc.Models;
+﻿using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.Site.Models
 {
     public class ApiClassDocument : SiteDocument
     {
-        public required ApiClass Class { get; init; }
+        public required ClassSymbol Class { get; init; }
     }
 }

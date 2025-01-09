@@ -1,5 +1,7 @@
 ﻿using Fasciculus.ApiDoc;
 using Fasciculus.ApiDoc.Models;
+using Fasciculus.CodeAnalysis;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
@@ -30,20 +32,29 @@ namespace Fasciculus.Site.Services
             { "Fasciculus.Algorithms", "Fast binary search, bit operations, fast array equality." },
         };
 
-        public ApiPackages Packages { get; }
-        public ApiPackage Combined { get; }
+        private readonly CodeAnalyzerResult content;
+
+        public PackageList Packages => content.Packages;
+
+        public ApiPackages OldPackages { get; }
+        public ApiPackage OldCombined { get; }
 
         public ApiProvider()
         {
+            content = GetContent();
+
             ApiDocBuilder builder = SetupApiDocBuilder();
             ApiDocuments documents = builder.Build();
 
-            Packages = documents.Packages;
-            Combined = documents.Combined;
+            OldPackages = documents.Packages;
+            OldCombined = documents.Combined;
 
             SetPackageDescriptions();
             SetNamespaceDescriptions();
         }
+
+        public Symbol? GetSymbol(UriPath link)
+            => content.Indices.Symbols.TryGetValue(link, out Symbol? symbol) ? symbol : null;
 
         public ApiPackage GetPackage(UriPath link)
         {
@@ -51,10 +62,10 @@ namespace Fasciculus.Site.Services
 
             if ("Combined" == name)
             {
-                return Combined;
+                return OldCombined;
             }
 
-            return Packages.First(p => p.Name == name);
+            return OldPackages.First(p => p.Name == name);
         }
 
         public ApiNamespace GetNamespace(UriPath link)
@@ -94,7 +105,7 @@ namespace Fasciculus.Site.Services
 
         private void SetPackageDescriptions()
         {
-            foreach (ApiPackage package in Packages)
+            foreach (ApiPackage package in OldPackages)
             {
                 if (PackageDescriptions.TryGetValue(package.Name, out string? description))
                 {
@@ -105,7 +116,7 @@ namespace Fasciculus.Site.Services
 
         private void SetNamespaceDescriptions()
         {
-            foreach (ApiPackage package in Packages.Append(Combined))
+            foreach (ApiPackage package in OldPackages.Append(OldCombined))
             {
                 foreach (ApiNamespace @namespace in package.Namespaces)
                 {
@@ -124,6 +135,13 @@ namespace Fasciculus.Site.Services
             GetProjectFiles().Apply(f => { builder.AddProjectFile(f); });
 
             return builder;
+        }
+
+        private static CodeAnalyzerResult GetContent()
+        {
+            return CodeAnalyzer.Create()
+                .WithProjectFiles(GetProjectFiles())
+                .Build().Analyze();
         }
 
         private static IEnumerable<FileInfo> GetProjectFiles()

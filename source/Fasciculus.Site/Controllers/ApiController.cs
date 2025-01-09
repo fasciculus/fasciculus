@@ -1,7 +1,8 @@
-﻿using Fasciculus.ApiDoc.Models;
+﻿using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net;
 using Fasciculus.Site.Models;
 using Fasciculus.Site.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fasciculus.Site.Controllers
@@ -16,7 +17,7 @@ namespace Fasciculus.Site.Controllers
         }
 
         [Route("/api/")]
-        public IActionResult Index()
+        public IActionResult Packages()
         {
             ApiIndexDocument document = new()
             {
@@ -27,53 +28,70 @@ namespace Fasciculus.Site.Controllers
             return View(document);
         }
 
-        [Route("/api/{packageName}/")]
-        public IActionResult Package(string packageName)
-        {
-            UriPath link = new(packageName);
-            ApiPackage package = apiProvider.GetPackage(link);
+        [Route("/api/{p1}/")]
+        public IActionResult Container1(string p1)
+            => Container(p1);
 
+        [Route("/api/{p1}/{p2}/")]
+        public IActionResult Container2(string p1, string p2)
+            => Container(p1, p2);
+
+        [Route("/api/{p1}/{p2}/{p3}/")]
+        public IActionResult Container2(string p1, string p2, string p3)
+            => Container(p1, p2, p3);
+
+        private IActionResult Container(params string[] parts)
+        {
+            UriPath path = new(parts);
+            Symbol? symbol = apiProvider.GetSymbol(path);
+
+            if (symbol is not null)
+            {
+                switch (symbol.Kind)
+                {
+                    case SymbolKind.Package: return symbol is PackageSymbol package ? Package(package) : ServerError();
+                    case SymbolKind.Namespace: return symbol is NamespaceSymbol @namespace ? Namespace(@namespace) : ServerError();
+                    case SymbolKind.Class: return symbol is ClassSymbol @class ? Class(@class) : ServerError();
+                }
+            }
+
+            return NotFound();
+        }
+
+        private ViewResult Package(PackageSymbol package)
+        {
             ApiPackageDocument document = new()
             {
                 Title = package.Name + " Package",
-                Navigation = apiProvider.GetNavigation(link),
                 Package = package
             };
 
-            return View(document);
+            return View("Package", document);
         }
 
-        [Route("/api/{packageName}/{namespaceName}/")]
-        public IActionResult Namespace(string packageName, string namespaceName)
+        private ViewResult Namespace(NamespaceSymbol @namespace)
         {
-            UriPath link = new(packageName, namespaceName);
-            ApiNamespace @namespace = apiProvider.GetNamespace(link);
-
             ApiNamespaceDocument document = new()
             {
                 Title = @namespace.Name + " Namespace",
-                Navigation = apiProvider.GetNavigation(link),
-                Namespace = @namespace,
-                Classes = @namespace.Classes
+                Namespace = @namespace
             };
 
-            return View(document);
+            return View("Namespace", document);
         }
 
-        [Route("/api/{packageName}/{namespaceName}/{className}/")]
-        public IActionResult Class(string packageName, string namespaceName, string className)
+        private ViewResult Class(ClassSymbol @class)
         {
-            UriPath link = new(packageName, namespaceName, className);
-            ApiClass @class = apiProvider.GetClass(link);
-
             ApiClassDocument document = new()
             {
-                Title = @class.Name + " Class",
-                Navigation = apiProvider.GetNavigation(link),
-                Class = @class,
+                Title = @class.Name + " Namespace",
+                Class = @class
             };
 
-            return View(document);
+            return View("Class", document);
         }
+
+        private StatusCodeResult ServerError()
+            => StatusCode(StatusCodes.Status500InternalServerError);
     }
 }

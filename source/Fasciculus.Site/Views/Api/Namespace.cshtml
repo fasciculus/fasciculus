@@ -1,8 +1,8 @@
 ﻿@model ApiNamespaceDocument
 
 @{
-    var hasPackages = Model.Namespace.Packages.Any();
-    var packagesLabel = Model.Namespace.Packages.Count() > 1 ? "Packages" : "Package";
+    // var hasPackages = Model.Namespace.Packages.Any();
+    // var packagesLabel = Model.Namespace.Packages.Count() > 1 ? "Packages" : "Package";
 }
 
 <h1>@Model.Namespace.Name Namespace</h1>
@@ -20,12 +20,12 @@
 
 <h2 id="definition">Definition</h2>
 
-@if (hasPackages)
+@* @if (hasPackages)
 {
     <p>@(packagesLabel): @(string.Join(", ", Model.Namespace.Packages))</p>
 }
-
-<p>@Model.Namespace.Description</p>
+ *@
+<p>@Html.Raw(@Model.Namespace.Comment.Summary)</p>
 
 @if (Model.HasClasses)
 {
@@ -43,7 +43,7 @@
 {
         <tr>
             <td><a href="~/api/@(c.Link)/">@c.Name</a></td>
-            <td></td>
+            <td>@Html.Raw(@c.Comment.Summary)</td>
         </tr>
 }
     </tbody>

@@ -2,4 +2,15 @@
 
 <h1>@Model.Class.Name Class</h1>
 
-<p>TBD</p>
+<h2>In this article</h2>
+
+<ul>
+    <li><a href="#definition">Definition</a></li>
+    <li><a href="#applies-to">Applies to</a></li>
+</ul>
+
+<h2 id="definition">Definition</h2>
+
+<p>@Html.Raw(@Model.Class.Comment.Summary)</p>
+
+<partial name="~/Views/Api/TargetFrameworks.cshtml" model=Model.Class.Frameworks />

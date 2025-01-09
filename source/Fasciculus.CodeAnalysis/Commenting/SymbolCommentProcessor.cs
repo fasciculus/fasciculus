@@ -59,7 +59,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
 
             if (cref is not null)
             {
-                string content = cref.Value.Replace("{", "<").Replace("}", ">");
+                string content = cref.Value.Replace("{", "&lt;").Replace("}", "&gt;");
                 XElement code = new("c", content);
 
                 element.ReplaceWith(code);
