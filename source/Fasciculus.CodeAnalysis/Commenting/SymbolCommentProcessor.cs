@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Commenting
 {
-    public class SymbolCommentProcessor : XDocumentWalker
+    public class SymbolCommentProcessor : XWalker
     {
         private static string[] HandledElements
             = ["c", "code", "comment", "p", "para", "see", "summary", "typeparam"];
@@ -30,10 +30,10 @@ namespace Fasciculus.CodeAnalysis.Commenting
         {
             XDocument document = symbol.Comment.Document;
 
-            Visit(document);
+            VisitDocument(document);
         }
 
-        public override void Visit(XElement element)
+        public override void VisitElement(XElement element)
         {
             string name = element.Name.LocalName;
 
@@ -45,7 +45,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
                 case "see": VisitSee(element); break;
             }
 
-            base.Visit(element);
+            base.VisitElement(element);
         }
 
         private static void VisitPara(XElement element)
