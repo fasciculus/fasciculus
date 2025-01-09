@@ -97,6 +97,12 @@ namespace Fasciculus.Net
             => string.Join("/", parts);
 
         /// <summary>
+        /// Converts this path to an <see cref="Uri"/> prefixed with the given <paramref name="prefix"/>.
+        /// </summary>
+        public Uri ToUri(string prefix)
+            => new(prefix + ToString());
+
+        /// <summary>
         /// Indicates whether the current link is equal to another link.
         /// <para>
         /// Comparison is done using <see cref="Comparer"/>
