@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Fasciculus.Net
+namespace Fasciculus.Net.Navigating
 {
     /// <summary>
     /// An immutable list of strings representing the path of an URI.

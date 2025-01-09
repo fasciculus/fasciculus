@@ -36,15 +36,4 @@
     <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
   </ItemGroup>
 
-  <!--
-  <Target Name="LogBuildInfo" BeforeTargets="BeforeResolveReferences">
-    <Message Importance="high" Text="~~~~~~ Build Info ~~~~~~" />
-    <Message Importance="high" Text="TargetFramework = '$(TargetFramework)'" />
-    <Message Importance="high" Text="TargetPlatformIdentifier = '$(TargetPlatformIdentifier)'" />
-    <Message Importance="high" Text="FasciculusTargetPlatformIsWindows = '$(FasciculusTargetPlatformIsWindows)'" />
-    <Message Importance="high" Text="FasciculusDotNetWindowsTfm = '$(FasciculusDotNetWindowsTfm)'" />
-    <Message Importance="high" Text="~~~~~~~~~~~~~~~~~~~~~~~~" />
-  </Target>
-  -->
-
 </Project>
