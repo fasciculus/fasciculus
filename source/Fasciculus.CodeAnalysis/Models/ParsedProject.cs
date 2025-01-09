@@ -12,7 +12,7 @@ namespace Fasciculus.CodeAnalysis.Models
     /// </summary>
     public class ParsedProject : IEnumerable<SyntaxTree>
     {
-        public string Name { get; }
+        public string AssemblyName { get; }
 
         public TargetFramework Framework { get; }
 
@@ -20,9 +20,9 @@ namespace Fasciculus.CodeAnalysis.Models
 
         private readonly SyntaxTree[] syntaxTrees;
 
-        public ParsedProject(string name, TargetFramework framework, DirectoryInfo? projectDirectory, IEnumerable<SyntaxTree> syntaxTrees)
+        public ParsedProject(string assemblyName, TargetFramework framework, DirectoryInfo? projectDirectory, IEnumerable<SyntaxTree> syntaxTrees)
         {
-            Name = name;
+            AssemblyName = assemblyName;
             Framework = framework;
             ProjectDirectory = projectDirectory;
 

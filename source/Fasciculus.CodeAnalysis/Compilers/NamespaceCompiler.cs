@@ -1,8 +1,12 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.IO;
 using Fasciculus.Net;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.IO;
+using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -44,7 +48,28 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             DefaultVisit(node);
 
-            return new(name, link, context.Frameworks, classes);
+            return new(name, link, context.Frameworks, classes)
+            {
+                Comment = CreateComment(name)
+            };
+        }
+
+        private SymbolComment CreateComment(string name)
+        {
+            FileInfo? file = context.ProjectDirectory?
+                .Combine("Properties", "Comments", "Namespaces")
+                .File(name + ".xml");
+
+            if (file is not null && file.Exists)
+            {
+                try
+                {
+                    return new(XDocument.Load(file.FullName));
+                }
+                catch { }
+            }
+
+            return SymbolComment.Empty;
         }
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)

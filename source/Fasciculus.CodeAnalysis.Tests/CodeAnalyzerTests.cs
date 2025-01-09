@@ -34,11 +34,20 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         private void LogComments(SymbolIndices indices)
         {
-            UriPath path = new("Fasciculus.Core", "Fasciculus.Collections", "ObservableNotifyingEnumerable-1");
-            ClassSymbol @class = indices.Classes[path];
+            UriPath[] paths =
+            [
+                new("Fasciculus.Core", "Fasciculus.Algorithms"),
+                new("Fasciculus.Core", "Fasciculus.Collections", "ObservableNotifyingEnumerable-1")
+            ];
 
-            Log($"~~~~ {@class.Name} ~~~~");
-            Log(@class.Comment.Summary);
+            foreach (UriPath path in paths)
+            {
+                Symbol symbol = indices.Symbols[path];
+
+                Log($"~~~~ {symbol.Name} ~~~~");
+                Log(symbol.Comment.Summary);
+            }
+
             Log("~~~~~~~~~~~~~~~~~~~~~~~~");
         }
 
