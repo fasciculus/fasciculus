@@ -63,16 +63,28 @@ namespace Fasciculus.Net
         }
 
         /// <summary>
-        /// Whether this link points to a parent of the given <paramref name="other"/> link.
+        /// Whether this link points to an ancestor of the given <paramref name="other"/> link.
         /// </summary>
-        public bool IsParentOf(UriPath other)
+        public bool IsAncestorOf(UriPath other)
             => Count < other.Count && Enumerable.SequenceEqual(parts, other.parts.Take(Count), Comparer);
 
         /// <summary>
-        /// Whether this link points to a child of the given <paramref name="other"/> link.
+        /// Whether this link points to a descendant of the given <paramref name="other"/> link.
         /// </summary>
-        public bool IsChildOf(UriPath other)
-            => other.IsParentOf(this);
+        public bool IsDescendantOf(UriPath other)
+            => other.IsAncestorOf(this);
+
+        /// <summary>
+        /// Whether this link points to itself or an ancestor of the given <paramref name="other"/> link.
+        /// </summary>
+        public bool IsSelfOrAncestorOf(UriPath other)
+            => Equals(other) || IsAncestorOf(other);
+
+        /// <summary>
+        /// Whether this link points to itself or a descendant of the given <paramref name="other"/> link.
+        /// </summary>
+        public bool IsSelfOrDescendantOf(UriPath other)
+            => other.IsSelfOrDescendantOf(this);
 
         /// <summary>
         /// Returns an enumerator that iterates through this collection.

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Fasciculus.Collections
 {
     /// <summary>
-    /// Disposable stack of disposable entries. The stack calls <see cref="IDisposable.Dispose"/> on its entries if it itself gets disposed.
+    /// Disposable stack of disposable entries. The stack calls <see cref="IDisposable.Dispose()"/> on its entries if it itself gets disposed.
     /// </summary>
     public class DisposableStack<T> : Stack<T>, IDisposable
         where T : notnull, IDisposable

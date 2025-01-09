@@ -87,12 +87,12 @@ namespace Fasciculus.Site.Services
 
             foreach (ApiNamespace @namespace in package.Namespaces)
             {
-                bool namespaceOpen = link.IsChildOf(@namespace.Link) || link.Equals(@namespace.Link);
+                bool namespaceOpen = link.IsSelfOrDescendantOf(@namespace.Link);
                 NavigationNode namespaceNode = new(@namespace.Name, @namespace.Link, namespaceOpen);
 
                 foreach (var @class in @namespace.Classes)
                 {
-                    NavigationNode classNode = new(@class.Name, @class.Link, link.IsChildOf(@class.Link));
+                    NavigationNode classNode = new(@class.Name, @class.Link, link.IsSelfOrDescendantOf(@class.Link));
 
                     namespaceNode.Add(classNode);
                 }
