@@ -22,6 +22,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public UriPath Link { get; private set; }
 
+        public SymbolModifiers Modifiers { get; set; }
+
         public SymbolComment Comment { get; set; } = SymbolComment.Empty;
 
         private readonly TargetFrameworks frameworks;
@@ -29,6 +31,8 @@ namespace Fasciculus.CodeAnalysis.Models
         public IEnumerable<TargetFramework> Frameworks => frameworks;
 
         public TargetProducts Products => new(frameworks);
+
+        public virtual bool IsAccessible => Modifiers.IsAccessible;
 
         public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFrameworks frameworks)
         {
@@ -44,6 +48,7 @@ namespace Fasciculus.CodeAnalysis.Models
             Kind = other.Kind;
             Name = other.Name;
             Link = other.Link;
+            Modifiers = other.Modifiers;
             Comment = other.Comment;
 
             frameworks = new(other.frameworks);

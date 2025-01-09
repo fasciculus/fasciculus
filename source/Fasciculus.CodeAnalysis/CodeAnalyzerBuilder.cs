@@ -26,6 +26,20 @@ namespace Fasciculus.CodeAnalysis
             return this;
         }
 
+        public CodeAnalyzerBuilder ExcludeGenerated(bool value = true)
+        {
+            options.IncludeGenerated = !value;
+
+            return this;
+        }
+
+        public CodeAnalyzerBuilder AccessibleOnly(bool value = true)
+        {
+            options.AccessibleOnly = value;
+
+            return this;
+        }
+
         public CodeAnalyzer Build()
             => new(options);
     }

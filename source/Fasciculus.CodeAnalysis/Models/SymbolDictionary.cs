@@ -13,6 +13,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public int Count => symbols.Count;
 
+        public bool HasAccessible => symbols.Values.Any(s => s.IsAccessible);
+
         public SymbolDictionary(IEnumerable<T> symbols)
         {
             AddOrMergeWith(symbols);

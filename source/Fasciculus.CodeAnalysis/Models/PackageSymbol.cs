@@ -11,6 +11,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<NamespaceSymbol> Namespaces => namespaces;
 
+        public override bool IsAccessible => namespaces.HasAccessible;
+
         public PackageSymbol(SymbolName name, UriPath link, TargetFrameworks frameworks, IEnumerable<CompilationUnit> compilationUnits)
             : base(SymbolKind.Package, name, link, frameworks)
         {

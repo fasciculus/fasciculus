@@ -7,7 +7,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
 {
     public class SymbolIndicesBuilder
     {
+        private readonly SymbolIndicesOptions options = new();
+
         private readonly List<PackageSymbol> packages = [];
+
 
         public SymbolIndicesBuilder WithPackages(IEnumerable<PackageSymbol> packages)
         {
@@ -21,9 +24,9 @@ namespace Fasciculus.CodeAnalysis.Indexing
 
         public SymbolIndices Build()
         {
-            SymbolIndicesFactory factory = new();
+            SymbolIndicesFactory factory = new(options);
 
-            return factory.CreateIndices(packages);
+            return factory.Create(packages);
         }
     }
 }

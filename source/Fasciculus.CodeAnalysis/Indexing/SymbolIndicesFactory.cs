@@ -10,6 +10,8 @@ namespace Fasciculus.CodeAnalysis.Indexing
     {
         private readonly TaskSafeMutex mutex = new();
 
+        private readonly SymbolIndicesOptions options;
+
         private Dictionary<UriPath, Symbol> symbols = [];
         private Dictionary<UriPath, PackageSymbol> packages = [];
         private Dictionary<UriPath, NamespaceSymbol> namespaces = [];
@@ -23,7 +25,12 @@ namespace Fasciculus.CodeAnalysis.Indexing
             classes = [];
         }
 
-        public SymbolIndices CreateIndices(IEnumerable<PackageSymbol> input)
+        public SymbolIndicesFactory(SymbolIndicesOptions options)
+        {
+            this.options = options;
+        }
+
+        public SymbolIndices Create(IEnumerable<PackageSymbol> input)
         {
             using Locker locker = Locker.Lock(mutex);
 
@@ -42,10 +49,13 @@ namespace Fasciculus.CodeAnalysis.Indexing
 
         private void AddPackage(PackageSymbol package)
         {
-            symbols.Add(package.Link, package);
-            packages.Add(package.Link, package);
+            if (IsIncluded(package))
+            {
+                symbols.Add(package.Link, package);
+                packages.Add(package.Link, package);
 
-            AddNamespaces(package.Namespaces);
+                AddNamespaces(package.Namespaces);
+            }
         }
 
         private void AddPackages(IEnumerable<PackageSymbol> packages)
@@ -53,10 +63,13 @@ namespace Fasciculus.CodeAnalysis.Indexing
 
         private void AddNamespace(NamespaceSymbol @namespace)
         {
-            symbols.Add(@namespace.Link, @namespace);
-            namespaces.Add(@namespace.Link, @namespace);
+            if (IsIncluded(@namespace))
+            {
+                symbols.Add(@namespace.Link, @namespace);
+                namespaces.Add(@namespace.Link, @namespace);
 
-            AddClasses(@namespace.Classes);
+                AddClasses(@namespace.Classes);
+            }
         }
 
         private void AddNamespaces(IEnumerable<NamespaceSymbol> namespaces)
@@ -64,11 +77,17 @@ namespace Fasciculus.CodeAnalysis.Indexing
 
         private void AddClass(ClassSymbol @class)
         {
-            symbols.Add(@class.Link, @class);
-            classes.Add(@class.Link, @class);
+            if (IsIncluded(@class))
+            {
+                symbols.Add(@class.Link, @class);
+                classes.Add(@class.Link, @class);
+            }
         }
 
         private void AddClasses(IEnumerable<ClassSymbol> classes)
             => classes.Apply(AddClass);
+
+        private bool IsIncluded(Symbol symbol)
+            => !options.AccessibleOnly || symbol.IsAccessible;
     }
 }

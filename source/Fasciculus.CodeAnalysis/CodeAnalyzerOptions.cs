@@ -10,5 +10,7 @@ namespace Fasciculus.CodeAnalysis
         public string CombinedPackageName { get; set; } = "Combined";
 
         public bool IncludeGenerated { get; set; } = false;
+
+        public bool AccessibleOnly { get; set; } = true;
     }
 }

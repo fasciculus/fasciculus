@@ -10,6 +10,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<ClassSymbol> Classes => classes;
 
+        public override bool IsAccessible => classes.HasAccessible;
+
         public NamespaceSymbol(SymbolName name, UriPath link, TargetFrameworks frameworks, IEnumerable<ClassSymbol> classes)
             : base(SymbolKind.Namespace, name, link, frameworks)
         {

@@ -57,7 +57,7 @@ namespace Fasciculus.CodeAnalysis
         {
             return [.. workspace.CurrentSolution.Projects
                 .Where(p => p.HasDocuments)
-                .AsParallel()
+                //.AsParallel()
                 .Select(ParseProject)];
         }
 

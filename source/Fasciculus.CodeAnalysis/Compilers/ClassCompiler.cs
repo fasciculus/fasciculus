@@ -69,6 +69,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             return new(name, link, context.Frameworks)
             {
+                Modifiers = modifiers,
                 Comment = comment
             };
         }
