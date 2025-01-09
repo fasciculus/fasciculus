@@ -2,11 +2,12 @@
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
+using Fasciculus.Xml;
 using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Commenting
 {
-    public class SymbolCommentProcessor
+    public class SymbolCommentProcessor : XDocumentWalker
     {
         private static string[] HandledElements
             = ["c", "code", "comment", "p", "para", "see", "summary", "typeparam"];
@@ -29,27 +30,22 @@ namespace Fasciculus.CodeAnalysis.Commenting
         {
             XDocument document = symbol.Comment.Document;
 
-            Visit(document.Root);
+            Visit(document);
         }
 
-        private void Visit(XElement? element)
+        public override void Visit(XElement element)
         {
-            if (element is not null)
+            string name = element.Name.LocalName;
+
+            UnhandledCommentElements.Instance.Used(name);
+
+            switch (name)
             {
-                string name = element.Name.LocalName;
-
-                UnhandledCommentElements.Instance.Used(name);
-
-                switch (name)
-                {
-                    case "para": VisitPara(element); break;
-                    case "see": VisitSee(element); break;
-                }
-
-                XElement[] children = [.. element.Elements()];
-
-                children.Apply(Visit);
+                case "para": VisitPara(element); break;
+                case "see": VisitSee(element); break;
             }
+
+            base.Visit(element);
         }
 
         private static void VisitPara(XElement element)
