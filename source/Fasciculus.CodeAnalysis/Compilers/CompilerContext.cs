@@ -1,4 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Frameworking;
+using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -8,14 +9,18 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public TargetFrameworks Frameworks => new(Framework);
 
-        public CompilerContext(TargetFramework framework)
+        public DirectoryInfo? ProjectDirectory { get; private set; }
+
+        public CompilerContext(TargetFramework framework, DirectoryInfo? projectDirectory)
         {
             Framework = framework;
+            ProjectDirectory = projectDirectory;
         }
 
         private CompilerContext(CompilerContext other)
         {
             Framework = other.Framework;
+            ProjectDirectory = other.ProjectDirectory;
         }
 
         public CompilerContext WithFramework(TargetFramework framework)

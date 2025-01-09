@@ -11,6 +11,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private static readonly SyntaxKind[] HandledSymbols =
         [
             SyntaxKind.NamespaceDeclaration,
+            SyntaxKind.AttributeList,
             SyntaxKind.UsingDirective
         ];
 
@@ -43,6 +44,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             namespaces.AddOrMergeWith(namespaceCompiler.Compile(node, link));
         }
+
+        public override void VisitAttributeList(AttributeListSyntax node) { }
 
         public override void VisitUsingDirective(UsingDirectiveSyntax node) { }
     }
