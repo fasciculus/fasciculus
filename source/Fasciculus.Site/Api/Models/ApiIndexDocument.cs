@@ -1,7 +1,8 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Site.Models;
 using System.Collections.Generic;
 
-namespace Fasciculus.Site.Models
+namespace Fasciculus.Site.Api.Models
 {
     public class ApiIndexDocument : SiteDocument
     {

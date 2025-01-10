@@ -1,8 +1,7 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net.Navigating;
+using Fasciculus.Site.Api.Models;
 using Fasciculus.Site.Api.Services;
-using Fasciculus.Site.Models;
-using Fasciculus.Site.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fasciculus.Site.Controllers

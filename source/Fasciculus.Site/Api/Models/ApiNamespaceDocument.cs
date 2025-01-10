@@ -1,8 +1,9 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Site.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fasciculus.Site.Models
+namespace Fasciculus.Site.Api.Models
 {
     public class ApiNamespaceDocument : SiteDocument
     {

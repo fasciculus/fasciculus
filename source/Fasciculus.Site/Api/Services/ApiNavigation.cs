@@ -1,10 +1,9 @@
 ﻿using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net.Navigating;
-using Fasciculus.Site.Api.Services;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fasciculus.Site.Services
+namespace Fasciculus.Site.Api.Services
 {
     public class ApiNavigation : NavigationFactory
     {
