@@ -31,7 +31,7 @@ namespace Fasciculus.Site.Controllers
             pipeline.Setup(renderer);
 
             FileInfo file = SpecialDirectories.WorkingDirectory
-                .Combine("Docs", "Blog", "2025", "01").File("010_Test.md");
+                .Combine("Blog", "Documents", "2025", "01").File("010_Test.md");
 
             string markdown = file.ReadAllText();
             MarkdownDocument document = Markdown.Parse(markdown, pipeline);
