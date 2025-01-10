@@ -1,5 +1,6 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO;
 using Fasciculus.Site.Models;
+using Fasciculus.Site.Services;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Renderers;
@@ -7,7 +8,6 @@ using Markdig.Syntax;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Linq;
-using YamlDotNet.Serialization;
 
 namespace Fasciculus.Site.Controllers
 {
@@ -16,6 +16,13 @@ namespace Fasciculus.Site.Controllers
         public class BlogFrontMatter
         {
             public string Title { get; set; } = string.Empty;
+        }
+
+        private readonly Yaml yaml;
+
+        public BlogController(Yaml yaml)
+        {
+            this.yaml = yaml;
         }
 
         [Route("/blog/")]
@@ -41,8 +48,7 @@ namespace Fasciculus.Site.Controllers
             if (frontMatterBlock is not null)
             {
                 string frontMatterYaml = string.Join("\r\n", frontMatterBlock.Lines);
-                IDeserializer deserializer = new DeserializerBuilder().IgnoreUnmatchedProperties().WithCaseInsensitivePropertyMatching().Build();
-                frontMatter = deserializer.Deserialize<BlogFrontMatter>(frontMatterYaml);
+                frontMatter = yaml.Deserialize<BlogFrontMatter>(frontMatterYaml);
             }
 
             renderer.Render(document);

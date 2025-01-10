@@ -1,5 +1,6 @@
-﻿using Fasciculus.Site.Api.Services;
+using Fasciculus.Site.Api.Services;
 using Fasciculus.Site.Generating.Services;
+using Fasciculus.Site.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -42,6 +43,8 @@ namespace Fasciculus.Site
             WebApplicationBuilder builder = WebApplication.CreateBuilder([]);
 
             builder.Services.AddControllersWithViews();
+
+            builder.Services.TryAddSingleton<Yaml>();
 
             builder.Services.TryAddSingleton<ApiContent>();
             builder.Services.TryAddSingleton<ApiNavigation>();
