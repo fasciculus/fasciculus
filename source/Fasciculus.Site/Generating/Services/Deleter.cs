@@ -1,12 +1,11 @@
 ﻿using Fasciculus.Collections;
-using Fasciculus.Site.Generating.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.Site.Services
+namespace Fasciculus.Site.Generating.Services
 {
     public class Deleter
     {
