@@ -42,7 +42,9 @@ namespace Fasciculus.Site
             WebApplicationBuilder builder = WebApplication.CreateBuilder([]);
 
             builder.Services.AddControllersWithViews();
+
             builder.Services.TryAddSingleton<ApiContent>();
+            builder.Services.TryAddSingleton<ApiNavigation>();
             builder.Services.TryAddSingleton<ApiProvider>();
 
             if (generate)

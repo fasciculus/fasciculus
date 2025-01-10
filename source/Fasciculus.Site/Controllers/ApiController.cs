@@ -2,18 +2,19 @@
 using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Models;
 using Fasciculus.Site.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fasciculus.Site.Controllers
 {
     public class ApiController : Controller
     {
-        private readonly ApiProvider apiProvider;
+        private readonly ApiContent content;
+        private readonly ApiNavigation navigation;
 
-        public ApiController(ApiProvider apiProvider)
+        public ApiController(ApiContent content, ApiNavigation navigation)
         {
-            this.apiProvider = apiProvider;
+            this.content = content;
+            this.navigation = navigation;
         }
 
         [Route("/api/")]
@@ -22,7 +23,7 @@ namespace Fasciculus.Site.Controllers
             ApiIndexDocument document = new()
             {
                 Title = "API Doc",
-                Packages = apiProvider.Packages
+                Packages = content.Packages
             };
 
             return View(document);
@@ -43,16 +44,17 @@ namespace Fasciculus.Site.Controllers
         private IActionResult Container(params string[] parts)
         {
             UriPath path = new(parts);
-            Symbol? symbol = apiProvider.GetSymbol(path);
+            Symbol? symbol = content.GetSymbol(path);
 
             if (symbol is not null)
             {
-                switch (symbol.Kind)
+                return symbol.Kind switch
                 {
-                    case SymbolKind.Package: return symbol is PackageSymbol package ? Package(package) : ServerError();
-                    case SymbolKind.Namespace: return symbol is NamespaceSymbol @namespace ? Namespace(@namespace) : ServerError();
-                    case SymbolKind.Class: return symbol is ClassSymbol @class ? Class(@class) : ServerError();
-                }
+                    SymbolKind.Package => Package((PackageSymbol)symbol),
+                    SymbolKind.Namespace => Namespace((NamespaceSymbol)symbol),
+                    SymbolKind.Class => Class((ClassSymbol)symbol),
+                    _ => NotFound()
+                };
             }
 
             return NotFound();
@@ -63,7 +65,8 @@ namespace Fasciculus.Site.Controllers
             ApiPackageDocument document = new()
             {
                 Title = package.Name + " Package",
-                Package = package
+                Package = package,
+                Navigation = navigation.Create(package.Link)
             };
 
             return View("Package", document);
@@ -74,7 +77,8 @@ namespace Fasciculus.Site.Controllers
             ApiNamespaceDocument document = new()
             {
                 Title = @namespace.Name + " Namespace",
-                Namespace = @namespace
+                Namespace = @namespace,
+                Navigation = navigation.Create(@namespace.Link)
             };
 
             return View("Namespace", document);
@@ -84,14 +88,12 @@ namespace Fasciculus.Site.Controllers
         {
             ApiClassDocument document = new()
             {
-                Title = @class.Name + " Namespace",
-                Class = @class
+                Title = @class.Name + " Class",
+                Class = @class,
+                Navigation = navigation.Create(@class.Link)
             };
 
             return View("Class", document);
         }
-
-        private StatusCodeResult ServerError()
-            => StatusCode(StatusCodes.Status500InternalServerError);
     }
 }
