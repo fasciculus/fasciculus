@@ -63,10 +63,10 @@ namespace Fasciculus.Site
 
         private static IServiceCollection AddGenerator(this IServiceCollection services)
         {
-            services.TryAddKeyedSingleton(Writer.OutputDirectoryKey, outputDirectory);
+            services.TryAddKeyedSingleton(GeneratorWriter.OutputDirectoryKey, outputDirectory);
 
             services.TryAddSingleton<GeneratorDocuments>();
-            services.TryAddSingleton<Writer>();
+            services.TryAddSingleton<GeneratorWriter>();
             services.TryAddSingleton<Generator>();
             services.TryAddSingleton<Deleter>();
 

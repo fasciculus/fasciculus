@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Fasciculus.Site.Generating.Services
 {
-    public class Writer
+    public class GeneratorWriter
     {
         public const string OutputDirectoryKey = "_OutputDirectory";
 
@@ -17,7 +17,7 @@ namespace Fasciculus.Site.Generating.Services
         public IReadOnlySet<string> AllFiles => allFiles;
         public IReadOnlySet<string> ModifiedFiles => modifiedFiles;
 
-        public Writer([FromKeyedServices(OutputDirectoryKey)] DirectoryInfo outputDirectory)
+        public GeneratorWriter([FromKeyedServices(OutputDirectoryKey)] DirectoryInfo outputDirectory)
         {
             this.outputDirectory = outputDirectory;
         }

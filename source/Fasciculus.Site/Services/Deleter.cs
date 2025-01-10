@@ -11,9 +11,9 @@ namespace Fasciculus.Site.Services
     public class Deleter
     {
         private readonly DirectoryInfo outputDirectory;
-        private readonly Writer writer;
+        private readonly GeneratorWriter writer;
 
-        public Deleter([FromKeyedServices(Writer.OutputDirectoryKey)] DirectoryInfo outputDirectory, Writer writer)
+        public Deleter([FromKeyedServices(GeneratorWriter.OutputDirectoryKey)] DirectoryInfo outputDirectory, GeneratorWriter writer)
         {
             this.outputDirectory = outputDirectory;
             this.writer = writer;

@@ -22,11 +22,11 @@ namespace Fasciculus.Site.Services
         private readonly IFeatureCollection serverFeatures;
         private readonly IHttpContextFactory httpContextFactory;
         private readonly GeneratorDocuments documents;
-        private readonly Writer writer;
+        private readonly GeneratorWriter writer;
 
         public Generator(IEnumerable<IHostedService> hostedServices, IEnumerable<IStartupFilter> startupFilters,
             IServer server, IApplicationBuilderFactory applicationBuilderFactory, IHttpContextFactory httpContextFactory,
-            GeneratorDocuments documents, Writer writer)
+            GeneratorDocuments documents, GeneratorWriter writer)
         {
             requestDelegate = BuildRequestDelegate(hostedServices, startupFilters, server, applicationBuilderFactory);
             serverFeatures = server.Features;
