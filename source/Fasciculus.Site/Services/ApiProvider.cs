@@ -6,7 +6,6 @@ using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Fasciculus.Net.Navigating;
-using Fasciculus.Site.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,16 +31,16 @@ namespace Fasciculus.Site.Services
             { "Fasciculus.Algorithms", "Fast binary search, bit operations, fast array equality." },
         };
 
-        private readonly CodeAnalyzerResult content;
+        private readonly ApiContent content;
 
         public PackageList Packages => content.Packages;
 
         public ApiPackages OldPackages { get; }
         public ApiPackage OldCombined { get; }
 
-        public ApiProvider()
+        public ApiProvider(ApiContent content)
         {
-            content = GetContent();
+            this.content = content;
 
             ApiDocBuilder builder = SetupApiDocBuilder();
             ApiDocuments documents = builder.Build();
