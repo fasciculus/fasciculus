@@ -18,6 +18,7 @@ namespace Fasciculus.Site.Services
 
         public SymbolIndices Indices => result.Indices;
         public PackageList Packages => result.Packages;
+        public PackageSymbol Combined => result.Combined;
 
         public ApiContent()
         {

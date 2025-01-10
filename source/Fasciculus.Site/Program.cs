@@ -34,7 +34,6 @@ namespace Fasciculus.Site
         private static void InitializeExpensiveServices(IServiceProvider services)
         {
             _ = services.GetRequiredService<ApiContent>();
-            _ = services.GetRequiredService<ApiProvider>();
         }
 
         private static WebApplication CreateWebApplication()
@@ -45,7 +44,6 @@ namespace Fasciculus.Site
 
             builder.Services.TryAddSingleton<ApiContent>();
             builder.Services.TryAddSingleton<ApiNavigation>();
-            builder.Services.TryAddSingleton<ApiProvider>();
 
             if (generate)
             {

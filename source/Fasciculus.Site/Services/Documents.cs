@@ -1,4 +1,4 @@
-﻿using Fasciculus.ApiDoc.Models;
+﻿using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,11 +8,11 @@ namespace Fasciculus.Site.Services
 {
     public class Documents : List<string>
     {
-        public Documents(ApiProvider apiProvider)
+        public Documents(ApiContent apiContent, ApiNavigation apiNavigation)
         {
             AddGlobals();
             AddStatics();
-            AddApi(apiProvider);
+            AddApi(apiContent, apiNavigation);
         }
 
         private void AddGlobals()
@@ -32,22 +32,22 @@ namespace Fasciculus.Site.Services
             paths.Apply(Add);
         }
 
-        private void AddApi(ApiProvider apiProvider)
+        private static readonly SortedSet<SymbolKind> DocumentsSymbolKinds =
+            [
+                SymbolKind.Package,
+                SymbolKind.Namespace,
+                SymbolKind.Class,
+            ];
+
+        private void AddApi(ApiContent apiContent, ApiNavigation apiNavigation)
         {
             Add("/api/");
 
-            foreach (ApiPackage package in apiProvider.OldPackages.Append(apiProvider.OldCombined))
+            foreach (Symbol symbol in apiContent.Indices.Symbols.Values)
             {
-                Add($"/api/{package.Link}/");
-
-                foreach (ApiNamespace @namespace in package.Namespaces)
+                if (DocumentsSymbolKinds.Contains(symbol.Kind))
                 {
-                    Add($"/api/{@namespace.Link}/");
-
-                    foreach (ApiClass @class in @namespace.Classes)
-                    {
-                        Add($"/api/{@class.Link}/");
-                    }
+                    Add($"/api/{symbol.Link}/");
                 }
             }
         }

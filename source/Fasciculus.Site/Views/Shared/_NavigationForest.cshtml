@@ -8,11 +8,11 @@
                 <details @(n1.IsOpen ? "open" : "")>
                     <summary>@n1.Label</summary>
                     <ul>
-                        <li><a href="~/@Model.Prefix/@n1.Link">@n1.Label</a></li>
+                        <li><a href="~/@Model.Prefix/@n1.Link/">@n1.Label</a></li>
                         @foreach (var n2 in n1.Children)
                         {
                             <li>
-                                <a href="~/@Model.Prefix/@n2.Link">@n2.Label</a>
+                                <a href="~/@Model.Prefix/@n2.Link/">@n2.Label</a>
                             </li>
                         }
                     </ul>
@@ -20,7 +20,7 @@
             }
             else
             {
-                <a href="~/@Model.Prefix/@n1.Link">@n1.Label</a>
+                <a href="~/@Model.Prefix/@n1.Link/">@n1.Label</a>
             }
         </li>
     }
