@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.Site.Services
+namespace Fasciculus.Site.Generating.Services
 {
     public class Documents : List<string>
     {
