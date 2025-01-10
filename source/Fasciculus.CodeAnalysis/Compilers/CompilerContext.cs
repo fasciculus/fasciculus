@@ -9,6 +9,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public TargetFrameworks Frameworks => new(Framework);
 
+        public string Package { get; private set; } = string.Empty;
+
         public DirectoryInfo? ProjectDirectory { get; private set; }
 
         public CompilerContext(TargetFramework framework, DirectoryInfo? projectDirectory)
@@ -24,11 +26,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
         }
 
         public CompilerContext WithFramework(TargetFramework framework)
-        {
-            return new(this)
-            {
-                Framework = framework,
-            };
-        }
+            => new(this) { Framework = framework };
+
+        public CompilerContext WithPackage(string package)
+            => new(this) { Package = package };
     }
 }

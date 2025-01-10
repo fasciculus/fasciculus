@@ -28,7 +28,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolName name = new(project.AssemblyName);
             UriPath link = new(name);
-            CompilationCompiler compiler = new(context.WithFramework(project.Framework));
+
+            CompilerContext subContext = context
+                .WithFramework(project.Framework)
+                .WithPackage(name);
+
+            CompilationCompiler compiler = new(subContext);
 
             IEnumerable<CompilationUnit> compilationUnits = roots
                 .Select(root => compiler.Compile(root, link));

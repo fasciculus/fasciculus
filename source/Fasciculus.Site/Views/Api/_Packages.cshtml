@@ -1,0 +1,17 @@
+﻿@model Symbol
+@{
+    int count = Model.Packages.Count();
+    bool first = true;
+}
+@if (count > 0)
+{
+    <p>
+        @(count > 1 ? "Packages:" : "Package:")
+        @foreach (var package in Model.Packages)
+        {
+            @(first ? "" : ", ")
+            <a href="~/api/@package/">@package</a>
+            first = false;
+        }
+    </p>
+}

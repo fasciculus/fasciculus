@@ -20,11 +20,8 @@
 
 <h2 id="definition">Definition</h2>
 
-@* @if (hasPackages)
-{
-    <p>@(packagesLabel): @(string.Join(", ", Model.Namespace.Packages))</p>
-}
- *@
+<partial name="_Packages.cshtml" model=Model.Namespace />
+
 <p>@Html.Raw(@Model.Namespace.Comment.Summary)</p>
 
 @if (Model.HasClasses)
@@ -50,4 +47,4 @@
 </table>
 }
 
-<partial name="~/Views/Api/TargetFrameworks.cshtml" model=Model.Namespace.Frameworks />
+<partial name="_TargetFrameworks.cshtml" model=Model.Namespace.Frameworks />

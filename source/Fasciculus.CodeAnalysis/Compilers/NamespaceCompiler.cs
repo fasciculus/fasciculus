@@ -1,4 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
@@ -42,13 +43,15 @@ namespace Fasciculus.CodeAnalysis.Compilers
             using Locker locker = Locker.Lock(mutex);
 
             SymbolName name = new(node.Name.ToString());
+            TargetFrameworks frameworks = context.Frameworks;
+            string package = context.Package;
 
             link = parentLink.Append(name);
             classes = new();
 
             DefaultVisit(node);
 
-            return new(name, link, context.Frameworks, classes)
+            return new(name, link, frameworks, package, classes)
             {
                 Comment = CreateComment(name)
             };

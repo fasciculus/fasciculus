@@ -1,4 +1,5 @@
 ﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
@@ -61,13 +62,15 @@ namespace Fasciculus.CodeAnalysis.Compilers
             IEnumerable<string> parameters = parameterList is null ? [] : parameterList.Parameters.Select(p => p.Identifier.ToString());
             SymbolName name = new(untyped, parameters);
             UriPath link = parentLink.Append(name.Mangled);
+            TargetFrameworks frameworks = context.Frameworks;
+            string package = context.Package;
             SymbolModifiers modifiers = modifiersFactory.Create(node.Modifiers);
 
             Clear();
 
             DefaultVisit(node);
 
-            return new(name, link, context.Frameworks)
+            return new(name, link, frameworks, package)
             {
                 Modifiers = modifiers,
                 Comment = comment
