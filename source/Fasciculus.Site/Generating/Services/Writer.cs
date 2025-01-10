@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Fasciculus.Site.Services
+namespace Fasciculus.Site.Generating.Services
 {
     public class Writer
     {
