@@ -45,6 +45,7 @@ namespace Fasciculus.Site
             builder.Services.AddControllersWithViews();
 
             builder.Services.TryAddSingleton<Yaml>();
+            builder.Services.TryAddSingleton<Markup>();
 
             builder.Services.TryAddSingleton<ApiContent>();
             builder.Services.TryAddSingleton<ApiNavigation>();

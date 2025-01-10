@@ -1,13 +1,9 @@
 using Fasciculus.IO;
-using Fasciculus.Site.Models;
+using Fasciculus.Site.Blog.Models;
 using Fasciculus.Site.Services;
-using Markdig;
-using Markdig.Extensions.Yaml;
-using Markdig.Renderers;
 using Markdig.Syntax;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
-using System.Linq;
 
 namespace Fasciculus.Site.Controllers
 {
@@ -19,50 +15,31 @@ namespace Fasciculus.Site.Controllers
         }
 
         private readonly Yaml yaml;
+        private readonly Markup markup;
 
-        public BlogController(Yaml yaml)
+        public BlogController(Yaml yaml, Markup markup)
         {
             this.yaml = yaml;
+            this.markup = markup;
         }
 
         [Route("/blog/")]
         public IActionResult Blog()
         {
-            MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
-                .UseYamlFrontMatter()
-                .Build();
-
-            using StringWriter writer = new();
-            HtmlRenderer renderer = new(writer);
-
-            pipeline.Setup(renderer);
-
             FileInfo file = SpecialDirectories.WorkingDirectory
                 .Combine("Blog", "Documents", "2025", "01").File("010_Test.md");
 
-            string markdown = file.ReadAllText();
-            MarkdownDocument document = Markdown.Parse(markdown, pipeline);
-            YamlFrontMatterBlock? frontMatterBlock = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
-            BlogFrontMatter frontMatter = new();
+            MarkdownDocument markdown = markup.Parse(file);
+            BlogFrontMatter frontMatter = markup.FrontMatter<BlogFrontMatter>(markdown);
+            string content = markup.Render(markdown);
 
-            if (frontMatterBlock is not null)
-            {
-                string frontMatterYaml = string.Join("\r\n", frontMatterBlock.Lines);
-                frontMatter = yaml.Deserialize<BlogFrontMatter>(frontMatterYaml);
-            }
-
-            renderer.Render(document);
-            writer.Flush();
-
-            string content = writer.ToString();
-
-            BlogDocument blogDocument = new()
+            BlogDocument document = new()
             {
                 Title = frontMatter.Title,
                 Content = content
             };
 
-            return View(blogDocument);
+            return View(document);
         }
     }
 }

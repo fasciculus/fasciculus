@@ -1,4 +1,6 @@
-﻿namespace Fasciculus.Site.Models
+using Fasciculus.Site.Models;
+
+namespace Fasciculus.Site.Blog.Models
 {
     public class BlogDocument : SiteDocument
     {
