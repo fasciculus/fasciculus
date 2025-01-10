@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" />
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Fasciculus.CodeAnalysis/Fasciculus.CodeAnalysis.csproj" />
     <ProjectReference Include="../Fasciculus.Extensions/Fasciculus.Extensions.csproj" />
   </ItemGroup>

@@ -13,6 +13,7 @@ namespace Fasciculus.Site.Services
             AddGlobals();
             AddStatics();
             AddApi(apiContent, apiNavigation);
+            AddBlog();
         }
 
         private void AddGlobals()
@@ -50,6 +51,11 @@ namespace Fasciculus.Site.Services
                     Add($"/api/{symbol.Link}/");
                 }
             }
+        }
+
+        private void AddBlog()
+        {
+            Add("/blog/");
         }
     }
 }
