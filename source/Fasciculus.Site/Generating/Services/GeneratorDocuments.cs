@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace Fasciculus.Site.Generating.Services
 {
-    public class Documents : List<string>
+    public class GeneratorDocuments : List<string>
     {
-        public Documents(ApiContent apiContent, ApiNavigation apiNavigation)
+        public GeneratorDocuments(ApiContent apiContent, ApiNavigation apiNavigation)
         {
             AddGlobals();
             AddStatics();

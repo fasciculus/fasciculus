@@ -65,7 +65,7 @@ namespace Fasciculus.Site
         {
             services.TryAddKeyedSingleton(Writer.OutputDirectoryKey, outputDirectory);
 
-            services.TryAddSingleton<Documents>();
+            services.TryAddSingleton<GeneratorDocuments>();
             services.TryAddSingleton<Writer>();
             services.TryAddSingleton<Generator>();
             services.TryAddSingleton<Deleter>();
