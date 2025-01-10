@@ -13,6 +13,8 @@
 
 <partial name="_Packages.cshtml" model=Model.Class />
 
+<code>@Model.Class.Modifiers class @Model.Class.Name</code>
+
 <p>@Html.Raw(@Model.Class.Comment.Summary)</p>
 
 <partial name="_TargetFrameworks.cshtml" model=Model.Class.Frameworks />

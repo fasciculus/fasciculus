@@ -16,6 +16,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private static readonly SyntaxKind[] HandledSymbols =
         [
             SyntaxKind.AttributeList,
+            SyntaxKind.Attribute,
             SyntaxKind.TypeParameterList,
             SyntaxKind.TypeParameterConstraintClause,
             SyntaxKind.BaseList,
@@ -31,6 +32,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             SyntaxKind.ClassDeclaration,
             SyntaxKind.SingleLineDocumentationCommentTrivia,
             SyntaxKind.MultiLineDocumentationCommentTrivia,
+            SyntaxKind.IdentifierName
         ];
 
         private readonly TaskSafeMutex mutex = new();
@@ -78,6 +80,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
         }
 
         public override void VisitAttributeList(AttributeListSyntax node)
+        {
+            base.VisitAttributeList(node);
+        }
+
+        public override void VisitAttribute(AttributeSyntax node)
         {
         }
 

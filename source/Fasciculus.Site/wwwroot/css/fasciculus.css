@@ -13,8 +13,20 @@ a[href^="//"]:after, a[href^="http://"]:after, a[href^="https://"]:after {
     left: 0.1rem;
 }
 
-c {
+c, code {
+    color: black;
     background-color: #eee;
+}
+
+c {
+    padding-inline-start: 0.25em;
+    padding-inline-end: 0.25em;
+}
+
+code {
+    display: block;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .container {

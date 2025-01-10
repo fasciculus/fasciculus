@@ -36,6 +36,7 @@ namespace Fasciculus.CodeAnalysis.Tests
         {
             UriPath[] paths =
             [
+                new("Fasciculus.Core", "Fasciculus.Net.Navigating", "UriPath"),
                 new("Fasciculus.Core", "Fasciculus.Algorithms"),
                 new("Fasciculus.Core", "Fasciculus.Collections", "ObservableNotifyingEnumerable-1")
             ];
