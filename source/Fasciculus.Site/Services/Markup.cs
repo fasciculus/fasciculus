@@ -11,16 +11,19 @@ namespace Fasciculus.Site.Services
     public class Markup
     {
         private readonly Yaml yaml;
+        private readonly MarkdownPipeline pipeline;
 
         public Markup(Yaml yaml)
         {
             this.yaml = yaml;
+
+            pipeline = new MarkdownPipelineBuilder()
+                .UseYamlFrontMatter()
+                .Build();
         }
 
         public MarkdownDocument Parse(string markdown)
         {
-            MarkdownPipeline pipeline = CreatePipeline();
-
             return Markdown.Parse(markdown, pipeline);
         }
 
@@ -47,26 +50,11 @@ namespace Fasciculus.Site.Services
             using StringWriter writer = new();
             HtmlRenderer renderer = new(writer);
 
-            _ = CreatePipeline(renderer);
-
+            pipeline.Setup(renderer);
             renderer.Render(document);
             writer.Flush();
 
             return writer.ToString();
-        }
-
-        private static MarkdownPipeline CreatePipeline(IMarkdownRenderer? renderer = null)
-        {
-            MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
-                .UseYamlFrontMatter()
-                .Build();
-
-            if (renderer is not null)
-            {
-                pipeline.Setup(renderer);
-            }
-
-            return pipeline;
         }
     }
 }
