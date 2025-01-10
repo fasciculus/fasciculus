@@ -1,6 +1,5 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Fasciculus.Reflection;
-using Fasciculus.Site.Generating.Services;
 using Fasciculus.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,7 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.Site.Services
+namespace Fasciculus.Site.Generating.Services
 {
     public class Generator
     {
@@ -86,7 +85,7 @@ namespace Fasciculus.Site.Services
             Action<IApplicationBuilder> configure = options.GetRequiredProperty<Action<IApplicationBuilder>>("ConfigureApplication");
             IApplicationBuilder applicationBuilder = applicationBuilderFactory.CreateBuilder(server.Features);
 
-            foreach (var startupFilter in Enumerable.Reverse(startupFilters))
+            foreach (var startupFilter in startupFilters.Reverse())
             {
                 configure = startupFilter.Configure(configure);
             }
