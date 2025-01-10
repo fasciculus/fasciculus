@@ -1,4 +1,5 @@
-﻿using Fasciculus.Support;
+﻿using Fasciculus.Net.Navigating;
+using Fasciculus.Support;
 
 namespace Fasciculus.Site.Models
 {

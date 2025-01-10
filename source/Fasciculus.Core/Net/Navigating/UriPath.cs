@@ -14,6 +14,11 @@ namespace Fasciculus.Net.Navigating
     public partial class UriPath : IReadOnlyList<string>, IEquatable<UriPath>, IComparable<UriPath>
     {
         /// <summary>
+        /// The empty path.
+        /// </summary>
+        public static readonly UriPath Empty = new();
+
+        /// <summary>
         /// The comparer used in this class. Set to <see cref="StringComparer.InvariantCultureIgnoreCase"/>
         /// </summary>
         public static readonly StringComparer Comparer = StringComparer.InvariantCultureIgnoreCase;
