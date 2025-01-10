@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.Site.Services
+namespace Fasciculus.Site.Api.Services
 {
     public class ApiContent
     {
