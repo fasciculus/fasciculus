@@ -64,7 +64,7 @@ namespace Fasciculus.CodeAnalysis
 
         private ParsedProject ParseProject(Project project)
         {
-            ProjectParser2 parser = new();
+            ProjectParser parser = new();
             TargetFramework framework = project.GetTargetFramework();
             bool includeGenerated = options.IncludeGenerated;
 

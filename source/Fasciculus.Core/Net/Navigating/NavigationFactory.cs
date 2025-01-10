@@ -16,7 +16,7 @@ namespace Fasciculus.Net.Navigating
         /// <summary>
         /// Creates a new forest with the given <paramref name="roots"/>.
         /// </summary>
-        public NavigationForest Create(IEnumerable<UriPath> roots, UriPath selected, UriPath? prefix = null)
+        public NavigationForest Create(IEnumerable<UriPath> roots, UriPath selected)
         {
             using Locker locker = Locker.Lock(mutex);
 
@@ -24,7 +24,7 @@ namespace Fasciculus.Net.Navigating
 
             IEnumerable<NavigationNode> trees = Visit(roots);
 
-            return new(trees, prefix);
+            return new(trees);
         }
 
         /// <summary>

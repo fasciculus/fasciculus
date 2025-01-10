@@ -13,7 +13,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
     /// <summary>
     /// Parser for a single project.
     /// </summary>
-    public class ProjectParser2
+    public class ProjectParser
     {
         public ParsedProject Parse(Project project, TargetFramework framework, bool includeGenerated)
         {

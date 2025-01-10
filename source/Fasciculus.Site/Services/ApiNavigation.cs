@@ -16,20 +16,20 @@ namespace Fasciculus.Site.Services
 
         public NavigationForest Create(UriPath selected)
         {
-            UriPath package = new(selected.Take(1));
-            UriPath prefix = new("api");
+            UriPath packageLink = new(selected.Take(1));
+            PackageSymbol package = (PackageSymbol)content.GetSymbol(packageLink)!;
 
-            return Create(GetChildren(package), selected, prefix);
+            return Create(GetChildren(package), ToApiLink(selected));
         }
 
         protected override string GetLabel(UriPath link)
         {
-            return content.GetSymbol(link)?.Name ?? string.Empty;
+            return content.GetSymbol(ToSymbolLink(link))?.Name ?? string.Empty;
         }
 
         protected override IEnumerable<UriPath> GetChildren(UriPath link)
         {
-            Symbol? symbol = content.GetSymbol(link);
+            Symbol? symbol = content.GetSymbol(ToSymbolLink(link));
 
             if (symbol is not null)
             {
@@ -45,9 +45,15 @@ namespace Fasciculus.Site.Services
         }
 
         private static IEnumerable<UriPath> GetChildren(PackageSymbol package)
-            => package.Namespaces.Select(n => n.Link);
+            => package.Namespaces.Select(x => ToApiLink(x.Link));
 
         private static IEnumerable<UriPath> GetChildren(NamespaceSymbol @namespace)
-            => @namespace.Classes.Select(n => n.Link);
+            => @namespace.Classes.Select(x => ToApiLink(x.Link));
+
+        private static UriPath ToSymbolLink(UriPath apiLink)
+            => new(apiLink.Skip(1));
+
+        private static UriPath ToApiLink(UriPath symbolLink)
+            => new(symbolLink.Prepend("api"));
     }
 }

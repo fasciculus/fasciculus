@@ -7,11 +7,6 @@ namespace Fasciculus.Net.Navigating
     /// </summary>
     public class NavigationForest
     {
-        /// <summary>
-        /// The prefix to use when displaying the forest.
-        /// </summary>
-        public UriPath Prefix { get; }
-
         private readonly List<NavigationNode> trees;
 
         /// <summary>
@@ -20,20 +15,18 @@ namespace Fasciculus.Net.Navigating
         public IEnumerable<NavigationNode> Trees => trees;
 
         /// <summary>
-        /// Initializes a new forest with the given <paramref name="trees"/> and the optionally given <paramref name="prefix"/>.
+        /// Initializes a new forest with the given <paramref name="trees"/>.
         /// </summary>
-        public NavigationForest(IEnumerable<NavigationNode> trees, UriPath? prefix = null)
+        public NavigationForest(IEnumerable<NavigationNode> trees)
         {
-            Prefix = prefix ?? UriPath.Empty;
-
             this.trees = new(trees);
         }
 
         /// <summary>
-        /// Initializes a new forest with the optionally given <paramref name="prefix"/>.
+        /// Initializes a new forest.
         /// </summary>
-        public NavigationForest(UriPath? prefix = null)
-            : this([], prefix) { }
+        public NavigationForest()
+            : this([]) { }
 
         /// <summary>
         /// Adds the given <paramref name="tree"/> to this forest.
