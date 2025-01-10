@@ -25,7 +25,7 @@ namespace Fasciculus.Site
             if (generate)
             {
                 app.Services.GetRequiredService<Generator>().Run();
-                app.Services.GetRequiredService<Deleter>().Run();
+                app.Services.GetRequiredService<GeneratorDeleter>().Run();
             }
             else
             {
@@ -68,7 +68,7 @@ namespace Fasciculus.Site
             services.TryAddSingleton<GeneratorDocuments>();
             services.TryAddSingleton<GeneratorWriter>();
             services.TryAddSingleton<Generator>();
-            services.TryAddSingleton<Deleter>();
+            services.TryAddSingleton<GeneratorDeleter>();
 
             return services;
         }

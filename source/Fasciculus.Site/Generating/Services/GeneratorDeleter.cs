@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace Fasciculus.Site.Generating.Services
 {
-    public class Deleter
+    public class GeneratorDeleter
     {
         private readonly DirectoryInfo outputDirectory;
         private readonly GeneratorWriter writer;
 
-        public Deleter([FromKeyedServices(GeneratorWriter.OutputDirectoryKey)] DirectoryInfo outputDirectory, GeneratorWriter writer)
+        public GeneratorDeleter([FromKeyedServices(GeneratorWriter.OutputDirectoryKey)] DirectoryInfo outputDirectory, GeneratorWriter writer)
         {
             this.outputDirectory = outputDirectory;
             this.writer = writer;
