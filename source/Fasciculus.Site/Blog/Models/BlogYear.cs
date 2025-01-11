@@ -18,7 +18,7 @@ namespace Fasciculus.Site.Blog.Models
             => months.Select(m => m.Link);
 
         public BlogYear(UriPath link, DateTime published)
-            : base(link, string.Empty, published)
+            : base(BlogItemKind.Year, link, string.Empty, published)
         {
             name = published.ToString("yyyy");
         }

@@ -11,7 +11,7 @@ namespace Fasciculus.Site.Blog.Models
         public override IEnumerable<UriPath> Children => [];
 
         public BlogEntry(UriPath link, string title, DateTime published, string content)
-            : base(link, title, published)
+            : base(BlogItemKind.Entry, link, title, published)
         {
             Content = content;
         }

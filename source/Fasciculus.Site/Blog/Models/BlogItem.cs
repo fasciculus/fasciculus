@@ -10,6 +10,8 @@ namespace Fasciculus.Site.Blog.Models
         public static readonly DateTimeFormatInfo DateTimeFormat
             = CultureInfo.GetCultureInfo("en").DateTimeFormat;
 
+        public BlogItemKind Kind { get; }
+
         public UriPath Link { get; }
 
         public virtual string Title { get; }
@@ -18,8 +20,9 @@ namespace Fasciculus.Site.Blog.Models
 
         public abstract IEnumerable<UriPath> Children { get; }
 
-        public BlogItem(UriPath link, string title, DateTime published)
+        public BlogItem(BlogItemKind kind, UriPath link, string title, DateTime published)
         {
+            Kind = kind;
             Link = link;
             Title = title;
             Published = published;
