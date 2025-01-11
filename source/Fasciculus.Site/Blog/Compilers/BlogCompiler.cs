@@ -1,6 +1,7 @@
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Blog.Models;
+using Fasciculus.Site.Blog.Services;
 using Fasciculus.Site.Rendering.Services;
 using Markdig.Syntax;
 using System;
@@ -13,9 +14,9 @@ namespace Fasciculus.Site.Blog.Compilers
         private readonly DirectoryInfo directory;
         private readonly Markup markup;
 
-        public BlogCompiler(DirectoryInfo directory, Markup markup)
+        public BlogCompiler(BlogDocuments docoments, Markup markup)
         {
-            this.directory = directory;
+            directory = docoments.Directory;
             this.markup = markup;
         }
 

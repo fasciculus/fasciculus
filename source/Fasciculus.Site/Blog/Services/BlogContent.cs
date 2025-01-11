@@ -1,31 +1,37 @@
 using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Blog.Compilers;
 using Fasciculus.Site.Blog.Models;
-using Fasciculus.Site.Rendering.Services;
+using Fasciculus.Site.Blog.Support;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Site.Blog.Services
 {
-    public class BlogContent
+    public class BlogContent : IEnumerable<BlogEntry>
     {
         private readonly Dictionary<UriPath, BlogEntry> entries;
+        private readonly SortedSet<BlogEntry> sorted;
 
         public BlogEntry this[UriPath link] => entries[link];
 
-        public BlogContent(BlogDocuments documents, Markup markup)
+        public BlogContent(BlogDocuments documents, BlogCompiler compiler)
         {
-            entries = Compile(documents, markup).ToDictionary(e => e.Link);
+            entries = documents.Select(compiler.Compile).ToDictionary(e => e.Link);
+            sorted = new(entries.Values, BlogEntryComparer.Instance);
         }
 
         public BlogEntry GetEntry(UriPath link)
             => entries[link];
 
-        private static IEnumerable<BlogEntry> Compile(BlogDocuments documents, Markup markup)
-        {
-            BlogCompiler compiler = new(documents.Directory, markup);
+        public IEnumerable<BlogEntry> Newest(int count = 1)
+            => sorted.Take(Math.Min(sorted.Count, count));
 
-            return documents.Select(compiler.Compile);
-        }
+        public IEnumerator<BlogEntry> GetEnumerator()
+            => sorted.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => sorted.GetEnumerator();
     }
 }

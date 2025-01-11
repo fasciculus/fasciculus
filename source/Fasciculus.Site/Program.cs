@@ -1,4 +1,5 @@
 using Fasciculus.Site.Api.Services;
+using Fasciculus.Site.Blog.Compilers;
 using Fasciculus.Site.Blog.Services;
 using Fasciculus.Site.Generating.Services;
 using Fasciculus.Site.Rendering.Services;
@@ -87,7 +88,9 @@ namespace Fasciculus.Site
         private static IServiceCollection AddBlog(this IServiceCollection services)
         {
             services.TryAddSingleton<BlogDocuments>();
+            services.TryAddSingleton<BlogCompiler>();
             services.TryAddSingleton<BlogContent>();
+            services.TryAddSingleton<BlogNavigation>();
 
             return services;
         }
