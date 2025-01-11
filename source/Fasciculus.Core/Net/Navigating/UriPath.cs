@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,6 +34,12 @@ namespace Fasciculus.Net.Navigating
         /// Returns the part at the given position.
         /// </summary>
         public string this[int index] => parts[index];
+
+        /// <summary>
+        /// Returns the parent of this link. The parent of <see cref="Empty"/> is <see cref="Empty"/>.
+        /// </summary>
+        public UriPath Parent
+            => Count > 0 ? new(parts.Take(Count - 1)) : Empty;
 
         /// <summary>
         /// Initializes a new list.
