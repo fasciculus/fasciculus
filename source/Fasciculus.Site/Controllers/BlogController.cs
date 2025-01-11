@@ -3,6 +3,7 @@ using Fasciculus.Site.Blog.Models;
 using Fasciculus.Site.Services;
 using Markdig.Syntax;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 
 namespace Fasciculus.Site.Controllers
@@ -12,14 +13,14 @@ namespace Fasciculus.Site.Controllers
         public class BlogFrontMatter
         {
             public string Title { get; set; } = string.Empty;
+            public DateTime Published { get; set; } = DateTime.MinValue;
+            public string Author { get; set; } = string.Empty;
         }
 
-        private readonly Yaml yaml;
         private readonly Markup markup;
 
-        public BlogController(Yaml yaml, Markup markup)
+        public BlogController(Markup markup)
         {
-            this.yaml = yaml;
             this.markup = markup;
         }
 
@@ -31,7 +32,9 @@ namespace Fasciculus.Site.Controllers
 
             MarkdownDocument markdown = markup.Parse(file);
             BlogFrontMatter frontMatter = markup.FrontMatter<BlogFrontMatter>(markdown);
-            string content = markup.Render(markdown);
+            string published = $"Published: {frontMatter.Published:yyyy-MM-dd}";
+            string author = $"Author: {frontMatter.Author}";
+            string content = markup.Render(markdown, published, author);
 
             BlogDocument document = new()
             {

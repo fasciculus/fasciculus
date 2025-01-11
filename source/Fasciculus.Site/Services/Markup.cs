@@ -1,13 +1,41 @@
+using Fasciculus.Collections;
 using Fasciculus.IO;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Renderers;
+using Markdig.Renderers.Html;
 using Markdig.Syntax;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Site.Services
 {
+    public class FrontMatterHeadingRenderer : HtmlObjectRenderer<HeadingBlock>
+    {
+        private readonly IMarkdownObjectRenderer[] renderers;
+        private readonly string[] lines;
+
+        public FrontMatterHeadingRenderer(IEnumerable<IMarkdownObjectRenderer> renderers, params string[] lines)
+        {
+            this.renderers = [.. renderers];
+            this.lines = lines;
+        }
+
+        protected override void Write(HtmlRenderer renderer, HeadingBlock heading)
+        {
+            renderers.Apply(r => { r.Write(renderer, heading); });
+
+            if (heading.Level == 1 && renderer.EnableHtmlForBlock)
+            {
+                renderer.Write("<p>");
+                renderer.Write(string.Join("<br/>", lines));
+                renderer.Write("</p>").WriteLine();
+            }
+        }
+    }
+
     public class Markup
     {
         private readonly Yaml yaml;
@@ -45,12 +73,19 @@ namespace Fasciculus.Site.Services
             return new T();
         }
 
-        public string Render(MarkdownDocument document)
+        public string Render(MarkdownDocument document, params string[] frontMatterLines)
         {
             using StringWriter writer = new();
             HtmlRenderer renderer = new(writer);
 
             pipeline.Setup(renderer);
+
+            IMarkdownObjectRenderer[] existingRenderers = [.. renderer.ObjectRenderers.FindAll(r => r is HeadingRenderer)];
+            FrontMatterHeadingRenderer frontMatterHeadingRenderer = new(existingRenderers, frontMatterLines);
+
+            renderer.ObjectRenderers.RemoveAll(r => r is HeadingRenderer);
+            renderer.ObjectRenderers.Add(frontMatterHeadingRenderer);
+
             renderer.Render(document);
             writer.Flush();
 

@@ -20,7 +20,7 @@ namespace Fasciculus.Site
 
             using WebApplication app = CreateWebApplication();
 
-            InitializeExpensiveServices(app.Services);
+            //InitializeExpensiveServices(app.Services);
 
             if (generate)
             {
