@@ -1,4 +1,4 @@
-﻿html {
+html {
     font-size: .875rem;
 }
 
@@ -60,4 +60,13 @@ div.fsc-navigation-forest {
 
 .footer {
     padding-top: 1rem;
+}
+
+.fsc-frontmatter {
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.fsc-frontmatter td {
+    padding-right: 1rem;
 }

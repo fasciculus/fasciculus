@@ -1,5 +1,7 @@
 using Fasciculus.Collections;
 using Fasciculus.IO;
+using Fasciculus.Site.Rendering.Models;
+using Fasciculus.Site.Rendering.Rendering;
 using Fasciculus.Site.Services;
 using Markdig;
 using Markdig.Extensions.Yaml;
@@ -60,7 +62,7 @@ namespace Fasciculus.Site.Rendering.Services
             => Parse(file.ReadAllText());
 
         public T FrontMatter<T>(MarkdownDocument document)
-            where T : new()
+            where T : IFrontMatter, new()
         {
             YamlFrontMatterBlock? block = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
 
@@ -74,18 +76,11 @@ namespace Fasciculus.Site.Rendering.Services
             return new T();
         }
 
-        public string Render(MarkdownDocument document, params string[] frontMatterLines)
+        public string Render(MarkdownDocument document, IFrontMatter? frontMatter = null)
         {
             using StringWriter writer = new();
-            HtmlRenderer renderer = new(writer);
-
-            pipeline.Setup(renderer);
-
-            IMarkdownObjectRenderer[] existingRenderers = [.. renderer.ObjectRenderers.FindAll(r => r is HeadingRenderer)];
-            FrontMatterHeadingRenderer frontMatterHeadingRenderer = new(existingRenderers, frontMatterLines);
-
-            renderer.ObjectRenderers.RemoveAll(r => r is HeadingRenderer);
-            renderer.ObjectRenderers.Add(frontMatterHeadingRenderer);
+            IEnumerable<FrontMatterEntry> entries = frontMatter?.GetEntries() ?? [];
+            MarkupRenderer renderer = new(writer, pipeline, entries);
 
             renderer.Render(document);
             writer.Flush();
