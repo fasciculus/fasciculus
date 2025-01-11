@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Fasciculus.Site.Api.Models
 {
-    public class ApiNamespaceDocument : SiteDocument
+    public class ApiNamespaceDocument : ViewModel
     {
         public required NamespaceSymbol Namespace { get; init; }
 

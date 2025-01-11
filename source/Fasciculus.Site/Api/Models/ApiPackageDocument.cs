@@ -3,7 +3,7 @@ using Fasciculus.Site.Models;
 
 namespace Fasciculus.Site.Api.Models
 {
-    public class ApiPackageDocument : SiteDocument
+    public class ApiPackageDocument : ViewModel
     {
         public required PackageSymbol Package { get; init; }
     }

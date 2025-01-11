@@ -8,7 +8,7 @@ namespace Fasciculus.Site.Controllers
         [Route("/")]
         public IActionResult Index()
         {
-            SiteDocument document = new()
+            ViewModel document = new()
             {
                 Title = "Home"
             };
@@ -19,7 +19,7 @@ namespace Fasciculus.Site.Controllers
         [Route("/privacy.html")]
         public IActionResult Privacy()
         {
-            SiteDocument document = new()
+            ViewModel document = new()
             {
                 Title = "Privacy"
             };
@@ -30,7 +30,7 @@ namespace Fasciculus.Site.Controllers
         [Route("/about.html")]
         public IActionResult About()
         {
-            SiteDocument document = new()
+            ViewModel document = new()
             {
                 Title = "About"
             };

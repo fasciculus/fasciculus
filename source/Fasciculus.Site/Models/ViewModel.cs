@@ -1,9 +1,9 @@
-﻿using Fasciculus.Net.Navigating;
+using Fasciculus.Net.Navigating;
 using Fasciculus.Support;
 
 namespace Fasciculus.Site.Models
 {
-    public class SiteDocument
+    public class ViewModel
     {
         public required string Title { get; init; }
 
