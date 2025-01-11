@@ -20,13 +20,13 @@ namespace Fasciculus.Site.Controllers
         [Route("/api/")]
         public IActionResult Packages()
         {
-            ApiIndexDocument document = new()
+            ApiIndexViewModel model = new()
             {
                 Title = "API Doc",
                 Packages = content.Packages
             };
 
-            return View(document);
+            return View(model);
         }
 
         [Route("/api/{p1}/")]
@@ -62,26 +62,26 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Package(PackageSymbol package)
         {
-            ApiPackageDocument document = new()
+            ApiPackageViewModel model = new()
             {
                 Title = package.Name + " Package",
                 Package = package,
                 Navigation = navigation.Create(package.Link)
             };
 
-            return View("Package", document);
+            return View("Package", model);
         }
 
         private ViewResult Namespace(NamespaceSymbol @namespace)
         {
-            ApiNamespaceDocument document = new()
+            ApiNamespaceViewModel model = new()
             {
                 Title = @namespace.Name + " Namespace",
                 Namespace = @namespace,
                 Navigation = navigation.Create(@namespace.Link)
             };
 
-            return View("Namespace", document);
+            return View("Namespace", model);
         }
 
         private ViewResult Class(ClassSymbol @class)

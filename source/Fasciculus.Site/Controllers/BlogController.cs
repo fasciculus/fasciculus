@@ -26,13 +26,13 @@ namespace Fasciculus.Site.Controllers
             BlogFrontMatter frontMatter = markup.FrontMatter<BlogFrontMatter>(markdown);
             string content = markup.Render(markdown, frontMatter);
 
-            BlogDocument document = new()
+            BlogViewModel model = new()
             {
                 Title = frontMatter.Title,
                 Content = content
             };
 
-            return View(document);
+            return View(model);
         }
     }
 }

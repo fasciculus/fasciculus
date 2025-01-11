@@ -1,11 +1,11 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Site.Models;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Site.Api.Models
 {
-    public class ApiNamespaceDocument : ViewModel
+    public class ApiNamespaceViewModel : ViewModel
     {
         public required NamespaceSymbol Namespace { get; init; }
 

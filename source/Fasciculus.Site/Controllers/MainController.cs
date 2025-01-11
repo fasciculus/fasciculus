@@ -1,4 +1,4 @@
-﻿using Fasciculus.Site.Models;
+using Fasciculus.Site.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fasciculus.Site.Controllers
@@ -8,34 +8,34 @@ namespace Fasciculus.Site.Controllers
         [Route("/")]
         public IActionResult Index()
         {
-            ViewModel document = new()
+            ViewModel model = new()
             {
                 Title = "Home"
             };
 
-            return View(document);
+            return View(model);
         }
 
         [Route("/privacy.html")]
         public IActionResult Privacy()
         {
-            ViewModel document = new()
+            ViewModel model = new()
             {
                 Title = "Privacy"
             };
 
-            return View(document);
+            return View(model);
         }
 
         [Route("/about.html")]
         public IActionResult About()
         {
-            ViewModel document = new()
+            ViewModel model = new()
             {
                 Title = "About"
             };
 
-            return View(document);
+            return View(model);
         }
     }
 }
