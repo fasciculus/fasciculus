@@ -35,9 +35,10 @@ namespace Fasciculus.Site.Blog.Compilers
             DateTime published = frontMatter.Published;
             UriPath link = CreateLink(published, file);
             string title = frontMatter.Title;
+            string summary = frontMatter.Summary;
             string content = markup.Render(markdown, frontMatter);
 
-            return new(link, title, published, content);
+            return new(link, title, published, summary, content);
         }
 
         private static UriPath CreateLink(DateTime published, FileInfo file)

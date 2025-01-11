@@ -35,7 +35,7 @@ namespace Fasciculus.Site.Rendering.Rendering
                     renderer.Write("<tr>").WriteLine();
                     renderer.PushIndent("  ");
 
-                    renderer.Write("<td>").Write(entry.Label).Write("</td>").WriteLine();
+                    renderer.Write("<td>").Write(entry.Label).Write(":</td>").WriteLine();
                     renderer.Write("<td>").Write(entry.Value).Write("</td>").WriteLine();
 
                     renderer.PopIndent();
