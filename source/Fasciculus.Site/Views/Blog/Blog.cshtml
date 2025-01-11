@@ -1,2 +1,6 @@
-﻿@model BlogViewModel
-@Html.Raw(Model.Content)
+@model BlogViewModel
+<h1>Blog</h1>
+@foreach (var entry in Model.Entries)
+{
+    <p><a href="~/@entry.Link">@entry.Title</a></p>
+}

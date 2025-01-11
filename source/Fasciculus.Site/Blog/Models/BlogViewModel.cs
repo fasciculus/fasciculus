@@ -1,9 +1,10 @@
 using Fasciculus.Site.Models;
+using System.Collections.Generic;
 
 namespace Fasciculus.Site.Blog.Models
 {
     public class BlogViewModel : ViewModel
     {
-        public string Content { get; set; } = string.Empty;
+        public required List<BlogEntry> Entries { get; init; }
     }
 }

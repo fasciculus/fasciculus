@@ -46,8 +46,8 @@ namespace Fasciculus.Site.Blog.Compilers
             [
                 "blog",
                 published.Year.ToString(),
-                published.Month.ToString(),
-                file.Name
+                published.Month.ToString("00"),
+                Path.GetFileNameWithoutExtension(file.FullName) + ".html"
             ];
 
             return new(parts);
