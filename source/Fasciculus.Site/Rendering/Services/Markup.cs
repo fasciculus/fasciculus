@@ -1,12 +1,9 @@
-using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.Site.Rendering.Models;
 using Fasciculus.Site.Rendering.Rendering;
 using Fasciculus.Site.Services;
 using Markdig;
 using Markdig.Extensions.Yaml;
-using Markdig.Renderers;
-using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -15,30 +12,6 @@ using System.Linq;
 
 namespace Fasciculus.Site.Rendering.Services
 {
-    public class FrontMatterHeadingRenderer : HtmlObjectRenderer<HeadingBlock>
-    {
-        private readonly IMarkdownObjectRenderer[] renderers;
-        private readonly string[] lines;
-
-        public FrontMatterHeadingRenderer(IEnumerable<IMarkdownObjectRenderer> renderers, params string[] lines)
-        {
-            this.renderers = [.. renderers];
-            this.lines = lines;
-        }
-
-        protected override void Write(HtmlRenderer renderer, HeadingBlock heading)
-        {
-            renderers.Apply(r => { r.Write(renderer, heading); });
-
-            if (heading.Level == 1 && renderer.EnableHtmlForBlock)
-            {
-                renderer.Write("<p>");
-                renderer.Write(string.Join("<br/>", lines));
-                renderer.Write("</p>").WriteLine();
-            }
-        }
-    }
-
     public class Markup
     {
         private readonly Yaml yaml;

@@ -1,4 +1,5 @@
 using Fasciculus.Site.Api.Services;
+using Fasciculus.Site.Blog.Services;
 using Fasciculus.Site.Generating.Services;
 using Fasciculus.Site.Rendering.Services;
 using Fasciculus.Site.Services;
@@ -42,20 +43,22 @@ namespace Fasciculus.Site
         private static WebApplication CreateWebApplication()
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder([]);
+            IServiceCollection services = builder.Services;
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.TryAddSingleton<Yaml>();
-            builder.Services.TryAddSingleton<Markup>();
-
-            builder.Services.TryAddSingleton<ApiContent>();
-            builder.Services.TryAddSingleton<ApiNavigation>();
+            services.AddCommon().AddApi().AddBlog();
 
             if (generate)
             {
-                builder.Services.AddGenerator();
+                services.AddGenerator();
             }
 
+            return CreateApplication(builder);
+        }
+
+        private static WebApplication CreateApplication(WebApplicationBuilder builder)
+        {
             WebApplication app = builder.Build();
 
             app.UseRouting();
@@ -63,6 +66,30 @@ namespace Fasciculus.Site
             app.MapControllers();
 
             return app;
+        }
+
+        private static IServiceCollection AddCommon(this IServiceCollection services)
+        {
+            services.TryAddSingleton<Yaml>();
+            services.TryAddSingleton<Markup>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddApi(this IServiceCollection services)
+        {
+            services.TryAddSingleton<ApiContent>();
+            services.TryAddSingleton<ApiNavigation>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddBlog(this IServiceCollection services)
+        {
+            services.TryAddSingleton<BlogDocuments>();
+            services.TryAddSingleton<BlogContent>();
+
+            return services;
         }
 
         private static IServiceCollection AddGenerator(this IServiceCollection services)

@@ -1,5 +1,6 @@
 using Fasciculus.IO;
 using Fasciculus.Site.Blog.Models;
+using Fasciculus.Site.Blog.Services;
 using Fasciculus.Site.Rendering.Services;
 using Markdig.Syntax;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace Fasciculus.Site.Controllers
     {
         private readonly Markup markup;
 
-        public BlogController(Markup markup)
+        public BlogController(Markup markup, BlogContent content)
         {
             this.markup = markup;
         }
