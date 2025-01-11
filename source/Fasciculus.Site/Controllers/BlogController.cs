@@ -1,6 +1,6 @@
 using Fasciculus.IO;
 using Fasciculus.Site.Blog.Models;
-using Fasciculus.Site.Services;
+using Fasciculus.Site.Rendering.Services;
 using Markdig.Syntax;
 using Microsoft.AspNetCore.Mvc;
 using System;

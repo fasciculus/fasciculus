@@ -1,5 +1,6 @@
 using Fasciculus.Collections;
 using Fasciculus.IO;
+using Fasciculus.Site.Services;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Renderers;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.Site.Services
+namespace Fasciculus.Site.Rendering.Services
 {
     public class FrontMatterHeadingRenderer : HtmlObjectRenderer<HeadingBlock>
     {
