@@ -3,35 +3,33 @@ using Fasciculus.Site.Blog.Compilers;
 using Fasciculus.Site.Blog.Models;
 using Fasciculus.Site.Blog.Support;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Site.Blog.Services
 {
-    public class BlogContent : IEnumerable<BlogEntry>
+    public class BlogContent
     {
-        private readonly Dictionary<UriPath, BlogEntry> entries;
-        private readonly SortedSet<BlogEntry> sorted;
+        private readonly SortedSet<BlogYear> years;
+        private readonly SortedSet<BlogMonth> months;
+        private readonly SortedSet<BlogEntry> entries;
 
-        public BlogEntry this[UriPath link] => entries[link];
+        private readonly Dictionary<UriPath, BlogItem> items;
 
         public BlogContent(BlogDocuments documents, BlogCompiler compiler)
         {
-            entries = documents.Select(compiler.Compile).ToDictionary(e => e.Link);
-            sorted = new(entries.Values, BlogEntryComparer.Instance);
+            BlogItemComparer comparer = BlogItemComparer.Instance;
+
+            years = new(compiler.Compile(documents), comparer);
+            months = new(years.SelectMany(y => y), comparer);
+            entries = new(months.SelectMany(m => m), comparer);
+            items = years.Cast<BlogItem>().Concat(months).Concat(entries).ToDictionary(i => i.Link);
         }
 
-        public BlogEntry GetEntry(UriPath link)
-            => entries[link];
+        public BlogItem GetItem(UriPath link)
+            => items[link];
 
         public IEnumerable<BlogEntry> Newest(int count = 1)
-            => sorted.Take(Math.Min(sorted.Count, count));
-
-        public IEnumerator<BlogEntry> GetEnumerator()
-            => sorted.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => sorted.GetEnumerator();
+            => entries.Take(Math.Min(entries.Count, count));
     }
 }

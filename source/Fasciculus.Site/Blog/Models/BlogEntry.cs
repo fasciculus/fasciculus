@@ -1,23 +1,18 @@
 using Fasciculus.Net.Navigating;
 using System;
+using System.Collections.Generic;
 
 namespace Fasciculus.Site.Blog.Models
 {
-    public class BlogEntry
+    public class BlogEntry : BlogItem
     {
-        public UriPath Link { get; }
-
-        public string Title { get; }
-
-        public DateTime Published { get; }
-
         public string Content { get; }
 
+        public override IEnumerable<UriPath> Children => [];
+
         public BlogEntry(UriPath link, string title, DateTime published, string content)
+            : base(link, title, published)
         {
-            Link = link;
-            Title = title;
-            Published = published;
             Content = content;
         }
     }
