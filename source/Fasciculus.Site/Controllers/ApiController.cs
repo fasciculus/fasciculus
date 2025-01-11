@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Api.Models;
 using Fasciculus.Site.Api.Services;
@@ -86,14 +86,14 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Class(ClassSymbol @class)
         {
-            ApiClassDocument document = new()
+            ApiClassViewModel model = new()
             {
                 Title = @class.Name + " Class",
                 Class = @class,
                 Navigation = navigation.Create(@class.Link)
             };
 
-            return View("Class", document);
+            return View("Class", model);
         }
     }
 }
