@@ -1,5 +1,6 @@
 using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.Site.Blog.Services
 {
@@ -14,17 +15,17 @@ namespace Fasciculus.Site.Blog.Services
 
         public NavigationForest Create(UriPath selected)
         {
-            throw new System.NotImplementedException();
+            return Create(content.Years.Select(y => y.Link), selected);
         }
 
         protected override IEnumerable<UriPath> GetChildren(UriPath link)
         {
-            throw new System.NotImplementedException();
+            return content.GetItem(link).Children;
         }
 
         protected override string GetLabel(UriPath link)
         {
-            throw new System.NotImplementedException();
+            return content.GetItem(link).Title;
         }
     }
 }

@@ -17,6 +17,11 @@ namespace Fasciculus.Site.Blog.Services
         private readonly Dictionary<UriPath, BlogYear> yearMap;
         private readonly Dictionary<UriPath, BlogMonth> monthMap;
         private readonly Dictionary<UriPath, BlogEntry> entryMap;
+        private readonly Dictionary<UriPath, BlogItem> itemMap;
+
+        public IEnumerable<BlogYear> Years => years;
+        public IEnumerable<BlogMonth> Months => months;
+        public IEnumerable<BlogEntry> Entries => entries;
 
         public BlogContent(BlogFiles files, BlogCompiler compiler)
         {
@@ -29,6 +34,8 @@ namespace Fasciculus.Site.Blog.Services
             yearMap = years.ToDictionary(y => y.Link);
             monthMap = months.ToDictionary(m => m.Link);
             entryMap = entries.ToDictionary(e => e.Link);
+
+            itemMap = years.Cast<BlogItem>().Concat(months).Concat(entries).ToDictionary(i => i.Link);
         }
 
         public IEnumerable<BlogEntry> Newest(int count = 1)
@@ -42,5 +49,8 @@ namespace Fasciculus.Site.Blog.Services
 
         public BlogEntry GetEntry(UriPath link)
             => entryMap[link];
+
+        public BlogItem GetItem(UriPath link)
+            => itemMap[link];
     }
 }

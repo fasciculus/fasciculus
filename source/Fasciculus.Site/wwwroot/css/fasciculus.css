@@ -40,6 +40,9 @@ code {
 div.fsc-navigation-forest {
     flex-grow: 0;
     flex-basis: content;
+    padding-right: 1rem;
+    margin-right: 1rem;
+    border-right: 1px solid #888;
 }
 
 .fsc-navigation-forest {

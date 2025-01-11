@@ -8,10 +8,12 @@ namespace Fasciculus.Site.Controllers
     public class BlogController : Controller
     {
         private readonly BlogContent content;
+        private readonly BlogNavigation navigation;
 
-        public BlogController(BlogContent content)
+        public BlogController(BlogContent content, BlogNavigation navigation)
         {
             this.content = content;
+            this.navigation = navigation;
         }
 
         [Route("/blog/")]
@@ -20,6 +22,7 @@ namespace Fasciculus.Site.Controllers
             BlogViewModel model = new()
             {
                 Title = "Blog",
+                Navigation = navigation.Create(UriPath.Empty),
                 Entries = new(content.Newest(10)),
             };
 
@@ -35,6 +38,7 @@ namespace Fasciculus.Site.Controllers
             BlogYearViewModel model = new()
             {
                 Title = year.Title,
+                Navigation = navigation.Create(link),
                 Year = year
             };
 
@@ -42,7 +46,7 @@ namespace Fasciculus.Site.Controllers
         }
 
         [Route("/blog/{y}/{m}/")]
-        public IActionResult Year(string y, string m)
+        public IActionResult Month(string y, string m)
         {
             UriPath link = new("blog", y, m);
             BlogMonth month = content.GetMonth(link);
@@ -50,6 +54,7 @@ namespace Fasciculus.Site.Controllers
             BlogMonthViewModel model = new()
             {
                 Title = month.Title,
+                Navigation = navigation.Create(link),
                 Month = month
             };
 
@@ -65,6 +70,7 @@ namespace Fasciculus.Site.Controllers
             BlogEntryViewModel model = new()
             {
                 Title = entry.Title,
+                Navigation = navigation.Create(link),
                 Entry = entry
             };
 
