@@ -16,11 +16,11 @@ namespace Fasciculus.Site.Blog.Services
 
         private readonly Dictionary<UriPath, BlogItem> items;
 
-        public BlogContent(BlogDocuments documents, BlogCompiler compiler)
+        public BlogContent(BlogFiles files, BlogCompiler compiler)
         {
             BlogItemComparer comparer = BlogItemComparer.Instance;
 
-            years = new(compiler.Compile(documents), comparer);
+            years = new(compiler.Compile(files), comparer);
             months = new(years.SelectMany(y => y), comparer);
             entries = new(months.SelectMany(m => m), comparer);
             items = years.Cast<BlogItem>().Concat(months).Concat(entries).ToDictionary(i => i.Link);

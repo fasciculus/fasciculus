@@ -87,7 +87,7 @@ namespace Fasciculus.Site
 
         private static IServiceCollection AddBlog(this IServiceCollection services)
         {
-            services.TryAddSingleton<BlogDocuments>();
+            services.TryAddSingleton<BlogFiles>();
             services.TryAddSingleton<BlogCompiler>();
             services.TryAddSingleton<BlogContent>();
             services.TryAddSingleton<BlogNavigation>();

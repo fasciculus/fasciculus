@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Fasciculus.Site.Blog.Services
 {
-    public class BlogDocuments : IEnumerable<FileInfo>
+    public class BlogFiles : IEnumerable<FileInfo>
     {
         public DirectoryInfo Directory { get; }
 
@@ -15,7 +15,7 @@ namespace Fasciculus.Site.Blog.Services
 
         public IEnumerable<FileInfo> Files => files;
 
-        public BlogDocuments()
+        public BlogFiles()
         {
             Directory = FindDirectory();
             files = new(Directory.GetFiles("*.md", SearchOption.AllDirectories));
