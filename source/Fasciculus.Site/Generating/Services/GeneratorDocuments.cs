@@ -1,6 +1,7 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using Fasciculus.Site.Api.Services;
+using Fasciculus.Site.Blog.Services;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace Fasciculus.Site.Generating.Services
 {
     public class GeneratorDocuments : List<string>
     {
-        public GeneratorDocuments(ApiContent apiContent, ApiNavigation apiNavigation)
+        public GeneratorDocuments(ApiContent apiContent, ApiNavigation apiNavigation, BlogContent blogContent)
         {
             AddGlobals();
             AddStatics();
             AddApi(apiContent, apiNavigation);
-            AddBlog();
+            AddBlog(blogContent);
         }
 
         private void AddGlobals()
@@ -54,9 +55,13 @@ namespace Fasciculus.Site.Generating.Services
             }
         }
 
-        private void AddBlog()
+        private void AddBlog(BlogContent blogContent)
         {
             Add("/blog/");
+
+            blogContent.Years.Apply(y => { Add($"/{y.Link}/"); });
+            blogContent.Months.Apply(m => { Add($"/{m.Link}/"); });
+            blogContent.Entries.Apply(e => { Add($"/{e.Link}"); });
         }
     }
 }

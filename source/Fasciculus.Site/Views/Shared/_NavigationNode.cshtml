@@ -1,11 +1,19 @@
-﻿@model NavigationNode
+@model NavigationNode
+@{
+    string link = Model.Link.ToString();
+
+    if (!link.EndsWith(".html"))
+    {
+        link += "/";
+    }
+}
 <li>
     @if (Model.HasChildren)
     {
         <details @(Model.IsOpen ? "open" : "")>
             <summary>@Model.Label</summary>
             <ul>
-                <li><a href="~/@Model.Link/">@Model.Label</a></li>
+                <li><a href="~/@link">@Model.Label</a></li>
                 @foreach (var child in Model.Children)
                 {
                     <partial name="~/Views/Shared/_NavigationNode.cshtml" model=child />
@@ -15,6 +23,6 @@
     }
     else
     {
-        <a href="~/@Model.Link/">@Model.Label</a>
+        <a href="~/@link">@Model.Label</a>
     }
 </li>
