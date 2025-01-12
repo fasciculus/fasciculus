@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Collections;
 using Fasciculus.Net.Navigating;
@@ -23,7 +23,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public UriPath Link { get; private set; }
 
-        public SymbolModifiers Modifiers { get; set; }
+        public SymbolModifiers Modifiers { get; set; } = new();
 
         public virtual bool IsAccessible => Modifiers.IsAccessible;
 
