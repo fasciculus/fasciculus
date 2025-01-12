@@ -1,6 +1,8 @@
-﻿using Fasciculus.CodeAnalysis.Compilers;
+using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Support;
+using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Fasciculus.Net.Navigating;
@@ -29,6 +31,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             LogUnhandledSymbols();
             LogUnhandledModifiers();
             LogUnhandledCommentElements();
+            LogSymbolCounters();
             LogComments(result.Indices);
         }
 
@@ -88,6 +91,15 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Log("--- unhandled comment elements ---");
                 Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
             }
+        }
+
+        private void LogSymbolCounters()
+        {
+            Log("--- most required symbols ---");
+
+            SymbolCounters.Instance.Counters
+                .OrderByDescending(x => x.Value)
+                .Apply(x => { Log($"{x.Value} {x.Key}"); });
         }
 
         private static IEnumerable<FileInfo> GetProjectFiles()

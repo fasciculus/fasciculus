@@ -1,4 +1,5 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis.CSharp;
@@ -19,7 +20,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly NamespaceCompiler namespaceCompiler;
 
-        private NamespaceList namespaces;
+        private NamespaceList namespaces = new();
         private UriPath link = new();
 
         public CompilationCompiler(CompilerContext context)
@@ -47,6 +48,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitAttributeList(AttributeListSyntax node) { }
 
-        public override void VisitUsingDirective(UsingDirectiveSyntax node) { }
+        public override void VisitUsingDirective(UsingDirectiveSyntax node)
+        {
+            SymbolCounters.Instance.Increment("UsingDirectiveSyntax");
+        }
     }
 }
