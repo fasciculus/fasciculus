@@ -1,4 +1,4 @@
-﻿using Fasciculus.Threading.Synchronization;
+using Fasciculus.Threading.Synchronization;
 using System.Collections.Generic;
 using System.Linq;
 

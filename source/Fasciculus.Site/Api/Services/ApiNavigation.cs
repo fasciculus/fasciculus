@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 using System.Linq;

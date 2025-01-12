@@ -13,7 +13,7 @@
         <details @(Model.IsOpen ? "open" : "")>
             <summary>@Model.Label</summary>
             <ul>
-                <li><a href="~/@link">@Model.Label</a></li>
+                <li><a href="~/@link">Overview</a></li>
                 @foreach (var child in Model.Children)
                 {
                     <partial name="~/Views/Shared/_NavigationNode.cshtml" model=child />
@@ -23,6 +23,6 @@
     }
     else
     {
-        <a href="~/@link">@Model.Label</a>
+        <a href="~/@link">&emsp;@Model.Label</a>
     }
 </li>
