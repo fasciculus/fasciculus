@@ -23,16 +23,22 @@ namespace Fasciculus.Site.Blog.Compilers
         {
             BlogYears years = [];
 
-            files.Select(Compile).Apply(years.Add);
+            files.Select(Compile).NotNull().Apply(years.Add);
 
             return years;
         }
 
-        private BlogEntry Compile(FileInfo file)
+        private BlogEntry? Compile(FileInfo file)
         {
             MarkdownDocument markdown = markup.Parse(file);
             BlogFrontMatter frontMatter = markup.FrontMatter<BlogFrontMatter>(markdown);
             DateTime published = frontMatter.Published;
+
+            if (published == DateTime.MinValue)
+            {
+                return null;
+            }
+
             UriPath link = CreateLink(published, file);
             string title = frontMatter.Title;
             string summary = frontMatter.Summary;
