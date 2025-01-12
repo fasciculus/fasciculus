@@ -1,8 +1,6 @@
-using Fasciculus.IO.Searching;
+using Fasciculus.PackageVersions.Models;
+using Fasciculus.PackageVersions.Services;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace Fasciculus.PackageVersions
 {
@@ -10,25 +8,11 @@ namespace Fasciculus.PackageVersions
     {
         public static void Main(string[] args)
         {
-            GetPackages();
-        }
+            using VersionsProvider versionsProvider = new();
+            VersionsChecker versionsChecker = new(versionsProvider);
+            List<PackageInfo> packages = PackagesProvider.GetPackages();
 
-        private static IEnumerable<PackageInfo> GetPackages()
-        {
-            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
-            FileInfo file = FileSearch.Search("Directory.Packages.props", searchPath).First();
-            XDocument document = XDocument.Load(file.FullName);
-
-            foreach (XElement groupElement in document.Root!.Elements("ItemGroup"))
-            {
-                foreach (XElement packageElement in groupElement.Elements("PackageVersion"))
-                {
-                    string name = packageElement.Attribute("Include")!.Value;
-                    string version = packageElement.Attribute("Version")!.Value;
-                }
-            }
-
-            return [];
+            versionsChecker.Check(packages);
         }
     }
 }
