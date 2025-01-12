@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.CodeAnalysis.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Site.CheckLinks", "source\Fasciculus.Site.CheckLinks\Fasciculus.Site.CheckLinks.csproj", "{4DD17207-E297-41E9-B99C-0C6F05B224E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.PackageVersions", "source\Fasciculus.PackageVersions\Fasciculus.PackageVersions.csproj", "{260798F4-B67E-46F5-BE6B-E870C890567B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,10 @@ Global
 		{4DD17207-E297-41E9-B99C-0C6F05B224E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DD17207-E297-41E9-B99C-0C6F05B224E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DD17207-E297-41E9-B99C-0C6F05B224E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{260798F4-B67E-46F5-BE6B-E870C890567B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{260798F4-B67E-46F5-BE6B-E870C890567B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{260798F4-B67E-46F5-BE6B-E870C890567B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{260798F4-B67E-46F5-BE6B-E870C890567B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
