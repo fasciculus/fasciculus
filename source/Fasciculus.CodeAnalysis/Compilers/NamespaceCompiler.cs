@@ -1,6 +1,7 @@
-﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
@@ -82,11 +83,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitInterfaceDeclaration(InterfaceDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("InterfaceDeclarationSyntax");
             //base.VisitInterfaceDeclaration(node);
         }
 
         public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("EnumDeclarationSyntax");
             //base.VisitEnumDeclaration(node);
         }
 

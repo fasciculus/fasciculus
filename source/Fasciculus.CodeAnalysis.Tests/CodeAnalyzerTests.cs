@@ -32,10 +32,10 @@ namespace Fasciculus.CodeAnalysis.Tests
             LogUnhandledModifiers();
             LogUnhandledCommentElements();
             LogSymbolCounters();
-            LogComments(result.Indices);
+            //LogComments(result.Indices);
         }
 
-        private void LogComments(SymbolIndices indices)
+        public void LogComments(SymbolIndices indices)
         {
             UriPath[] paths =
             [

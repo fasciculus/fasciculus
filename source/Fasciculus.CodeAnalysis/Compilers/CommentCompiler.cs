@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -29,10 +29,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
             SyntaxKind.GenericName,
             SyntaxKind.PredefinedType,
             SyntaxKind.NullableType,
+            SyntaxKind.ArrayType,
+            SyntaxKind.ArrayRankSpecifier,
+            SyntaxKind.OmittedArraySizeExpression,
             SyntaxKind.TypeArgumentList,
             SyntaxKind.IdentifierName,
 
             SyntaxKind.XmlText,
+            SyntaxKind.XmlTextAttribute,
         ];
 
         private readonly TaskSafeMutex mutex = new();
@@ -57,11 +61,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             string xml = "<comment>\r\n" + stringBuilder.ToString() + "</comment>";
 
             return commentFactory.Create(xml);
-        }
-
-        public override void VisitPredefinedType(PredefinedTypeSyntax node)
-        {
-            base.VisitPredefinedType(node);
         }
 
         public override void VisitXmlTextAttribute(XmlTextAttributeSyntax node)

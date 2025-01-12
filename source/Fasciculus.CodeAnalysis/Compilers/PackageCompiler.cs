@@ -1,5 +1,6 @@
-﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis.CSharp;
@@ -33,12 +34,16 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 .WithFramework(project.Framework)
                 .WithPackage(name);
 
-            CompilationCompiler compiler = new(subContext);
+            //CompilationCompiler compiler = new(subContext);
 
-            IEnumerable<CompilationUnit> compilationUnits = roots
-                .Select(root => compiler.Compile(root, link));
+            //IEnumerable<CompilationUnit> compilationUnits = roots
+            //    .Select(root => compiler.Compile(root, link));
 
-            return new(name, link, context.Frameworks, compilationUnits)
+            Compiler compiler = new();
+
+            roots.Apply(compiler.Compile);
+
+            return new(name, link, context.Frameworks, [])
             {
                 Comment = CreateComment(project),
             };

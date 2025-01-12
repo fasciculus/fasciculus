@@ -1,6 +1,7 @@
-﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
@@ -79,11 +80,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             };
         }
 
-        public override void VisitAttributeList(AttributeListSyntax node)
-        {
-            base.VisitAttributeList(node);
-        }
-
         public override void VisitAttribute(AttributeSyntax node)
         {
         }
@@ -102,22 +98,27 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("FieldDeclarationSyntax");
         }
 
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("PropertyDeclarationSyntax");
         }
 
         public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("IndexerDeclarationSyntax");
         }
 
         public override void VisitEventFieldDeclaration(EventFieldDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("EventFieldDeclarationSyntax");
         }
 
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("ConstructorDeclarationSyntax");
         }
 
         public override void VisitDestructorDeclaration(DestructorDeclarationSyntax node)
@@ -126,18 +127,24 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
+            MethodCompiler compiler = new();
+
+            compiler.Compile(node);
         }
 
         public override void VisitOperatorDeclaration(OperatorDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("OperatorDeclarationSyntax");
         }
 
         public override void VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("ConversionOperatorDeclarationSyntax");
         }
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
+            SymbolCounters.Instance.Increment("ClassDeclarationSyntax");
         }
 
         public override void VisitDocumentationCommentTrivia(DocumentationCommentTriviaSyntax node)
