@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<comment>
+  <summary>
+    BitSet, disposable stack of disposables, IEnumerable extensions, observable sorted set.
+  </summary>
+</comment>
