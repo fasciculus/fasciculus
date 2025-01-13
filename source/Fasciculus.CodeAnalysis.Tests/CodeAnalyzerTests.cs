@@ -28,11 +28,39 @@ namespace Fasciculus.CodeAnalysis.Tests
                 .WithProjectFiles(GetProjectFiles())
                 .Build().Analyze();
 
-            LogUnhandledSymbols();
-            LogUnhandledModifiers();
-            LogUnhandledCommentElements();
-            LogSymbolCounters();
+            LogNamespaceNames();
+            LogUnhandledSyntax();
+            //LogUnhandledSymbols();
+            //LogUnhandledModifiers();
+            //LogUnhandledCommentElements();
+            //LogSymbolCounters();
             //LogComments(result.Indices);
+        }
+
+        public void LogNamespaceNames()
+        {
+            Log("--- namespace names ---");
+            Compiler.namespaceNames.Apply(Log);
+        }
+
+        public void LogUnhandledSyntax()
+        {
+            Dictionary<SyntaxKind, SortedSet<SyntaxKind>> unhandled = Syntax.Instance.GetUnhandled();
+
+            if (unhandled.Count > 0)
+            {
+                Log("--- unhandled syntax kinds ---");
+
+                foreach (var kvp in unhandled)
+                {
+                    Log($"{kvp.Key}");
+
+                    foreach (var kind in kvp.Value)
+                    {
+                        Log($"- {kind}");
+                    }
+                }
+            }
         }
 
         public void LogComments(SymbolIndices indices)
@@ -55,7 +83,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Log("~~~~~~~~~~~~~~~~~~~~~~~~");
         }
 
-        private void LogUnhandledSymbols()
+        public void LogUnhandledSymbols()
         {
             Dictionary<string, SortedSet<SyntaxKind>> unhandled = UnhandledSymbols.Instance.Unhandled();
 
@@ -71,7 +99,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        private void LogUnhandledModifiers()
+        public void LogUnhandledModifiers()
         {
             SortedSet<string> unhandled = UnhandledModifiers.Instance.Unhandled();
 
@@ -82,7 +110,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        private void LogUnhandledCommentElements()
+        public void LogUnhandledCommentElements()
         {
             SortedSet<string> unhandled = UnhandledCommentElements.Instance.Unhandled();
 
@@ -93,7 +121,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        private void LogSymbolCounters()
+        public void LogSymbolCounters()
         {
             Log("--- most required symbols ---");
 

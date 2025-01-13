@@ -1,13 +1,33 @@
+using Fasciculus.CodeAnalysis.Support;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class Compiler : CSharpSyntaxWalker
+    public partial class Compiler : CSharpSyntaxWalker
     {
+        public static readonly SortedSet<string> namespaceNames = [];
+
+        private readonly Stack<SyntaxNode> ancestors = [];
+
+        private readonly List<string> identifiers = [];
+        private readonly Stack<string> qualifiedNames = [];
+
+        public Compiler()
+            : base(SyntaxWalkerDepth.StructuredTrivia)
+        {
+        }
+
         public void Compile(CompilationUnitSyntax compilationUnit)
         {
+            // compilation_unit
+            //   : extern_alias_directive* using_directive* global_attributes? namespace_member_declaration*
+
+            Syntax.Instance.Add(compilationUnit);
+
             DefaultVisit(compilationUnit);
         }
 
@@ -18,7 +38,28 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void Visit(SyntaxNode? node)
         {
+            if (node is not null)
+            {
+                ancestors.Push(node);
+            }
+
             base.Visit(node);
+
+            if (node is not null)
+            {
+                ancestors.Pop();
+            }
+        }
+
+        public T? FindAncestor<T>()
+            where T : SyntaxNode
+        {
+            if (ancestors.Count == 0)
+            {
+                return null;
+            }
+
+            return (T?)ancestors.Skip(1).FirstOrDefault(t => t is T);
         }
 
         public override void VisitAccessorDeclaration(AccessorDeclarationSyntax node)
@@ -33,7 +74,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitAliasQualifiedName(AliasQualifiedNameSyntax node)
         {
+            Syntax.Instance.Add(node);
+
             base.VisitAliasQualifiedName(node);
+
+            //if (identifiers.Count > 0 && identifiers[0] == "global")
+            //{
+            //    identifiers.RemoveAt(0);
+            //}
         }
 
         public override void VisitAllowsConstraintClause(AllowsConstraintClauseSyntax node)
@@ -538,7 +586,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
+            // called from: QualifiedName
+
+            Syntax.Instance.Add(node);
+
             base.VisitIdentifierName(node);
+
+            identifiers.Add(node.Identifier.ValueText);
         }
 
         public override void VisitIfDirectiveTrivia(IfDirectiveTriviaSyntax node)
@@ -738,7 +792,18 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
         {
+            // called from: CompilationUnit
+
+            // namespace_declaration
+            // : 'namespace' qualified_identifier namespace_body ';'?
+
+            Syntax.Instance.Add(node);
+
             base.VisitNamespaceDeclaration(node);
+
+            string name = qualifiedNames.Pop();
+
+            namespaceNames.Add(name);
         }
 
         public override void VisitNullableDirectiveTrivia(NullableDirectiveTriviaSyntax node)
@@ -873,7 +938,16 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitQualifiedName(QualifiedNameSyntax node)
         {
+            // called from: NamespaceDeclaration, QualifiedName
+
+            // qualified_identifier
+            // : identifier ('.' identifier)*
+
+            Syntax.Instance.Add(node);
+
+            identifiers.Clear();
             base.VisitQualifiedName(node);
+            qualifiedNames.Push(string.Join(".", identifiers));
         }
 
         public override void VisitQueryBody(QueryBodySyntax node)
