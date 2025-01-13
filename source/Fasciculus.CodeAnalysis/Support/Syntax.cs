@@ -83,17 +83,29 @@ namespace Fasciculus.CodeAnalysis.Support
         private readonly SyntaxKind[] AliasQualifiedNameKinds
             = [SyntaxKind.IdentifierName];
 
+        private readonly SyntaxKind[] CompilationUnitKinds
+            = [SyntaxKind.UsingDirective];
+
+        private readonly SyntaxKind[] AttributeListKinds
+            = [SyntaxKind.Attribute, SyntaxKind.AttributeTargetSpecifier];
+
         private readonly SyntaxKind[] NamespaceDeclarationKinds
-            = [SyntaxKind.QualifiedName];
+            = [];
 
         private readonly SyntaxKind[] QualifiedNameKinds
             = [SyntaxKind.AliasQualifiedName, SyntaxKind.IdentifierName, SyntaxKind.QualifiedName];
 
+        private readonly SyntaxKind[] UsingDirectiveKinds
+            = [SyntaxKind.IdentifierName, SyntaxKind.QualifiedName];
+
         private void AddInfos()
         {
             infos.Add(SyntaxKind.AliasQualifiedName, new(AliasQualifiedNameKinds));
+            infos.Add(SyntaxKind.AttributeList, new(AttributeListKinds));
+            infos.Add(SyntaxKind.CompilationUnit, new(CompilationUnitKinds));
             infos.Add(SyntaxKind.NamespaceDeclaration, new(NamespaceDeclarationKinds));
             infos.Add(SyntaxKind.QualifiedName, new(QualifiedNameKinds));
+            infos.Add(SyntaxKind.UsingDirective, new(UsingDirectiveKinds));
         }
     }
 }

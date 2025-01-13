@@ -1,0 +1,23 @@
+CompilationUnit: NamespaceDeclaration
+CompilationUnit: UsingDirective NamespaceDeclaration
+CompilationUnit: UsingDirective UsingDirective NamespaceDeclaration
+CompilationUnit: UsingDirective UsingDirective UsingDirective NamespaceDeclaration
+CompilationUnit: UsingDirective UsingDirective UsingDirective UsingDirective NamespaceDeclaration
+CompilationUnit: UsingDirective UsingDirective UsingDirective UsingDirective UsingDirective NamespaceDeclaration
+CompilationUnit: UsingDirective UsingDirective UsingDirective UsingDirective UsingDirective UsingDirective NamespaceDeclaration
+CompilationUnit: UsingDirective UsingDirective UsingDirective UsingDirective UsingDirective UsingDirective UsingDirective NamespaceDeclaration
+CompilationUnit: UsingDirective UsingDirective AttributeList
+CompilationUnit: UsingDirective UsingDirective AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList
+CompilationUnit: UsingDirective UsingDirective AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList AttributeList
+
+UsingDirective: IdentifierName
+UsingDirective: QualifiedName
+
+HasTrivia: True
+AttributeList: AttributeTargetSpecifier Attribute
+AttributeList: Attribute
+
+HasTrivia: False
+Attribute: IdentifierName
+Attribute: IdentifierName AttributeArgumentList
+Attribute: QualifiedName AttributeArgumentList

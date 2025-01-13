@@ -28,7 +28,7 @@ namespace Fasciculus.CodeAnalysis.Tests
                 .WithProjectFiles(GetProjectFiles())
                 .Build().Analyze();
 
-            LogNamespaceNames();
+            LogProductions();
             LogUnhandledSyntax();
             //LogUnhandledSymbols();
             //LogUnhandledModifiers();
@@ -37,10 +37,15 @@ namespace Fasciculus.CodeAnalysis.Tests
             //LogComments(result.Indices);
         }
 
-        public void LogNamespaceNames()
+        public void LogProductions()
         {
-            Log("--- namespace names ---");
-            Compiler.namespaceNames.Apply(Log);
+            Log("--- productions ---");
+
+            List<Production> productions = Productions.Instance.GetProductions(SyntaxKind.Attribute);
+            bool hasTrivia = productions.Any(p => p.HasTrivia);
+
+            Log($"HasTrivia: {hasTrivia}");
+            productions.Apply(p => Log(p.ToString()));
         }
 
         public void LogUnhandledSyntax()
@@ -55,7 +60,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 {
                     Log($"{kvp.Key}");
 
-                    foreach (var kind in kvp.Value)
+                    string[] kinds = [.. kvp.Value.Select(k => k.ToString()).OrderBy(x => x)];
+
+                    foreach (var kind in kinds)
                     {
                         Log($"- {kind}");
                     }
