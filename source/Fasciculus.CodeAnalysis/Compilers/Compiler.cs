@@ -127,17 +127,33 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitArrayRankSpecifier(ArrayRankSpecifierSyntax node)
         {
+            // ArrayRankSpecifier
+            // : IdentifierName
+            // | InvocationExpression
+            // | OmittedArraySizeExpression
+            // | AddExpression
+            // | NumericLiteralExpression
+            //
+            // only OmittedArraySizeExpression occurs on fields.
+
+            Productions.Instance.Add(node);
+
             base.VisitArrayRankSpecifier(node);
         }
 
         public override void VisitArrayType(ArrayTypeSyntax node)
         {
+            // ArrayType
+            // : (IdentifierName | GenericName | PredefinedType) ArrayRankSpecifier
+
+            Productions.Instance.Add(node);
+
             base.VisitArrayType(node);
         }
 
         public override void VisitArrowExpressionClause(ArrowExpressionClauseSyntax node)
         {
-            base.VisitArrowExpressionClause(node);
+            //base.VisitArrowExpressionClause(node);
         }
 
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
@@ -203,6 +219,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitBaseList(BaseListSyntax node)
         {
+            // BaseList
+            // : SimpleBaseType+
+
+            Productions.Instance.Add(node);
+
             base.VisitBaseList(node);
         }
 
@@ -218,7 +239,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitBlock(BlockSyntax node)
         {
-            base.VisitBlock(node);
+            // base.VisitBlock(node);
         }
 
         public override void VisitBracketedArgumentList(BracketedArgumentListSyntax node)
@@ -278,6 +299,26 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // ClassDeclaration
+            // : AttributeList? TypeParameterList? BaseList? TypeParameterConstraintClause?
+            //   (
+            //       FieldDeclaration
+            //     | PropertyDeclaration
+            //     | IndexerDeclaration
+            //     | EventFieldDeclaration
+            //     | ConstructorDeclaration
+            //     | DestructorDeclaration
+            //     | MethodDeclaration
+            //     | OperatorDeclaration
+            //     | ConversionOperatorDeclaration
+            //     | ClassDeclaration
+            //   )*
+            //
+            // TypeParameterConstraintClause only when TypeParameterList 
+
+            Productions.Instance.Add(node);
+
             base.VisitClassDeclaration(node);
         }
 
@@ -458,11 +499,22 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // EnumDeclaration
+            // : EnumMemberDeclaration*
+
+            Productions.Instance.Add(node);
+
             base.VisitEnumDeclaration(node);
         }
 
         public override void VisitEnumMemberDeclaration(EnumMemberDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // Leaf
+
+            Productions.Instance.Add(node);
+
             base.VisitEnumMemberDeclaration(node);
         }
 
@@ -488,6 +540,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitExplicitInterfaceSpecifier(ExplicitInterfaceSpecifierSyntax node)
         {
+            // ExplicitInterfaceSpecifier
+            // : IdentifierName
+            // | GenericName
+
+            Productions.Instance.Add(node);
+
             base.VisitExplicitInterfaceSpecifier(node);
         }
 
@@ -513,6 +571,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // FieldDeclaration: VariableDeclaration
+
+            Productions.Instance.Add(node);
+
             base.VisitFieldDeclaration(node);
         }
 
@@ -588,6 +651,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitGenericName(GenericNameSyntax node)
         {
+            // GenericName
+            // : TypeArgumentList
+
+            Productions.Instance.Add(node);
+
             base.VisitGenericName(node);
         }
 
@@ -667,6 +735,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitInterfaceDeclaration(InterfaceDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // InterfaceDeclaration
+            // : TypeParameterList? BaseList? TypeParameterConstraintClause? MethodDeclaration*
+
+            Productions.Instance.Add(node);
+
             base.VisitInterfaceDeclaration(node);
         }
 
@@ -792,6 +866,19 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // MethodDeclaration
+            // : AttributeList? <return-type> ExplicitInterfaceSpecifier? ParameterList TypeParameterConstraintClause? (ArrowExpressionClause | Block)
+            //
+            // return-type
+            // : IdentifierName TypeParameterList?
+            // | GenericName TypeParameterList?
+            // | PredefinedType TypeParameterList?
+            // | ArrayType
+            // | NullableType
+
+            Productions.Instance.Add(node);
+
             base.VisitMethodDeclaration(node);
         }
 
@@ -812,12 +899,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
         {
-            // called from: CompilationUnit
+            // HasTrivia: True
+            // NamespaceDeclaration
+            // : QualifiedName ClassDeclaration* InterfaceDeclaration* EnumDeclaration*
 
-            // namespace_declaration
-            // : 'namespace' qualified_identifier namespace_body ';'?
-
-            Syntax.Instance.Add(node);
+            Productions.Instance.Add(node);
 
             base.VisitNamespaceDeclaration(node);
 
@@ -831,6 +917,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitNullableType(NullableTypeSyntax node)
         {
+            // NullableType
+            // : IdentifierName
+            // | GenericName
+            // | PredefinedType
+
+            Productions.Instance.Add(node);
+
             base.VisitNullableType(node);
         }
 
@@ -841,7 +934,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitOmittedArraySizeExpression(OmittedArraySizeExpressionSyntax node)
         {
-            base.VisitOmittedArraySizeExpression(node);
+            // Leaf
+
+            //Productions.Instance.Add(node);
+
+            //base.VisitOmittedArraySizeExpression(node);
         }
 
         public override void VisitOmittedTypeArgument(OmittedTypeArgumentSyntax node)
@@ -871,11 +968,25 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitParameter(ParameterSyntax node)
         {
+            // Parameter
+            // : IdentifierName EqualsValueClause?
+            // | GenericName
+            // | PredefinedType EqualsValueClause?
+            // | ArrayType
+            // | PointerType
+            // | NullableType EqualsValueClause?
+
+            Productions.Instance.Add(node);
+
             base.VisitParameter(node);
         }
 
         public override void VisitParameterList(ParameterListSyntax node)
         {
+            // ParameterList: Parameter*
+
+            Productions.Instance.Add(node);
+
             base.VisitParameterList(node);
         }
 
@@ -926,6 +1037,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitPredefinedType(PredefinedTypeSyntax node)
         {
+            // Leaf
+
+            Productions.Instance.Add(node);
+
             base.VisitPredefinedType(node);
         }
 
@@ -1063,6 +1178,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitSimpleBaseType(SimpleBaseTypeSyntax node)
         {
+            // SimpleBaseType
+            // : IdentifierName
+            // | GenericName
+
+            Productions.Instance.Add(node);
+
             base.VisitSimpleBaseType(node);
         }
 
@@ -1183,6 +1304,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitTypeArgumentList(TypeArgumentListSyntax node)
         {
+            // TypeArgumentList
+            // : (IdentifierName | PredefinedType)+
+            // | GenericName
+            // | NullableType
+
+            Productions.Instance.Add(node);
+
             base.VisitTypeArgumentList(node);
         }
 
@@ -1213,6 +1341,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitTypeParameterList(TypeParameterListSyntax node)
         {
+            // TypeParameterList: TypeParameter+
+
+            Productions.Instance.Add(node);
+
             base.VisitTypeParameterList(node);
         }
 
@@ -1256,12 +1388,21 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitVariableDeclaration(VariableDeclarationSyntax node)
         {
+            // VariableDeclaration
+            // : (IdentifierName | GenericName | PredefinedType | ArrayType | NullableType) VariableDeclarator
+
+            Productions.Instance.Add(node);
+
             base.VisitVariableDeclaration(node);
         }
 
         public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
         {
-            base.VisitVariableDeclarator(node);
+            // VariableDeclarator: EqualsValueClause?
+
+            //Productions.Instance.Add(node);
+
+            //base.VisitVariableDeclarator(node);
         }
 
         public override void VisitVarPattern(VarPatternSyntax node)

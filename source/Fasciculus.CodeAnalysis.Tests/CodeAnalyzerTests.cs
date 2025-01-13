@@ -39,9 +39,15 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         public void LogProductions()
         {
+            List<Production> productions = Productions.Instance.GetProductions(SyntaxKind.TypeParameterList);
+
+            if (productions.Count == 0)
+            {
+                return;
+            }
+
             Log("--- productions ---");
 
-            List<Production> productions = Productions.Instance.GetProductions(SyntaxKind.Attribute);
             bool hasTrivia = productions.Any(p => p.HasTrivia);
 
             Log($"HasTrivia: {hasTrivia}");
