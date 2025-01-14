@@ -28,7 +28,7 @@ namespace Fasciculus.CodeAnalysis.Tests
                 .WithProjectFiles(GetProjectFiles())
                 .Build().Analyze();
 
-            LogProductions();
+            //LogProductions();
             LogUnhandledSyntax();
             //LogUnhandledSymbols();
             //LogUnhandledModifiers();

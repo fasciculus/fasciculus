@@ -1,15 +1,20 @@
+using Fasciculus.CodeAnalysis.Compilers.Models;
 using Fasciculus.CodeAnalysis.Support;
+using Fasciculus.Support;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
     public partial class Compiler : CSharpSyntaxWalker
     {
         private readonly Stack<SyntaxNode> ancestors = [];
+
+        private readonly Stack<CommentInfo> commentInfos = [];
 
         public Compiler()
             : base(SyntaxWalkerDepth.StructuredTrivia)
@@ -209,7 +214,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitAttributeList(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitAttributeTargetSpecifier(AttributeTargetSpecifierSyntax node)
@@ -340,7 +349,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitClassDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitClassOrStructConstraint(ClassOrStructConstraintSyntax node)
@@ -417,7 +430,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitConversionOperatorDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitConversionOperatorMemberCref(ConversionOperatorMemberCrefSyntax node)
@@ -482,7 +499,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitDestructorDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitDiscardDesignation(DiscardDesignationSyntax node)
@@ -497,6 +518,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitDocumentationCommentTrivia(DocumentationCommentTriviaSyntax node)
         {
+            if (commentInfos.Count == 0)
+            {
+                SyntaxNode? failingNode = ancestors.FirstOrDefault(n => n.HasStructuredTrivia);
+                SyntaxKind? failingKind = failingNode?.Kind();
+
+                throw Ex.InvalidOperation($"missing push in '{failingKind}'");
+            }
+
             base.VisitDocumentationCommentTrivia(node);
         }
 
@@ -553,7 +582,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitEnumDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitEnumMemberDeclaration(EnumMemberDeclarationSyntax node)
@@ -597,7 +630,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitEventFieldDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitExplicitInterfaceSpecifier(ExplicitInterfaceSpecifierSyntax node)
@@ -638,7 +675,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitFieldDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitFieldExpression(FieldExpressionSyntax node)
@@ -790,7 +831,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitIndexerDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitIndexerMemberCref(IndexerMemberCrefSyntax node)
@@ -811,7 +856,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitInterfaceDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitInterpolatedStringExpression(InterpolatedStringExpressionSyntax node)
@@ -967,7 +1016,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitMethodDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitNameColon(NameColonSyntax node)
@@ -993,7 +1046,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitNamespaceDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitNullableDirectiveTrivia(NullableDirectiveTriviaSyntax node)
@@ -1044,7 +1101,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitOperatorDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitOperatorMemberCref(OperatorMemberCrefSyntax node)
@@ -1161,7 +1222,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
+            commentInfos.Push(new());
+
             base.VisitPropertyDeclaration(node);
+
+            commentInfos.Pop();
         }
 
         public override void VisitPropertyPatternClause(PropertyPatternClauseSyntax node)
@@ -1544,21 +1609,42 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public override void VisitXmlCDataSection(XmlCDataSectionSyntax node)
         {
             base.VisitXmlCDataSection(node);
+
+            string text = string.Join("", node.TextTokens.Select(x => x.Text));
+
+            commentInfos.Peek().Top.Add(new XCData(text));
         }
 
         public override void VisitXmlComment(XmlCommentSyntax node)
         {
             base.VisitXmlComment(node);
+
+            string text = string.Join("", node.TextTokens.Select(x => x.Text));
+
+            commentInfos.Peek().Top.Add(new XComment(text));
         }
 
         public override void VisitXmlCrefAttribute(XmlCrefAttributeSyntax node)
         {
             base.VisitXmlCrefAttribute(node);
+
+            string cref = node.Cref.GetText().ToString();
+
+            commentInfos.Peek().Top.Add(new XAttribute("cref", cref));
         }
 
         public override void VisitXmlElement(XmlElementSyntax node)
         {
+            CommentInfo info = commentInfos.Peek();
+            string name = node.StartTag.Name.LocalName.ValueText;
+
+            info.Push(name);
+
             base.VisitXmlElement(node);
+
+            XElement element = info.Pop();
+
+            info.Top.Add(element);
         }
 
         public override void VisitXmlElementEndTag(XmlElementEndTagSyntax node)
@@ -1573,7 +1659,16 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitXmlEmptyElement(XmlEmptyElementSyntax node)
         {
+            CommentInfo info = commentInfos.Peek();
+            string name = node.Name.LocalName.ValueText;
+
+            info.Push(name);
+
             base.VisitXmlEmptyElement(node);
+
+            XElement element = info.Pop();
+
+            info.Top.Add(element);
         }
 
         public override void VisitXmlName(XmlNameSyntax node)
@@ -1599,11 +1694,20 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public override void VisitXmlText(XmlTextSyntax node)
         {
             base.VisitXmlText(node);
+
+            string text = string.Join("", node.TextTokens.Select(x => x.Text));
+
+            commentInfos.Peek().Top.Add(new XText(text));
         }
 
         public override void VisitXmlTextAttribute(XmlTextAttributeSyntax node)
         {
             base.VisitXmlTextAttribute(node);
+
+            string name = node.Name.LocalName.ValueText;
+            string value = string.Join("", node.TextTokens.Select(x => x.Text));
+
+            commentInfos.Peek().Top.Add(new XAttribute(name, value));
         }
 
         public override void VisitYieldStatement(YieldStatementSyntax node)

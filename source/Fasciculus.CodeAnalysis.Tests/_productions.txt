@@ -6,3 +6,5 @@ Argument: SimpleMemberAccessExpression
 Argument: NumericLiteralExpression
 Argument: NullLiteralExpression
 Argument: CollectionExpression
+
+VisitXmlText

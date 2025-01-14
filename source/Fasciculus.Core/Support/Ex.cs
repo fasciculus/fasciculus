@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO.Resources;
+using Fasciculus.IO.Resources;
 using System;
 using System.IO;
 
@@ -21,8 +21,8 @@ namespace Fasciculus.Support
         /// <summary>
         /// Creates a new <see cref="InvalidOperationException"/>.
         /// </summary>
-        public static InvalidOperationException InvalidOperation()
-            => new();
+        public static InvalidOperationException InvalidOperation(string? message = null)
+            => message is null ? new() : new(message);
 
         /// <summary>
         /// Creates a new <see cref="ArgumentException"/>.
