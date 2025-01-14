@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace Fasciculus.CodeAnalysis.Compilers.Models
+namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public class CommentInfo
     {
