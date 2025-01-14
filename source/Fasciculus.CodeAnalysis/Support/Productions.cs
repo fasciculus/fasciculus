@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.Collections;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
@@ -74,7 +75,7 @@ namespace Fasciculus.CodeAnalysis.Support
         }
     }
 
-    public class Productions
+    public class Productions : INodeLogger
     {
         public static readonly Productions Instance = new();
 

@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.Collections;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
@@ -32,7 +33,7 @@ namespace Fasciculus.CodeAnalysis.Support
         }
     }
 
-    public class Syntax
+    public class Syntax : INodeLogger
     {
         public static readonly Syntax Instance = new();
 

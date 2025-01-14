@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class CommentInfo
+    public class CommentBuilder
     {
         public XDocument Document { get; }
 
@@ -11,11 +11,17 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public XElement Top => elements.Peek();
 
-        public CommentInfo()
+        public CommentBuilder()
         {
-            Document = XDocument.Parse("<comment></comment>");
+            Document = XDocument.Parse("<comment>\r\n</comment>");
             elements.Push(Document.Root!);
         }
+
+        public static CommentBuilder Create()
+            => new();
+
+        public void Add(XObject content)
+            => Top.Add(content);
 
         public void Push(string name)
         {

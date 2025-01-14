@@ -1,5 +1,6 @@
 using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
@@ -34,7 +35,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 .WithFramework(project.Framework)
                 .WithPackage(name);
 
-            Compiler compiler = new();
+            Compiler compiler = new(Productions.Instance);
 
             roots.Apply(compiler.Compile);
 
