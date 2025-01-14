@@ -39,7 +39,7 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         public void LogProductions()
         {
-            List<Production> productions = Productions.Instance.GetProductions(SyntaxKind.TypeParameterList);
+            List<Production> productions = Productions.Instance.GetProductions(SyntaxKind.ObjectCreationExpression);
 
             if (productions.Count == 0)
             {

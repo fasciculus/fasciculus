@@ -1,5 +1,4 @@
 using Fasciculus.CodeAnalysis.Support;
-using Fasciculus.Support;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -12,15 +11,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly Stack<SyntaxNode> ancestors = [];
 
-        private List<string> identifierNames = [];
-        private string qualifiedName = string.Empty;
-
         public Compiler()
             : base(SyntaxWalkerDepth.StructuredTrivia)
         {
         }
 
-        public void Compile(CompilationUnitSyntax compilationUnit)
+        public virtual void Compile(CompilationUnitSyntax compilationUnit)
         {
             // compilation_unit
             //   : extern_alias_directive* using_directive* global_attributes? namespace_member_declaration*
@@ -65,11 +61,23 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitAccessorDeclaration(AccessorDeclarationSyntax node)
         {
+            // covers GetAccessorDeclaration, SetAccessorDeclaration, InitAccessorDeclaration, AddAccessorDeclaration,
+            //  RemoveAccessorDeclaration, UnknownAccessorDeclaration
+            //
+            // GetAccessorDeclaration: ArrowExpressionClause?
+            // SetAccessorDeclaration:
+
+            Productions.Instance.Add(node);
+
             base.VisitAccessorDeclaration(node);
         }
 
         public override void VisitAccessorList(AccessorListSyntax node)
         {
+            // AccessorList: GetAccessorDeclaration? SetAccessorDeclaration?
+
+            Productions.Instance.Add(node);
+
             base.VisitAccessorList(node);
         }
 
@@ -81,13 +89,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             Productions.Instance.Add(node);
 
             base.VisitAliasQualifiedName(node);
-
-            if (identifierNames.Count == 0 || identifierNames[0] != "global")
-            {
-                throw Ex.InvalidOperation();
-            }
-
-            identifierNames.RemoveAt(0);
         }
 
         public override void VisitAllowsConstraintClause(AllowsConstraintClauseSyntax node)
@@ -112,11 +113,27 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitArgument(ArgumentSyntax node)
         {
+            // Argument
+            // : IdentifierName
+            // | SimpleMemberAccessExpression
+            // | NumericLiteralExpression
+            // | NullLiteralExpression
+            // | CollectionExpression
+            // | InvocationExpression
+            // | ObjectCreationExpression
+            // plus maybe more
+
+            Productions.Instance.Add(node);
+
             base.VisitArgument(node);
         }
 
         public override void VisitArgumentList(ArgumentListSyntax node)
         {
+            // ArgumentList: Argument*
+
+            Productions.Instance.Add(node);
+
             base.VisitArgumentList(node);
         }
 
@@ -249,6 +266,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitBracketedParameterList(BracketedParameterListSyntax node)
         {
+            // BracketedParameterList: Parameter
+
+            Productions.Instance.Add(node);
+
             base.VisitBracketedParameterList(node);
         }
 
@@ -324,11 +345,20 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitClassOrStructConstraint(ClassOrStructConstraintSyntax node)
         {
+            // ClassConstraint or StructConstraint
+            // Leaf
+
+            Productions.Instance.Add(node);
+
             base.VisitClassOrStructConstraint(node);
         }
 
         public override void VisitCollectionExpression(CollectionExpressionSyntax node)
         {
+            // CollectionExpression:
+
+            Productions.Instance.Add(node);
+
             base.VisitCollectionExpression(node);
         }
 
@@ -359,6 +389,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
+            // ConstructorDeclaration
+            // : ParameterList (BaseConstructorInitializer | ThisConstructorInitializer)? Block
+
+            Productions.Instance.Add(node);
+
             base.VisitConstructorDeclaration(node);
         }
 
@@ -374,6 +409,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // ConversionOperatorDeclaration
+            // : IdentifierName ParameterList ArrowExpressionClause
+            // 
+            // may have Block?
+
+            Productions.Instance.Add(node);
+
             base.VisitConversionOperatorDeclaration(node);
         }
 
@@ -434,6 +477,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitDestructorDeclaration(DestructorDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // DestructorDeclaration: ParameterList Block
+
+            Productions.Instance.Add(node);
+
             base.VisitDestructorDeclaration(node);
         }
 
@@ -520,6 +568,15 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitEqualsValueClause(EqualsValueClauseSyntax node)
         {
+            // EqualsValueClause
+            // : ImplicitObjectCreationExpression
+            // | FalseLiteralExpression
+            // | NullLiteralExpression
+            // | DefaultLiteralExpression
+            // | CollectionExpression
+
+            Productions.Instance.Add(node);
+
             base.VisitEqualsValueClause(node);
         }
 
@@ -535,6 +592,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitEventFieldDeclaration(EventFieldDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // EventFieldDeclaration: VariableDeclaration
+
+            Productions.Instance.Add(node);
+
             base.VisitEventFieldDeclaration(node);
         }
 
@@ -679,8 +741,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //Productions.Instance.Add(node);
 
             //base.VisitIdentifierName(node);
-
-            identifierNames.Add(node.Identifier.ValueText);
         }
 
         public override void VisitIfDirectiveTrivia(IfDirectiveTriviaSyntax node)
@@ -705,6 +765,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
         {
+            // ImplicitObjectCreationExpression: ArgumentList
+
+            Productions.Instance.Add(node);
+
             base.VisitImplicitObjectCreationExpression(node);
         }
 
@@ -720,6 +784,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // IndexerDeclaration
+            // : PredefinedType BracketedParameterList ArrowExpressionClause
+
+            Productions.Instance.Add(node);
+
             base.VisitIndexerDeclaration(node);
         }
 
@@ -771,6 +841,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
+            // InvocationExpression: SimpleMemberAccessExpression ArgumentList
+
+            Productions.Instance.Add(node);
+
             base.VisitInvocationExpression(node);
         }
 
@@ -826,6 +900,15 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitLiteralExpression(LiteralExpressionSyntax node)
         {
+            // covers ArgListExpression, NumericLiteralExpression, StringLiteralExpression, Utf8StringLiteralExpression
+            //  CharacterLiteralExpression, TrueLiteralExpression, FalseLiteralExpression, NullLiteralExpression, DefaultLiteralExpression
+            //
+            // DefaultLiteralExpression:
+            // FalseLiteralExpression:
+            // NullLiteralExpression:
+
+            Productions.Instance.Add(node);
+
             base.VisitLiteralExpression(node);
         }
 
@@ -856,6 +939,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
         {
+            // covers SimpleMemberAccessExpression and PointerMemberAccessExpression
+            // SimpleMemberAccessExpression: (IdentifierName | GenericName) IdentifierName
+
+            Productions.Instance.Add(node);
+
             base.VisitMemberAccessExpression(node);
         }
 
@@ -906,8 +994,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             Productions.Instance.Add(node);
 
             base.VisitNamespaceDeclaration(node);
-
-            string name = string.IsNullOrEmpty(qualifiedName) ? string.Join(".", identifierNames) : qualifiedName;
         }
 
         public override void VisitNullableDirectiveTrivia(NullableDirectiveTriviaSyntax node)
@@ -929,6 +1015,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
+            // ObjectCreationExpression: GenericName ArgumentList
+
+            Productions.Instance.Add(node);
+
             base.VisitObjectCreationExpression(node);
         }
 
@@ -948,6 +1038,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitOperatorDeclaration(OperatorDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // OperatorDeclaration
+            // : AttributeList IdentifierName ParameterList ArrowExpressionClause
+
+            Productions.Instance.Add(node);
+
             base.VisitOperatorDeclaration(node);
         }
 
@@ -1056,6 +1152,15 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
+            // HasTrivia: True
+            // PropertyDeclaration
+            // : <return-type> ExplicitInterfaceSpecifier? ((AccessorList EqualsValueClause?) | ArrowExpressionClause)
+            //
+            // <return-type>
+            // : AttributeList? (IdentifierName | GenericName | PredefinedType | NullableType) 
+
+            Productions.Instance.Add(node);
+
             base.VisitPropertyDeclaration(node);
         }
 
@@ -1078,12 +1183,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             Productions.Instance.Add(node);
 
-            identifierNames.Clear();
-            qualifiedName = string.Empty;
-
             base.VisitQualifiedName(node);
-
-            qualifiedName = string.Join(".", identifierNames);
         }
 
         public override void VisitQueryBody(QueryBodySyntax node)
@@ -1316,6 +1416,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitTypeConstraint(TypeConstraintSyntax node)
         {
+            Productions.Instance.Add(node);
+
             base.VisitTypeConstraint(node);
         }
 
@@ -1336,6 +1438,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitTypeParameterConstraintClause(TypeParameterConstraintClauseSyntax node)
         {
+            // TypeParameterConstraintClause
+            // : IdentifierName ClassConstraint
+            // | IdentifierName TypeConstraint+
+
+            Productions.Instance.Add(node);
+
             base.VisitTypeParameterConstraintClause(node);
         }
 
@@ -1377,8 +1485,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             Productions.Instance.Add(node);
 
             base.VisitUsingDirective(node);
-
-            string name = string.IsNullOrEmpty(qualifiedName) ? string.Join(".", identifierNames) : qualifiedName;
         }
 
         public override void VisitUsingStatement(UsingStatementSyntax node)
