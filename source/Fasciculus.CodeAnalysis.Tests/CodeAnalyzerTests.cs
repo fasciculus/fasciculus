@@ -96,22 +96,6 @@ namespace Fasciculus.CodeAnalysis.Tests
             Log("~~~~~~~~~~~~~~~~~~~~~~~~");
         }
 
-        public void LogUnhandledSymbols()
-        {
-            Dictionary<string, SortedSet<SyntaxKind>> unhandled = UnhandledSymbols.Instance.Unhandled();
-
-            if (unhandled.Count > 0)
-            {
-                Log("--- unhandled symbols ---");
-
-                foreach (var entry in unhandled)
-                {
-                    Log(entry.Key);
-                    Log(string.Join(Environment.NewLine, entry.Value.Select(u => "- " + u)));
-                }
-            }
-        }
-
         public void LogUnhandledModifiers()
         {
             SortedSet<string> unhandled = UnhandledModifiers.Instance.Unhandled();

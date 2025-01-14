@@ -34,11 +34,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 .WithFramework(project.Framework)
                 .WithPackage(name);
 
-            //CompilationCompiler compiler = new(subContext);
-
-            //IEnumerable<CompilationUnit> compilationUnits = roots
-            //    .Select(root => compiler.Compile(root, link));
-
             Compiler compiler = new();
 
             roots.Apply(compiler.Compile);
