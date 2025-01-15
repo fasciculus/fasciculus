@@ -41,9 +41,16 @@ namespace Fasciculus.CodeAnalysis
             return this;
         }
 
+        public CodeAnalyzerBuilder WithDebuggers(CodeAnalyzerDebuggers debuggers)
+        {
+            options.Debuggers = debuggers;
+
+            return this;
+        }
+
         public CodeAnalyzerBuilder WithNodeDebugger(INodeDebugger nodeDebugger)
         {
-            options.NodeDebugger = nodeDebugger;
+            options.Debuggers.NodeDebugger = nodeDebugger;
 
             return this;
         }

@@ -13,11 +13,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
         protected readonly ICompiler compiler;
         protected readonly INodeDebugger nodeDebugger;
 
-        public Walker(ICompiler compiler, INodeDebugger nodeDebugger)
+        public Walker(ICompiler compiler, CompilerContext context)
             : base(SyntaxWalkerDepth.StructuredTrivia)
         {
             this.compiler = compiler;
-            this.nodeDebugger = nodeDebugger;
+
+            nodeDebugger = context.Debuggers.NodeDebugger;
         }
 
         //public override void DefaultVisit(SyntaxNode node)

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Debugging
 {
-    public class ProductionDebuggerProduction : IEquatable<ProductionDebuggerProduction>, IComparable<ProductionDebuggerProduction>
+    public class ProductionDebuggerEntry : IEquatable<ProductionDebuggerEntry>, IComparable<ProductionDebuggerEntry>
     {
         public static readonly IComparer<SyntaxKind> Comparer = Comparer<SyntaxKind>.Default;
 
@@ -19,14 +19,14 @@ namespace Fasciculus.CodeAnalysis.Debugging
 
         public bool HasStructuredTrivia { get; }
 
-        public ProductionDebuggerProduction(SyntaxNode node)
+        public ProductionDebuggerEntry(SyntaxNode node)
         {
             Left = node.Kind();
             right = new(node.ChildNodes().Select(n => n.Kind()));
             HasStructuredTrivia = node.HasStructuredTrivia;
         }
 
-        public bool Equals(ProductionDebuggerProduction? other)
+        public bool Equals(ProductionDebuggerEntry? other)
         {
             if (other is null)
             {
@@ -42,12 +42,12 @@ namespace Fasciculus.CodeAnalysis.Debugging
         }
 
         public override bool Equals(object? obj)
-            => Equals(obj as ProductionDebuggerProduction);
+            => Equals(obj as ProductionDebuggerEntry);
 
         public override int GetHashCode()
             => Left.GetHashCode() ^ right.ToHashCode();
 
-        public int CompareTo(ProductionDebuggerProduction? other)
+        public int CompareTo(ProductionDebuggerEntry? other)
         {
             if (other is null)
             {

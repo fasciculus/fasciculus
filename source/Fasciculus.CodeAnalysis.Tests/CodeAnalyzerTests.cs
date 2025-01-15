@@ -22,11 +22,13 @@ namespace Fasciculus.CodeAnalysis.Tests
         private static readonly SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
         private static readonly string[] projectNames = ["Fasciculus.Core", "Fasciculus.Extensions"];
 
+        private readonly SyntaxDebugger syntaxDebugger;
         private readonly ProductionDebugger productionDebugger;
 
         public CodeAnalyzerTests()
         {
-            productionDebugger = new();
+            syntaxDebugger = new();
+            productionDebugger = new(syntaxDebugger);
         }
 
         [TestMethod]
@@ -48,7 +50,7 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         public void LogProductions()
         {
-            List<ProductionDebuggerProduction> productions = productionDebugger.GetProductions(SyntaxKind.ObjectCreationExpression);
+            List<ProductionDebuggerEntry> productions = productionDebugger[SyntaxKind.ObjectCreationExpression];
 
             if (productions.Count == 0)
             {
@@ -57,15 +59,15 @@ namespace Fasciculus.CodeAnalysis.Tests
 
             Log("--- productions ---");
 
-            bool hasTrivia = productions.Any(p => p.HasStructuredTrivia);
+            bool hasStructuredTrivia = productions.Any(p => p.HasStructuredTrivia);
 
-            Log($"HasStructuredTrivia: {hasTrivia}");
+            Log($"HasStructuredTrivia: {hasStructuredTrivia}");
             productions.Apply(p => Log(p.ToString()));
         }
 
         public void LogUnhandledSyntax()
         {
-            Dictionary<SyntaxKind, SortedSet<SyntaxKind>> unhandled = Syntax.Instance.GetUnhandled();
+            Dictionary<SyntaxKind, SortedSet<SyntaxKind>> unhandled = syntaxDebugger.GetUnhandled();
 
             if (unhandled.Count > 0)
             {

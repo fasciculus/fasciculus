@@ -19,7 +19,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public virtual void Compile(CompilationUnitSyntax compilationUnit)
         {
-            Walker walker = new(this, context.NodeDebugger);
+            Walker walker = new(this, context);
 
             compilationUnit.Accept(walker);
         }

@@ -9,9 +9,11 @@ namespace Fasciculus.CodeAnalysis.Debugging
     public class ProductionDebugger : INodeDebugger
     {
         private readonly TaskSafeMutex mutex = new();
-        private readonly SortedSet<ProductionDebuggerProduction> productions = [];
+        private readonly SortedSet<ProductionDebuggerEntry> entries = [];
 
         private readonly INodeDebugger? nextDebugger;
+
+        public List<ProductionDebuggerEntry> this[SyntaxKind left] => GetEntries(left);
 
         public ProductionDebugger(INodeDebugger? nextDebugger = null)
         {
@@ -22,15 +24,15 @@ namespace Fasciculus.CodeAnalysis.Debugging
         {
             using Locker locker = Locker.Lock(mutex);
 
-            productions.Add(new(node));
+            entries.Add(new(node));
             nextDebugger?.Add(node);
         }
 
-        public List<ProductionDebuggerProduction> GetProductions(SyntaxKind left)
+        public List<ProductionDebuggerEntry> GetEntries(SyntaxKind left)
         {
             using Locker locker = Locker.Lock(mutex);
 
-            return new(productions.Where(p => p.Left == left));
+            return new(entries.Where(p => p.Left == left));
         }
     }
 }

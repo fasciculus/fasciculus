@@ -50,7 +50,7 @@ namespace Fasciculus.CodeAnalysis
         {
             CompilerContext context = CompilerContext.Create(project.Framework)
                 .WithProjectDirectory(project.ProjectDirectory)
-                .WithNodeDebugger(options.NodeDebugger);
+                .WithDebuggers(options.Debuggers);
 
             PackageCompiler compiler = new(context);
 

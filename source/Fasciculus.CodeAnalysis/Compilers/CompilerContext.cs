@@ -1,4 +1,3 @@
-using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Frameworking;
 using System.IO;
 
@@ -12,9 +11,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public DirectoryInfo? ProjectDirectory { get; private set; }
 
-        public INodeDebugger NodeDebugger { get; private set; } = new NullNodeDebugger();
-
         public string Package { get; private set; } = string.Empty;
+
+        public CodeAnalyzerDebuggers Debuggers { get; private set; } = new();
 
         public CompilerContext(TargetFramework framework)
         {
@@ -25,8 +24,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             Framework = other.Framework;
             ProjectDirectory = other.ProjectDirectory;
-            NodeDebugger = other.NodeDebugger;
             Package = other.Package;
+            Debuggers = other.Debuggers;
         }
 
         public static CompilerContext Create(TargetFramework framework)
@@ -38,10 +37,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public CompilerContext WithProjectDirectory(DirectoryInfo? projectDirectory)
             => new(this) { ProjectDirectory = projectDirectory };
 
-        public CompilerContext WithNodeDebugger(INodeDebugger nodeDebugger)
-            => new(this) { NodeDebugger = nodeDebugger };
-
         public CompilerContext WithPackage(string package)
             => new(this) { Package = package };
+
+        public CompilerContext WithDebuggers(CodeAnalyzerDebuggers debuggers)
+            => new(this) { Debuggers = debuggers };
     }
 }
