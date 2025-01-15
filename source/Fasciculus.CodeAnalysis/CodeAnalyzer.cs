@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Frameworking;
@@ -48,7 +48,10 @@ namespace Fasciculus.CodeAnalysis
 
         private PackageSymbol CompilePackage(ParsedProject project)
         {
-            CompilerContext context = new(project.Framework, project.ProjectDirectory);
+            CompilerContext context = CompilerContext.Create(project.Framework)
+                .WithProjectDirectory(project.ProjectDirectory)
+                .WithNodeDebugger(options.NodeDebugger);
+
             PackageCompiler compiler = new(context);
 
             return compiler.Compile(project);

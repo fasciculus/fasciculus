@@ -1,15 +1,13 @@
-using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.Collections;
-using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fasciculus.CodeAnalysis.Support
+namespace Fasciculus.CodeAnalysis.Debugging
 {
-    public class Production : IEquatable<Production>, IComparable<Production>
+    public class ProductionDebuggerProduction : IEquatable<ProductionDebuggerProduction>, IComparable<ProductionDebuggerProduction>
     {
         public static readonly IComparer<SyntaxKind> Comparer = Comparer<SyntaxKind>.Default;
 
@@ -19,16 +17,16 @@ namespace Fasciculus.CodeAnalysis.Support
 
         public IEnumerable<SyntaxKind> Right => right;
 
-        public bool HasTrivia { get; }
+        public bool HasStructuredTrivia { get; }
 
-        public Production(SyntaxNode node)
+        public ProductionDebuggerProduction(SyntaxNode node)
         {
             Left = node.Kind();
             right = new(node.ChildNodes().Select(n => n.Kind()));
-            HasTrivia = node.HasStructuredTrivia;
+            HasStructuredTrivia = node.HasStructuredTrivia;
         }
 
-        public bool Equals(Production? other)
+        public bool Equals(ProductionDebuggerProduction? other)
         {
             if (other is null)
             {
@@ -44,12 +42,12 @@ namespace Fasciculus.CodeAnalysis.Support
         }
 
         public override bool Equals(object? obj)
-            => Equals(obj as Production);
+            => Equals(obj as ProductionDebuggerProduction);
 
         public override int GetHashCode()
             => Left.GetHashCode() ^ right.ToHashCode();
 
-        public int CompareTo(Production? other)
+        public int CompareTo(ProductionDebuggerProduction? other)
         {
             if (other is null)
             {
@@ -72,31 +70,6 @@ namespace Fasciculus.CodeAnalysis.Support
             string r = string.Join(" ", right.Select(n => n.ToString()));
 
             return $"{l}: {r}";
-        }
-    }
-
-    public class Productions : INodeDebugger
-    {
-        public static readonly Productions Instance = new();
-
-        private readonly TaskSafeMutex mutex = new();
-        private readonly SortedSet<Production> productions = [];
-
-        private Productions() { }
-
-        public void Add(SyntaxNode node)
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            productions.Add(new(node));
-            Syntax.Instance.Add(node);
-        }
-
-        public List<Production> GetProductions(SyntaxKind left)
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            return new(productions.Where(p => p.Left == left));
         }
     }
 }

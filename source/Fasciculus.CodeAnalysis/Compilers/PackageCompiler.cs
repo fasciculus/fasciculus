@@ -1,6 +1,5 @@
 using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.CodeAnalysis.Support;
 using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
@@ -31,11 +30,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
             SymbolName name = new(project.AssemblyName);
             UriPath link = new(name);
 
-            CompilerContext subContext = context
+            CompilerContext context = this.context
                 .WithFramework(project.Framework)
                 .WithPackage(name);
 
-            Compiler compiler = new(Productions.Instance);
+            Compiler compiler = new(context);
 
             roots.Apply(compiler.Compile);
 

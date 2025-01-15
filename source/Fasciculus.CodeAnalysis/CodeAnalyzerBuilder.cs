@@ -1,4 +1,5 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.CodeAnalysis.Debugging;
+using Fasciculus.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,6 +37,13 @@ namespace Fasciculus.CodeAnalysis
         public CodeAnalyzerBuilder AccessibleOnly(bool value = true)
         {
             options.AccessibleOnly = value;
+
+            return this;
+        }
+
+        public CodeAnalyzerBuilder WithNodeDebugger(INodeDebugger nodeDebugger)
+        {
+            options.NodeDebugger = nodeDebugger;
 
             return this;
         }

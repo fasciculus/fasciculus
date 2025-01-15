@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Compilers;
+using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Support;
@@ -21,11 +22,19 @@ namespace Fasciculus.CodeAnalysis.Tests
         private static readonly SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
         private static readonly string[] projectNames = ["Fasciculus.Core", "Fasciculus.Extensions"];
 
+        private readonly ProductionDebugger productionDebugger;
+
+        public CodeAnalyzerTests()
+        {
+            productionDebugger = new();
+        }
+
         [TestMethod]
         public void Test()
         {
             CodeAnalyzerResult result = CodeAnalyzer.Create()
                 .WithProjectFiles(GetProjectFiles())
+                .WithNodeDebugger(productionDebugger)
                 .Build().Analyze();
 
             //LogProductions();
@@ -39,7 +48,7 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         public void LogProductions()
         {
-            List<Production> productions = Productions.Instance.GetProductions(SyntaxKind.ObjectCreationExpression);
+            List<ProductionDebuggerProduction> productions = productionDebugger.GetProductions(SyntaxKind.ObjectCreationExpression);
 
             if (productions.Count == 0)
             {
@@ -48,9 +57,9 @@ namespace Fasciculus.CodeAnalysis.Tests
 
             Log("--- productions ---");
 
-            bool hasTrivia = productions.Any(p => p.HasTrivia);
+            bool hasTrivia = productions.Any(p => p.HasStructuredTrivia);
 
-            Log($"HasTrivia: {hasTrivia}");
+            Log($"HasStructuredTrivia: {hasTrivia}");
             productions.Apply(p => Log(p.ToString()));
         }
 

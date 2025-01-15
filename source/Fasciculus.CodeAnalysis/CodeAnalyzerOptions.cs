@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using Fasciculus.CodeAnalysis.Debugging;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Fasciculus.CodeAnalysis
@@ -12,5 +13,7 @@ namespace Fasciculus.CodeAnalysis
         public bool IncludeGenerated { get; set; } = false;
 
         public bool AccessibleOnly { get; set; } = true;
+
+        public INodeDebugger NodeDebugger { get; set; } = new NullNodeDebugger();
     }
 }

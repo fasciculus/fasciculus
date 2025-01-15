@@ -1,5 +1,4 @@
 using Fasciculus.CodeAnalysis.Compilers.Builders;
-using Fasciculus.CodeAnalysis.Debugging;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 
@@ -7,20 +6,20 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public partial class Compiler : ICompiler
     {
-        private readonly INodeDebugger nodeDebugger;
+        private readonly CompilerContext context;
 
         private readonly Stack<CommentBuilder> commentBuilders = [];
 
         public CommentBuilder CommentBuilder => commentBuilders.Peek();
 
-        public Compiler(INodeDebugger nodeDebugger)
+        public Compiler(CompilerContext context)
         {
-            this.nodeDebugger = nodeDebugger;
+            this.context = context;
         }
 
         public virtual void Compile(CompilationUnitSyntax compilationUnit)
         {
-            Walker walker = new(this, nodeDebugger);
+            Walker walker = new(this, context.NodeDebugger);
 
             compilationUnit.Accept(walker);
         }
