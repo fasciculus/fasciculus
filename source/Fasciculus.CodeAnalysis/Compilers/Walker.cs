@@ -11,13 +11,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
     public class Walker : CSharpSyntaxWalker
     {
         protected readonly ICompiler compiler;
-        protected readonly INodeLogger? logger;
+        protected readonly INodeDebugger nodeDebugger;
 
-        public Walker(ICompiler compiler, INodeLogger? logger)
+        public Walker(ICompiler compiler, INodeDebugger nodeDebugger)
             : base(SyntaxWalkerDepth.StructuredTrivia)
         {
             this.compiler = compiler;
-            this.logger = logger;
+            this.nodeDebugger = nodeDebugger;
         }
 
         //public override void DefaultVisit(SyntaxNode node)
@@ -38,7 +38,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // GetAccessorDeclaration: ArrowExpressionClause?
             // SetAccessorDeclaration:
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitAccessorDeclaration(node);
         }
@@ -47,7 +47,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // AccessorList: GetAccessorDeclaration? SetAccessorDeclaration?
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitAccessorList(node);
         }
@@ -57,7 +57,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // AliasQualifiedName
             // : IdentifierName IdentifierName
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitAliasQualifiedName(node);
         }
@@ -94,7 +94,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | ObjectCreationExpression
             // plus maybe more
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitArgument(node);
         }
@@ -103,7 +103,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // ArgumentList: Argument*
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitArgumentList(node);
         }
@@ -124,7 +124,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //
             // only OmittedArraySizeExpression occurs on fields.
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitArrayRankSpecifier(node);
         }
@@ -134,7 +134,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // ArrayType
             // : (IdentifierName | GenericName | PredefinedType) ArrayRankSpecifier
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitArrayType(node);
         }
@@ -146,7 +146,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitAssignmentExpression(node);
         }
@@ -178,7 +178,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // : AttributeTargetSpecifier Attribute
             // | Attribute
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -212,7 +212,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // BaseList
             // : SimpleBaseType+
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitBaseList(node);
         }
@@ -241,7 +241,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // BracketedParameterList: Parameter
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitBracketedParameterList(node);
         }
@@ -311,7 +311,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //
             // TypeParameterConstraintClause only when TypeParameterList 
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -325,7 +325,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // ClassConstraint or StructConstraint
             // Leaf
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitClassOrStructConstraint(node);
         }
@@ -334,7 +334,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // CollectionExpression:
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitCollectionExpression(node);
         }
@@ -346,7 +346,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //
             // CompilationUnit: UsingDirective* AttributeList* NamespaceDeclaration*
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitCompilationUnit(node);
         }
@@ -376,7 +376,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // ConstructorDeclaration
             // : ParameterList (BaseConstructorInitializer | ThisConstructorInitializer)? Block
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitConstructorDeclaration(node);
         }
@@ -399,7 +399,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // 
             // may have Block?
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -468,7 +468,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // DestructorDeclaration: ParameterList Block
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -551,7 +551,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // EnumDeclaration
             // : EnumMemberDeclaration*
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -565,7 +565,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // Leaf
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -583,7 +583,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | DefaultLiteralExpression
             // | CollectionExpression
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitEqualsValueClause(node);
         }
@@ -603,7 +603,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // EventFieldDeclaration: VariableDeclaration
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -618,7 +618,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // : IdentifierName
             // | GenericName
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitExplicitInterfaceSpecifier(node);
         }
@@ -648,7 +648,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // FieldDeclaration: VariableDeclaration
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -732,7 +732,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // GenericName
             // : TypeArgumentList
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitGenericName(node);
         }
@@ -783,7 +783,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // ImplicitObjectCreationExpression: ArgumentList
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitImplicitObjectCreationExpression(node);
         }
@@ -804,7 +804,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // IndexerDeclaration
             // : PredefinedType BracketedParameterList ArrowExpressionClause
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -829,7 +829,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // InterfaceDeclaration
             // : TypeParameterList? BaseList? TypeParameterConstraintClause? MethodDeclaration*
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -867,7 +867,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // InvocationExpression: SimpleMemberAccessExpression ArgumentList
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitInvocationExpression(node);
         }
@@ -931,7 +931,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // FalseLiteralExpression:
             // NullLiteralExpression:
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitLiteralExpression(node);
         }
@@ -966,7 +966,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // covers SimpleMemberAccessExpression and PointerMemberAccessExpression
             // SimpleMemberAccessExpression: (IdentifierName | GenericName) IdentifierName
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitMemberAccessExpression(node);
         }
@@ -989,7 +989,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | ArrayType
             // | NullableType
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -1019,7 +1019,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // NamespaceDeclaration
             // : QualifiedName ClassDeclaration* InterfaceDeclaration* EnumDeclaration*
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -1040,7 +1040,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | GenericName
             // | PredefinedType
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitNullableType(node);
         }
@@ -1049,7 +1049,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // ObjectCreationExpression: GenericName ArgumentList
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitObjectCreationExpression(node);
         }
@@ -1074,7 +1074,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // OperatorDeclaration
             // : AttributeList IdentifierName ParameterList ArrowExpressionClause
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -1108,7 +1108,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | PointerType
             // | NullableType EqualsValueClause?
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitParameter(node);
         }
@@ -1117,7 +1117,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // ParameterList: Parameter*
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitParameterList(node);
         }
@@ -1171,7 +1171,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // Leaf
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitPredefinedType(node);
         }
@@ -1195,7 +1195,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // <return-type>
             // : AttributeList? (IdentifierName | GenericName | PredefinedType | NullableType) 
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             compiler.PushComment();
 
@@ -1221,7 +1221,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | QualifiedName IdentifierName
             // | AliasQualifiedName IdentifierName
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitQualifiedName(node);
         }
@@ -1322,7 +1322,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // : IdentifierName
             // | GenericName
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitSimpleBaseType(node);
         }
@@ -1449,14 +1449,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | GenericName
             // | NullableType
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitTypeArgumentList(node);
         }
 
         public override void VisitTypeConstraint(TypeConstraintSyntax node)
         {
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitTypeConstraint(node);
         }
@@ -1482,7 +1482,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // : IdentifierName ClassConstraint
             // | IdentifierName TypeConstraint+
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitTypeParameterConstraintClause(node);
         }
@@ -1491,7 +1491,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // TypeParameterList: TypeParameter+
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitTypeParameterList(node);
         }
@@ -1522,7 +1522,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // : IdentifierName
             // | QualifiedName
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitUsingDirective(node);
         }
@@ -1537,7 +1537,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // VariableDeclaration
             // : (IdentifierName | GenericName | PredefinedType | ArrayType | NullableType) VariableDeclarator
 
-            logger?.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitVariableDeclaration(node);
         }

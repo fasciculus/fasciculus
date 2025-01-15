@@ -75,7 +75,7 @@ namespace Fasciculus.CodeAnalysis.Support
         }
     }
 
-    public class Productions : INodeLogger
+    public class Productions : INodeDebugger
     {
         public static readonly Productions Instance = new();
 

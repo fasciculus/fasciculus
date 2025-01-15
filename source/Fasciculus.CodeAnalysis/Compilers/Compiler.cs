@@ -7,20 +7,20 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public partial class Compiler : ICompiler
     {
-        private readonly INodeLogger? nodeLogger;
+        private readonly INodeDebugger nodeDebugger;
 
         private readonly Stack<CommentBuilder> commentBuilders = [];
 
         public CommentBuilder CommentBuilder => commentBuilders.Peek();
 
-        public Compiler(INodeLogger? nodeLogger)
+        public Compiler(INodeDebugger nodeDebugger)
         {
-            this.nodeLogger = nodeLogger;
+            this.nodeDebugger = nodeDebugger;
         }
 
         public virtual void Compile(CompilationUnitSyntax compilationUnit)
         {
-            Walker walker = new(this, nodeLogger);
+            Walker walker = new(this, nodeDebugger);
 
             compilationUnit.Accept(walker);
         }

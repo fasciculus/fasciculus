@@ -33,7 +33,7 @@ namespace Fasciculus.CodeAnalysis.Support
         }
     }
 
-    public class Syntax : INodeLogger
+    public class Syntax : INodeDebugger
     {
         public static readonly Syntax Instance = new();
 

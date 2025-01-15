@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Fasciculus.CodeAnalysis.Debugging
 {
-    public interface INodeLogger
+    public interface INodeDebugger
     {
         public void Add(SyntaxNode node);
     }
