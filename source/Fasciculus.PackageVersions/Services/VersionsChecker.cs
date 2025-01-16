@@ -1,8 +1,6 @@
 using Fasciculus.PackageVersions.Models;
 using NuGet.Versioning;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Fasciculus.PackageVersions.Services
@@ -20,7 +18,7 @@ namespace Fasciculus.PackageVersions.Services
         {
             int updateable = packages.Select(Check).Sum();
 
-            Log($"{updateable} package(s) to update.");
+            Logging.Log($"{updateable} package(s) to update.");
         }
 
         private int Check(PackageInfo package)
@@ -29,19 +27,13 @@ namespace Fasciculus.PackageVersions.Services
 
             if (versions.Any(v => v > package.Version))
             {
-                Log($"{package.Name}: {package.Version} -> {versions.Last()}");
+                Logging.Log($"{package.Name}: {package.Version} -> {versions.Last()}");
                 return 1;
             }
             else
             {
                 return 0;
             }
-        }
-
-        private static void Log(string message)
-        {
-            Console.WriteLine(message);
-            Debug.WriteLine(message);
         }
     }
 }
