@@ -1,4 +1,3 @@
-using Fasciculus.Collections;
 using Fasciculus.PackageVersions.Models;
 using NuGet.Versioning;
 using System;
@@ -19,20 +18,23 @@ namespace Fasciculus.PackageVersions.Services
 
         public void Check(IEnumerable<PackageInfo> packages)
         {
-            packages.Apply(Check);
+            int updateable = packages.Select(Check).Sum();
+
+            Log($"{updateable} package(s) to update.");
         }
 
-        private void Check(PackageInfo package)
+        private int Check(PackageInfo package)
         {
             SortedSet<NuGetVersion> versions = versionsProvider.GetVersions(package.Name, package.Version.IsPrerelease);
 
             if (versions.Any(v => v > package.Version))
             {
                 Log($"{package.Name}: {package.Version} -> {versions.Last()}");
+                return 1;
             }
             else
             {
-                Log($"{package.Name}: up-to-date");
+                return 0;
             }
         }
 
