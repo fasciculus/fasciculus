@@ -1,8 +1,9 @@
-﻿using Fasciculus.IO.Compressing;
+using Fasciculus.IO.Compressing;
 using Fasciculus.Support;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace Fasciculus.IO.Resources
 {
@@ -38,7 +39,6 @@ namespace Fasciculus.IO.Resources
         /// If <paramref name="compressed"/> is <c>true</c> the resource is expected to be GZip compressed.
         /// </para>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <returns>The return value of <paramref name="read"/></returns>
         public T Read<T>(Func<Stream, T> read, bool compressed)
         {
@@ -56,6 +56,17 @@ namespace Fasciculus.IO.Resources
             {
                 return read(stream);
             }
+        }
+
+        /// <summary>
+        /// Reads the resource into a string.
+        /// <para>
+        /// If <paramref name="compressed"/> is <c>true</c> the resource is expected to be GZip compressed.
+        /// </para>
+        /// </summary>
+        public string ReadString(bool compressed, Encoding encoding)
+        {
+            return Read(s => s.ReadAllText(encoding), compressed);
         }
     }
 }
