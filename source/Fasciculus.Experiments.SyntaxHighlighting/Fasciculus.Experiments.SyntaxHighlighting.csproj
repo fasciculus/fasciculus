@@ -6,8 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ColorCode.Core" />
+    <PackageReference Include="ColorCode.HTML" />
     <PackageReference Include="Markdig" />
-    <PackageReference Include="Microsoft.ClearScript.Complete" />
   </ItemGroup>
 
   <ItemGroup>
