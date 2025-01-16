@@ -1,37 +1,69 @@
-using Fasciculus.CodeAnalysis.Compilers.Builders;
+using Fasciculus.CodeAnalysis.Debugging;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class Compiler : ICompiler
+    public partial class Compiler : CSharpSyntaxWalker, ICompiler
     {
         private readonly CompilerContext context;
 
-        private readonly Stack<CommentBuilder> commentBuilders = [];
+        protected readonly ModifierCompiler modifierCompiler;
 
-        public CommentBuilder CommentBuilder => commentBuilders.Peek();
+        protected readonly INodeDebugger nodeDebugger;
 
         public Compiler(CompilerContext context)
         {
             this.context = context;
+
+            modifierCompiler = new(context);
+
+            nodeDebugger = context.Debuggers.NodeDebugger;
         }
 
         public virtual void Compile(CompilationUnitSyntax compilationUnit)
         {
-            Walker walker = new(this, context);
-
-            compilationUnit.Accept(walker);
+            compilationUnit.Accept(this);
         }
 
-        public void PushComment()
+        protected virtual string GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
         {
-            commentBuilders.Push(CommentBuilder.Create());
+            string name = identifier.Text;
+
+            if (typeParameters is null || typeParameters.Parameters.Count == 0)
+            {
+                return name;
+            }
+
+            string parameters = string.Join(",", typeParameters.Parameters.Select(p => p.Identifier.Text));
+
+            return $"{name}<{parameters}>";
         }
 
-        public void PopComment()
+        public override void VisitCompilationUnit(CompilationUnitSyntax node)
         {
-            commentBuilders.Pop();
+            // compilation_unit
+            //   : extern_alias_directive* using_directive* global_attributes? namespace_member_declaration*
+            //
+            // CompilationUnit: UsingDirective* AttributeList* NamespaceDeclaration*
+
+            nodeDebugger.Add(node);
+
+            base.VisitCompilationUnit(node);
         }
+
+        public override void VisitUsingDirective(UsingDirectiveSyntax node)
+        {
+            // UsingDirective
+            // : IdentifierName
+            // | QualifiedName
+
+            nodeDebugger.Add(node);
+
+            base.VisitUsingDirective(node);
+        }
+
     }
 }

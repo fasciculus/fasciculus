@@ -55,6 +55,13 @@ namespace Fasciculus.CodeAnalysis
             return this;
         }
 
+        public CodeAnalyzerBuilder WithModifierDebugger(IModifierDebugger modifierDebugger)
+        {
+            options.Debuggers.ModifierDebugger = modifierDebugger;
+
+            return this;
+        }
+
         public CodeAnalyzer Build()
             => new(options);
     }

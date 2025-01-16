@@ -1,26 +1,7 @@
-using Fasciculus.CodeAnalysis.Compilers.Builders;
-using Fasciculus.CodeAnalysis.Debugging;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Linq;
-using System.Xml.Linq;
-
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class Walker : CSharpSyntaxWalker
+    public partial class Compiler
     {
-        protected readonly ICompiler compiler;
-        protected readonly INodeDebugger nodeDebugger;
-
-        public Walker(ICompiler compiler, CompilerContext context)
-            : base(SyntaxWalkerDepth.StructuredTrivia)
-        {
-            this.compiler = compiler;
-
-            nodeDebugger = context.Debuggers.NodeDebugger;
-        }
-
         //public override void DefaultVisit(SyntaxNode node)
         //{
         //    base.DefaultVisit(node);
@@ -30,38 +11,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.Visit(node);
         //}
-
-        public override void VisitAccessorDeclaration(AccessorDeclarationSyntax node)
-        {
-            // covers GetAccessorDeclaration, SetAccessorDeclaration, InitAccessorDeclaration, AddAccessorDeclaration,
-            //  RemoveAccessorDeclaration, UnknownAccessorDeclaration
-            //
-            // GetAccessorDeclaration: ArrowExpressionClause?
-            // SetAccessorDeclaration:
-
-            nodeDebugger.Add(node);
-
-            base.VisitAccessorDeclaration(node);
-        }
-
-        public override void VisitAccessorList(AccessorListSyntax node)
-        {
-            // AccessorList: GetAccessorDeclaration? SetAccessorDeclaration?
-
-            nodeDebugger.Add(node);
-
-            base.VisitAccessorList(node);
-        }
-
-        public override void VisitAliasQualifiedName(AliasQualifiedNameSyntax node)
-        {
-            // AliasQualifiedName
-            // : IdentifierName IdentifierName
-
-            nodeDebugger.Add(node);
-
-            base.VisitAliasQualifiedName(node);
-        }
 
         //public override void VisitAllowsConstraintClause(AllowsConstraintClauseSyntax node)
         //{
@@ -83,84 +32,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitAnonymousObjectMemberDeclarator(node);
         //}
 
-        public override void VisitArgument(ArgumentSyntax node)
-        {
-            // Argument
-            // : IdentifierName
-            // | SimpleMemberAccessExpression
-            // | NumericLiteralExpression
-            // | NullLiteralExpression
-            // | CollectionExpression
-            // | InvocationExpression
-            // | ObjectCreationExpression
-            // plus maybe more
-
-            nodeDebugger.Add(node);
-
-            base.VisitArgument(node);
-        }
-
-        public override void VisitArgumentList(ArgumentListSyntax node)
-        {
-            // ArgumentList: Argument*
-
-            nodeDebugger.Add(node);
-
-            base.VisitArgumentList(node);
-        }
-
         //public override void VisitArrayCreationExpression(ArrayCreationExpressionSyntax node)
         //{
         //    base.VisitArrayCreationExpression(node);
         //}
-
-        public override void VisitArrayRankSpecifier(ArrayRankSpecifierSyntax node)
-        {
-            // ArrayRankSpecifier
-            // : IdentifierName
-            // | InvocationExpression
-            // | OmittedArraySizeExpression
-            // | AddExpression
-            // | NumericLiteralExpression
-            //
-            // only OmittedArraySizeExpression occurs on fields.
-
-            nodeDebugger.Add(node);
-
-            base.VisitArrayRankSpecifier(node);
-        }
-
-        public override void VisitArrayType(ArrayTypeSyntax node)
-        {
-            // ArrayType
-            // : (IdentifierName | GenericName | PredefinedType) ArrayRankSpecifier
-
-            nodeDebugger.Add(node);
-
-            base.VisitArrayType(node);
-        }
-
-        public override void VisitArrowExpressionClause(ArrowExpressionClauseSyntax node)
-        {
-            //base.VisitArrowExpressionClause(node);
-        }
-
-        public override void VisitAssignmentExpression(AssignmentExpressionSyntax node)
-        {
-            nodeDebugger.Add(node);
-
-            base.VisitAssignmentExpression(node);
-        }
-
-        public override void VisitAttribute(AttributeSyntax node)
-        {
-            // Attribute
-            // : IdentifierName
-            // | IdentifierName AttributeArgumentList
-            // | QualifiedName AttributeArgumentList
-
-            //base.VisitAttribute(node);
-        }
 
         //public override void VisitAttributeArgument(AttributeArgumentSyntax node)
         //{
@@ -171,27 +46,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitAttributeArgumentList(node);
         //}
-
-        public override void VisitAttributeList(AttributeListSyntax node)
-        {
-            // HasTrivia
-            // AttributeList
-            // : AttributeTargetSpecifier Attribute
-            // | Attribute
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitAttributeList(node);
-
-            compiler.PopComment();
-        }
-
-        public override void VisitAttributeTargetSpecifier(AttributeTargetSpecifierSyntax node)
-        {
-            // Leaf
-        }
 
         //public override void VisitAwaitExpression(AwaitExpressionSyntax node)
         //{
@@ -208,16 +62,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitBaseExpression(node);
         //}
 
-        public override void VisitBaseList(BaseListSyntax node)
-        {
-            // BaseList
-            // : SimpleBaseType+
-
-            nodeDebugger.Add(node);
-
-            base.VisitBaseList(node);
-        }
-
         //public override void VisitBinaryExpression(BinaryExpressionSyntax node)
         //{
         //    base.VisitBinaryExpression(node);
@@ -228,24 +72,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitBinaryPattern(node);
         //}
 
-        public override void VisitBlock(BlockSyntax node)
-        {
-            // base.VisitBlock(node);
-        }
-
         //public override void VisitBracketedArgumentList(BracketedArgumentListSyntax node)
         //{
         //    base.VisitBracketedArgumentList(node);
         //}
-
-        public override void VisitBracketedParameterList(BracketedParameterListSyntax node)
-        {
-            // BracketedParameterList: Parameter
-
-            nodeDebugger.Add(node);
-
-            base.VisitBracketedParameterList(node);
-        }
 
         //public override void VisitBreakStatement(BreakStatementSyntax node)
         //{
@@ -292,66 +122,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitCheckedStatement(node);
         //}
 
-        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // ClassDeclaration
-            // : AttributeList? TypeParameterList? BaseList? TypeParameterConstraintClause?
-            //   (
-            //       FieldDeclaration
-            //     | PropertyDeclaration
-            //     | IndexerDeclaration
-            //     | EventFieldDeclaration
-            //     | ConstructorDeclaration
-            //     | DestructorDeclaration
-            //     | MethodDeclaration
-            //     | OperatorDeclaration
-            //     | ConversionOperatorDeclaration
-            //     | ClassDeclaration
-            //   )*
-            //
-            // TypeParameterConstraintClause only when TypeParameterList 
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitClassDeclaration(node);
-
-            compiler.PopComment();
-        }
-
-        public override void VisitClassOrStructConstraint(ClassOrStructConstraintSyntax node)
-        {
-            // ClassConstraint or StructConstraint
-            // Leaf
-
-            nodeDebugger.Add(node);
-
-            base.VisitClassOrStructConstraint(node);
-        }
-
-        public override void VisitCollectionExpression(CollectionExpressionSyntax node)
-        {
-            // CollectionExpression:
-
-            nodeDebugger.Add(node);
-
-            base.VisitCollectionExpression(node);
-        }
-
-        public override void VisitCompilationUnit(CompilationUnitSyntax node)
-        {
-            // compilation_unit
-            //   : extern_alias_directive* using_directive* global_attributes? namespace_member_declaration*
-            //
-            // CompilationUnit: UsingDirective* AttributeList* NamespaceDeclaration*
-
-            nodeDebugger.Add(node);
-
-            base.VisitCompilationUnit(node);
-        }
-
         //public override void VisitConditionalAccessExpression(ConditionalAccessExpressionSyntax node)
         //{
         //    base.VisitConditionalAccessExpression(node);
@@ -372,16 +142,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitConstructorConstraint(node);
         //}
 
-        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
-        {
-            // ConstructorDeclaration
-            // : ParameterList (BaseConstructorInitializer | ThisConstructorInitializer)? Block
-
-            nodeDebugger.Add(node);
-
-            base.VisitConstructorDeclaration(node);
-        }
-
         //public override void VisitConstructorInitializer(ConstructorInitializerSyntax node)
         //{
         //    base.VisitConstructorInitializer(node);
@@ -391,23 +151,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitContinueStatement(node);
         //}
-
-        public override void VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // ConversionOperatorDeclaration
-            // : IdentifierName ParameterList ArrowExpressionClause
-            // 
-            // may have Block?
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitConversionOperatorDeclaration(node);
-
-            compiler.PopComment();
-        }
 
         //public override void VisitConversionOperatorMemberCref(ConversionOperatorMemberCrefSyntax node)
         //{
@@ -464,20 +207,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitDelegateDeclaration(node);
         //}
 
-        public override void VisitDestructorDeclaration(DestructorDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // DestructorDeclaration: ParameterList Block
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitDestructorDeclaration(node);
-
-            compiler.PopComment();
-        }
-
         //public override void VisitDiscardDesignation(DiscardDesignationSyntax node)
         //{
         //    base.VisitDiscardDesignation(node);
@@ -487,19 +216,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitDiscardPattern(node);
         //}
-
-        public override void VisitDocumentationCommentTrivia(DocumentationCommentTriviaSyntax node)
-        {
-            //if (commentInfos.Count == 0)
-            //{
-            //    SyntaxNode? failingNode = ancestors.FirstOrDefault(n => n.HasStructuredTrivia);
-            //    SyntaxKind? failingKind = failingNode?.Kind();
-
-            //    throw Ex.InvalidOperation($"missing push in '{failingKind}'");
-            //}
-
-            base.VisitDocumentationCommentTrivia(node);
-        }
 
         //public override void VisitDoStatement(DoStatementSyntax node)
         //{
@@ -546,49 +262,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitEndRegionDirectiveTrivia(node);
         //}
 
-        public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // EnumDeclaration
-            // : EnumMemberDeclaration*
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitEnumDeclaration(node);
-
-            compiler.PopComment();
-        }
-
-        public override void VisitEnumMemberDeclaration(EnumMemberDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // Leaf
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitEnumMemberDeclaration(node);
-
-            compiler.PopComment();
-        }
-
-        public override void VisitEqualsValueClause(EqualsValueClauseSyntax node)
-        {
-            // EqualsValueClause
-            // : ImplicitObjectCreationExpression
-            // | FalseLiteralExpression
-            // | NullLiteralExpression
-            // | DefaultLiteralExpression
-            // | CollectionExpression
-
-            nodeDebugger.Add(node);
-
-            base.VisitEqualsValueClause(node);
-        }
-
         //public override void VisitErrorDirectiveTrivia(ErrorDirectiveTriviaSyntax node)
         //{
         //    base.VisitErrorDirectiveTrivia(node);
@@ -598,31 +271,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitEventDeclaration(node);
         //}
-
-        public override void VisitEventFieldDeclaration(EventFieldDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // EventFieldDeclaration: VariableDeclaration
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitEventFieldDeclaration(node);
-
-            compiler.PopComment();
-        }
-
-        public override void VisitExplicitInterfaceSpecifier(ExplicitInterfaceSpecifierSyntax node)
-        {
-            // ExplicitInterfaceSpecifier
-            // : IdentifierName
-            // | GenericName
-
-            nodeDebugger.Add(node);
-
-            base.VisitExplicitInterfaceSpecifier(node);
-        }
 
         //public override void VisitExpressionColon(ExpressionColonSyntax node)
         //{
@@ -643,20 +291,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitExternAliasDirective(node);
         //}
-
-        public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // FieldDeclaration: VariableDeclaration
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitFieldDeclaration(node);
-
-            compiler.PopComment();
-        }
 
         //public override void VisitFieldExpression(FieldExpressionSyntax node)
         //{
@@ -728,16 +362,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitFunctionPointerUnmanagedCallingConventionList(node);
         //}
 
-        public override void VisitGenericName(GenericNameSyntax node)
-        {
-            // GenericName
-            // : TypeArgumentList
-
-            nodeDebugger.Add(node);
-
-            base.VisitGenericName(node);
-        }
-
         //public override void VisitGlobalStatement(GlobalStatementSyntax node)
         //{
         //    base.VisitGlobalStatement(node);
@@ -752,13 +376,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitGroupClause(node);
         //}
-
-        public override void VisitIdentifierName(IdentifierNameSyntax node)
-        {
-            //Productions.Instance.Add(node);
-
-            //base.VisitIdentifierName(node);
-        }
 
         //public override void VisitIfDirectiveTrivia(IfDirectiveTriviaSyntax node)
         //{
@@ -780,15 +397,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitImplicitElementAccess(node);
         //}
 
-        public override void VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
-        {
-            // ImplicitObjectCreationExpression: ArgumentList
-
-            nodeDebugger.Add(node);
-
-            base.VisitImplicitObjectCreationExpression(node);
-        }
-
         //public override void VisitImplicitStackAllocArrayCreationExpression(ImplicitStackAllocArrayCreationExpressionSyntax node)
         //{
         //    base.VisitImplicitStackAllocArrayCreationExpression(node);
@@ -799,21 +407,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitIncompleteMember(node);
         //}
 
-        public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // IndexerDeclaration
-            // : PredefinedType BracketedParameterList ArrowExpressionClause
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitIndexerDeclaration(node);
-
-            compiler.PopComment();
-        }
-
         //public override void VisitIndexerMemberCref(IndexerMemberCrefSyntax node)
         //{
         //    base.VisitIndexerMemberCref(node);
@@ -823,21 +416,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitInitializerExpression(node);
         //}
-
-        public override void VisitInterfaceDeclaration(InterfaceDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // InterfaceDeclaration
-            // : TypeParameterList? BaseList? TypeParameterConstraintClause? MethodDeclaration*
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitInterfaceDeclaration(node);
-
-            compiler.PopComment();
-        }
 
         //public override void VisitInterpolatedStringExpression(InterpolatedStringExpressionSyntax node)
         //{
@@ -863,15 +441,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitInterpolationFormatClause(node);
         //}
-
-        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
-        {
-            // InvocationExpression: SimpleMemberAccessExpression ArgumentList
-
-            nodeDebugger.Add(node);
-
-            base.VisitInvocationExpression(node);
-        }
 
         //public override void VisitIsPatternExpression(IsPatternExpressionSyntax node)
         //{
@@ -923,20 +492,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitListPattern(node);
         //}
 
-        public override void VisitLiteralExpression(LiteralExpressionSyntax node)
-        {
-            // covers ArgListExpression, NumericLiteralExpression, StringLiteralExpression, Utf8StringLiteralExpression
-            //  CharacterLiteralExpression, TrueLiteralExpression, FalseLiteralExpression, NullLiteralExpression, DefaultLiteralExpression
-            //
-            // DefaultLiteralExpression:
-            // FalseLiteralExpression:
-            // NullLiteralExpression:
-
-            nodeDebugger.Add(node);
-
-            base.VisitLiteralExpression(node);
-        }
-
         //public override void VisitLoadDirectiveTrivia(LoadDirectiveTriviaSyntax node)
         //{
         //    base.VisitLoadDirectiveTrivia(node);
@@ -962,42 +517,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitMakeRefExpression(node);
         //}
 
-        public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
-        {
-            // covers SimpleMemberAccessExpression and PointerMemberAccessExpression
-            // SimpleMemberAccessExpression: (IdentifierName | GenericName) IdentifierName
-
-            nodeDebugger.Add(node);
-
-            base.VisitMemberAccessExpression(node);
-        }
-
         //public override void VisitMemberBindingExpression(MemberBindingExpressionSyntax node)
         //{
         //    base.VisitMemberBindingExpression(node);
         //}
-
-        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // MethodDeclaration
-            // : AttributeList? <return-type> ExplicitInterfaceSpecifier? ParameterList TypeParameterConstraintClause? (ArrowExpressionClause | Block)
-            //
-            // return-type
-            // : IdentifierName TypeParameterList?
-            // | GenericName TypeParameterList?
-            // | PredefinedType TypeParameterList?
-            // | ArrayType
-            // | NullableType
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitMethodDeclaration(node);
-
-            compiler.PopComment();
-        }
 
         //public override void VisitNameColon(NameColonSyntax node)
         //{
@@ -1014,75 +537,15 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitNameMemberCref(node);
         //}
 
-        public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // NamespaceDeclaration
-            // : QualifiedName ClassDeclaration* InterfaceDeclaration* EnumDeclaration*
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitNamespaceDeclaration(node);
-
-            compiler.PopComment();
-        }
-
         //public override void VisitNullableDirectiveTrivia(NullableDirectiveTriviaSyntax node)
         //{
         //    base.VisitNullableDirectiveTrivia(node);
         //}
 
-        public override void VisitNullableType(NullableTypeSyntax node)
-        {
-            // NullableType
-            // : IdentifierName
-            // | GenericName
-            // | PredefinedType
-
-            nodeDebugger.Add(node);
-
-            base.VisitNullableType(node);
-        }
-
-        public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
-        {
-            // ObjectCreationExpression: GenericName ArgumentList
-
-            nodeDebugger.Add(node);
-
-            base.VisitObjectCreationExpression(node);
-        }
-
-        public override void VisitOmittedArraySizeExpression(OmittedArraySizeExpressionSyntax node)
-        {
-            // Leaf
-
-            //Productions.Instance.Add(node);
-
-            //base.VisitOmittedArraySizeExpression(node);
-        }
-
         //public override void VisitOmittedTypeArgument(OmittedTypeArgumentSyntax node)
         //{
         //    base.VisitOmittedTypeArgument(node);
         //}
-
-        public override void VisitOperatorDeclaration(OperatorDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // OperatorDeclaration
-            // : AttributeList IdentifierName ParameterList ArrowExpressionClause
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitOperatorDeclaration(node);
-
-            compiler.PopComment();
-        }
 
         //public override void VisitOperatorMemberCref(OperatorMemberCrefSyntax node)
         //{
@@ -1098,30 +561,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitOrdering(node);
         //}
-
-        public override void VisitParameter(ParameterSyntax node)
-        {
-            // Parameter
-            // : IdentifierName EqualsValueClause?
-            // | GenericName
-            // | PredefinedType EqualsValueClause?
-            // | ArrayType
-            // | PointerType
-            // | NullableType EqualsValueClause?
-
-            nodeDebugger.Add(node);
-
-            base.VisitParameter(node);
-        }
-
-        public override void VisitParameterList(ParameterListSyntax node)
-        {
-            // ParameterList: Parameter*
-
-            nodeDebugger.Add(node);
-
-            base.VisitParameterList(node);
-        }
 
         //public override void VisitParenthesizedExpression(ParenthesizedExpressionSyntax node)
         //{
@@ -1168,15 +607,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitPragmaWarningDirectiveTrivia(node);
         //}
 
-        public override void VisitPredefinedType(PredefinedTypeSyntax node)
-        {
-            // Leaf
-
-            nodeDebugger.Add(node);
-
-            base.VisitPredefinedType(node);
-        }
-
         //public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
         //{
         //    base.VisitPrefixUnaryExpression(node);
@@ -1187,24 +617,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitPrimaryConstructorBaseType(node);
         //}
 
-        public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // PropertyDeclaration
-            // : <return-type> ExplicitInterfaceSpecifier? ((AccessorList EqualsValueClause?) | ArrowExpressionClause)
-            //
-            // <return-type>
-            // : AttributeList? (IdentifierName | GenericName | PredefinedType | NullableType) 
-
-            nodeDebugger.Add(node);
-
-            compiler.PushComment();
-
-            base.VisitPropertyDeclaration(node);
-
-            compiler.PopComment();
-        }
-
         //public override void VisitPropertyPatternClause(PropertyPatternClauseSyntax node)
         //{
         //    base.VisitPropertyPatternClause(node);
@@ -1214,18 +626,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitQualifiedCref(node);
         //}
-
-        public override void VisitQualifiedName(QualifiedNameSyntax node)
-        {
-            // QualifiedName
-            // : IdentifierName IdentifierName
-            // | QualifiedName IdentifierName
-            // | AliasQualifiedName IdentifierName
-
-            nodeDebugger.Add(node);
-
-            base.VisitQualifiedName(node);
-        }
 
         //public override void VisitQueryBody(QueryBodySyntax node)
         //{
@@ -1316,17 +716,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitShebangDirectiveTrivia(node);
         //}
-
-        public override void VisitSimpleBaseType(SimpleBaseTypeSyntax node)
-        {
-            // SimpleBaseType
-            // : IdentifierName
-            // | GenericName
-
-            nodeDebugger.Add(node);
-
-            base.VisitSimpleBaseType(node);
-        }
 
         //public override void VisitSimpleLambdaExpression(SimpleLambdaExpressionSyntax node)
         //{
@@ -1443,25 +832,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitTupleType(node);
         //}
 
-        public override void VisitTypeArgumentList(TypeArgumentListSyntax node)
-        {
-            // TypeArgumentList
-            // : (IdentifierName | PredefinedType)+
-            // | GenericName
-            // | NullableType
-
-            nodeDebugger.Add(node);
-
-            base.VisitTypeArgumentList(node);
-        }
-
-        public override void VisitTypeConstraint(TypeConstraintSyntax node)
-        {
-            nodeDebugger.Add(node);
-
-            base.VisitTypeConstraint(node);
-        }
-
         //public override void VisitTypeCref(TypeCrefSyntax node)
         //{
         //    base.VisitTypeCref(node);
@@ -1476,26 +846,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitTypeParameter(node);
         //}
-
-        public override void VisitTypeParameterConstraintClause(TypeParameterConstraintClauseSyntax node)
-        {
-            // TypeParameterConstraintClause
-            // : IdentifierName ClassConstraint
-            // | IdentifierName TypeConstraint+
-
-            nodeDebugger.Add(node);
-
-            base.VisitTypeParameterConstraintClause(node);
-        }
-
-        public override void VisitTypeParameterList(TypeParameterListSyntax node)
-        {
-            // TypeParameterList: TypeParameter+
-
-            nodeDebugger.Add(node);
-
-            base.VisitTypeParameterList(node);
-        }
 
         //public override void VisitTypePattern(TypePatternSyntax node)
         //{
@@ -1517,40 +867,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitUnsafeStatement(node);
         //}
 
-        public override void VisitUsingDirective(UsingDirectiveSyntax node)
-        {
-            // UsingDirective
-            // : IdentifierName
-            // | QualifiedName
-
-            nodeDebugger.Add(node);
-
-            base.VisitUsingDirective(node);
-        }
-
         //public override void VisitUsingStatement(UsingStatementSyntax node)
         //{
         //    base.VisitUsingStatement(node);
         //}
-
-        public override void VisitVariableDeclaration(VariableDeclarationSyntax node)
-        {
-            // VariableDeclaration
-            // : (IdentifierName | GenericName | PredefinedType | ArrayType | NullableType) VariableDeclarator
-
-            nodeDebugger.Add(node);
-
-            base.VisitVariableDeclaration(node);
-        }
-
-        public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
-        {
-            // VariableDeclarator: EqualsValueClause?
-
-            //Productions.Instance.Add(node);
-
-            //base.VisitVariableDeclarator(node);
-        }
 
         //public override void VisitVarPattern(VarPatternSyntax node)
         //{
@@ -1582,45 +902,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitWithExpression(node);
         //}
 
-        public override void VisitXmlCDataSection(XmlCDataSectionSyntax node)
-        {
-            base.VisitXmlCDataSection(node);
-
-            string text = string.Join("", node.TextTokens.Select(x => x.Text));
-
-            compiler.CommentBuilder.Add(new XCData(text));
-        }
-
-        public override void VisitXmlComment(XmlCommentSyntax node)
-        {
-            base.VisitXmlComment(node);
-
-            string text = string.Join("", node.TextTokens.Select(x => x.Text));
-
-            compiler.CommentBuilder.Add(new XComment(text));
-        }
-
-        public override void VisitXmlCrefAttribute(XmlCrefAttributeSyntax node)
-        {
-            base.VisitXmlCrefAttribute(node);
-
-            string cref = node.Cref.GetText().ToString();
-
-            compiler.CommentBuilder.Add(new XAttribute("cref", cref));
-        }
-
-        public override void VisitXmlElement(XmlElementSyntax node)
-        {
-            CommentBuilder builder = compiler.CommentBuilder;
-            string name = node.StartTag.Name.LocalName.ValueText;
-
-            builder.Push(name);
-
-            base.VisitXmlElement(node);
-
-            builder.Add(builder.Pop());
-        }
-
         //public override void VisitXmlElementEndTag(XmlElementEndTagSyntax node)
         //{
         //    base.VisitXmlElementEndTag(node);
@@ -1630,18 +911,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitXmlElementStartTag(node);
         //}
-
-        public override void VisitXmlEmptyElement(XmlEmptyElementSyntax node)
-        {
-            CommentBuilder builder = compiler.CommentBuilder;
-            string name = node.Name.LocalName.ValueText;
-
-            builder.Push(name);
-
-            base.VisitXmlEmptyElement(node);
-
-            builder.Add(builder.Pop());
-        }
 
         //public override void VisitXmlName(XmlNameSyntax node)
         //{
@@ -1662,25 +931,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //{
         //    base.VisitXmlProcessingInstruction(node);
         //}
-
-        public override void VisitXmlText(XmlTextSyntax node)
-        {
-            base.VisitXmlText(node);
-
-            string text = string.Join("", node.TextTokens.Select(x => x.Text));
-
-            compiler.CommentBuilder.Add(new XText(text));
-        }
-
-        public override void VisitXmlTextAttribute(XmlTextAttributeSyntax node)
-        {
-            base.VisitXmlTextAttribute(node);
-
-            string name = node.Name.LocalName.ValueText;
-            string value = string.Join("", node.TextTokens.Select(x => x.Text));
-
-            compiler.CommentBuilder.Add(new XAttribute(name, value));
-        }
 
         //public override void VisitYieldStatement(YieldStatementSyntax node)
         //{

@@ -23,11 +23,13 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         private readonly SyntaxDebugger syntaxDebugger;
         private readonly ProductionDebugger productionDebugger;
+        private readonly ModifierDebugger modifierDebugger;
 
         public CodeAnalyzerTests()
         {
             syntaxDebugger = new();
             productionDebugger = new(syntaxDebugger);
+            modifierDebugger = new();
         }
 
         [TestMethod]
@@ -36,12 +38,12 @@ namespace Fasciculus.CodeAnalysis.Tests
             CodeAnalyzerResult result = CodeAnalyzer.Create()
                 .WithProjectFiles(GetProjectFiles())
                 .WithNodeDebugger(productionDebugger)
+                .WithModifierDebugger(modifierDebugger)
                 .Build().Analyze();
 
             //LogProductions();
             LogUnhandledSyntax();
-            //LogUnhandledSymbols();
-            //LogUnhandledModifiers();
+            LogUnhandledModifiers();
             //LogUnhandledCommentElements();
             //LogComments(result.Indices);
         }
@@ -107,7 +109,7 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         public void LogUnhandledModifiers()
         {
-            SortedSet<string> unhandled = UnhandledModifiers.Instance.Unhandled();
+            SortedSet<string> unhandled = modifierDebugger.GetUnhandled();
 
             if (unhandled.Count > 0)
             {

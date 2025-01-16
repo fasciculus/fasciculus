@@ -1,28 +1,27 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Debugging;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class ModifiersFactory
+    public class ModifierCompiler
     {
-        private static readonly string[] HandledModifiers
-            = ["public", "abstract", "static", "partial"];
+        private readonly IModifierDebugger debugger;
 
         private readonly TaskSafeMutex mutex = new();
 
-        SymbolModifiers modifiers = new();
+        private SymbolModifiers modifiers = new();
 
-        public ModifiersFactory()
+        public ModifierCompiler(CompilerContext context)
         {
-            UnhandledModifiers.Instance.Handled(HandledModifiers);
+            debugger = context.Debuggers.ModifierDebugger;
         }
 
-        public SymbolModifiers Create(SyntaxTokenList tokens)
+        public SymbolModifiers Compile(SyntaxTokenList tokens)
         {
             using Locker locker = Locker.Lock(mutex);
-
             modifiers = new();
 
             tokens.Apply(VisitToken);
@@ -34,11 +33,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             string name = token.Text;
 
-            UnhandledModifiers.Instance.Used(name);
+            debugger.Add(name);
 
             switch (name)
             {
                 case "public": modifiers.IsPublic = true; break;
+                case "private": modifiers.IsPrivate = true; break;
+                case "protected": modifiers.IsProtected = true; break;
+                case "readonly": modifiers.IsReadonly = true; break;
                 case "abstract": modifiers.IsAbstract = true; break;
                 case "static": modifiers.IsStatic = true; break;
                 case "partial": modifiers.IsPartial = true; break;

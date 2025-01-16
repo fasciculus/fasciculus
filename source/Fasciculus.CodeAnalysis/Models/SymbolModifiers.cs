@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
@@ -6,7 +6,13 @@ namespace Fasciculus.CodeAnalysis.Models
     {
         public bool IsPublic { get; set; }
 
-        public bool IsAccessible => IsPublic;
+        public bool IsPrivate { get; set; }
+
+        public bool IsProtected { get; set; }
+
+        public bool IsAccessible => IsPublic || IsProtected;
+
+        public bool IsReadonly { get; set; }
 
         public bool IsAbstract { get; set; }
 
