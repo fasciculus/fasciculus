@@ -16,10 +16,13 @@
         <tbody>
             @foreach (var package in Model.Packages)
             {
-                <tr>
-                    <td><a href="~/api/@(package.Link)/">@package.Name</a></td>
-                    <td>@package.Comment.Summary</td>
-                </tr>
+                @if (!package.IsEmpty)
+                {
+                    <tr>
+                        <td><a href="~/api/@(package.Link)/">@package.Name</a></td>
+                        <td>@package.Comment.Summary</td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
