@@ -40,9 +40,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 case "public": modifiers.IsPublic = true; break;
                 case "private": modifiers.IsPrivate = true; break;
                 case "protected": modifiers.IsProtected = true; break;
-                case "readonly": modifiers.IsReadonly = true; break;
+                case "internal": modifiers.IsInternal = true; break;
                 case "abstract": modifiers.IsAbstract = true; break;
                 case "static": modifiers.IsStatic = true; break;
+                case "readonly": modifiers.IsReadonly = true; break;
+                case "virtual": modifiers.IsVirtual = true; break;
+                case "override": modifiers.IsOverride = true; break;
+                case "unsafe": modifiers.IsUnsafe = true; break;
+                case "async": modifiers.IsAsync = true; break;
                 case "partial": modifiers.IsPartial = true; break;
             }
         }

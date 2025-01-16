@@ -12,7 +12,11 @@ namespace Fasciculus.CodeAnalysis.Debugging
 
         public ModifierDebugger()
         {
-            handled = new(["public", "private", "protected", "readonly", "abstract", "static", "partial"]);
+            handled = new([
+                "public", "private", "protected", "internal",
+                "abstract", "static", "readonly",
+                "virtual", "override", "unsafe", "async",
+                "partial"]);
         }
 
         public void Add(string modifier)
