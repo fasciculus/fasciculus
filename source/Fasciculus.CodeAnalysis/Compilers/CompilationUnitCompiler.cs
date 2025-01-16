@@ -10,7 +10,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly CompilerContext context;
 
-        protected readonly ModifierCompiler modifierCompiler;
+        protected readonly ModifiersCompiler modifierCompiler;
 
         protected readonly INodeDebugger nodeDebugger;
 

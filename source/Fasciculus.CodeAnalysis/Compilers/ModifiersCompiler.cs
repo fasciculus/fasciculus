@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class ModifierCompiler
+    public class ModifiersCompiler
     {
         private readonly IModifierDebugger debugger;
 
@@ -14,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private SymbolModifiers modifiers = new();
 
-        public ModifierCompiler(CompilerContext context)
+        public ModifiersCompiler(CompilerContext context)
         {
             debugger = context.Debuggers.ModifierDebugger;
         }
