@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class Compiler
+    public partial class CompileUnitCompiler
     {
         public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
         {

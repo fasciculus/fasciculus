@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class Compiler
+    public partial class CompileUnitCompiler
     {
         private readonly Stack<CommentBuilder> commentBuilders = [];
 
