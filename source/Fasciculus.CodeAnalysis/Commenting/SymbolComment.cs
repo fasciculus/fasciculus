@@ -1,10 +1,11 @@
+using System.IO;
 using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Commenting
 {
     public class SymbolComment
     {
-        public static readonly SymbolComment Empty = new(XDocument.Parse("<comment />"));
+        public static SymbolComment Empty => new(XDocument.Parse("<comment />"));
 
         private static SymbolCommentConverter converter = new();
 
@@ -17,7 +18,23 @@ namespace Fasciculus.CodeAnalysis.Commenting
             Document = document;
         }
 
+        public static SymbolComment FromFile(FileInfo? file)
+        {
+            if (file is not null && file.Exists)
+            {
+                XDocument document = XDocument.Load(file.FullName);
+                XElement? root = document.Root;
+
+                if (root is not null && root.Name.LocalName == "comment")
+                {
+                    return new(document);
+                }
+            }
+
+            return Empty;
+        }
+
         private static string Convert(XElement? element)
-            => converter.Convert(element);
+            => SymbolCommentConverter.Convert(element);
     }
 }

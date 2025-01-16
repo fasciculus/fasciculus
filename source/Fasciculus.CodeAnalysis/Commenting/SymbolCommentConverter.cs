@@ -1,4 +1,4 @@
-﻿using Fasciculus.Xml;
+using Fasciculus.Xml;
 using System.Text;
 using System.Xml.Linq;
 
@@ -30,7 +30,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
             }
         }
 
-        public string Convert(XElement? element)
+        public static string Convert(XElement? element)
         {
             if (element is not null)
             {

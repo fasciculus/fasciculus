@@ -8,7 +8,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -29,37 +28,16 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolName name = new(project.AssemblyName);
             UriPath link = new(name);
-
-            CompilerContext context = this.context
-                .WithFramework(project.Framework)
-                .WithPackage(name);
-
             CompilationUnitCompiler compiler = new(context);
+            FileInfo? commentFile = context.CommentsDirectory?.File(context.Project.AssemblyName + ".xml");
+            SymbolComment comment = SymbolComment.FromFile(commentFile);
 
             roots.Apply(compiler.Compile);
 
             return new(name, link, context.Frameworks, [])
             {
-                Comment = CreateComment(project),
+                Comment = comment,
             };
-        }
-
-        private static SymbolComment CreateComment(ParsedProject project)
-        {
-            FileInfo? file = project.ProjectDirectory?
-                .Combine("Properties", "Comments")
-                .File(project.AssemblyName + ".xml");
-
-            if (file is not null && file.Exists)
-            {
-                try
-                {
-                    return new(XDocument.Load(file.FullName));
-                }
-                catch { }
-            }
-
-            return SymbolComment.Empty;
         }
     }
 }
