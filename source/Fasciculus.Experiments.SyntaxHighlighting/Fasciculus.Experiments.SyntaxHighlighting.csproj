@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources/Document1.md" LogicalName="Document1" />
+    <EmbeddedResource Include="Resources/Document2.md" LogicalName="Document2" />
+    <EmbeddedResource Include="Resources/Document3.md" LogicalName="Document3" />
   </ItemGroup>
 
 </Project>

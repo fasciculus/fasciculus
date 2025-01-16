@@ -11,7 +11,7 @@ namespace Fasciculus.Experiments.SyntaxHighlighting
 {
     public static class Program
     {
-        private static readonly string[] DocumentNames = ["Document1"];
+        private static readonly string[] DocumentNames = ["Document1", "Document2", "Document3"];
 
         public static void Main(string[] args)
         {
@@ -24,9 +24,17 @@ namespace Fasciculus.Experiments.SyntaxHighlighting
         {
             string markdown = EmbeddedResources.Find(documentName).ReadString(false, Encoding.UTF8);
 
-            MarkdownPipeline markdownPipeline = new MarkdownPipelineBuilder().Build();
+            MarkdownPipelineBuilder markdownPipelineBuilder = new();
+
+            markdownPipelineBuilder.Extensions.Add(new ColorCodeExtension());
+
+            MarkdownPipeline markdownPipeline = markdownPipelineBuilder.Build();
+
             MarkdownDocument markdownDocument = Markdown.Parse(markdown, markdownPipeline);
             string html = markdownDocument.ToHtml(markdownPipeline);
+
+            Log($"------ {documentName} ------");
+            Log(html);
         }
 
         private static void Log(object? obj)
