@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 namespace Fasciculus.Site.Api.Models
 {
-    public class ApiIndexViewModel : ViewModel
+    public class ApiPackagesViewModel : ViewModel
     {
+        public required PackageSymbol Combined { get; init; }
+
         public required IEnumerable<PackageSymbol> Packages { get; init; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,8 @@ namespace Fasciculus.CodeAnalysis.Models
         public IEnumerable<NamespaceSymbol> Namespaces => namespaces;
 
         public override bool IsAccessible => namespaces.HasAccessible;
+
+        public bool IsEmpty => namespaces.Count == 0;
 
         public PackageSymbol(SymbolName name, UriPath link, TargetFrameworks frameworks, IEnumerable<CompilationUnit> compilationUnits)
             : base(SymbolKind.Package, name, link, frameworks, name)

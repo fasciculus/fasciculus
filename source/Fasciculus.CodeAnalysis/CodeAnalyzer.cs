@@ -9,6 +9,7 @@ using Fasciculus.CodeAnalysis.Workspaces;
 using Fasciculus.Collections;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis
@@ -42,8 +43,9 @@ namespace Fasciculus.CodeAnalysis
         private PackageList CompilePackages(MSBuildWorkspace workspace)
         {
             ParsedProject[] parsedProjects = ParseProjects(workspace);
+            IEnumerable<PackageSymbol> packages = parsedProjects.Select(CompilePackage);
 
-            return new(parsedProjects.Select(CompilePackage));
+            return new(packages.Where(p => !p.IsEmpty));
         }
 
         private PackageSymbol CompilePackage(ParsedProject project)

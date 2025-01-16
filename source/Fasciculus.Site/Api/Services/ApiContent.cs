@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis;
+using Fasciculus.CodeAnalysis;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
@@ -42,7 +42,8 @@ namespace Fasciculus.Site.Api.Services
             return PackageNames
                 .Select(n => Tuple.Create(directory(n), n))
                 .Select(t => t.Item1?.File(t.Item2 + ".csproj"))
-                .NotNull();
+                .NotNull()
+                .Where(f => f.Exists);
         }
     }
 }

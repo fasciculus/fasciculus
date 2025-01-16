@@ -20,9 +20,10 @@ namespace Fasciculus.Site.Controllers
         [Route("/api/")]
         public IActionResult Packages()
         {
-            ApiIndexViewModel model = new()
+            ApiPackagesViewModel model = new()
             {
                 Title = "API Doc",
+                Combined = content.Combined,
                 Packages = content.Packages
             };
 

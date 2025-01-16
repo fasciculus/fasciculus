@@ -1,20 +1,26 @@
-﻿@model ApiIndexViewModel
+@model ApiPackagesViewModel
 <h1>API Documentation</h1>
 
-<h2>All-In-One</h2>
-
-<p><a href="~/api/Combined/">Combined</a></p>
-
-<h2>Individual Packages</h2>
-
-<table class="table">
-    <tbody>
-@foreach (var package in Model.Packages)
+@if (!Model.Combined.IsEmpty)
 {
-        <tr>
-            <td><a href="~/api/@(package.Link)/">@package.Name</a></td>
-            <td>@package.Comment.Summary</td>
-        </tr>
+    <h2>All-In-One</h2>
+
+    <p><a href="~/api/Combined/">Combined</a></p>
 }
-    </tbody>
-</table>
+
+@if (Model.Packages.Any())
+{
+    <h2>Individual Packages</h2>
+
+    <table class="table">
+        <tbody>
+            @foreach (var package in Model.Packages)
+            {
+                <tr>
+                    <td><a href="~/api/@(package.Link)/">@package.Name</a></td>
+                    <td>@package.Comment.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
