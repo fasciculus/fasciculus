@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class CompileUnitCompiler
+    public partial class CompilationUnitCompiler
     {
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {

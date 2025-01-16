@@ -34,7 +34,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 .WithFramework(project.Framework)
                 .WithPackage(name);
 
-            CompileUnitCompiler compiler = new(context);
+            CompilationUnitCompiler compiler = new(context);
 
             roots.Apply(compiler.Compile);
 

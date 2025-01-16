@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class CompileUnitCompiler : CSharpSyntaxWalker
+    public partial class CompilationUnitCompiler : CSharpSyntaxWalker
     {
         private readonly CompilerContext context;
 
@@ -14,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         protected readonly INodeDebugger nodeDebugger;
 
-        public CompileUnitCompiler(CompilerContext context)
+        public CompilationUnitCompiler(CompilerContext context)
         {
             this.context = context;
 
