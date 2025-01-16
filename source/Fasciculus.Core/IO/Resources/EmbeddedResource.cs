@@ -40,7 +40,7 @@ namespace Fasciculus.IO.Resources
         /// </para>
         /// </summary>
         /// <returns>The return value of <paramref name="read"/></returns>
-        public T Read<T>(Func<Stream, T> read, bool compressed)
+        public T Read<T>(Func<Stream, T> read, bool compressed = false)
         {
             using Stream? stream = Assembly.GetManifestResourceStream(Name) ?? throw Ex.ResourceNotFound(Name);
 
@@ -64,9 +64,16 @@ namespace Fasciculus.IO.Resources
         /// If <paramref name="compressed"/> is <c>true</c> the resource is expected to be GZip compressed.
         /// </para>
         /// </summary>
-        public string ReadString(bool compressed, Encoding encoding)
-        {
-            return Read(s => s.ReadAllText(encoding), compressed);
-        }
+        public string ReadString(Encoding encoding, bool compressed = false)
+            => Read(s => s.ReadAllText(encoding), compressed);
+
+        /// <summary>
+        /// Reads the UTF-8 encoded resource into a string.
+        /// <para>
+        /// If <paramref name="compressed"/> is <c>true</c> the resource is expected to be GZip compressed.
+        /// </para>
+        /// </summary>
+        public string ReadString(bool compressed = false)
+            => ReadString(Encoding.UTF8, compressed);
     }
 }

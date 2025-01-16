@@ -5,7 +5,6 @@ using Markdig;
 using Markdig.Syntax;
 using System;
 using System.Diagnostics;
-using System.Text;
 
 namespace Fasciculus.Experiments.SyntaxHighlighting
 {
@@ -22,7 +21,7 @@ namespace Fasciculus.Experiments.SyntaxHighlighting
 
         private static void ProcessDocument(string documentName)
         {
-            string markdown = EmbeddedResources.Find(documentName).ReadString(false, Encoding.UTF8);
+            string markdown = EmbeddedResources.Find(documentName).ReadString();
 
             MarkdownPipelineBuilder markdownPipelineBuilder = new();
 
