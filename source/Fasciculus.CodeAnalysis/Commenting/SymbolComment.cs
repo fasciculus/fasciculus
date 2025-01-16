@@ -1,10 +1,10 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Commenting
 {
     public class SymbolComment
     {
-        public static readonly SymbolComment Empty = SymbolCommentFactory.CreateEmpty();
+        public static readonly SymbolComment Empty = new(XDocument.Parse("<comment />"));
 
         private static SymbolCommentConverter converter = new();
 
