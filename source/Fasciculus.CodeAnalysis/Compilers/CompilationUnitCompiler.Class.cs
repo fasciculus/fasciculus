@@ -8,7 +8,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public partial class CompilationUnitCompiler
     {
-        protected Stack<ClassBuilder> classBuilders = [];
+        protected readonly Stack<ClassBuilder> classBuilders = [];
 
         protected virtual void PushClass(SymbolName name, SymbolModifiers modifiers)
         {
@@ -25,8 +25,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
         protected virtual void PopClass()
         {
             PopComment();
-            typeReceivers.Pop();
             commentReceivers.Pop();
+            typeReceivers.Pop();
 
             ClassBuilder builder = classBuilders.Pop();
             ClassSymbol @class = builder.Build();

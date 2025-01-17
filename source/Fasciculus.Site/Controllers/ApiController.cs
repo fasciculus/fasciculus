@@ -54,6 +54,7 @@ namespace Fasciculus.Site.Controllers
                     SymbolKind.Package => Package((PackageSymbol)symbol),
                     SymbolKind.Namespace => Namespace((NamespaceSymbol)symbol),
                     SymbolKind.Class => Class((ClassSymbol)symbol),
+                    SymbolKind.Enum => Enum((EnumSymbol)symbol),
                     _ => NotFound()
                 };
             }
@@ -95,6 +96,18 @@ namespace Fasciculus.Site.Controllers
             };
 
             return View("Class", model);
+        }
+
+        private ViewResult Enum(EnumSymbol @enum)
+        {
+            ApiEnumViewModel model = new()
+            {
+                Title = @enum.Name + " Enum",
+                Enum = @enum,
+                Navigation = navigation.Create(@enum.Link)
+            };
+
+            return View("Enum", model);
         }
     }
 }

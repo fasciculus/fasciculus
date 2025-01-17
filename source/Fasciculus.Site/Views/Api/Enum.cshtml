@@ -1,0 +1,20 @@
+@model ApiEnumViewModel
+
+<h1>@Model.Enum.Name Enum</h1>
+
+<h2>In this article</h2>
+
+<ul>
+    <li><a href="#definition">Definition</a></li>
+    <li><a href="#applies-to">Applies to</a></li>
+</ul>
+
+<h2 id="definition">Definition</h2>
+
+<partial name="_Packages.cshtml" model=Model.Enum />
+
+<code>@Model.Enum.Modifiers enum @Model.Enum.Name</code>
+
+<p>@Html.Raw(@Model.Enum.Comment.Summary)</p>
+
+<partial name="_TargetFrameworks.cshtml" model=Model.Enum.Frameworks />

@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
@@ -13,17 +13,6 @@ namespace Fasciculus.CodeAnalysis.Indexing
         private readonly SymbolIndicesOptions options;
 
         private Dictionary<UriPath, Symbol> symbols = [];
-        private Dictionary<UriPath, PackageSymbol> packages = [];
-        private Dictionary<UriPath, NamespaceSymbol> namespaces = [];
-        private Dictionary<UriPath, ClassSymbol> classes = [];
-
-        private void Clear()
-        {
-            symbols = [];
-            packages = [];
-            namespaces = [];
-            classes = [];
-        }
 
         public SymbolIndicesFactory(SymbolIndicesOptions options)
         {
@@ -34,16 +23,13 @@ namespace Fasciculus.CodeAnalysis.Indexing
         {
             using Locker locker = Locker.Lock(mutex);
 
-            Clear();
+            symbols = [];
 
             AddPackages(input);
 
             return new()
             {
                 Symbols = symbols,
-                Packages = packages,
-                Namespaces = namespaces,
-                Classes = classes
             };
         }
 
@@ -52,7 +38,6 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(package))
             {
                 symbols.Add(package.Link, package);
-                packages.Add(package.Link, package);
 
                 AddNamespaces(package.Namespaces);
             }
@@ -66,28 +51,38 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(@namespace))
             {
                 symbols.Add(@namespace.Link, @namespace);
-                namespaces.Add(@namespace.Link, @namespace);
 
                 AddClasses(@namespace.Classes);
+                AddEnums(@namespace.Enums);
             }
         }
 
         private void AddNamespaces(IEnumerable<NamespaceSymbol> namespaces)
             => namespaces.Apply(AddNamespace);
 
+        private void AddClasses(IEnumerable<ClassSymbol> classes)
+            => classes.Apply(AddClass);
+
         private void AddClass(ClassSymbol @class)
         {
             if (IsIncluded(@class))
             {
                 symbols.Add(@class.Link, @class);
-                classes.Add(@class.Link, @class);
             }
         }
 
-        private void AddClasses(IEnumerable<ClassSymbol> classes)
-            => classes.Apply(AddClass);
+        private void AddEnums(IEnumerable<EnumSymbol> enums)
+            => enums.Apply(AddEnum);
+
+        private void AddEnum(EnumSymbol @enum)
+        {
+            if (IsIncluded(@enum))
+            {
+                symbols.Add(@enum.Link, @enum);
+            }
+        }
 
         private bool IsIncluded(Symbol symbol)
-            => !options.AccessibleOnly || symbol.IsAccessible;
+            => options.IncludeNonAccessible || symbol.IsAccessible;
     }
 }

@@ -7,13 +7,15 @@ namespace Fasciculus.CodeAnalysis.Models
     public class NamespaceSymbol : Symbol<NamespaceSymbol>
     {
         private readonly ClassList classes = [];
+        private readonly EnumList enums = [];
 
         public IEnumerable<ClassSymbol> Classes => classes;
+        public IEnumerable<EnumSymbol> Enums => enums;
 
         public override bool IsAccessible => classes.HasAccessible;
 
         public virtual bool IsEmpty
-            => classes.Count == 0;
+            => classes.Count == 0 && enums.Count == 0;
 
         public NamespaceSymbol(SymbolName name, UriPath link, TargetFramework framework, string package)
             : base(SymbolKind.Namespace, name, link, framework, package)
@@ -24,6 +26,7 @@ namespace Fasciculus.CodeAnalysis.Models
             : base(other, clone)
         {
             classes = other.classes.Clone();
+            enums = other.enums.Clone();
         }
 
         public NamespaceSymbol Clone()
@@ -34,11 +37,17 @@ namespace Fasciculus.CodeAnalysis.Models
             classes.AddOrMergeWith(@class);
         }
 
+        public void AddOrMergeWith(EnumSymbol @enum)
+        {
+            enums.AddOrMergeWith(@enum);
+        }
+
         public override void MergeWith(NamespaceSymbol other)
         {
             base.MergeWith(other);
 
             classes.AddOrMergeWith(other.classes);
+            enums.AddOrMergeWith(other.enums);
         }
 
         public override void ReBase(UriPath newBase)
@@ -46,6 +55,7 @@ namespace Fasciculus.CodeAnalysis.Models
             base.ReBase(newBase);
 
             classes.ReBase(newBase);
+            enums.ReBase(newBase);
         }
     }
 }

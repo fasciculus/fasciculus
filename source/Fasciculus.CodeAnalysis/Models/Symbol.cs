@@ -7,13 +7,6 @@ using System.Diagnostics;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public enum SymbolKind
-    {
-        Package,
-        Namespace,
-        Class
-    }
-
     [DebuggerDisplay("{Name}")]
     public class Symbol
     {

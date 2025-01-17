@@ -9,6 +9,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         public UriPath Link { get; }
 
         protected readonly List<ClassSymbol> classes = [];
+        protected readonly List<EnumSymbol> enums = [];
 
         public TypeReceiver(UriPath link)
         {
@@ -18,6 +19,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         public void Add(ClassSymbol @class)
         {
             classes.Add(@class);
+        }
+
+        public void Add(EnumSymbol @enum)
+        {
+            enums.Add(@enum);
         }
     }
 }

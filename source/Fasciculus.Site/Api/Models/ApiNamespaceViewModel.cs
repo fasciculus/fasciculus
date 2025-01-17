@@ -11,5 +11,8 @@ namespace Fasciculus.Site.Api.Models
 
         public IEnumerable<ClassSymbol> Classes => Namespace.Classes;
         public bool HasClasses => Classes.Any();
+
+        public IEnumerable<EnumSymbol> Enums => Namespace.Enums;
+        public bool HasEnums => Enums.Any();
     }
 }

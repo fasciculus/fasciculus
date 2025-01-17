@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +7,14 @@ namespace Fasciculus.CodeAnalysis.Indexing
 {
     public class SymbolIndicesBuilder
     {
-        private readonly SymbolIndicesOptions options = new();
+        private readonly SymbolIndicesOptions options;
 
         private readonly List<PackageSymbol> packages = [];
 
+        public SymbolIndicesBuilder(SymbolIndicesOptions options)
+        {
+            this.options = options;
+        }
 
         public SymbolIndicesBuilder WithPackages(IEnumerable<PackageSymbol> packages)
         {

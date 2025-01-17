@@ -1,9 +1,4 @@
-﻿@model ApiNamespaceViewModel
-
-@{
-    // var hasPackages = Model.Namespace.Packages.Any();
-    // var packagesLabel = Model.Namespace.Packages.Count() > 1 ? "Packages" : "Package";
-}
+@model ApiNamespaceViewModel
 
 <h1>@Model.Namespace.Name Namespace</h1>
 
@@ -11,10 +6,14 @@
 
 <ul>
     <li><a href="#definition">Definition</a></li>
-@if (Model.HasClasses)
-{
-    <li><a href="#classes">Classes</a></li>
-}
+    @if (Model.HasEnums)
+    {
+        <li><a href="#enums">Enums</a></li>
+    }
+    @if (Model.HasClasses)
+    {
+        <li><a href="#classes">Classes</a></li>
+    }
     <li><a href="#applies-to">Applies to</a></li>
 </ul>
 
@@ -24,27 +23,49 @@
 
 <p>@Html.Raw(@Model.Namespace.Comment.Summary)</p>
 
+@if (Model.HasEnums)
+{
+    <h2 id="enums">Enums</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Enum</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model.Enums)
+            {
+                <tr>
+                    <td><a href="~/api/@(e.Link)/">@e.Name</a></td>
+                    <td>@Html.Raw(@e.Comment.Summary)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 @if (Model.HasClasses)
 {
-<h2 id="classes">Classes</h2>
+    <h2 id="classes">Classes</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Class</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var c in Model.Classes)
-{
-        <tr>
-            <td><a href="~/api/@(c.Link)/">@c.Name</a></td>
-            <td>@Html.Raw(@c.Comment.Summary)</td>
-        </tr>
-}
-    </tbody>
-</table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var c in Model.Classes)
+        {
+            <tr>
+                <td><a href="~/api/@(c.Link)/">@c.Name</a></td>
+                <td>@Html.Raw(@c.Comment.Summary)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 }
 
 <partial name="_TargetFrameworks.cshtml" model=Model.Namespace.Frameworks />

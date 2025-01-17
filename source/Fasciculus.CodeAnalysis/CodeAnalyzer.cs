@@ -73,9 +73,14 @@ namespace Fasciculus.CodeAnalysis
             return parser.Parse(project, framework, includeGenerated);
         }
 
-        private static SymbolIndices CreateIndices(PackageList packages, PackageSymbol combined)
+        private SymbolIndices CreateIndices(PackageList packages, PackageSymbol combined)
         {
-            return SymbolIndices.Create()
+            SymbolIndicesOptions options = new()
+            {
+                IncludeNonAccessible = this.options.IncludeNonAccessible
+            };
+
+            return SymbolIndices.Create(options)
                 .WithPackages(packages)
                 .WithPackages(combined)
                 .Build();
