@@ -35,6 +35,7 @@ namespace Fasciculus.Site.CheckLinks
 
             string[] externalLinks = [.. links.Where(x => x.StartsWith("http"))];
             using HttpClient httpClient = HttpClientFactory.Create(null);
+            int broken = 0;
 
             foreach (string externalLink in externalLinks)
             {
@@ -48,8 +49,15 @@ namespace Fasciculus.Site.CheckLinks
 
                     Console.WriteLine(message);
                     Debug.WriteLine(message);
+
+                    ++broken;
                 }
             }
+
+            string brokenMessage = $"{broken} / {externalLinks.Length} broken links";
+
+            Console.WriteLine(brokenMessage);
+            Debug.WriteLine(brokenMessage);
         }
     }
 }
