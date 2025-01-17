@@ -29,6 +29,11 @@ namespace Fasciculus.CodeAnalysis.Models
         public NamespaceSymbol Clone()
             => new(this, true);
 
+        public void AddOrMergeWith(ClassSymbol @class)
+        {
+            classes.AddOrMergeWith(@class);
+        }
+
         public override void MergeWith(NamespaceSymbol other)
         {
             base.MergeWith(other);
