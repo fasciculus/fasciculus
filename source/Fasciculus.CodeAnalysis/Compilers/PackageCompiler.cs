@@ -1,6 +1,5 @@
 using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis.CSharp;
@@ -31,10 +30,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             CompilationUnitCompiler compiler = new(context);
             FileInfo? commentFile = context.CommentsDirectory?.File(context.Project.AssemblyName + ".xml");
             SymbolComment comment = SymbolComment.FromFile(commentFile);
+            CompilationUnitInfo[] compilationUnits = [.. roots.Select(compiler.Compile)];
 
-            roots.Apply(compiler.Compile);
-
-            return new(name, link, context.Framework, [])
+            return new(name, link, context.Framework, compilationUnits)
             {
                 Comment = comment,
             };

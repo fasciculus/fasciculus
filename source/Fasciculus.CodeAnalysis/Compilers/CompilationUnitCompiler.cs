@@ -15,6 +15,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         protected readonly INodeDebugger nodeDebugger;
 
+        protected CompilationUnitInfo compilationUnit = new();
+
         public CompilationUnitCompiler(CompilerContext context)
         {
             this.context = context;
@@ -24,9 +26,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
             nodeDebugger = context.Debuggers.NodeDebugger;
         }
 
-        public virtual void Compile(CompilationUnitSyntax compilationUnit)
+        public virtual CompilationUnitInfo Compile(CompilationUnitSyntax node)
         {
-            compilationUnit.Accept(this);
+            compilationUnit = new();
+
+            node.Accept(this);
+
+            return compilationUnit;
         }
 
         protected virtual string GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
