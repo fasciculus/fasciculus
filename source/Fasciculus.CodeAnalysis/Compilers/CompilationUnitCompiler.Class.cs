@@ -26,6 +26,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             ClassBuilder builder = new(name, link, Framework, Package, modifiers);
 
             classBuilders.Push(builder);
+            typeReceivers.Push(builder);
             commentReceivers.Push(builder);
 
             PushComment();
@@ -34,12 +35,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
         protected virtual void PopClass()
         {
             PopComment();
+            typeReceivers.Pop();
             commentReceivers.Pop();
 
             ClassBuilder builder = classBuilders.Pop();
             ClassSymbol @class = builder.Build();
 
-            namespaceBuilders.Peek().Add(@class);
+            typeReceivers.Peek().Add(@class);
         }
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)

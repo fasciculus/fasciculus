@@ -9,7 +9,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
     public partial class CompilationUnitCompiler
     {
         protected readonly Stack<CommentBuilder> commentBuilders = [];
-        protected readonly Stack<CommentReceiver> commentReceivers = [];
+        protected readonly Stack<ICommentReceiver> commentReceivers = [];
 
         public void PushComment()
         {

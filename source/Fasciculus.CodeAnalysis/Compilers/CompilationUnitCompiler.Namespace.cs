@@ -27,10 +27,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
             NamespaceBuilder builder = new(name, link, Framework, Package);
 
             namespaceBuilders.Push(builder);
+            typeReceivers.Push(builder);
         }
 
         protected virtual void PopNamespace()
         {
+            typeReceivers.Pop();
+
             NamespaceBuilder builder = namespaceBuilders.Pop();
             NamespaceSymbol @namespace = builder.Build();
             FileInfo? commentFile = NamespaceCommentsDirectory?.File($"{builder.Name}.xml");

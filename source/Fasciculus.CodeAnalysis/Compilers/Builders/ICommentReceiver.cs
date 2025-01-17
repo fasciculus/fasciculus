@@ -2,8 +2,8 @@ using Fasciculus.CodeAnalysis.Commenting;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class CommentReceiver
+    public interface ICommentReceiver
     {
-        public SymbolComment Comment { get; set; } = SymbolComment.Empty;
+        public SymbolComment Comment { get; set; }
     }
 }
