@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 
@@ -12,8 +12,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public override bool IsAccessible => classes.HasAccessible;
 
-        public NamespaceSymbol(SymbolName name, UriPath link, TargetFrameworks frameworks, string package, IEnumerable<ClassSymbol> classes)
-            : base(SymbolKind.Namespace, name, link, frameworks, package)
+        public NamespaceSymbol(SymbolName name, UriPath link, TargetFramework framework, string package, IEnumerable<ClassSymbol> classes)
+            : base(SymbolKind.Namespace, name, link, framework, package)
         {
             this.classes = new(classes);
         }

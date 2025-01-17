@@ -29,23 +29,21 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public SymbolComment Comment { get; set; } = SymbolComment.Empty;
 
-        private readonly TargetFrameworks frameworks;
+        private readonly TargetFrameworks frameworks = new();
 
         public IEnumerable<TargetFramework> Frameworks => frameworks;
-
-        public TargetProducts Products => new(frameworks);
 
         private readonly SortedSet<string> packages;
 
         public IEnumerable<string> Packages => packages;
 
-        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFrameworks frameworks, string package)
+        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFramework framework, string package)
         {
             Kind = kind;
             Name = name;
             Link = link;
 
-            this.frameworks = new(frameworks);
+            frameworks.Add(framework);
             packages = [package];
         }
 
@@ -57,7 +55,7 @@ namespace Fasciculus.CodeAnalysis.Models
             Modifiers = other.Modifiers;
             Comment = other.Comment;
 
-            frameworks = new(other.frameworks);
+            frameworks.Add(other.frameworks);
             packages = new(other.packages);
         }
 
@@ -76,8 +74,8 @@ namespace Fasciculus.CodeAnalysis.Models
     public class Symbol<T> : Symbol
         where T : notnull, Symbol<T>
     {
-        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFrameworks frameworks, string package)
-            : base(kind, name, link, frameworks, package) { }
+        public Symbol(SymbolKind kind, SymbolName name, UriPath link, TargetFramework framework, string package)
+            : base(kind, name, link, framework, package) { }
 
         protected Symbol(Symbol<T> other, bool clone)
             : base(other, clone) { }

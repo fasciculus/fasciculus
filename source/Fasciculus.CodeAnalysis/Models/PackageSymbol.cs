@@ -15,8 +15,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public bool IsEmpty => namespaces.Count == 0;
 
-        public PackageSymbol(SymbolName name, UriPath link, TargetFrameworks frameworks, IEnumerable<CompilationUnit> compilationUnits)
-            : base(SymbolKind.Package, name, link, frameworks, name)
+        public PackageSymbol(SymbolName name, UriPath link, TargetFramework framework, IEnumerable<CompilationUnit> compilationUnits)
+            : base(SymbolKind.Package, name, link, framework, name)
         {
             namespaces = new(compilationUnits.SelectMany(x => x.Namespaces));
         }

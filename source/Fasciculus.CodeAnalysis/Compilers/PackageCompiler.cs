@@ -34,7 +34,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             roots.Apply(compiler.Compile);
 
-            return new(name, link, context.Frameworks, [])
+            return new(name, link, context.Framework, [])
             {
                 Comment = comment,
             };
