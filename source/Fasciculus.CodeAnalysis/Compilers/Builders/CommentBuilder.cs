@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Commenting;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -32,5 +33,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         {
             return elements.Pop();
         }
+
+        public SymbolComment Build()
+            => new(Document);
     }
 }
