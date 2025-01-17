@@ -19,16 +19,9 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public PackageSymbol Combine(string packageName)
         {
-            SymbolName name = new SymbolName(packageName);
+            SymbolName name = new(packageName);
             UriPath link = new(name);
-
-            if (Count == 0)
-            {
-                return new(name, link, TargetFramework.UnsupportedFramework, []);
-            }
-
-            TargetFramework framework = this.First().Frameworks.First();
-            PackageSymbol result = new(name, link, framework, []);
+            PackageSymbol result = new(name, link, TargetFramework.UnsupportedFramework, []);
 
             this.Select(p => p.Clone()).Apply(result.MergeWith);
             result.ReBase(link);

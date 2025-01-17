@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +40,14 @@ namespace Fasciculus.CodeAnalysis.Frameworking
         /// <c>true</c> if the framework is added, <c>false</c> if the framework is already present.
         /// </returns>
         public bool Add(TargetFramework targetFramework)
-            => frameworks.Add(targetFramework);
+        {
+            if (targetFramework.Equals(TargetFramework.UnsupportedFramework))
+            {
+                return false;
+            }
+
+            return frameworks.Add(targetFramework);
+        }
 
         /// <summary>
         /// Adds the given <paramref name="targetFrameworks"/> to this collection.
