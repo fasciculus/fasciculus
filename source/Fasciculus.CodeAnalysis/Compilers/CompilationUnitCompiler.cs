@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Debugging;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -11,6 +12,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly CompilerContext context;
 
+        public TargetFramework Framework => context.Framework;
+
+        public string Package => context.Project.AssemblyName;
+
         protected readonly ModifiersCompiler modifierCompiler;
 
         protected readonly INodeDebugger nodeDebugger;
@@ -18,6 +23,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         protected CompilationUnitInfo compilationUnit = new();
 
         public CompilationUnitCompiler(CompilerContext context)
+            : base(SyntaxWalkerDepth.StructuredTrivia)
         {
             this.context = context;
 
@@ -35,18 +41,18 @@ namespace Fasciculus.CodeAnalysis.Compilers
             return compilationUnit;
         }
 
-        protected virtual string GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
+        protected virtual SymbolName GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
         {
             string name = identifier.Text;
 
             if (typeParameters is null || typeParameters.Parameters.Count == 0)
             {
-                return name;
+                return new(name);
             }
 
-            string parameters = string.Join(",", typeParameters.Parameters.Select(p => p.Identifier.Text));
+            string[] parameters = [.. typeParameters.Parameters.Select(p => p.Identifier.Text)];
 
-            return $"{name}<{parameters}>";
+            return new(name, parameters);
         }
 
         protected bool IsIncluded(SymbolModifiers modifiers)
