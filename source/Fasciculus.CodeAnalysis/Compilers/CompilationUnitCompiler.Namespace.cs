@@ -18,6 +18,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         protected virtual UriPath CreateNamespaceLink(SymbolName name)
         {
+            if (namespaceBuilders.Count > 0)
+            {
+                return namespaceBuilders.Peek().Link.Append(name);
+            }
+
             return new(Package, name);
         }
 

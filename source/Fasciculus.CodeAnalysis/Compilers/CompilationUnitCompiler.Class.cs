@@ -10,19 +10,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         protected Stack<ClassBuilder> classBuilders = [];
 
-        protected virtual UriPath CreateClassLink(SymbolName name)
-        {
-            if (classBuilders.Count > 0)
-            {
-                return classBuilders.Peek().Link.Append(name.Mangled);
-            }
-
-            return namespaceBuilders.Peek().Link.Append(name.Mangled);
-        }
-
         protected virtual void PushClass(SymbolName name, SymbolModifiers modifiers)
         {
-            UriPath link = CreateClassLink(name);
+            UriPath link = typeReceivers.Peek().Link.Append(name.Mangled);
             ClassBuilder builder = new(name, link, Framework, Package, modifiers);
 
             classBuilders.Push(builder);

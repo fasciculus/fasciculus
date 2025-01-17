@@ -9,8 +9,6 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
     {
         public SymbolName Name { get; }
 
-        public UriPath Link { get; }
-
         public TargetFramework Framework { get; }
 
         public string Package { get; }
@@ -20,9 +18,9 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         public SymbolComment Comment { get; set; } = SymbolComment.Empty;
 
         public ClassBuilder(SymbolName name, UriPath link, TargetFramework framework, string package, SymbolModifiers modifiers)
+            : base(link)
         {
             Name = name;
-            Link = link;
             Framework = framework;
             Package = package;
             Modifiers = modifiers;
