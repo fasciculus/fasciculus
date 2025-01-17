@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
@@ -6,7 +6,7 @@ namespace Fasciculus.CodeAnalysis.Models
     public class NamespaceList : SymbolDictionary<NamespaceSymbol>
     {
         public NamespaceList(IEnumerable<NamespaceSymbol> namespaces)
-            : base(namespaces) { }
+            : base(namespaces.Where(n => !n.IsEmpty)) { }
 
         public NamespaceList()
             : this([]) { }

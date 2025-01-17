@@ -45,7 +45,7 @@ namespace Fasciculus.CodeAnalysis
             ParsedProject[] parsedProjects = ParseProjects(workspace);
             IEnumerable<PackageSymbol> packages = parsedProjects.Select(CompilePackage);
 
-            return new(packages.Where(p => !p.IsEmpty));
+            return new(packages);
         }
 
         private PackageSymbol CompilePackage(ParsedProject project)

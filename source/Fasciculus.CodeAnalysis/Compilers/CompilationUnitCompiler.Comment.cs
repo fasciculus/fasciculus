@@ -8,7 +8,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public partial class CompilationUnitCompiler
     {
-        private readonly Stack<CommentBuilder> commentBuilders = [];
+        protected readonly Stack<CommentBuilder> commentBuilders = [];
 
         public void PushComment()
         {

@@ -6,16 +6,18 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public class NamespaceSymbol : Symbol<NamespaceSymbol>
     {
-        private readonly ClassList classes;
+        private readonly ClassList classes = [];
 
         public IEnumerable<ClassSymbol> Classes => classes;
 
         public override bool IsAccessible => classes.HasAccessible;
 
-        public NamespaceSymbol(SymbolName name, UriPath link, TargetFramework framework, string package, IEnumerable<ClassSymbol> classes)
+        public virtual bool IsEmpty
+            => classes.Count == 0;
+
+        public NamespaceSymbol(SymbolName name, UriPath link, TargetFramework framework, string package)
             : base(SymbolKind.Namespace, name, link, framework, package)
         {
-            this.classes = new(classes);
         }
 
         private NamespaceSymbol(NamespaceSymbol other, bool clone)
