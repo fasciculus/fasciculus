@@ -34,9 +34,9 @@ namespace Fasciculus.CodeAnalysis
             return this;
         }
 
-        public CodeAnalyzerBuilder AccessibleOnly(bool value = true)
+        public CodeAnalyzerBuilder IncludeNonAccessible(bool value = true)
         {
-            options.AccessibleOnly = value;
+            options.IncludeNonAccessible = value;
 
             return this;
         }

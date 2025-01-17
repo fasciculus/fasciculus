@@ -15,11 +15,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
             string name = GetName(node.Identifier, null);
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitConstructorDeclaration(node);
+                base.VisitConstructorDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
         public override void VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node)
@@ -35,11 +38,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
             string name = node.Type.ToString();
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitConversionOperatorDeclaration(node);
+                base.VisitConversionOperatorDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
         public override void VisitDestructorDeclaration(DestructorDeclarationSyntax node)
@@ -51,11 +57,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitDestructorDeclaration(node);
+                base.VisitDestructorDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
         public override void VisitEventFieldDeclaration(EventFieldDeclarationSyntax node)
@@ -67,11 +76,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitEventFieldDeclaration(node);
+                base.VisitEventFieldDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
         public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
@@ -83,11 +95,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitFieldDeclaration(node);
+                base.VisitFieldDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
         public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
@@ -100,11 +115,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitIndexerDeclaration(node);
+                base.VisitIndexerDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
         public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
@@ -134,11 +152,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitMethodDeclaration(node);
+                base.VisitMethodDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
         public override void VisitOperatorDeclaration(OperatorDeclarationSyntax node)
@@ -151,11 +172,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitOperatorDeclaration(node);
+                base.VisitOperatorDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
@@ -171,12 +195,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitPropertyDeclaration(node);
+                base.VisitPropertyDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
-
     }
 }

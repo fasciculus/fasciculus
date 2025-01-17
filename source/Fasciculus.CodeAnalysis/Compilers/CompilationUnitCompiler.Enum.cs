@@ -15,11 +15,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitEnumDeclaration(node);
+                base.VisitEnumDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
         public override void VisitEnumMemberDeclaration(EnumMemberDeclarationSyntax node)
@@ -31,12 +34,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitEnumMemberDeclaration(node);
+                base.VisitEnumMemberDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
-
     }
 }

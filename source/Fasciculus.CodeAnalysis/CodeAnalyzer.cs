@@ -50,7 +50,7 @@ namespace Fasciculus.CodeAnalysis
 
         private PackageSymbol CompilePackage(ParsedProject project)
         {
-            CompilerContext context = new(project, options.Debuggers);
+            CompilerContext context = new(project, options.IncludeNonAccessible, options.Debuggers);
             PackageCompiler compiler = new(context);
 
             return compiler.Compile(project);

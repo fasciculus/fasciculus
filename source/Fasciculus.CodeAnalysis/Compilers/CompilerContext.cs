@@ -11,18 +11,19 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public TargetFramework Framework => Project.Framework;
 
-        public TargetFrameworks Frameworks => new([Framework]);
-
         public DirectoryInfo? ProjectDirectory => Project.ProjectDirectory;
 
         public DirectoryInfo? CommentsDirectory
             => ProjectDirectory?.Combine("Properties", "Comments");
 
+        public bool IncludeNonAccessible { get; }
+
         public CodeAnalyzerDebuggers Debuggers { get; }
 
-        public CompilerContext(ParsedProject project, CodeAnalyzerDebuggers debuggers)
+        public CompilerContext(ParsedProject project, bool includeNonAccessible, CodeAnalyzerDebuggers debuggers)
         {
             Project = project;
+            IncludeNonAccessible = includeNonAccessible;
             Debuggers = debuggers;
         }
     }

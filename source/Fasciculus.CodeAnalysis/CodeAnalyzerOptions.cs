@@ -11,7 +11,7 @@ namespace Fasciculus.CodeAnalysis
 
         public bool IncludeGenerated { get; set; } = false;
 
-        public bool AccessibleOnly { get; set; } = true;
+        public bool IncludeNonAccessible { get; set; } = false;
 
         public CodeAnalyzerDebuggers Debuggers { get; set; } = new();
     }

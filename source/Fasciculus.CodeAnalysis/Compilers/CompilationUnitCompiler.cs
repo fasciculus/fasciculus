@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Debugging;
+using Fasciculus.CodeAnalysis.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -41,6 +42,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             return $"{name}<{parameters}>";
         }
+
+        protected bool IsIncluded(SymbolModifiers modifiers)
+            => modifiers.IsAccessible || context.IncludeNonAccessible;
+
 
         public override void VisitCompilationUnit(CompilationUnitSyntax node)
         {

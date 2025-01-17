@@ -30,11 +30,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
             string name = GetName(node.Identifier, node.TypeParameterList);
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitClassDeclaration(node);
+                base.VisitClassDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
 
     }

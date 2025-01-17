@@ -15,12 +15,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
 
-            PushComment();
+            if (IsIncluded(modifiers))
+            {
+                PushComment();
 
-            base.VisitInterfaceDeclaration(node);
+                base.VisitInterfaceDeclaration(node);
 
-            PopComment();
+                PopComment();
+            }
         }
-
     }
 }
