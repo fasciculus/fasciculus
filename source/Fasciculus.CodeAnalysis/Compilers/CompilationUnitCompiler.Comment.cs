@@ -9,6 +9,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
     public partial class CompilationUnitCompiler
     {
         protected readonly Stack<CommentBuilder> commentBuilders = [];
+        protected readonly Stack<CommentReceiver> commentReceivers = [];
 
         public void PushComment()
         {
@@ -17,7 +18,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public void PopComment()
         {
-            commentBuilders.Pop();
+            CommentBuilder builder = commentBuilders.Pop();
+
+            if (commentReceivers.Count > 0)
+            {
+                commentReceivers.Peek().Comment = builder.Build();
+            }
         }
 
         public override void VisitDocumentationCommentTrivia(DocumentationCommentTriviaSyntax node)
@@ -112,11 +118,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            PushComment();
+            //PushComment();
 
             base.VisitAttributeList(node);
 
-            PopComment();
+            //PopComment();
         }
 
     }
