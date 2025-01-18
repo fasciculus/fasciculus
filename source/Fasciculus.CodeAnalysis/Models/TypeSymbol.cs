@@ -11,8 +11,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<UriPath> Sources => sources;
 
-        public TypeSymbol(SymbolKind kind, SymbolName name, UriPath link, TargetFramework framework, string package)
-            : base(kind, name, link, framework, package)
+        public TypeSymbol(SymbolKind kind, UriPath link, TargetFramework framework, string package)
+            : base(kind, link, framework, package)
         {
         }
 

@@ -13,8 +13,9 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public EnumSymbol Build()
         {
-            EnumSymbol @enum = new(Name, Link, Framework, Package)
+            EnumSymbol @enum = new(Link, Framework, Package)
             {
+                Name = Name,
                 Modifiers = Modifiers,
                 Comment = Comment
             };

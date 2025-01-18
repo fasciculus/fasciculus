@@ -23,7 +23,10 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public NamespaceSymbol Build()
         {
-            NamespaceSymbol @namespace = new(Name, Link, Framework, Package);
+            NamespaceSymbol @namespace = new(Link, Framework, Package)
+            {
+                Name = Name,
+            };
 
             classes.Apply(@namespace.AddOrMergeWith);
             enums.Apply(@namespace.AddOrMergeWith);

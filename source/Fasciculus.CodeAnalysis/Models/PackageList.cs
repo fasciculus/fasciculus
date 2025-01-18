@@ -24,6 +24,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
             PackageSymbol result = new(name, link, TargetFramework.UnsupportedFramework, [])
             {
+                Name = name,
                 RepositoryDirectory = packageLink
             };
 

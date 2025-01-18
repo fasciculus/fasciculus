@@ -37,7 +37,7 @@ namespace Fasciculus.CodeAnalysis.Tests
         public void Test()
         {
             CodeAnalyzerResult result = CodeAnalyzer.Create()
-                .WithProjectFiles(GetProjects())
+                .WithProjects(GetProjects())
                 .WithNodeDebugger(productionDebugger)
                 .WithModifierDebugger(modifierDebugger)
                 .Build().Analyze();

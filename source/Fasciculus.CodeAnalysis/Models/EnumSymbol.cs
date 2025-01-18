@@ -5,13 +5,18 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public class EnumSymbol : TypeSymbol<EnumSymbol>
     {
-        public EnumSymbol(SymbolName name, UriPath link, TargetFramework framework, string package)
-            : base(SymbolKind.Enum, name, link, framework, package) { }
+        public EnumSymbol(UriPath link, TargetFramework framework, string package)
+            : base(SymbolKind.Enum, link, framework, package) { }
 
         private EnumSymbol(EnumSymbol other, bool clone)
             : base(other, clone) { }
 
         public EnumSymbol Clone()
-            => new(this, true);
+        {
+            return new(this, true)
+            {
+                Name = Name,
+            };
+        }
     }
 }
