@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Configuration;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;

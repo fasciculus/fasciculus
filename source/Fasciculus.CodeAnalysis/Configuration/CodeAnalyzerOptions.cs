@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Fasciculus.CodeAnalysis
+namespace Fasciculus.CodeAnalysis.Configuration
 {
     public class CodeAnalyzerOptions
     {

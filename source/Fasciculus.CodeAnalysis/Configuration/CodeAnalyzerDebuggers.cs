@@ -1,6 +1,6 @@
 using Fasciculus.CodeAnalysis.Debugging;
 
-namespace Fasciculus.CodeAnalysis
+namespace Fasciculus.CodeAnalysis.Configuration
 {
     public class CodeAnalyzerDebuggers
     {
