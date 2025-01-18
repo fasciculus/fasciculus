@@ -1,4 +1,4 @@
-﻿@model ApiPackageViewModel
+@model ApiPackageViewModel
 
 <h1>@Model.Package.Name Package</h1>
 <h2>In this article</h2>
@@ -8,6 +8,7 @@
     <li><a href="#applies-to">Applies to</a></li>
 </ul>
 <h2 id="definition">Definition</h2>
+<p><a href="@(Model.RepositoryPrefix)@(Model.Package.RepositoryDirectory)">View on GitHub</a>.</p>
 <p>@Html.Raw(@Model.Package.Comment.Summary)</p>
 <h2 id="namespaces">Namespaces</h2>
 <table class="table">
