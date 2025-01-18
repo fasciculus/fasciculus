@@ -42,11 +42,20 @@ namespace Fasciculus.CodeAnalysis.Tests
                 .WithModifierDebugger(modifierDebugger)
                 .Build().Analyze();
 
-            Assert.AreEqual(2, result.Packages.Count);
-
-            //LogProductions();
             LogUnhandledSyntax();
             LogUnhandledModifiers();
+
+            ICollection<Symbol> symbols = result.Indices.Symbols.Values;
+            int namespaceCount = symbols.Where(x => x.Kind == SymbolKind.Namespace).Count();
+            int classCount = symbols.Where(x => x.Kind == SymbolKind.Class).Count();
+            int enumCount = symbols.Where(x => x.Kind == SymbolKind.Enum).Count();
+
+            Assert.AreEqual(2, result.Packages.Count);
+            Assert.AreEqual(37, namespaceCount);
+            Assert.AreEqual(114, classCount);
+            Assert.AreEqual(2, enumCount);
+
+            //LogProductions();
             //LogUnhandledCommentElements();
             //LogComments(result.Indices);
         }

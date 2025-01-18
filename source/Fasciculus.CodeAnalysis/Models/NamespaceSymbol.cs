@@ -17,8 +17,8 @@ namespace Fasciculus.CodeAnalysis.Models
         public virtual bool IsEmpty
             => classes.Count == 0 && enums.Count == 0;
 
-        public NamespaceSymbol(UriPath link, TargetFramework framework, string package)
-            : base(SymbolKind.Namespace, link, framework, package)
+        public NamespaceSymbol(TargetFramework framework, string package)
+            : base(SymbolKind.Namespace, framework, package)
         {
         }
 
@@ -33,7 +33,8 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             return new(this, true)
             {
-                Name = Name
+                Name = Name,
+                Link = Link,
             };
         }
 

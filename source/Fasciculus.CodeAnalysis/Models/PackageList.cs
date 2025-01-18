@@ -22,9 +22,10 @@ namespace Fasciculus.CodeAnalysis.Models
             SymbolName name = new(packageName);
             UriPath link = new(name);
 
-            PackageSymbol result = new(name, link, TargetFramework.UnsupportedFramework, [])
+            PackageSymbol result = new(name, TargetFramework.UnsupportedFramework, [])
             {
                 Name = name,
+                Link = link,
                 RepositoryDirectory = packageLink
             };
 

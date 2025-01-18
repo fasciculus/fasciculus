@@ -14,7 +14,13 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public required SymbolName Name { get; init; }
 
-        public UriPath Link { get; private set; }
+        private UriPath link = new();
+
+        public required UriPath Link
+        {
+            get => link;
+            init => link = value;
+        }
 
         public SymbolModifiers Modifiers { get; set; } = new();
 
@@ -30,10 +36,9 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<string> Packages => packages;
 
-        public Symbol(SymbolKind kind, UriPath link, TargetFramework framework, string package)
+        public Symbol(SymbolKind kind, TargetFramework framework, string package)
         {
             Kind = kind;
-            Link = link;
 
             frameworks.Add(framework);
             packages = [package];
@@ -42,7 +47,7 @@ namespace Fasciculus.CodeAnalysis.Models
         protected Symbol(Symbol other, bool _)
         {
             Kind = other.Kind;
-            Link = other.Link;
+            link = other.Link;
             Modifiers = other.Modifiers;
             Comment = other.Comment;
 
@@ -52,7 +57,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public virtual void ReBase(UriPath newBase)
         {
-            Link = Link.Replace(0, 1, newBase);
+            link = link.Replace(0, 1, newBase);
         }
 
         public virtual void MergeWith(Symbol other)
@@ -65,8 +70,8 @@ namespace Fasciculus.CodeAnalysis.Models
     public class Symbol<T> : Symbol
         where T : notnull, Symbol<T>
     {
-        public Symbol(SymbolKind kind, UriPath link, TargetFramework framework, string package)
-            : base(kind, link, framework, package) { }
+        public Symbol(SymbolKind kind, TargetFramework framework, string package)
+            : base(kind, framework, package) { }
 
         protected Symbol(Symbol<T> other, bool clone)
             : base(other, clone) { }

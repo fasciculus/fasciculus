@@ -1,12 +1,11 @@
 using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
     public class ClassSymbol : TypeSymbol<ClassSymbol>
     {
-        public ClassSymbol(SymbolName name, UriPath link, TargetFramework framework, string package)
-            : base(SymbolKind.Class, link, framework, package) { }
+        public ClassSymbol(SymbolName name, TargetFramework framework, string package)
+            : base(SymbolKind.Class, framework, package) { }
 
         private ClassSymbol(ClassSymbol other, bool clone)
             : base(other, clone) { }
@@ -16,6 +15,7 @@ namespace Fasciculus.CodeAnalysis.Models
             return new(this, true)
             {
                 Name = Name,
+                Link = Link,
             };
         }
     }

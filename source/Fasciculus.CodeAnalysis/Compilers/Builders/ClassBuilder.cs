@@ -13,9 +13,10 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public ClassSymbol Build()
         {
-            ClassSymbol @class = new(Name, Link, Framework, Package)
+            ClassSymbol @class = new(Name, Framework, Package)
             {
                 Name = Name,
+                Link = Link,
                 Modifiers = Modifiers,
                 Comment = Comment
             };
