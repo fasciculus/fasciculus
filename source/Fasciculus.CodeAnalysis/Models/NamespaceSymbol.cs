@@ -6,6 +6,9 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public class NamespaceSymbol : Symbol<NamespaceSymbol>
     {
+        public static SymbolModifiers NamespaceModifiers
+            => new() { IsPublic = true };
+
         private readonly ClassList classes = [];
         private readonly EnumList enums = [];
 
@@ -35,6 +38,7 @@ namespace Fasciculus.CodeAnalysis.Models
             {
                 Name = Name,
                 Link = Link,
+                Modifiers = Modifiers
             };
         }
 

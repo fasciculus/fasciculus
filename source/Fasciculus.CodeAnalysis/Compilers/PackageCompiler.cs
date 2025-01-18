@@ -41,6 +41,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
+                Modifiers = PackageSymbol.PackageModifiers,
                 Comment = comment,
                 RepositoryDirectory = repositoryDirectory
             };

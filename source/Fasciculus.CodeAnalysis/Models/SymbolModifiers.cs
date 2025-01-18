@@ -30,6 +30,23 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public bool IsPartial { get; set; }
 
+        public SymbolModifiers() { }
+
+        public SymbolModifiers(SymbolModifiers other)
+        {
+            IsPublic = other.IsPublic;
+            IsPrivate = other.IsPrivate;
+            IsProtected = other.IsProtected;
+            IsInternal = other.IsInternal;
+            IsStatic = other.IsStatic;
+            IsReadonly = other.IsReadonly;
+            IsVirtual = other.IsVirtual;
+            IsOverride = other.IsOverride;
+            IsUnsafe = other.IsUnsafe;
+            IsAsync = other.IsAsync;
+            IsPartial = other.IsPartial;
+        }
+
         public override string? ToString()
         {
             StringBuilder sb = new();

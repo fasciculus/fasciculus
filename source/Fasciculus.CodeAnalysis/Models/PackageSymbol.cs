@@ -7,6 +7,9 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public class PackageSymbol : Symbol<PackageSymbol>
     {
+        public static SymbolModifiers PackageModifiers
+            => new() { IsPublic = true };
+
         private readonly NamespaceList namespaces;
 
         public IEnumerable<NamespaceSymbol> Namespaces => namespaces;
@@ -35,6 +38,7 @@ namespace Fasciculus.CodeAnalysis.Models
             {
                 Name = Name,
                 Link = Link,
+                Modifiers = Modifiers,
                 RepositoryDirectory = RepositoryDirectory
             };
         }

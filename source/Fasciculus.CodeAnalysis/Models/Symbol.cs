@@ -1,6 +1,5 @@
 using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Collections;
 using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,13 +21,19 @@ namespace Fasciculus.CodeAnalysis.Models
             init => link = value;
         }
 
-        public SymbolModifiers Modifiers { get; set; } = new();
+        private SymbolModifiers modifiers = new();
 
-        public virtual bool IsAccessible => Modifiers.IsAccessible;
+        public required SymbolModifiers Modifiers
+        {
+            get => new(modifiers);
+            init => modifiers = value;
+        }
+
+        public virtual bool IsAccessible => modifiers.IsAccessible;
 
         public SymbolComment Comment { get; set; } = SymbolComment.Empty;
 
-        private readonly TargetFrameworks frameworks = new();
+        private readonly TargetFrameworks frameworks = [];
 
         public IEnumerable<TargetFramework> Frameworks => frameworks;
 
@@ -47,8 +52,9 @@ namespace Fasciculus.CodeAnalysis.Models
         protected Symbol(Symbol other, bool _)
         {
             Kind = other.Kind;
-            link = other.Link;
-            Modifiers = other.Modifiers;
+
+            link = other.link;
+            modifiers = other.modifiers;
             Comment = other.Comment;
 
             frameworks.Add(other.frameworks);
@@ -63,7 +69,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public virtual void MergeWith(Symbol other)
         {
             frameworks.Add(other.frameworks);
-            other.packages.Apply(p => { packages.Add(p); });
+            packages.UnionWith(other.packages);
         }
     }
 

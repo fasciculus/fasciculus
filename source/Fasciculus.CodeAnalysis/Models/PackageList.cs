@@ -26,6 +26,7 @@ namespace Fasciculus.CodeAnalysis.Models
             {
                 Name = name,
                 Link = link,
+                Modifiers = PackageSymbol.PackageModifiers,
                 RepositoryDirectory = packageLink
             };
 

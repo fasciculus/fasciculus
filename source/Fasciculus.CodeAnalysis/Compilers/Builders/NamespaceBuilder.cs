@@ -27,6 +27,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
             {
                 Name = Name,
                 Link = Link,
+                Modifiers = NamespaceSymbol.NamespaceModifiers,
             };
 
             classes.Apply(@namespace.AddOrMergeWith);
