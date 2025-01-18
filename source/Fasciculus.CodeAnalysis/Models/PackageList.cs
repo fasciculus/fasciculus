@@ -21,7 +21,11 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             SymbolName name = new(packageName);
             UriPath link = new(name);
-            PackageSymbol result = new(name, link, TargetFramework.UnsupportedFramework, []);
+
+            PackageSymbol result = new(name, link, TargetFramework.UnsupportedFramework, [])
+            {
+                RepositoryDirectory = new()
+            };
 
             this.Select(p => p.Clone()).Apply(result.MergeWith);
             result.ReBase(link);

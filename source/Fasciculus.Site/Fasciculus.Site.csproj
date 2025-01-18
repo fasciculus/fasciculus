@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="UnusedImages\external.png" />
+    <Content Include="UnusedImages\external.svg" />
+    <Content Include="UnusedImages\github-240.png" />
+    <Content Include="UnusedImages\github-48.png" />
+    <Content Include="UnusedImages\github-64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Markdig" />
     <PackageReference Include="YamlDotNet" />
   </ItemGroup>

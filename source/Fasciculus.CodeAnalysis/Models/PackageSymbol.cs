@@ -15,6 +15,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public bool IsEmpty => namespaces.Count == 0;
 
+        public required UriPath RepositoryDirectory { get; init; }
+
         public PackageSymbol(SymbolName name, UriPath link, TargetFramework framework, IEnumerable<CompilationUnitInfo> compilationUnits)
             : base(SymbolKind.Package, name, link, framework, name)
         {
@@ -28,7 +30,7 @@ namespace Fasciculus.CodeAnalysis.Models
         }
 
         public PackageSymbol Clone()
-            => new(this, true);
+            => new(this, true) { RepositoryDirectory = RepositoryDirectory };
 
         public override void MergeWith(PackageSymbol other)
         {

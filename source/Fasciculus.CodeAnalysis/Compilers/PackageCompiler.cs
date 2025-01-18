@@ -35,6 +35,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             return new(name, link, context.Framework, compilationUnits)
             {
                 Comment = comment,
+                RepositoryDirectory = context.Project.RepositoryDirectory
             };
         }
     }

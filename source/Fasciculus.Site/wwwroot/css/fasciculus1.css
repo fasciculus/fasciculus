@@ -7,10 +7,15 @@ a  {
 }
 
 a[href^="//"]:after, a[href^="http://"]:after, a[href^="https://"]:after {
-    content: url(/images/external.png);
+    content: url(/images/external2.png);
     position: relative;
     top: -0.25rem;
     left: 0.1rem;
+    margin-right: 0.125rem;
+}
+
+a.nav-link:after {
+    content: none;
 }
 
 c, code {
@@ -33,8 +38,26 @@ code {
     max-width: 100%;
 }
 
+.fsc-logo {
+    width: 32px;
+    height: 32px;
+}
+
 .nav-link {
     font-size: 1.25rem;
+}
+
+.fsc-navbar {
+    width: 100%;
+}
+
+.fsc-navbar-left {
+    flex-shrink: 0;
+}
+
+.fsc-navbar-right {
+    flex-grow: 0;
+    flex-basis: content;
 }
 
 div.fsc-navigation-forest {
