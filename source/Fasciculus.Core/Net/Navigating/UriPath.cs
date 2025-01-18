@@ -95,7 +95,7 @@ namespace Fasciculus.Net.Navigating
         /// Whether this link points to itself or a descendant of the given <paramref name="other"/> link.
         /// </summary>
         public bool IsSelfOrDescendantOf(UriPath other)
-            => other.IsSelfOrDescendantOf(this);
+            => other.IsSelfOrAncestorOf(this);
 
         /// <summary>
         /// Returns an enumerator that iterates through this collection.

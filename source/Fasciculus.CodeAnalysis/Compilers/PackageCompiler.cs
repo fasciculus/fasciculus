@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
@@ -19,23 +20,27 @@ namespace Fasciculus.CodeAnalysis.Compilers
             this.context = context;
         }
 
-        public PackageSymbol Compile(ParsedProject project)
+        public PackageSymbol Compile()
         {
+            ParsedProject project = context.Project;
+
             IEnumerable<CompilationUnitSyntax> roots = project
                 .Where(t => t.HasCompilationUnitRoot)
                 .Select(t => t.GetCompilationUnitRoot());
 
             SymbolName name = new(project.AssemblyName);
             UriPath link = new(name);
+            TargetFramework framework = context.Framework;
             CompilationUnitCompiler compiler = new(context);
-            FileInfo? commentFile = context.CommentsDirectory?.File(context.Project.AssemblyName + ".xml");
+            FileInfo commentFile = context.CommentsDirectory.File(context.Project.AssemblyName + ".xml");
             SymbolComment comment = SymbolComment.FromFile(commentFile);
+            UriPath repositoryDirectory = context.Project.RepositoryDirectory;
             CompilationUnitInfo[] compilationUnits = [.. roots.Select(compiler.Compile)];
 
-            return new(name, link, context.Framework, compilationUnits)
+            return new(name, link, framework, compilationUnits)
             {
                 Comment = comment,
-                RepositoryDirectory = context.Project.RepositoryDirectory
+                RepositoryDirectory = repositoryDirectory
             };
         }
     }

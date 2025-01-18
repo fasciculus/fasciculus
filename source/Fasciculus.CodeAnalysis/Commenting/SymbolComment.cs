@@ -18,9 +18,9 @@ namespace Fasciculus.CodeAnalysis.Commenting
             Document = document;
         }
 
-        public static SymbolComment FromFile(FileInfo? file)
+        public static SymbolComment FromFile(FileInfo file)
         {
-            if (file is not null && file.Exists)
+            if (file.Exists)
             {
                 XDocument document = XDocument.Load(file.FullName);
                 XElement? root = document.Root;

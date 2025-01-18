@@ -40,9 +40,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // EnumDeclaration
             // : EnumMemberDeclaration*
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -61,9 +61,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // Leaf
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {

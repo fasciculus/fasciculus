@@ -13,7 +13,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // BaseList
             // : SimpleBaseType+
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             base.VisitBaseList(node);
         }
@@ -24,7 +24,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // : IdentifierName
             // | GenericName
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             base.VisitSimpleBaseType(node);
         }

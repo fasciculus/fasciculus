@@ -31,6 +31,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             ClassBuilder builder = classBuilders.Pop();
             ClassSymbol @class = builder.Build();
 
+            @class.AddSource(Source);
+
             typeReceivers.Peek().Add(@class);
         }
 
@@ -54,9 +56,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //
             // TypeParameterConstraintClause only when TypeParameterList 
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifierCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {

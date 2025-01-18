@@ -13,9 +13,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         protected readonly Stack<NamespaceBuilder> namespaceBuilders = [];
 
-        protected DirectoryInfo? NamespaceCommentsDirectory
-            => context.CommentsDirectory?.Combine("Namespaces");
-
         protected virtual UriPath CreateNamespaceLink(SymbolName name)
         {
             if (namespaceBuilders.Count > 0)
@@ -41,7 +38,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             NamespaceBuilder builder = namespaceBuilders.Pop();
             NamespaceSymbol @namespace = builder.Build();
-            FileInfo? commentFile = NamespaceCommentsDirectory?.File($"{builder.Name}.xml");
+            FileInfo commentFile = NamespaceCommentsDirectory.File($"{builder.Name}.xml");
 
             @namespace.Comment = SymbolComment.FromFile(commentFile);
 
@@ -54,7 +51,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // NamespaceDeclaration
             // : QualifiedName ClassDeclaration* InterfaceDeclaration* EnumDeclaration*
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolName name = new(node.Name.ToString());
 

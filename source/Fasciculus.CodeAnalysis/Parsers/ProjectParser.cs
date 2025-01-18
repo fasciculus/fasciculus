@@ -4,6 +4,7 @@ using Fasciculus.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Parsers
@@ -22,24 +23,25 @@ namespace Fasciculus.CodeAnalysis.Parsers
 
         public ParsedProject Parse(UnparsedProject unparsedProject)
         {
-            IEnumerable<SyntaxTree> syntaxTrees = [];
             Project project = unparsedProject.Project;
+            DirectoryInfo projectDirectory = unparsedProject.ProjectDirectory;
+            IEnumerable<SyntaxTree> syntaxTrees = [];
 
             if (Tasks.Wait(project.GetCompilationAsync()) is CSharpCompilation compilation)
             {
-                syntaxTrees = compilation.SyntaxTrees.Where(CheckGenerated);
+                syntaxTrees = compilation.SyntaxTrees.Where(t => CheckGenerated(t, projectDirectory));
             }
 
             return new(syntaxTrees)
             {
                 AssemblyName = project.AssemblyName,
                 Framework = project.GetTargetFramework(),
-                ProjectDirectory = project.GetDirectory(),
+                ProjectDirectory = unparsedProject.ProjectDirectory,
                 RepositoryDirectory = unparsedProject.RepositoryDirectory,
             };
         }
 
-        private bool CheckGenerated(SyntaxTree syntaxTree)
-            => IncludeGenerated || !syntaxTree.IsGenerated();
+        private bool CheckGenerated(SyntaxTree syntaxTree, DirectoryInfo projectDirectory)
+            => IncludeGenerated || !syntaxTree.IsGenerated(projectDirectory);
     }
 }

@@ -11,6 +11,7 @@ using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis
@@ -43,29 +44,45 @@ namespace Fasciculus.CodeAnalysis
 
         private PackageList CompilePackages(MSBuildWorkspace workspace)
         {
-            ParsedProject[] parsedProjects = ParseProjects(workspace);
-            IEnumerable<PackageSymbol> packages = parsedProjects.Select(CompilePackage);
+            ParsedProject[] parsedProjects = [.. ParseProjects(workspace)];
+            PackageSymbol[] packages = [.. parsedProjects.Select(CompilePackage)];
 
             return new(packages);
         }
 
         private PackageSymbol CompilePackage(ParsedProject project)
         {
-            CompilerContext context = new(project, options.IncludeNonAccessible, options.Debuggers);
+            CompilerContext context = new()
+            {
+                Project = project,
+                IncludeNonAccessible = options.IncludeNonAccessible,
+                Debuggers = options.Debuggers,
+            };
+
             PackageCompiler compiler = new(context);
 
-            return compiler.Compile(project);
+            return compiler.Compile();
         }
 
-        private ParsedProject[] ParseProjects(MSBuildWorkspace workspace)
+        private IEnumerable<ParsedProject> ParseProjects(MSBuildWorkspace workspace)
         {
-            return [.. workspace.CurrentSolution.Projects
-                .Where(p => p.HasDocuments)
-                //.AsParallel()
-                .Select(ParseProject)];
+            Project[] projects = [.. workspace.CurrentSolution.Projects];
+
+            foreach (Project project in projects)
+            {
+                if (project.HasDocuments)
+                {
+                    DirectoryInfo? projectDirectory = project.GetDirectory();
+
+                    if (projectDirectory is not null)
+                    {
+                        yield return ParseProject(project, projectDirectory);
+                    }
+                }
+            }
         }
 
-        private ParsedProject ParseProject(Project project)
+        private ParsedProject ParseProject(Project project, DirectoryInfo projectDirectory)
         {
             ProjectParserContext context = new()
             {
@@ -77,6 +94,7 @@ namespace Fasciculus.CodeAnalysis
             UnparsedProject unparsedProject = new()
             {
                 Project = project,
+                ProjectDirectory = projectDirectory,
                 RepositoryDirectory = GetRepositoryDirectory(project),
                 Framework = project.GetTargetFramework()
             };

@@ -42,6 +42,8 @@ namespace Fasciculus.CodeAnalysis.Tests
                 .WithModifierDebugger(modifierDebugger)
                 .Build().Analyze();
 
+            Assert.AreEqual(2, result.Packages.Count);
+
             //LogProductions();
             LogUnhandledSyntax();
             LogUnhandledModifiers();

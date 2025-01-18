@@ -1,9 +1,13 @@
 using Fasciculus.CodeAnalysis.Debugging;
+using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.IO;
+using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
@@ -12,13 +16,19 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly CompilerContext context;
 
-        public TargetFramework Framework => context.Framework;
+        public TargetFramework Framework { get; }
 
-        public string Package => context.Project.AssemblyName;
+        public string Package { get; }
 
-        protected readonly ModifiersCompiler modifierCompiler;
+        public DirectoryInfo NamespaceCommentsDirectory { get; }
 
-        protected readonly INodeDebugger nodeDebugger;
+        public bool IncludeNonAccessible { get; }
+
+        public ModifiersCompiler ModifiersCompiler { get; }
+
+        public INodeDebugger NodeDebugger { get; }
+
+        protected UriPath Source { get; set; } = UriPath.Empty;
 
         protected CompilationUnitInfo compilationUnit = new();
 
@@ -27,18 +37,28 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             this.context = context;
 
-            modifierCompiler = new(context);
-
-            nodeDebugger = context.Debuggers.NodeDebugger;
+            Framework = context.Framework;
+            Package = context.Project.AssemblyName;
+            NamespaceCommentsDirectory = context.CommentsDirectory.Combine("Namespaces");
+            IncludeNonAccessible = context.IncludeNonAccessible;
+            ModifiersCompiler = new(context);
+            NodeDebugger = context.Debuggers.NodeDebugger;
         }
 
         public virtual CompilationUnitInfo Compile(CompilationUnitSyntax node)
         {
+            Source = node.GetSource(context.ProjectDirectory);
+
             compilationUnit = new();
 
             node.Accept(this);
 
             return compilationUnit;
+        }
+
+        protected virtual UriPath GetSource(SyntaxNode node)
+        {
+            return UriPath.Empty;
         }
 
         protected virtual SymbolName GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
@@ -56,7 +76,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         }
 
         protected bool IsIncluded(SymbolModifiers modifiers)
-            => modifiers.IsAccessible || context.IncludeNonAccessible;
+            => IncludeNonAccessible || modifiers.IsAccessible;
 
 
         public override void VisitCompilationUnit(CompilationUnitSyntax node)
@@ -66,7 +86,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //
             // CompilationUnit: UsingDirective* AttributeList* NamespaceDeclaration*
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             base.VisitCompilationUnit(node);
         }
@@ -77,7 +97,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // : IdentifierName
             // | QualifiedName
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             base.VisitUsingDirective(node);
         }

@@ -8,24 +8,17 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public class CompilerContext
     {
-        public ParsedProject Project { get; }
+        public required ParsedProject Project { get; init; }
 
         public TargetFramework Framework => Project.Framework;
 
-        public DirectoryInfo? ProjectDirectory => Project.ProjectDirectory;
+        public DirectoryInfo ProjectDirectory => Project.ProjectDirectory;
 
-        public DirectoryInfo? CommentsDirectory
-            => ProjectDirectory?.Combine("Properties", "Comments");
+        public DirectoryInfo CommentsDirectory
+            => ProjectDirectory.Combine("Properties", "Comments");
 
-        public bool IncludeNonAccessible { get; }
+        public required bool IncludeNonAccessible { get; init; }
 
-        public CodeAnalyzerDebuggers Debuggers { get; }
-
-        public CompilerContext(ParsedProject project, bool includeNonAccessible, CodeAnalyzerDebuggers debuggers)
-        {
-            Project = project;
-            IncludeNonAccessible = includeNonAccessible;
-            Debuggers = debuggers;
-        }
+        public required CodeAnalyzerDebuggers Debuggers { get; init; }
     }
 }

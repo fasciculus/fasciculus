@@ -116,7 +116,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // : AttributeTargetSpecifier Attribute
             // | Attribute
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             //PushComment();
 

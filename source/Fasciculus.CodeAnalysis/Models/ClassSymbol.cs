@@ -3,7 +3,7 @@ using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class ClassSymbol : Symbol<ClassSymbol>
+    public class ClassSymbol : TypeSymbol<ClassSymbol>
     {
         public ClassSymbol(SymbolName name, UriPath link, TargetFramework framework, string package)
             : base(SymbolKind.Class, name, link, framework, package) { }

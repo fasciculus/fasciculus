@@ -17,7 +17,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public required TargetFramework Framework { get; init; }
 
-        public required DirectoryInfo? ProjectDirectory { get; init; }
+        public required DirectoryInfo ProjectDirectory { get; init; }
 
         public required UriPath RepositoryDirectory { get; init; }
 
