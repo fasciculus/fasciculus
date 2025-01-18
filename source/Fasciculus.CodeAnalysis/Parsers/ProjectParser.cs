@@ -1,11 +1,9 @@
-﻿using Fasciculus.CodeAnalysis.Extensions;
-using Fasciculus.CodeAnalysis.Frameworking;
+using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Parsers
@@ -15,20 +13,33 @@ namespace Fasciculus.CodeAnalysis.Parsers
     /// </summary>
     public class ProjectParser
     {
-        public ParsedProject Parse(Project project, TargetFramework framework, bool includeGenerated)
+        public bool IncludeGenerated { get; }
+
+        public ProjectParser(ProjectParserContext context)
+        {
+            IncludeGenerated = context.IncludeGenerated;
+        }
+
+        public ParsedProject Parse(UnparsedProject unparsedProject)
         {
             IEnumerable<SyntaxTree> syntaxTrees = [];
-            DirectoryInfo? directory = project.GetDirectory();
+            Project project = unparsedProject.Project;
 
             if (Tasks.Wait(project.GetCompilationAsync()) is CSharpCompilation compilation)
             {
-                syntaxTrees = compilation.SyntaxTrees.Where(t => CheckGenerated(t, includeGenerated));
+                syntaxTrees = compilation.SyntaxTrees.Where(CheckGenerated);
             }
 
-            return new(project.AssemblyName, framework, directory, syntaxTrees);
+            return new(syntaxTrees)
+            {
+                AssemblyName = project.AssemblyName,
+                Framework = project.GetTargetFramework(),
+                ProjectDirectory = project.GetDirectory(),
+                RepositoryDirectory = unparsedProject.RepositoryDirectory,
+            };
         }
 
-        private static bool CheckGenerated(SyntaxTree syntaxTree, bool includeGenerated)
-            => includeGenerated || !syntaxTree.IsGenerated();
+        private bool CheckGenerated(SyntaxTree syntaxTree)
+            => IncludeGenerated || !syntaxTree.IsGenerated();
     }
 }

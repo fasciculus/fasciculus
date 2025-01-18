@@ -1,4 +1,5 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
+using Fasciculus.CodeAnalysis.Frameworking;
+using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,20 +13,18 @@ namespace Fasciculus.CodeAnalysis.Models
     /// </summary>
     public class ParsedProject : IEnumerable<SyntaxTree>
     {
-        public string AssemblyName { get; }
+        public required string AssemblyName { get; init; }
 
-        public TargetFramework Framework { get; }
+        public required TargetFramework Framework { get; init; }
 
-        public DirectoryInfo? ProjectDirectory { get; }
+        public required DirectoryInfo? ProjectDirectory { get; init; }
+
+        public required UriPath RepositoryDirectory { get; init; }
 
         private readonly SyntaxTree[] syntaxTrees;
 
-        public ParsedProject(string assemblyName, TargetFramework framework, DirectoryInfo? projectDirectory, IEnumerable<SyntaxTree> syntaxTrees)
+        public ParsedProject(IEnumerable<SyntaxTree> syntaxTrees)
         {
-            AssemblyName = assemblyName;
-            Framework = framework;
-            ProjectDirectory = projectDirectory;
-
             this.syntaxTrees = [.. syntaxTrees];
         }
 

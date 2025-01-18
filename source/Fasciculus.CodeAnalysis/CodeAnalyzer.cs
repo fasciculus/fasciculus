@@ -2,12 +2,12 @@ using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Configuration;
 using Fasciculus.CodeAnalysis.Extensions;
-using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Parsers;
 using Fasciculus.CodeAnalysis.Workspaces;
 using Fasciculus.Collections;
+using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using System.Collections.Generic;
@@ -67,12 +67,25 @@ namespace Fasciculus.CodeAnalysis
 
         private ParsedProject ParseProject(Project project)
         {
-            ProjectParser parser = new();
-            TargetFramework framework = project.GetTargetFramework();
-            bool includeGenerated = options.IncludeGenerated;
+            ProjectParserContext context = new()
+            {
+                IncludeGenerated = options.IncludeGenerated
+            };
 
-            return parser.Parse(project, framework, includeGenerated);
+            ProjectParser parser = new(context);
+
+            UnparsedProject unparsedProject = new()
+            {
+                Project = project,
+                RepositoryDirectory = GetRepositoryDirectory(project),
+                Framework = project.GetTargetFramework()
+            };
+
+            return parser.Parse(unparsedProject);
         }
+
+        private UriPath GetRepositoryDirectory(Project project)
+            => options.Projects.First(p => p.ProjectFile.FullName == project.FilePath).RepositoryDirectory;
 
         private SymbolIndices CreateIndices(PackageList packages, PackageSymbol combined)
         {
