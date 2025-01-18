@@ -11,15 +11,7 @@
 
 <h2 id="definition">Definition</h2>
 
-<partial name="_Packages.cshtml" model=Model.Class />
-
-<p>
-    Source(s):
-    @foreach (var uri in Model.SourceUris)
-    {
-        <a href="@uri">@(uri.Segments.Last())</a>
-    }
-</p>
+<partial name="_TypeInfo.cshtml" model=Model />
 
 <code>@Model.Class.Modifiers class @Model.Class.Name</code>
 

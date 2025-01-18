@@ -31,6 +31,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             EnumBuilder builder = enumBuilders.Pop();
             EnumSymbol @enum = builder.Build();
 
+            @enum.AddSource(Source);
+
             typeReceivers.Peek().Add(@enum);
         }
 

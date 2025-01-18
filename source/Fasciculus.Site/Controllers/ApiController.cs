@@ -98,6 +98,7 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @class.Name + " Class",
                 Class = @class,
+                Symbol = @class,
                 SourceUris = [.. GetSourceUris(@class)],
                 Navigation = navigation.Create(@class.Link)
             };
@@ -111,6 +112,8 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @enum.Name + " Enum",
                 Enum = @enum,
+                Symbol = @enum,
+                SourceUris = [.. GetSourceUris(@enum)],
                 Navigation = navigation.Create(@enum.Link)
             };
 

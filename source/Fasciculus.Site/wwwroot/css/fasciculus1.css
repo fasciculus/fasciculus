@@ -96,3 +96,13 @@ div.fsc-navigation-forest {
 .fsc-frontmatter td {
     padding-right: 1rem;
 }
+
+.fsc-typeinfo {
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.fsc-typeinfo td {
+    padding-right: 1rem;
+}
+

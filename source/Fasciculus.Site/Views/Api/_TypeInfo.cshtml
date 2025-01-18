@@ -1,0 +1,33 @@
+@model ApiTypeViewModel
+@{
+    string packagesLabel = Model.Symbol.Packages.Count() == 1 ? "Package" : "Packages";
+    bool firstPackage = true;
+    string sourcesLabel = Model.SourceUris.Length == 1 ? "Source" : "Sources";
+    bool firstSource = true;
+}
+<table class="fsc-typeinfo">
+    <tbody>
+        <tr>
+            <td>@(packagesLabel)</td>
+            <td>
+                @foreach (string package in Model.Symbol.Packages)
+                {
+                    @(firstPackage ? "" : ", ")
+                    <a href="~/api/@package/">@package</a>
+                    firstPackage = false;
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>@(sourcesLabel)</td>
+            <td>
+                @foreach (Uri sourceUri in Model.SourceUris)
+                {
+                    @(firstSource ? "" : ", ")
+                    <a href="@sourceUri">@(sourceUri.Segments.Last())</a>
+                    firstSource = false;
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
