@@ -1,11 +1,10 @@
 using Fasciculus.CodeAnalysis;
+using Fasciculus.CodeAnalysis.Configuration;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Fasciculus.Net.Navigating;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,28 +21,34 @@ namespace Fasciculus.Site.Api.Services
 
         public ApiContent()
         {
-            result = CodeAnalyzer.Create().WithProjectFiles(GetProjectFiles()).Build().Analyze();
+            result = CodeAnalyzer.Create().WithProjectFiles(GetProjects()).Build().Analyze();
         }
 
         public Symbol? GetSymbol(UriPath link)
             => result.Indices.Symbols.TryGetValue(link, out Symbol? symbol) ? symbol : null;
 
-        private static readonly string[] PackageNames =
+        private static readonly string[] ProjectNames =
         [
             "Fasciculus.Core",
             "Fasciculus.Extensions"
         ];
 
-        private static IEnumerable<FileInfo> GetProjectFiles()
+        private static IEnumerable<CodeAnalyzerProject> GetProjects()
         {
             SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
-            DirectoryInfo? directory(string packageName) => DirectorySearch.Search(packageName, searchPath).FirstOrDefault();
 
-            return PackageNames
-                .Select(n => Tuple.Create(directory(n), n))
-                .Select(t => t.Item1?.File(t.Item2 + ".csproj"))
-                .NotNull()
-                .Where(f => f.Exists);
+            foreach (string projectName in ProjectNames)
+            {
+                DirectoryInfo directory = DirectorySearch.Search(projectName, searchPath).First();
+
+                CodeAnalyzerProject project = new()
+                {
+                    ProjectFile = directory.File(projectName + ".csproj"),
+                    RepositoryDirectory = new("tree", "main", "source", projectName)
+                };
+
+                yield return project;
+            }
         }
     }
 }

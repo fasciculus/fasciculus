@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Compilers;
+using Fasciculus.CodeAnalysis.Configuration;
 using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
@@ -36,7 +37,7 @@ namespace Fasciculus.CodeAnalysis.Tests
         public void Test()
         {
             CodeAnalyzerResult result = CodeAnalyzer.Create()
-                .WithProjectFiles(GetProjectFiles())
+                .WithProjectFiles(GetProjects())
                 .WithNodeDebugger(productionDebugger)
                 .WithModifierDebugger(modifierDebugger)
                 .Build().Analyze();
@@ -129,13 +130,19 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        private static IEnumerable<FileInfo> GetProjectFiles()
+        private static IEnumerable<CodeAnalyzerProject> GetProjects()
         {
             foreach (var projectName in projectNames)
             {
                 DirectoryInfo directory = DirectorySearch.Search(projectName, searchPath).First();
 
-                yield return directory.File(projectName + ".csproj");
+                CodeAnalyzerProject project = new()
+                {
+                    ProjectFile = directory.File(projectName + ".csproj"),
+                    RepositoryDirectory = new("tree", "main", "source", projectName)
+                };
+
+                yield return project;
             }
         }
     }

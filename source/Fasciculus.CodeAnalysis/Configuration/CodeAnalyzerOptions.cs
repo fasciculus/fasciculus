@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Configuration
 {
     public class CodeAnalyzerOptions
     {
-        public List<FileInfo> ProjectFiles { get; set; } = [];
+        public List<CodeAnalyzerProject> Projects { get; set; } = [];
 
         public string CombinedPackageName { get; set; } = "Combined";
 

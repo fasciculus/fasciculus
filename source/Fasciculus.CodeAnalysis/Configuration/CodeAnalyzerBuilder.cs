@@ -1,7 +1,6 @@
 using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Configuration
@@ -10,14 +9,14 @@ namespace Fasciculus.CodeAnalysis.Configuration
     {
         private readonly CodeAnalyzerOptions options = new();
 
-        public CodeAnalyzerBuilder WithProjectFiles(IEnumerable<FileInfo> files)
+        public CodeAnalyzerBuilder WithProjectFiles(IEnumerable<CodeAnalyzerProject> files)
         {
-            files.Apply(options.ProjectFiles.Add);
+            files.Apply(options.Projects.Add);
 
             return this;
         }
 
-        public CodeAnalyzerBuilder WithProjectFiles(params FileInfo[] files)
+        public CodeAnalyzerBuilder WithProjectFiles(params CodeAnalyzerProject[] files)
             => WithProjectFiles(files.AsEnumerable());
 
         public CodeAnalyzerBuilder WithCombinedPackageName(string name)

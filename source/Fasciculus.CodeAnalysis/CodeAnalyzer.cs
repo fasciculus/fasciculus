@@ -98,7 +98,7 @@ namespace Fasciculus.CodeAnalysis
         {
             MSBuildWorkspace workspace = WorkspaceFactory.CreateWorkspace();
 
-            options.ProjectFiles.Apply(f => workspace.AddProjectFile(f));
+            options.Projects.Apply(f => workspace.AddProjectFile(f.ProjectFile));
 
             return workspace;
         }
