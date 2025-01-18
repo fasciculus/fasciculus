@@ -28,7 +28,7 @@ namespace Fasciculus.CodeAnalysis
         {
             using MSBuildWorkspace workspace = LoadWorkspace();
             PackageList packages = CompilePackages(workspace);
-            PackageSymbol combined = packages.Combine(options.CombinedPackageName);
+            PackageSymbol combined = packages.Combine(options.CombinedPackageName, options.CombinedPackageLink);
             SymbolIndices indices = CreateIndices(packages, combined);
 
             ProcessComments(indices);

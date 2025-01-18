@@ -21,7 +21,10 @@ namespace Fasciculus.Site.Api.Services
 
         public ApiContent()
         {
-            result = CodeAnalyzer.Create().WithProjectFiles(GetProjects()).Build().Analyze();
+            result = CodeAnalyzer.Create()
+                .WithProjectFiles(GetProjects())
+                .WithCombinedPackageLink(new("tree", "main", "source"))
+                .Build().Analyze();
         }
 
         public Symbol? GetSymbol(UriPath link)

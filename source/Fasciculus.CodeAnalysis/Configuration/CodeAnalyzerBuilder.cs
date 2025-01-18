@@ -1,5 +1,6 @@
 using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.Collections;
+using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +23,13 @@ namespace Fasciculus.CodeAnalysis.Configuration
         public CodeAnalyzerBuilder WithCombinedPackageName(string name)
         {
             options.CombinedPackageName = name;
+
+            return this;
+        }
+
+        public CodeAnalyzerBuilder WithCombinedPackageLink(UriPath link)
+        {
+            options.CombinedPackageLink = link;
 
             return this;
         }

@@ -17,14 +17,14 @@ namespace Fasciculus.CodeAnalysis.Models
         public PackageList(IEnumerable<PackageSymbol> packages)
             : base(packages.Where(p => !p.IsEmpty)) { }
 
-        public PackageSymbol Combine(string packageName)
+        public PackageSymbol Combine(string packageName, UriPath packageLink)
         {
             SymbolName name = new(packageName);
             UriPath link = new(name);
 
             PackageSymbol result = new(name, link, TargetFramework.UnsupportedFramework, [])
             {
-                RepositoryDirectory = new()
+                RepositoryDirectory = packageLink
             };
 
             this.Select(p => p.Clone()).Apply(result.MergeWith);
