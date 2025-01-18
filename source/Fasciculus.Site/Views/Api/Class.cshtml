@@ -1,4 +1,4 @@
-﻿@model ApiClassViewModel
+@model ApiClassViewModel
 
 <h1>@Model.Class.Name Class</h1>
 
@@ -12,6 +12,14 @@
 <h2 id="definition">Definition</h2>
 
 <partial name="_Packages.cshtml" model=Model.Class />
+
+<p>
+    Source(s):
+    @foreach (var uri in Model.SourceUris)
+    {
+        <a href="@uri">@(uri.Segments.Last())</a>
+    }
+</p>
 
 <code>@Model.Class.Modifiers class @Model.Class.Name</code>
 

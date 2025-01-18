@@ -3,6 +3,9 @@ using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Api.Models;
 using Fasciculus.Site.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.Site.Controllers
 {
@@ -95,6 +98,7 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @class.Name + " Class",
                 Class = @class,
+                SourceUris = [.. GetSourceUris(@class)],
                 Navigation = navigation.Create(@class.Link)
             };
 
@@ -111,6 +115,26 @@ namespace Fasciculus.Site.Controllers
             };
 
             return View("Enum", model);
+        }
+
+        private IEnumerable<Uri> GetSourceUris<T>(T type)
+            where T : notnull, TypeSymbol<T>
+        {
+            if (type.Packages.Count() > 0)
+            {
+                UriPath packageLink = new(type.Packages.First());
+                PackageSymbol? package = content.GetSymbol(packageLink) as PackageSymbol;
+
+                if (package is not null)
+                {
+                    foreach (UriPath source in type.Sources)
+                    {
+                        string uri = $"{RepositoryPrefix}/{package.RepositoryDirectory}/{source}";
+
+                        yield return new(uri);
+                    }
+                }
+            }
         }
     }
 }
