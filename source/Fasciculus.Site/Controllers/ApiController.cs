@@ -8,6 +8,8 @@ namespace Fasciculus.Site.Controllers
 {
     public class ApiController : Controller
     {
+        private static readonly string RepositoryPrefix = "https://github.com/fasciculus/fasciculus";
+
         private readonly ApiContent content;
         private readonly ApiNavigation navigation;
 
@@ -68,6 +70,7 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = package.Name + " Package",
                 Package = package,
+                PackageUri = new($"{RepositoryPrefix}/{package.RepositoryDirectory}/"),
                 Navigation = navigation.Create(package.Link)
             };
 

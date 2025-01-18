@@ -30,7 +30,12 @@ namespace Fasciculus.CodeAnalysis.Models
         }
 
         public PackageSymbol Clone()
-            => new(this, true) { RepositoryDirectory = RepositoryDirectory };
+        {
+            return new(this, true)
+            {
+                RepositoryDirectory = RepositoryDirectory
+            };
+        }
 
         public override void MergeWith(PackageSymbol other)
         {
