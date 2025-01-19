@@ -15,7 +15,7 @@ namespace Fasciculus.Site.Api.Services
     {
         private readonly CodeAnalyzerResult result;
 
-        public SymbolIndices Indices => result.Indices;
+        public SymbolIndex Index => result.Index;
         public PackageList Packages => result.Packages;
         public PackageSymbol Combined => result.Combined;
 
@@ -28,7 +28,7 @@ namespace Fasciculus.Site.Api.Services
         }
 
         public Symbol? GetSymbol(UriPath link)
-            => result.Indices.Symbols.TryGetValue(link, out Symbol? symbol) ? symbol : null;
+            => result.Index.TryGetSymbol(link, out Symbol? symbol) ? symbol : null;
 
         private static readonly string[] ProjectNames =
         [

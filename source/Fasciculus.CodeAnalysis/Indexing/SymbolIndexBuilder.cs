@@ -5,30 +5,30 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Indexing
 {
-    public class SymbolIndicesBuilder
+    public class SymbolIndexBuilder
     {
-        private readonly SymbolIndicesOptions options;
+        private readonly SymbolIndexOptions options;
 
         private readonly List<PackageSymbol> packages = [];
 
-        public SymbolIndicesBuilder(SymbolIndicesOptions options)
+        public SymbolIndexBuilder(SymbolIndexOptions options)
         {
             this.options = options;
         }
 
-        public SymbolIndicesBuilder WithPackages(IEnumerable<PackageSymbol> packages)
+        public SymbolIndexBuilder WithPackages(IEnumerable<PackageSymbol> packages)
         {
             packages.Apply(this.packages.Add);
 
             return this;
         }
 
-        public SymbolIndicesBuilder WithPackages(params PackageSymbol[] packages)
+        public SymbolIndexBuilder WithPackages(params PackageSymbol[] packages)
             => WithPackages(packages.AsEnumerable());
 
-        public SymbolIndices Build()
+        public SymbolIndex Build()
         {
-            SymbolIndicesFactory factory = new(options);
+            SymbolIndexFactory factory = new(options);
 
             return factory.Create(packages);
         }

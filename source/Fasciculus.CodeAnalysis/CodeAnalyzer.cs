@@ -30,15 +30,15 @@ namespace Fasciculus.CodeAnalysis
             using MSBuildWorkspace workspace = LoadWorkspace();
             PackageList packages = CompilePackages(workspace);
             PackageSymbol combined = packages.Combine(options.CombinedPackageName, options.CombinedPackageLink);
-            SymbolIndices indices = CreateIndices(packages, combined);
+            SymbolIndex index = CreateIndex(packages, combined);
 
-            ProcessComments(indices);
+            ProcessComments(index);
 
             return new()
             {
                 Packages = packages,
                 Combined = combined,
-                Indices = indices
+                Index = index
             };
         }
 
@@ -105,22 +105,22 @@ namespace Fasciculus.CodeAnalysis
         private UriPath GetRepositoryDirectory(Project project)
             => options.Projects.First(p => p.ProjectFile.FullName == project.FilePath).RepositoryDirectory;
 
-        private SymbolIndices CreateIndices(PackageList packages, PackageSymbol combined)
+        private SymbolIndex CreateIndex(PackageList packages, PackageSymbol combined)
         {
-            SymbolIndicesOptions options = new()
+            SymbolIndexOptions options = new()
             {
                 IncludeNonAccessible = this.options.IncludeNonAccessible
             };
 
-            return SymbolIndices.Create(options)
+            return SymbolIndex.Create(options)
                 .WithPackages(packages)
                 .WithPackages(combined)
                 .Build();
         }
 
-        private static void ProcessComments(SymbolIndices indices)
+        private static void ProcessComments(SymbolIndex index)
         {
-            SymbolCommentProcessor processor = new(indices);
+            SymbolCommentProcessor processor = new(index);
 
             processor.Process();
         }

@@ -47,7 +47,7 @@ namespace Fasciculus.Site.Generating.Services
         {
             Add("/api/");
 
-            foreach (Symbol symbol in apiContent.Indices.Symbols.Values)
+            foreach (Symbol symbol in apiContent.Index.Symbols)
             {
                 if (DocumentsSymbolKinds.Contains(symbol.Kind))
                 {

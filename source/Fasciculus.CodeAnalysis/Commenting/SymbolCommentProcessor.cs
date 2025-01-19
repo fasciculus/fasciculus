@@ -1,4 +1,4 @@
-﻿using Fasciculus.CodeAnalysis.Compilers;
+using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
@@ -12,18 +12,18 @@ namespace Fasciculus.CodeAnalysis.Commenting
         private static string[] HandledElements
             = ["c", "code", "comment", "p", "para", "see", "summary", "typeparam"];
 
-        private readonly SymbolIndices indices;
+        private readonly SymbolIndex index;
 
-        public SymbolCommentProcessor(SymbolIndices indices)
+        public SymbolCommentProcessor(SymbolIndex index)
         {
-            this.indices = indices;
+            this.index = index;
 
             UnhandledCommentElements.Instance.Handled(HandledElements);
         }
 
         public void Process()
         {
-            indices.Symbols.Values.Apply(Process);
+            index.Symbols.Apply(Process);
         }
 
         private void Process(Symbol symbol)

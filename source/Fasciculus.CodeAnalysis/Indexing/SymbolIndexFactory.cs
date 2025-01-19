@@ -6,59 +6,56 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Indexing
 {
-    public class SymbolIndicesFactory
+    public class SymbolIndexFactory
     {
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly SymbolIndicesOptions options;
+        private readonly bool IncludeNonAccessible;
 
-        private Dictionary<UriPath, Symbol> symbols = [];
+        private Dictionary<UriPath, Symbol> index = [];
 
-        public SymbolIndicesFactory(SymbolIndicesOptions options)
+        public SymbolIndexFactory(SymbolIndexOptions options)
         {
-            this.options = options;
+            IncludeNonAccessible = options.IncludeNonAccessible;
         }
 
-        public SymbolIndices Create(IEnumerable<PackageSymbol> input)
+        public SymbolIndex Create(IEnumerable<PackageSymbol> input)
         {
             using Locker locker = Locker.Lock(mutex);
 
-            symbols = [];
+            index = [];
 
             AddPackages(input);
 
-            return new()
-            {
-                Symbols = symbols,
-            };
-        }
-
-        private void AddPackage(PackageSymbol package)
-        {
-            if (IsIncluded(package))
-            {
-                symbols.Add(package.Link, package);
-
-                AddNamespaces(package.Namespaces);
-            }
+            return new(index);
         }
 
         private void AddPackages(IEnumerable<PackageSymbol> packages)
             => packages.Apply(AddPackage);
 
-        private void AddNamespace(NamespaceSymbol @namespace)
+        private void AddPackage(PackageSymbol package)
         {
-            if (IsIncluded(@namespace))
+            if (IsIncluded(package))
             {
-                symbols.Add(@namespace.Link, @namespace);
+                index.Add(package.Link, package);
 
-                AddClasses(@namespace.Classes);
-                AddEnums(@namespace.Enums);
+                AddNamespaces(package.Namespaces);
             }
         }
 
         private void AddNamespaces(IEnumerable<NamespaceSymbol> namespaces)
             => namespaces.Apply(AddNamespace);
+
+        private void AddNamespace(NamespaceSymbol @namespace)
+        {
+            if (IsIncluded(@namespace))
+            {
+                index.Add(@namespace.Link, @namespace);
+
+                AddClasses(@namespace.Classes);
+                AddEnums(@namespace.Enums);
+            }
+        }
 
         private void AddClasses(IEnumerable<ClassSymbol> classes)
             => classes.Apply(AddClass);
@@ -67,7 +64,7 @@ namespace Fasciculus.CodeAnalysis.Indexing
         {
             if (IsIncluded(@class))
             {
-                symbols.Add(@class.Link, @class);
+                index.Add(@class.Link, @class);
             }
         }
 
@@ -78,11 +75,11 @@ namespace Fasciculus.CodeAnalysis.Indexing
         {
             if (IsIncluded(@enum))
             {
-                symbols.Add(@enum.Link, @enum);
+                index.Add(@enum.Link, @enum);
             }
         }
 
         private bool IsIncluded(Symbol symbol)
-            => options.IncludeNonAccessible || symbol.IsAccessible;
+            => IncludeNonAccessible || symbol.IsAccessible;
     }
 }

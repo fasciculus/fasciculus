@@ -1,6 +1,6 @@
 namespace Fasciculus.CodeAnalysis.Indexing
 {
-    public class SymbolIndicesOptions
+    public class SymbolIndexOptions
     {
         public required bool IncludeNonAccessible { get; init; }
     }

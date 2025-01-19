@@ -45,7 +45,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             LogUnhandledSyntax();
             LogUnhandledModifiers();
 
-            ICollection<Symbol> symbols = result.Indices.Symbols.Values;
+            IEnumerable<Symbol> symbols = result.Index.Symbols;
             int namespaceCount = symbols.Where(x => x.Kind == SymbolKind.Namespace).Count();
             int classCount = symbols.Where(x => x.Kind == SymbolKind.Class).Count();
             int enumCount = symbols.Where(x => x.Kind == SymbolKind.Enum).Count();
@@ -99,7 +99,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        public void LogComments(SymbolIndices indices)
+        public void LogComments(SymbolIndex index)
         {
             UriPath[] paths =
             [
@@ -110,7 +110,7 @@ namespace Fasciculus.CodeAnalysis.Tests
 
             foreach (UriPath path in paths)
             {
-                Symbol symbol = indices.Symbols[path];
+                Symbol symbol = index[path];
 
                 Log($"~~~~ {symbol.Name} ~~~~");
                 Log(symbol.Comment.Summary);
