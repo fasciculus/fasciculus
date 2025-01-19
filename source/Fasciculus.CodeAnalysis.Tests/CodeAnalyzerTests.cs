@@ -25,12 +25,23 @@ namespace Fasciculus.CodeAnalysis.Tests
         private readonly DefaultSyntaxDebugger syntaxDebugger;
         private readonly DefaultProductionDebugger productionDebugger;
         private readonly DefaultModifierDebugger modifierDebugger;
+        private readonly DefaultAccessorDebugger accessorDebugger;
+
+        private readonly CodeAnalyzerDebuggers debuggers;
 
         public CodeAnalyzerTests()
         {
             syntaxDebugger = new();
             productionDebugger = new(syntaxDebugger);
             modifierDebugger = new();
+            accessorDebugger = new();
+
+            debuggers = new()
+            {
+                NodeDebugger = productionDebugger,
+                ModifierDebugger = modifierDebugger,
+                AccessorDebugger = accessorDebugger
+            };
         }
 
         [TestMethod]
@@ -38,12 +49,13 @@ namespace Fasciculus.CodeAnalysis.Tests
         {
             CodeAnalyzerResult result = CodeAnalyzer.Create()
                 .WithProjects(GetProjects())
-                .WithNodeDebugger(productionDebugger)
-                .WithModifierDebugger(modifierDebugger)
+                .WithDebuggers(debuggers)
                 .Build().Analyze();
 
+            //LogProductions();
             LogUnhandledSyntax();
             LogUnhandledModifiers();
+            LogUnhandledAccessors();
 
             IEnumerable<Symbol> symbols = result.Index.Symbols;
             int namespaceCount = symbols.Where(x => x.Kind == SymbolKind.Namespace).Count();
@@ -59,8 +71,8 @@ namespace Fasciculus.CodeAnalysis.Tests
 
             Assert.AreEqual(0, syntaxDebugger.GetUnhandled().Count);
             Assert.AreEqual(0, modifierDebugger.GetUnhandled().Count);
+            Assert.AreEqual(0, accessorDebugger.GetUnhandled().Count);
 
-            //LogProductions();
             //LogUnhandledCommentElements();
             //LogComments(result.Indices);
         }
@@ -104,6 +116,28 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
+        public void LogUnhandledModifiers()
+        {
+            SortedSet<string> unhandled = modifierDebugger.GetUnhandled();
+
+            if (unhandled.Count > 0)
+            {
+                Log("--- unhandled modifiers ---");
+                Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
+            }
+        }
+
+        public void LogUnhandledAccessors()
+        {
+            SortedSet<string> unhandled = accessorDebugger.GetUnhandled();
+
+            if (unhandled.Count > 0)
+            {
+                Log("--- unhandled accessors ---");
+                Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
+            }
+        }
+
         public void LogComments(SymbolIndex index)
         {
             UriPath[] paths =
@@ -122,17 +156,6 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
 
             Log("~~~~~~~~~~~~~~~~~~~~~~~~");
-        }
-
-        public void LogUnhandledModifiers()
-        {
-            SortedSet<string> unhandled = modifierDebugger.GetUnhandled();
-
-            if (unhandled.Count > 0)
-            {
-                Log("--- unhandled modifiers ---");
-                Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
-            }
         }
 
         public void LogUnhandledCommentElements()

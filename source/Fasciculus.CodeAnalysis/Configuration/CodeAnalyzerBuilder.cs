@@ -69,6 +69,13 @@ namespace Fasciculus.CodeAnalysis.Configuration
             return this;
         }
 
+        public CodeAnalyzerBuilder WithAccessorDebugger(IAccessorDebugger accessorDebugger)
+        {
+            options.Debuggers.AccessorDebugger = accessorDebugger;
+
+            return this;
+        }
+
         public CodeAnalyzer Build()
             => new(options);
     }

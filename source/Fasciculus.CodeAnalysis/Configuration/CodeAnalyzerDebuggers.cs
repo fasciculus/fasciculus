@@ -7,5 +7,7 @@ namespace Fasciculus.CodeAnalysis.Configuration
         public INodeDebugger NodeDebugger { get; set; } = new NullNodeDebugger();
 
         public IModifierDebugger ModifierDebugger { get; set; } = new NullModifierDebugger();
+
+        public IAccessorDebugger AccessorDebugger { get; set; } = new NullAccessorDebugger();
     }
 }
