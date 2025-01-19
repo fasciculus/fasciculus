@@ -23,6 +23,7 @@ namespace Fasciculus.Site.Generating.Services
             Add("/");
             Add("/about.html");
             Add("/privacy.html");
+            Add("/releases.html");
         }
 
         private void AddStatics()
