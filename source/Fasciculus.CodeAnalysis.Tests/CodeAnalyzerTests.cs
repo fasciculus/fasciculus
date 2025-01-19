@@ -57,6 +57,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             Assert.AreEqual(6, interfaceCount);
             Assert.AreEqual(114, classCount);
 
+            Assert.AreEqual(0, syntaxDebugger.GetUnhandled().Count);
+            Assert.AreEqual(0, modifierDebugger.GetUnhandled().Count);
+
             //LogProductions();
             //LogUnhandledCommentElements();
             //LogComments(result.Indices);
