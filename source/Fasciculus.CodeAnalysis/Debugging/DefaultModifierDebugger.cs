@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Debugging
 {
-    public class ModifierDebugger : IModifierDebugger
+    public class DefaultModifierDebugger : IModifierDebugger
     {
         private readonly TaskSafeMutex mutex = new();
 
         private readonly SortedSet<string> handled;
         private readonly SortedSet<string> used = [];
 
-        public ModifierDebugger()
+        public DefaultModifierDebugger()
         {
             handled = new([
                 "public", "private", "protected", "internal",

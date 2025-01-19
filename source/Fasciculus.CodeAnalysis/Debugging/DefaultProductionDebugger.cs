@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Debugging
 {
-    public class ProductionDebugger : INodeDebugger
+    public class DefaultProductionDebugger : INodeDebugger
     {
         private readonly TaskSafeMutex mutex = new();
         private readonly SortedSet<ProductionDebuggerEntry> entries = [];
@@ -15,7 +15,7 @@ namespace Fasciculus.CodeAnalysis.Debugging
 
         public List<ProductionDebuggerEntry> this[SyntaxKind left] => GetEntries(left);
 
-        public ProductionDebugger(INodeDebugger? nextDebugger = null)
+        public DefaultProductionDebugger(INodeDebugger? nextDebugger = null)
         {
             this.nextDebugger = nextDebugger;
         }

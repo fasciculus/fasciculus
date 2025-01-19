@@ -6,20 +6,20 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Debugging
 {
-    public class SyntaxDebugger : INodeDebugger
+    public class DefaultSyntaxDebugger : INodeDebugger
     {
         private readonly TaskSafeMutex mutex = new();
 
         private readonly Dictionary<SyntaxKind, SyntaxDebuggerEntry> entries;
         private readonly INodeDebugger? nextDebugger;
 
-        public SyntaxDebugger(Dictionary<SyntaxKind, SyntaxDebuggerEntry> entries, INodeDebugger? nextDebugger = null)
+        public DefaultSyntaxDebugger(Dictionary<SyntaxKind, SyntaxDebuggerEntry> entries, INodeDebugger? nextDebugger = null)
         {
             this.entries = entries;
             this.nextDebugger = nextDebugger;
         }
 
-        public SyntaxDebugger()
+        public DefaultSyntaxDebugger()
             : this(new SyntaxDebuggerKnownEntries()) { }
 
         public void Add(SyntaxNode node)

@@ -22,9 +22,9 @@ namespace Fasciculus.CodeAnalysis.Tests
         private static readonly SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
         private static readonly string[] projectNames = ["Fasciculus.Core", "Fasciculus.Extensions"];
 
-        private readonly SyntaxDebugger syntaxDebugger;
-        private readonly ProductionDebugger productionDebugger;
-        private readonly ModifierDebugger modifierDebugger;
+        private readonly DefaultSyntaxDebugger syntaxDebugger;
+        private readonly DefaultProductionDebugger productionDebugger;
+        private readonly DefaultModifierDebugger modifierDebugger;
 
         public CodeAnalyzerTests()
         {
