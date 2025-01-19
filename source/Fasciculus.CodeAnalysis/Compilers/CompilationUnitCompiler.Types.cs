@@ -29,5 +29,24 @@ namespace Fasciculus.CodeAnalysis.Compilers
             base.VisitSimpleBaseType(node);
         }
 
+        protected virtual string GetTypeName(TypeSyntax type)
+        {
+            if (type is PredefinedTypeSyntax predefined) return GetTypeName(predefined);
+            if (type is GenericNameSyntax generic) return GetTypeName(generic);
+
+            return string.Empty;
+        }
+
+        protected virtual string GetTypeName(PredefinedTypeSyntax type)
+        {
+            return type.Keyword.ToString();
+        }
+
+        protected virtual string GetTypeName(GenericNameSyntax type)
+        {
+            TypeArgumentListSyntax args = type.TypeArgumentList;
+
+            return string.Empty;
+        }
     }
 }

@@ -47,13 +47,15 @@ namespace Fasciculus.CodeAnalysis.Tests
 
             IEnumerable<Symbol> symbols = result.Index.Symbols;
             int namespaceCount = symbols.Where(x => x.Kind == SymbolKind.Namespace).Count();
-            int classCount = symbols.Where(x => x.Kind == SymbolKind.Class).Count();
             int enumCount = symbols.Where(x => x.Kind == SymbolKind.Enum).Count();
+            int interfaceCount = symbols.Where(x => x.Kind == SymbolKind.Interface).Count();
+            int classCount = symbols.Where(x => x.Kind == SymbolKind.Class).Count();
 
             Assert.AreEqual(2, result.Packages.Count);
             Assert.AreEqual(37, namespaceCount);
-            Assert.AreEqual(114, classCount);
             Assert.AreEqual(2, enumCount);
+            Assert.AreEqual(6, interfaceCount);
+            Assert.AreEqual(114, classCount);
 
             //LogProductions();
             //LogUnhandledCommentElements();

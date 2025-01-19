@@ -30,8 +30,9 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
                 Modifiers = NamespaceSymbol.NamespaceModifiers,
             };
 
-            classes.Apply(@namespace.AddOrMergeWith);
             enums.Apply(@namespace.AddOrMergeWith);
+            interfaces.Apply(@namespace.AddOrMergeWith);
+            classes.Apply(@namespace.AddOrMergeWith);
 
             return @namespace;
         }

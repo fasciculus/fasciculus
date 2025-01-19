@@ -2,15 +2,15 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class ClassSymbol : TypeSymbol<ClassSymbol>
+    public class InterfaceSymbol : TypeSymbol<InterfaceSymbol>
     {
-        public ClassSymbol(TargetFramework framework, string package)
-            : base(SymbolKind.Class, framework, package) { }
+        public InterfaceSymbol(TargetFramework framework, string package)
+            : base(SymbolKind.Interface, framework, package) { }
 
-        private ClassSymbol(ClassSymbol other, bool clone)
+        private InterfaceSymbol(InterfaceSymbol other, bool clone)
             : base(other, clone) { }
 
-        public ClassSymbol Clone()
+        public InterfaceSymbol Clone()
         {
             return new(this, true)
             {

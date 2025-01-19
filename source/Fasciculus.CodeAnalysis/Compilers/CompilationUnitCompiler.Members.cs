@@ -197,6 +197,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
+                SymbolName name = new(node.Identifier.ValueText);
+                string type = GetTypeName(node.Type);
+
                 PushComment();
 
                 base.VisitPropertyDeclaration(node);

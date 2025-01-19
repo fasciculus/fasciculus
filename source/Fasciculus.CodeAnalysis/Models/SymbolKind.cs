@@ -4,7 +4,8 @@ namespace Fasciculus.CodeAnalysis.Models
     {
         Package,
         Namespace,
+        Enum,
+        Interface,
         Class,
-        Enum
     }
 }

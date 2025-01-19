@@ -4,16 +4,16 @@ using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class ClassBuilder : TypeBuilder
+    public class InterfaceBuilder : TypeBuilder
     {
-        public ClassBuilder(SymbolName name, UriPath link, TargetFramework framework, string package, SymbolModifiers modifiers)
+        public InterfaceBuilder(SymbolName name, UriPath link, TargetFramework framework, string package, SymbolModifiers modifiers)
             : base(name, link, framework, package, modifiers)
         {
         }
 
-        public ClassSymbol Build()
+        public InterfaceSymbol Build()
         {
-            ClassSymbol @class = new(Framework, Package)
+            InterfaceSymbol @interface = new(Framework, Package)
             {
                 Name = Name,
                 Link = Link,
@@ -21,7 +21,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
                 Comment = Comment
             };
 
-            return @class;
+            return @interface;
         }
     }
 }

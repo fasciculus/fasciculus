@@ -52,19 +52,9 @@ namespace Fasciculus.CodeAnalysis.Indexing
             {
                 index.Add(@namespace.Link, @namespace);
 
-                AddClasses(@namespace.Classes);
                 AddEnums(@namespace.Enums);
-            }
-        }
-
-        private void AddClasses(IEnumerable<ClassSymbol> classes)
-            => classes.Apply(AddClass);
-
-        private void AddClass(ClassSymbol @class)
-        {
-            if (IsIncluded(@class))
-            {
-                index.Add(@class.Link, @class);
+                AddInterfaces(@namespace.Interfaces);
+                AddClasses(@namespace.Classes);
             }
         }
 
@@ -76,6 +66,28 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(@enum))
             {
                 index.Add(@enum.Link, @enum);
+            }
+        }
+
+        private void AddInterfaces(IEnumerable<InterfaceSymbol> interfaces)
+            => interfaces.Apply(AddInterface);
+
+        private void AddInterface(InterfaceSymbol @interface)
+        {
+            if (IsIncluded(@interface))
+            {
+                index.Add(@interface.Link, @interface);
+            }
+        }
+
+        private void AddClasses(IEnumerable<ClassSymbol> classes)
+            => classes.Apply(AddClass);
+
+        private void AddClass(ClassSymbol @class)
+        {
+            if (IsIncluded(@class))
+            {
+                index.Add(@class.Link, @class);
             }
         }
 

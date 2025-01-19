@@ -4,7 +4,7 @@ using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class EnumBuilder : TypeBuilder, ICommentReceiver
+    public class EnumBuilder : TypeBuilder
     {
         public EnumBuilder(SymbolName name, UriPath link, TargetFramework framework, string package, SymbolModifiers modifiers)
             : base(name, link, framework, package, modifiers)

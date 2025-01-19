@@ -58,8 +58,9 @@ namespace Fasciculus.Site.Controllers
                 {
                     SymbolKind.Package => Package((PackageSymbol)symbol),
                     SymbolKind.Namespace => Namespace((NamespaceSymbol)symbol),
-                    SymbolKind.Class => Class((ClassSymbol)symbol),
                     SymbolKind.Enum => Enum((EnumSymbol)symbol),
+                    SymbolKind.Interface => Interface((InterfaceSymbol)symbol),
+                    SymbolKind.Class => Class((ClassSymbol)symbol),
                     _ => NotFound()
                 };
             }
@@ -92,20 +93,6 @@ namespace Fasciculus.Site.Controllers
             return View("Namespace", model);
         }
 
-        private ViewResult Class(ClassSymbol @class)
-        {
-            ApiClassViewModel model = new()
-            {
-                Title = @class.Name + " Class",
-                Class = @class,
-                Symbol = @class,
-                SourceUris = [.. GetSourceUris(@class)],
-                Navigation = navigation.Create(@class.Link)
-            };
-
-            return View("Class", model);
-        }
-
         private ViewResult Enum(EnumSymbol @enum)
         {
             ApiEnumViewModel model = new()
@@ -118,6 +105,34 @@ namespace Fasciculus.Site.Controllers
             };
 
             return View("Enum", model);
+        }
+
+        private ViewResult Interface(InterfaceSymbol @interface)
+        {
+            ApiInterfaceViewModel model = new()
+            {
+                Title = @interface.Name + " Interface",
+                Interface = @interface,
+                Symbol = @interface,
+                SourceUris = [.. GetSourceUris(@interface)],
+                Navigation = navigation.Create(@interface.Link)
+            };
+
+            return View("Interface", model);
+        }
+
+        private ViewResult Class(ClassSymbol @class)
+        {
+            ApiClassViewModel model = new()
+            {
+                Title = @class.Name + " Class",
+                Class = @class,
+                Symbol = @class,
+                SourceUris = [.. GetSourceUris(@class)],
+                Navigation = navigation.Create(@class.Link)
+            };
+
+            return View("Class", model);
         }
 
         private IEnumerable<Uri> GetSourceUris<T>(T type)

@@ -1,0 +1,20 @@
+@model ApiInterfaceViewModel
+
+<h1>@Model.Interface.Name Interface</h1>
+
+<h2>In this article</h2>
+
+<ul>
+    <li><a href="#definition">Definition</a></li>
+    <li><a href="#applies-to">Applies to</a></li>
+</ul>
+
+<h2 id="definition">Definition</h2>
+
+<partial name="_TypeInfo.cshtml" model=Model />
+
+<code>@Model.Interface.Modifiers interface @Model.Interface.Name</code>
+
+<p>@Html.Raw(@Model.Interface.Comment.Summary)</p>
+
+<partial name="_TargetFrameworks.cshtml" model=Model.Interface.Frameworks />

@@ -49,10 +49,12 @@ namespace Fasciculus.Site.Api.Services
 
         private static IEnumerable<UriPath> GetChildren(NamespaceSymbol @namespace)
         {
-            return @namespace.Classes.Cast<Symbol>()
+            IEnumerable<Symbol> symbols = Enumerable.Empty<Symbol>()
                 .Concat(@namespace.Enums)
-                .OrderBy(s => s.Name)
-                .Select(s => ToApiLink(s.Link));
+                .Concat(@namespace.Interfaces)
+                .Concat(@namespace.Classes);
+
+            return symbols.OrderBy(s => s.Name).Select(s => ToApiLink(s.Link));
         }
 
         private static UriPath ToSymbolLink(UriPath apiLink)

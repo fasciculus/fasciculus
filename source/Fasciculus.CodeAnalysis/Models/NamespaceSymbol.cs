@@ -9,16 +9,19 @@ namespace Fasciculus.CodeAnalysis.Models
         public static SymbolModifiers NamespaceModifiers
             => new() { IsPublic = true };
 
-        private readonly ClassList classes = [];
         private readonly EnumList enums = [];
+        private readonly InterfaceList interfaces = [];
+        private readonly ClassList classes = [];
 
-        public IEnumerable<ClassSymbol> Classes => classes;
         public IEnumerable<EnumSymbol> Enums => enums;
-
-        public override bool IsAccessible => classes.HasAccessible;
+        public IEnumerable<InterfaceSymbol> Interfaces => interfaces;
+        public IEnumerable<ClassSymbol> Classes => classes;
 
         public virtual bool IsEmpty
-            => classes.Count == 0 && enums.Count == 0;
+            => enums.Count == 0 && interfaces.Count == 0 && classes.Count == 0;
+
+        public override bool IsAccessible
+            => enums.HasAccessible || interfaces.HasAccessible || classes.HasAccessible;
 
         public NamespaceSymbol(TargetFramework framework, string package)
             : base(SymbolKind.Namespace, framework, package)
@@ -28,8 +31,9 @@ namespace Fasciculus.CodeAnalysis.Models
         private NamespaceSymbol(NamespaceSymbol other, bool clone)
             : base(other, clone)
         {
-            classes = other.classes.Clone();
             enums = other.enums.Clone();
+            interfaces = other.interfaces.Clone();
+            classes = other.classes.Clone();
         }
 
         public NamespaceSymbol Clone()
@@ -42,30 +46,37 @@ namespace Fasciculus.CodeAnalysis.Models
             };
         }
 
-        public void AddOrMergeWith(ClassSymbol @class)
-        {
-            classes.AddOrMergeWith(@class);
-        }
-
         public void AddOrMergeWith(EnumSymbol @enum)
         {
             enums.AddOrMergeWith(@enum);
+        }
+
+        public void AddOrMergeWith(InterfaceSymbol @interface)
+        {
+            interfaces.AddOrMergeWith(@interface);
+        }
+
+        public void AddOrMergeWith(ClassSymbol @class)
+        {
+            classes.AddOrMergeWith(@class);
         }
 
         public override void MergeWith(NamespaceSymbol other)
         {
             base.MergeWith(other);
 
-            classes.AddOrMergeWith(other.classes);
             enums.AddOrMergeWith(other.enums);
+            interfaces.AddOrMergeWith(other.interfaces);
+            classes.AddOrMergeWith(other.classes);
         }
 
         public override void ReBase(UriPath newBase)
         {
             base.ReBase(newBase);
 
-            classes.ReBase(newBase);
             enums.ReBase(newBase);
+            interfaces.ReBase(newBase);
+            classes.ReBase(newBase);
         }
     }
 }

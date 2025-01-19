@@ -40,8 +40,9 @@ namespace Fasciculus.Site.Generating.Services
             [
                 SymbolKind.Package,
                 SymbolKind.Namespace,
-                SymbolKind.Class,
                 SymbolKind.Enum,
+                SymbolKind.Interface,
+                SymbolKind.Class,
             ];
 
         private void AddApi(ApiContent apiContent, ApiNavigation apiNavigation)

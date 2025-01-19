@@ -7,7 +7,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
     {
         public UriPath Link { get; }
 
-        public void Add(ClassSymbol @class);
         public void Add(EnumSymbol @enum);
+        public void Add(InterfaceSymbol @interface);
+        public void Add(ClassSymbol @class);
     }
 }
