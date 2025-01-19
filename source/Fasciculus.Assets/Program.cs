@@ -1,4 +1,4 @@
-﻿using Fasciculus.Assets.Operations;
+using Fasciculus.Assets.Operations;
 
 namespace Fasciculus.Assets
 {
@@ -7,6 +7,7 @@ namespace Fasciculus.Assets
         public static void Main(string[] args)
         {
             CreateLogo.Execute();
+            CreateToDo.Execute();
         }
     }
 }
