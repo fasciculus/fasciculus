@@ -4,6 +4,7 @@ using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
+using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -14,17 +15,21 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public partial class CompilationUnitCompiler : CSharpSyntaxWalker
     {
-        private readonly CompilerContext context;
+        private readonly TaskSafeMutex mutex = new();
 
         public TargetFramework Framework { get; }
 
         public string Package { get; }
+
+        public DirectoryInfo ProjectDirectory { get; }
 
         public DirectoryInfo NamespaceCommentsDirectory { get; }
 
         public bool IncludeNonAccessible { get; }
 
         public ModifiersCompiler ModifiersCompiler { get; }
+
+        private readonly AccessorsCompiler accessorsCompiler;
 
         public INodeDebugger NodeDebugger { get; }
 
@@ -35,30 +40,27 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public CompilationUnitCompiler(CompilerContext context)
             : base(SyntaxWalkerDepth.StructuredTrivia)
         {
-            this.context = context;
-
             Framework = context.Framework;
             Package = context.Project.AssemblyName;
+            ProjectDirectory = context.ProjectDirectory;
             NamespaceCommentsDirectory = context.CommentsDirectory.Combine("Namespaces");
             IncludeNonAccessible = context.IncludeNonAccessible;
             ModifiersCompiler = new(context);
+            accessorsCompiler = new(context);
             NodeDebugger = context.Debuggers.NodeDebugger;
         }
 
         public virtual CompilationUnitInfo Compile(CompilationUnitSyntax node)
         {
-            Source = node.GetSource(context.ProjectDirectory);
+            using Locker locker = Locker.Lock(mutex);
+
+            Source = node.GetSource(ProjectDirectory);
 
             compilationUnit = new();
 
             node.Accept(this);
 
             return compilationUnit;
-        }
-
-        protected virtual UriPath GetSource(SyntaxNode node)
-        {
-            return UriPath.Empty;
         }
 
         protected virtual SymbolName GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)

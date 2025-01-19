@@ -1,5 +1,4 @@
 using Fasciculus.CodeAnalysis.Models;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Fasciculus.CodeAnalysis.Compilers
@@ -178,48 +177,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 PushComment();
 
                 base.VisitOperatorDeclaration(node);
-
-                PopComment();
-            }
-        }
-
-        public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // PropertyDeclaration
-            // : <return-type> ExplicitInterfaceSpecifier? ((AccessorList EqualsValueClause?) | ArrowExpressionClause)
-            //
-            // <return-type>
-            // : AttributeList? (IdentifierName | GenericName | PredefinedType | NullableType) 
-
-            NodeDebugger.Add(node);
-
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
-
-            if (IsIncluded(modifiers))
-            {
-                SymbolName name = new(node.Identifier.ValueText);
-                string type = GetTypeName(node.Type);
-                AccessorListSyntax? accessorList = node.AccessorList;
-
-                if (accessorList is not null)
-                {
-                    AccessorDeclarationSyntax[] accessors = [.. accessorList.Accessors];
-
-                    foreach (AccessorDeclarationSyntax accessor in accessors)
-                    {
-                        SyntaxTokenList accessorModifierList = accessor.Modifiers;
-
-                        if (accessorModifierList.Count > 0)
-                        {
-                            SymbolModifiers accessorModifiers = ModifiersCompiler.Compile(accessorModifierList);
-                        }
-                    }
-                }
-
-                PushComment();
-
-                base.VisitPropertyDeclaration(node);
 
                 PopComment();
             }

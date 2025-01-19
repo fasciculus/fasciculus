@@ -4,28 +4,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public partial class CompilationUnitCompiler
     {
-        public override void VisitAccessorDeclaration(AccessorDeclarationSyntax node)
-        {
-            // covers GetAccessorDeclaration, SetAccessorDeclaration, InitAccessorDeclaration, AddAccessorDeclaration,
-            //  RemoveAccessorDeclaration, UnknownAccessorDeclaration
-            //
-            // GetAccessorDeclaration: ArrowExpressionClause?
-            // SetAccessorDeclaration:
-
-            NodeDebugger.Add(node);
-
-            base.VisitAccessorDeclaration(node);
-        }
-
-        public override void VisitAccessorList(AccessorListSyntax node)
-        {
-            // AccessorList: GetAccessorDeclaration? SetAccessorDeclaration?
-
-            NodeDebugger.Add(node);
-
-            base.VisitAccessorList(node);
-        }
-
         public override void VisitAliasQualifiedName(AliasQualifiedNameSyntax node)
         {
             // AliasQualifiedName

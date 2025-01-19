@@ -8,9 +8,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     public class ModifiersCompiler
     {
-        private readonly IModifierDebugger debugger;
-
         private readonly TaskSafeMutex mutex = new();
+
+        private readonly IModifierDebugger debugger;
 
         private SymbolModifiers modifiers = new();
 
@@ -22,6 +22,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public SymbolModifiers Compile(SyntaxTokenList tokens)
         {
             using Locker locker = Locker.Lock(mutex);
+
             modifiers = new();
 
             tokens.Apply(VisitToken);
