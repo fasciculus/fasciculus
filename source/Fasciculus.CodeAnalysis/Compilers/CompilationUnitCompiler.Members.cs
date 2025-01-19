@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Fasciculus.CodeAnalysis.Compilers
@@ -199,6 +200,22 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 SymbolName name = new(node.Identifier.ValueText);
                 string type = GetTypeName(node.Type);
+                AccessorListSyntax? accessorList = node.AccessorList;
+
+                if (accessorList is not null)
+                {
+                    AccessorDeclarationSyntax[] accessors = [.. accessorList.Accessors];
+
+                    foreach (AccessorDeclarationSyntax accessor in accessors)
+                    {
+                        SyntaxTokenList accessorModifierList = accessor.Modifiers;
+
+                        if (accessorModifierList.Count > 0)
+                        {
+                            SymbolModifiers accessorModifiers = ModifiersCompiler.Compile(accessorModifierList);
+                        }
+                    }
+                }
 
                 PushComment();
 

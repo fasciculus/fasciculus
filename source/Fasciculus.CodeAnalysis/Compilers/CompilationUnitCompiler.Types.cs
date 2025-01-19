@@ -1,6 +1,7 @@
 using Fasciculus.CodeAnalysis.Compilers.Builders;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -31,22 +32,36 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         protected virtual string GetTypeName(TypeSyntax type)
         {
-            if (type is PredefinedTypeSyntax predefined) return GetTypeName(predefined);
-            if (type is GenericNameSyntax generic) return GetTypeName(generic);
+            if (type is PredefinedTypeSyntax predefined) return GetPredefinedTypeName(predefined);
+            if (type is IdentifierNameSyntax identifier) return GetIdentifierTypeName(identifier);
+            if (type is GenericNameSyntax generic) return GetGenericTypeName(generic);
+            if (type is NullableTypeSyntax nullable) return GetNullableTypeName(nullable);
 
             return string.Empty;
         }
 
-        protected virtual string GetTypeName(PredefinedTypeSyntax type)
+        protected virtual string GetPredefinedTypeName(PredefinedTypeSyntax type)
         {
             return type.Keyword.ToString();
         }
 
-        protected virtual string GetTypeName(GenericNameSyntax type)
+        protected virtual string GetIdentifierTypeName(IdentifierNameSyntax identifier)
         {
-            TypeArgumentListSyntax args = type.TypeArgumentList;
+            return identifier.Identifier.ValueText;
+        }
 
-            return string.Empty;
+        protected virtual string GetGenericTypeName(GenericNameSyntax type)
+        {
+            string name = type.Identifier.ValueText;
+            TypeSyntax[] args = [.. type.TypeArgumentList.Arguments];
+            string[] names = [.. args.Select(GetTypeName)];
+
+            return $"{name}<{string.Join(",", names)}>";
+        }
+
+        protected virtual string GetNullableTypeName(NullableTypeSyntax nullable)
+        {
+            return GetTypeName(nullable.ElementType) + "?";
         }
     }
 }
