@@ -35,7 +35,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         private readonly TargetFrameworks frameworks = [];
 
-        public IEnumerable<TargetFramework> Frameworks => frameworks;
+        public TargetFrameworks Frameworks => new(frameworks);
 
         private readonly SortedSet<string> packages;
 
