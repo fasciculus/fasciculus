@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Threading.Synchronization;
 using System;
 
@@ -16,9 +16,15 @@ namespace Fasciculus.Support.Progressing
 
         private readonly T start;
 
+        /// <summary>
+        /// The currently accumulated value.
+        /// </summary>
         [ObservableProperty]
         public partial T Current { get; private set; }
 
+        /// <summary>
+        /// The total value as set in <see cref="Begin(T)"/>.
+        /// </summary>
         [ObservableProperty]
         public partial T Total { get; private set; }
 
