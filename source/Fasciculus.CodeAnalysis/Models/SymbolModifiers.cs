@@ -12,7 +12,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public bool IsInternal { get; set; }
 
-        public bool IsAccessible => IsPublic || IsProtected;
+        public bool IsAccessible
+            => (IsPublic || IsProtected) || !(IsPrivate || IsInternal);
 
         public bool IsAbstract { get; set; }
 
