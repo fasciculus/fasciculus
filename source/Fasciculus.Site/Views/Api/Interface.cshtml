@@ -1,4 +1,7 @@
 @model ApiInterfaceViewModel
+@{
+    bool hasProperties = @Model.Interface.Properties.Any();
+}
 
 <h1>@Model.Interface.Name Interface</h1>
 
@@ -6,6 +9,10 @@
 
 <ul>
     <li><a href="#definition">Definition</a></li>
+    @if (hasProperties)
+    {
+        <li><a href="#properties">Properties</a></li>
+    }
     <li><a href="#applies-to">Applies to</a></li>
 </ul>
 
@@ -16,5 +23,10 @@
 <code>@Model.Interface.Modifiers interface @Model.Interface.Name</code>
 
 <p>@Html.Raw(@Model.Interface.Comment.Summary)</p>
+
+@if (hasProperties)
+{
+    <partial name="_Properties.cshtml" model=Model.Interface.Properties />
+}
 
 <partial name="_TargetFrameworks.cshtml" model=Model.Interface.Frameworks />
