@@ -11,7 +11,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public EnumList()
             : this([]) { }
 
-        private EnumList(EnumList other, bool clone)
+        private EnumList(EnumList other, bool _)
             : base(other.Select(e => e.Clone())) { }
 
         public EnumList Clone()
