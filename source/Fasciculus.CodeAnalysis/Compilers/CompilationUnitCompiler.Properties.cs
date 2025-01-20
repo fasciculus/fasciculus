@@ -14,9 +14,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // <return-type>
             // : AttributeList? (IdentifierName | GenericName | PredefinedType | NullableType) 
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -56,7 +56,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // GetAccessorDeclaration: ArrowExpressionClause?
             // SetAccessorDeclaration:
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitAccessorDeclaration(node);
         }
@@ -65,7 +65,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // AccessorList: GetAccessorDeclaration? SetAccessorDeclaration?
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitAccessorList(node);
         }

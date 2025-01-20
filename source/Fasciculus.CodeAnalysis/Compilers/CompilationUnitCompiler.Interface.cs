@@ -42,9 +42,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // InterfaceDeclaration
             // : TypeParameterList? BaseList? TypeParameterConstraintClause? MethodDeclaration*
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {

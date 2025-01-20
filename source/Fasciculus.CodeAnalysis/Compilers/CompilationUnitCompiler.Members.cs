@@ -10,10 +10,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // ConstructorDeclaration
             // : ParameterList (BaseConstructorInitializer | ThisConstructorInitializer)? Block
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
             string name = GetName(node.Identifier, null);
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -33,10 +33,10 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // 
             // may have Block?
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
             string name = node.Type.ToString();
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -53,9 +53,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // DestructorDeclaration: ParameterList Block
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -72,9 +72,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // EventFieldDeclaration: VariableDeclaration
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -91,9 +91,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // FieldDeclaration: VariableDeclaration
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -111,9 +111,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // IndexerDeclaration
             // : PredefinedType BracketedParameterList ArrowExpressionClause
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -130,7 +130,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // covers SimpleMemberAccessExpression and PointerMemberAccessExpression
             // SimpleMemberAccessExpression: (IdentifierName | GenericName) IdentifierName
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitMemberAccessExpression(node);
         }
@@ -148,9 +148,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | ArrayType
             // | NullableType
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -168,9 +168,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // OperatorDeclaration
             // : AttributeList IdentifierName ParameterList ArrowExpressionClause
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {

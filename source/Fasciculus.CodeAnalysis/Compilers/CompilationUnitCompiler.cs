@@ -1,4 +1,3 @@
-using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
@@ -24,11 +23,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public DirectoryInfo NamespaceCommentsDirectory { get; }
 
-        public ModifiersCompiler ModifiersCompiler { get; }
-
         private readonly AccessorsCompiler accessorsCompiler;
-
-        public INodeDebugger NodeDebugger { get; }
 
         protected UriPath Source { get; set; } = UriPath.Empty;
 
@@ -41,9 +36,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             Package = context.Project.AssemblyName;
             ProjectDirectory = context.ProjectDirectory;
             NamespaceCommentsDirectory = context.CommentsDirectory.Combine("Namespaces");
-            ModifiersCompiler = new(context);
+
             accessorsCompiler = new(context);
-            NodeDebugger = context.Debuggers.NodeDebugger;
         }
 
         public virtual CompilationUnitInfo Compile(CompilationUnitSyntax node)
@@ -80,7 +74,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //
             // CompilationUnit: UsingDirective* AttributeList* NamespaceDeclaration*
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitCompilationUnit(node);
         }
@@ -91,7 +85,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // : IdentifierName
             // | QualifiedName
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
             base.VisitUsingDirective(node);
         }

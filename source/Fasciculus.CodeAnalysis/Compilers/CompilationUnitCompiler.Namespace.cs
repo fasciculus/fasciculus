@@ -51,7 +51,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // NamespaceDeclaration
             // : QualifiedName ClassDeclaration* InterfaceDeclaration* EnumDeclaration*
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
             SymbolName name = new(node.Name.ToString());
 

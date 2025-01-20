@@ -56,9 +56,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //
             // TypeParameterConstraintClause only when TypeParameterList 
 
-            NodeDebugger.Add(node);
+            nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = ModifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {

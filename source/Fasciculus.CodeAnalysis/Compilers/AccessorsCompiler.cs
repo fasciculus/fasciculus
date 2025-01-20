@@ -10,7 +10,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly INodeDebugger nodeDebugger;
         private readonly IAccessorDebugger accessorDebugger;
 
         private AccessorList accessors = [];
@@ -18,7 +17,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public AccessorsCompiler(CompilerContext context)
             : base(context, SyntaxWalkerDepth.Node)
         {
-            nodeDebugger = context.Debuggers.NodeDebugger;
             accessorDebugger = context.Debuggers.AccessorDebugger;
         }
 
@@ -36,6 +34,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public override void VisitAccessorList(AccessorListSyntax node)
         {
             // AccessorList: GetAccessorDeclaration? SetAccessorDeclaration?
+            // and more
 
             nodeDebugger.Add(node);
 
@@ -53,7 +52,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             nodeDebugger.Add(node);
 
             base.VisitAccessorDeclaration(node);
-        }
 
+
+        }
     }
 }
