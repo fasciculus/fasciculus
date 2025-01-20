@@ -6,14 +6,13 @@ using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.IO;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class CompilationUnitCompiler : CSharpSyntaxWalker
+    public partial class CompilationUnitCompiler : CompilerBase
     {
         private readonly TaskSafeMutex mutex = new();
 
@@ -24,8 +23,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public DirectoryInfo ProjectDirectory { get; }
 
         public DirectoryInfo NamespaceCommentsDirectory { get; }
-
-        public bool IncludeNonAccessible { get; }
 
         public ModifiersCompiler ModifiersCompiler { get; }
 
@@ -38,13 +35,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
         protected CompilationUnitInfo compilationUnit = new();
 
         public CompilationUnitCompiler(CompilerContext context)
-            : base(SyntaxWalkerDepth.StructuredTrivia)
+            : base(context, SyntaxWalkerDepth.StructuredTrivia)
         {
             Framework = context.Framework;
             Package = context.Project.AssemblyName;
             ProjectDirectory = context.ProjectDirectory;
             NamespaceCommentsDirectory = context.CommentsDirectory.Combine("Namespaces");
-            IncludeNonAccessible = context.IncludeNonAccessible;
             ModifiersCompiler = new(context);
             accessorsCompiler = new(context);
             NodeDebugger = context.Debuggers.NodeDebugger;
@@ -76,10 +72,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             return new(name, parameters);
         }
-
-        protected bool IsIncluded(SymbolModifiers modifiers)
-            => IncludeNonAccessible || modifiers.IsAccessible;
-
 
         public override void VisitCompilationUnit(CompilationUnitSyntax node)
         {

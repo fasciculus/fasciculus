@@ -1,12 +1,12 @@
 using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Threading.Synchronization;
-using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class AccessorsCompiler : CSharpSyntaxWalker
+    public class AccessorsCompiler : CompilerBase
     {
         private readonly TaskSafeMutex mutex = new();
 
@@ -16,7 +16,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private AccessorList accessors = [];
 
         public AccessorsCompiler(CompilerContext context)
-            : base(Microsoft.CodeAnalysis.SyntaxWalkerDepth.Node)
+            : base(context, SyntaxWalkerDepth.Node)
         {
             nodeDebugger = context.Debuggers.NodeDebugger;
             accessorDebugger = context.Debuggers.AccessorDebugger;
