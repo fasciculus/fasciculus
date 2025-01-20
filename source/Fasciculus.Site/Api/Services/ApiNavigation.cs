@@ -46,7 +46,33 @@ namespace Fasciculus.Site.Api.Services
 
         protected override string GetLabel(UriPath link)
         {
-            return content.GetSymbol(ToSymbolLink(link))?.Name ?? string.Empty;
+            Symbol? symbol = content.GetSymbol(ToSymbolLink(link));
+
+            if (symbol is not null)
+            {
+                return symbol.Name;
+            }
+
+            if (link.Last() == "Properties")
+            {
+                return "Properties";
+            }
+
+            return string.Empty;
+        }
+
+        protected override bool IsOpen(UriPath link, UriPath selected)
+        {
+            if (link.Count > 0)
+            {
+                return link[link.Count - 1] switch
+                {
+                    "Properties" => base.IsOpen(link.Parent, selected),
+                    _ => base.IsOpen(link, selected),
+                };
+            }
+
+            return base.IsOpen(link, selected);
         }
 
         protected override IEnumerable<UriPath> GetChildren(UriPath link)
@@ -59,8 +85,14 @@ namespace Fasciculus.Site.Api.Services
                 {
                     SymbolKind.Package => GetChildren((PackageSymbol)symbol),
                     SymbolKind.Namespace => GetChildren((NamespaceSymbol)symbol),
+                    SymbolKind.Class => GetChildren((ClassSymbol)symbol),
                     _ => []
                 };
+            }
+
+            if (link.Last() == "Properties")
+            {
+                return Properties(link);
             }
 
             return [];
@@ -78,6 +110,33 @@ namespace Fasciculus.Site.Api.Services
 
             return symbols.OrderBy(s => s.Name).Select(s => ToApiLink(s.Link));
         }
+
+        private static IEnumerable<UriPath> GetChildren(ClassSymbol @class)
+        {
+            if (@class.Properties.Any())
+            {
+                yield return ToApiLink(@class.Link).Append("Properties");
+            }
+        }
+
+        private IEnumerable<UriPath> Properties(UriPath link)
+        {
+            Symbol? symbol = content.GetSymbol(ToSymbolLink(link.Parent));
+
+            if (symbol is not null)
+            {
+                return symbol.Kind switch
+                {
+                    SymbolKind.Class => Properties((ClassSymbol)symbol),
+                    _ => []
+                };
+            }
+
+            return [];
+        }
+
+        private static IEnumerable<UriPath> Properties(ClassSymbol @class)
+            => @class.Properties.Select(p => ToApiLink(p.Link));
 
         private static UriPath ToSymbolLink(UriPath apiLink)
             => new(apiLink.Skip(1));
