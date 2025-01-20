@@ -36,26 +36,30 @@ namespace Fasciculus.Site.Generating.Services
             paths.Apply(Add);
         }
 
-        private static readonly SortedSet<SymbolKind> DocumentsSymbolKinds =
-            [
-                SymbolKind.Package,
-                SymbolKind.Namespace,
-                SymbolKind.Enum,
-                SymbolKind.Interface,
-                SymbolKind.Class,
-            ];
-
         private void AddApi(ApiContent apiContent, ApiNavigation apiNavigation)
         {
             Add("/api/");
 
             foreach (Symbol symbol in apiContent.Index.Symbols)
             {
-                if (DocumentsSymbolKinds.Contains(symbol.Kind))
+                if (IsLeaf(symbol.Kind))
+                {
+                    Add($"/api/{symbol.Link}.html");
+                }
+                else
                 {
                     Add($"/api/{symbol.Link}/");
                 }
             }
+        }
+
+        private bool IsLeaf(SymbolKind kind)
+        {
+            return kind switch
+            {
+                SymbolKind.Property => true,
+                _ => false,
+            };
         }
 
         private void AddBlog(BlogContent blogContent)
