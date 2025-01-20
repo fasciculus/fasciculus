@@ -14,6 +14,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
                 Comment = Comment
             };
 
+            Populate(@interface);
+
             return @interface;
         }
     }

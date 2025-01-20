@@ -66,6 +66,7 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(@enum))
             {
                 index.Add(@enum.Link, @enum);
+                AddProperties(@enum.Properties);
             }
         }
 
@@ -77,6 +78,7 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(@interface))
             {
                 index.Add(@interface.Link, @interface);
+                AddProperties(@interface.Properties);
             }
         }
 
@@ -88,6 +90,18 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(@class))
             {
                 index.Add(@class.Link, @class);
+                AddProperties(@class.Properties);
+            }
+        }
+
+        private void AddProperties(IEnumerable<PropertySymbol> properties)
+            => properties.Apply(AddProperty);
+
+        private void AddProperty(PropertySymbol property)
+        {
+            if (IsIncluded(property))
+            {
+                index.Add(property.Link, property);
             }
         }
 

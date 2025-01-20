@@ -3,7 +3,7 @@ using Fasciculus.Collections;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class PropertyBuilder : SymbolBuilder<PropertySymbol>
+    public class PropertyBuilder : MemberBuilder<PropertySymbol>
     {
         public required AccessorList Accessors { get; init; }
 
@@ -15,6 +15,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
                 Link = Link,
                 Modifiers = Modifiers,
                 Comment = Comment,
+                Type = Type,
             };
 
             Accessors.Apply(property.Add);

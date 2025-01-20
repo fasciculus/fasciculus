@@ -1,10 +1,50 @@
+using Fasciculus.CodeAnalysis.Compilers.Builders;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
     public partial class CompilationUnitCompiler
     {
+        private readonly Stack<PropertyBuilder> propertyBuilders = [];
+
+        private void PushProperty(SymbolName name, SymbolModifiers modifiers, string type, AccessorList accessors)
+        {
+            UriPath link = memberReceivers.Peek().Link.Append(name.Name);
+
+            PropertyBuilder builder = new()
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = modifiers,
+                Type = type,
+                Accessors = accessors
+            };
+
+            propertyBuilders.Push(builder);
+            commentReceivers.Push(builder);
+
+            PushComment();
+        }
+
+        private void PopProperty()
+        {
+            PopComment();
+
+            commentReceivers.Pop();
+
+            PropertyBuilder builder = propertyBuilders.Pop();
+            PropertySymbol property = builder.Build();
+
+            property.AddSource(Source);
+
+            memberReceivers.Peek().Add(property);
+        }
+
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
             // HasTrivia: True
@@ -24,9 +64,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 string type = GetTypeName(node.Type);
                 AccessorList accessors = accessorsCompiler.Compile(node);
 
-                PushComment();
+                PushProperty(name, modifiers, type, accessors);
                 base.VisitPropertyDeclaration(node);
-                PopComment();
+                PopProperty();
             }
         }
 

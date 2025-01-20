@@ -58,16 +58,18 @@ namespace Fasciculus.CodeAnalysis.Tests
             LogUnhandledAccessors();
 
             IEnumerable<Symbol> symbols = result.Index.Symbols;
-            int namespaceCount = symbols.Where(x => x.Kind == SymbolKind.Namespace).Count();
-            int enumCount = symbols.Where(x => x.Kind == SymbolKind.Enum).Count();
-            int interfaceCount = symbols.Where(x => x.Kind == SymbolKind.Interface).Count();
-            int classCount = symbols.Where(x => x.Kind == SymbolKind.Class).Count();
+            NamespaceSymbol[] namespaces = [.. symbols.Where(x => x.Kind == SymbolKind.Namespace).Cast<NamespaceSymbol>()];
+            EnumSymbol[] enums = [.. symbols.Where(x => x.Kind == SymbolKind.Enum).Cast<EnumSymbol>()];
+            InterfaceSymbol[] interfaces = [.. symbols.Where(x => x.Kind == SymbolKind.Interface).Cast<InterfaceSymbol>()];
+            ClassSymbol[] classes = [.. symbols.Where(x => x.Kind == SymbolKind.Class).Cast<ClassSymbol>()];
+            PropertySymbol[] properties = [.. symbols.Where(x => x.Kind == SymbolKind.Property).Cast<PropertySymbol>()];
 
             Assert.AreEqual(2, result.Packages.Count);
-            Assert.AreEqual(37, namespaceCount);
-            Assert.AreEqual(2, enumCount);
-            Assert.AreEqual(6, interfaceCount);
-            Assert.AreEqual(114, classCount);
+            Assert.AreEqual(37, namespaces.Length);
+            Assert.AreEqual(2, enums.Length);
+            Assert.AreEqual(6, interfaces.Length);
+            Assert.AreEqual(114, classes.Length);
+            Assert.AreEqual(88, properties.Length);
 
             Assert.AreEqual(0, syntaxDebugger.GetUnhandled().Count);
             Assert.AreEqual(0, modifierDebugger.GetUnhandled().Count);
