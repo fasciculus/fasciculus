@@ -5,7 +5,7 @@ using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class TypeBuilder : TypeReceiver, ICommentReceiver
+    public class TypeBuilder : TypeReceiver, ICommentReceiver, IMemberReceiver
     {
         public SymbolName Name { get; }
 
@@ -17,6 +17,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public SymbolComment Comment { get; set; } = SymbolComment.Empty;
 
+        protected PropertyList properties = [];
+
         public TypeBuilder(SymbolName name, UriPath link, TargetFramework framework, string package, SymbolModifiers modifiers)
             : base(link)
         {
@@ -24,6 +26,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
             Framework = framework;
             Package = package;
             Modifiers = modifiers;
+        }
+
+        public void Add(PropertySymbol property)
+        {
+            properties.AddOrMergeWith(property);
         }
     }
 }

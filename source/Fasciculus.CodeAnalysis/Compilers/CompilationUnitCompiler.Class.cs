@@ -18,6 +18,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             classBuilders.Push(builder);
             typeReceivers.Push(builder);
             commentReceivers.Push(builder);
+            memberReceivers.Push(builder);
 
             PushComment();
         }

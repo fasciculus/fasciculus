@@ -29,5 +29,10 @@ namespace Fasciculus.CodeAnalysis.Models
                 Modifiers = Modifiers,
             };
         }
+
+        public void Add(AccessorInfo accessor)
+        {
+            accessors.Add(accessor);
+        }
     }
 }

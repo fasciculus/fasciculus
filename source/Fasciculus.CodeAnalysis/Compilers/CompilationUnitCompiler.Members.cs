@@ -1,10 +1,14 @@
+using Fasciculus.CodeAnalysis.Compilers.Builders;
 using Fasciculus.CodeAnalysis.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
     public partial class CompilationUnitCompiler
     {
+        private readonly Stack<IMemberReceiver> memberReceivers = [];
+
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
             // ConstructorDeclaration
