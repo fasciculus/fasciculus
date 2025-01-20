@@ -1,4 +1,7 @@
 @model ApiClassViewModel
+@{
+    bool hasProperties = @Model.Class.Properties.Any();
+}
 
 <h1>@Model.Class.Name Class</h1>
 
@@ -6,6 +9,10 @@
 
 <ul>
     <li><a href="#definition">Definition</a></li>
+    @if (hasProperties)
+    {
+        <li><a href="#properties">Properties</a></li>
+    }
     <li><a href="#applies-to">Applies to</a></li>
 </ul>
 
@@ -16,5 +23,10 @@
 <code>@Model.Class.Modifiers class @Model.Class.Name</code>
 
 <p>@Html.Raw(@Model.Class.Comment.Summary)</p>
+
+@if (hasProperties)
+{
+    <partial name="_Properties.cshtml" model=Model.Class.Properties />
+}
 
 <partial name="_TargetFrameworks.cshtml" model=Model.Class.Frameworks />

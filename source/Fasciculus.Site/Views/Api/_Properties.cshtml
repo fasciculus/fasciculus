@@ -1,0 +1,21 @@
+@model PropertyList
+
+<h2 id="properties">Properties</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Property</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (PropertySymbol property in Model)
+        {
+            <tr>
+                <td>@property.Name</td>
+                <td>@Html.Raw(@property.Comment.Summary)</td>
+            </tr>
+        }
+    </tbody>
+</table>
