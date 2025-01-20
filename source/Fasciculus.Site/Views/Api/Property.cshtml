@@ -1,0 +1,21 @@
+@model ApiPropertyViewModel
+@{
+    PropertySymbol property = Model.Property;
+}
+
+<h1>@property.Name Property</h1>
+
+<h2>In this article</h2>
+
+<ul>
+    <li><a href="#definition">Definition</a></li>
+    <li><a href="#applies-to">Applies to</a></li>
+</ul>
+
+<h2 id="definition">Definition</h2>
+
+<code>@property.Modifiers @property.Type @property.Name @property.Accessors</code>
+
+<p>@Html.Raw(property.Comment.Summary)</p>
+
+<partial name="_TargetFrameworks.cshtml" model=property.Frameworks />

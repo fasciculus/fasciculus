@@ -44,8 +44,32 @@ namespace Fasciculus.Site.Controllers
             => Container(p1, p2);
 
         [Route("/api/{p1}/{p2}/{p3}/")]
-        public IActionResult Container2(string p1, string p2, string p3)
+        public IActionResult Container3(string p1, string p2, string p3)
             => Container(p1, p2, p3);
+
+        [Route("/api/{p1}/{p2}/{p3}/{p4}")]
+        public IActionResult Container4(string p1, string p2, string p3, string p4)
+            => Container(p1, p2, p3, p4);
+
+        [Route("/api/{p1}.html")]
+        public IActionResult Document1(string p1)
+            => Document(p1);
+
+        [Route("/api/{p1}/{p2}.html")]
+        public IActionResult Document2(string p1, string p2)
+            => Document(p1, p2);
+
+        [Route("/api/{p1}/{p2}/{p3}.html")]
+        public IActionResult Document3(string p1, string p2, string p3)
+            => Document(p1, p2, p3);
+
+        [Route("/api/{p1}/{p2}/{p3}/{p4}.html")]
+        public IActionResult Document4(string p1, string p2, string p3, string p4)
+            => Document(p1, p2, p3, p4);
+
+        [Route("/api/{p1}/{p2}/{p3}/{p4}/{p5}.html")]
+        public IActionResult Document5(string p1, string p2, string p3, string p4, string p5)
+            => Document(p1, p2, p3, p4, p5);
 
         private IActionResult Container(params string[] parts)
         {
@@ -61,6 +85,23 @@ namespace Fasciculus.Site.Controllers
                     SymbolKind.Enum => Enum((EnumSymbol)symbol),
                     SymbolKind.Interface => Interface((InterfaceSymbol)symbol),
                     SymbolKind.Class => Class((ClassSymbol)symbol),
+                    _ => NotFound()
+                };
+            }
+
+            return NotFound();
+        }
+
+        private IActionResult Document(params string[] parts)
+        {
+            UriPath path = new(parts);
+            Symbol? symbol = content.GetSymbol(path);
+
+            if (symbol is not null)
+            {
+                return symbol.Kind switch
+                {
+                    SymbolKind.Property => Property((PropertySymbol)symbol),
                     _ => NotFound()
                 };
             }
@@ -133,6 +174,18 @@ namespace Fasciculus.Site.Controllers
             };
 
             return View("Class", model);
+        }
+
+        private ViewResult Property(PropertySymbol property)
+        {
+            ApiPropertyViewModel model = new()
+            {
+                Title = property.Name + " Property",
+                Property = property,
+                Navigation = navigation.Create(property.Link)
+            };
+
+            return View("Property", model);
         }
 
         private IEnumerable<Uri> GetSourceUris<T>(T type)

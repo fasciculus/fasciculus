@@ -13,7 +13,7 @@
         @foreach (PropertySymbol property in Model)
         {
             <tr>
-                <td>@property.Name</td>
+                <td><a href="~/api/@(property.Link).html">@property.Name</a></td>
                 <td>@Html.Raw(@property.Comment.Summary)</td>
             </tr>
         }
