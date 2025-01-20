@@ -13,7 +13,15 @@ namespace Fasciculus.CodeAnalysis.Compilers
         protected virtual void PushEnum(SymbolName name, SymbolModifiers modifiers)
         {
             UriPath link = typeReceivers.Peek().Link.Append(name.Mangled);
-            EnumBuilder builder = new(name, link, Framework, Package, modifiers);
+
+            EnumBuilder builder = new()
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = modifiers,
+            };
 
             enumBuilders.Push(builder);
             typeReceivers.Push(builder);

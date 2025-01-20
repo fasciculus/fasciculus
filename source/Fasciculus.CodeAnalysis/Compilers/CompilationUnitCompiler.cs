@@ -1,5 +1,4 @@
 using Fasciculus.CodeAnalysis.Extensions;
-using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
@@ -15,13 +14,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly TaskSafeMutex mutex = new();
 
-        public TargetFramework Framework { get; }
-
-        public string Package { get; }
-
-        public DirectoryInfo ProjectDirectory { get; }
-
-        public DirectoryInfo NamespaceCommentsDirectory { get; }
+        protected readonly DirectoryInfo namespaceCommentsDirectory;
 
         private readonly AccessorsCompiler accessorsCompiler;
 
@@ -32,10 +25,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public CompilationUnitCompiler(CompilerContext context)
             : base(context, SyntaxWalkerDepth.StructuredTrivia)
         {
-            Framework = context.Framework;
-            Package = context.Project.AssemblyName;
-            ProjectDirectory = context.ProjectDirectory;
-            NamespaceCommentsDirectory = context.CommentsDirectory.Combine("Namespaces");
+            namespaceCommentsDirectory = context.CommentsDirectory.Combine("Namespaces");
 
             accessorsCompiler = new(context);
         }
@@ -44,7 +34,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             using Locker locker = Locker.Lock(mutex);
 
-            Source = node.GetSource(ProjectDirectory);
+            Source = node.GetSource(projectDirectory);
 
             compilationUnit = new();
 

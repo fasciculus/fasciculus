@@ -13,7 +13,15 @@ namespace Fasciculus.CodeAnalysis.Compilers
         protected virtual void PushClass(SymbolName name, SymbolModifiers modifiers)
         {
             UriPath link = typeReceivers.Peek().Link.Append(name.Mangled);
-            ClassBuilder builder = new(name, link, Framework, Package, modifiers);
+
+            ClassBuilder builder = new()
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = modifiers,
+            };
 
             classBuilders.Push(builder);
             typeReceivers.Push(builder);

@@ -20,13 +20,21 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 return namespaceBuilders.Peek().Link.Append(name);
             }
 
-            return new(Package, name);
+            return new(package, name);
         }
 
         protected virtual void PushNamespace(SymbolName name)
         {
             UriPath link = CreateNamespaceLink(name);
-            NamespaceBuilder builder = new(name, link, Framework, Package);
+
+            NamespaceBuilder builder = new()
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = new()
+            };
 
             namespaceBuilders.Push(builder);
             typeReceivers.Push(builder);
@@ -38,7 +46,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             NamespaceBuilder builder = namespaceBuilders.Pop();
             NamespaceSymbol @namespace = builder.Build();
-            FileInfo commentFile = NamespaceCommentsDirectory.File($"{builder.Name}.xml");
+            FileInfo commentFile = namespaceCommentsDirectory.File($"{builder.Name}.xml");
 
             @namespace.Comment = SymbolComment.FromFile(commentFile);
 
