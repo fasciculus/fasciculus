@@ -46,8 +46,9 @@ namespace Fasciculus.CodeAnalysis.Debugging
 
             Add(SyntaxKind.EnumDeclaration, [SyntaxKind.EnumMemberDeclaration]);
 
-            Add(SyntaxKind.EqualsValueClause, [SyntaxKind.CollectionExpression, SyntaxKind.DefaultLiteralExpression,
-                SyntaxKind.FalseLiteralExpression, SyntaxKind.ImplicitObjectCreationExpression, SyntaxKind.NullLiteralExpression]);
+            Add(SyntaxKind.EqualsValueClause, [SyntaxKind.CollectionExpression, SyntaxKind.ConditionalExpression,
+                SyntaxKind.DefaultLiteralExpression, SyntaxKind.FalseLiteralExpression, SyntaxKind.IdentifierName,
+                SyntaxKind.ImplicitObjectCreationExpression, SyntaxKind.NullLiteralExpression, SyntaxKind.SimpleMemberAccessExpression]);
 
             Add(SyntaxKind.EventFieldDeclaration, [SyntaxKind.VariableDeclaration]);
 
