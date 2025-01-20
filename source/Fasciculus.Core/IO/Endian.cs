@@ -1,4 +1,4 @@
-﻿using Fasciculus.Support;
+using Fasciculus.Support;
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -16,17 +16,17 @@ namespace Fasciculus.IO
         /// <summary>
         /// Little-endian converter.
         /// </summary>
-        public static readonly Endian Little = BitConverter.IsLittleEndian ? straight : reverted;
+        public static Endian Little { get; } = BitConverter.IsLittleEndian ? straight : reverted;
 
         /// <summary>
         /// Big-endian converter.
         /// </summary>
-        public static readonly Endian Big = BitConverter.IsLittleEndian ? reverted : straight;
+        public static Endian Big { get; } = BitConverter.IsLittleEndian ? reverted : straight;
 
         /// <summary>
         /// Converter using current endianness.
         /// </summary>
-        public static readonly Endian Current = straight;
+        public static Endian Current { get; } = straight;
 
         /// <summary>
         /// Reads the first 2 bytes of the given <paramref name="buffer"/> and converts them to a <see cref="short"/>

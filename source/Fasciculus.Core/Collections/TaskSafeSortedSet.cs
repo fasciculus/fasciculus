@@ -1,4 +1,4 @@
-﻿using Fasciculus.Threading.Synchronization;
+using Fasciculus.Threading.Synchronization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,8 +19,19 @@ namespace Fasciculus.Collections
         /// </summary>
         public int Count => Locker.Locked(mutex, () => values.Count);
 
+        /// <summary>
+        /// Always <c>false</c>.
+        /// </summary>
         bool ICollection<T>.IsReadOnly => false;
+
+        /// <summary>
+        /// Always <c>false</c>.
+        /// </summary>
         bool ICollection.IsSynchronized => false;
+
+        /// <summary>
+        /// Always <c>this</c>.
+        /// </summary>
         object ICollection.SyncRoot => this;
 
         /// <summary>

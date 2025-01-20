@@ -16,12 +16,12 @@ namespace Fasciculus.Net.Navigating
         /// <summary>
         /// The empty path.
         /// </summary>
-        public static readonly UriPath Empty = new();
+        public static UriPath Empty { get; } = new();
 
         /// <summary>
         /// The comparer used in this class. Set to <see cref="StringComparer.InvariantCultureIgnoreCase"/>
         /// </summary>
-        public static readonly StringComparer Comparer = StringComparer.InvariantCultureIgnoreCase;
+        public static StringComparer Comparer { get; } = StringComparer.InvariantCultureIgnoreCase;
 
         private readonly List<string> parts;
 
