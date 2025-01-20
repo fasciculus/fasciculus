@@ -129,7 +129,7 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         public void LogUnhandledAccessors()
         {
-            SortedSet<string> unhandled = accessorDebugger.GetUnhandled();
+            SortedSet<SyntaxKind> unhandled = accessorDebugger.GetUnhandled();
 
             if (unhandled.Count > 0)
             {

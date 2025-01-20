@@ -9,6 +9,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<AccessorInfo> Accessors => accessors;
 
+        public int Count => accessors.Count;
+
         public void Add(AccessorInfo accessor)
             => accessors.Add(accessor);
 

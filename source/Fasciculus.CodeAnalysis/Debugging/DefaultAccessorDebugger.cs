@@ -1,4 +1,6 @@
 using Fasciculus.Threading.Synchronization;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Debugging
@@ -7,26 +9,26 @@ namespace Fasciculus.CodeAnalysis.Debugging
     {
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly SortedSet<string> handled;
-        private readonly SortedSet<string> used = [];
+        private readonly SortedSet<SyntaxKind> handled;
+        private readonly SortedSet<SyntaxKind> used = [];
 
         public DefaultAccessorDebugger()
         {
-            handled = new([]);
+            handled = new([SyntaxKind.GetAccessorDeclaration, SyntaxKind.SetAccessorDeclaration]);
         }
 
-        public void Add(string accessor)
+        public void Add(AccessorDeclarationSyntax node)
         {
             using Locker locker = Locker.Lock(mutex);
 
-            used.Add(accessor);
+            used.Add(node.Kind());
         }
 
-        public SortedSet<string> GetUnhandled()
+        public SortedSet<SyntaxKind> GetUnhandled()
         {
             using Locker locker = Locker.Lock(mutex);
 
-            SortedSet<string> unhandled = new(used);
+            SortedSet<SyntaxKind> unhandled = new(used);
 
             unhandled.ExceptWith(handled);
 

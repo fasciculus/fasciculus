@@ -1,7 +1,9 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Fasciculus.CodeAnalysis.Debugging
 {
     public interface IAccessorDebugger
     {
-        public void Add(string accessor);
+        public void Add(AccessorDeclarationSyntax node);
     }
 }
