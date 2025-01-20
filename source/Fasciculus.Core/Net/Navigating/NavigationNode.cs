@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Fasciculus.Net.Navigating
 {
@@ -7,6 +7,11 @@ namespace Fasciculus.Net.Navigating
     /// </summary>
     public class NavigationNode
     {
+        /// <summary>
+        /// The node's kind.
+        /// </summary>
+        public int Kind { get; }
+
         /// <summary>
         /// The label to display
         /// </summary>
@@ -37,8 +42,9 @@ namespace Fasciculus.Net.Navigating
         /// <summary>
         /// Initializes a new node.
         /// </summary>
-        public NavigationNode(string label, UriPath link, IEnumerable<NavigationNode> children, bool isOpen = false)
+        public NavigationNode(int kind, string label, UriPath link, IEnumerable<NavigationNode> children, bool isOpen = false)
         {
+            Kind = kind;
             Label = label;
             Link = link;
             IsOpen = isOpen;
@@ -49,8 +55,8 @@ namespace Fasciculus.Net.Navigating
         /// <summary>
         /// Initializes a new node.
         /// </summary>
-        public NavigationNode(string label, UriPath link, bool isOpen = false)
-            : this(label, link, [], isOpen) { }
+        public NavigationNode(int kind, string label, UriPath link, bool isOpen = false)
+            : this(kind, label, link, [], isOpen) { }
 
         /// <summary>
         /// Adds the given <paramref name="node"/> as child of this node.

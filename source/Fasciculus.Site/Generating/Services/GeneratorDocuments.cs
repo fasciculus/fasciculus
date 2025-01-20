@@ -64,7 +64,7 @@ namespace Fasciculus.Site.Generating.Services
 
             blogContent.Years.Apply(y => { Add($"/{y.Link}/"); });
             blogContent.Months.Apply(m => { Add($"/{m.Link}/"); });
-            blogContent.Entries.Apply(e => { Add($"/{e.Link}"); });
+            blogContent.Entries.Apply(e => { Add($"/{e.Link}.html"); });
         }
     }
 }

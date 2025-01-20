@@ -1,5 +1,6 @@
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net.Navigating;
+using Fasciculus.Site.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,6 +21,27 @@ namespace Fasciculus.Site.Api.Services
             PackageSymbol package = (PackageSymbol)content.GetSymbol(packageLink)!;
 
             return Create(GetChildren(package), ToApiLink(selected));
+        }
+
+        protected override int GetKind(UriPath link)
+        {
+            Symbol? symbol = content.GetSymbol(ToSymbolLink(link));
+
+            if (symbol is not null)
+            {
+                return symbol.Kind switch
+                {
+                    SymbolKind.Package => NavigationKind.ApiPackage,
+                    SymbolKind.Namespace => NavigationKind.ApiNamespace,
+                    SymbolKind.Enum => NavigationKind.ApiEnum,
+                    SymbolKind.Interface => NavigationKind.ApiInterface,
+                    SymbolKind.Class => NavigationKind.ApiClass,
+                    SymbolKind.Property => NavigationKind.ApiProperty,
+                    _ => NavigationKind.Unknown
+                };
+            }
+
+            return NavigationKind.Unknown;
         }
 
         protected override string GetLabel(UriPath link)

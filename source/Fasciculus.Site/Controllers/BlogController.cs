@@ -61,7 +61,7 @@ namespace Fasciculus.Site.Controllers
             return View(model);
         }
 
-        [Route("/blog/{y}/{m}/{e}")]
+        [Route("/blog/{y}/{m}/{e}.html")]
         public IActionResult Entry(string y, string m, string e)
         {
             UriPath link = new("blog", y, m, e);

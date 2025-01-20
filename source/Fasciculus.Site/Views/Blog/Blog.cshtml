@@ -2,6 +2,6 @@
 <h1>Blog</h1>
 @foreach (var entry in Model.Entries)
 {
-    <h5><a href="~/@entry.Link">@entry.Title</a></h5>
+    <h5><a href="~/@(entry.Link).html">@entry.Title</a></h5>
     <p>@(entry.Published.ToString("yyyy-MM-dd")):&ensp;@entry.Summary</p>
 }

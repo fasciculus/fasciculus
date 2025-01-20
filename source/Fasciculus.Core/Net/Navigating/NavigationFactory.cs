@@ -28,6 +28,11 @@ namespace Fasciculus.Net.Navigating
         }
 
         /// <summary>
+        /// Returns the kind for the node with the given <paramref name="link"/>.
+        /// </summary>
+        protected abstract int GetKind(UriPath link);
+
+        /// <summary>
         /// Returns the label for the node with the given <paramref name="link"/>.
         /// </summary>
         protected abstract string GetLabel(UriPath link);
@@ -39,11 +44,12 @@ namespace Fasciculus.Net.Navigating
 
         private NavigationNode Visit(UriPath link)
         {
+            int kind = GetKind(link);
             string label = GetLabel(link);
             bool isOpen = link.IsSelfOrAncestorOf(selected);
             IEnumerable<NavigationNode> children = Visit(GetChildren(link));
 
-            return new(label, link, children, isOpen);
+            return new(kind, label, link, children, isOpen);
         }
 
         private IEnumerable<NavigationNode> Visit(IEnumerable<UriPath> links)
