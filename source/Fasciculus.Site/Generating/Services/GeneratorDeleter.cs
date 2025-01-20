@@ -1,5 +1,6 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -24,10 +25,12 @@ namespace Fasciculus.Site.Generating.Services
 
             toDelete.ExceptWith(writer.AllFiles);
 
+            Console.WriteLine($"~~~ FILES TO DELETE ({toDelete.Count}) ~~~");
             Debug.WriteLine($"~~~ FILES TO DELETE ({toDelete.Count}) ~~~");
 
-            toDelete.Apply(f => { Debug.WriteLine(f); });
+            toDelete.Apply(f => { Console.WriteLine(f); Debug.WriteLine(f); });
 
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Debug.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         }
 
