@@ -1,4 +1,4 @@
-using Fasciculus.Net.Navigating;
+using Fasciculus.Site.Navigation;
 using Fasciculus.Support;
 
 namespace Fasciculus.Site.Models
@@ -7,11 +7,11 @@ namespace Fasciculus.Site.Models
     {
         public required string Title { get; init; }
 
-        private NavigationForest? navigation = null;
+        private SiteNavigation? navigation = null;
 
         public bool HasNavigation => navigation is not null;
 
-        public NavigationForest Navigation
+        public SiteNavigation Navigation
         {
             get => Cond.NotNull(navigation);
             set { navigation = value; }

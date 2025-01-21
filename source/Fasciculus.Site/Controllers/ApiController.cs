@@ -13,13 +13,13 @@ namespace Fasciculus.Site.Controllers
     {
         private static readonly string RepositoryPrefix = "https://github.com/fasciculus/fasciculus";
 
-        private readonly ApiContent content;
-        private readonly ApiNavigation navigation;
+        private readonly ApiContent apiContent;
+        private readonly ApiNavigation apiNavigation;
 
-        public ApiController(ApiContent content, ApiNavigation navigation)
+        public ApiController(ApiContent apiContent, ApiNavigation apiNavigation)
         {
-            this.content = content;
-            this.navigation = navigation;
+            this.apiContent = apiContent;
+            this.apiNavigation = apiNavigation;
         }
 
         [Route("/api/")]
@@ -28,8 +28,8 @@ namespace Fasciculus.Site.Controllers
             ApiPackagesViewModel model = new()
             {
                 Title = "API Doc",
-                Combined = content.Combined,
-                Packages = content.Packages
+                Combined = apiContent.Combined,
+                Packages = apiContent.Packages
             };
 
             return View(model);
@@ -74,7 +74,7 @@ namespace Fasciculus.Site.Controllers
         private IActionResult Container(params string[] parts)
         {
             UriPath path = new(parts);
-            Symbol? symbol = content.GetSymbol(path);
+            Symbol? symbol = apiContent.GetSymbol(path);
 
             if (symbol is not null)
             {
@@ -95,7 +95,7 @@ namespace Fasciculus.Site.Controllers
         private IActionResult Document(params string[] parts)
         {
             UriPath path = new(parts);
-            Symbol? symbol = content.GetSymbol(path);
+            Symbol? symbol = apiContent.GetSymbol(path);
 
             if (symbol is not null)
             {
@@ -116,7 +116,7 @@ namespace Fasciculus.Site.Controllers
                 Title = package.Name + " Package",
                 Package = package,
                 PackageUri = new($"{RepositoryPrefix}/{package.RepositoryDirectory}/"),
-                Navigation = navigation.Create(package.Link)
+                Navigation = apiNavigation.Create(package.Link)
             };
 
             return View("Package", model);
@@ -128,7 +128,7 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @namespace.Name + " Namespace",
                 Namespace = @namespace,
-                Navigation = navigation.Create(@namespace.Link)
+                Navigation = apiNavigation.Create(@namespace.Link)
             };
 
             return View("Namespace", model);
@@ -142,7 +142,7 @@ namespace Fasciculus.Site.Controllers
                 Enum = @enum,
                 Symbol = @enum,
                 SourceUris = [.. GetSourceUris(@enum)],
-                Navigation = navigation.Create(@enum.Link)
+                Navigation = apiNavigation.Create(@enum.Link)
             };
 
             return View("Enum", model);
@@ -156,7 +156,7 @@ namespace Fasciculus.Site.Controllers
                 Interface = @interface,
                 Symbol = @interface,
                 SourceUris = [.. GetSourceUris(@interface)],
-                Navigation = navigation.Create(@interface.Link)
+                Navigation = apiNavigation.Create(@interface.Link)
             };
 
             return View("Interface", model);
@@ -170,7 +170,7 @@ namespace Fasciculus.Site.Controllers
                 Class = @class,
                 Symbol = @class,
                 SourceUris = [.. GetSourceUris(@class)],
-                Navigation = navigation.Create(@class.Link)
+                Navigation = apiNavigation.Create(@class.Link)
             };
 
             return View("Class", model);
@@ -182,7 +182,7 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = property.Name + " Property",
                 Property = property,
-                Navigation = navigation.Create(property.Link)
+                Navigation = apiNavigation.Create(property.Link)
             };
 
             return View("Property", model);
@@ -194,7 +194,7 @@ namespace Fasciculus.Site.Controllers
             if (type.Packages.Count() > 0)
             {
                 UriPath packageLink = new(type.Packages.First());
-                PackageSymbol? package = content.GetSymbol(packageLink) as PackageSymbol;
+                PackageSymbol? package = apiContent.GetSymbol(packageLink) as PackageSymbol;
 
                 if (package is not null)
                 {

@@ -1,3 +1,4 @@
+using Fasciculus.Collections;
 using System.Collections.Generic;
 
 namespace Fasciculus.Net.Navigating
@@ -23,11 +24,11 @@ namespace Fasciculus.Net.Navigating
         public UriPath Link { get; }
 
         /// <summary>
-        /// Whether this node is open and displays its children
+        /// The parent of this node if any.
         /// </summary>
-        public bool IsOpen { get; }
+        public NavigationNode? Parent { get; private set; }
 
-        private readonly List<NavigationNode> children;
+        private readonly List<NavigationNode> children = [];
 
         /// <summary>
         /// The children of this node, ordered by Label.
@@ -40,6 +41,11 @@ namespace Fasciculus.Net.Navigating
         public bool HasChildren => children.Count > 0;
 
         /// <summary>
+        /// Whether this node is open and displays its children
+        /// </summary>
+        public bool IsOpen { get; }
+
+        /// <summary>
         /// Initializes a new node.
         /// </summary>
         public NavigationNode(int kind, string label, UriPath link, IEnumerable<NavigationNode> children, bool isOpen = false)
@@ -49,7 +55,7 @@ namespace Fasciculus.Net.Navigating
             Link = link;
             IsOpen = isOpen;
 
-            this.children = new(children);
+            children.Apply(Add);
         }
 
         /// <summary>
@@ -64,6 +70,7 @@ namespace Fasciculus.Net.Navigating
         public void Add(NavigationNode node)
         {
             children.Add(node);
+            node.Parent = this;
         }
     }
 }

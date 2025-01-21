@@ -35,11 +35,15 @@
             @if (Model.HasNavigation)
             {
                 <div class="col fsc-navigation-forest">
-                    <partial name="~/Views/Shared/_NavigationForest.cshtml" model=Model.Navigation />
+                    <partial name="~/Views/Shared/_NavigationForest.cshtml" model=Model.Navigation.Forest />
                 </div>
             }
             <div class="col">
                 <main role="main" class="pb-3">
+                    @if (Model.HasNavigation)
+                    {
+                        <partial name="~/Views/Shared/_SitePath.cshtml" model=Model.Navigation.Path />
+                    }
                     @RenderBody()
                 </main>
             </div>

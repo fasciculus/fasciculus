@@ -1,6 +1,7 @@
 using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Blog.Models;
 using Fasciculus.Site.Models;
+using Fasciculus.Site.Navigation;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,9 +16,12 @@ namespace Fasciculus.Site.Blog.Services
             this.content = content;
         }
 
-        public NavigationForest Create(UriPath selected)
+        public SiteNavigation Create(UriPath selected)
         {
-            return Create(content.Years.Select(y => y.Link), selected);
+            NavigationForest forest = Create(content.Years.Select(y => y.Link), selected);
+            SitePath path = [];
+
+            return new() { Forest = forest, Path = path };
         }
 
         protected override IEnumerable<UriPath> GetChildren(UriPath link)

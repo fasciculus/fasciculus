@@ -1,6 +1,8 @@
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Collections;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Models;
+using Fasciculus.Site.Navigation;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,33 +17,53 @@ namespace Fasciculus.Site.Api.Services
             this.content = content;
         }
 
-        public NavigationForest Create(UriPath selected)
+        public SiteNavigation Create(UriPath selected)
         {
             UriPath packageLink = new(selected.Take(1));
             PackageSymbol package = (PackageSymbol)content.GetSymbol(packageLink)!;
+            NavigationForest forest = Create(GetChildren(package), ToApiLink(selected));
+            SitePath path = CreateSitePath(forest, selected);
 
-            return Create(GetChildren(package), ToApiLink(selected));
+            return new() { Forest = forest, Path = path };
+        }
+
+        private SitePath CreateSitePath(NavigationForest navigation, UriPath link)
+        {
+            SitePath result = [];
+
+            if (link.Count > 1)
+            {
+                List<NavigationNode> pathTo = navigation.PathTo(ToApiLink(link.Parent));
+                Symbol[] symbols = [.. pathTo.Select(n => content.GetSymbol(ToSymbolLink(n.Link))).NotNull()];
+                UriPath packageLink = new(link.Take(1));
+                PackageSymbol package = (PackageSymbol)content.GetSymbol(packageLink)!;
+
+                result.Add(NavigationKind.ApiPackage, package.Name, ToApiLink(packageLink));
+                symbols.Apply(s => { result.Add(GetKind(s), s.Name, ToApiLink(s.Link)); });
+            }
+
+            return result;
         }
 
         protected override int GetKind(UriPath link)
         {
             Symbol? symbol = content.GetSymbol(ToSymbolLink(link));
 
-            if (symbol is not null)
-            {
-                return symbol.Kind switch
-                {
-                    SymbolKind.Package => NavigationKind.ApiPackage,
-                    SymbolKind.Namespace => NavigationKind.ApiNamespace,
-                    SymbolKind.Enum => NavigationKind.ApiEnum,
-                    SymbolKind.Interface => NavigationKind.ApiInterface,
-                    SymbolKind.Class => NavigationKind.ApiClass,
-                    SymbolKind.Property => NavigationKind.ApiProperty,
-                    _ => NavigationKind.Unknown
-                };
-            }
+            return symbol is null ? NavigationKind.Unknown : GetKind(symbol);
+        }
 
-            return NavigationKind.Unknown;
+        private static int GetKind(Symbol symbol)
+        {
+            return symbol.Kind switch
+            {
+                SymbolKind.Package => NavigationKind.ApiPackage,
+                SymbolKind.Namespace => NavigationKind.ApiNamespace,
+                SymbolKind.Enum => NavigationKind.ApiEnum,
+                SymbolKind.Interface => NavigationKind.ApiInterface,
+                SymbolKind.Class => NavigationKind.ApiClass,
+                SymbolKind.Property => NavigationKind.ApiProperty,
+                _ => NavigationKind.Unknown
+            };
         }
 
         protected override string GetLabel(UriPath link)
@@ -53,7 +75,7 @@ namespace Fasciculus.Site.Api.Services
                 return symbol.Name;
             }
 
-            if (link.Last() == "Properties")
+            if (link[^1] == "Properties")
             {
                 return "Properties";
             }
@@ -65,7 +87,7 @@ namespace Fasciculus.Site.Api.Services
         {
             if (link.Count > 0)
             {
-                return link[link.Count - 1] switch
+                return link[^1] switch
                 {
                     "Properties" => base.IsOpen(link.Parent, selected),
                     _ => base.IsOpen(link, selected),
@@ -90,7 +112,7 @@ namespace Fasciculus.Site.Api.Services
                 };
             }
 
-            if (link.Last() == "Properties")
+            if (link[^1] == "Properties")
             {
                 return Properties(link);
             }
