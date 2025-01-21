@@ -69,7 +69,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Assert.AreEqual(2, enums.Length);
             Assert.AreEqual(6, interfaces.Length);
             Assert.AreEqual(114, classes.Length);
-            Assert.AreEqual(98, properties.Length);
+            Assert.AreEqual(102, properties.Length);
 
             Assert.AreEqual(0, syntaxDebugger.GetUnhandled().Count);
             Assert.AreEqual(0, modifierDebugger.GetUnhandled().Count);

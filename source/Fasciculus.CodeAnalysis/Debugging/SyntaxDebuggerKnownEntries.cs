@@ -62,7 +62,8 @@ namespace Fasciculus.CodeAnalysis.Debugging
 
             Add(SyntaxKind.ImplicitObjectCreationExpression, [SyntaxKind.ArgumentList]);
 
-            Add(SyntaxKind.IndexerDeclaration, [SyntaxKind.ArrowExpressionClause, SyntaxKind.BracketedParameterList, SyntaxKind.PredefinedType]);
+            Add(SyntaxKind.IndexerDeclaration, [SyntaxKind.ArrowExpressionClause, SyntaxKind.BracketedParameterList, SyntaxKind.NullableType,
+                SyntaxKind.PredefinedType]);
 
             Add(SyntaxKind.InterfaceDeclaration, [SyntaxKind.BaseList, SyntaxKind.MethodDeclaration, SyntaxKind.TypeParameterConstraintClause,
                 SyntaxKind.TypeParameterList]);
