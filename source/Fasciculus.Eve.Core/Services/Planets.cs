@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Threading;
@@ -31,7 +31,7 @@ namespace Fasciculus.Eve.Services
         public EveStation Hub { get; }
 
         [ObservableProperty]
-        private EvePlanetProduction[] productions = [];
+        public partial EvePlanetProduction[] Productions { get; set; } = [];
 
         public Planets(IEveSettings settings, IEsiClient esiClient, IEveProvider provider, IPlanetBaseCosts baseCosts, IPlanetChains chains)
         {

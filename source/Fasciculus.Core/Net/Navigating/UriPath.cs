@@ -11,7 +11,7 @@ namespace Fasciculus.Net.Navigating
     /// An immutable list of strings representing the path of an URI.
     /// </summary>
     [DebuggerDisplay("{string.Join(\"/\", parts)}")]
-    public partial class UriPath : IReadOnlyList<string>, IEquatable<UriPath>, IComparable<UriPath>
+    public class UriPath : IReadOnlyList<string>, IEquatable<UriPath>, IComparable<UriPath>
     {
         /// <summary>
         /// The empty path.

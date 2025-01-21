@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Models;
 using Fasciculus.IO.Resources;
 using Fasciculus.Maui.Support;
@@ -25,22 +25,25 @@ namespace Fasciculus.Eve.Services
     public partial class EveResourcesProgress : ObservableObject, IEveResourcesProgress
     {
         [ObservableProperty]
-        private WorkState dataInfo;
+        public partial WorkState DataInfo { get; set; }
+
         public IProgress<WorkState> DataProgress { get; }
 
         [ObservableProperty]
-        private WorkState universeInfo;
+        public partial WorkState UniverseInfo { get; set; }
+
         public IProgress<WorkState> UniverseProgress { get; }
 
         [ObservableProperty]
-        private WorkState navigationInfo;
+        public partial WorkState NavigationInfo { get; set; }
+
         public IProgress<WorkState> NavigationProgress { get; }
 
         [ObservableProperty]
-        private bool universe;
+        public partial bool Universe { get; set; }
 
         [ObservableProperty]
-        private bool navigation;
+        public partial bool Navigation { get; set; }
 
         public EveResourcesProgress()
         {

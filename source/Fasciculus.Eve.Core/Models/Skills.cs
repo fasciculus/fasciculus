@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Collections;
 using Fasciculus.IO;
@@ -134,13 +134,13 @@ namespace Fasciculus.Eve.Models
         public string Name => Type.Name;
 
         [ObservableProperty]
-        private int level;
+        public partial int Level { get; set; }
 
         [ObservableProperty]
-        private bool canDecrement;
+        public partial bool CanDecrement { get; set; }
 
         [ObservableProperty]
-        private bool canIncrement;
+        public partial bool CanIncrement { get; set; }
 
         public EveMutableSkill(EveType type, int level)
         {

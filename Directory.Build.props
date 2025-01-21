@@ -65,7 +65,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(_FasciculusTargetPlatformIsWindows)' == 'true'">
-    <WindowsSdkPackageVersion>10.0.19041.44</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.19041.57</WindowsSdkPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
