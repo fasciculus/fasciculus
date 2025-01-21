@@ -1,9 +1,8 @@
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Site.Models;
 
 namespace Fasciculus.Site.Api.Models
 {
-    public class ApiPropertyViewModel : ViewModel
+    public class ApiPropertyViewModel : ApiSymbolInfoViewModel
     {
         public required PropertySymbol Property { get; init; }
     }

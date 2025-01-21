@@ -2,7 +2,7 @@ using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.Site.Api.Models
 {
-    public class ApiClassViewModel : ApiTypeViewModel
+    public class ApiClassViewModel : ApiSymbolInfoViewModel
     {
         public required ClassSymbol Class { get; init; }
     }

@@ -141,7 +141,7 @@ namespace Fasciculus.Site.Controllers
                 Title = @enum.Name + " Enum",
                 Enum = @enum,
                 Symbol = @enum,
-                SourceUris = [.. GetSourceUris(@enum)],
+                SourceUris = [.. GetTypeSourceUris(@enum)],
                 Navigation = apiNavigation.Create(@enum.Link)
             };
 
@@ -155,7 +155,7 @@ namespace Fasciculus.Site.Controllers
                 Title = @interface.Name + " Interface",
                 Interface = @interface,
                 Symbol = @interface,
-                SourceUris = [.. GetSourceUris(@interface)],
+                SourceUris = [.. GetTypeSourceUris(@interface)],
                 Navigation = apiNavigation.Create(@interface.Link)
             };
 
@@ -169,7 +169,7 @@ namespace Fasciculus.Site.Controllers
                 Title = @class.Name + " Class",
                 Class = @class,
                 Symbol = @class,
-                SourceUris = [.. GetSourceUris(@class)],
+                SourceUris = [.. GetTypeSourceUris(@class)],
                 Navigation = apiNavigation.Create(@class.Link)
             };
 
@@ -182,14 +182,36 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = property.Name + " Property",
                 Property = property,
+                Symbol = property,
+                SourceUris = [.. GetMemberSourceUris(property)],
                 Navigation = apiNavigation.Create(property.Link)
             };
 
             return View("Property", model);
         }
 
-        private IEnumerable<Uri> GetSourceUris<T>(T type)
+        private IEnumerable<Uri> GetTypeSourceUris<T>(T type)
             where T : notnull, TypeSymbol<T>
+        {
+            if (type.Packages.Count() > 0)
+            {
+                UriPath packageLink = new(type.Packages.First());
+                PackageSymbol? package = apiContent.GetSymbol(packageLink) as PackageSymbol;
+
+                if (package is not null)
+                {
+                    foreach (UriPath source in type.Sources)
+                    {
+                        string uri = $"{RepositoryPrefix}/{package.RepositoryDirectory}/{source}";
+
+                        yield return new(uri);
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<Uri> GetMemberSourceUris<T>(T type)
+            where T : notnull, MemberSymbol<T>
         {
             if (type.Packages.Count() > 0)
             {

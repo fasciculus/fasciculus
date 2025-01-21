@@ -4,7 +4,7 @@ using System;
 
 namespace Fasciculus.Site.Api.Models
 {
-    public class ApiTypeViewModel : ViewModel
+    public class ApiSymbolInfoViewModel : ViewModel
     {
         public required Symbol Symbol { get; init; }
 
