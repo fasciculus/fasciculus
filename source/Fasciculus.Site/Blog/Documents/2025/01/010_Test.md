@@ -13,3 +13,27 @@ Some more text.
 ## Chapter 1
 
 Text in chapter 1.
+
+Some C# code:
+
+```cs
+public interface Foo
+{
+  /// <summary>
+  /// Greets the world.
+  /// </summary>
+  public void Bar()
+  {
+    // Greet them
+    Console.WriteLine("Hello, world!");
+  }
+}
+```
+
+... and some XML code:
+
+```xml
+<summary>
+  Greets the world.
+</summary>
+```

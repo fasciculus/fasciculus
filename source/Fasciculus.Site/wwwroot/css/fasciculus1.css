@@ -30,8 +30,12 @@ c {
 
 code {
     display: block;
-    padding: 0.5rem;
+    padding: 1rem;
     margin-bottom: 1rem;
+}
+
+pre {
+    margin-bottom: 0;
 }
 
 .container {
@@ -108,4 +112,44 @@ div.fsc-navigation-forest {
 
 .fsc-tododone {
     padding-bottom: 4px;
+}
+
+.csharp {
+    background-color: #eee;
+    padding: 0.625rem;
+    margin-bottom: 1rem;
+}
+
+.xml {
+    background-color: #eee;
+    padding: 0.625rem;
+    margin-bottom: 1rem;
+}
+
+.comment {
+    color: #008000;
+}
+
+.keyword {
+    color: #0000ff;
+}
+
+.xmlDocTag {
+    color: #008000;
+}
+
+.xmlDocComment {
+    color: #008000;
+}
+
+.string {
+    color: #a31515;
+}
+
+.xmlDelimiter {
+    color: #008000;
+}
+
+.xmlName {
+    color: #008000;
 }

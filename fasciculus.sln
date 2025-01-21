@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.PackageVersions"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Experiments.SyntaxHighlighting", "source\Fasciculus.Experiments.SyntaxHighlighting\Fasciculus.Experiments.SyntaxHighlighting.csproj", "{985F03E2-3069-40D3-8199-2C70494380D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markup", "source\Fasciculus.Markup\Fasciculus.Markup.csproj", "{867F2362-4125-4AE6-A278-946CBADA58DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -152,6 +154,10 @@ Global
 		{985F03E2-3069-40D3-8199-2C70494380D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{985F03E2-3069-40D3-8199-2C70494380D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{985F03E2-3069-40D3-8199-2C70494380D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{867F2362-4125-4AE6-A278-946CBADA58DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{867F2362-4125-4AE6-A278-946CBADA58DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{867F2362-4125-4AE6-A278-946CBADA58DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{867F2362-4125-4AE6-A278-946CBADA58DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
 using Fasciculus.IO;
+using Fasciculus.Markdown.ColorCode;
 using Fasciculus.Site.Rendering.Models;
 using Fasciculus.Site.Rendering.Rendering;
 using Fasciculus.Site.Services;
@@ -23,12 +24,13 @@ namespace Fasciculus.Site.Rendering.Services
 
             pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
+                .UseColorCode()
                 .Build();
         }
 
         public MarkdownDocument Parse(string markdown)
         {
-            return Markdown.Parse(markdown, pipeline);
+            return Markdig.Markdown.Parse(markdown, pipeline);
         }
 
         public MarkdownDocument Parse(FileInfo file)
