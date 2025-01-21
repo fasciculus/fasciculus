@@ -13,13 +13,15 @@ namespace Fasciculus.Site.Models
         public const int ApiEnum = 102;
         public const int ApiInterface = 103;
         public const int ApiClass = 104;
-        public const int ApiProperty = 105;
+        public const int ApiField = 105;
+        public const int ApiProperty = 106;
 
         public static bool IsLeaf(int kind)
         {
             return kind switch
             {
                 BlogEntry => true,
+                ApiField => true,
                 ApiProperty => true,
                 _ => false,
             };

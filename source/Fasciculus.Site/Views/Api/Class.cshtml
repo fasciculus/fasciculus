@@ -1,6 +1,7 @@
 @model ApiClassViewModel
 @{
-    bool hasProperties = @Model.Class.Properties.Any();
+    bool hasFields = Model.Class.Fields.Any();
+    bool hasProperties = Model.Class.Properties.Any();
 }
 
 <h1>@Model.Class.Name Class</h1>
@@ -9,6 +10,10 @@
 
 <ul>
     <li><a href="#definition">Definition</a></li>
+    @if (hasFields)
+    {
+        <li><a href="#fields">Fields</a></li>
+    }
     @if (hasProperties)
     {
         <li><a href="#properties">Properties</a></li>
@@ -23,6 +28,11 @@
 <code>@Model.Class.Modifiers class @Model.Class.Name</code>
 
 <p>@Html.Raw(@Model.Class.Comment.Summary)</p>
+
+@if (hasFields)
+{
+    <partial name="_Fields.cshtml" model=Model.Class.Fields />
+}
 
 @if (hasProperties)
 {

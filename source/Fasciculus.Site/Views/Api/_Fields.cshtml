@@ -1,0 +1,21 @@
+@model FieldList
+
+<h2 id="properties">Fields</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Field</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (FieldSymbol field in Model)
+        {
+            <tr>
+                <td><a href="~/api/@(field.Link).html">@field.Name</a></td>
+                <td>@Html.Raw(@field.Comment.Summary)</td>
+            </tr>
+        }
+    </tbody>
+</table>

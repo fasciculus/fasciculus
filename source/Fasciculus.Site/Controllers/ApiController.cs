@@ -101,6 +101,7 @@ namespace Fasciculus.Site.Controllers
             {
                 return symbol.Kind switch
                 {
+                    SymbolKind.Field => Field((FieldSymbol)symbol),
                     SymbolKind.Property => Property((PropertySymbol)symbol),
                     _ => NotFound()
                 };
@@ -174,6 +175,20 @@ namespace Fasciculus.Site.Controllers
             };
 
             return View("Class", model);
+        }
+
+        private ViewResult Field(FieldSymbol field)
+        {
+            ApiFieldViewModel model = new()
+            {
+                Title = field.Name + " Field",
+                Field = field,
+                Symbol = field,
+                SourceUris = [.. GetSourceUris(field)],
+                Navigation = apiNavigation.Create(field.Link)
+            };
+
+            return View("Field", model);
         }
 
         private ViewResult Property(PropertySymbol property)

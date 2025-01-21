@@ -61,6 +61,7 @@ namespace Fasciculus.Site.Api.Services
                 SymbolKind.Enum => NavigationKind.ApiEnum,
                 SymbolKind.Interface => NavigationKind.ApiInterface,
                 SymbolKind.Class => NavigationKind.ApiClass,
+                SymbolKind.Field => NavigationKind.ApiField,
                 SymbolKind.Property => NavigationKind.ApiProperty,
                 _ => NavigationKind.Unknown
             };
@@ -73,6 +74,11 @@ namespace Fasciculus.Site.Api.Services
             if (symbol is not null)
             {
                 return symbol.Name;
+            }
+
+            if (link[^1] == "Fields")
+            {
+                return "Fields";
             }
 
             if (link[^1] == "Properties")
@@ -89,6 +95,7 @@ namespace Fasciculus.Site.Api.Services
             {
                 return link[^1] switch
                 {
+                    "Fields" => base.IsOpen(link.Parent, selected),
                     "Properties" => base.IsOpen(link.Parent, selected),
                     _ => base.IsOpen(link, selected),
                 };
@@ -110,6 +117,11 @@ namespace Fasciculus.Site.Api.Services
                     SymbolKind.Class => GetChildren((ClassSymbol)symbol),
                     _ => []
                 };
+            }
+
+            if (link[^1] == "Fields")
+            {
+                return Fields(link);
             }
 
             if (link[^1] == "Properties")
@@ -135,10 +147,31 @@ namespace Fasciculus.Site.Api.Services
 
         private static IEnumerable<UriPath> GetChildren(ClassSymbol @class)
         {
+            if (@class.Fields.Any())
+            {
+                yield return ToApiLink(@class.Link).Append("Fields");
+            }
+
             if (@class.Properties.Any())
             {
                 yield return ToApiLink(@class.Link).Append("Properties");
             }
+        }
+
+        private IEnumerable<UriPath> Fields(UriPath link)
+        {
+            Symbol? symbol = content.GetSymbol(ToSymbolLink(link.Parent));
+
+            if (symbol is not null)
+            {
+                return symbol.Kind switch
+                {
+                    SymbolKind.Class => Fields((ClassSymbol)symbol),
+                    _ => []
+                };
+            }
+
+            return [];
         }
 
         private IEnumerable<UriPath> Properties(UriPath link)
@@ -156,6 +189,9 @@ namespace Fasciculus.Site.Api.Services
 
             return [];
         }
+
+        private static IEnumerable<UriPath> Fields(ClassSymbol @class)
+            => @class.Fields.Select(p => ToApiLink(p.Link));
 
         private static IEnumerable<UriPath> Properties(ClassSymbol @class)
             => @class.Properties.Select(p => ToApiLink(p.Link));
