@@ -62,6 +62,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             EnumSymbol[] enums = [.. symbols.Where(x => x.Kind == SymbolKind.Enum).Cast<EnumSymbol>()];
             InterfaceSymbol[] interfaces = [.. symbols.Where(x => x.Kind == SymbolKind.Interface).Cast<InterfaceSymbol>()];
             ClassSymbol[] classes = [.. symbols.Where(x => x.Kind == SymbolKind.Class).Cast<ClassSymbol>()];
+            FieldSymbol[] fields = [.. symbols.Where(x => x.Kind == SymbolKind.Field).Cast<FieldSymbol>()];
             PropertySymbol[] properties = [.. symbols.Where(x => x.Kind == SymbolKind.Property).Cast<PropertySymbol>()];
 
             Assert.AreEqual(2, result.Packages.Count);
@@ -69,6 +70,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Assert.AreEqual(2, enums.Length);
             Assert.AreEqual(6, interfaces.Length);
             Assert.AreEqual(114, classes.Length);
+            Assert.AreEqual(6, fields.Length);
             Assert.AreEqual(102, properties.Length);
 
             Assert.AreEqual(0, syntaxDebugger.GetUnhandled().Count);

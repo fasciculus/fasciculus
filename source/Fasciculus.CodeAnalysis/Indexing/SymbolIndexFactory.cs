@@ -90,7 +90,19 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(@class))
             {
                 index.Add(@class.Link, @class);
+                AddFields(@class.Fields);
                 AddProperties(@class.Properties);
+            }
+        }
+
+        private void AddFields(IEnumerable<FieldSymbol> fields)
+            => fields.Apply(AddField);
+
+        private void AddField(FieldSymbol field)
+        {
+            if (IsIncluded(field))
+            {
+                index.Add(field.Link, field);
             }
         }
 
