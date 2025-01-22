@@ -1,0 +1,23 @@
+@model ApiEnumMemberViewModel
+@{
+    EnumMemberSymbol member = Model.Member;
+}
+<h1>@member.Name Member</h1>
+
+<h2>In this article</h2>
+
+<ul>
+    <li><a href="#definition">Definition</a></li>
+    <li><a href="#applies-to">Applies to</a></li>
+</ul>
+
+<h2 id="definition">Definition</h2>
+
+<partial name="_SymbolInfo.cshtml" model=Model />
+
+<code>@member.Name</code>
+
+<p>@Html.Raw(member.Comment.Summary)</p>
+
+<partial name="_TargetFrameworks.cshtml" model=member.Frameworks />
+

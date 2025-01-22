@@ -102,6 +102,7 @@ namespace Fasciculus.Site.Controllers
                 return symbol.Kind switch
                 {
                     SymbolKind.Field => Field((FieldSymbol)symbol),
+                    SymbolKind.EnumMember => EnumMember((EnumMemberSymbol)symbol),
                     SymbolKind.Property => Property((PropertySymbol)symbol),
                     _ => NotFound()
                 };
@@ -189,6 +190,20 @@ namespace Fasciculus.Site.Controllers
             };
 
             return View("Field", model);
+        }
+
+        private ViewResult EnumMember(EnumMemberSymbol member)
+        {
+            ApiEnumMemberViewModel model = new()
+            {
+                Title = member.Name + " Member",
+                Member = member,
+                Symbol = member,
+                SourceUris = [.. GetSourceUris(member)],
+                Navigation = apiNavigation.Create(member.Link)
+            };
+
+            return View("EnumMember", model);
         }
 
         private ViewResult Property(PropertySymbol property)
