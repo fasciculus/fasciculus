@@ -73,15 +73,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             base.VisitAssignmentExpression(node);
         }
 
-        public override void VisitBracketedParameterList(BracketedParameterListSyntax node)
-        {
-            // BracketedParameterList: Parameter
-
-            nodeDebugger.Add(node);
-
-            base.VisitBracketedParameterList(node);
-        }
-
         public override void VisitClassOrStructConstraint(ClassOrStructConstraintSyntax node)
         {
             // ClassConstraint or StructConstraint
@@ -187,30 +178,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             nodeDebugger.Add(node);
 
             base.VisitObjectCreationExpression(node);
-        }
-
-        public override void VisitParameter(ParameterSyntax node)
-        {
-            // Parameter
-            // : IdentifierName EqualsValueClause?
-            // | GenericName
-            // | PredefinedType EqualsValueClause?
-            // | ArrayType
-            // | PointerType
-            // | NullableType EqualsValueClause?
-
-            nodeDebugger.Add(node);
-
-            base.VisitParameter(node);
-        }
-
-        public override void VisitParameterList(ParameterListSyntax node)
-        {
-            // ParameterList: Parameter*
-
-            nodeDebugger.Add(node);
-
-            base.VisitParameterList(node);
         }
 
         public override void VisitPredefinedType(PredefinedTypeSyntax node)
