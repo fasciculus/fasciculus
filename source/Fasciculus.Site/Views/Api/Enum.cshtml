@@ -6,6 +6,7 @@
 
 <ul>
     <li><a href="#definition">Definition</a></li>
+    <li><a href="#members">Members</a></li>
     <li><a href="#applies-to">Applies to</a></li>
 </ul>
 
@@ -16,5 +17,25 @@
 <code>@Model.Enum.Modifiers enum @Model.Enum.Name</code>
 
 <p>@Html.Raw(@Model.Enum.Comment.Summary)</p>
+
+<h2 id="members">Members</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Member</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (EnumMemberSymbol member in Model.Enum.Members)
+        {
+            <tr>
+                <td><a href="~/api/@(member.Link).html">@member.Name</a></td>
+                <td>@Html.Raw(@member.Comment.Summary)</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <partial name="_TargetFrameworks.cshtml" model=Model.Enum.Frameworks />
