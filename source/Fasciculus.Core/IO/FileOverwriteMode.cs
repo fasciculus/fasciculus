@@ -1,4 +1,4 @@
-﻿namespace Fasciculus.IO
+namespace Fasciculus.IO
 {
     /// <summary>
     /// Whether to overwrite a target file. Used with
@@ -12,7 +12,7 @@
         Never,
 
         /// <summary>
-        /// Overwrite if the file doesn't exist or if file's last write time is older tan a given time.
+        /// Overwrite if the file doesn't exist or if the file's last write time is older than a given time.
         /// </summary>
         IfNewer,
 
