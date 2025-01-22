@@ -9,6 +9,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public void Add(FieldSymbol field);
 
+        public void Add(EnumMemberSymbol member);
+
         public void Add(PropertySymbol property);
     }
 }

@@ -8,6 +8,7 @@ namespace Fasciculus.CodeAnalysis.Models
         Interface,
         Class,
         Field,
-        Property
+        EnumMember,
+        Property,
     }
 }

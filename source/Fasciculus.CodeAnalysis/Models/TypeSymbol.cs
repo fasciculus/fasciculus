@@ -11,6 +11,10 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<FieldSymbol> Fields => fields;
 
+        private readonly EnumMemberList members;
+
+        public IEnumerable<EnumMemberSymbol> Members => members;
+
         private readonly PropertyList properties;
 
         public IEnumerable<PropertySymbol> Properties => properties;
@@ -19,14 +23,15 @@ namespace Fasciculus.CodeAnalysis.Models
             : base(kind, framework, package)
         {
             fields = [];
+            members = [];
             properties = [];
-
         }
 
         protected TypeSymbol(T other, bool clone)
             : base(other, clone)
         {
             fields = other.fields.Clone();
+            members = other.members.Clone();
             properties = other.properties.Clone();
         }
 
@@ -35,6 +40,7 @@ namespace Fasciculus.CodeAnalysis.Models
             base.MergeWith(other);
 
             fields.AddOrMergeWith(other.fields);
+            members.AddOrMergeWith(other.members);
             properties.AddOrMergeWith(other.properties);
         }
 
@@ -43,11 +49,15 @@ namespace Fasciculus.CodeAnalysis.Models
             base.ReBase(newBase);
 
             fields.ReBase(newBase);
+            members.ReBase(newBase);
             properties.ReBase(newBase);
         }
 
         public void Add(FieldSymbol field)
             => fields.AddOrMergeWith(field);
+
+        public void Add(EnumMemberSymbol member)
+            => members.AddOrMergeWith(member);
 
         public void Add(PropertySymbol property)
             => properties.AddOrMergeWith(property);
