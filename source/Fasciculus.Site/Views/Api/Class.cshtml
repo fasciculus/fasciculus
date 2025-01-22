@@ -1,6 +1,7 @@
 @model ApiClassViewModel
 @{
     bool hasFields = Model.Class.Fields.Any();
+    bool hasEvents = Model.Class.Events.Any();
     bool hasProperties = Model.Class.Properties.Any();
 }
 
@@ -13,6 +14,10 @@
     @if (hasFields)
     {
         <li><a href="#fields">Fields</a></li>
+    }
+    @if (hasEvents)
+    {
+        <li><a href="#events">Events</a></li>
     }
     @if (hasProperties)
     {
@@ -32,6 +37,11 @@
 @if (hasFields)
 {
     <partial name="_Fields.cshtml" model=Model.Class.Fields />
+}
+
+@if (hasEvents)
+{
+    <partial name="_Events.cshtml" model=Model.Class.Events />
 }
 
 @if (hasProperties)

@@ -1,0 +1,21 @@
+@model EventList
+
+<h2 id="events">Events</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Event</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (EventSymbol e in Model)
+        {
+            <tr>
+                <td><a href="~/api/@(e.Link).html">@e.Name</a></td>
+                <td>@Html.Raw(@e.Comment.Summary)</td>
+            </tr>
+        }
+    </tbody>
+</table>

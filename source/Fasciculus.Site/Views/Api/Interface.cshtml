@@ -1,5 +1,6 @@
 @model ApiInterfaceViewModel
 @{
+    bool hasEvents = Model.Interface.Events.Any();
     bool hasProperties = @Model.Interface.Properties.Any();
 }
 
@@ -9,6 +10,10 @@
 
 <ul>
     <li><a href="#definition">Definition</a></li>
+    @if (hasEvents)
+    {
+        <li><a href="#events">Events</a></li>
+    }
     @if (hasProperties)
     {
         <li><a href="#properties">Properties</a></li>
@@ -23,6 +28,11 @@
 <code>@Model.Interface.Modifiers interface @Model.Interface.Name</code>
 
 <p>@Html.Raw(@Model.Interface.Comment.Summary)</p>
+
+@if (hasEvents)
+{
+    <partial name="_Events.cshtml" model=Model.Interface.Events />
+}
 
 @if (hasProperties)
 {

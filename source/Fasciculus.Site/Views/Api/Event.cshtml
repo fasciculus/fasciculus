@@ -1,0 +1,23 @@
+@model ApiEventViewModel
+@{
+    EventSymbol ev = Model.Event;
+}
+
+<h1>@ev.Name Event</h1>
+
+<h2>In this article</h2>
+
+<ul>
+    <li><a href="#definition">Definition</a></li>
+    <li><a href="#applies-to">Applies to</a></li>
+</ul>
+
+<h2 id="definition">Definition</h2>
+
+<partial name="_SymbolInfo.cshtml" model=Model />
+
+<code>@ev.Modifiers @ev.Type @ev.Name</code>
+
+<p>@Html.Raw(ev.Comment.Summary)</p>
+
+<partial name="_TargetFrameworks.cshtml" model=ev.Frameworks />

@@ -63,6 +63,7 @@ namespace Fasciculus.Site.Api.Services
                 SymbolKind.Class => NavigationKind.ApiClass,
                 SymbolKind.Field => NavigationKind.ApiField,
                 SymbolKind.EnumMember => NavigationKind.ApiEnumMember,
+                SymbolKind.Event => NavigationKind.ApiEvent,
                 SymbolKind.Property => NavigationKind.ApiProperty,
                 _ => NavigationKind.Unknown
             };
@@ -87,6 +88,11 @@ namespace Fasciculus.Site.Api.Services
                 return "Members";
             }
 
+            if (link[^1] == "Events")
+            {
+                return "Events";
+            }
+
             if (link[^1] == "Properties")
             {
                 return "Properties";
@@ -103,6 +109,7 @@ namespace Fasciculus.Site.Api.Services
                 {
                     "Fields" => base.IsOpen(link.Parent, selected),
                     "Members" => base.IsOpen(link.Parent, selected),
+                    "Events" => base.IsOpen(link.Parent, selected),
                     "Properties" => base.IsOpen(link.Parent, selected),
                     _ => base.IsOpen(link, selected),
                 };
@@ -138,6 +145,11 @@ namespace Fasciculus.Site.Api.Services
                 return Members(link);
             }
 
+            if (link[^1] == "Events")
+            {
+                return Events(link);
+            }
+
             if (link[^1] == "Properties")
             {
                 return Properties(link);
@@ -169,6 +181,11 @@ namespace Fasciculus.Site.Api.Services
 
         private static IEnumerable<UriPath> GetChildren(InterfaceSymbol @interface)
         {
+            if (@interface.Events.Any())
+            {
+                yield return ToApiLink(@interface.Link).Append("Events");
+            }
+
             if (@interface.Properties.Any())
             {
                 yield return ToApiLink(@interface.Link).Append("Properties");
@@ -180,6 +197,11 @@ namespace Fasciculus.Site.Api.Services
             if (@class.Fields.Any())
             {
                 yield return ToApiLink(@class.Link).Append("Fields");
+            }
+
+            if (@class.Events.Any())
+            {
+                yield return ToApiLink(@class.Link).Append("Events");
             }
 
             if (@class.Properties.Any())
@@ -226,6 +248,29 @@ namespace Fasciculus.Site.Api.Services
         private static IEnumerable<UriPath> Members(EnumSymbol @enum)
             => @enum.Members.Select(p => ToApiLink(p.Link));
 
+        private IEnumerable<UriPath> Events(UriPath link)
+        {
+            Symbol? symbol = content.GetSymbol(ToSymbolLink(link.Parent));
+
+            if (symbol is not null)
+            {
+                return symbol.Kind switch
+                {
+                    SymbolKind.Interface => Events((InterfaceSymbol)symbol),
+                    SymbolKind.Class => Events((ClassSymbol)symbol),
+                    _ => []
+                };
+            }
+
+            return [];
+        }
+
+        private static IEnumerable<UriPath> Events(InterfaceSymbol @interface)
+            => @interface.Events.Select(p => ToApiLink(p.Link));
+
+        private static IEnumerable<UriPath> Events(ClassSymbol @class)
+            => @class.Events.Select(p => ToApiLink(p.Link));
+
         private IEnumerable<UriPath> Properties(UriPath link)
         {
             Symbol? symbol = content.GetSymbol(ToSymbolLink(link.Parent));
@@ -234,6 +279,7 @@ namespace Fasciculus.Site.Api.Services
             {
                 return symbol.Kind switch
                 {
+                    SymbolKind.Interface => Properties((InterfaceSymbol)symbol),
                     SymbolKind.Class => Properties((ClassSymbol)symbol),
                     _ => []
                 };
@@ -241,6 +287,9 @@ namespace Fasciculus.Site.Api.Services
 
             return [];
         }
+
+        private static IEnumerable<UriPath> Properties(InterfaceSymbol @interface)
+            => @interface.Properties.Select(p => ToApiLink(p.Link));
 
         private static IEnumerable<UriPath> Properties(ClassSymbol @class)
             => @class.Properties.Select(p => ToApiLink(p.Link));

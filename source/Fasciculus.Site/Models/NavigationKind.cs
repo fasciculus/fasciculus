@@ -15,7 +15,8 @@ namespace Fasciculus.Site.Models
         public const int ApiClass = 104;
         public const int ApiField = 105;
         public const int ApiEnumMember = 106;
-        public const int ApiProperty = 107;
+        public const int ApiEvent = 107;
+        public const int ApiProperty = 108;
 
         public static bool IsLeaf(int kind)
         {
@@ -24,6 +25,7 @@ namespace Fasciculus.Site.Models
                 BlogEntry => true,
                 ApiField => true,
                 ApiEnumMember => true,
+                ApiEvent => true,
                 ApiProperty => true,
                 _ => false,
             };

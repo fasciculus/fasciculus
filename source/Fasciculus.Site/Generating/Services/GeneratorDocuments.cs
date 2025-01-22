@@ -53,12 +53,13 @@ namespace Fasciculus.Site.Generating.Services
             }
         }
 
-        private bool IsLeaf(SymbolKind kind)
+        private static bool IsLeaf(SymbolKind kind)
         {
             return kind switch
             {
                 SymbolKind.Field => true,
                 SymbolKind.EnumMember => true,
+                SymbolKind.Event => true,
                 SymbolKind.Property => true,
                 _ => false,
             };
