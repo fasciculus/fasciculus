@@ -1,4 +1,4 @@
-﻿using Fasciculus.Threading.Synchronization;
+using Fasciculus.Threading.Synchronization;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -21,7 +21,7 @@ namespace Fasciculus.Collections
         public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
-        /// Notifies clients that a property value has changed.
+        /// Notifies clients that the collection has changed.
         /// </summary>
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
