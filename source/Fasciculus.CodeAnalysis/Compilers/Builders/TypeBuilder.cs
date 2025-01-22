@@ -8,6 +8,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
     {
         protected FieldList fields = [];
         protected EnumMemberList members = [];
+        protected EventList events = [];
         protected PropertyList properties = [];
 
         public void Add(FieldSymbol field)
@@ -20,6 +21,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
             members.AddOrMergeWith(member);
         }
 
+        public void Add(EventSymbol @event)
+        {
+            events.AddOrMergeWith(@event);
+        }
+
         public void Add(PropertySymbol property)
         {
             properties.AddOrMergeWith(property);
@@ -29,6 +35,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         {
             fields.Apply(type.Add);
             members.Apply(type.Add);
+            events.Apply(type.Add);
             properties.Apply(type.Add);
         }
     }

@@ -11,6 +11,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public void Add(EnumMemberSymbol member);
 
+        public void Add(EventSymbol @event);
+
         public void Add(PropertySymbol property);
     }
 }

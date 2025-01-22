@@ -15,6 +15,10 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<EnumMemberSymbol> Members => members;
 
+        private readonly EventList events;
+
+        public IEnumerable<EventSymbol> Events => events;
+
         private readonly PropertyList properties;
 
         public IEnumerable<PropertySymbol> Properties => properties;
@@ -24,6 +28,7 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             fields = [];
             members = [];
+            events = [];
             properties = [];
         }
 
@@ -32,6 +37,7 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             fields = other.fields.Clone();
             members = other.members.Clone();
+            events = other.events.Clone();
             properties = other.properties.Clone();
         }
 
@@ -41,6 +47,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
             fields.AddOrMergeWith(other.fields);
             members.AddOrMergeWith(other.members);
+            events.AddOrMergeWith(other.events);
             properties.AddOrMergeWith(other.properties);
         }
 
@@ -50,6 +57,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
             fields.ReBase(newBase);
             members.ReBase(newBase);
+            events.ReBase(newBase);
             properties.ReBase(newBase);
         }
 
@@ -58,6 +66,9 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public void Add(EnumMemberSymbol member)
             => members.AddOrMergeWith(member);
+
+        public void Add(EventSymbol @event)
+            => events.AddOrMergeWith(@event);
 
         public void Add(PropertySymbol property)
             => properties.AddOrMergeWith(property);

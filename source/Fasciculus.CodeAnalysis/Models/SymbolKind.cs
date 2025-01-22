@@ -9,6 +9,7 @@ namespace Fasciculus.CodeAnalysis.Models
         Class,
         Field,
         EnumMember,
+        Event,
         Property,
     }
 }

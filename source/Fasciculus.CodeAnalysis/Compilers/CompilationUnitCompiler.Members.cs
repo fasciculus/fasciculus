@@ -71,25 +71,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             }
         }
 
-        public override void VisitEventFieldDeclaration(EventFieldDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // EventFieldDeclaration: VariableDeclaration
-
-            nodeDebugger.Add(node);
-
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
-
-            if (IsIncluded(modifiers))
-            {
-                PushComment();
-
-                base.VisitEventFieldDeclaration(node);
-
-                PopComment();
-            }
-        }
-
         public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
         {
             // HasTrivia: True

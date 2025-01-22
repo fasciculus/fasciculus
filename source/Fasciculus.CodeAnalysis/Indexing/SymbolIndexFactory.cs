@@ -78,6 +78,7 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(@interface))
             {
                 index.Add(@interface.Link, @interface);
+                AddEvents(@interface.Events);
                 AddProperties(@interface.Properties);
             }
         }
@@ -91,6 +92,7 @@ namespace Fasciculus.CodeAnalysis.Indexing
             {
                 index.Add(@class.Link, @class);
                 AddFields(@class.Fields);
+                AddEvents(@class.Events);
                 AddProperties(@class.Properties);
             }
         }
@@ -114,6 +116,17 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(member))
             {
                 index.Add(member.Link, member);
+            }
+        }
+
+        private void AddEvents(IEnumerable<EventSymbol> events)
+            => events.Apply(AddEvent);
+
+        private void AddEvent(EventSymbol @event)
+        {
+            if (IsIncluded(@event))
+            {
+                index.Add(@event.Link, @event);
             }
         }
 
