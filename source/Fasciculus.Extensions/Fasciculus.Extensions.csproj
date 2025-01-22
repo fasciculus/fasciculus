@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <Import Project="Properties/Description.props" />
-  <Import Project="Properties/ReleaseNotes.props" />
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>

@@ -19,10 +19,17 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <NoWarn>$(NoWarn),IDE0290,IDE0130</NoWarn>
     <WarningsAsErrors>$(WarningsAsErrors),MVVMTK0045</WarningsAsErrors>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <DebugType>portable</DebugType>
     <Deterministic>true</Deterministic>
     <IncludeSymbols>true</IncludeSymbols>
+  </PropertyGroup>
+  
+  <!-- Debugger / SourceLink Settings -->
+
+  <PropertyGroup>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   
@@ -37,8 +44,7 @@
     <Company>The Fasciculus Project</Company>
     <Copyright>Copyright (c) The Fasciculus Project</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageReleaseNotes>https://fasciculus.github.io/releases.html</PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
