@@ -8,16 +8,16 @@ namespace Fasciculus.CodeAnalysis.Debugging
 {
     public class DefaultProductionDebugger : INodeDebugger
     {
+        public INodeDebugger Next { get; }
+
         private readonly TaskSafeMutex mutex = new();
         private readonly SortedSet<ProductionDebuggerEntry> entries = [];
 
-        private readonly INodeDebugger? nextDebugger;
-
         public List<ProductionDebuggerEntry> this[SyntaxKind left] => GetEntries(left);
 
-        public DefaultProductionDebugger(INodeDebugger? nextDebugger = null)
+        public DefaultProductionDebugger(INodeDebugger? next = null)
         {
-            this.nextDebugger = nextDebugger;
+            Next = next ?? new NullNodeDebugger();
         }
 
         public void Add(SyntaxNode node)
@@ -25,7 +25,7 @@ namespace Fasciculus.CodeAnalysis.Debugging
             using Locker locker = Locker.Lock(mutex);
 
             entries.Add(new(node));
-            nextDebugger?.Add(node);
+            Next.Add(node);
         }
 
         public List<ProductionDebuggerEntry> GetEntries(SyntaxKind left)

@@ -8,19 +8,20 @@ namespace Fasciculus.CodeAnalysis.Debugging
 {
     public class DefaultSyntaxDebugger : INodeDebugger
     {
+        public INodeDebugger Next { get; }
+
         private readonly TaskSafeMutex mutex = new();
-
         private readonly Dictionary<SyntaxKind, SyntaxDebuggerEntry> entries;
-        private readonly INodeDebugger? nextDebugger;
 
-        public DefaultSyntaxDebugger(Dictionary<SyntaxKind, SyntaxDebuggerEntry> entries, INodeDebugger? nextDebugger = null)
+        public DefaultSyntaxDebugger(Dictionary<SyntaxKind, SyntaxDebuggerEntry> entries, INodeDebugger? next = null)
         {
+            Next = next ?? new NullNodeDebugger();
+
             this.entries = entries;
-            this.nextDebugger = nextDebugger;
         }
 
-        public DefaultSyntaxDebugger()
-            : this(new SyntaxDebuggerKnownEntries()) { }
+        public DefaultSyntaxDebugger(INodeDebugger? next = null)
+            : this(new SyntaxDebuggerKnownEntries(), next) { }
 
         public void Add(SyntaxNode node)
         {
@@ -36,7 +37,7 @@ namespace Fasciculus.CodeAnalysis.Debugging
             }
 
             entry.AddUsed(used);
-            nextDebugger?.Add(node);
+            Next.Add(node);
         }
 
         public Dictionary<SyntaxKind, SortedSet<SyntaxKind>> GetUnhandled()

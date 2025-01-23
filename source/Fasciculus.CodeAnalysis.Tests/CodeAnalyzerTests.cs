@@ -1,12 +1,9 @@
-using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Configuration;
 using Fasciculus.CodeAnalysis.Debugging;
-using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
-using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -19,6 +16,46 @@ namespace Fasciculus.CodeAnalysis.Tests
     [TestClass]
     public class CodeAnalyzerTests : TestsBase
     {
+        private class TestContext
+        {
+            public required List<CodeAnalyzerProject> Projects { get; init; }
+
+            public required SyntaxKind ProductionKind { get; init; }
+
+            public required int Packages { get; init; }
+            public required int Namespaces { get; init; }
+            public required int Enums { get; init; }
+            public required int Interfaces { get; init; }
+            public required int Classes { get; init; }
+
+            public required int Fields { get; init; }
+            public required int Members { get; init; }
+            public required int Events { get; init; }
+            public required int Properties { get; init; }
+
+            public DefaultSyntaxDebugger SyntaxDebugger { get; }
+            public DefaultProductionDebugger ProductionDebugger { get; }
+            public DefaultModifierDebugger ModifierDebugger { get; }
+            public DefaultAccessorDebugger AccessorDebugger { get; }
+
+            public CodeAnalyzerDebuggers Debuggers { get; }
+
+            public TestContext()
+            {
+                SyntaxDebugger = new();
+                ProductionDebugger = new(SyntaxDebugger);
+                ModifierDebugger = new();
+                AccessorDebugger = new();
+
+                Debuggers = new()
+                {
+                    NodeDebugger = ProductionDebugger,
+                    ModifierDebugger = ModifierDebugger,
+                    AccessorDebugger = AccessorDebugger
+                };
+            }
+        }
+
         private static readonly SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
         private static readonly string[] projectNames = ["Fasciculus.Core", "Fasciculus.Extensions"];
 
@@ -45,17 +82,62 @@ namespace Fasciculus.CodeAnalysis.Tests
         }
 
         [TestMethod]
-        public void Test()
+        public void TestFasciculusCore()
+        {
+            TestContext context = new()
+            {
+                Projects = [GetProject("Fasciculus.Core")],
+                ProductionKind = SyntaxKind.None,
+
+                Packages = 1,
+                Namespaces = 34,
+                Enums = 2,
+                Interfaces = 8,
+                Classes = 110,
+
+                Fields = 6,
+                Members = 6,
+                Events = 4,
+                Properties = 98,
+            };
+
+            Test(context);
+        }
+
+        [TestMethod]
+        public void TestFasciculusExtensions()
+        {
+            TestContext context = new()
+            {
+                Projects = [GetProject("Fasciculus.Extensions")],
+                ProductionKind = SyntaxKind.None,
+
+                Packages = 1,
+                Namespaces = 4,
+                Enums = 0,
+                Interfaces = 0,
+                Classes = 8,
+
+                Fields = 0,
+                Members = 0,
+                Events = 0,
+                Properties = 4,
+            };
+
+            Test(context);
+        }
+
+        private void Test(TestContext context)
         {
             CodeAnalyzerResult result = CodeAnalyzer.Create()
-                .WithProjects(GetProjects())
-                .WithDebuggers(debuggers)
+                .WithProjects(context.Projects)
+                .WithDebuggers(context.Debuggers)
                 .Build().Analyze();
 
-            //LogProductions();
-            LogUnhandledSyntax();
-            LogUnhandledModifiers();
-            LogUnhandledAccessors();
+            LogProductions(context);
+            LogUnhandledSyntax(context);
+            LogUnhandledModifiers(context);
+            LogUnhandledAccessors(context);
 
             IEnumerable<Symbol> symbols = result.Index.Symbols;
             NamespaceSymbol[] namespaces = [.. symbols.Where(x => x.Kind == SymbolKind.Namespace).Cast<NamespaceSymbol>()];
@@ -67,27 +149,25 @@ namespace Fasciculus.CodeAnalysis.Tests
             EventSymbol[] events = [.. symbols.Where(x => x.Kind == SymbolKind.Event).Cast<EventSymbol>()];
             PropertySymbol[] properties = [.. symbols.Where(x => x.Kind == SymbolKind.Property).Cast<PropertySymbol>()];
 
-            Assert.AreEqual(2, result.Packages.Count);
-            Assert.AreEqual(37, namespaces.Length);
-            Assert.AreEqual(2, enums.Length);
-            Assert.AreEqual(6, interfaces.Length);
-            Assert.AreEqual(114, classes.Length);
-            Assert.AreEqual(6, fields.Length);
-            Assert.AreEqual(6, members.Length);
-            Assert.AreEqual(4, events.Length);
-            Assert.AreEqual(102, properties.Length);
+            Assert.AreEqual(context.Packages, result.Packages.Count);
 
-            Assert.AreEqual(0, syntaxDebugger.GetUnhandled().Count);
-            Assert.AreEqual(0, modifierDebugger.GetUnhandled().Count);
-            Assert.AreEqual(0, accessorDebugger.GetUnhandled().Count);
+            Assert.AreEqual(context.Namespaces, namespaces.Length);
+            Assert.AreEqual(context.Enums, enums.Length);
+            Assert.AreEqual(context.Interfaces, interfaces.Length);
+            Assert.AreEqual(context.Classes, classes.Length);
+            Assert.AreEqual(context.Fields, fields.Length);
+            Assert.AreEqual(context.Members, members.Length);
+            Assert.AreEqual(context.Events, events.Length);
+            Assert.AreEqual(context.Properties, properties.Length);
 
-            //LogUnhandledCommentElements();
-            //LogComments(result.Indices);
+            Assert.AreEqual(0, context.SyntaxDebugger.GetUnhandled().Count);
+            Assert.AreEqual(0, context.ModifierDebugger.GetUnhandled().Count);
+            Assert.AreEqual(0, context.AccessorDebugger.GetUnhandled().Count);
         }
 
-        public void LogProductions()
+        private void LogProductions(TestContext context)
         {
-            List<ProductionDebuggerEntry> productions = productionDebugger[SyntaxKind.ObjectCreationExpression];
+            List<ProductionDebuggerEntry> productions = context.ProductionDebugger[context.ProductionKind];
 
             if (productions.Count == 0)
             {
@@ -102,9 +182,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             productions.Apply(p => Log(p.ToString()));
         }
 
-        public void LogUnhandledSyntax()
+        private void LogUnhandledSyntax(TestContext context)
         {
-            Dictionary<SyntaxKind, SortedSet<SyntaxKind>> unhandled = syntaxDebugger.GetUnhandled();
+            Dictionary<SyntaxKind, SortedSet<SyntaxKind>> unhandled = context.SyntaxDebugger.GetUnhandled();
 
             if (unhandled.Count > 0)
             {
@@ -124,9 +204,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        public void LogUnhandledModifiers()
+        private void LogUnhandledModifiers(TestContext context)
         {
-            SortedSet<string> unhandled = modifierDebugger.GetUnhandled();
+            SortedSet<string> unhandled = context.ModifierDebugger.GetUnhandled();
 
             if (unhandled.Count > 0)
             {
@@ -135,9 +215,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        public void LogUnhandledAccessors()
+        private void LogUnhandledAccessors(TestContext context)
         {
-            SortedSet<SyntaxKind> unhandled = accessorDebugger.GetUnhandled();
+            SortedSet<SyntaxKind> unhandled = context.AccessorDebugger.GetUnhandled();
 
             if (unhandled.Count > 0)
             {
@@ -146,51 +226,16 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        public void LogComments(SymbolIndex index)
+        private static CodeAnalyzerProject GetProject(string name)
         {
-            UriPath[] paths =
-            [
-                new("Fasciculus.Core", "Fasciculus.Net.Navigating", "UriPath"),
-                new("Fasciculus.Core", "Fasciculus.Algorithms"),
-                new("Fasciculus.Core", "Fasciculus.Collections", "ObservableNotifyingEnumerable-1")
-            ];
+            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
+            DirectoryInfo directory = DirectorySearch.Search(name, searchPath).First();
 
-            foreach (UriPath path in paths)
+            return new()
             {
-                Symbol symbol = index[path];
-
-                Log($"~~~~ {symbol.Name} ~~~~");
-                Log(symbol.Comment.Summary);
-            }
-
-            Log("~~~~~~~~~~~~~~~~~~~~~~~~");
-        }
-
-        public void LogUnhandledCommentElements()
-        {
-            SortedSet<string> unhandled = UnhandledCommentElements.Instance.Unhandled();
-
-            if (unhandled.Count > 0)
-            {
-                Log("--- unhandled comment elements ---");
-                Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
-            }
-        }
-
-        private static IEnumerable<CodeAnalyzerProject> GetProjects()
-        {
-            foreach (var projectName in projectNames)
-            {
-                DirectoryInfo directory = DirectorySearch.Search(projectName, searchPath).First();
-
-                CodeAnalyzerProject project = new()
-                {
-                    ProjectFile = directory.File(projectName + ".csproj"),
-                    RepositoryDirectory = new("tree", "main", "source", projectName)
-                };
-
-                yield return project;
-            }
+                ProjectFile = directory.File(name + ".csproj"),
+                RepositoryDirectory = new("tree", "main", "source", name)
+            };
         }
     }
 }

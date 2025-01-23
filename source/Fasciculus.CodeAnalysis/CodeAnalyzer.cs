@@ -70,13 +70,16 @@ namespace Fasciculus.CodeAnalysis
 
             foreach (Project project in projects)
             {
-                if (project.HasDocuments)
+                if (options.Projects.Any(p => p.ProjectFile.FullName == project.FilePath))
                 {
-                    DirectoryInfo? projectDirectory = project.GetDirectory();
-
-                    if (projectDirectory is not null)
+                    if (project.HasDocuments)
                     {
-                        yield return ParseProject(project, projectDirectory);
+                        DirectoryInfo? projectDirectory = project.GetDirectory();
+
+                        if (projectDirectory is not null)
+                        {
+                            yield return ParseProject(project, projectDirectory);
+                        }
                     }
                 }
             }
