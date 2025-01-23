@@ -1,18 +1,20 @@
 using System.Xml.Linq;
+using static Fasciculus.CodeAnalysis.Commenting.CommentConstants;
 
 namespace Fasciculus.CodeAnalysis.Commenting
 {
-    public static class SymbolCommentMerger
+    public class DefaultCommentMerger : ICommentMerger
     {
-        public static void Merge(this XDocument dst, XDocument src)
+        public void Merge(XDocument src, XDocument dst)
         {
             XElement dstRoot = EnsureRoot(dst);
             XElement? srcRoot = src.Root;
 
-            Merge(dstRoot, srcRoot, "summary");
+            Merge(srcRoot, dstRoot, SummaryName);
+            Merge(srcRoot, dstRoot, RemarksName);
         }
 
-        private static void Merge(XElement dstRoot, XElement? srcRoot, string name)
+        private static void Merge(XElement? srcRoot, XElement dstRoot, string name)
         {
             XElement? dst = dstRoot.Element(name);
 
@@ -27,13 +29,14 @@ namespace Fasciculus.CodeAnalysis.Commenting
             }
         }
 
-        private static XElement EnsureRoot(this XDocument doc)
+
+        private static XElement EnsureRoot(XDocument doc)
         {
             XElement? root = doc.Root;
 
             if (root is null)
             {
-                root = new("comment");
+                root = new(RootName);
 
                 doc.Add(root);
             }

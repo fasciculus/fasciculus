@@ -20,16 +20,23 @@ namespace Fasciculus.CodeAnalysis
     {
         private readonly CodeAnalyzerOptions options;
 
+        private readonly CommentContext commentContext;
+
         public CodeAnalyzer(CodeAnalyzerOptions options)
         {
             this.options = options;
+
+            commentContext = new()
+            {
+                Merger = new DefaultCommentMerger(),
+            };
         }
 
         public CodeAnalyzerResult Analyze()
         {
             using MSBuildWorkspace workspace = LoadWorkspace();
             PackageList packages = CompilePackages(workspace);
-            PackageSymbol combined = packages.Combine(options.CombinedPackageName, options.CombinedPackageLink, new());
+            PackageSymbol combined = packages.Combine(options.CombinedPackageName, options.CombinedPackageLink, commentContext);
             SymbolIndex index = CreateIndex(packages, combined);
 
             ProcessComments(index);
@@ -56,7 +63,7 @@ namespace Fasciculus.CodeAnalysis
             {
                 Project = project,
                 IncludeNonAccessible = options.IncludeNonAccessible,
-                CommentContext = new(),
+                CommentContext = commentContext,
                 Debuggers = options.Debuggers,
             };
 
