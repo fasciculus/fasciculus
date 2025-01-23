@@ -2,7 +2,7 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class EventSymbol : MemberSymbol<EventSymbol>
+    public class EventSymbol : TypedSymbol<EventSymbol>
     {
         public EventSymbol(TargetFramework framework, string package)
             : base(SymbolKind.Event, framework, package) { }

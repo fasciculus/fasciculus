@@ -2,7 +2,7 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class PropertySymbol : MemberSymbol<PropertySymbol>
+    public class PropertySymbol : TypedSymbol<PropertySymbol>
     {
         private readonly AccessorList accessors;
 

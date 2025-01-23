@@ -2,7 +2,7 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class EnumMemberSymbol : MemberSymbol<EnumMemberSymbol>
+    public class EnumMemberSymbol : TypedSymbol<EnumMemberSymbol>
     {
         public EnumMemberSymbol(TargetFramework framework, string package)
             : base(SymbolKind.EnumMember, framework, package) { }

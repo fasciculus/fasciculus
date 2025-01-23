@@ -2,7 +2,7 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class FieldSymbol : MemberSymbol<FieldSymbol>
+    public class FieldSymbol : TypedSymbol<FieldSymbol>
     {
         public FieldSymbol(TargetFramework framework, string package)
             : base(SymbolKind.Field, framework, package) { }
