@@ -29,7 +29,7 @@ namespace Fasciculus.CodeAnalysis
         {
             using MSBuildWorkspace workspace = LoadWorkspace();
             PackageList packages = CompilePackages(workspace);
-            PackageSymbol combined = packages.Combine(options.CombinedPackageName, options.CombinedPackageLink);
+            PackageSymbol combined = packages.Combine(options.CombinedPackageName, options.CombinedPackageLink, new());
             SymbolIndex index = CreateIndex(packages, combined);
 
             ProcessComments(index);
@@ -56,6 +56,7 @@ namespace Fasciculus.CodeAnalysis
             {
                 Project = project,
                 IncludeNonAccessible = options.IncludeNonAccessible,
+                CommentContext = new(),
                 Debuggers = options.Debuggers,
             };
 

@@ -6,20 +6,21 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public class CommentBuilder
     {
-        public XDocument Document { get; }
+        private readonly SymbolCommentContext commentContext;
+
+        private readonly XDocument document;
 
         private readonly Stack<XElement> elements = [];
 
         public XElement Top => elements.Peek();
 
-        public CommentBuilder()
+        public CommentBuilder(SymbolCommentContext commentContext)
         {
-            Document = XDocument.Parse("<comment>\r\n</comment>");
-            elements.Push(Document.Root!);
-        }
+            this.commentContext = commentContext;
 
-        public static CommentBuilder Create()
-            => new();
+            document = XDocument.Parse("<comment/>");
+            elements.Push(document.Root!);
+        }
 
         public void Add(XObject content)
             => Top.Add(content);
@@ -35,6 +36,6 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         }
 
         public SymbolComment Build()
-            => new(Document);
+            => new(commentContext, document);
     }
 }

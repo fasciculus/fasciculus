@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 using System.Collections.Generic;
 
@@ -9,6 +10,9 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         protected readonly List<EnumSymbol> enums = [];
         protected readonly List<InterfaceSymbol> interfaces = [];
         protected readonly List<ClassSymbol> classes = [];
+
+        public TypeReceiver(SymbolCommentContext commentContext)
+            : base(commentContext) { }
 
         public void Add(EnumSymbol @enum)
         {

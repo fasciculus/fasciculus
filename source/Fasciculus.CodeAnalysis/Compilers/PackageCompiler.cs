@@ -33,7 +33,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             TargetFramework framework = context.Framework;
             CompilationUnitCompiler compiler = new(context);
             FileInfo commentFile = context.CommentsDirectory.File(context.Project.AssemblyName + ".xml");
-            SymbolComment comment = SymbolComment.FromFile(commentFile);
+            SymbolComment comment = SymbolComment.FromFile(context.CommentContext, commentFile);
             UriPath repositoryDirectory = context.Project.RepositoryDirectory;
             CompilationUnitInfo[] compilationUnits = [.. roots.Select(compiler.Compile)];
 

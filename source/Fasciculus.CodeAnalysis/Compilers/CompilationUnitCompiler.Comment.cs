@@ -13,7 +13,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public void PushComment()
         {
-            commentBuilders.Push(CommentBuilder.Create());
+            commentBuilders.Push(new(commentContext));
         }
 
         public void PopComment()
@@ -22,7 +22,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (commentReceivers.Count > 0)
             {
-                commentReceivers.Peek().Comment = builder.Build();
+                commentReceivers.Peek().Comment.MergeWith(builder.Build());
             }
         }
 

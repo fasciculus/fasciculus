@@ -27,7 +27,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             UriPath link = CreateNamespaceLink(name);
 
-            NamespaceBuilder builder = new()
+            NamespaceBuilder builder = new(commentContext)
             {
                 Name = name,
                 Link = link,
@@ -48,7 +48,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             NamespaceSymbol @namespace = builder.Build();
             FileInfo commentFile = namespaceCommentsDirectory.File($"{builder.Name}.xml");
 
-            @namespace.Comment.MergeWith(SymbolComment.FromFile(commentFile));
+            @namespace.Comment.MergeWith(SymbolComment.FromFile(commentContext, commentFile));
 
             compilationUnit.AddOrMergeWith(@namespace);
         }

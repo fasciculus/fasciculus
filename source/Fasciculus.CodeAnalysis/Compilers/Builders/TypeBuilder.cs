@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 
@@ -10,6 +11,9 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         protected MemberList members = [];
         protected EventList events = [];
         protected PropertyList properties = [];
+
+        public TypeBuilder(SymbolCommentContext commentContext)
+            : base(commentContext) { }
 
         public void Add(FieldSymbol field)
         {

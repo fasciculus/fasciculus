@@ -14,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             UriPath link = typeReceivers.Peek().Link.Append(name.Mangled);
 
-            ClassBuilder builder = new()
+            ClassBuilder builder = new(commentContext)
             {
                 Name = name,
                 Link = link,

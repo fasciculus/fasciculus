@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Configuration;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
@@ -16,6 +17,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public DirectoryInfo CommentsDirectory
             => ProjectDirectory.Combine("Properties", "Comments");
+
+        public required SymbolCommentContext CommentContext { get; init; }
 
         public required bool IncludeNonAccessible { get; init; }
 

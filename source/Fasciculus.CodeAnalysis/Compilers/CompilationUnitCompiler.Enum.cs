@@ -15,7 +15,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             UriPath link = typeReceivers.Peek().Link.Append(name.Mangled);
 
-            EnumBuilder builder = new()
+            EnumBuilder builder = new(commentContext)
             {
                 Name = name,
                 Link = link,
@@ -50,7 +50,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             UriPath link = memberReceivers.Peek().Link.Append(name.Name);
 
-            EnumMemberBuilder builder = new()
+            EnumMemberBuilder builder = new(commentContext)
             {
                 Name = name,
                 Link = link,

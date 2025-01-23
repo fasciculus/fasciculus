@@ -14,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             UriPath link = memberReceivers.Peek().Link.Append(name.Name);
 
-            FieldBuilder builder = new()
+            FieldBuilder builder = new(commentContext)
             {
                 Name = name,
                 Link = link,

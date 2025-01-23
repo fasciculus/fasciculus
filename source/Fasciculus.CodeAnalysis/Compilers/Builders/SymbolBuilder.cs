@@ -18,7 +18,12 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public required SymbolModifiers Modifiers { get; init; }
 
-        public SymbolComment Comment { get; set; } = SymbolComment.Empty;
+        public SymbolComment Comment { get; }
+
+        public SymbolBuilder(SymbolCommentContext commentContext)
+        {
+            Comment = SymbolComment.Empty(commentContext);
+        }
 
         public abstract T Build();
     }

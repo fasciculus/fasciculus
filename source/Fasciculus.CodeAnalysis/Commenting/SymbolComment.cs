@@ -6,19 +6,23 @@ namespace Fasciculus.CodeAnalysis.Commenting
 {
     public class SymbolComment
     {
-        public static SymbolComment Empty => new(XDocument.Parse("<comment />"));
+        public static SymbolComment Empty(SymbolCommentContext context)
+            => new(context, XDocument.Parse("<comment />"));
+
+        private readonly SymbolCommentContext context;
 
         private readonly XDocument document;
 
         public string Summary => Convert(document.Root?.Element("summary"));
 
-        public SymbolComment(XDocument document)
+        public SymbolComment(SymbolCommentContext context, XDocument document)
         {
-            this.document = document;
+            this.context = context;
+            this.document = new(document);
         }
 
         public SymbolComment Clone()
-            => new(document);
+            => new(context, document);
 
         public void MergeWith(SymbolComment other)
             => SymbolCommentMerger.Merge(document, other.document);
@@ -26,7 +30,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
         internal void Accept(XWalker visitor)
             => visitor.VisitDocument(document);
 
-        public static SymbolComment FromFile(FileInfo file)
+        public static SymbolComment FromFile(SymbolCommentContext context, FileInfo file)
         {
             if (file.Exists)
             {
@@ -35,11 +39,11 @@ namespace Fasciculus.CodeAnalysis.Commenting
 
                 if (root is not null && root.Name.LocalName == "comment")
                 {
-                    return new(document);
+                    return new(context, document);
                 }
             }
 
-            return Empty;
+            return Empty(context);
         }
 
         private static string Convert(XElement? element)

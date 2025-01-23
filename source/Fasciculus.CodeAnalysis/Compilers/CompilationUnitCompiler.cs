@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;
@@ -14,18 +15,21 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly TaskSafeMutex mutex = new();
 
-        protected readonly DirectoryInfo namespaceCommentsDirectory;
+        private readonly DirectoryInfo namespaceCommentsDirectory;
+
+        private readonly SymbolCommentContext commentContext;
 
         private readonly AccessorsCompiler accessorsCompiler;
 
-        protected UriPath Source { get; set; } = UriPath.Empty;
+        private UriPath Source { get; set; } = UriPath.Empty;
 
-        protected CompilationUnitInfo compilationUnit = new();
+        private CompilationUnitInfo compilationUnit = new();
 
         public CompilationUnitCompiler(CompilerContext context)
             : base(context, SyntaxWalkerDepth.StructuredTrivia)
         {
             namespaceCommentsDirectory = context.CommentsDirectory.Combine("Namespaces");
+            commentContext = context.CommentContext;
 
             accessorsCompiler = new(context);
         }

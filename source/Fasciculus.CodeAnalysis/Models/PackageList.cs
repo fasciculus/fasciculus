@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Collections;
 using Fasciculus.Net.Navigating;
@@ -17,7 +18,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public PackageList(IEnumerable<PackageSymbol> packages)
             : base(packages.Where(p => !p.IsEmpty)) { }
 
-        public PackageSymbol Combine(string packageName, UriPath packageLink)
+        public PackageSymbol Combine(string packageName, UriPath packageLink, SymbolCommentContext commentContext)
         {
             SymbolName name = new(packageName);
             UriPath link = new(name);
@@ -28,7 +29,7 @@ namespace Fasciculus.CodeAnalysis.Models
                 Link = link,
                 Modifiers = PackageSymbol.PackageModifiers,
                 RepositoryDirectory = packageLink,
-                Comment = new(XDocument.Parse(CombinedComment)),
+                Comment = new(commentContext, XDocument.Parse(CombinedComment)),
             };
 
             this.Select(p => p.Clone()).Apply(result.MergeWith);

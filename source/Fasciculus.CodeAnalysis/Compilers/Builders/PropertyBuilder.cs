@@ -1,3 +1,4 @@
+using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 
@@ -6,6 +7,9 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
     public class PropertyBuilder : MemberBuilder<PropertySymbol>
     {
         public required AccessorList Accessors { get; init; }
+
+        public PropertyBuilder(SymbolCommentContext commentContext)
+            : base(commentContext) { }
 
         public override PropertySymbol Build()
         {
