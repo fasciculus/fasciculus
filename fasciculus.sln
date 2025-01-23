@@ -58,6 +58,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markup", "source
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Experiments.Html", "source\Fasciculus.Experiments.Html\Fasciculus.Experiments.Html.csproj", "{4D434129-FC07-4EDE-8D9D-EBD360C968CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NuGet", "source\Fasciculus.NuGet\Fasciculus.NuGet.csproj", "{11A99BB3-E16F-4273-A05F-EB0834EB6273}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NuGet.Tests", "source\Fasciculus.NuGet.Tests\Fasciculus.NuGet.Tests.csproj", "{35A7C196-D962-4819-8961-44C755F6C1C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -152,6 +156,14 @@ Global
 		{4D434129-FC07-4EDE-8D9D-EBD360C968CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D434129-FC07-4EDE-8D9D-EBD360C968CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D434129-FC07-4EDE-8D9D-EBD360C968CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11A99BB3-E16F-4273-A05F-EB0834EB6273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11A99BB3-E16F-4273-A05F-EB0834EB6273}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11A99BB3-E16F-4273-A05F-EB0834EB6273}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11A99BB3-E16F-4273-A05F-EB0834EB6273}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35A7C196-D962-4819-8961-44C755F6C1C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35A7C196-D962-4819-8961-44C755F6C1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35A7C196-D962-4819-8961-44C755F6C1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35A7C196-D962-4819-8961-44C755F6C1C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
