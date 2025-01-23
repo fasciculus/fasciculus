@@ -12,6 +12,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
                 Name = Name,
                 Link = Link,
                 Modifiers = NamespaceSymbol.NamespaceModifiers,
+                Comment = Comment,
             };
 
             enums.Apply(@namespace.AddOrMergeWith);

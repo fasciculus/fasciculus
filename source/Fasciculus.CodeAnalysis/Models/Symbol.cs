@@ -31,7 +31,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public virtual bool IsAccessible => modifiers.IsAccessible;
 
-        public SymbolComment Comment { get; set; } = SymbolComment.Empty;
+        public required SymbolComment Comment { get; init; }
 
         private readonly TargetFrameworks frameworks = [];
 
@@ -55,7 +55,6 @@ namespace Fasciculus.CodeAnalysis.Models
 
             link = other.link;
             modifiers = other.modifiers;
-            Comment = other.Comment;
 
             frameworks.Add(other.frameworks);
             packages = new(other.packages);
@@ -68,6 +67,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public virtual void MergeWith(Symbol other)
         {
+            Comment.MergeWith(other.Comment);
+
             frameworks.Add(other.frameworks);
             packages.UnionWith(other.packages);
         }

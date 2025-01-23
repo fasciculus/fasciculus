@@ -9,7 +9,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
 {
     public class SymbolCommentProcessor : XWalker
     {
-        private static string[] HandledElements
+        private static readonly string[] HandledElements
             = ["c", "code", "comment", "p", "para", "see", "summary", "typeparam"];
 
         private readonly SymbolIndex index;
@@ -28,9 +28,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
 
         private void Process(Symbol symbol)
         {
-            XDocument document = symbol.Comment.Document;
-
-            VisitDocument(document);
+            symbol.Comment.Accept(this);
         }
 
         public override void VisitElement(XElement element)

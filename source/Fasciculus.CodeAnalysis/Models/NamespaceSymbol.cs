@@ -42,7 +42,8 @@ namespace Fasciculus.CodeAnalysis.Models
             {
                 Name = Name,
                 Link = Link,
-                Modifiers = Modifiers
+                Modifiers = Modifiers,
+                Comment = Comment,
             };
         }
 

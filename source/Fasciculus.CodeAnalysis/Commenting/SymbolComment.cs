@@ -1,3 +1,4 @@
+using Fasciculus.Xml;
 using System.IO;
 using System.Xml.Linq;
 
@@ -7,16 +8,23 @@ namespace Fasciculus.CodeAnalysis.Commenting
     {
         public static SymbolComment Empty => new(XDocument.Parse("<comment />"));
 
-        private static SymbolCommentConverter converter = new();
+        private readonly XDocument document;
 
-        public XDocument Document { get; }
-
-        public string Summary => Convert(Document.Root?.Element("summary"));
+        public string Summary => Convert(document.Root?.Element("summary"));
 
         public SymbolComment(XDocument document)
         {
-            Document = document;
+            this.document = document;
         }
+
+        public SymbolComment Clone()
+            => new(document);
+
+        public void MergeWith(SymbolComment other)
+            => SymbolCommentMerger.Merge(document, other.document);
+
+        internal void Accept(XWalker visitor)
+            => visitor.VisitDocument(document);
 
         public static SymbolComment FromFile(FileInfo file)
         {

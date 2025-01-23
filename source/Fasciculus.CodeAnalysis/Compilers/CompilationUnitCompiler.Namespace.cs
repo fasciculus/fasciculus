@@ -48,7 +48,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             NamespaceSymbol @namespace = builder.Build();
             FileInfo commentFile = namespaceCommentsDirectory.File($"{builder.Name}.xml");
 
-            @namespace.Comment = SymbolComment.FromFile(commentFile);
+            @namespace.Comment.MergeWith(SymbolComment.FromFile(commentFile));
 
             compilationUnit.AddOrMergeWith(@namespace);
         }

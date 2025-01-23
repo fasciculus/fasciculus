@@ -39,7 +39,8 @@ namespace Fasciculus.CodeAnalysis.Models
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                RepositoryDirectory = RepositoryDirectory
+                RepositoryDirectory = RepositoryDirectory,
+                Comment = Comment.Clone(),
             };
         }
 

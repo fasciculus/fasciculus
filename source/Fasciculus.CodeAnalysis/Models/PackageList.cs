@@ -27,12 +27,12 @@ namespace Fasciculus.CodeAnalysis.Models
                 Name = name,
                 Link = link,
                 Modifiers = PackageSymbol.PackageModifiers,
-                RepositoryDirectory = packageLink
+                RepositoryDirectory = packageLink,
+                Comment = new(XDocument.Parse(CombinedComment)),
             };
 
             this.Select(p => p.Clone()).Apply(result.MergeWith);
             result.ReBase(link);
-            result.Comment = new(XDocument.Parse(CombinedComment));
 
             return result;
         }
