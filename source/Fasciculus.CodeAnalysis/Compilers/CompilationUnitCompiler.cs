@@ -17,7 +17,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly DirectoryInfo namespaceCommentsDirectory;
 
-        private readonly SymbolCommentContext commentContext;
+        private readonly CommentContext commentContext;
 
         private readonly AccessorsCompiler accessorsCompiler;
 

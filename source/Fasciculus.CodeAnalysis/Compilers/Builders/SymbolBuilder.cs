@@ -20,7 +20,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public SymbolComment Comment { get; }
 
-        public SymbolBuilder(SymbolCommentContext commentContext)
+        public SymbolBuilder(CommentContext commentContext)
         {
             Comment = SymbolComment.Empty(commentContext);
         }

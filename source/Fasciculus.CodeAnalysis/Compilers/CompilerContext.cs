@@ -18,7 +18,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public DirectoryInfo CommentsDirectory
             => ProjectDirectory.Combine("Properties", "Comments");
 
-        public required SymbolCommentContext CommentContext { get; init; }
+        public required CommentContext CommentContext { get; init; }
 
         public required bool IncludeNonAccessible { get; init; }
 

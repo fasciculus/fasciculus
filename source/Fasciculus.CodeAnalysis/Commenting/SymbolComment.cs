@@ -6,16 +6,16 @@ namespace Fasciculus.CodeAnalysis.Commenting
 {
     public class SymbolComment
     {
-        public static SymbolComment Empty(SymbolCommentContext context)
+        public static SymbolComment Empty(CommentContext context)
             => new(context, XDocument.Parse("<comment />"));
 
-        private readonly SymbolCommentContext context;
+        private readonly CommentContext context;
 
         private readonly XDocument document;
 
         public string Summary => Convert(document.Root?.Element("summary"));
 
-        public SymbolComment(SymbolCommentContext context, XDocument document)
+        public SymbolComment(CommentContext context, XDocument document)
         {
             this.context = context;
             this.document = new(document);
@@ -30,7 +30,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
         internal void Accept(XWalker visitor)
             => visitor.VisitDocument(document);
 
-        public static SymbolComment FromFile(SymbolCommentContext context, FileInfo file)
+        public static SymbolComment FromFile(CommentContext context, FileInfo file)
         {
             if (file.Exists)
             {

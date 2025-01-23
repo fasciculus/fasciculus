@@ -11,7 +11,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         protected readonly List<InterfaceSymbol> interfaces = [];
         protected readonly List<ClassSymbol> classes = [];
 
-        public TypeReceiver(SymbolCommentContext commentContext)
+        public TypeReceiver(CommentContext commentContext)
             : base(commentContext) { }
 
         public void Add(EnumSymbol @enum)

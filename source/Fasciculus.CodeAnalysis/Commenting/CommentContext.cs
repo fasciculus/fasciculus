@@ -1,6 +1,6 @@
 namespace Fasciculus.CodeAnalysis.Commenting
 {
-    public class SymbolCommentContext
+    public class CommentContext
     {
     }
 }

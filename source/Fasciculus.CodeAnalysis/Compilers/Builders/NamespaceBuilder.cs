@@ -6,7 +6,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public class NamespaceBuilder : TypeReceiver<NamespaceSymbol>
     {
-        public NamespaceBuilder(SymbolCommentContext commentContext)
+        public NamespaceBuilder(CommentContext commentContext)
             : base(commentContext) { }
 
         public override NamespaceSymbol Build()

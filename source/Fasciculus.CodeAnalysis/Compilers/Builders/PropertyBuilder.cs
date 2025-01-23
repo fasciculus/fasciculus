@@ -8,7 +8,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
     {
         public required AccessorList Accessors { get; init; }
 
-        public PropertyBuilder(SymbolCommentContext commentContext)
+        public PropertyBuilder(CommentContext commentContext)
             : base(commentContext) { }
 
         public override PropertySymbol Build()

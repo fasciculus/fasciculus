@@ -5,7 +5,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public class EnumBuilder : TypeBuilder<EnumSymbol>
     {
-        public EnumBuilder(SymbolCommentContext commentContext)
+        public EnumBuilder(CommentContext commentContext)
             : base(commentContext) { }
 
         public override EnumSymbol Build()

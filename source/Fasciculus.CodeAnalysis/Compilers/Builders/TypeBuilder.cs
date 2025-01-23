@@ -12,7 +12,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         protected EventList events = [];
         protected PropertyList properties = [];
 
-        public TypeBuilder(SymbolCommentContext commentContext)
+        public TypeBuilder(CommentContext commentContext)
             : base(commentContext) { }
 
         public void Add(FieldSymbol field)

@@ -8,7 +8,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
     {
         public required string Type { get; init; }
 
-        public TypedSymbolBuilder(SymbolCommentContext commentContext)
+        public TypedSymbolBuilder(CommentContext commentContext)
             : base(commentContext) { }
     }
 }

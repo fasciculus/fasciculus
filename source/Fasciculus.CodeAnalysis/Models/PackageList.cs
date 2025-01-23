@@ -18,7 +18,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public PackageList(IEnumerable<PackageSymbol> packages)
             : base(packages.Where(p => !p.IsEmpty)) { }
 
-        public PackageSymbol Combine(string packageName, UriPath packageLink, SymbolCommentContext commentContext)
+        public PackageSymbol Combine(string packageName, UriPath packageLink, CommentContext commentContext)
         {
             SymbolName name = new(packageName);
             UriPath link = new(name);

@@ -6,7 +6,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public class CommentBuilder
     {
-        private readonly SymbolCommentContext commentContext;
+        private readonly CommentContext commentContext;
 
         private readonly XDocument document;
 
@@ -14,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public XElement Top => elements.Peek();
 
-        public CommentBuilder(SymbolCommentContext commentContext)
+        public CommentBuilder(CommentContext commentContext)
         {
             this.commentContext = commentContext;
 

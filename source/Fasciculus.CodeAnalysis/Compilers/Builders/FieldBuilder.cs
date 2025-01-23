@@ -5,7 +5,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public class FieldBuilder : TypedSymbolBuilder<FieldSymbol>
     {
-        public FieldBuilder(SymbolCommentContext commentContext)
+        public FieldBuilder(CommentContext commentContext)
             : base(commentContext) { }
 
         public override FieldSymbol Build()

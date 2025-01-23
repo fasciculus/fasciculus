@@ -5,7 +5,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public class InterfaceBuilder : TypeBuilder<InterfaceSymbol>
     {
-        public InterfaceBuilder(SymbolCommentContext commentContext)
+        public InterfaceBuilder(CommentContext commentContext)
             : base(commentContext) { }
 
         public override InterfaceSymbol Build()

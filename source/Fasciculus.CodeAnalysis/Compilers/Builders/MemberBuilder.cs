@@ -5,7 +5,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public class MemberBuilder : TypedSymbolBuilder<MemberSymbol>
     {
-        public MemberBuilder(SymbolCommentContext commentContext)
+        public MemberBuilder(CommentContext commentContext)
             : base(commentContext) { }
 
         public override MemberSymbol Build()
