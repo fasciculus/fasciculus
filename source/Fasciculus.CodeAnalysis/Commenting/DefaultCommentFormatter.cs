@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Commenting
 {
-    public class SymbolCommentConverter
+    public class DefaultCommentFormatter : ICommentFormatter
     {
-        private class Walker : XWalker
+        private class Visitor : XVisitor
         {
             public StringBuilder Result { get; } = new();
 
@@ -14,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
             {
                 if (element.IsEmpty)
                 {
-                    Result.Append('<').Append(element.Name).Append("/>");
+                    Result.Append('<').Append(element.Name).Append(" />");
                 }
                 else
                 {
@@ -30,18 +30,18 @@ namespace Fasciculus.CodeAnalysis.Commenting
             }
         }
 
-        public static string Convert(XElement? element)
+        public string Format(XElement? element)
         {
-            if (element is not null)
+            if (element is null)
             {
-                Walker walker = new();
-
-                walker.VisitNodes(element.Nodes());
-
-                return walker.Result.ToString();
+                return string.Empty;
             }
 
-            return string.Empty;
+            Visitor visitor = new();
+
+            visitor.VisitNodes(element.Nodes());
+
+            return visitor.Result.ToString();
         }
     }
 }

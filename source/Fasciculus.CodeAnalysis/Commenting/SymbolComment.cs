@@ -1,4 +1,3 @@
-using Fasciculus.Xml;
 using System.IO;
 using System.Xml.Linq;
 using static Fasciculus.CodeAnalysis.Commenting.CommentConstants;
@@ -14,7 +13,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
 
         private readonly XDocument document;
 
-        public string Summary => Convert(document.Root?.Element(SummaryName));
+        public string Summary => ResolveAndFormat(document.Root?.Element(SummaryName));
 
         public SymbolComment(CommentContext context, XDocument document)
         {
@@ -28,8 +27,8 @@ namespace Fasciculus.CodeAnalysis.Commenting
         public void MergeWith(SymbolComment other)
             => context.Merger.Merge(other.document, document);
 
-        internal void Accept(XWalker visitor)
-            => visitor.VisitDocument(document);
+        private string ResolveAndFormat(XElement? element)
+            => context.Formatter.Format(context.Resolver.Resolve(element));
 
         public static SymbolComment FromFile(CommentContext context, FileInfo file)
         {
@@ -46,8 +45,5 @@ namespace Fasciculus.CodeAnalysis.Commenting
 
             return Empty(context);
         }
-
-        private static string Convert(XElement? element)
-            => SymbolCommentConverter.Convert(element);
     }
 }

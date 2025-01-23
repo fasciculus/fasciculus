@@ -1,6 +1,7 @@
 using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Configuration;
+using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
@@ -29,6 +30,8 @@ namespace Fasciculus.CodeAnalysis
             commentContext = new()
             {
                 Merger = new DefaultCommentMerger(),
+                Resolver = new DefaultCommentResolver(new NullCommentDebugger()),
+                Formatter = new DefaultCommentFormatter(),
             };
         }
 
@@ -38,8 +41,6 @@ namespace Fasciculus.CodeAnalysis
             PackageList packages = CompilePackages(workspace);
             PackageSymbol combined = packages.Combine(options.CombinedPackageName, options.CombinedPackageLink, commentContext);
             SymbolIndex index = CreateIndex(packages, combined);
-
-            ProcessComments(index);
 
             return new()
             {
@@ -127,13 +128,6 @@ namespace Fasciculus.CodeAnalysis
                 .WithPackages(packages)
                 .WithPackages(combined)
                 .Build();
-        }
-
-        private static void ProcessComments(SymbolIndex index)
-        {
-            SymbolCommentProcessor processor = new(index);
-
-            processor.Process();
         }
 
         private MSBuildWorkspace LoadWorkspace()

@@ -1,41 +1,35 @@
-using Fasciculus.CodeAnalysis.Compilers;
-using Fasciculus.CodeAnalysis.Indexing;
-using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Collections;
+using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.Xml;
 using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Commenting
 {
-    public class SymbolCommentProcessor : XWalker
+    public class DefaultCommentResolver : XVisitor, ICommentResolver
     {
-        private static readonly string[] HandledElements
-            = ["c", "code", "comment", "p", "para", "see", "summary", "typeparam"];
+        private readonly ICommentDebugger debugger;
 
-        private readonly SymbolIndex index;
-
-        public SymbolCommentProcessor(SymbolIndex index)
+        public DefaultCommentResolver(ICommentDebugger debugger)
         {
-            this.index = index;
-
-            UnhandledCommentElements.Instance.Handled(HandledElements);
+            this.debugger = debugger;
         }
 
-        public void Process()
+        public XElement? Resolve(XElement? element)
         {
-            index.Symbols.Apply(Process);
-        }
+            if (element is null)
+            {
+                return null;
+            }
 
-        private void Process(Symbol symbol)
-        {
-            symbol.Comment.Accept(this);
+            VisitNodes(element.Nodes());
+
+            return element;
         }
 
         public override void VisitElement(XElement element)
         {
             string name = element.Name.LocalName;
 
-            UnhandledCommentElements.Instance.Used(name);
+            debugger.Used(name);
 
             switch (name)
             {

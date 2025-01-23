@@ -33,6 +33,8 @@ namespace Fasciculus.CodeAnalysis.Tests
             public required int Events { get; init; }
             public required int Properties { get; init; }
 
+            public required int Summaries { get; init; }
+
             public DefaultSyntaxDebugger SyntaxDebugger { get; }
             public DefaultProductionDebugger ProductionDebugger { get; }
             public DefaultModifierDebugger ModifierDebugger { get; }
@@ -56,31 +58,6 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        private static readonly SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
-        private static readonly string[] projectNames = ["Fasciculus.Core", "Fasciculus.Extensions"];
-
-        private readonly DefaultSyntaxDebugger syntaxDebugger;
-        private readonly DefaultProductionDebugger productionDebugger;
-        private readonly DefaultModifierDebugger modifierDebugger;
-        private readonly DefaultAccessorDebugger accessorDebugger;
-
-        private readonly CodeAnalyzerDebuggers debuggers;
-
-        public CodeAnalyzerTests()
-        {
-            syntaxDebugger = new();
-            productionDebugger = new(syntaxDebugger);
-            modifierDebugger = new();
-            accessorDebugger = new();
-
-            debuggers = new()
-            {
-                NodeDebugger = productionDebugger,
-                ModifierDebugger = modifierDebugger,
-                AccessorDebugger = accessorDebugger
-            };
-        }
-
         [TestMethod]
         public void TestFasciculusCore()
         {
@@ -93,12 +70,14 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Namespaces = 34,
                 Enums = 2,
                 Interfaces = 8,
-                Classes = 110,
+                Classes = 108,
 
                 Fields = 6,
                 Members = 6,
                 Events = 4,
                 Properties = 98,
+
+                Summaries = 238,
             };
 
             Test(context);
@@ -122,6 +101,8 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Members = 0,
                 Events = 0,
                 Properties = 4,
+
+                Summaries = 13,
             };
 
             Test(context);
@@ -144,21 +125,27 @@ namespace Fasciculus.CodeAnalysis.Tests
             EnumSymbol[] enums = [.. symbols.Where(x => x.Kind == SymbolKind.Enum).Cast<EnumSymbol>()];
             InterfaceSymbol[] interfaces = [.. symbols.Where(x => x.Kind == SymbolKind.Interface).Cast<InterfaceSymbol>()];
             ClassSymbol[] classes = [.. symbols.Where(x => x.Kind == SymbolKind.Class).Cast<ClassSymbol>()];
+
             FieldSymbol[] fields = [.. symbols.Where(x => x.Kind == SymbolKind.Field).Cast<FieldSymbol>()];
             MemberSymbol[] members = [.. symbols.Where(x => x.Kind == SymbolKind.Member).Cast<MemberSymbol>()];
             EventSymbol[] events = [.. symbols.Where(x => x.Kind == SymbolKind.Event).Cast<EventSymbol>()];
             PropertySymbol[] properties = [.. symbols.Where(x => x.Kind == SymbolKind.Property).Cast<PropertySymbol>()];
 
+            string[] summaries = [.. symbols.Select(x => x.Comment.Summary).Where(x => !string.IsNullOrEmpty(x))];
+
             Assert.AreEqual(context.Packages, result.Packages.Count);
 
-            Assert.AreEqual(context.Namespaces, namespaces.Length);
-            Assert.AreEqual(context.Enums, enums.Length);
-            Assert.AreEqual(context.Interfaces, interfaces.Length);
-            Assert.AreEqual(context.Classes, classes.Length);
-            Assert.AreEqual(context.Fields, fields.Length);
-            Assert.AreEqual(context.Members, members.Length);
-            Assert.AreEqual(context.Events, events.Length);
-            Assert.AreEqual(context.Properties, properties.Length);
+            Assert.AreEqual(context.Namespaces, namespaces.Length, "Namespaces");
+            Assert.AreEqual(context.Enums, enums.Length, "Enums");
+            Assert.AreEqual(context.Interfaces, interfaces.Length, "Interfaces");
+            Assert.AreEqual(context.Classes, classes.Length, "Classes");
+
+            Assert.AreEqual(context.Fields, fields.Length, "Fields");
+            Assert.AreEqual(context.Members, members.Length, "Members");
+            Assert.AreEqual(context.Events, events.Length, "Events");
+            Assert.AreEqual(context.Properties, properties.Length, "Properties");
+
+            Assert.AreEqual(context.Summaries, summaries.Length, "Summaries");
 
             Assert.AreEqual(0, context.SyntaxDebugger.GetUnhandled().Count);
             Assert.AreEqual(0, context.ModifierDebugger.GetUnhandled().Count);
