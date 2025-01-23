@@ -9,7 +9,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
     public partial class CompilationUnitCompiler
     {
         protected readonly Stack<EnumBuilder> enumBuilders = [];
-        protected readonly Stack<EnumMemberBuilder> enumMemberBuilders = [];
+        protected readonly Stack<MemberBuilder> memberBuilders = [];
 
         protected virtual void PushEnum(SymbolName name, SymbolModifiers modifiers)
         {
@@ -50,7 +50,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             UriPath link = memberReceivers.Peek().Link.Append(name.Name);
 
-            EnumMemberBuilder builder = new(commentContext)
+            MemberBuilder builder = new(commentContext)
             {
                 Name = name,
                 Link = link,
@@ -60,7 +60,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 Type = string.Empty,
             };
 
-            enumMemberBuilders.Push(builder);
+            memberBuilders.Push(builder);
             commentReceivers.Push(builder);
 
             PushComment();
@@ -72,7 +72,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             commentReceivers.Pop();
 
-            EnumMemberBuilder builder = enumMemberBuilders.Pop();
+            MemberBuilder builder = memberBuilders.Pop();
             MemberSymbol member = builder.Build();
 
             member.AddSource(Source);

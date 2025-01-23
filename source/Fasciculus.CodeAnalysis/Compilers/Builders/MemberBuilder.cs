@@ -3,12 +3,23 @@ using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public abstract class MemberBuilder<T> : SymbolBuilder<T>
-        where T : notnull, Symbol<T>
+    public class MemberBuilder : TypedSymbolBuilder<MemberSymbol>
     {
-        public required string Type { get; init; }
-
         public MemberBuilder(SymbolCommentContext commentContext)
             : base(commentContext) { }
+
+        public override MemberSymbol Build()
+        {
+            MemberSymbol member = new(Framework, Package)
+            {
+                Name = Name,
+                Link = Link,
+                Modifiers = Modifiers,
+                Comment = Comment,
+                Type = Type,
+            };
+
+            return member;
+        }
     }
 }
