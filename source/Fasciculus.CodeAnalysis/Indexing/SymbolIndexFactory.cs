@@ -66,7 +66,7 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(@enum))
             {
                 index.Add(@enum.Link, @enum);
-                AddEnumMembers(@enum.Members);
+                AddMembers(@enum.Members);
             }
         }
 
@@ -108,10 +108,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddEnumMembers(IEnumerable<EnumMemberSymbol> members)
-            => members.Apply(AddEnumMember);
+        private void AddMembers(IEnumerable<MemberSymbol> members)
+            => members.Apply(AddMember);
 
-        private void AddEnumMember(EnumMemberSymbol member)
+        private void AddMember(MemberSymbol member)
         {
             if (IsIncluded(member))
             {

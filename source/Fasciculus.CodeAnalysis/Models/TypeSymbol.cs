@@ -11,9 +11,9 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<FieldSymbol> Fields => fields;
 
-        private readonly EnumMemberList members;
+        private readonly MemberList members;
 
-        public IEnumerable<EnumMemberSymbol> Members => members;
+        public IEnumerable<MemberSymbol> Members => members;
 
         private readonly EventList events;
 
@@ -64,7 +64,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public void Add(FieldSymbol field)
             => fields.AddOrMergeWith(field);
 
-        public void Add(EnumMemberSymbol member)
+        public void Add(MemberSymbol member)
             => members.AddOrMergeWith(member);
 
         public void Add(EventSymbol @event)

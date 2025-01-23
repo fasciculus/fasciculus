@@ -102,7 +102,7 @@ namespace Fasciculus.Site.Controllers
                 return symbol.Kind switch
                 {
                     SymbolKind.Field => Field((FieldSymbol)symbol),
-                    SymbolKind.EnumMember => EnumMember((EnumMemberSymbol)symbol),
+                    SymbolKind.Member => Member((MemberSymbol)symbol),
                     SymbolKind.Event => Event((EventSymbol)symbol),
                     SymbolKind.Property => Property((PropertySymbol)symbol),
                     _ => NotFound()
@@ -193,9 +193,9 @@ namespace Fasciculus.Site.Controllers
             return View("Field", model);
         }
 
-        private ViewResult EnumMember(EnumMemberSymbol member)
+        private ViewResult Member(MemberSymbol member)
         {
-            ApiEnumMemberViewModel model = new()
+            ApiMemberViewModel model = new()
             {
                 Title = member.Name + " Member",
                 Member = member,
@@ -204,7 +204,7 @@ namespace Fasciculus.Site.Controllers
                 Navigation = apiNavigation.Create(member.Link)
             };
 
-            return View("EnumMember", model);
+            return View("Member", model);
         }
 
         private ViewResult Event(EventSymbol @event)

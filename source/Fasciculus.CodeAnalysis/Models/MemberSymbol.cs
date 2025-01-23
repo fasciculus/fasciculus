@@ -2,15 +2,15 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class EnumMemberSymbol : TypedSymbol<EnumMemberSymbol>
+    public class MemberSymbol : TypedSymbol<MemberSymbol>
     {
-        public EnumMemberSymbol(TargetFramework framework, string package)
-            : base(SymbolKind.EnumMember, framework, package) { }
+        public MemberSymbol(TargetFramework framework, string package)
+            : base(SymbolKind.Member, framework, package) { }
 
-        private EnumMemberSymbol(EnumMemberSymbol other, bool clone)
+        private MemberSymbol(MemberSymbol other, bool clone)
             : base(other, clone) { }
 
-        public EnumMemberSymbol Clone()
+        public MemberSymbol Clone()
         {
             return new(this, true)
             {

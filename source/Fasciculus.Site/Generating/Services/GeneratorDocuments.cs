@@ -58,7 +58,7 @@ namespace Fasciculus.Site.Generating.Services
             return kind switch
             {
                 SymbolKind.Field => true,
-                SymbolKind.EnumMember => true,
+                SymbolKind.Member => true,
                 SymbolKind.Event => true,
                 SymbolKind.Property => true,
                 _ => false,

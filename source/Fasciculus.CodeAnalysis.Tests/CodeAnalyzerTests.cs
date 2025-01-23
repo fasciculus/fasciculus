@@ -145,7 +145,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             InterfaceSymbol[] interfaces = [.. symbols.Where(x => x.Kind == SymbolKind.Interface).Cast<InterfaceSymbol>()];
             ClassSymbol[] classes = [.. symbols.Where(x => x.Kind == SymbolKind.Class).Cast<ClassSymbol>()];
             FieldSymbol[] fields = [.. symbols.Where(x => x.Kind == SymbolKind.Field).Cast<FieldSymbol>()];
-            EnumMemberSymbol[] members = [.. symbols.Where(x => x.Kind == SymbolKind.EnumMember).Cast<EnumMemberSymbol>()];
+            MemberSymbol[] members = [.. symbols.Where(x => x.Kind == SymbolKind.Member).Cast<MemberSymbol>()];
             EventSymbol[] events = [.. symbols.Where(x => x.Kind == SymbolKind.Event).Cast<EventSymbol>()];
             PropertySymbol[] properties = [.. symbols.Where(x => x.Kind == SymbolKind.Property).Cast<PropertySymbol>()];
 

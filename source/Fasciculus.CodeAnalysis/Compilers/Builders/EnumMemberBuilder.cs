@@ -2,11 +2,11 @@ using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class EnumMemberBuilder : MemberBuilder<EnumMemberSymbol>
+    public class EnumMemberBuilder : MemberBuilder<MemberSymbol>
     {
-        public override EnumMemberSymbol Build()
+        public override MemberSymbol Build()
         {
-            EnumMemberSymbol member = new(Framework, Package)
+            MemberSymbol member = new(Framework, Package)
             {
                 Name = Name,
                 Link = Link,

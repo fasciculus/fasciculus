@@ -73,7 +73,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             commentReceivers.Pop();
 
             EnumMemberBuilder builder = enumMemberBuilders.Pop();
-            EnumMemberSymbol member = builder.Build();
+            MemberSymbol member = builder.Build();
 
             member.AddSource(Source);
 

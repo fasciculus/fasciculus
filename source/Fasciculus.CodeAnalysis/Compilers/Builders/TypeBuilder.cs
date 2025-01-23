@@ -7,7 +7,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         where T : notnull, TypeSymbol<T>
     {
         protected FieldList fields = [];
-        protected EnumMemberList members = [];
+        protected MemberList members = [];
         protected EventList events = [];
         protected PropertyList properties = [];
 
@@ -16,7 +16,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
             fields.AddOrMergeWith(field);
         }
 
-        public void Add(EnumMemberSymbol member)
+        public void Add(MemberSymbol member)
         {
             members.AddOrMergeWith(member);
         }
