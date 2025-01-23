@@ -61,7 +61,7 @@ namespace Fasciculus.Xml
                 case XmlNodeType.DocumentType: VisitNode<XDocumentType>(node, VisitDocumentType); break;
                 case XmlNodeType.Element: VisitNode<XElement>(node, VisitElement); break;
                 case XmlNodeType.ProcessingInstruction: VisitNode<XProcessingInstruction>(node, VisitProcessingInstruction); break;
-                case XmlNodeType.Text: VisitNode<XCData>(node, VisitText); break;
+                case XmlNodeType.Text: VisitNode<XText>(node, VisitText); break;
             }
         }
 
