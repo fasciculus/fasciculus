@@ -17,14 +17,14 @@ namespace Fasciculus.PackageVersions
             using SourceCacheContext cache = new();
             NuGetResources resources = new();
             ConsoleLogger logger = new(LogLevel.Warning);
-            NuGetVersions versionsService = new(resources, cache, logger);
+            VersionsProvider versionsProvider = new(resources, cache, logger);
 
             PackageIdentity[] packages = packagesService.GetPackages();
 
             foreach (PackageIdentity package in packages)
             {
                 bool includePrerelease = package.Version.IsPrerelease;
-                SortedSet<NuGetVersion> versions = versionsService.GetVersions(package.Id, includePrerelease);
+                SortedSet<NuGetVersion> versions = versionsProvider.GetVersions(package.Id, includePrerelease);
 
                 if (versions.Any(v => v > package.Version))
                 {

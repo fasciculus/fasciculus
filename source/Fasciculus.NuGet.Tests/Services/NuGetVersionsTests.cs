@@ -17,9 +17,9 @@ namespace Fasciculus.NuGet.Tests.Services
 
             NuGetResources resources = new();
             ConsoleLogger logger = new();
-            NuGetVersions service = new(resources, cache, logger);
+            VersionsProvider versionsProvider = new(resources, cache, logger);
 
-            SortedSet<NuGetVersion> versions = service.GetVersions("NuGet.Protocol", false);
+            SortedSet<NuGetVersion> versions = versionsProvider.GetVersions("NuGet.Protocol", false);
 
             Assert.AreEqual(83, versions.Count);
         }

@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.NuGet.Services
 {
-    public class NuGetVersions : IVersionsProvider
+    public class VersionsProvider : IVersionsProvider
     {
         private readonly FindPackageByIdResource resource;
         private readonly SourceCacheContext cache;
         private readonly ILogger logger;
 
-        public NuGetVersions(INuGetResources resources, SourceCacheContext cache, ILogger logger)
+        public VersionsProvider(INuGetResources resources, SourceCacheContext cache, ILogger logger)
         {
             resource = resources.FindPackageById;
 
