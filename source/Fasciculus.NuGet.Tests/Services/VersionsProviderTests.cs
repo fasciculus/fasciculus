@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Fasciculus.NuGet.Tests.Services
 {
     [TestClass]
-    public class NuGetVersionsTests
+    public class VersionsProviderTests
     {
         [TestMethod]
         public void Test()
