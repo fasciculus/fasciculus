@@ -19,6 +19,11 @@ namespace Fasciculus.NuGet.Services
                 return true;
             }
 
+            if (packageId.StartsWith("Microsoft."))
+            {
+                return true;
+            }
+
             if (packageId.StartsWith("System."))
             {
                 return true;

@@ -52,8 +52,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.CodeAnalysis.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Site.CheckLinks", "source\Fasciculus.Site.CheckLinks\Fasciculus.Site.CheckLinks.csproj", "{4DD17207-E297-41E9-B99C-0C6F05B224E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.PackageVersions", "source\Fasciculus.PackageVersions\Fasciculus.PackageVersions.csproj", "{260798F4-B67E-46F5-BE6B-E870C890567B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markup", "source\Fasciculus.Markup\Fasciculus.Markup.csproj", "{867F2362-4125-4AE6-A278-946CBADA58DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Experiments.Html", "source\Fasciculus.Experiments.Html\Fasciculus.Experiments.Html.csproj", "{4D434129-FC07-4EDE-8D9D-EBD360C968CE}"
@@ -61,6 +59,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NuGet", "source\Fasciculus.NuGet\Fasciculus.NuGet.csproj", "{11A99BB3-E16F-4273-A05F-EB0834EB6273}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NuGet.Tests", "source\Fasciculus.NuGet.Tests\Fasciculus.NuGet.Tests.csproj", "{35A7C196-D962-4819-8961-44C755F6C1C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Dependencies", "source\Fasciculus.Dependencies\Fasciculus.Dependencies.csproj", "{578AAC20-9191-4173-B664-B4BD636AA23A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -144,10 +144,6 @@ Global
 		{4DD17207-E297-41E9-B99C-0C6F05B224E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DD17207-E297-41E9-B99C-0C6F05B224E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DD17207-E297-41E9-B99C-0C6F05B224E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{260798F4-B67E-46F5-BE6B-E870C890567B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{260798F4-B67E-46F5-BE6B-E870C890567B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{260798F4-B67E-46F5-BE6B-E870C890567B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{260798F4-B67E-46F5-BE6B-E870C890567B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{867F2362-4125-4AE6-A278-946CBADA58DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{867F2362-4125-4AE6-A278-946CBADA58DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{867F2362-4125-4AE6-A278-946CBADA58DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -164,6 +160,10 @@ Global
 		{35A7C196-D962-4819-8961-44C755F6C1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35A7C196-D962-4819-8961-44C755F6C1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35A7C196-D962-4819-8961-44C755F6C1C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{578AAC20-9191-4173-B664-B4BD636AA23A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{578AAC20-9191-4173-B664-B4BD636AA23A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{578AAC20-9191-4173-B664-B4BD636AA23A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{578AAC20-9191-4173-B664-B4BD636AA23A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

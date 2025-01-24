@@ -9,6 +9,6 @@ namespace Fasciculus.NuGet.Services
     {
         public Task<IPackageSearchMetadata> GetMetadataAsync(PackageIdentity package, CancellationToken? ctk = null);
 
-        public IPackageSearchMetadata GetMetadata(PackageIdentity package, CancellationToken? ctk = null);
+        public IPackageSearchMetadata? GetMetadata(PackageIdentity package, CancellationToken? ctk = null);
     }
 }

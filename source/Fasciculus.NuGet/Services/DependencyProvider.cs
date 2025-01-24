@@ -47,11 +47,14 @@ namespace Fasciculus.NuGet.Services
                 return;
             }
 
-            IPackageSearchMetadata metadata = metadataProvider.GetMetadata(package);
+            IPackageSearchMetadata? metadata = metadataProvider.GetMetadata(package);
 
-            visited[package] = metadata;
+            if (metadata is not null)
+            {
+                visited[package] = metadata;
 
-            Visit(metadata.DependencySets);
+                Visit(metadata.DependencySets);
+            }
         }
 
         private void Visit(IEnumerable<PackageDependencyGroup> groups)
