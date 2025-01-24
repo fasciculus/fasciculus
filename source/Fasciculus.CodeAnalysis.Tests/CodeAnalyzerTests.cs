@@ -70,14 +70,14 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Namespaces = 34,
                 Enums = 2,
                 Interfaces = 8,
-                Classes = 108,
+                Classes = 110,
 
                 Fields = 6,
                 Members = 6,
                 Events = 4,
                 Properties = 98,
 
-                Summaries = 238,
+                Summaries = 240,
             };
 
             Test(context);
