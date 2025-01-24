@@ -1,8 +1,8 @@
 using Fasciculus.Threading;
+using Fasciculus.Threading.Synchronization;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Fasciculus.NuGet.Services
 {
@@ -12,19 +12,43 @@ namespace Fasciculus.NuGet.Services
 
         private readonly SourceRepository repository;
 
+        private readonly TaskSafeMutex mutex = new();
+
+        private FindPackageByIdResource? findPackageById;
+
+        public FindPackageByIdResource FindPackageById => GetFindPackageById();
+
+        private PackageMetadataResource? packageMetadata;
+
+        public PackageMetadataResource PackageMetadata => GetPackageMetadata();
+
         public NuGetResources()
         {
             repository = Repository.Factory.GetCoreV3(DefaultRepositoryUrl);
         }
 
-        public async Task<FindPackageByIdResource> GetFindPackageByIdResourceAsync(CancellationToken? ctk = null)
+        private FindPackageByIdResource GetFindPackageById()
         {
-            return await repository.GetResourceAsync<FindPackageByIdResource>(ctk.OrNone());
+            using Locker locker = Locker.Lock(mutex);
+
+            if (findPackageById is null)
+            {
+                findPackageById = Tasks.Wait(repository.GetResourceAsync<FindPackageByIdResource>(CancellationToken.None));
+            }
+
+            return findPackageById;
         }
 
-        public FindPackageByIdResource GetFindPackageByIdResource(CancellationToken? ctk = null)
+        private PackageMetadataResource GetPackageMetadata()
         {
-            return Tasks.Wait(GetFindPackageByIdResourceAsync(ctk));
+            using Locker locker = Locker.Lock(mutex);
+
+            if (packageMetadata is null)
+            {
+                packageMetadata = Tasks.Wait(repository.GetResourceAsync<PackageMetadataResource>(CancellationToken.None));
+            }
+
+            return packageMetadata;
         }
     }
 }

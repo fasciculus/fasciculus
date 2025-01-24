@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.NuGet.Services
 {
-    public class NuGetVersions : INuGetVersions
+    public class NuGetVersions : IVersionsProvider
     {
         private readonly FindPackageByIdResource resource;
         private readonly SourceCacheContext cache;
@@ -17,7 +17,7 @@ namespace Fasciculus.NuGet.Services
 
         public NuGetVersions(INuGetResources resources, SourceCacheContext cache, ILogger logger)
         {
-            resource = resources.GetFindPackageByIdResource();
+            resource = resources.FindPackageById;
 
             this.cache = cache;
             this.logger = logger;

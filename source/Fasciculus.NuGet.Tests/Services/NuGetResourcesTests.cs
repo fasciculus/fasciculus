@@ -9,9 +9,13 @@ namespace Fasciculus.NuGet.Tests.Services
         [TestMethod]
         public void Test()
         {
-            INuGetResources resources = new NuGetResources();
+            NuGetResources resources = new();
 
-            resources.GetFindPackageByIdResource();
+            var findPackageById = resources.FindPackageById;
+            var packageMetadata = resources.PackageMetadata;
+
+            Assert.IsNotNull(findPackageById);
+            Assert.IsNotNull(packageMetadata);
         }
     }
 }

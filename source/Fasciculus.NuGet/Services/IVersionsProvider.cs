@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Fasciculus.NuGet.Services
 {
-    public interface INuGetVersions
+    public interface IVersionsProvider
     {
         public Task<SortedSet<NuGetVersion>> GetVersionsAsync(string packageName, bool includePrerelease, CancellationToken? ctk = null);
 
