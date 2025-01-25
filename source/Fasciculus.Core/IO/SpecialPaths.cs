@@ -1,4 +1,4 @@
-﻿using Fasciculus.Interop;
+using Fasciculus.Interop;
 using System;
 using System.IO;
 using static System.Environment;
@@ -47,6 +47,14 @@ namespace Fasciculus.IO
         /// </para>
         /// </summary>
         public static string Downloads => OS.IsWindows ? Path.Combine(Home, "Downloads") : Home;
+
+        /// <summary>
+        /// Program files.
+        /// <para>
+        /// Shorthand for <c>Environment.GetFolderPath(SpecialFolder.ProgramFiles)</c>.
+        /// </para>
+        /// </summary>
+        public static string ProgramFiles => GetFolderPath(SpecialFolder.ProgramFiles);
 
         /// <summary>
         /// Application base directory.

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 
 namespace Fasciculus.IO
 {
@@ -26,6 +26,11 @@ namespace Fasciculus.IO
         /// <see cref="DirectoryInfo"/> for <see cref="SpecialPaths.Downloads"/>.
         /// </summary>
         public static DirectoryInfo Downloads => new(SpecialPaths.Downloads);
+
+        /// <summary>
+        /// <see cref="DirectoryInfo"/> for <see cref="SpecialPaths.ProgramFiles"/>.
+        /// </summary>
+        public static DirectoryInfo ProgramFiles => new(SpecialPaths.ProgramFiles);
 
         /// <summary>
         /// <see cref="DirectoryInfo"/> for <see cref="SpecialPaths.BaseDirectory"/>.
