@@ -75,9 +75,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Fields = 6,
                 Members = 6,
                 Events = 4,
-                Properties = 98,
+                Properties = 102,
 
-                Summaries = 240,
+                Summaries = 244,
             };
 
             Test(context);
