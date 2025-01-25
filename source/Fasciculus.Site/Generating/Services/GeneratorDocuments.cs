@@ -78,6 +78,7 @@ namespace Fasciculus.Site.Generating.Services
         private void AddLicenses()
         {
             Add("/licenses/");
+            SiteConstants.PackageNames.Apply(p => { Add($"/licenses/{p}.html"); });
         }
     }
 }
