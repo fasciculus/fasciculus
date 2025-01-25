@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Fasciculus.NuGet.Services
 {
-    public interface IDirectoryPackages
+    public interface IDirectoryPackagesProvider
     {
         public FileInfo? SearchPackagesFile(SearchPath? searchPath = null);
 
