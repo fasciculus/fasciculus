@@ -16,6 +16,7 @@ namespace Fasciculus.Site.Generating.Services
             AddStatics();
             AddApi(apiContent, apiNavigation);
             AddBlog(blogContent);
+            AddLicenses();
         }
 
         private void AddGlobals()
@@ -72,6 +73,11 @@ namespace Fasciculus.Site.Generating.Services
             blogContent.Years.Apply(y => { Add($"/{y.Link}/"); });
             blogContent.Months.Apply(m => { Add($"/{m.Link}/"); });
             blogContent.Entries.Apply(e => { Add($"/{e.Link}.html"); });
+        }
+
+        private void AddLicenses()
+        {
+            Add("/licenses/");
         }
     }
 }

@@ -58,7 +58,7 @@ namespace Fasciculus.Dependencies
             packages = FilterPackages(packages);
 
             logger.LogWarning("Checking licenses.");
-            CheckLicences(packages);
+            CheckLicenses(packages);
         }
 
         private void CheckForUpgrades(PackageIdentity[] packages)
@@ -85,7 +85,7 @@ namespace Fasciculus.Dependencies
             return null;
         }
 
-        private void CheckLicences(PackageIdentity[] packages)
+        private void CheckLicenses(PackageIdentity[] packages)
         {
             NuGetFramework targetFramework = MoreFrameworks.Net90;
             IPackageSearchMetadata[] dependencies = dependencyProvider.GetDependencies(packages, targetFramework);
