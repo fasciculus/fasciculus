@@ -1,10 +1,13 @@
 using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Collections;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public class ClassBuilder : TypeBuilder<ClassSymbol>
     {
+        private ConstructorList constructors = [];
+
         public ClassBuilder(CommentContext commentContext)
             : base(commentContext) { }
 
@@ -20,7 +23,12 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
             Populate(@class);
 
+            constructors.Apply(@class.Add);
+
             return @class;
         }
+
+        public void Add(ConstructorSymbol constructor)
+            => constructors.AddOrMergeWith(constructor);
     }
 }

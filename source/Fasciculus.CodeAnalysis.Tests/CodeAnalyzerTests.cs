@@ -33,6 +33,8 @@ namespace Fasciculus.CodeAnalysis.Tests
             public required int Events { get; init; }
             public required int Properties { get; init; }
 
+            public required int Constructors { get; init; }
+
             public required int Summaries { get; init; }
 
             public DefaultSyntaxDebugger SyntaxDebugger { get; }
@@ -77,7 +79,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Events = 4,
                 Properties = 102,
 
-                Summaries = 244,
+                Constructors = 62,
+
+                Summaries = 306,
             };
 
             Test(context);
@@ -102,7 +106,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Events = 0,
                 Properties = 4,
 
-                Summaries = 13,
+                Constructors = 4,
+
+                Summaries = 17,
             };
 
             Test(context);
@@ -131,6 +137,8 @@ namespace Fasciculus.CodeAnalysis.Tests
             EventSymbol[] events = [.. symbols.Where(x => x.Kind == SymbolKind.Event).Cast<EventSymbol>()];
             PropertySymbol[] properties = [.. symbols.Where(x => x.Kind == SymbolKind.Property).Cast<PropertySymbol>()];
 
+            ConstructorSymbol[] constructors = [.. symbols.Where(x => x.Kind == SymbolKind.Constructor).Cast<ConstructorSymbol>()];
+
             string[] summaries = [.. symbols.Select(x => x.Comment.Summary).Where(x => !string.IsNullOrEmpty(x))];
 
             Assert.AreEqual(context.Packages, result.Packages.Count);
@@ -144,6 +152,8 @@ namespace Fasciculus.CodeAnalysis.Tests
             Assert.AreEqual(context.Members, members.Length, "Members");
             Assert.AreEqual(context.Events, events.Length, "Events");
             Assert.AreEqual(context.Properties, properties.Length, "Properties");
+
+            Assert.AreEqual(context.Constructors, constructors.Length, "Constructors");
 
             Assert.AreEqual(context.Summaries, summaries.Length, "Summaries");
 

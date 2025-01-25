@@ -9,26 +9,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly Stack<IMemberReceiver> memberReceivers = [];
 
-        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
-        {
-            // ConstructorDeclaration
-            // : ParameterList (BaseConstructorInitializer | ThisConstructorInitializer)? Block
-
-            nodeDebugger.Add(node);
-
-            string name = GetName(node.Identifier, null);
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
-
-            if (IsIncluded(modifiers))
-            {
-                PushComment();
-
-                base.VisitConstructorDeclaration(node);
-
-                PopComment();
-            }
-        }
-
         public override void VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node)
         {
             // HasTrivia: True

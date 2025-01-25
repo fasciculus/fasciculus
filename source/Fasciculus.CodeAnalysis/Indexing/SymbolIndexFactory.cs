@@ -91,9 +91,12 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(@class))
             {
                 index.Add(@class.Link, @class);
+
                 AddFields(@class.Fields);
                 AddEvents(@class.Events);
                 AddProperties(@class.Properties);
+
+                AddConstructors(@class.Constructors);
             }
         }
 
@@ -138,6 +141,17 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(property))
             {
                 index.Add(property.Link, property);
+            }
+        }
+
+        private void AddConstructors(IEnumerable<ConstructorSymbol> constructors)
+            => constructors.Apply(AddConstructor);
+
+        private void AddConstructor(ConstructorSymbol constructor)
+        {
+            if (IsIncluded(constructor))
+            {
+                index.Add(constructor.Link, constructor);
             }
         }
 

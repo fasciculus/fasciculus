@@ -4,7 +4,7 @@ using Fasciculus.CodeAnalysis.Models;
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     public abstract class TypedSymbolBuilder<T> : SymbolBuilder<T>
-        where T : notnull, Symbol<T>
+        where T : notnull, TypedSymbol<T>
     {
         public required string Type { get; init; }
 
