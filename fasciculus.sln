@@ -60,7 +60,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NuGet", "source\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NuGet.Tests", "source\Fasciculus.NuGet.Tests\Fasciculus.NuGet.Tests.csproj", "{35A7C196-D962-4819-8961-44C755F6C1C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Dependencies", "source\Fasciculus.Dependencies\Fasciculus.Dependencies.csproj", "{578AAC20-9191-4173-B664-B4BD636AA23A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.DependencyCheck", "source\Fasciculus.DependencyCheck\Fasciculus.DependencyCheck.csproj", "{72E09559-B90B-462D-BCC0-8C6DB6C3BECB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -160,10 +160,10 @@ Global
 		{35A7C196-D962-4819-8961-44C755F6C1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35A7C196-D962-4819-8961-44C755F6C1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35A7C196-D962-4819-8961-44C755F6C1C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{578AAC20-9191-4173-B664-B4BD636AA23A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{578AAC20-9191-4173-B664-B4BD636AA23A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{578AAC20-9191-4173-B664-B4BD636AA23A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{578AAC20-9191-4173-B664-B4BD636AA23A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72E09559-B90B-462D-BCC0-8C6DB6C3BECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72E09559-B90B-462D-BCC0-8C6DB6C3BECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72E09559-B90B-462D-BCC0-8C6DB6C3BECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72E09559-B90B-462D-BCC0-8C6DB6C3BECB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
