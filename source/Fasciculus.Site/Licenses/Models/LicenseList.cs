@@ -15,6 +15,8 @@ namespace Fasciculus.Site.Licenses.Models
 
         public int Count => entries.Count;
 
+        public SortedSet<string> Licenses => new(entries.Select(e => e.License));
+
         public LicenseList(string package)
         {
             Package = package;

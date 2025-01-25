@@ -8,6 +8,8 @@ namespace Fasciculus.Site.Models
         public const int BlogMonth = 11;
         public const int BlogEntry = 12;
 
+        public const int LicenseList = 20;
+
         public const int ApiPackage = 100;
         public const int ApiNamespace = 101;
         public const int ApiEnum = 102;
@@ -23,6 +25,7 @@ namespace Fasciculus.Site.Models
             return kind switch
             {
                 BlogEntry => true,
+                LicenseList => true,
                 ApiField => true,
                 ApiEnumMember => true,
                 ApiEvent => true,

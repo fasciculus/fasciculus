@@ -1,7 +1,10 @@
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
+using Fasciculus.Net.Navigating;
 using Fasciculus.NuGet.Services;
 using Fasciculus.Site.Licenses.Models;
+using Fasciculus.Site.Models;
+using Fasciculus.Site.Navigation;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
@@ -15,12 +18,13 @@ namespace Fasciculus.Site.Licenses.Services
     {
         private readonly IProjectPackagesProvider projectPackagesProvider;
         private readonly IDirectoryPackagesProvider directoryPackagesProvider;
-        private readonly IDependencyProvider dependencyProvider;
 
         private readonly SearchPath searchPath;
         private readonly Dictionary<string, PackageIdentity> directoryPackages;
 
         private readonly Dictionary<string, LicenseList> licenseLists = [];
+
+        public SiteNavigation Navigation { get; }
 
         public LicenseList this[string packageName] => licenseLists[packageName];
 
@@ -29,10 +33,11 @@ namespace Fasciculus.Site.Licenses.Services
         {
             this.projectPackagesProvider = projectPackagesProvider;
             this.directoryPackagesProvider = directoryPackagesProvider;
-            this.dependencyProvider = dependencyProvider;
 
             searchPath = GetSearchPath();
             directoryPackages = GetDirectoryPackages();
+
+            List<NavigationNode> navigationNodes = [];
 
             foreach (string packageName in SiteConstants.PackageNames)
             {
@@ -47,7 +52,19 @@ namespace Fasciculus.Site.Licenses.Services
                 }
 
                 licenseLists[packageName] = licenseList;
+
+                string label = $"{packageName} ({licenseList.Count})";
+                UriPath link = new("licenses", packageName);
+                NavigationNode navigationNode = new(NavigationKind.LicenseList, label, link);
+
+                navigationNodes.Add(navigationNode);
             }
+
+            Navigation = new()
+            {
+                Forest = new(navigationNodes),
+                Path = []
+            };
         }
 
         public LicenseList[] GetLicenseLists()

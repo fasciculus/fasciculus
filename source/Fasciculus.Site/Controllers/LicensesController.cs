@@ -19,7 +19,8 @@ namespace Fasciculus.Site.Controllers
             LicencesViewModel model = new()
             {
                 Title = "Licenses",
-                LicenseLists = content.GetLicenseLists()
+                LicenseLists = content.GetLicenseLists(),
+                Navigation = content.Navigation,
             };
 
             return View("Index", model);
@@ -31,7 +32,8 @@ namespace Fasciculus.Site.Controllers
             PackageLicensesViewModel model = new()
             {
                 Title = packageName,
-                Licenses = content[packageName]
+                Licenses = content[packageName],
+                Navigation = content.Navigation,
             };
 
             return View("PackageLicenses", model);

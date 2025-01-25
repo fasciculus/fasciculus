@@ -8,6 +8,8 @@
     <thead>
         <tr>
             <th>Package</th>
+            <th class="text-center">Dependencies</th>
+            <th>License Types</th>
         </tr>
     </thead>
     <tbody>
@@ -15,6 +17,8 @@
         {
             <tr>
                 <td><a href="~/licenses/@(list.Package).html">@list.Package</a></td>
+                <td class="text-center">@list.Count</td>
+                <td>@(string.Join(", ", list.Licenses))</td>
             </tr>
         }
     </tbody>

@@ -16,7 +16,7 @@ namespace Fasciculus.Site.Licenses.Models
         public static LicenseEntry Create(IPackageSearchMetadata metadata)
         {
             LicenseMetadata? licenseMetadata = metadata.LicenseMetadata;
-            string license = licenseMetadata is null ? string.Empty : licenseMetadata.License;
+            string license = licenseMetadata is null ? "Proprietary" : licenseMetadata.License;
 
             return new()
             {
