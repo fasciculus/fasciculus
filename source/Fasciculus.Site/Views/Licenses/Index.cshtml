@@ -3,3 +3,19 @@
 <h1>Licences</h1>
 
 <p>The packages of The Fasciculus Project are all <a href="https://github.com/fasciculus/fasciculus/blob/main/LICENSE">MIT</a> licensed.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Package</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (LicenseList list in Model.LicenseLists)
+        {
+            <tr>
+                <td><a href="~/licenses/@(list.Package).html">@list.Package</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

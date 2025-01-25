@@ -1,0 +1,42 @@
+@model PackageLicensesViewModel
+@{
+    LicenseList licenses = Model.Licenses;
+}
+
+<h1>@Model.Title</h1>
+
+@if (licenses.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Dependency</th>
+                <th>Version</th>
+                <th>License</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(LicenseEntry license in licenses)
+            {
+                <tr>
+                    <td>@license.Identity.Id</td>
+                    <td>@license.Identity.Version</td>
+                    <td>@license.License</td>
+                    @if (@license.LicenseUrl is null)
+                    {
+                        <td>&nbsp;</td>
+                    }
+                    else
+                    {
+                        <td><a href="@license.LicenseUrl">@license.LicenseUrl</a></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>This package depends on no external licences.</p>
+}

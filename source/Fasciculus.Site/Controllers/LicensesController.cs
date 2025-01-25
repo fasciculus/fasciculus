@@ -13,15 +13,28 @@ namespace Fasciculus.Site.Controllers
             this.content = content;
         }
 
-        [Route("/licences/")]
+        [Route("/licenses/")]
         public IActionResult Index()
         {
             LicencesViewModel model = new()
             {
                 Title = "Licenses",
+                LicenseLists = content.GetLicenseLists()
             };
 
             return View("Index", model);
+        }
+
+        [Route("/licenses/{packageName}.html")]
+        public IActionResult PackageLicenses(string packageName)
+        {
+            PackageLicensesViewModel model = new()
+            {
+                Title = packageName,
+                Licenses = content[packageName]
+            };
+
+            return View("PackageLicenses", model);
         }
     }
 }

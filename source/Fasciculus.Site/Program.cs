@@ -43,7 +43,7 @@ namespace Fasciculus.Site
 
         private static void InitializeExpensiveServices(IServiceProvider services)
         {
-            _ = services.GetRequiredService<ApiContent>();
+            //_ = services.GetRequiredService<ApiContent>();
         }
 
         private static WebApplication CreateWebApplication()
