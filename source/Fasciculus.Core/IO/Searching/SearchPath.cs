@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +11,19 @@ namespace Fasciculus.IO.Searching
     public class SearchPath : IEnumerable<DirectoryInfo>
     {
         private readonly List<DirectoryInfo> directories = [];
+
+        /// <summary>
+        /// Initializes an empty search path.
+        /// </summary>
+        public SearchPath() { }
+
+        /// <summary>
+        /// Initializes a search path with the given <paramref name="directories"/>.
+        /// </summary>
+        public SearchPath(IEnumerable<DirectoryInfo> directories, bool recursive = false)
+        {
+            directories.Apply(d => { Add(d, recursive); });
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
