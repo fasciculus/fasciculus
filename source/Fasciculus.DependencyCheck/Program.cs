@@ -1,4 +1,5 @@
 using Fasciculus.Collections;
+using Fasciculus.NuGet.Frameworks;
 using Fasciculus.NuGet.Logging;
 using Fasciculus.NuGet.Services;
 using NuGet.Common;
@@ -9,7 +10,6 @@ using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static NuGet.Frameworks.FrameworkConstants;
 
 namespace Fasciculus.Dependencies
 {
@@ -87,7 +87,7 @@ namespace Fasciculus.Dependencies
 
         private void CheckLicences(PackageIdentity[] packages)
         {
-            NuGetFramework targetFramework = new(FrameworkIdentifiers.NetCoreApp, new Version(9, 0, 0, 0));
+            NuGetFramework targetFramework = MoreFrameworks.Net90;
             IPackageSearchMetadata[] dependencies = dependencyProvider.GetDependencies(packages, targetFramework);
             SortedSet<string> dependencyIds = new(dependencies.Select(x => x.Identity.Id));
 
