@@ -3,12 +3,15 @@ using Fasciculus.NuGet.Logging;
 using Fasciculus.NuGet.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuGet.Common;
+using NuGet.Frameworks;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using static NuGet.Frameworks.FrameworkConstants;
 
 namespace Fasciculus.NuGet.Tests.Services
 {
@@ -26,8 +29,9 @@ namespace Fasciculus.NuGet.Tests.Services
             IgnoredPackages ignoredPackages = new();
             DependencyProvider dependencyProvider = new(metadataProvider, ignoredPackages, logger);
             PackageIdentity package = new("NuGet.Protocol", NuGetVersion.Parse("6.12.1"));
+            NuGetFramework targetFramework = new(FrameworkIdentifiers.NetCoreApp, new Version(9, 0, 0, 0));
 
-            IPackageSearchMetadata[] dependencies = dependencyProvider.GetDependencies([package]);
+            IPackageSearchMetadata[] dependencies = dependencyProvider.GetDependencies([package], targetFramework);
             SortedSet<string> dependencyIds = new(dependencies.Select(x => x.Identity.Id));
 
             dependencyIds.Apply(x => { Debug.WriteLine(x); });
@@ -37,7 +41,7 @@ namespace Fasciculus.NuGet.Tests.Services
                 .NotNull()
                 .Select(x => x.License));
 
-            Assert.AreEqual(7, dependencies.Length);
+            Assert.AreEqual(9, dependencies.Length);
             Assert.AreEqual(2, licenses.Count);
         }
     }

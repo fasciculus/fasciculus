@@ -1,11 +1,13 @@
 using Fasciculus.Collections;
 using Fasciculus.Threading.Synchronization;
 using NuGet.Common;
+using NuGet.Frameworks;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fasciculus.NuGet.Services
 {
@@ -18,6 +20,7 @@ namespace Fasciculus.NuGet.Services
         private readonly TaskSafeMutex mutex = new();
 
         private readonly Dictionary<PackageIdentity, IPackageSearchMetadata> visited = [];
+        private NuGetFramework framework = FrameworkConstants.CommonFrameworks.DotNet;
 
         public DependencyProvider(IMetadataProvider metadataProvider, IIgnoredPackages ignoredPackages, ILogger logger)
         {
@@ -26,11 +29,12 @@ namespace Fasciculus.NuGet.Services
             this.logger = logger;
         }
 
-        public IPackageSearchMetadata[] GetDependencies(IEnumerable<PackageIdentity> packages)
+        public IPackageSearchMetadata[] GetDependencies(IEnumerable<PackageIdentity> packages, NuGetFramework targetFramework)
         {
             using Locker locker = Locker.Lock(mutex);
 
             visited.Clear();
+            framework = targetFramework;
 
             Visit(packages);
 
@@ -58,7 +62,21 @@ namespace Fasciculus.NuGet.Services
         }
 
         private void Visit(IEnumerable<PackageDependencyGroup> groups)
-            => groups.Apply(Visit);
+        {
+            if (groups.Any())
+            {
+                PackageDependencyGroup? group = groups.GetNearest(framework);
+
+                if (group is not null)
+                {
+                    Visit(group);
+                }
+                else
+                {
+                    logger.LogWarning($"no group found.");
+                }
+            }
+        }
 
         private void Visit(PackageDependencyGroup group)
             => Visit(group.Packages);
