@@ -1,4 +1,5 @@
 using Fasciculus.Collections;
+using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using NuGet.Frameworks;
 using NuGet.Packaging.Core;
@@ -29,7 +30,7 @@ namespace Fasciculus.NuGet.Services
         {
             XDocument document = XDocument.Load(projectFile.FullName);
 
-            return GetPackageElements(document).Select(GetPackageIdentity).NotNull();
+            return GetPackageReferences(document, projectFile).Select(GetPackageIdentity).NotNull();
         }
 
         private static PackageIdentity? GetPackageIdentity(XElement element)
@@ -62,7 +63,7 @@ namespace Fasciculus.NuGet.Services
             return new(FrameworkConstants.EmptyVersion);
         }
 
-        private static IEnumerable<XElement> GetPackageElements(XDocument document)
+        private static IEnumerable<XElement> GetPackageReferences(XDocument document, FileInfo projectFile)
         {
             XElement? root = document.Root;
 
@@ -73,6 +74,22 @@ namespace Fasciculus.NuGet.Services
                     foreach (XElement packageReference in itemGroup.Elements("PackageReference"))
                     {
                         yield return packageReference;
+                    }
+
+                    foreach (XElement projectReference in itemGroup.Elements("ProjectReference"))
+                    {
+                        XAttribute? includeAttribute = projectReference.Attribute("Include");
+
+                        if (includeAttribute is not null)
+                        {
+                            FileInfo referencedFile = projectFile.Directory!.File(includeAttribute.Value);
+                            XDocument referenceDocument = XDocument.Load(referencedFile.FullName);
+
+                            foreach (XElement element in GetPackageReferences(referenceDocument, referencedFile))
+                            {
+                                yield return element;
+                            }
+                        }
                     }
                 }
             }
