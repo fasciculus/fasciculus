@@ -15,7 +15,7 @@ namespace Fasciculus.Dependencies
 {
     public class Program : IDisposable
     {
-        private readonly DirectoryPackages directoryPackages = new();
+        private readonly DirectoryPackagesProvider directoryPackages = new();
         private readonly SourceCacheContext cache = new();
         private readonly NuGetResources resources = new();
         private readonly IgnoredPackages ignoredPackages = new();

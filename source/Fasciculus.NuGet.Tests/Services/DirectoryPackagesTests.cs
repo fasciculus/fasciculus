@@ -10,7 +10,7 @@ namespace Fasciculus.NuGet.Tests.Services
         [TestMethod]
         public void Test()
         {
-            DirectoryPackages service = new();
+            DirectoryPackagesProvider service = new();
             PackageIdentity[] packages = service.GetPackages();
 
             Assert.AreEqual(44, packages.Length);

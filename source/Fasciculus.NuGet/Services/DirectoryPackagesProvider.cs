@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Fasciculus.NuGet.Services
 {
-    public class DirectoryPackages : IDirectoryPackagesProvider
+    public class DirectoryPackagesProvider : IDirectoryPackagesProvider
     {
         public const string DirectoryPackagesFileName = "Directory.Packages.props";
 
