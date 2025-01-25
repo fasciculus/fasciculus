@@ -1,12 +1,17 @@
+using Fasciculus.NuGet.Logging;
+using Fasciculus.NuGet.Services;
 using Fasciculus.Site.Api.Services;
 using Fasciculus.Site.Blog.Compilers;
 using Fasciculus.Site.Blog.Services;
 using Fasciculus.Site.Generating.Services;
+using Fasciculus.Site.Licenses.Services;
 using Fasciculus.Site.Rendering.Services;
 using Fasciculus.Site.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using NuGet.Common;
+using NuGet.Protocol.Core.Types;
 using System;
 using System.IO;
 
@@ -48,7 +53,7 @@ namespace Fasciculus.Site
 
             builder.Services.AddControllersWithViews();
 
-            services.AddCommon().AddApi().AddBlog();
+            services.AddCommon().AddApi().AddBlog().AddLicenses();
 
             if (generate)
             {
@@ -91,6 +96,24 @@ namespace Fasciculus.Site
             services.TryAddSingleton<BlogCompiler>();
             services.TryAddSingleton<BlogContent>();
             services.TryAddSingleton<BlogNavigation>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddLicenses(this IServiceCollection services)
+        {
+            ConsoleLogger logger = new(LogLevel.Warning);
+
+            services.TryAddSingleton<IProjectPackagesProvider, ProjectPackagesProvider>();
+            services.TryAddSingleton<IDirectoryPackagesProvider, DirectoryPackagesProvider>();
+            services.TryAddSingleton<INuGetResources, NuGetResources>();
+            services.TryAddSingleton<SourceCacheContext>();
+            services.TryAddSingleton<ILogger>(logger);
+            services.TryAddSingleton<IMetadataProvider, MetadataProvider>();
+            services.TryAddSingleton<IIgnoredPackages, IgnoredPackages>();
+            services.TryAddSingleton<IDependencyProvider, DependencyProvider>();
+
+            services.TryAddSingleton<LicensesContent>();
 
             return services;
         }
