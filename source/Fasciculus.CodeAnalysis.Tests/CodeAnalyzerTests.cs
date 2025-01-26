@@ -41,6 +41,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             public DefaultProductionDebugger ProductionDebugger { get; }
             public DefaultModifierDebugger ModifierDebugger { get; }
             public DefaultAccessorDebugger AccessorDebugger { get; }
+            public DefaultCommentDebugger CommentDebugger { get; }
 
             public CodeAnalyzerDebuggers Debuggers { get; }
 
@@ -50,12 +51,14 @@ namespace Fasciculus.CodeAnalysis.Tests
                 ProductionDebugger = new(SyntaxDebugger);
                 ModifierDebugger = new();
                 AccessorDebugger = new();
+                CommentDebugger = new();
 
                 Debuggers = new()
                 {
                     NodeDebugger = ProductionDebugger,
                     ModifierDebugger = ModifierDebugger,
-                    AccessorDebugger = AccessorDebugger
+                    AccessorDebugger = AccessorDebugger,
+                    CommentDebugger = CommentDebugger
                 };
             }
         }
@@ -121,11 +124,6 @@ namespace Fasciculus.CodeAnalysis.Tests
                 .WithDebuggers(context.Debuggers)
                 .Build().Analyze();
 
-            LogProductions(context);
-            LogUnhandledSyntax(context);
-            LogUnhandledModifiers(context);
-            LogUnhandledAccessors(context);
-
             IEnumerable<Symbol> symbols = result.Index.Symbols;
             NamespaceSymbol[] namespaces = [.. symbols.Where(x => x.Kind == SymbolKind.Namespace).Cast<NamespaceSymbol>()];
             EnumSymbol[] enums = [.. symbols.Where(x => x.Kind == SymbolKind.Enum).Cast<EnumSymbol>()];
@@ -140,6 +138,12 @@ namespace Fasciculus.CodeAnalysis.Tests
             ConstructorSymbol[] constructors = [.. symbols.Where(x => x.Kind == SymbolKind.Constructor).Cast<ConstructorSymbol>()];
 
             string[] summaries = [.. symbols.Select(x => x.Comment.Summary).Where(x => !string.IsNullOrEmpty(x))];
+
+            LogProductions(context);
+            LogUnhandledSyntax(context);
+            LogUnhandledModifiers(context);
+            LogUnhandledAccessors(context);
+            LogUnhandledComments(context);
 
             Assert.AreEqual(context.Packages, result.Packages.Count);
 
@@ -160,6 +164,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Assert.AreEqual(0, context.SyntaxDebugger.GetUnhandled().Count);
             Assert.AreEqual(0, context.ModifierDebugger.GetUnhandled().Count);
             Assert.AreEqual(0, context.AccessorDebugger.GetUnhandled().Count);
+            Assert.AreEqual(0, context.CommentDebugger.GetUnhandled().Count);
         }
 
         private void LogProductions(TestContext context)
@@ -219,6 +224,17 @@ namespace Fasciculus.CodeAnalysis.Tests
             if (unhandled.Count > 0)
             {
                 Log("--- unhandled accessors ---");
+                Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
+            }
+        }
+
+        private void LogUnhandledComments(TestContext context)
+        {
+            SortedSet<string> unhandled = context.CommentDebugger.GetUnhandled();
+
+            if (unhandled.Count > 0)
+            {
+                Log("--- unhandled comment elements ---");
                 Log(string.Join(Environment.NewLine, unhandled.Select(u => "- " + u)));
             }
         }
