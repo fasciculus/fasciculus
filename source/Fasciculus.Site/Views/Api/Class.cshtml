@@ -3,6 +3,8 @@
     bool hasFields = Model.Class.Fields.Any();
     bool hasEvents = Model.Class.Events.Any();
     bool hasProperties = Model.Class.Properties.Any();
+
+    bool hasConstructors = Model.Class.Constructors.Any();
 }
 
 <h1>@Model.Class.Name Class</h1>
@@ -22,6 +24,10 @@
     @if (hasProperties)
     {
         <li><a href="#properties">Properties</a></li>
+    }
+    @if (hasConstructors)
+    {
+        <li><a href="#constructors">Constructors</a></li>
     }
     <li><a href="#applies-to">Applies to</a></li>
 </ul>
@@ -47,6 +53,11 @@
 @if (hasProperties)
 {
     <partial name="_Properties.cshtml" model=Model.Class.Properties />
+}
+
+@if (hasConstructors)
+{
+    <partial name="_Constructors.cshtml" model=Model.Class.Constructors />
 }
 
 <partial name="_TargetFrameworks.cshtml" model=Model.Class.Frameworks />

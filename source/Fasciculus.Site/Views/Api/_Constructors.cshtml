@@ -1,0 +1,22 @@
+@model ConstructorList
+
+<h2 id="constructors">Constructors</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Constructor</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ConstructorSymbol constructor in Model)
+        {
+            <tr>
+                <td>@constructor.Name</td>
+                <td>@Html.Raw(@constructor.Comment.Summary)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
