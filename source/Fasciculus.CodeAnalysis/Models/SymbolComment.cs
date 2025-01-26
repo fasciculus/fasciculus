@@ -5,7 +5,12 @@ using static Fasciculus.CodeAnalysis.Commenting.CommentConstants;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class SymbolComment
+    public interface ISymbolComment
+    {
+        public string Summary { get; }
+    }
+
+    public class SymbolComment : ISymbolComment
     {
         public static SymbolComment Empty(CommentContext context)
             => new(context, XDocument.Parse(RootXml));

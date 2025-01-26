@@ -11,8 +11,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<UriPath> Sources => sources;
 
-        public SourceSymbol(SymbolKind kind, TargetFramework framework, string package)
-            : base(kind, framework, package) { }
+        public SourceSymbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)
+            : base(kind, framework, package, comment) { }
 
         protected SourceSymbol(T other, bool clone)
             : base(other, clone)

@@ -10,12 +10,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public override InterfaceSymbol Build()
         {
-            InterfaceSymbol @interface = new(Framework, Package)
+            InterfaceSymbol @interface = new(Framework, Package, Comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment
             };
 
             Populate(@interface);

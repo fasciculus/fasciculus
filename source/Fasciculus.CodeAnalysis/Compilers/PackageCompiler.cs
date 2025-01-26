@@ -36,12 +36,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
             UriPath repositoryDirectory = context.Project.RepositoryDirectory;
             CompilationUnitInfo[] compilationUnits = [.. roots.Select(compiler.Compile)];
 
-            return new(name, framework, compilationUnits)
+            return new(name, framework, comment, compilationUnits)
             {
                 Name = name,
                 Link = link,
                 Modifiers = PackageSymbol.PackageModifiers,
-                Comment = comment,
                 RepositoryDirectory = repositoryDirectory
             };
         }

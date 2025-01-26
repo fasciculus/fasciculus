@@ -7,8 +7,8 @@ namespace Fasciculus.CodeAnalysis.Models
     {
         public required string Type { get; init; }
 
-        public TypedSymbol(SymbolKind kind, TargetFramework framework, string package)
-            : base(kind, framework, package) { }
+        public TypedSymbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)
+            : base(kind, framework, package, comment) { }
 
         protected TypedSymbol(T other, bool clone)
             : base(other, clone)

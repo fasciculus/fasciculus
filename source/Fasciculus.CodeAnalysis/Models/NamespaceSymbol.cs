@@ -23,8 +23,8 @@ namespace Fasciculus.CodeAnalysis.Models
         public override bool IsAccessible
             => enums.HasAccessible || interfaces.HasAccessible || classes.HasAccessible;
 
-        public NamespaceSymbol(TargetFramework framework, string package)
-            : base(SymbolKind.Namespace, framework, package)
+        public NamespaceSymbol(TargetFramework framework, string package, SymbolComment comment)
+            : base(SymbolKind.Namespace, framework, package, comment)
         {
         }
 
@@ -43,7 +43,6 @@ namespace Fasciculus.CodeAnalysis.Models
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment,
             };
         }
 

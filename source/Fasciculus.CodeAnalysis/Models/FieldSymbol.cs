@@ -4,8 +4,8 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public class FieldSymbol : TypedSymbol<FieldSymbol>
     {
-        public FieldSymbol(TargetFramework framework, string package)
-            : base(SymbolKind.Field, framework, package) { }
+        public FieldSymbol(TargetFramework framework, string package, SymbolComment comment)
+            : base(SymbolKind.Field, framework, package, comment) { }
 
         private FieldSymbol(FieldSymbol other, bool clone)
             : base(other, clone) { }
@@ -17,7 +17,6 @@ namespace Fasciculus.CodeAnalysis.Models
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment,
                 Type = Type,
             };
         }

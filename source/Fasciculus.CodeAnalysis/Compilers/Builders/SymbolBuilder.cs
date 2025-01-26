@@ -8,6 +8,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
     public abstract class SymbolBuilder<T> : ICommentReceiver
         where T : notnull, Symbol<T>
     {
+        protected readonly CommentContext commentContext;
+
         public required SymbolName Name { get; init; }
 
         public required UriPath Link { get; init; }
@@ -22,6 +24,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public SymbolBuilder(CommentContext commentContext)
         {
+            this.commentContext = commentContext;
+
             Comment = SymbolComment.Empty(commentContext);
         }
 

@@ -30,8 +30,6 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public virtual bool IsAccessible => modifiers.IsAccessible;
 
-        public required SymbolComment Comment { get; init; }
-
         private readonly TargetFrameworks frameworks = [];
 
         public TargetFrameworks Frameworks => new(frameworks);
@@ -40,12 +38,18 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<string> Packages => packages;
 
-        public Symbol(SymbolKind kind, TargetFramework framework, string package)
+        private readonly SymbolComment comment;
+
+        public ISymbolComment Comment => comment;
+
+        public Symbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)
         {
             Kind = kind;
 
             frameworks.Add(framework);
             packages = [package];
+
+            this.comment = comment;
         }
 
         protected Symbol(Symbol other, bool _)
@@ -57,6 +61,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
             frameworks.Add(other.frameworks);
             packages = new(other.packages);
+
+            comment = other.comment.Clone();
         }
 
         public virtual void ReBase(UriPath newBase)
@@ -66,18 +72,17 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public virtual void MergeWith(Symbol other)
         {
-            Comment.MergeWith(other.Comment);
-
             frameworks.Add(other.frameworks);
             packages.UnionWith(other.packages);
+            comment.MergeWith(other.comment);
         }
     }
 
     public class Symbol<T> : Symbol
         where T : notnull, Symbol<T>
     {
-        public Symbol(SymbolKind kind, TargetFramework framework, string package)
-            : base(kind, framework, package) { }
+        public Symbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)
+            : base(kind, framework, package, comment) { }
 
         protected Symbol(Symbol<T> other, bool clone)
             : base(other, clone) { }

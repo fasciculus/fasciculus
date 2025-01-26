@@ -13,12 +13,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public override ClassSymbol Build()
         {
-            ClassSymbol @class = new(Framework, Package)
+            ClassSymbol @class = new(Framework, Package, Comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment
             };
 
             Populate(@class);

@@ -13,12 +13,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public override PropertySymbol Build()
         {
-            PropertySymbol property = new(Framework, Package)
+            PropertySymbol property = new(Framework, Package, Comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment,
                 Type = Type,
             };
 

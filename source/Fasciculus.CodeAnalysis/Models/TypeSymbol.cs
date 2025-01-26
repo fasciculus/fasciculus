@@ -23,8 +23,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<PropertySymbol> Properties => properties;
 
-        public TypeSymbol(SymbolKind kind, TargetFramework framework, string package)
-            : base(kind, framework, package)
+        public TypeSymbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)
+            : base(kind, framework, package, comment)
         {
             fields = [];
             members = [];

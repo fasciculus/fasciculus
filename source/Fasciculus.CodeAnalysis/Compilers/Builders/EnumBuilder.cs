@@ -10,12 +10,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public override EnumSymbol Build()
         {
-            EnumSymbol @enum = new(Framework, Package)
+            EnumSymbol @enum = new(Framework, Package, Comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment
             };
 
             Populate(@enum);

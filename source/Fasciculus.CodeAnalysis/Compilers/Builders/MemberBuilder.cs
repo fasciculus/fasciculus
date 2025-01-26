@@ -10,12 +10,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public override MemberSymbol Build()
         {
-            MemberSymbol member = new(Framework, Package)
+            MemberSymbol member = new(Framework, Package, Comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment,
                 Type = Type,
             };
 

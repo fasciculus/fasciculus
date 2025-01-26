@@ -21,15 +21,15 @@ namespace Fasciculus.CodeAnalysis.Models
         public PackageSymbol Combine(string packageName, UriPath packageLink, CommentContext commentContext)
         {
             SymbolName name = new(packageName);
+            SymbolComment comment = new(commentContext, XDocument.Parse(CombinedComment));
             UriPath link = new(name);
 
-            PackageSymbol result = new(name, TargetFramework.UnsupportedFramework, [])
+            PackageSymbol result = new(name, TargetFramework.UnsupportedFramework, comment, [])
             {
                 Name = name,
                 Link = link,
                 Modifiers = PackageSymbol.PackageModifiers,
                 RepositoryDirectory = packageLink,
-                Comment = new(commentContext, XDocument.Parse(CombinedComment)),
             };
 
             this.Select(p => p.Clone()).Apply(result.MergeWith);

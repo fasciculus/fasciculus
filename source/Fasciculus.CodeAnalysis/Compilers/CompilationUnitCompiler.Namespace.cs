@@ -1,10 +1,8 @@
 using Fasciculus.CodeAnalysis.Compilers.Builders;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -26,7 +24,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             UriPath link = CreateNamespaceLink(name);
 
-            NamespaceBuilder builder = new(commentContext)
+            NamespaceBuilder builder = new(commentContext, namespaceCommentsDirectory)
             {
                 Name = name,
                 Link = link,
@@ -45,9 +43,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             NamespaceBuilder builder = namespaceBuilders.Pop();
             NamespaceSymbol @namespace = builder.Build();
-            FileInfo commentFile = namespaceCommentsDirectory.File($"{builder.Name}.xml");
-
-            @namespace.Comment.MergeWith(SymbolComment.FromFile(commentContext, commentFile));
 
             compilationUnit.AddOrMergeWith(@namespace);
         }

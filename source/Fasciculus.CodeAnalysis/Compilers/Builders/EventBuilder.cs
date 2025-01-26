@@ -10,12 +10,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public override EventSymbol Build()
         {
-            EventSymbol @event = new(Framework, Package)
+            EventSymbol @event = new(Framework, Package, Comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment,
                 Type = Type,
             };
 

@@ -20,8 +20,9 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public required UriPath RepositoryDirectory { get; init; }
 
-        public PackageSymbol(SymbolName name, TargetFramework framework, IEnumerable<CompilationUnitInfo> compilationUnits)
-            : base(SymbolKind.Package, framework, name)
+        public PackageSymbol(SymbolName name, TargetFramework framework, SymbolComment comment,
+            IEnumerable<CompilationUnitInfo> compilationUnits)
+            : base(SymbolKind.Package, framework, name, comment)
         {
             namespaces = new(compilationUnits.SelectMany(x => x.Namespaces));
         }
@@ -40,7 +41,6 @@ namespace Fasciculus.CodeAnalysis.Models
                 Link = Link,
                 Modifiers = Modifiers,
                 RepositoryDirectory = RepositoryDirectory,
-                Comment = Comment.Clone(),
             };
         }
 

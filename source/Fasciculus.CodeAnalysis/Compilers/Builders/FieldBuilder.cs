@@ -10,12 +10,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public override FieldSymbol Build()
         {
-            FieldSymbol field = new(Framework, Package)
+            FieldSymbol field = new(Framework, Package, Comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment,
                 Type = Type,
             };
 

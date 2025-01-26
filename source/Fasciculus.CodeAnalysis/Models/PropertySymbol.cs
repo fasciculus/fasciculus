@@ -8,8 +8,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public AccessorList Accessors => accessors.Clone();
 
-        public PropertySymbol(TargetFramework framework, string package)
-            : base(SymbolKind.Property, framework, package)
+        public PropertySymbol(TargetFramework framework, string package, SymbolComment comment)
+            : base(SymbolKind.Property, framework, package, comment)
         {
             accessors = [];
         }
@@ -27,7 +27,6 @@ namespace Fasciculus.CodeAnalysis.Models
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment,
                 Type = Type,
             };
         }

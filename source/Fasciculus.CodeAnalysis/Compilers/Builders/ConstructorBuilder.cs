@@ -10,12 +10,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public override ConstructorSymbol Build()
         {
-            ConstructorSymbol constructor = new(Framework, Package)
+            ConstructorSymbol constructor = new(Framework, Package, Comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment,
                 Type = Type,
             };
 

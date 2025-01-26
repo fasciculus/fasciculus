@@ -10,8 +10,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<ConstructorSymbol> Constructors => constructors;
 
-        public ClassSymbol(TargetFramework framework, string package)
-            : base(SymbolKind.Class, framework, package)
+        public ClassSymbol(TargetFramework framework, string package, SymbolComment comment)
+            : base(SymbolKind.Class, framework, package, comment)
         {
             constructors = [];
         }
@@ -29,7 +29,6 @@ namespace Fasciculus.CodeAnalysis.Models
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                Comment = Comment,
             };
         }
 
