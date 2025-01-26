@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Compilers.Builders;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,15 +58,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             commentBuilders.Peek().Add(new XComment(text));
         }
 
-        public override void VisitXmlCrefAttribute(XmlCrefAttributeSyntax node)
-        {
-            base.VisitXmlCrefAttribute(node);
-
-            string cref = node.Cref.GetText().ToString();
-
-            commentBuilders.Peek().Add(new XAttribute("cref", cref));
-        }
-
         public override void VisitXmlElement(XmlElementSyntax node)
         {
             CommentBuilder builder = commentBuilders.Peek();
@@ -97,6 +89,25 @@ namespace Fasciculus.CodeAnalysis.Compilers
             string text = string.Join("", node.TextTokens.Select(x => x.Text));
 
             commentBuilders.Peek().Add(new XText(text));
+        }
+
+        public override void VisitXmlCrefAttribute(XmlCrefAttributeSyntax node)
+        {
+            base.VisitXmlCrefAttribute(node);
+
+            string cref = node.Cref.GetText().ToString();
+
+            commentBuilders.Peek().Add(new XAttribute("cref", cref));
+        }
+
+        public override void VisitXmlNameAttribute(XmlNameAttributeSyntax node)
+        {
+            base.VisitXmlNameAttribute(node);
+
+            string name = node.Name.LocalName.ValueText;
+            string value = node.Identifier.ToFullString();
+
+            commentBuilders.Peek().Add(new XAttribute(name, value));
         }
 
         public override void VisitXmlTextAttribute(XmlTextAttributeSyntax node)
