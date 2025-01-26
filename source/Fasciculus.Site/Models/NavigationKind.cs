@@ -12,13 +12,17 @@ namespace Fasciculus.Site.Models
 
         public const int ApiPackage = 100;
         public const int ApiNamespace = 101;
+
         public const int ApiEnum = 102;
         public const int ApiInterface = 103;
         public const int ApiClass = 104;
+
         public const int ApiField = 105;
         public const int ApiEnumMember = 106;
         public const int ApiEvent = 107;
         public const int ApiProperty = 108;
+
+        public const int ApiConstructors = 109;
 
         public static bool IsLeaf(int kind)
         {
@@ -30,6 +34,7 @@ namespace Fasciculus.Site.Models
                 ApiEnumMember => true,
                 ApiEvent => true,
                 ApiProperty => true,
+                ApiConstructors => true,
                 _ => false,
             };
         }

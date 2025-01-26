@@ -49,7 +49,18 @@ namespace Fasciculus.Site.Api.Services
         {
             Symbol? symbol = content.GetSymbol(ToSymbolLink(link));
 
-            return symbol is null ? NavigationKind.Unknown : GetKind(symbol);
+            if (symbol is null)
+            {
+                return link[^1] switch
+                {
+                    "-Constructors" => NavigationKind.ApiConstructors,
+                    _ => NavigationKind.Unknown
+                };
+            }
+            else
+            {
+                return GetKind(symbol);
+            }
         }
 
         private static int GetKind(Symbol symbol)
@@ -78,27 +89,18 @@ namespace Fasciculus.Site.Api.Services
                 return symbol.Name;
             }
 
-            if (link[^1] == "Fields")
-            {
-                return "Fields";
-            }
+            string last = link[^1];
 
-            if (link[^1] == "Members")
+            return last switch
             {
-                return "Members";
-            }
+                "Fields" => "Fields",
+                "Members" => "Members",
+                "Events" => "Events",
+                "Properties" => "Properties",
+                "-Constructors" => "Constructors",
+                _ => string.Empty,
+            };
 
-            if (link[^1] == "Events")
-            {
-                return "Events";
-            }
-
-            if (link[^1] == "Properties")
-            {
-                return "Properties";
-            }
-
-            return string.Empty;
         }
 
         protected override bool IsOpen(UriPath link, UriPath selected)
@@ -207,6 +209,11 @@ namespace Fasciculus.Site.Api.Services
             if (@class.Properties.Any())
             {
                 yield return ToApiLink(@class.Link).Append("Properties");
+            }
+
+            if (@class.Constructors.Any())
+            {
+                yield return ToApiLink(@class.Link).Append("-Constructors");
             }
         }
 

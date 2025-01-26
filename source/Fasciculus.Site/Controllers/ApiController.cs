@@ -95,6 +95,13 @@ namespace Fasciculus.Site.Controllers
         private IActionResult Document(params string[] parts)
         {
             UriPath path = new(parts);
+            string last = parts.Last();
+
+            switch (last)
+            {
+                case "-Constructors": return Constructors(path);
+            }
+
             Symbol? symbol = apiContent.GetSymbol(path);
 
             if (symbol is not null)
@@ -233,6 +240,26 @@ namespace Fasciculus.Site.Controllers
             };
 
             return View("Property", model);
+        }
+
+        private IActionResult Constructors(UriPath path)
+        {
+            ClassSymbol? @class = apiContent.GetSymbol(path.Parent) as ClassSymbol;
+
+            if (@class is not null)
+            {
+                ApiConstructorsViewModel model = new()
+                {
+                    Title = $"{@class.Name} Constructors",
+                    Constructors = new(@class.Constructors),
+                    Navigation = apiNavigation.Create(path)
+                };
+
+                return View("Constructors", model);
+            }
+
+            return NotFound();
+
         }
 
         private IEnumerable<Uri> GetSourceUris<T>(T symbol)
