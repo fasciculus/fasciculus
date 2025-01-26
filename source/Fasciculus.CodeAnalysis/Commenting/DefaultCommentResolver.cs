@@ -34,7 +34,9 @@ namespace Fasciculus.CodeAnalysis.Commenting
             switch (name)
             {
                 case "para": VisitPara(element); break;
+                case "paramref": VisitParamref(element); break;
                 case "see": VisitSee(element); break;
+                case "typeparamref": VisitTypeparamref(element); break;
             }
 
             base.VisitElement(element);
@@ -45,6 +47,19 @@ namespace Fasciculus.CodeAnalysis.Commenting
             element.Name = "p";
         }
 
+        private static void VisitParamref(XElement element)
+        {
+            XAttribute? name = element.Attribute("name");
+
+            if (name is not null)
+            {
+                string content = name.Value;
+                XElement code = new("c", content);
+
+                element.ReplaceWith(code);
+            }
+        }
+
         private static void VisitSee(XElement element)
         {
             XAttribute? cref = element.Attribute("cref");
@@ -52,6 +67,19 @@ namespace Fasciculus.CodeAnalysis.Commenting
             if (cref is not null)
             {
                 string content = cref.Value.Replace("{", "&lt;").Replace("}", "&gt;");
+                XElement code = new("c", content);
+
+                element.ReplaceWith(code);
+            }
+        }
+
+        private static void VisitTypeparamref(XElement element)
+        {
+            XAttribute? name = element.Attribute("name");
+
+            if (name is not null)
+            {
+                string content = name.Value;
                 XElement code = new("c", content);
 
                 element.ReplaceWith(code);
