@@ -43,18 +43,40 @@ namespace Fasciculus.Site.Generating.Services
 
             foreach (Symbol symbol in apiContent.Index.Symbols)
             {
-                if (IsLeaf(symbol.Kind))
+                SymbolKind kind = symbol.Kind;
+
+                if (ApiIsIncluded(kind))
                 {
-                    Add($"/api/{symbol.Link}.html");
-                }
-                else
-                {
-                    Add($"/api/{symbol.Link}/");
+                    if (ApiIsLeaf(kind))
+                    {
+                        Add($"/api/{symbol.Link}.html");
+                    }
+                    else
+                    {
+                        Add($"/api/{symbol.Link}/");
+                    }
+
+                    if (symbol is ClassSymbol @class)
+                    {
+                        if (@class.Constructors.Any())
+                        {
+                            Add($"/api/{@class.Link}/-Constructors.html");
+                        }
+                    }
                 }
             }
         }
 
-        private static bool IsLeaf(SymbolKind kind)
+        private static bool ApiIsIncluded(SymbolKind kind)
+        {
+            return kind switch
+            {
+                SymbolKind.Constructor => false,
+                _ => true,
+            };
+        }
+
+        private static bool ApiIsLeaf(SymbolKind kind)
         {
             return kind switch
             {
