@@ -2,7 +2,12 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class EnumSymbol : TypeSymbol<EnumSymbol>
+    public interface IEnumSymbol : ITypeSymbol
+    {
+
+    }
+
+    internal class EnumSymbol : TypeSymbol<EnumSymbol>, IEnumSymbol
     {
         public EnumSymbol(TargetFramework framework, string package, SymbolComment comment)
             : base(SymbolKind.Enum, framework, package, comment) { }

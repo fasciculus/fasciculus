@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class CompilationUnitCompiler
+    internal partial class CompilationUnitCompiler
     {
         protected readonly Stack<ITypeReceiver> typeReceivers = [];
 

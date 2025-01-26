@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Fasciculus.Net.Navigating;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,12 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class SymbolDictionary<T> : IEnumerable<T>
+    public interface ISymbolDictionary
+    {
+        public int Count { get; }
+    }
+
+    internal class SymbolDictionary<T> : IEnumerable<T>, ISymbolDictionary
         where T : notnull, Symbol<T>
     {
         private readonly Dictionary<SymbolName, T> symbols = [];

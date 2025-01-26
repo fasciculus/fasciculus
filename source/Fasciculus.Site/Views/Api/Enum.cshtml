@@ -28,7 +28,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (MemberSymbol member in Model.Enum.Members)
+        @foreach (IMemberSymbol member in Model.Enum.Members)
         {
             <tr>
                 <td><a href="~/api/@(member.Link).html">@member.Name</a></td>

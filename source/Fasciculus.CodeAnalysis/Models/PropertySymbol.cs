@@ -2,11 +2,16 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class PropertySymbol : TypedSymbol<PropertySymbol>
+    public interface IPropertySymbol : ITypedSymbol
+    {
+        public IAccessorList Accessors { get; }
+    }
+
+    internal class PropertySymbol : TypedSymbol<PropertySymbol>, IPropertySymbol
     {
         private readonly AccessorList accessors;
 
-        public AccessorList Accessors => accessors.Clone();
+        public IAccessorList Accessors => accessors;
 
         public PropertySymbol(TargetFramework framework, string package, SymbolComment comment)
             : base(SymbolKind.Property, framework, package, comment)

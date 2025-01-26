@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public abstract class TypeReceiver<T> : SymbolBuilder<T>, ITypeReceiver
+    internal abstract class TypeReceiver<T> : SymbolBuilder<T>, ITypeReceiver
         where T : notnull, Symbol<T>
     {
         protected readonly List<EnumSymbol> enums = [];

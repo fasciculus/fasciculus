@@ -1,4 +1,4 @@
-@model ConstructorList
+@model IEnumerable<IConstructorSymbol>
 
 <h2 id="constructors">Constructors</h2>
 
@@ -10,7 +10,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (ConstructorSymbol constructor in Model)
+        @foreach (IConstructorSymbol constructor in Model)
         {
             <tr>
                 <td><a href="~/api/@(constructor.Link.Parent)/-Constructors.html#@(constructor.Id)">@constructor.Name</a></td>

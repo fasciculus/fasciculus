@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class CompilationUnitCompiler
+    internal partial class CompilationUnitCompiler
     {
         protected readonly Stack<NamespaceBuilder> namespaceBuilders = [];
 

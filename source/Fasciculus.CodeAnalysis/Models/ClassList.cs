@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class ClassList : SymbolDictionary<ClassSymbol>
+    internal class ClassList : SymbolDictionary<ClassSymbol>
     {
         public ClassList(IEnumerable<ClassSymbol> classes)
             : base(classes) { }

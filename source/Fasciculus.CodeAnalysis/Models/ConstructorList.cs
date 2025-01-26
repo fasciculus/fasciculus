@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class ConstructorList : SymbolDictionary<ConstructorSymbol>
+    internal class ConstructorList : SymbolDictionary<ConstructorSymbol>
     {
         public ConstructorList(IEnumerable<ConstructorSymbol> constructors)
             : base(constructors) { }

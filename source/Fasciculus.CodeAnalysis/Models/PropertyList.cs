@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class PropertyList : SymbolDictionary<PropertySymbol>
+    internal class PropertyList : SymbolDictionary<PropertySymbol>
     {
         public PropertyList(IEnumerable<PropertySymbol> properties)
             : base(properties) { }

@@ -3,7 +3,7 @@ using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public interface IMemberReceiver
+    internal interface IMemberReceiver
     {
         public UriPath Link { get; }
 

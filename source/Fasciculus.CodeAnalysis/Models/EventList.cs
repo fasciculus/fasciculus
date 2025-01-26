@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class EventList : SymbolDictionary<EventSymbol>
+    internal class EventList : SymbolDictionary<EventSymbol>
     {
         public EventList(IEnumerable<EventSymbol> events)
             : base(events) { }

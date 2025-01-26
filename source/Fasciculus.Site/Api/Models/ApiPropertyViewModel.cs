@@ -4,6 +4,6 @@ namespace Fasciculus.Site.Api.Models
 {
     public class ApiPropertyViewModel : ApiSymbolInfoViewModel
     {
-        public required PropertySymbol Property { get; init; }
+        public required IPropertySymbol Property { get; init; }
     }
 }

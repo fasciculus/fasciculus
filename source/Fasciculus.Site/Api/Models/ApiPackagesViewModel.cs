@@ -6,8 +6,8 @@ namespace Fasciculus.Site.Api.Models
 {
     public class ApiPackagesViewModel : ViewModel
     {
-        public required PackageSymbol Combined { get; init; }
+        public required IPackageSymbol Combined { get; init; }
 
-        public required IEnumerable<PackageSymbol> Packages { get; init; }
+        public required IEnumerable<IPackageSymbol> Packages { get; init; }
     }
 }

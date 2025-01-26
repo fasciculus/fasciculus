@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class CompilationUnitCompiler
+    internal partial class CompilationUnitCompiler
     {
         private SymbolName GetName(SyntaxToken identifier, ParameterListSyntax? parameters, TypeParameterListSyntax? typeParameters)
         {

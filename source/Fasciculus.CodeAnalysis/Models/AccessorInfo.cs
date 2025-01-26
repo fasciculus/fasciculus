@@ -23,11 +23,18 @@ namespace Fasciculus.CodeAnalysis.Models
         }
     }
 
-    public class AccessorInfo : IEquatable<AccessorInfo>, IComparable<AccessorInfo>
+    public interface IAccessorInfo : IEquatable<IAccessorInfo>, IComparable<IAccessorInfo>
+    {
+        public AccessorKind Kind { get; }
+
+        public ISymbolModifiers Modifiers { get; }
+    }
+
+    internal class AccessorInfo : IAccessorInfo, IEquatable<AccessorInfo>, IComparable<AccessorInfo>
     {
         public required AccessorKind Kind { get; init; }
 
-        public required SymbolModifiers Modifiers { get; init; }
+        public required ISymbolModifiers Modifiers { get; init; }
 
         public static AccessorInfo CreateUnknown(SymbolModifiers modifiers)
             => new() { Kind = AccessorKind.Unknown, Modifiers = modifiers };
@@ -37,6 +44,9 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public static AccessorInfo CreateSet(SymbolModifiers modifiers)
             => new() { Kind = AccessorKind.Set, Modifiers = modifiers };
+
+        public bool Equals(IAccessorInfo? other)
+            => other is not null && Kind == other.Kind;
 
         public bool Equals(AccessorInfo? other)
             => other is not null && Kind == other.Kind;
@@ -48,6 +58,9 @@ namespace Fasciculus.CodeAnalysis.Models
             => Kind.GetHashCode();
 
         public int CompareTo(AccessorInfo? other)
+            => other is null ? -1 : Kind.CompareTo(other.Kind);
+
+        public int CompareTo(IAccessorInfo? other)
             => other is null ? -1 : Kind.CompareTo(other.Kind);
 
         public override string? ToString()

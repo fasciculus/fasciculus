@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class PackageList : SymbolDictionary<PackageSymbol>
+    internal class PackageList : SymbolDictionary<PackageSymbol>
     {
         private static readonly string CombinedComment
             = "<comment><summary>" +

@@ -34,19 +34,14 @@ namespace Fasciculus.CodeAnalysis
             };
         }
 
-        public CodeAnalyzerResult Analyze()
+        public ICodeAnalyzerResult Analyze()
         {
             using MSBuildWorkspace workspace = LoadWorkspace();
             PackageList packages = CompilePackages(workspace);
             PackageSymbol combined = packages.Combine(options.CombinedPackageName, options.CombinedPackageLink, commentContext);
             SymbolIndex index = CreateIndex(packages, combined);
 
-            return new()
-            {
-                Packages = packages,
-                Combined = combined,
-                Index = index
-            };
+            return new CodeAnalyzerResult(packages, combined, index);
         }
 
         private PackageList CompilePackages(MSBuildWorkspace workspace)

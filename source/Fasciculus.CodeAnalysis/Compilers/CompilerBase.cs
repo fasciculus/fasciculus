@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class CompilerBase : CSharpSyntaxWalker
+    internal class CompilerBase : CSharpSyntaxWalker
     {
         protected readonly TargetFramework framework;
 

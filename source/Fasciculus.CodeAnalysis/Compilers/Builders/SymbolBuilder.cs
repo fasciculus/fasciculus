@@ -5,7 +5,7 @@ using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public abstract class SymbolBuilder<T> : ICommentReceiver
+    internal abstract class SymbolBuilder<T> : ICommentReceiver
         where T : notnull, Symbol<T>
     {
         protected readonly CommentContext commentContext;

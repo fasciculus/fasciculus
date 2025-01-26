@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class PackageCompiler
+    internal class PackageCompiler
     {
         private readonly CompilerContext context;
 

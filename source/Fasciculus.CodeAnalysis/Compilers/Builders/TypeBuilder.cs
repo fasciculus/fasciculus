@@ -4,7 +4,7 @@ using Fasciculus.Collections;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public abstract class TypeBuilder<T> : TypeReceiver<T>, ICommentReceiver, IMemberReceiver
+    internal abstract class TypeBuilder<T> : TypeReceiver<T>, ICommentReceiver, IMemberReceiver
         where T : notnull, TypeSymbol<T>
     {
         protected FieldList fields = [];

@@ -3,10 +3,28 @@ using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis
 {
-    public class CodeAnalyzerResult
+    public interface ICodeAnalyzerResult
     {
-        public required PackageList Packages { get; init; }
-        public required PackageSymbol Combined { get; init; }
-        public required SymbolIndex Index { get; init; }
+        public IPackageSymbol[] Packages { get; }
+        public IPackageSymbol Combined { get; }
+        public ISymbolIndex Index { get; }
+    }
+
+    internal class CodeAnalyzerResult : ICodeAnalyzerResult
+    {
+        private readonly PackageList packages;
+        private readonly PackageSymbol combined;
+        private readonly SymbolIndex index;
+
+        public IPackageSymbol[] Packages => [.. packages];
+        public IPackageSymbol Combined => combined;
+        public ISymbolIndex Index => index;
+
+        public CodeAnalyzerResult(PackageList packages, PackageSymbol combined, SymbolIndex index)
+        {
+            this.packages = packages;
+            this.combined = combined;
+            this.index = index;
+        }
     }
 }

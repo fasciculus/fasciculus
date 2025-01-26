@@ -1,4 +1,4 @@
-@model PropertyList
+@model IEnumerable<IPropertySymbol>
 
 <h2 id="properties">Properties</h2>
 
@@ -10,7 +10,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (PropertySymbol property in Model)
+        @foreach (IPropertySymbol property in Model)
         {
             <tr>
                 <td><a href="~/api/@(property.Link).html">@property.Name</a></td>

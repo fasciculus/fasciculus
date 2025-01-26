@@ -28,21 +28,21 @@ namespace Fasciculus.Site.Api.Services
         public SiteNavigation Create(UriPath selected)
         {
             UriPath packageLink = new(selected.Take(1));
-            PackageSymbol package = (PackageSymbol)content.GetSymbol(packageLink)!;
+            IPackageSymbol package = (IPackageSymbol)content.GetSymbol(packageLink)!;
             NavigationForest forest = CreateForest(package, selected);
             SitePath path = CreateSitePath(package, forest, selected);
 
             return new() { Forest = forest, Path = path };
         }
 
-        private SitePath CreateSitePath(PackageSymbol package, NavigationForest navigation, UriPath link)
+        private SitePath CreateSitePath(IPackageSymbol package, NavigationForest navigation, UriPath link)
         {
             SitePath result = [];
 
             if (link.Count > 1)
             {
                 List<NavigationNode> pathTo = navigation.PathTo(ToSiteLink(link.Parent));
-                Symbol[] symbols = [.. pathTo.Select(n => content.GetSymbol(ToSymbolLink(n.Link))).NotNull()];
+                ISymbol[] symbols = [.. pathTo.Select(n => content.GetSymbol(ToSymbolLink(n.Link))).NotNull()];
 
                 result.Add(NavigationKind.ApiPackage, package.Name, ToSiteLink(package.Link));
                 symbols.Apply(s => { result.Add(GetKind(s), s.Name, ToSiteLink(s.Link)); });
@@ -68,17 +68,17 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link);
         }
 
-        private static NavigationForest CreateForest(PackageSymbol package, UriPath selected)
+        private static NavigationForest CreateForest(IPackageSymbol package, UriPath selected)
         {
             NavigationNode[] trees = CreateNamespaceTrees(package.Namespaces, selected);
 
             return new(trees);
         }
 
-        private static NavigationNode[] CreateNamespaceTrees(IEnumerable<NamespaceSymbol> namespaces, UriPath selected)
+        private static NavigationNode[] CreateNamespaceTrees(IEnumerable<INamespaceSymbol> namespaces, UriPath selected)
             => [.. namespaces.Select(n => CreateNamespaceNode(n, selected))];
 
-        private static NavigationNode CreateNamespaceNode(NamespaceSymbol @namespace, UriPath selected)
+        private static NavigationNode CreateNamespaceNode(INamespaceSymbol @namespace, UriPath selected)
         {
             int kind = NavigationKind.ApiNamespace;
             string label = @namespace.Name;
@@ -105,7 +105,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, children, isOpen);
         }
 
-        private static NavigationNode CreateEnumsNode(NamespaceSymbol @namespace, UriPath selected)
+        private static NavigationNode CreateEnumsNode(INamespaceSymbol @namespace, UriPath selected)
         {
             int kind = NavigationKind.ApiEnums;
             UriPath link = ToSiteLink(@namespace.Link);
@@ -115,7 +115,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, "Enums", link, children, isOpen);
         }
 
-        private static NavigationNode CreateInterfacesNode(NamespaceSymbol @namespace, UriPath selected)
+        private static NavigationNode CreateInterfacesNode(INamespaceSymbol @namespace, UriPath selected)
         {
             int kind = NavigationKind.ApiInterfaces;
             UriPath link = ToSiteLink(@namespace.Link);
@@ -125,7 +125,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, "Interfaces", link, children, isOpen);
         }
 
-        private static NavigationNode CreateClassesNode(NamespaceSymbol @namespace, UriPath selected)
+        private static NavigationNode CreateClassesNode(INamespaceSymbol @namespace, UriPath selected)
         {
             int kind = NavigationKind.ApiClasses;
             UriPath link = ToSiteLink(@namespace.Link);
@@ -135,7 +135,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, "Classes", link, children, isOpen);
         }
 
-        private static NavigationNode CreateMembersNode(EnumSymbol @enum, UriPath selected)
+        private static NavigationNode CreateMembersNode(IEnumSymbol @enum, UriPath selected)
         {
             int kind = NavigationKind.ApiMembers;
             UriPath link = ToSiteLink(@enum.Link);
@@ -145,7 +145,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, "Members", link, children, isOpen);
         }
 
-        private static NavigationNode CreateFieldsNode(ClassSymbol @class, UriPath selected)
+        private static NavigationNode CreateFieldsNode(IClassSymbol @class, UriPath selected)
         {
             int kind = NavigationKind.ApiFields;
             UriPath link = ToSiteLink(@class.Link);
@@ -155,7 +155,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, "Fields", link, children, isOpen);
         }
 
-        private static NavigationNode CreateEventsNode(ClassSymbol @class, UriPath selected)
+        private static NavigationNode CreateEventsNode(IClassSymbol @class, UriPath selected)
         {
             int kind = NavigationKind.ApiEvents;
             UriPath link = ToSiteLink(@class.Link);
@@ -165,7 +165,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, "Events", link, children, isOpen);
         }
 
-        private static NavigationNode CreatePropertiesNode(ClassSymbol @class, UriPath selected)
+        private static NavigationNode CreatePropertiesNode(IClassSymbol @class, UriPath selected)
         {
             int kind = NavigationKind.ApiProperties;
             UriPath link = ToSiteLink(@class.Link);
@@ -175,7 +175,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, "Properties", link, children, isOpen);
         }
 
-        private static NavigationNode CreateEnumNode(EnumSymbol @enum, UriPath selected)
+        private static NavigationNode CreateEnumNode(IEnumSymbol @enum, UriPath selected)
         {
             int kind = NavigationKind.ApiEnum;
             string label = @enum.Name;
@@ -192,7 +192,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, children, isOpen);
         }
 
-        private static NavigationNode CreateInterfaceNode(InterfaceSymbol @interface, UriPath selected)
+        private static NavigationNode CreateInterfaceNode(IInterfaceSymbol @interface, UriPath selected)
         {
             int kind = NavigationKind.ApiInterface;
             string label = @interface.Name;
@@ -204,7 +204,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, children, isOpen);
         }
 
-        private static NavigationNode CreateClassNode(ClassSymbol @class, UriPath selected)
+        private static NavigationNode CreateClassNode(IClassSymbol @class, UriPath selected)
         {
             int kind = NavigationKind.ApiClass;
             string label = @class.Name;
@@ -233,7 +233,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, children, isOpen);
         }
 
-        private static NavigationNode CreateMemberNode(MemberSymbol member, UriPath selected)
+        private static NavigationNode CreateMemberNode(IMemberSymbol member, UriPath selected)
         {
             int kind = NavigationKind.ApiMember;
             string label = member.Name;
@@ -243,7 +243,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, isOpen);
         }
 
-        private static NavigationNode CreateFieldNode(FieldSymbol field, UriPath selected)
+        private static NavigationNode CreateFieldNode(IFieldSymbol field, UriPath selected)
         {
             int kind = NavigationKind.ApiField;
             string label = field.Name;
@@ -253,7 +253,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, isOpen);
         }
 
-        private static NavigationNode CreateEventNode(EventSymbol @event, UriPath selected)
+        private static NavigationNode CreateEventNode(IEventSymbol @event, UriPath selected)
         {
             int kind = NavigationKind.ApiEvent;
             string label = @event.Name;
@@ -263,7 +263,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, isOpen);
         }
 
-        private static NavigationNode CreatePropertyNode(PropertySymbol property, UriPath selected)
+        private static NavigationNode CreatePropertyNode(IPropertySymbol property, UriPath selected)
         {
             int kind = NavigationKind.ApiProperty;
             string label = property.Name;
@@ -273,7 +273,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, isOpen);
         }
 
-        private static NavigationNode CreateConstructorsNode(ClassSymbol @class, UriPath selected)
+        private static NavigationNode CreateConstructorsNode(IClassSymbol @class, UriPath selected)
         {
             int kind = NavigationKind.ApiConstructors;
             string label = "Constructors";
@@ -290,7 +290,7 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link);
         }
 
-        private static int GetKind(Symbol symbol)
+        private static int GetKind(ISymbol symbol)
         {
             return symbol.Kind switch
             {

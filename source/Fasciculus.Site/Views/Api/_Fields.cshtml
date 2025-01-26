@@ -1,4 +1,4 @@
-@model FieldList
+@model IEnumerable<IFieldSymbol>
 
 <h2 id="fields">Fields</h2>
 
@@ -10,7 +10,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (FieldSymbol field in Model)
+        @foreach (IFieldSymbol field in Model)
         {
             <tr>
                 <td><a href="~/api/@(field.Link).html">@field.Name</a></td>

@@ -5,8 +5,27 @@ using System.Diagnostics;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
+    public interface ISymbol
+    {
+        public SymbolKind Kind { get; }
+
+        public SymbolName Name { get; }
+
+        public UriPath Link { get; }
+
+        public ISymbolModifiers Modifiers { get; }
+
+        public bool IsAccessible { get; }
+
+        public ITargetFrameworks Frameworks { get; }
+
+        public IEnumerable<string> Packages { get; }
+
+        public ISymbolComment Comment { get; }
+    }
+
     [DebuggerDisplay("{Name}")]
-    public class Symbol
+    internal class Symbol : ISymbol
     {
         public SymbolKind Kind { get; }
 
@@ -20,19 +39,13 @@ namespace Fasciculus.CodeAnalysis.Models
             init => link = value;
         }
 
-        private SymbolModifiers modifiers = new();
+        public required ISymbolModifiers Modifiers { get; init; }
 
-        public required SymbolModifiers Modifiers
-        {
-            get => new(modifiers);
-            init => modifiers = value;
-        }
-
-        public virtual bool IsAccessible => modifiers.IsAccessible;
+        public virtual bool IsAccessible => Modifiers.IsAccessible;
 
         private readonly TargetFrameworks frameworks = [];
 
-        public TargetFrameworks Frameworks => new(frameworks);
+        public ITargetFrameworks Frameworks => frameworks;
 
         private readonly SortedSet<string> packages;
 
@@ -57,7 +70,8 @@ namespace Fasciculus.CodeAnalysis.Models
             Kind = other.Kind;
 
             link = other.link;
-            modifiers = other.modifiers;
+
+            Modifiers = other.Modifiers;
 
             frameworks.Add(other.frameworks);
             packages = new(other.packages);
@@ -78,7 +92,7 @@ namespace Fasciculus.CodeAnalysis.Models
         }
     }
 
-    public class Symbol<T> : Symbol
+    internal class Symbol<T> : Symbol
         where T : notnull, Symbol<T>
     {
         public Symbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)

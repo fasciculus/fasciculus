@@ -4,7 +4,7 @@ using Fasciculus.Collections;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class PropertyBuilder : TypedSymbolBuilder<PropertySymbol>
+    internal class PropertyBuilder : TypedSymbolBuilder<PropertySymbol>
     {
         public required AccessorList Accessors { get; init; }
 

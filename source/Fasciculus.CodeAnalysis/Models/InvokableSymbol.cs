@@ -2,12 +2,12 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public interface IInvokableSymbol
+    public interface IInvokableSymbol : ITypedSymbol
     {
         public string Id { get; }
     }
 
-    public abstract class InvokableSymbol<T> : TypedSymbol<T>, IInvokableSymbol
+    internal class InvokableSymbol<T> : TypedSymbol<T>, IInvokableSymbol
         where T : notnull, InvokableSymbol<T>
     {
         public string Id => GetId();

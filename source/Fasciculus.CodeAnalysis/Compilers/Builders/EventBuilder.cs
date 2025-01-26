@@ -3,7 +3,7 @@ using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class EventBuilder : TypedSymbolBuilder<EventSymbol>
+    internal class EventBuilder : TypedSymbolBuilder<EventSymbol>
     {
         public EventBuilder(CommentContext commentContext)
             : base(commentContext) { }

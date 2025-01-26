@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class CompilationUnitCompiler : CompilerBase
+    internal partial class CompilationUnitCompiler : CompilerBase
     {
         private readonly TaskSafeMutex mutex = new();
 

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class EnumList : SymbolDictionary<EnumSymbol>
+    internal class EnumList : SymbolDictionary<EnumSymbol>
     {
         public EnumList(IEnumerable<EnumSymbol> enums)
             : base(enums) { }

@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class CommentBuilder
+    internal class CommentBuilder
     {
         private readonly CommentContext commentContext;
 

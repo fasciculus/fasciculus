@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class InterfaceList : SymbolDictionary<InterfaceSymbol>
+    internal class InterfaceList : SymbolDictionary<InterfaceSymbol>
     {
         public InterfaceList(IEnumerable<InterfaceSymbol> interfaces)
             : base(interfaces) { }

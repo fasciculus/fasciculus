@@ -10,7 +10,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public string Summary { get; }
     }
 
-    public class SymbolComment : ISymbolComment
+    internal class SymbolComment : ISymbolComment
     {
         public static SymbolComment Empty(CommentContext context)
             => new(context, XDocument.Parse(RootXml));

@@ -2,7 +2,12 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class EventSymbol : TypedSymbol<EventSymbol>
+    public interface IEventSymbol : ITypedSymbol
+    {
+
+    }
+
+    internal class EventSymbol : TypedSymbol<EventSymbol>, IEventSymbol
     {
         public EventSymbol(TargetFramework framework, string package, SymbolComment comment)
             : base(SymbolKind.Event, framework, package, comment) { }

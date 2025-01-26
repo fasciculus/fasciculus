@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class ModifiersCompiler
+    internal class ModifiersCompiler
     {
         private readonly TaskSafeMutex mutex = new();
 

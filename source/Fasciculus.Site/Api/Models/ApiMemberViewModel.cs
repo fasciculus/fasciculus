@@ -4,6 +4,6 @@ namespace Fasciculus.Site.Api.Models
 {
     public class ApiMemberViewModel : ApiSymbolInfoViewModel
     {
-        public required MemberSymbol Member { get; init; }
+        public required IMemberSymbol Member { get; init; }
     }
 }

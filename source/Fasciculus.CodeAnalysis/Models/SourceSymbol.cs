@@ -4,7 +4,12 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class SourceSymbol<T> : Symbol<T>
+    public interface ISourceSymbol : ISymbol
+    {
+        public IEnumerable<UriPath> Sources { get; }
+    }
+
+    internal class SourceSymbol<T> : Symbol<T>, ISourceSymbol
         where T : notnull, SourceSymbol<T>
     {
         private readonly SortedSet<UriPath> sources = [];

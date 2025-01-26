@@ -41,7 +41,7 @@ namespace Fasciculus.Site.Generating.Services
         {
             Add("/api/");
 
-            foreach (Symbol symbol in apiContent.Index.Symbols)
+            foreach (ISymbol symbol in apiContent.Index.Symbols)
             {
                 SymbolKind kind = symbol.Kind;
 
@@ -56,7 +56,7 @@ namespace Fasciculus.Site.Generating.Services
                         Add($"/api/{symbol.Link}/");
                     }
 
-                    if (symbol is ClassSymbol @class)
+                    if (symbol is IClassSymbol @class)
                     {
                         if (@class.Constructors.Any())
                         {

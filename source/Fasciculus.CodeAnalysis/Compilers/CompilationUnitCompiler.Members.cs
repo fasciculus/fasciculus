@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class CompilationUnitCompiler
+    internal partial class CompilationUnitCompiler
     {
         private readonly Stack<IMemberReceiver> memberReceivers = [];
 

@@ -2,7 +2,36 @@ using System.Text;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class SymbolModifiers
+    public interface ISymbolModifiers
+    {
+        public bool IsPublic { get; }
+
+        public bool IsPrivate { get; }
+
+        public bool IsProtected { get; }
+
+        public bool IsInternal { get; }
+
+        public bool IsAccessible { get; }
+
+        public bool IsAbstract { get; }
+
+        public bool IsStatic { get; }
+
+        public bool IsReadonly { get; }
+
+        public bool IsVirtual { get; }
+
+        public bool IsOverride { get; }
+
+        public bool IsUnsafe { get; }
+
+        public bool IsAsync { get; }
+
+        public bool IsPartial { get; }
+    }
+
+    internal class SymbolModifiers : ISymbolModifiers
     {
         public bool IsPublic { get; set; }
 

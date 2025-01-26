@@ -3,7 +3,7 @@ using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class EnumBuilder : TypeBuilder<EnumSymbol>
+    internal class EnumBuilder : TypeBuilder<EnumSymbol>
     {
         public EnumBuilder(CommentContext commentContext)
             : base(commentContext) { }

@@ -4,11 +4,16 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class ClassSymbol : TypeSymbol<ClassSymbol>
+    public interface IClassSymbol : ITypeSymbol
+    {
+        public IEnumerable<IConstructorSymbol> Constructors { get; }
+    }
+
+    internal class ClassSymbol : TypeSymbol<ClassSymbol>, IClassSymbol
     {
         private readonly ConstructorList constructors;
 
-        public IEnumerable<ConstructorSymbol> Constructors => constructors;
+        public IEnumerable<IConstructorSymbol> Constructors => constructors;
 
         public ClassSymbol(TargetFramework framework, string package, SymbolComment comment)
             : base(SymbolKind.Class, framework, package, comment)

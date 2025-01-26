@@ -13,11 +13,11 @@ namespace Fasciculus.Site.Api.Services
 {
     public class ApiContent
     {
-        private readonly CodeAnalyzerResult result;
+        private readonly ICodeAnalyzerResult result;
 
-        public SymbolIndex Index => result.Index;
-        public PackageList Packages => result.Packages;
-        public PackageSymbol Combined => result.Combined;
+        public ISymbolIndex Index => result.Index;
+        public IPackageSymbol[] Packages => result.Packages;
+        public IPackageSymbol Combined => result.Combined;
 
         public ApiContent()
         {
@@ -27,8 +27,8 @@ namespace Fasciculus.Site.Api.Services
                 .Build().Analyze();
         }
 
-        public Symbol? GetSymbol(UriPath link)
-            => result.Index.TryGetSymbol(link, out Symbol? symbol) ? symbol : null;
+        public ISymbol? GetSymbol(UriPath link)
+            => Index.TryGetSymbol(link, out ISymbol? symbol) ? symbol : null;
 
         private static readonly string[] ProjectNames =
         [

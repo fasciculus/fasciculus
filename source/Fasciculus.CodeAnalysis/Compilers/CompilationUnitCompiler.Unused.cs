@@ -1,6 +1,6 @@
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public partial class CompilationUnitCompiler
+    internal partial class CompilationUnitCompiler
     {
         //public override void DefaultVisit(SyntaxNode node)
         //{

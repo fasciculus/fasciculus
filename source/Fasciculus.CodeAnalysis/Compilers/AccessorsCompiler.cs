@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
-    public class AccessorsCompiler : CompilerBase
+    internal class AccessorsCompiler : CompilerBase
     {
         private readonly TaskSafeMutex mutex = new();
 

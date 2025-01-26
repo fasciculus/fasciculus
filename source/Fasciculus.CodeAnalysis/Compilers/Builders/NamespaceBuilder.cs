@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    public class NamespaceBuilder : TypeReceiver<NamespaceSymbol>
+    internal class NamespaceBuilder : TypeReceiver<NamespaceSymbol>
     {
         private readonly DirectoryInfo commentsDirectory;
 

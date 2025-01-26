@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class NamespaceList : SymbolDictionary<NamespaceSymbol>
+    internal class NamespaceList : SymbolDictionary<NamespaceSymbol>
     {
         public NamespaceList(IEnumerable<NamespaceSymbol> namespaces)
             : base(namespaces.Where(n => !n.IsEmpty)) { }

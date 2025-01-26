@@ -1,11 +1,11 @@
-﻿using NuGet.Frameworks;
+using NuGet.Frameworks;
 using System;
 using System.Diagnostics;
 
 namespace Fasciculus.CodeAnalysis.Frameworking
 {
     /// <summary>
-    /// A wrapper around a <see cref="NuGetFramework"/> with additional properties.
+    /// An immutable wrapper around a <see cref="NuGetFramework"/> with additional properties.
     /// </summary>
     [DebuggerDisplay("{NuGetFramework}")]
     public class TargetFramework : IEquatable<TargetFramework>

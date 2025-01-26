@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class FieldList : SymbolDictionary<FieldSymbol>
+    internal class FieldList : SymbolDictionary<FieldSymbol>
     {
         public FieldList(IEnumerable<FieldSymbol> fields)
             : base(fields) { }

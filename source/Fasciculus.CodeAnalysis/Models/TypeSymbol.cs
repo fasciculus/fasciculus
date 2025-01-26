@@ -4,24 +4,35 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class TypeSymbol<T> : SourceSymbol<T>
+    public interface ITypeSymbol : ISourceSymbol
+    {
+        public IEnumerable<IMemberSymbol> Members { get; }
+
+        public IEnumerable<IFieldSymbol> Fields { get; }
+
+        public IEnumerable<IEventSymbol> Events { get; }
+
+        public IEnumerable<IPropertySymbol> Properties { get; }
+    }
+
+    internal class TypeSymbol<T> : SourceSymbol<T>, ITypeSymbol
         where T : notnull, TypeSymbol<T>
     {
         private readonly FieldList fields;
 
-        public IEnumerable<FieldSymbol> Fields => fields;
+        public IEnumerable<IFieldSymbol> Fields => fields;
 
         private readonly MemberList members;
 
-        public IEnumerable<MemberSymbol> Members => members;
+        public IEnumerable<IMemberSymbol> Members => members;
 
         private readonly EventList events;
 
-        public IEnumerable<EventSymbol> Events => events;
+        public IEnumerable<IEventSymbol> Events => events;
 
         private readonly PropertyList properties;
 
-        public IEnumerable<PropertySymbol> Properties => properties;
+        public IEnumerable<IPropertySymbol> Properties => properties;
 
         public TypeSymbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)
             : base(kind, framework, package, comment)

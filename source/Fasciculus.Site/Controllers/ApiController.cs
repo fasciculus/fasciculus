@@ -75,17 +75,17 @@ namespace Fasciculus.Site.Controllers
         private IActionResult Container(params string[] parts)
         {
             UriPath path = new(parts);
-            Symbol? symbol = apiContent.GetSymbol(path);
+            ISymbol? symbol = apiContent.GetSymbol(path);
 
             if (symbol is not null)
             {
                 return symbol.Kind switch
                 {
-                    SymbolKind.Package => Package((PackageSymbol)symbol),
-                    SymbolKind.Namespace => Namespace((NamespaceSymbol)symbol),
-                    SymbolKind.Enum => Enum((EnumSymbol)symbol),
-                    SymbolKind.Interface => Interface((InterfaceSymbol)symbol),
-                    SymbolKind.Class => Class((ClassSymbol)symbol),
+                    SymbolKind.Package => Package((IPackageSymbol)symbol),
+                    SymbolKind.Namespace => Namespace((INamespaceSymbol)symbol),
+                    SymbolKind.Enum => Enum((IEnumSymbol)symbol),
+                    SymbolKind.Interface => Interface((IInterfaceSymbol)symbol),
+                    SymbolKind.Class => Class((IClassSymbol)symbol),
                     _ => NotFound()
                 };
             }
@@ -103,16 +103,16 @@ namespace Fasciculus.Site.Controllers
                 case "-Constructors": return Constructors(path);
             }
 
-            Symbol? symbol = apiContent.GetSymbol(path);
+            ISymbol? symbol = apiContent.GetSymbol(path);
 
             if (symbol is not null)
             {
                 return symbol.Kind switch
                 {
-                    SymbolKind.Field => Field((FieldSymbol)symbol),
-                    SymbolKind.Member => Member((MemberSymbol)symbol),
-                    SymbolKind.Event => Event((EventSymbol)symbol),
-                    SymbolKind.Property => Property((PropertySymbol)symbol),
+                    SymbolKind.Field => Field((IFieldSymbol)symbol),
+                    SymbolKind.Member => Member((IMemberSymbol)symbol),
+                    SymbolKind.Event => Event((IEventSymbol)symbol),
+                    SymbolKind.Property => Property((IPropertySymbol)symbol),
                     _ => NotFound()
                 };
             }
@@ -120,7 +120,7 @@ namespace Fasciculus.Site.Controllers
             return NotFound();
         }
 
-        private ViewResult Package(PackageSymbol package)
+        private ViewResult Package(IPackageSymbol package)
         {
             ApiPackageViewModel model = new()
             {
@@ -133,7 +133,7 @@ namespace Fasciculus.Site.Controllers
             return View("Package", model);
         }
 
-        private ViewResult Namespace(NamespaceSymbol @namespace)
+        private ViewResult Namespace(INamespaceSymbol @namespace)
         {
             ApiNamespaceViewModel model = new()
             {
@@ -145,7 +145,7 @@ namespace Fasciculus.Site.Controllers
             return View("Namespace", model);
         }
 
-        private ViewResult Enum(EnumSymbol @enum)
+        private ViewResult Enum(IEnumSymbol @enum)
         {
             ApiEnumViewModel model = new()
             {
@@ -159,7 +159,7 @@ namespace Fasciculus.Site.Controllers
             return View("Enum", model);
         }
 
-        private ViewResult Interface(InterfaceSymbol @interface)
+        private ViewResult Interface(IInterfaceSymbol @interface)
         {
             ApiInterfaceViewModel model = new()
             {
@@ -173,7 +173,7 @@ namespace Fasciculus.Site.Controllers
             return View("Interface", model);
         }
 
-        private ViewResult Class(ClassSymbol @class)
+        private ViewResult Class(IClassSymbol @class)
         {
             ApiClassViewModel model = new()
             {
@@ -187,7 +187,7 @@ namespace Fasciculus.Site.Controllers
             return View("Class", model);
         }
 
-        private ViewResult Field(FieldSymbol field)
+        private ViewResult Field(IFieldSymbol field)
         {
             ApiFieldViewModel model = new()
             {
@@ -201,7 +201,7 @@ namespace Fasciculus.Site.Controllers
             return View("Field", model);
         }
 
-        private ViewResult Member(MemberSymbol member)
+        private ViewResult Member(IMemberSymbol member)
         {
             ApiMemberViewModel model = new()
             {
@@ -215,7 +215,7 @@ namespace Fasciculus.Site.Controllers
             return View("Member", model);
         }
 
-        private ViewResult Event(EventSymbol @event)
+        private ViewResult Event(IEventSymbol @event)
         {
             ApiEventViewModel model = new()
             {
@@ -229,7 +229,7 @@ namespace Fasciculus.Site.Controllers
             return View("Event", model);
         }
 
-        private ViewResult Property(PropertySymbol property)
+        private ViewResult Property(IPropertySymbol property)
         {
             ApiPropertyViewModel model = new()
             {
@@ -245,14 +245,14 @@ namespace Fasciculus.Site.Controllers
 
         private IActionResult Constructors(UriPath path)
         {
-            ClassSymbol? @class = apiContent.GetSymbol(path.Parent) as ClassSymbol;
+            IClassSymbol? @class = apiContent.GetSymbol(path.Parent) as IClassSymbol;
 
             if (@class is not null)
             {
                 ApiConstructorsViewModel model = new()
                 {
                     Title = $"{@class.Name} Constructors",
-                    Constructors = new(@class.Constructors),
+                    Constructors = @class.Constructors,
                     Navigation = apiNavigation.Create(path)
                 };
 
@@ -264,12 +264,12 @@ namespace Fasciculus.Site.Controllers
         }
 
         private IEnumerable<Uri> GetSourceUris<T>(T symbol)
-            where T : notnull, SourceSymbol<T>
+            where T : notnull, ISourceSymbol
         {
             if (symbol.Packages.Count() > 0)
             {
                 UriPath packageLink = new(symbol.Packages.First());
-                PackageSymbol? package = apiContent.GetSymbol(packageLink) as PackageSymbol;
+                IPackageSymbol? package = apiContent.GetSymbol(packageLink) as IPackageSymbol;
 
                 if (package is not null)
                 {

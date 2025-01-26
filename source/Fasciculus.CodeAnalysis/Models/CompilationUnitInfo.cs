@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class CompilationUnitInfo
+    internal class CompilationUnitInfo
     {
         private readonly NamespaceList namespaces = [];
 

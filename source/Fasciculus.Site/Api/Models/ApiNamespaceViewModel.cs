@@ -7,15 +7,15 @@ namespace Fasciculus.Site.Api.Models
 {
     public class ApiNamespaceViewModel : ViewModel
     {
-        public required NamespaceSymbol Namespace { get; init; }
+        public required INamespaceSymbol Namespace { get; init; }
 
-        public IEnumerable<EnumSymbol> Enums => Namespace.Enums;
+        public IEnumerable<IEnumSymbol> Enums => Namespace.Enums;
         public bool HasEnums => Enums.Any();
 
-        public IEnumerable<InterfaceSymbol> Interfaces => Namespace.Interfaces;
+        public IEnumerable<IInterfaceSymbol> Interfaces => Namespace.Interfaces;
         public bool HasInterfaces => Interfaces.Any();
 
-        public IEnumerable<ClassSymbol> Classes => Namespace.Classes;
+        public IEnumerable<IClassSymbol> Classes => Namespace.Classes;
         public bool HasClasses => Classes.Any();
 
     }

@@ -4,6 +4,6 @@ namespace Fasciculus.Site.Api.Models
 {
     public class ApiFieldViewModel : ApiSymbolInfoViewModel
     {
-        public required FieldSymbol Field { get; init; }
+        public required IFieldSymbol Field { get; init; }
     }
 }

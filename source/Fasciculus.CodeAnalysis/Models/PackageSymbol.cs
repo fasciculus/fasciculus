@@ -5,14 +5,23 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public class PackageSymbol : Symbol<PackageSymbol>
+    public interface IPackageSymbol : ISymbol
+    {
+        public IEnumerable<INamespaceSymbol> Namespaces { get; }
+
+        public bool IsEmpty { get; }
+
+        public UriPath RepositoryDirectory { get; }
+    }
+
+    internal class PackageSymbol : Symbol<PackageSymbol>, IPackageSymbol
     {
         public static SymbolModifiers PackageModifiers
             => new() { IsPublic = true };
 
         private readonly NamespaceList namespaces;
 
-        public IEnumerable<NamespaceSymbol> Namespaces => namespaces;
+        public IEnumerable<INamespaceSymbol> Namespaces => namespaces;
 
         public override bool IsAccessible => namespaces.HasAccessible;
 

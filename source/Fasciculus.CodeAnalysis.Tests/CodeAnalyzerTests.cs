@@ -119,23 +119,23 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         private void Test(TestContext context)
         {
-            CodeAnalyzerResult result = CodeAnalyzer.Create()
+            ICodeAnalyzerResult result = CodeAnalyzer.Create()
                 .WithProjects(context.Projects)
                 .WithDebuggers(context.Debuggers)
                 .Build().Analyze();
 
-            IEnumerable<Symbol> symbols = result.Index.Symbols;
-            NamespaceSymbol[] namespaces = [.. symbols.Where(x => x.Kind == SymbolKind.Namespace).Cast<NamespaceSymbol>()];
-            EnumSymbol[] enums = [.. symbols.Where(x => x.Kind == SymbolKind.Enum).Cast<EnumSymbol>()];
-            InterfaceSymbol[] interfaces = [.. symbols.Where(x => x.Kind == SymbolKind.Interface).Cast<InterfaceSymbol>()];
-            ClassSymbol[] classes = [.. symbols.Where(x => x.Kind == SymbolKind.Class).Cast<ClassSymbol>()];
+            IEnumerable<ISymbol> symbols = result.Index.Symbols;
+            INamespaceSymbol[] namespaces = [.. symbols.Where(x => x.Kind == SymbolKind.Namespace).Cast<INamespaceSymbol>()];
+            IEnumSymbol[] enums = [.. symbols.Where(x => x.Kind == SymbolKind.Enum).Cast<IEnumSymbol>()];
+            IInterfaceSymbol[] interfaces = [.. symbols.Where(x => x.Kind == SymbolKind.Interface).Cast<IInterfaceSymbol>()];
+            IClassSymbol[] classes = [.. symbols.Where(x => x.Kind == SymbolKind.Class).Cast<IClassSymbol>()];
 
-            FieldSymbol[] fields = [.. symbols.Where(x => x.Kind == SymbolKind.Field).Cast<FieldSymbol>()];
-            MemberSymbol[] members = [.. symbols.Where(x => x.Kind == SymbolKind.Member).Cast<MemberSymbol>()];
-            EventSymbol[] events = [.. symbols.Where(x => x.Kind == SymbolKind.Event).Cast<EventSymbol>()];
-            PropertySymbol[] properties = [.. symbols.Where(x => x.Kind == SymbolKind.Property).Cast<PropertySymbol>()];
+            IFieldSymbol[] fields = [.. symbols.Where(x => x.Kind == SymbolKind.Field).Cast<IFieldSymbol>()];
+            IMemberSymbol[] members = [.. symbols.Where(x => x.Kind == SymbolKind.Member).Cast<IMemberSymbol>()];
+            IEventSymbol[] events = [.. symbols.Where(x => x.Kind == SymbolKind.Event).Cast<IEventSymbol>()];
+            IPropertySymbol[] properties = [.. symbols.Where(x => x.Kind == SymbolKind.Property).Cast<IPropertySymbol>()];
 
-            ConstructorSymbol[] constructors = [.. symbols.Where(x => x.Kind == SymbolKind.Constructor).Cast<ConstructorSymbol>()];
+            IConstructorSymbol[] constructors = [.. symbols.Where(x => x.Kind == SymbolKind.Constructor).Cast<IConstructorSymbol>()];
 
             string[] summaries = [.. symbols.Select(x => x.Comment.Summary).Where(x => !string.IsNullOrEmpty(x))];
 
@@ -145,7 +145,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             LogUnhandledAccessors(context);
             LogUnhandledComments(context);
 
-            Assert.AreEqual(context.Packages, result.Packages.Count);
+            Assert.AreEqual(context.Packages, result.Packages.Length);
 
             Assert.AreEqual(context.Namespaces, namespaces.Length, "Namespaces");
             Assert.AreEqual(context.Enums, enums.Length, "Enums");

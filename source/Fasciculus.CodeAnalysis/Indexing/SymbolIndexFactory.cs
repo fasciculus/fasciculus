@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Indexing
 {
-    public class SymbolIndexFactory
+    internal class SymbolIndexFactory
     {
         private readonly TaskSafeMutex mutex = new();
 
         private readonly bool IncludeNonAccessible;
 
-        private Dictionary<UriPath, Symbol> index = [];
+        private Dictionary<UriPath, ISymbol> index = [];
 
         public SymbolIndexFactory(SymbolIndexOptions options)
         {
@@ -43,10 +43,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddNamespaces(IEnumerable<NamespaceSymbol> namespaces)
+        private void AddNamespaces(IEnumerable<INamespaceSymbol> namespaces)
             => namespaces.Apply(AddNamespace);
 
-        private void AddNamespace(NamespaceSymbol @namespace)
+        private void AddNamespace(INamespaceSymbol @namespace)
         {
             if (IsIncluded(@namespace))
             {
@@ -58,10 +58,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddEnums(IEnumerable<EnumSymbol> enums)
+        private void AddEnums(IEnumerable<IEnumSymbol> enums)
             => enums.Apply(AddEnum);
 
-        private void AddEnum(EnumSymbol @enum)
+        private void AddEnum(IEnumSymbol @enum)
         {
             if (IsIncluded(@enum))
             {
@@ -70,10 +70,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddInterfaces(IEnumerable<InterfaceSymbol> interfaces)
+        private void AddInterfaces(IEnumerable<IInterfaceSymbol> interfaces)
             => interfaces.Apply(AddInterface);
 
-        private void AddInterface(InterfaceSymbol @interface)
+        private void AddInterface(IInterfaceSymbol @interface)
         {
             if (IsIncluded(@interface))
             {
@@ -83,10 +83,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddClasses(IEnumerable<ClassSymbol> classes)
+        private void AddClasses(IEnumerable<IClassSymbol> classes)
             => classes.Apply(AddClass);
 
-        private void AddClass(ClassSymbol @class)
+        private void AddClass(IClassSymbol @class)
         {
             if (IsIncluded(@class))
             {
@@ -100,10 +100,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddFields(IEnumerable<FieldSymbol> fields)
+        private void AddFields(IEnumerable<IFieldSymbol> fields)
             => fields.Apply(AddField);
 
-        private void AddField(FieldSymbol field)
+        private void AddField(IFieldSymbol field)
         {
             if (IsIncluded(field))
             {
@@ -111,10 +111,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddMembers(IEnumerable<MemberSymbol> members)
+        private void AddMembers(IEnumerable<IMemberSymbol> members)
             => members.Apply(AddMember);
 
-        private void AddMember(MemberSymbol member)
+        private void AddMember(IMemberSymbol member)
         {
             if (IsIncluded(member))
             {
@@ -122,10 +122,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddEvents(IEnumerable<EventSymbol> events)
+        private void AddEvents(IEnumerable<IEventSymbol> events)
             => events.Apply(AddEvent);
 
-        private void AddEvent(EventSymbol @event)
+        private void AddEvent(IEventSymbol @event)
         {
             if (IsIncluded(@event))
             {
@@ -133,10 +133,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddProperties(IEnumerable<PropertySymbol> properties)
+        private void AddProperties(IEnumerable<IPropertySymbol> properties)
             => properties.Apply(AddProperty);
 
-        private void AddProperty(PropertySymbol property)
+        private void AddProperty(IPropertySymbol property)
         {
             if (IsIncluded(property))
             {
@@ -144,10 +144,10 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private void AddConstructors(IEnumerable<ConstructorSymbol> constructors)
+        private void AddConstructors(IEnumerable<IConstructorSymbol> constructors)
             => constructors.Apply(AddConstructor);
 
-        private void AddConstructor(ConstructorSymbol constructor)
+        private void AddConstructor(IConstructorSymbol constructor)
         {
             if (IsIncluded(constructor))
             {
@@ -155,7 +155,7 @@ namespace Fasciculus.CodeAnalysis.Indexing
             }
         }
 
-        private bool IsIncluded(Symbol symbol)
+        private bool IsIncluded(ISymbol symbol)
             => IncludeNonAccessible || symbol.IsAccessible;
     }
 }

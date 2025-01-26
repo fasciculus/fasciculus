@@ -1,4 +1,4 @@
-@model EventList
+@model IEnumerable<IEventSymbol>
 
 <h2 id="events">Events</h2>
 
@@ -10,7 +10,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (EventSymbol e in Model)
+        @foreach (IEventSymbol e in Model)
         {
             <tr>
                 <td><a href="~/api/@(e.Link).html">@e.Name</a></td>

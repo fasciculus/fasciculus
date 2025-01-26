@@ -5,10 +5,17 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Frameworking
 {
+    public interface ITargetFrameworks : IEnumerable<TargetFramework>
+    {
+        public TargetProducts Products { get; }
+
+        public bool Contains(TargetFramework targetFramework);
+    }
+
     /// <summary>
     /// Collection of target frameworks.
     /// </summary>
-    public class TargetFrameworks : IEnumerable<TargetFramework>
+    public class TargetFrameworks : ITargetFrameworks
     {
         private readonly HashSet<TargetFramework> frameworks = [];
 

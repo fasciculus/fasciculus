@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Indexing
 {
-    public class SymbolIndexBuilder
+    internal class SymbolIndexBuilder
     {
         private readonly SymbolIndexOptions options;
 
