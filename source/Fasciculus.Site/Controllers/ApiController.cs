@@ -14,9 +14,9 @@ namespace Fasciculus.Site.Controllers
         private static readonly string RepositoryPrefix = "https://github.com/fasciculus/fasciculus";
 
         private readonly ApiContent apiContent;
-        private readonly ApiNavigation2 apiNavigation;
+        private readonly ApiNavigation apiNavigation;
 
-        public ApiController(ApiContent apiContent, ApiNavigation2 apiNavigation)
+        public ApiController(ApiContent apiContent, ApiNavigation apiNavigation)
         {
             this.apiContent = apiContent;
             this.apiNavigation = apiNavigation;

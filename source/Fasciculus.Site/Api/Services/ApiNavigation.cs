@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace Fasciculus.Site.Api.Services
 {
-    public class ApiNavigation2
+    public class ApiNavigation
     {
         private readonly ApiContent content;
 
-        public ApiNavigation2(ApiContent content)
+        public ApiNavigation(ApiContent content)
         {
             this.content = content;
         }
