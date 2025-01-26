@@ -13,7 +13,7 @@
         @foreach (ConstructorSymbol constructor in Model)
         {
             <tr>
-                <td>@constructor.Name</td>
+                <td><a href="~/api/@(constructor.Link.Parent)/-Constructors.html#@(constructor.Id)">@constructor.Name</a></td>
                 <td>@Html.Raw(@constructor.Comment.Summary)</td>
             </tr>
         }

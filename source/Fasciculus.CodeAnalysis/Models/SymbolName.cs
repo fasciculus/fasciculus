@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
+    /// <summary>
+    /// Immutable representation of a symbol's name.
+    /// </summary>
     [DebuggerDisplay("{Name}")]
     public class SymbolName : IEquatable<SymbolName>, IComparable<SymbolName>
     {
