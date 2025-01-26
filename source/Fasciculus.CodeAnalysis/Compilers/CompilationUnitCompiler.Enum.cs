@@ -26,8 +26,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             enumBuilders.Push(builder);
             typeReceivers.Push(builder);
-            commentReceivers.Push(builder);
             memberReceivers.Push(builder);
+            commentReceivers.Push(builder);
 
             PushComment();
         }
@@ -36,6 +36,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             PopComment();
             commentReceivers.Pop();
+            memberReceivers.Pop();
             typeReceivers.Pop();
 
             EnumBuilder builder = enumBuilders.Pop();

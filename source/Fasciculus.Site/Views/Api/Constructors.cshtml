@@ -2,17 +2,15 @@
 
 <h1>@Model.Title</h1>
 
-<h2>Overloads</h2>
-
 @foreach (ConstructorSymbol constructor in Model.Constructors)
 {
-    <h3>@constructor.Name</h3>
+    <h2>@constructor.Name</h2>
 
-    <h4>Definition</h4>
+    <h3>Definition</h3>
 
     <p>@Html.Raw(constructor.Comment.Summary)</p>
 
-    <h4>Applies To</h4>
+    <h3>Applies To</h3>
 
     <partial name="_TargetFrameworks.cshtml" model=constructor.Frameworks />
 }

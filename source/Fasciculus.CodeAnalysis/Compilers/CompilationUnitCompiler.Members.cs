@@ -24,11 +24,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                PushComment();
+                //PushComment();
 
                 base.VisitConversionOperatorDeclaration(node);
 
-                PopComment();
+                //PopComment();
             }
         }
 
@@ -43,11 +43,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                PushComment();
+                //PushComment();
 
                 base.VisitDestructorDeclaration(node);
 
-                PopComment();
+                //PopComment();
             }
         }
 
@@ -63,11 +63,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                PushComment();
+                //PushComment();
 
                 base.VisitIndexerDeclaration(node);
 
-                PopComment();
+                //PopComment();
             }
         }
 
@@ -100,11 +100,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                PushComment();
+                //PushComment();
 
                 base.VisitMethodDeclaration(node);
 
-                PopComment();
+                //PopComment();
             }
         }
 
@@ -120,11 +120,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                PushComment();
+                //PushComment();
 
                 base.VisitOperatorDeclaration(node);
 
-                PopComment();
+                //PopComment();
             }
         }
     }

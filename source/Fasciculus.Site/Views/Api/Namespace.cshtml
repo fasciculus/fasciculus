@@ -10,6 +10,10 @@
     {
         <li><a href="#enums">Enums</a></li>
     }
+    @if (Model.HasInterfaces)
+    {
+        <li><a href="#interfaces">Interfaces</a></li>
+    }
     @if (Model.HasClasses)
     {
         <li><a href="#classes">Classes</a></li>
@@ -40,6 +44,28 @@
                 <tr>
                     <td><a href="~/api/@(e.Link)/">@e.Name</a></td>
                     <td>@Html.Raw(@e.Comment.Summary)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (Model.HasInterfaces)
+{
+    <h2 id="interfaces">Interfaces</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Interface</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model.Interfaces)
+            {
+                <tr>
+                    <td><a href="~/api/@(i.Link)/">@i.Name</a></td>
+                    <td>@Html.Raw(@i.Comment.Summary)</td>
                 </tr>
             }
         </tbody>

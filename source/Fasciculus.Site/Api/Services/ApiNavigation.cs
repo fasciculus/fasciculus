@@ -73,7 +73,7 @@ namespace Fasciculus.Site.Api.Services
                 SymbolKind.Interface => NavigationKind.ApiInterface,
                 SymbolKind.Class => NavigationKind.ApiClass,
                 SymbolKind.Field => NavigationKind.ApiField,
-                SymbolKind.Member => NavigationKind.ApiEnumMember,
+                SymbolKind.Member => NavigationKind.ApiMember,
                 SymbolKind.Event => NavigationKind.ApiEvent,
                 SymbolKind.Property => NavigationKind.ApiProperty,
                 _ => NavigationKind.Unknown

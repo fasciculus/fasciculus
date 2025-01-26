@@ -14,9 +14,9 @@ namespace Fasciculus.Site.Controllers
         private static readonly string RepositoryPrefix = "https://github.com/fasciculus/fasciculus";
 
         private readonly ApiContent apiContent;
-        private readonly ApiNavigation apiNavigation;
+        private readonly ApiNavigation2 apiNavigation;
 
-        public ApiController(ApiContent apiContent, ApiNavigation apiNavigation)
+        public ApiController(ApiContent apiContent, ApiNavigation2 apiNavigation)
         {
             this.apiContent = apiContent;
             this.apiNavigation = apiNavigation;
@@ -28,6 +28,7 @@ namespace Fasciculus.Site.Controllers
             ApiPackagesViewModel model = new()
             {
                 Title = "API Doc",
+                Navigation = apiNavigation.Create(),
                 Combined = apiContent.Combined,
                 Packages = apiContent.Packages
             };

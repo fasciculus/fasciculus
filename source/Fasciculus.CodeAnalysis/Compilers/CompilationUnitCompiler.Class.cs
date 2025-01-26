@@ -25,8 +25,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             classBuilders.Push(builder);
             typeReceivers.Push(builder);
-            commentReceivers.Push(builder);
             memberReceivers.Push(builder);
+            commentReceivers.Push(builder);
 
             PushComment();
         }
@@ -34,7 +34,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
         protected virtual void PopClass()
         {
             PopComment();
+
             commentReceivers.Pop();
+            memberReceivers.Pop();
             typeReceivers.Pop();
 
             ClassBuilder builder = classBuilders.Pop();

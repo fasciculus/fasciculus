@@ -25,8 +25,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             interfaceBuilders.Push(builder);
             typeReceivers.Push(builder);
-            commentReceivers.Push(builder);
             memberReceivers.Push(builder);
+            commentReceivers.Push(builder);
 
             PushComment();
         }
@@ -35,6 +35,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             PopComment();
             commentReceivers.Pop();
+            memberReceivers.Pop();
             typeReceivers.Pop();
 
             InterfaceBuilder builder = interfaceBuilders.Pop();
@@ -57,7 +58,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                SymbolName name = new(node.Identifier.ValueText);
+                SymbolName name = GetName(node.Identifier, node.TypeParameterList);
 
                 PushInterface(name, modifiers);
 

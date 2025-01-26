@@ -10,11 +10,11 @@ namespace Fasciculus.Site.Generating.Services
 {
     public class GeneratorDocuments : List<string>
     {
-        public GeneratorDocuments(ApiContent apiContent, ApiNavigation apiNavigation, BlogContent blogContent)
+        public GeneratorDocuments(ApiContent apiContent, BlogContent blogContent)
         {
             AddGlobals();
             AddStatics();
-            AddApi(apiContent, apiNavigation);
+            AddApi(apiContent);
             AddBlog(blogContent);
             AddLicenses();
         }
@@ -37,7 +37,7 @@ namespace Fasciculus.Site.Generating.Services
             paths.Apply(Add);
         }
 
-        private void AddApi(ApiContent apiContent, ApiNavigation apiNavigation)
+        private void AddApi(ApiContent apiContent)
         {
             Add("/api/");
 

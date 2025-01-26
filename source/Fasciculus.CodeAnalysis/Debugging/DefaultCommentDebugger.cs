@@ -14,6 +14,7 @@ namespace Fasciculus.CodeAnalysis.Debugging
         {
             handled.Add("b");
             handled.Add("c");
+            handled.Add("code");
             handled.Add("p");
 
             handled.Add("para");
