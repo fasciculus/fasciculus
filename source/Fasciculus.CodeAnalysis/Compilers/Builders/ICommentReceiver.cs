@@ -1,4 +1,4 @@
-using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {

@@ -1,8 +1,9 @@
+using Fasciculus.CodeAnalysis.Commenting;
 using System.IO;
 using System.Xml.Linq;
 using static Fasciculus.CodeAnalysis.Commenting.CommentConstants;
 
-namespace Fasciculus.CodeAnalysis.Commenting
+namespace Fasciculus.CodeAnalysis.Models
 {
     public class SymbolComment
     {

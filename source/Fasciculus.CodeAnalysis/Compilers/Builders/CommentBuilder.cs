@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Models;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
