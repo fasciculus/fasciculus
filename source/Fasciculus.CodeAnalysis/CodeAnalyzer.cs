@@ -1,7 +1,6 @@
 using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Compilers;
 using Fasciculus.CodeAnalysis.Configuration;
-using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
@@ -30,7 +29,7 @@ namespace Fasciculus.CodeAnalysis
             commentContext = new()
             {
                 Merger = new DefaultCommentMerger(),
-                Resolver = new DefaultCommentResolver(new NullCommentDebugger()),
+                Resolver = new DefaultCommentResolver(options.Debuggers.CommentDebugger),
                 Formatter = new DefaultCommentFormatter(),
             };
         }

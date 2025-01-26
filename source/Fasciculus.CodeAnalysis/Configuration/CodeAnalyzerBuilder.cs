@@ -76,6 +76,13 @@ namespace Fasciculus.CodeAnalysis.Configuration
             return this;
         }
 
+        public CodeAnalyzerBuilder WithCommentDebugger(ICommentDebugger commentDebugger)
+        {
+            options.Debuggers.CommentDebugger = commentDebugger;
+
+            return this;
+        }
+
         public CodeAnalyzer Build()
             => new(options);
     }
