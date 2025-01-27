@@ -1,5 +1,6 @@
 using Fasciculus.CodeAnalysis.Compilers.Builders;
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 
@@ -9,33 +10,105 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly Stack<IMemberReceiver> memberReceivers = [];
 
-        public override void VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node)
+        protected readonly Stack<MemberBuilder> memberBuilders = [];
+        private readonly Stack<FieldBuilder> fieldBuilders = [];
+        private readonly Stack<EventBuilder> eventBuilders = [];
+        private readonly Stack<PropertyBuilder> propertyBuilders = [];
+
+        private void PushEnumMember(SymbolName name, SymbolModifiers modifiers)
+        {
+            UriPath link = memberReceivers.Peek().Link.Append(name.Name);
+
+            MemberBuilder builder = new(commentContext)
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = modifiers,
+                Type = string.Empty,
+            };
+
+            memberBuilders.Push(builder);
+            commentReceivers.Push(builder);
+
+            PushComment();
+        }
+
+        private void PopEnumMember()
+        {
+            PopComment();
+
+            commentReceivers.Pop();
+
+            MemberBuilder builder = memberBuilders.Pop();
+            MemberSymbol member = builder.Build();
+
+            member.AddSource(Source);
+
+            memberReceivers.Peek().Add(member);
+        }
+
+        public override void VisitEnumMemberDeclaration(EnumMemberDeclarationSyntax node)
         {
             // HasTrivia: True
-            // ConversionOperatorDeclaration
-            // : IdentifierName ParameterList ArrowExpressionClause
-            // 
-            // may have Block?
+            // Leaf
 
             nodeDebugger.Add(node);
 
-            string name = node.Type.ToString();
             SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
-                //PushComment();
+                SymbolName name = new(node.Identifier.ValueText);
 
-                base.VisitConversionOperatorDeclaration(node);
+                PushEnumMember(name, modifiers);
 
-                //PopComment();
+                base.VisitEnumMemberDeclaration(node);
+
+                PopEnumMember();
             }
         }
 
-        public override void VisitDestructorDeclaration(DestructorDeclarationSyntax node)
+        private void PushField(SymbolName name, SymbolModifiers modifiers, string type)
+        {
+            UriPath link = memberReceivers.Peek().Link.Append(name.Name);
+
+            FieldBuilder builder = new(commentContext)
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = modifiers,
+                Type = type,
+            };
+
+            fieldBuilders.Push(builder);
+            commentReceivers.Push(builder);
+
+            PushComment();
+        }
+
+        private void PopField()
+        {
+            PopComment();
+
+            commentReceivers.Pop();
+
+            FieldBuilder builder = fieldBuilders.Pop();
+            FieldSymbol field = builder.Build();
+
+            field.AddSource(Source);
+
+            memberReceivers.Peek().Add(field);
+        }
+
+
+        public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
             // HasTrivia: True
-            // DestructorDeclaration: ParameterList Block
+            // FieldDeclaration: VariableDeclaration
 
             nodeDebugger.Add(node);
 
@@ -43,19 +116,53 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                //PushComment();
+                SymbolName name = new(node.Declaration.Variables.First().Identifier.ValueText);
+                string type = GetTypeName(node.Declaration.Type);
 
-                base.VisitDestructorDeclaration(node);
-
-                //PopComment();
+                PushField(name, modifiers, type);
+                base.VisitFieldDeclaration(node);
+                PopField();
             }
         }
 
-        public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
+        private void PushEvent(SymbolName name, SymbolModifiers modifiers, string type)
+        {
+            UriPath link = memberReceivers.Peek().Link.Append(name.Name);
+
+            EventBuilder builder = new(commentContext)
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = modifiers,
+                Type = type,
+            };
+
+            eventBuilders.Push(builder);
+            commentReceivers.Push(builder);
+
+            PushComment();
+        }
+
+        private void PopEvent()
+        {
+            PopComment();
+
+            commentReceivers.Pop();
+
+            EventBuilder builder = eventBuilders.Pop();
+            EventSymbol @event = builder.Build();
+
+            @event.AddSource(Source);
+
+            memberReceivers.Peek().Add(@event);
+        }
+
+        public override void VisitEventFieldDeclaration(EventFieldDeclarationSyntax node)
         {
             // HasTrivia: True
-            // IndexerDeclaration
-            // : PredefinedType BracketedParameterList ArrowExpressionClause
+            // EventFieldDeclaration: VariableDeclaration
 
             nodeDebugger.Add(node);
 
@@ -63,36 +170,58 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                //PushComment();
+                SymbolName name = new(node.Declaration.Variables.First().Identifier.ValueText);
+                string type = GetTypeName(node.Declaration.Type);
 
-                base.VisitIndexerDeclaration(node);
-
-                //PopComment();
+                PushEvent(name, modifiers, type);
+                base.VisitEventFieldDeclaration(node);
+                PopEvent();
             }
         }
 
-        public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
+        private void PushProperty(SymbolName name, SymbolModifiers modifiers, string type, AccessorList accessors)
         {
-            // covers SimpleMemberAccessExpression and PointerMemberAccessExpression
-            // SimpleMemberAccessExpression: (IdentifierName | GenericName) IdentifierName
+            UriPath link = memberReceivers.Peek().Link.Append(name.Name);
 
-            nodeDebugger.Add(node);
+            PropertyBuilder builder = new(commentContext)
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = modifiers,
+                Type = type,
+                Accessors = accessors
+            };
 
-            base.VisitMemberAccessExpression(node);
+            propertyBuilders.Push(builder);
+            commentReceivers.Push(builder);
+
+            PushComment();
         }
 
-        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        private void PopProperty()
+        {
+            PopComment();
+
+            commentReceivers.Pop();
+
+            PropertyBuilder builder = propertyBuilders.Pop();
+            PropertySymbol property = builder.Build();
+
+            property.AddSource(Source);
+
+            memberReceivers.Peek().Add(property);
+        }
+
+        public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
             // HasTrivia: True
-            // MethodDeclaration
-            // : AttributeList? <return-type> ExplicitInterfaceSpecifier? ParameterList TypeParameterConstraintClause? (ArrowExpressionClause | Block)
+            // PropertyDeclaration
+            // : <return-type> ExplicitInterfaceSpecifier? ((AccessorList EqualsValueClause?) | ArrowExpressionClause)
             //
-            // return-type
-            // : IdentifierName TypeParameterList?
-            // | GenericName TypeParameterList?
-            // | PredefinedType TypeParameterList?
-            // | ArrayType
-            // | NullableType
+            // <return-type>
+            // : AttributeList? (IdentifierName | GenericName | PredefinedType | NullableType) 
 
             nodeDebugger.Add(node);
 
@@ -100,31 +229,13 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                //PushComment();
+                SymbolName name = new(node.Identifier.ValueText);
+                string type = GetTypeName(node.Type);
+                AccessorList accessors = accessorsCompiler.Compile(node);
 
-                base.VisitMethodDeclaration(node);
-
-                //PopComment();
-            }
-        }
-
-        public override void VisitOperatorDeclaration(OperatorDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // OperatorDeclaration
-            // : AttributeList IdentifierName ParameterList ArrowExpressionClause
-
-            nodeDebugger.Add(node);
-
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
-
-            if (IsIncluded(modifiers))
-            {
-                //PushComment();
-
-                base.VisitOperatorDeclaration(node);
-
-                //PopComment();
+                PushProperty(name, modifiers, type, accessors);
+                base.VisitPropertyDeclaration(node);
+                PopProperty();
             }
         }
     }

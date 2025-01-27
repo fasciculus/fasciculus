@@ -4,6 +4,28 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     internal partial class CompilationUnitCompiler
     {
+        public override void VisitAccessorDeclaration(AccessorDeclarationSyntax node)
+        {
+            // covers GetAccessorDeclaration, SetAccessorDeclaration, InitAccessorDeclaration, AddAccessorDeclaration,
+            //  RemoveAccessorDeclaration, UnknownAccessorDeclaration
+            //
+            // GetAccessorDeclaration: ArrowExpressionClause?
+            // SetAccessorDeclaration:
+
+            nodeDebugger.Add(node);
+
+            base.VisitAccessorDeclaration(node);
+        }
+
+        public override void VisitAccessorList(AccessorListSyntax node)
+        {
+            // AccessorList: GetAccessorDeclaration? SetAccessorDeclaration?
+
+            nodeDebugger.Add(node);
+
+            base.VisitAccessorList(node);
+        }
+
         public override void VisitAliasQualifiedName(AliasQualifiedNameSyntax node)
         {
             // AliasQualifiedName
@@ -157,6 +179,16 @@ namespace Fasciculus.CodeAnalysis.Compilers
             nodeDebugger.Add(node);
 
             base.VisitLiteralExpression(node);
+        }
+
+        public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
+        {
+            // covers SimpleMemberAccessExpression and PointerMemberAccessExpression
+            // SimpleMemberAccessExpression: (IdentifierName | GenericName) IdentifierName
+
+            nodeDebugger.Add(node);
+
+            base.VisitMemberAccessExpression(node);
         }
 
         public override void VisitNullableType(NullableTypeSyntax node)

@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Compilers.Builders;
 using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;
@@ -6,6 +7,7 @@ using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -22,6 +24,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private readonly AccessorsCompiler accessorsCompiler;
 
         private UriPath Source { get; set; } = UriPath.Empty;
+
+        protected readonly Stack<NamespaceBuilder> namespaceBuilders = [];
 
         private CompilationUnitInfo compilationUnit = new();
 
@@ -47,20 +51,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             return compilationUnit;
         }
 
-        protected virtual SymbolName GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
-        {
-            string name = identifier.Text;
-
-            if (typeParameters is null || typeParameters.Parameters.Count == 0)
-            {
-                return new(name);
-            }
-
-            string[] parameters = [.. typeParameters.Parameters.Select(p => p.Identifier.Text)];
-
-            return new(name, parameters);
-        }
-
         public override void VisitCompilationUnit(CompilationUnitSyntax node)
         {
             // compilation_unit
@@ -71,6 +61,60 @@ namespace Fasciculus.CodeAnalysis.Compilers
             nodeDebugger.Add(node);
 
             base.VisitCompilationUnit(node);
+        }
+
+        private UriPath CreateNamespaceLink(SymbolName name)
+        {
+            if (namespaceBuilders.Count > 0)
+            {
+                return namespaceBuilders.Peek().Link.Append(name);
+            }
+
+            return new(package, name);
+        }
+
+        private void PushNamespace(SymbolName name)
+        {
+            UriPath link = CreateNamespaceLink(name);
+
+            NamespaceBuilder builder = new(commentContext, namespaceCommentsDirectory)
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = new()
+            };
+
+            namespaceBuilders.Push(builder);
+            typeReceivers.Push(builder);
+        }
+
+        private void PopNamespace()
+        {
+            typeReceivers.Pop();
+
+            NamespaceBuilder builder = namespaceBuilders.Pop();
+            NamespaceSymbol @namespace = builder.Build();
+
+            compilationUnit.AddOrMergeWith(@namespace);
+        }
+
+        public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
+        {
+            // HasTrivia: True
+            // NamespaceDeclaration
+            // : QualifiedName ClassDeclaration* InterfaceDeclaration* EnumDeclaration*
+
+            nodeDebugger.Add(node);
+
+            SymbolName name = new(node.Name.ToString());
+
+            PushNamespace(name);
+
+            base.VisitNamespaceDeclaration(node);
+
+            PopNamespace();
         }
 
         public override void VisitUsingDirective(UsingDirectiveSyntax node)
@@ -84,5 +128,18 @@ namespace Fasciculus.CodeAnalysis.Compilers
             base.VisitUsingDirective(node);
         }
 
+        private static SymbolName GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
+        {
+            string name = identifier.Text;
+
+            if (typeParameters is null || typeParameters.Parameters.Count == 0)
+            {
+                return new(name);
+            }
+
+            string[] parameters = [.. typeParameters.Parameters.Select(p => p.Identifier.Text)];
+
+            return new(name, parameters);
+        }
     }
 }
