@@ -6,8 +6,6 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public interface ITypeSymbol : ISourceSymbol
     {
-        public IEnumerable<IMemberSymbol> Members { get; }
-
         public IEnumerable<IFieldSymbol> Fields { get; }
 
         public IEnumerable<IEventSymbol> Events { get; }
@@ -23,10 +21,6 @@ namespace Fasciculus.CodeAnalysis.Models
         private readonly FieldList fields;
 
         public IEnumerable<IFieldSymbol> Fields => fields;
-
-        private readonly MemberList members;
-
-        public IEnumerable<IMemberSymbol> Members => members;
 
         private readonly EventList events;
 
@@ -44,7 +38,6 @@ namespace Fasciculus.CodeAnalysis.Models
             : base(kind, framework, package, comment)
         {
             fields = [];
-            members = [];
             events = [];
             properties = [];
             methods = [];
@@ -54,7 +47,6 @@ namespace Fasciculus.CodeAnalysis.Models
             : base(other, clone)
         {
             fields = other.fields.Clone();
-            members = other.members.Clone();
             events = other.events.Clone();
             properties = other.properties.Clone();
             methods = other.methods.Clone();
@@ -65,7 +57,6 @@ namespace Fasciculus.CodeAnalysis.Models
             base.MergeWith(other);
 
             fields.AddOrMergeWith(other.fields);
-            members.AddOrMergeWith(other.members);
             events.AddOrMergeWith(other.events);
             properties.AddOrMergeWith(other.properties);
             methods.AddOrMergeWith(other.methods);
@@ -76,7 +67,6 @@ namespace Fasciculus.CodeAnalysis.Models
             base.ReBase(newBase);
 
             fields.ReBase(newBase);
-            members.ReBase(newBase);
             events.ReBase(newBase);
             properties.ReBase(newBase);
             methods.ReBase(newBase);
@@ -84,9 +74,6 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public void Add(FieldSymbol field)
             => fields.AddOrMergeWith(field);
-
-        public void Add(MemberSymbol member)
-            => members.AddOrMergeWith(member);
 
         public void Add(EventSymbol @event)
             => events.AddOrMergeWith(@event);

@@ -35,10 +35,9 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
             properties.AddOrMergeWith(property);
         }
 
-        protected void Populate(T type)
+        protected virtual void Populate(T type)
         {
             fields.Apply(type.Add);
-            members.Apply(type.Add);
             events.Apply(type.Add);
             properties.Apply(type.Add);
         }
