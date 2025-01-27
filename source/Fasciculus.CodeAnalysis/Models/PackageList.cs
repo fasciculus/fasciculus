@@ -24,18 +24,31 @@ namespace Fasciculus.CodeAnalysis.Models
             SymbolComment comment = new(commentContext, XDocument.Parse(CombinedComment));
             UriPath link = new(name);
 
-            PackageSymbol result = new(name, TargetFramework.UnsupportedFramework, comment, [])
+            if (Count > 0)
+            {
+                TargetFramework framework = this.First().Frameworks.First();
+
+                PackageSymbol result = new(name, framework, comment, [])
+                {
+                    Name = name,
+                    Link = link,
+                    Modifiers = PackageSymbol.PackageModifiers,
+                    RepositoryDirectory = packageLink,
+                };
+
+                this.Select(p => p.Clone()).Apply(result.MergeWith);
+                result.ReBase(link);
+
+                return result;
+            }
+
+            return new(name, TargetFramework.UnsupportedFramework, comment, [])
             {
                 Name = name,
                 Link = link,
                 Modifiers = PackageSymbol.PackageModifiers,
                 RepositoryDirectory = packageLink,
             };
-
-            this.Select(p => p.Clone()).Apply(result.MergeWith);
-            result.ReBase(link);
-
-            return result;
         }
     }
 }
