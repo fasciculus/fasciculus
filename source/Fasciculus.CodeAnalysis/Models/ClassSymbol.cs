@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public interface IClassSymbol : ITypeSymbol
+    public interface IClassSymbol : IClassOrInterfaceSymbol
     {
         public IEnumerable<IFieldSymbol> Fields { get; }
 
         public IEnumerable<IConstructorSymbol> Constructors { get; }
     }
 
-    internal class ClassSymbol : TypeSymbol<ClassSymbol>, IClassSymbol
+    internal class ClassSymbol : ClassOrInterfaceSymbol<ClassSymbol>, IClassSymbol
     {
         private readonly FieldList fields;
 

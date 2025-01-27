@@ -2,12 +2,12 @@ using Fasciculus.CodeAnalysis.Frameworking;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public interface IInterfaceSymbol : ITypeSymbol
+    public interface IInterfaceSymbol : IClassOrInterfaceSymbol
     {
 
     }
 
-    internal class InterfaceSymbol : TypeSymbol<InterfaceSymbol>, IInterfaceSymbol
+    internal class InterfaceSymbol : ClassOrInterfaceSymbol<InterfaceSymbol>, IInterfaceSymbol
     {
         public InterfaceSymbol(TargetFramework framework, string package, SymbolComment comment)
             : base(SymbolKind.Interface, framework, package, comment) { }
