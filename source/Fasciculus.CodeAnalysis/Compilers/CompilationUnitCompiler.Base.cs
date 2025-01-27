@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -126,20 +125,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             nodeDebugger.Add(node);
 
             base.VisitUsingDirective(node);
-        }
-
-        private static SymbolName GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
-        {
-            string name = identifier.Text;
-
-            if (typeParameters is null || typeParameters.Parameters.Count == 0)
-            {
-                return new(name);
-            }
-
-            string[] parameters = [.. typeParameters.Parameters.Select(p => p.Identifier.Text)];
-
-            return new(name, parameters);
         }
     }
 }

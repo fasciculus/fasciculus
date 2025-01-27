@@ -1,11 +1,8 @@
 using Fasciculus.CodeAnalysis.Compilers.Builders;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Collections;
 using Fasciculus.Net.Navigating;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -172,23 +169,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
                 //PopComment();
             }
-        }
-
-        private SymbolName GetName(SyntaxToken identifier, ParameterListSyntax? parameters, TypeParameterListSyntax? typeParameters)
-        {
-            SymbolName prefix = GetName(identifier, typeParameters);
-
-            if (parameters is null || parameters.Parameters.Count == 0)
-            {
-                return prefix;
-            }
-
-            TypeSyntax[] types = [.. parameters.Parameters.Select(p => p.Type).NotNull()];
-            string[] typeNames = [.. types.Select(t => t.ToFullString().TrimEnd())];
-
-            string name = $"{prefix}({string.Join(",", typeNames)})";
-
-            return new(name);
         }
     }
 }

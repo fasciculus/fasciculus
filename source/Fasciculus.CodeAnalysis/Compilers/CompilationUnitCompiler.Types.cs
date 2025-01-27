@@ -3,7 +3,6 @@ using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -225,40 +224,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             nodeDebugger.Add(node);
 
             base.VisitSimpleBaseType(node);
-        }
-
-        private string GetTypeName(TypeSyntax type)
-        {
-            if (type is PredefinedTypeSyntax predefined) return GetPredefinedTypeName(predefined);
-            if (type is IdentifierNameSyntax identifier) return GetIdentifierTypeName(identifier);
-            if (type is GenericNameSyntax generic) return GetGenericTypeName(generic);
-            if (type is NullableTypeSyntax nullable) return GetNullableTypeName(nullable);
-
-            return string.Empty;
-        }
-
-        private static string GetPredefinedTypeName(PredefinedTypeSyntax type)
-        {
-            return type.Keyword.ToString();
-        }
-
-        private static string GetIdentifierTypeName(IdentifierNameSyntax identifier)
-        {
-            return identifier.Identifier.ValueText;
-        }
-
-        private string GetGenericTypeName(GenericNameSyntax type)
-        {
-            string name = type.Identifier.ValueText;
-            TypeSyntax[] args = [.. type.TypeArgumentList.Arguments];
-            string[] names = [.. args.Select(GetTypeName)];
-
-            return $"{name}<{string.Join(",", names)}>";
-        }
-
-        private string GetNullableTypeName(NullableTypeSyntax nullable)
-        {
-            return GetTypeName(nullable.ElementType) + "?";
         }
     }
 }
