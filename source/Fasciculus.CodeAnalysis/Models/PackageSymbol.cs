@@ -9,8 +9,6 @@ namespace Fasciculus.CodeAnalysis.Models
     {
         public IEnumerable<INamespaceSymbol> Namespaces { get; }
 
-        public bool IsEmpty { get; }
-
         public UriPath RepositoryDirectory { get; }
     }
 
@@ -24,8 +22,6 @@ namespace Fasciculus.CodeAnalysis.Models
         public IEnumerable<INamespaceSymbol> Namespaces => namespaces;
 
         public override bool IsAccessible => namespaces.HasAccessible;
-
-        public bool IsEmpty => namespaces.Count == 0;
 
         public required UriPath RepositoryDirectory { get; init; }
 

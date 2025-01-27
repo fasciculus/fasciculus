@@ -1,7 +1,7 @@
 @model ApiPackagesViewModel
 <h1>API Documentation</h1>
 
-@if (!Model.Combined.IsEmpty)
+@if (Model.Combined.Namespaces.Any())
 {
     <h2>All-In-One</h2>
 
@@ -16,7 +16,7 @@
         <tbody>
             @foreach (var package in Model.Packages)
             {
-                @if (!package.IsEmpty)
+                @if (package.Namespaces.Any())
                 {
                     <tr>
                         <td><a href="~/api/@(package.Link)/">@package.Name</a></td>

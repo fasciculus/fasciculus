@@ -16,7 +16,7 @@ namespace Fasciculus.CodeAnalysis.Models
             "</summary></comment>";
 
         public PackageList(IEnumerable<PackageSymbol> packages)
-            : base(packages.Where(p => !p.IsEmpty)) { }
+            : base(packages.Where(p => p.Namespaces.Any())) { }
 
         public PackageSymbol Combine(string packageName, UriPath packageLink, CommentContext commentContext)
         {
