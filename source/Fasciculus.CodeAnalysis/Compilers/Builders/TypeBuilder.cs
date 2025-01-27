@@ -1,11 +1,10 @@
 using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Collections;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     internal abstract class TypeBuilder<T> : TypeReceiver<T>, ICommentReceiver, IMemberReceiver
-        where T : notnull, TypeSymbol<T>
+        where T : notnull, SourceSymbol<T>
     {
         protected FieldList fields = [];
         protected MemberList members = [];
@@ -37,8 +36,6 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         protected virtual void Populate(T type)
         {
-            events.Apply(type.Add);
-            properties.Apply(type.Add);
         }
     }
 }

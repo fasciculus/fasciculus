@@ -3,7 +3,7 @@ using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    internal class InterfaceBuilder : TypeBuilder<InterfaceSymbol>
+    internal class InterfaceBuilder : ClassOrInterfaceBuilder<InterfaceSymbol>
     {
         public InterfaceBuilder(CommentContext commentContext)
             : base(commentContext) { }

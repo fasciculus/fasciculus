@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public interface IEnumSymbol : ITypeSymbol
+    public interface IEnumSymbol : ISourceSymbol
     {
         public IEnumerable<IMemberSymbol> Members { get; }
     }
 
-    internal class EnumSymbol : TypeSymbol<EnumSymbol>, IEnumSymbol
+    internal class EnumSymbol : SourceSymbol<EnumSymbol>, IEnumSymbol
     {
         private readonly MemberList members;
 

@@ -4,9 +4,9 @@ using Fasciculus.Collections;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    internal class ClassBuilder : TypeBuilder<ClassSymbol>
+    internal class ClassBuilder : ClassOrInterfaceBuilder<ClassSymbol>
     {
-        private ConstructorList constructors = [];
+        private readonly ConstructorList constructors = [];
 
         public ClassBuilder(CommentContext commentContext)
             : base(commentContext) { }
