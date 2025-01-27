@@ -13,6 +13,8 @@ namespace Fasciculus.CodeAnalysis.Models
         public IEnumerable<IEventSymbol> Events { get; }
 
         public IEnumerable<IPropertySymbol> Properties { get; }
+
+        public IEnumerable<IMethodSymbol> Methods { get; }
     }
 
     internal class TypeSymbol<T> : SourceSymbol<T>, ITypeSymbol
@@ -34,6 +36,10 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<IPropertySymbol> Properties => properties;
 
+        private readonly MethodList methods;
+
+        public IEnumerable<IMethodSymbol> Methods => methods;
+
         public TypeSymbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)
             : base(kind, framework, package, comment)
         {
@@ -41,6 +47,7 @@ namespace Fasciculus.CodeAnalysis.Models
             members = [];
             events = [];
             properties = [];
+            methods = [];
         }
 
         protected TypeSymbol(T other, bool clone)
@@ -50,6 +57,7 @@ namespace Fasciculus.CodeAnalysis.Models
             members = other.members.Clone();
             events = other.events.Clone();
             properties = other.properties.Clone();
+            methods = other.methods.Clone();
         }
 
         public override void MergeWith(T other)
@@ -60,6 +68,7 @@ namespace Fasciculus.CodeAnalysis.Models
             members.AddOrMergeWith(other.members);
             events.AddOrMergeWith(other.events);
             properties.AddOrMergeWith(other.properties);
+            methods.AddOrMergeWith(other.methods);
         }
 
         public override void ReBase(UriPath newBase)
@@ -70,6 +79,7 @@ namespace Fasciculus.CodeAnalysis.Models
             members.ReBase(newBase);
             events.ReBase(newBase);
             properties.ReBase(newBase);
+            methods.ReBase(newBase);
         }
 
         public void Add(FieldSymbol field)
@@ -83,5 +93,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public void Add(PropertySymbol property)
             => properties.AddOrMergeWith(property);
+
+        public void Add(MethodSymbol method)
+            => methods.AddOrMergeWith(method);
     }
 }
