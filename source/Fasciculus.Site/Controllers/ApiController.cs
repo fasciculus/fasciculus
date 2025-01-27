@@ -127,6 +127,7 @@ namespace Fasciculus.Site.Controllers
                 Title = package.Name + " Package",
                 Package = package,
                 PackageUri = new($"{RepositoryPrefix}/{package.RepositoryDirectory}/"),
+                AppliesTo = new(package.Frameworks),
                 Navigation = apiNavigation.Create(package.Link)
             };
 
@@ -139,6 +140,7 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @namespace.Name + " Namespace",
                 Namespace = @namespace,
+                AppliesTo = new(@namespace.Frameworks),
                 Navigation = apiNavigation.Create(@namespace.Link)
             };
 
@@ -153,6 +155,7 @@ namespace Fasciculus.Site.Controllers
                 Enum = @enum,
                 Symbol = @enum,
                 SourceUris = [.. GetSourceUris(@enum)],
+                AppliesTo = new(@enum.Frameworks),
                 Navigation = apiNavigation.Create(@enum.Link)
             };
 
@@ -167,6 +170,7 @@ namespace Fasciculus.Site.Controllers
                 Interface = @interface,
                 Symbol = @interface,
                 SourceUris = [.. GetSourceUris(@interface)],
+                AppliesTo = new(@interface.Frameworks),
                 Navigation = apiNavigation.Create(@interface.Link)
             };
 
@@ -181,6 +185,7 @@ namespace Fasciculus.Site.Controllers
                 Class = @class,
                 Symbol = @class,
                 SourceUris = [.. GetSourceUris(@class)],
+                AppliesTo = new(@class.Frameworks),
                 Navigation = apiNavigation.Create(@class.Link)
             };
 
@@ -195,6 +200,7 @@ namespace Fasciculus.Site.Controllers
                 Field = field,
                 Symbol = field,
                 SourceUris = [.. GetSourceUris(field)],
+                AppliesTo = new(field.Frameworks),
                 Navigation = apiNavigation.Create(field.Link)
             };
 
@@ -209,6 +215,7 @@ namespace Fasciculus.Site.Controllers
                 Member = member,
                 Symbol = member,
                 SourceUris = [.. GetSourceUris(member)],
+                AppliesTo = new(member.Frameworks),
                 Navigation = apiNavigation.Create(member.Link)
             };
 
@@ -223,6 +230,7 @@ namespace Fasciculus.Site.Controllers
                 Event = @event,
                 Symbol = @event,
                 SourceUris = [.. GetSourceUris(@event)],
+                AppliesTo = new(@event.Frameworks),
                 Navigation = apiNavigation.Create(@event.Link)
             };
 
@@ -237,6 +245,7 @@ namespace Fasciculus.Site.Controllers
                 Property = property,
                 Symbol = property,
                 SourceUris = [.. GetSourceUris(property)],
+                AppliesTo = new(property.Frameworks),
                 Navigation = apiNavigation.Create(property.Link)
             };
 

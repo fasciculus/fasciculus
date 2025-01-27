@@ -15,7 +15,7 @@ namespace Fasciculus.CodeAnalysis.Frameworking
     /// <summary>
     /// Collection of target frameworks.
     /// </summary>
-    public class TargetFrameworks : ITargetFrameworks
+    internal class TargetFrameworks : ITargetFrameworks
     {
         private readonly HashSet<TargetFramework> frameworks = [];
 

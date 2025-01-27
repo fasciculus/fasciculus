@@ -9,6 +9,8 @@ namespace Fasciculus.Site.Api.Models
     {
         public required INamespaceSymbol Namespace { get; init; }
 
+        public required ApiAppliesTo AppliesTo { get; init; }
+
         public IEnumerable<IEnumSymbol> Enums => Namespace.Enums;
         public bool HasEnums => Enums.Any();
 

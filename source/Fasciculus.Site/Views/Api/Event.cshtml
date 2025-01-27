@@ -16,10 +16,8 @@
 
 <partial name="_SymbolInfo.cshtml" model=Model />
 
-<code>@ev.Modifiers @ev.Type @ev.Name</code>
+<code>@ev.Modifiers event @ev.Type @ev.Name</code>
 
 <p>@Html.Raw(ev.Comment.Summary)</p>
 
-<h2 id="applies-to">Applies To</h2>
-
-<partial name="_TargetFrameworks.cshtml" model=ev.Frameworks />
+<partial name="_AppliesTo.cshtml" model=Model.AppliesTo />
