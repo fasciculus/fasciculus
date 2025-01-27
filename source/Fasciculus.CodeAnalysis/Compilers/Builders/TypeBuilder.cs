@@ -37,7 +37,6 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         protected virtual void Populate(T type)
         {
-            fields.Apply(type.Add);
             events.Apply(type.Add);
             properties.Apply(type.Add);
         }

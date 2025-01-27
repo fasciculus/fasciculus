@@ -22,9 +22,15 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
             Populate(@class);
 
-            constructors.Apply(@class.Add);
-
             return @class;
+        }
+
+        protected override void Populate(ClassSymbol @class)
+        {
+            base.Populate(@class);
+
+            fields.Apply(@class.Add);
+            constructors.Apply(@class.Add);
         }
 
         public void Add(ConstructorSymbol constructor)

@@ -6,11 +6,17 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public interface IClassSymbol : ITypeSymbol
     {
+        public IEnumerable<IFieldSymbol> Fields { get; }
+
         public IEnumerable<IConstructorSymbol> Constructors { get; }
     }
 
     internal class ClassSymbol : TypeSymbol<ClassSymbol>, IClassSymbol
     {
+        private readonly FieldList fields;
+
+        public IEnumerable<IFieldSymbol> Fields => fields;
+
         private readonly ConstructorList constructors;
 
         public IEnumerable<IConstructorSymbol> Constructors => constructors;
@@ -18,12 +24,14 @@ namespace Fasciculus.CodeAnalysis.Models
         public ClassSymbol(TargetFramework framework, string package, SymbolComment comment)
             : base(SymbolKind.Class, framework, package, comment)
         {
+            fields = [];
             constructors = [];
         }
 
         private ClassSymbol(ClassSymbol other, bool clone)
             : base(other, clone)
         {
+            fields = other.fields.Clone();
             constructors = other.constructors.Clone();
         }
 
@@ -44,6 +52,7 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             base.MergeWith(other);
 
+            fields.AddOrMergeWith(other.fields);
             constructors.AddOrMergeWith(other.constructors);
         }
 
@@ -51,7 +60,11 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             base.ReBase(newBase);
 
+            fields.ReBase(newBase);
             constructors.ReBase(newBase);
         }
+
+        public void Add(FieldSymbol field)
+            => fields.AddOrMergeWith(field);
     }
 }

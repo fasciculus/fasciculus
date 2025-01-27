@@ -6,8 +6,6 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public interface ITypeSymbol : ISourceSymbol
     {
-        public IEnumerable<IFieldSymbol> Fields { get; }
-
         public IEnumerable<IEventSymbol> Events { get; }
 
         public IEnumerable<IPropertySymbol> Properties { get; }
@@ -18,10 +16,6 @@ namespace Fasciculus.CodeAnalysis.Models
     internal class TypeSymbol<T> : SourceSymbol<T>, ITypeSymbol
         where T : notnull, TypeSymbol<T>
     {
-        private readonly FieldList fields;
-
-        public IEnumerable<IFieldSymbol> Fields => fields;
-
         private readonly EventList events;
 
         public IEnumerable<IEventSymbol> Events => events;
@@ -37,7 +31,6 @@ namespace Fasciculus.CodeAnalysis.Models
         public TypeSymbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)
             : base(kind, framework, package, comment)
         {
-            fields = [];
             events = [];
             properties = [];
             methods = [];
@@ -46,7 +39,6 @@ namespace Fasciculus.CodeAnalysis.Models
         protected TypeSymbol(T other, bool clone)
             : base(other, clone)
         {
-            fields = other.fields.Clone();
             events = other.events.Clone();
             properties = other.properties.Clone();
             methods = other.methods.Clone();
@@ -56,7 +48,6 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             base.MergeWith(other);
 
-            fields.AddOrMergeWith(other.fields);
             events.AddOrMergeWith(other.events);
             properties.AddOrMergeWith(other.properties);
             methods.AddOrMergeWith(other.methods);
@@ -66,14 +57,10 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             base.ReBase(newBase);
 
-            fields.ReBase(newBase);
             events.ReBase(newBase);
             properties.ReBase(newBase);
             methods.ReBase(newBase);
         }
-
-        public void Add(FieldSymbol field)
-            => fields.AddOrMergeWith(field);
 
         public void Add(EventSymbol @event)
             => events.AddOrMergeWith(@event);
