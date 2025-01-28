@@ -21,6 +21,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private readonly Stack<FieldBuilder> fieldBuilders = [];
         private readonly Stack<EventBuilder> eventBuilders = [];
         private readonly Stack<PropertyBuilder> propertyBuilders = [];
+        private readonly Stack<AccessorBuilder> accessorBuilders = [];
 
         private readonly Stack<ConstructorBuilder> constructorBuilders = [];
 
@@ -42,6 +43,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             if (builder is FieldBuilder fieldBuilder) fieldBuilders.Push(fieldBuilder);
             if (builder is EventBuilder eventBuilder) eventBuilders.Push(eventBuilder);
             if (builder is PropertyBuilder propertyBuilder) propertyBuilders.Push(propertyBuilder);
+            if (builder is AccessorBuilder accessorBuilder) accessorBuilders.Push(accessorBuilder);
 
             if (builder is ConstructorBuilder constructorBuilder) constructorBuilders.Push(constructorBuilder);
 
@@ -72,6 +74,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private PropertyBuilder PopPropertyBuilder()
             => PopReceiver(propertyBuilders.Pop());
 
+        private AccessorBuilder PopAccessorBuilder()
+            => PopReceiver(accessorBuilders.Pop());
+
         private ConstructorBuilder PopConstructorBuilder()
             => PopReceiver(constructorBuilders.Pop());
 
@@ -86,7 +91,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 Framework = framework,
                 Package = package,
                 Source = UriPath.Empty,
-                Modifiers = new() { IsPublic = true }
+                Modifiers = SymbolModifiers.Public(),
             };
 
             PushBuilder(builder);
@@ -230,7 +235,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private EventSymbol PopEvent()
             => PopEventBuilder().Build(PopComment());
 
-        private void PushProperty(SymbolName name, SymbolModifiers modifiers, string type, AccessorList accessors)
+        private void PushProperty(SymbolName name, SymbolModifiers modifiers, string type)
         {
             UriPath link = propertyReceivers.Peek().Link.Append(name.Name);
 
@@ -243,7 +248,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 Modifiers = modifiers,
                 Type = type,
                 Source = Source,
-                Accessors = accessors
             };
 
             PushBuilder(builder);
@@ -252,6 +256,27 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private PropertySymbol PopProperty()
             => PopPropertyBuilder().Build(PopComment());
+
+        private void PushAccessor(SymbolName name, SymbolModifiers modifiers)
+        {
+            UriPath link = accessorReceivers.Peek().Link.Append(name.Name);
+
+            AccessorBuilder builder = new()
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = modifiers,
+                Source = Source,
+            };
+
+            PushBuilder(builder);
+            PushComment();
+        }
+
+        private AccessorSymbol PopAccessor()
+            => PopAccessorBuilder().Build(PopComment());
 
         private void PushConstructor(SymbolName name, SymbolModifiers modifiers)
         {

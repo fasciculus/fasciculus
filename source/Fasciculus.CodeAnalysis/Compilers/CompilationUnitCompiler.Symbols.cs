@@ -170,11 +170,33 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 SymbolName name = new(node.Identifier.ValueText);
                 string type = GetTypeName(node.Type);
-                AccessorList accessors = accessorsCompiler.Compile(node);
 
-                PushProperty(name, modifiers, type, accessors);
+                PushProperty(name, modifiers, type);
                 base.VisitPropertyDeclaration(node);
                 Add(PopProperty());
+            }
+        }
+
+        public override void VisitAccessorDeclaration(AccessorDeclarationSyntax node)
+        {
+            // covers GetAccessorDeclaration, SetAccessorDeclaration, InitAccessorDeclaration, AddAccessorDeclaration,
+            //  RemoveAccessorDeclaration, UnknownAccessorDeclaration
+            //
+            // GetAccessorDeclaration: ArrowExpressionClause?
+            // SetAccessorDeclaration:
+
+            nodeDebugger.Add(node);
+            accessorDebugger.Add(node);
+
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
+
+            if (IsIncluded(modifiers))
+            {
+                SymbolName name = new(node.Keyword.ValueText);
+
+                PushAccessor(name, modifiers);
+                base.VisitAccessorDeclaration(node);
+                Add(PopAccessor());
             }
         }
 

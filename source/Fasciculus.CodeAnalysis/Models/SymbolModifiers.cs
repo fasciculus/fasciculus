@@ -60,6 +60,9 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public bool IsPartial { get; set; }
 
+        public static SymbolModifiers Public()
+            => new() { IsPublic = true };
+
         public SymbolModifiers() { }
 
         public SymbolModifiers(SymbolModifiers other)

@@ -3,15 +3,23 @@ using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
+    internal interface IReceiver
+    {
+        public UriPath Link { get; }
+    }
+
+    internal interface IAccessorReceiver : IReceiver
+    {
+        public void Add(AccessorSymbol accessor);
+    }
+
     internal interface IClassReceiver : ITypeReceiver
     {
         public void Add(ClassSymbol @class);
     }
 
-    internal interface IConstructorReceiver
+    internal interface IConstructorReceiver : IReceiver
     {
-        public UriPath Link { get; }
-
         public void Add(ConstructorSymbol constructor);
     }
 
@@ -20,17 +28,13 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         public void Add(EnumSymbol @enum);
     }
 
-    internal interface IEventReceiver
+    internal interface IEventReceiver : IReceiver
     {
-        public UriPath Link { get; }
-
         public void Add(EventSymbol @event);
     }
 
-    internal interface IFieldReceiver
+    internal interface IFieldReceiver : IReceiver
     {
-        public UriPath Link { get; }
-
         public void Add(FieldSymbol field);
     }
 
@@ -39,22 +43,17 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         public void Add(InterfaceSymbol @interface);
     }
 
-    internal interface IMemberReceiver
+    internal interface IMemberReceiver : IReceiver
     {
-        public UriPath Link { get; }
-
         public void Add(MemberSymbol member);
     }
 
-    internal interface IPropertyReceiver
+    internal interface IPropertyReceiver : IReceiver
     {
-        public UriPath Link { get; }
-
         public void Add(PropertySymbol property);
     }
 
-    internal interface ITypeReceiver
+    internal interface ITypeReceiver : IReceiver
     {
-        public UriPath Link { get; }
     }
 }

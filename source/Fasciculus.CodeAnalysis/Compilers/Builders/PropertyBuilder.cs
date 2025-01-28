@@ -3,9 +3,9 @@ using Fasciculus.Collections;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    internal class PropertyBuilder : TypedSymbolBuilder<PropertySymbol>
+    internal class PropertyBuilder : TypedSymbolBuilder<PropertySymbol>, IAccessorReceiver
     {
-        public required AccessorList Accessors { get; init; }
+        private readonly AccessorList accessors = [];
 
         public override PropertySymbol Build(SymbolComment comment)
         {
@@ -17,11 +17,21 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
                 Type = Type,
             };
 
-            Accessors.Apply(property.Add);
+            if (accessors.Count == 0)
+            {
+                SymbolComment accessorComment = SymbolComment.Empty(comment.Context);
+
+                accessors.AddOrMergeWith(AccessorSymbol.CreateGet(Framework, Package, accessorComment, Link, Modifiers));
+            }
+
+            accessors.Apply(property.Add);
 
             property.AddSource(Source);
 
             return property;
         }
+
+        public void Add(AccessorSymbol accessor)
+            => accessors.AddOrMergeWith(accessor);
     }
 }

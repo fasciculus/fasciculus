@@ -15,7 +15,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public static SymbolComment Empty(CommentContext context)
             => new(context, XDocument.Parse(RootXml));
 
-        private readonly CommentContext context;
+        public CommentContext Context { get; }
 
         private readonly XDocument document;
 
@@ -23,18 +23,19 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public SymbolComment(CommentContext context, XDocument document)
         {
-            this.context = context;
+            Context = context;
+
             this.document = new(document);
         }
 
         public SymbolComment Clone()
-            => new(context, document);
+            => new(Context, document);
 
         public void MergeWith(SymbolComment other)
-            => context.Merger.Merge(other.document, document);
+            => Context.Merger.Merge(other.document, document);
 
         private string ResolveAndFormat(XElement? element)
-            => context.Formatter.Format(context.Resolver.Resolve(element));
+            => Context.Formatter.Format(Context.Resolver.Resolve(element));
 
         public static SymbolComment FromFile(CommentContext context, FileInfo file)
         {

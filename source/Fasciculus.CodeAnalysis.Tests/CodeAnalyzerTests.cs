@@ -156,6 +156,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Assert.AreEqual(context.Members, members.Length, "Members");
             Assert.AreEqual(context.Events, events.Length, "Events");
             Assert.AreEqual(context.Properties, properties.Length, "Properties");
+            Assert.IsTrue(properties.All(p => p.Accessors.Any()));
 
             Assert.AreEqual(context.Constructors, constructors.Length, "Constructors");
 

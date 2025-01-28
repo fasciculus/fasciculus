@@ -19,8 +19,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly CommentContext commentContext;
 
-        private readonly AccessorsCompiler accessorsCompiler;
-
+        private readonly IAccessorDebugger accessorDebugger;
         private readonly IModifierDebugger modifierDebugger;
 
         private UriPath Source { get; set; } = UriPath.Empty;
@@ -33,8 +32,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             namespaceCommentsDirectory = context.CommentsDirectory.Combine("Namespaces");
             commentContext = context.CommentContext;
 
-            accessorsCompiler = new(context);
-
+            accessorDebugger = context.Debuggers.AccessorDebugger;
             modifierDebugger = context.Debuggers.ModifierDebugger;
         }
 

@@ -1,17 +1,18 @@
 using Fasciculus.CodeAnalysis.Frameworking;
+using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
     public interface IPropertySymbol : ITypedSymbol
     {
-        public IAccessorList Accessors { get; }
+        public IEnumerable<IAccessorSymbol> Accessors { get; }
     }
 
     internal class PropertySymbol : TypedSymbol<PropertySymbol>, IPropertySymbol
     {
         private readonly AccessorList accessors;
 
-        public IAccessorList Accessors => accessors;
+        public IEnumerable<IAccessorSymbol> Accessors => accessors;
 
         public PropertySymbol(TargetFramework framework, string package, SymbolComment comment)
             : base(SymbolKind.Property, framework, package, comment)
@@ -36,9 +37,9 @@ namespace Fasciculus.CodeAnalysis.Models
             };
         }
 
-        public void Add(AccessorInfo accessor)
+        public void Add(AccessorSymbol accessor)
         {
-            accessors.Add(accessor);
+            accessors.AddOrMergeWith(accessor);
         }
     }
 }

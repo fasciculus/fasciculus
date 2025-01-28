@@ -11,6 +11,7 @@ namespace Fasciculus.CodeAnalysis.Models
         Member,
         Event,
         Property,
+        Accessor,
         Constructor,
         Method
     }
