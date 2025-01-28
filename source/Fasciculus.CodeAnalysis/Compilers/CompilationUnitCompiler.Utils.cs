@@ -8,6 +8,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     internal partial class CompilationUnitCompiler
     {
+        private bool IsIncluded(SymbolModifiers modifiers)
+            => includeNonAccessible || modifiers.IsAccessible;
+
         private SymbolModifiers GetModifiers(SyntaxTokenList tokens)
         {
             SymbolModifiers modifiers = new();
