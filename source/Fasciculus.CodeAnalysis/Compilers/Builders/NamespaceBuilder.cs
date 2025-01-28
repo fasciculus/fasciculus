@@ -1,27 +1,17 @@
-using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
-using Fasciculus.IO;
-using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    internal class NamespaceBuilder : TypeReceiver<NamespaceSymbol>
+    internal class NamespaceBuilder : SymbolBuilder<NamespaceSymbol>, IEnumReceiver, IInterfaceReceiver, IClassReceiver
     {
-        private readonly DirectoryInfo commentsDirectory;
+        private readonly EnumList enums = [];
+        private readonly InterfaceList interfaces = [];
+        private readonly ClassList classes = [];
 
-        public NamespaceBuilder(CommentContext commentContext, DirectoryInfo commentsDirectory)
-            : base(commentContext)
+        public override NamespaceSymbol Build(SymbolComment comment)
         {
-            this.commentsDirectory = commentsDirectory;
-        }
-
-        public override NamespaceSymbol Build()
-        {
-            FileInfo commentFile = commentsDirectory.File($"{Name}.xml");
-            Comment.MergeWith(SymbolComment.FromFile(commentContext, commentFile));
-
-            NamespaceSymbol @namespace = new(Framework, Package, Comment)
+            NamespaceSymbol @namespace = new(Framework, Package, comment)
             {
                 Name = Name,
                 Link = Link,
@@ -34,5 +24,14 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
             return @namespace;
         }
+
+        public void Add(EnumSymbol @enum)
+            => enums.AddOrMergeWith(@enum);
+
+        public void Add(InterfaceSymbol @interface)
+            => interfaces.AddOrMergeWith(@interface);
+
+        public void Add(ClassSymbol @class)
+            => classes.AddOrMergeWith(@class);
     }
 }

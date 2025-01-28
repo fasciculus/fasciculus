@@ -1,16 +1,12 @@
-using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     internal class ConstructorBuilder : InvokableBuilder<ConstructorSymbol>
     {
-        public ConstructorBuilder(CommentContext commentContext)
-            : base(commentContext) { }
-
-        public override ConstructorSymbol Build()
+        public override ConstructorSymbol Build(SymbolComment comment)
         {
-            ConstructorSymbol constructor = new(Framework, Package, Comment)
+            ConstructorSymbol constructor = new(Framework, Package, comment)
             {
                 Name = Name,
                 Link = Link,
@@ -18,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
                 Type = Type,
             };
 
-            Populate(constructor);
+            constructor.AddSource(Source);
 
             return constructor;
         }

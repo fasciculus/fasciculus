@@ -1,4 +1,3 @@
-using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 
@@ -8,12 +7,9 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
     {
         public required AccessorList Accessors { get; init; }
 
-        public PropertyBuilder(CommentContext commentContext)
-            : base(commentContext) { }
-
-        public override PropertySymbol Build()
+        public override PropertySymbol Build(SymbolComment comment)
         {
-            PropertySymbol property = new(Framework, Package, Comment)
+            PropertySymbol property = new(Framework, Package, comment)
             {
                 Name = Name,
                 Link = Link,
@@ -22,6 +18,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
             };
 
             Accessors.Apply(property.Add);
+
+            property.AddSource(Source);
 
             return property;
         }

@@ -1,4 +1,3 @@
-using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
@@ -7,8 +6,5 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         where T : notnull, TypedSymbol<T>
     {
         public required string Type { get; init; }
-
-        public TypedSymbolBuilder(CommentContext commentContext)
-            : base(commentContext) { }
     }
 }

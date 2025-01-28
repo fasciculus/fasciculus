@@ -1,7 +1,6 @@
 using Fasciculus.CodeAnalysis.Compilers.Builders;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -9,24 +8,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     internal partial class CompilationUnitCompiler
     {
-        protected readonly Stack<CommentBuilder> commentBuilders = [];
-        protected readonly Stack<ICommentReceiver> commentReceivers = [];
-
-        public void PushComment()
-        {
-            commentBuilders.Push(new(commentContext));
-        }
-
-        public void PopComment()
-        {
-            CommentBuilder builder = commentBuilders.Pop();
-
-            if (commentReceivers.Count > 0)
-            {
-                commentReceivers.Peek().Comment.MergeWith(builder.Build());
-            }
-        }
-
         public override void VisitDocumentationCommentTrivia(DocumentationCommentTriviaSyntax node)
         {
             //if (commentInfos.Count == 0)
@@ -129,12 +110,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            //PushComment();
-
             base.VisitAttributeList(node);
-
-            //PopComment();
         }
-
     }
 }

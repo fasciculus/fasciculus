@@ -1,21 +1,21 @@
-using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Collections;
+using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    internal abstract class ClassOrInterfaceBuilder<T> : TypeBuilder<T>
+    internal abstract class ClassOrInterfaceBuilder<T> : SymbolBuilder<T>, IEventReceiver, IPropertyReceiver
         where T : notnull, ClassOrInterfaceSymbol<T>
     {
-        public ClassOrInterfaceBuilder(CommentContext commentContext)
-            : base(commentContext) { }
+        private readonly EventList events = [];
+        private readonly PropertyList properties = [];
 
-        protected override void Populate(T classOrInterface)
-        {
-            base.Populate(classOrInterface);
+        protected IEnumerable<EventSymbol> Events => events;
+        protected IEnumerable<PropertySymbol> Properties => properties;
 
-            events.Apply(classOrInterface.Add);
-            properties.Apply(classOrInterface.Add);
-        }
+        public void Add(EventSymbol @event)
+            => events.AddOrMergeWith(@event);
+
+        public void Add(PropertySymbol property)
+            => properties.AddOrMergeWith(property);
     }
 }

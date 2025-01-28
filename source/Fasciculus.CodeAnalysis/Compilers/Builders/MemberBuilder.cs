@@ -1,22 +1,20 @@
-using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     internal class MemberBuilder : TypedSymbolBuilder<MemberSymbol>
     {
-        public MemberBuilder(CommentContext commentContext)
-            : base(commentContext) { }
-
-        public override MemberSymbol Build()
+        public override MemberSymbol Build(SymbolComment comment)
         {
-            MemberSymbol member = new(Framework, Package, Comment)
+            MemberSymbol member = new(Framework, Package, comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
                 Type = Type,
             };
+
+            member.AddSource(Source);
 
             return member;
         }

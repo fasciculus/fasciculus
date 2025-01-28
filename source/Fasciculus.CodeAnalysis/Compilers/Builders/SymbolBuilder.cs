@@ -1,15 +1,11 @@
-using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net.Navigating;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    internal abstract class SymbolBuilder<T> : ICommentReceiver
-        where T : notnull, Symbol<T>
+    internal abstract class SymbolBuilder
     {
-        protected readonly CommentContext commentContext;
-
         public required SymbolName Name { get; init; }
 
         public required UriPath Link { get; init; }
@@ -20,15 +16,12 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public required SymbolModifiers Modifiers { get; init; }
 
-        public SymbolComment Comment { get; }
+        public required UriPath Source { get; init; }
+    }
 
-        public SymbolBuilder(CommentContext commentContext)
-        {
-            this.commentContext = commentContext;
-
-            Comment = SymbolComment.Empty(commentContext);
-        }
-
-        public abstract T Build();
+    internal abstract class SymbolBuilder<T> : SymbolBuilder
+        where T : notnull, Symbol<T>
+    {
+        public abstract T Build(SymbolComment comment);
     }
 }

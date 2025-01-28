@@ -1,37 +1,35 @@
-using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
-    internal class ClassBuilder : ClassOrInterfaceBuilder<ClassSymbol>
+    internal class ClassBuilder : ClassOrInterfaceBuilder<ClassSymbol>, IFieldReceiver, IConstructorReceiver
     {
+        private readonly FieldList fields = [];
         private readonly ConstructorList constructors = [];
 
-        public ClassBuilder(CommentContext commentContext)
-            : base(commentContext) { }
-
-        public override ClassSymbol Build()
+        public override ClassSymbol Build(SymbolComment comment)
         {
-            ClassSymbol @class = new(Framework, Package, Comment)
+            ClassSymbol @class = new(Framework, Package, comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
             };
 
-            Populate(@class);
+            Events.Apply(@class.Add);
+            Properties.Apply(@class.Add);
+
+            fields.Apply(@class.Add);
+            constructors.Apply(@class.Add);
+
+            @class.AddSource(Source);
 
             return @class;
         }
 
-        protected override void Populate(ClassSymbol @class)
-        {
-            base.Populate(@class);
-
-            fields.Apply(@class.Add);
-            constructors.Apply(@class.Add);
-        }
+        public void Add(FieldSymbol field)
+            => fields.AddOrMergeWith(field);
 
         public void Add(ConstructorSymbol constructor)
             => constructors.AddOrMergeWith(constructor);

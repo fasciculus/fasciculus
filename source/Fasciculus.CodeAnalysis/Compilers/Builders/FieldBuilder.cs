@@ -1,22 +1,20 @@
-using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Models;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
     internal class FieldBuilder : TypedSymbolBuilder<FieldSymbol>
     {
-        public FieldBuilder(CommentContext commentContext)
-            : base(commentContext) { }
-
-        public override FieldSymbol Build()
+        public override FieldSymbol Build(SymbolComment comment)
         {
-            FieldSymbol field = new(Framework, Package, Comment)
+            FieldSymbol field = new(Framework, Package, comment)
             {
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
                 Type = Type,
             };
+
+            field.AddSource(Source);
 
             return field;
         }
