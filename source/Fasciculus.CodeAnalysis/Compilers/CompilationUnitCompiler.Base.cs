@@ -75,16 +75,5 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             base.VisitCompilationUnit(node);
         }
-
-        public override void VisitUsingDirective(UsingDirectiveSyntax node)
-        {
-            // UsingDirective
-            // : IdentifierName
-            // | QualifiedName
-
-            nodeDebugger.Add(node);
-
-            base.VisitUsingDirective(node);
-        }
     }
 }

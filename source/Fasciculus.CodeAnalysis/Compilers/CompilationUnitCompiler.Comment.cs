@@ -8,19 +8,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     internal partial class CompilationUnitCompiler
     {
-        public override void VisitDocumentationCommentTrivia(DocumentationCommentTriviaSyntax node)
-        {
-            //if (commentInfos.Count == 0)
-            //{
-            //    SyntaxNode? failingNode = ancestors.FirstOrDefault(n => n.HasStructuredTrivia);
-            //    SyntaxKind? failingKind = failingNode?.Kind();
-
-            //    throw Ex.InvalidOperation($"missing push in '{failingKind}'");
-            //}
-
-            base.VisitDocumentationCommentTrivia(node);
-        }
-
         public override void VisitXmlCDataSection(XmlCDataSectionSyntax node)
         {
             base.VisitXmlCDataSection(node);
@@ -74,7 +61,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         public override void VisitXmlCrefAttribute(XmlCrefAttributeSyntax node)
         {
-            base.VisitXmlCrefAttribute(node);
+            //base.VisitXmlCrefAttribute(node);
 
             string cref = node.Cref.GetText().ToString();
 
@@ -101,16 +88,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             commentBuilders.Peek().Add(new XAttribute(name, value));
         }
 
-        public override void VisitAttributeList(AttributeListSyntax node)
+        public override void VisitDocumentationCommentTrivia(DocumentationCommentTriviaSyntax node)
         {
-            // HasTrivia
-            // AttributeList
-            // : AttributeTargetSpecifier Attribute
-            // | Attribute
-
-            nodeDebugger.Add(node);
-
-            base.VisitAttributeList(node);
+            base.VisitDocumentationCommentTrivia(node);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            base.VisitBracketedParameterList(node);
+            //base.VisitBracketedParameterList(node);
         }
 
         public override void VisitParameterList(ParameterListSyntax node)
@@ -19,7 +19,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            base.VisitParameterList(node);
+            //base.VisitParameterList(node);
         }
 
         public override void VisitParameter(ParameterSyntax node)
@@ -34,7 +34,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            base.VisitParameter(node);
+            //base.VisitParameter(node);
         }
     }
 }

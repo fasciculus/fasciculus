@@ -22,7 +22,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 //PushComment();
 
-                base.VisitConversionOperatorDeclaration(node);
+                //base.VisitConversionOperatorDeclaration(node);
 
                 //PopComment();
             }
@@ -41,7 +41,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 //PushComment();
 
-                base.VisitDestructorDeclaration(node);
+                //base.VisitDestructorDeclaration(node);
 
                 //PopComment();
             }
@@ -61,7 +61,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 //PushComment();
 
-                base.VisitIndexerDeclaration(node);
+                //base.VisitIndexerDeclaration(node);
 
                 //PopComment();
             }
@@ -88,7 +88,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 //PushComment();
 
-                base.VisitMethodDeclaration(node);
+                //base.VisitMethodDeclaration(node);
 
                 //PopComment();
             }
@@ -108,7 +108,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 //PushComment();
 
-                base.VisitOperatorDeclaration(node);
+                //base.VisitOperatorDeclaration(node);
 
                 //PopComment();
             }
