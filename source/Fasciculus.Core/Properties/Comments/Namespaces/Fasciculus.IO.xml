@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<comment>
+  <summary>Binary serialization, endianness, various file system extensions, access to predefined directories.</summary>
+</comment>
