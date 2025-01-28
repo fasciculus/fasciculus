@@ -11,6 +11,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public SymbolName Name { get; }
 
+        public string Id { get; }
+
         public UriPath Link { get; }
 
         public ISymbolModifiers Modifiers { get; }
@@ -30,6 +32,8 @@ namespace Fasciculus.CodeAnalysis.Models
         public SymbolKind Kind { get; }
 
         public required SymbolName Name { get; init; }
+
+        public string Id => GetId();
 
         private UriPath link = new();
 
@@ -77,6 +81,11 @@ namespace Fasciculus.CodeAnalysis.Models
             packages = new(other.packages);
 
             comment = other.comment.Clone();
+        }
+
+        protected virtual string GetId()
+        {
+            return $"{Kind}-{Name.GetHashCode()}";
         }
 
         public virtual void ReBase(UriPath newBase)
