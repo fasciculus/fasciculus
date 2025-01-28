@@ -28,7 +28,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -48,7 +48,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -82,7 +82,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -101,7 +101,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -120,7 +120,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -140,7 +140,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -164,7 +164,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {
@@ -185,7 +185,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             nodeDebugger.Add(node);
 
-            SymbolModifiers modifiers = modifiersCompiler.Compile(node.Modifiers);
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
             if (IsIncluded(modifiers))
             {

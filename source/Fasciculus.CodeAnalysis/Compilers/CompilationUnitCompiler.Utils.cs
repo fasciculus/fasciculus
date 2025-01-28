@@ -8,6 +8,36 @@ namespace Fasciculus.CodeAnalysis.Compilers
 {
     internal partial class CompilationUnitCompiler
     {
+        private SymbolModifiers GetModifiers(SyntaxTokenList tokens)
+        {
+            SymbolModifiers modifiers = new();
+
+            foreach (SyntaxToken token in tokens)
+            {
+                string name = token.Text;
+
+                modifierDebugger.Add(name);
+
+                switch (name)
+                {
+                    case "public": modifiers.IsPublic = true; break;
+                    case "private": modifiers.IsPrivate = true; break;
+                    case "protected": modifiers.IsProtected = true; break;
+                    case "internal": modifiers.IsInternal = true; break;
+                    case "abstract": modifiers.IsAbstract = true; break;
+                    case "static": modifiers.IsStatic = true; break;
+                    case "readonly": modifiers.IsReadonly = true; break;
+                    case "virtual": modifiers.IsVirtual = true; break;
+                    case "override": modifiers.IsOverride = true; break;
+                    case "unsafe": modifiers.IsUnsafe = true; break;
+                    case "async": modifiers.IsAsync = true; break;
+                    case "partial": modifiers.IsPartial = true; break;
+                }
+            }
+
+            return modifiers;
+        }
+
         private static SymbolName GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
         {
             string name = identifier.Text;

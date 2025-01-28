@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Commenting;
+using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;
@@ -20,6 +21,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly AccessorsCompiler accessorsCompiler;
 
+        private readonly IModifierDebugger modifierDebugger;
+
         private UriPath Source { get; set; } = UriPath.Empty;
 
         private CompilationUnitInfo compilationUnit = new();
@@ -31,6 +34,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             commentContext = context.CommentContext;
 
             accessorsCompiler = new(context);
+
+            modifierDebugger = context.Debuggers.ModifierDebugger;
         }
 
         public virtual CompilationUnitInfo Compile(CompilationUnitSyntax node)

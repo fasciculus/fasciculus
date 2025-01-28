@@ -11,6 +11,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly TaskSafeMutex mutex = new();
 
+        private readonly ModifiersCompiler modifiersCompiler;
+
         private readonly IAccessorDebugger accessorDebugger;
 
         private AccessorList accessors = [];
@@ -18,6 +20,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public AccessorsCompiler(CompilerContext context)
             : base(context, SyntaxWalkerDepth.Node)
         {
+            modifiersCompiler = new(context);
             accessorDebugger = context.Debuggers.AccessorDebugger;
         }
 

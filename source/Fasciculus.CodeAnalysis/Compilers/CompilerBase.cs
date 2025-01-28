@@ -17,7 +17,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         protected readonly DirectoryInfo projectDirectory;
 
-        protected readonly ModifiersCompiler modifiersCompiler;
+        //protected readonly ModifiersCompiler modifiersCompiler;
 
         protected INodeDebugger nodeDebugger;
 
@@ -31,7 +31,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             projectDirectory = context.ProjectDirectory;
 
-            modifiersCompiler = new(context);
+            //modifiersCompiler = new(context);
 
             nodeDebugger = context.Debuggers.NodeDebugger;
         }
