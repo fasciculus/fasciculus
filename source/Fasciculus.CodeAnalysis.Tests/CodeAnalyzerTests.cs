@@ -77,14 +77,14 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Interfaces = 8,
                 Classes = 110,
 
-                Fields = 6,
+                Fields = 4,
                 Members = 6,
                 Events = 4,
-                Properties = 102,
+                Properties = 104,
 
                 Constructors = 62,
 
-                Summaries = 306,
+                Summaries = 310,
             };
 
             Test(context);
