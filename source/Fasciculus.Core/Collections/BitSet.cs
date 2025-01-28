@@ -1,4 +1,4 @@
-﻿using Fasciculus.Algorithms;
+using Fasciculus.Algorithms;
 using Fasciculus.IO;
 using System;
 using System.Collections;
@@ -16,7 +16,7 @@ namespace Fasciculus.Collections
         /// <summary>
         /// Empty bit set.
         /// </summary>
-        public static readonly BitSet Empty = new(Array.Empty<uint>());
+        public static BitSet Empty { get; } = new(Array.Empty<uint>());
 
         private readonly uint[] entries;
 
