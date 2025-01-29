@@ -24,7 +24,11 @@ namespace Fasciculus.Site.Rendering.Services
 
             pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
+                .UseAlertBlocks()
                 .UseColorCode()
+                .UseMathematics()
+                .UsePipeTables()
+                .UseBootstrap()
                 .Build();
         }
 

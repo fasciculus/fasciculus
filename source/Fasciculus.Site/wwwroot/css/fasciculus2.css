@@ -28,16 +28,6 @@ c {
     padding-inline-end: 0.25em;
 }
 
-code {
-    display: block;
-    padding: 1rem;
-    margin-bottom: 1rem;
-}
-
-pre {
-    margin-bottom: 0;
-}
-
 .container {
     max-width: 100%;
 }
@@ -114,10 +104,14 @@ div.fsc-navigation-forest {
     padding-bottom: 4px;
 }
 
-.csharp {
+div.csharp {
     background-color: #eee;
-    padding: 0.625rem;
     margin-bottom: 1rem;
+    padding: 0.625rem;
+}
+
+div.csharp pre {
+    margin-bottom: 0;
 }
 
 .xml {
@@ -152,4 +146,29 @@ div.fsc-navigation-forest {
 
 .xmlName {
     color: #008000;
+}
+
+.markdown-alert {
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.markdown-alert > :first-child {
+    margin-top: 0;
+}
+
+.markdown-alert > :last-child {
+    margin-bottom: 0
+}
+
+.markdown-alert-title {
+    font-weight: bold;
+}
+
+.markdown-alert-title svg {
+    display: none;
+}
+
+.markdown-alert.markdown-alert-warning {
+    background-color: #ffeecc;
 }

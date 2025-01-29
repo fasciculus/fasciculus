@@ -6,7 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@Model.Title | Fasciculus</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/fasciculus1.css" />
+    @if (Model.UseKaTeX)
+    {
+        <link rel="stylesheet" href="~/lib/katex/katex.min.css" />
+        <script defer src="~/lib/katex/katex.min.js"></script>
+        <script defer src="~/lib/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    }
+    <link rel="stylesheet" href="~/css/fasciculus2.css" />
 </head>
 <body>
     <header>
@@ -16,6 +22,7 @@
                     <ul class="nav">
                         <li class="nav-item"><a class="nav-link" href="~/"><img class="fsc-logo" src="~/images/fasciculus.png" /></a></li>
                         <li class="nav-item"><a class="nav-link" href="~/blog/">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link" href="~/specifications/">Specifications</a></li>
                         <li class="nav-item"><a class="nav-link" href="~/api/">APIs</a></li>
                         <li class="nav-item"><a class="nav-link" href="~/releases.html">Releases</a></li>
                         <li class="nav-item"><a class="nav-link" href="~/licenses/">Licenses</a></li>

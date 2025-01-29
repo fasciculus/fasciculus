@@ -25,4 +25,8 @@
     <ProjectReference Include="../Fasciculus.NuGet/Fasciculus.NuGet.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\katex\" />
+  </ItemGroup>
+
 </Project>

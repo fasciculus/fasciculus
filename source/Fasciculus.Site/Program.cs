@@ -7,6 +7,7 @@ using Fasciculus.Site.Generating.Services;
 using Fasciculus.Site.Licenses.Services;
 using Fasciculus.Site.Rendering.Services;
 using Fasciculus.Site.Services;
+using Fasciculus.Site.Specifications.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -53,7 +54,12 @@ namespace Fasciculus.Site
 
             builder.Services.AddControllersWithViews();
 
-            services.AddCommon().AddApi().AddBlog().AddLicenses();
+            services
+                .AddCommon()
+                .AddApi()
+                .AddBlog()
+                .AddSpecifications()
+                .AddLicenses();
 
             if (generate)
             {
@@ -96,6 +102,15 @@ namespace Fasciculus.Site
             services.TryAddSingleton<BlogCompiler>();
             services.TryAddSingleton<BlogContent>();
             services.TryAddSingleton<BlogNavigation>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddSpecifications(this IServiceCollection services)
+        {
+            services.TryAddSingleton<SpecificationFiles>();
+            services.TryAddSingleton<SpecificationCompiler>();
+            services.TryAddSingleton<SpecificationContent>();
 
             return services;
         }

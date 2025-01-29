@@ -16,5 +16,7 @@ namespace Fasciculus.Site.Models
             get => Cond.NotNull(navigation);
             set { navigation = value; }
         }
+
+        public bool UseKaTeX { get; set; } = false;
     }
 }
