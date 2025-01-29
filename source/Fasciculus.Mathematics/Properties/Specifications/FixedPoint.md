@@ -22,15 +22,22 @@ the remainder of this document it is written as $N$ with $N\in\set{8, 16, 32, 64
 
 **§2.2** `<fraction-bits>` is the number of bits used to store the fractional part of a fixed
 point value. Throughout the remainder of this document it is written as
-$Q$ with $Q\in\set{1, 2, 3, ...,  64}_\N$ and $Q \le N$.
+$Q$ with $Q\in\set{1, 2, 3, ..., 64}_\N$. For $Q$ the following restrictions apply:
+
+$$
+\begin{cases}
+Q = N &\text{for value range }[-1, 1]\\
+Q \le N - 3 &\text{otherwise}
+\end{cases}
+$$
 
 Regular fixed point values use the two most significant bits for house-keeping (see §3.2).
 
-**§2.3** The $\epsilon$ value is the step size with which the represented values can be increased
-or decreased such that $x \plusmn\epsilon \ne x$.
+**§2.3** The $\epsilon$ value is the smallest representable value such that $x \plusmn\epsilon \ne x$.
 
 Types where $N$ equals $Q$ have a larger $\epsilon$ than expected,
-as again the two most significant bits are used for house-keeping.
+as again the two most significant bits are used for house-keeping and an additional bit is
+used to provide symmetry around $0.0$.
 
 Example types (of which not all will be implemented):
 
@@ -136,7 +143,7 @@ set to zero.
 Example for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public const ushort Infinity = 0x4000; // binary: 0100_0000_0000_0000
+public const ushort PositiveInfinity = 0x4000; // binary: 0100_0000_0000_0000
 public const ushort NegativeInfinity = 0xC000; // binary: 1100_0000_0000_0000
 ```
 
@@ -158,7 +165,30 @@ public const ushort One = 0x2000; // binary: 0010_0000_0000_0000
 public const ushort NegativeOne = 0xA000; // binary: 1010_0000_0000_0000
 ```
 
+### §4.1.4 Min and Max Value Constants
+
+All `FP` classes where $Q \ne N$ provide constants for their minimum and maximum value.
+
+Example for `FP16Q8`:
+
+```cs
+public const ushort MinValue = 0xA000; // binary: 1010_0000_0000_0000
+public const ushort MaxValue = 0x2000; // binary: 0010_0000_0000_0000
+```
+
+### §4.1.4 Epsilon Constant
+
+All `FP` classes provide constants for $\epsilon$.
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public const ushort Epsilon = 0x0001; // binary: 0000_0000_0000_0001
+```
+
 ### §4.2 Angular Fixed Point Value Constants
+
+### §4.2.1 Constant for $\pi$
 
 All `AFP` classes provide constants for $\pi$.
 
@@ -167,3 +197,14 @@ Example for `AFP16`:
 ```cs
 public const short Pi = 0x8000; // binary: 1000_0000_0000_0000
 ```
+
+### §4.2.2 Epsilon Constant
+
+All `AFP` classes provide constants for $\epsilon$.
+
+Example for `AFP16`:
+
+```cs
+public const short Epsilon = 0x0001; // binary: 0000_0000_0000_0001
+```
+
