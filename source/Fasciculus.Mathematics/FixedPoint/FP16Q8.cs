@@ -188,5 +188,86 @@ namespace Fasciculus.Mathematics.FixedPoint
 
             return resultNeg ? (ushort)(mantissa | SignMask) : mantissa;
         }
+
+        /// <summary>
+        /// Sutracts <paramref name="rhs"/> from <paramref name="lhs"/>.
+        /// </summary>
+        public static ushort Sub(ushort lhs, ushort rhs)
+        {
+            if (IsNaN(lhs) || IsNaN(rhs)) return NaN;
+            if (IsInfinity(lhs)) return lhs;
+            if (IsInfinity(rhs)) return rhs;
+
+            return SubUnsafe(lhs, rhs);
+        }
+
+        /// <summary>
+        /// Sutracts <paramref name="rhs"/> from <paramref name="lhs"/>.
+        /// </summary>
+        public static ushort SubUnsafe(ushort lhs, ushort rhs)
+        {
+            bool lhsNeg = IsNegativeUnsafe(lhs);
+            bool rhsNeg = IsNegativeUnsafe(rhs);
+
+            int lhsInt = lhs & MantissaMask;
+            int rhsInt = rhs & MantissaMask;
+
+            lhsInt = lhsNeg ? -lhsInt : lhsInt;
+            rhsInt = rhsNeg ? -rhsInt : rhsInt;
+
+            int result = lhsInt - rhsInt;
+
+            if (result < MinIntValue) return NegativeInfinity;
+            if (result > MaxIntValue) return PositiveInfinity;
+
+            bool resultNeg = result < 0;
+
+            result = resultNeg ? -result : result;
+
+            ushort mantissa = (ushort)(result & MantissaMask);
+
+            return resultNeg ? (ushort)(mantissa | SignMask) : mantissa;
+        }
+
+        /// <summary>
+        /// Multiplies <paramref name="lhs"/> with <paramref name="rhs"/>
+        /// </summary>
+        public static ushort Mul(ushort lhs, ushort rhs)
+        {
+            if (IsNaN(lhs) || IsNaN(rhs)) return NaN;
+
+            if (IsInfinity(lhs) || IsInfinity(rhs))
+            {
+                bool lhsNeg = IsNegativeUnsafe(lhs);
+                bool rhsNeg = IsNegativeUnsafe(rhs);
+
+                return lhsNeg == rhsNeg ? PositiveInfinity : NegativeInfinity;
+            }
+
+            return MulUnsafe(lhs, rhs);
+        }
+
+        /// <summary>
+        /// Multiplies <paramref name="lhs"/> with <paramref name="rhs"/>
+        /// </summary>
+        public static ushort MulUnsafe(ushort lhs, ushort rhs)
+        {
+            bool lhsNeg = IsNegativeUnsafe(lhs);
+            bool rhsNeg = IsNegativeUnsafe(rhs);
+            bool resultNeg = lhsNeg != rhsNeg;
+
+            int lhsInt = lhs & MantissaMask;
+            int rhsInt = rhs & MantissaMask;
+
+            int absResult = (lhsInt * rhsInt) >> 8;
+            int result = resultNeg ? absResult : -absResult;
+
+            if (result < MinIntValue) return NegativeInfinity;
+            if (result > MaxIntValue) return PositiveInfinity;
+
+            ushort mantissa = (ushort)(absResult & MantissaMask);
+
+            return resultNeg ? (ushort)(mantissa | SignMask) : mantissa;
+        }
     }
 }
