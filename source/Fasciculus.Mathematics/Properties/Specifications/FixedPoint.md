@@ -210,6 +210,30 @@ public const short Epsilon = 0x0001; // binary: 0000_0000_0000_0001
 
 ## §5 Masks
 
+### §5.1 Sign Mask
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static const ushort SignMask = 0x8000; // binary: 1000_0000_0000_0000
+```
+
+### §5.2 Exception Mask
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static const ushort ExceptionMask = 0x4000; // binary: 0100_0000_0000_0000
+```
+
+### §5.2 Mantissa Mask
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static const ushort MantissaMask = 0x3FFF; // binary: 0011_1111_1111_1111
+```
+
 ## §6 Validation Check Algorithms
 
 ### $6.1 Check for `NaN`
@@ -255,4 +279,96 @@ Algorithms like division or square root return `NaN`, if the result is undefined
 
 ## §8 Unary Algorithms
 
-## §9 Arithmetic Algorithms
+### §8.1 Negate
+
+Toggles the $s$ bit of the value.
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort Negate(ushort value);
+public static ushort NegateUnsafe(ushort value);
+```
+
+### §8.2 Invert
+
+Calculates the inverse ($1/x$) of the value.
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort Invert(ushort value);
+public static ushort InvertUnsafe(ushort value);
+```
+
+### 8.3 Conversion to `double`
+
+Converts the value to a `double`. This may result in a loss of precision for
+$N \gt 52$.
+
+If the $e$ bit is set, this function returns the respective `double` counterpart.
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static double ToDouble(ushort value);
+```
+
+## §9 Shift Algorithms
+
+### $9.1 Left Shift
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort ShiftLeft(ushort value, uint count);
+public static ushort ShiftLeftUnsafe(ushort value, uint count);
+```
+
+### $9.1 Right Shift
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort ShiftRight(ushort value, uint count);
+public static ushort ShiftRightUnsafe(ushort value, uint count);
+```
+
+## §10 Arithmetic Algorithms
+
+### §10.1 Addition
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort Add(ushort lhs, ushort rhs);
+public static ushort AddUnsafe(ushort lhs, ushort rhs);
+```
+
+### §10.2 Subtraction
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort Sub(ushort lhs, ushort rhs);
+public static ushort SubUnsafe(ushort lhs, ushort rhs);
+```
+
+### §10.3 Multiplicaction
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort Mul(ushort lhs, ushort rhs);
+public static ushort MulUnsafe(ushort lhs, ushort rhs);
+```
+
+### §10.4 Division
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort Div(ushort lhs, ushort rhs);
+public static ushort DivUnsafe(ushort lhs, ushort rhs);
+```
+
