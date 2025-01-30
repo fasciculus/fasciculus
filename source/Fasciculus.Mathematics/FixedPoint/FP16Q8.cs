@@ -190,7 +190,7 @@ namespace Fasciculus.Mathematics.FixedPoint
         }
 
         /// <summary>
-        /// Sutracts <paramref name="rhs"/> from <paramref name="lhs"/>.
+        /// Subtracts <paramref name="rhs"/> from <paramref name="lhs"/>.
         /// </summary>
         public static ushort Sub(ushort lhs, ushort rhs)
         {
@@ -202,7 +202,7 @@ namespace Fasciculus.Mathematics.FixedPoint
         }
 
         /// <summary>
-        /// Sutracts <paramref name="rhs"/> from <paramref name="lhs"/>.
+        /// Subtracts <paramref name="rhs"/> from <paramref name="lhs"/>.
         /// </summary>
         public static ushort SubUnsafe(ushort lhs, ushort rhs)
         {
