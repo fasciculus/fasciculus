@@ -215,7 +215,7 @@ public const short Epsilon = 0x0001; // binary: 0000_0000_0000_0001
 Example for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public static const ushort SignMask = 0x8000; // binary: 1000_0000_0000_0000
+public const ushort SignMask = 0x8000; // binary: 1000_0000_0000_0000
 ```
 
 ### §5.2 Exception Mask
@@ -223,7 +223,7 @@ public static const ushort SignMask = 0x8000; // binary: 1000_0000_0000_0000
 Example for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public static const ushort ExceptionMask = 0x4000; // binary: 0100_0000_0000_0000
+public const ushort ExceptionMask = 0x4000; // binary: 0100_0000_0000_0000
 ```
 
 ### §5.2 Mantissa Mask
@@ -231,7 +231,7 @@ public static const ushort ExceptionMask = 0x4000; // binary: 0100_0000_0000_000
 Example for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public static const ushort MantissaMask = 0x3FFF; // binary: 0011_1111_1111_1111
+public const ushort MantissaMask = 0x3FFF; // binary: 0011_1111_1111_1111
 ```
 
 ## §6 Validation Check Algorithms
@@ -246,7 +246,23 @@ Example for `FP16Q8` and `FP16Q16`:
 public static bool IsNaN(ushort value);
 ```
 
-### $6.1 Check for Infinity
+### $6.2 Check for Negativity
+
+Checks whether the given value is negative.
+
+The result is `false` for `NaN`.
+
+The result is `true` for NegativeInfinity, `false` for PositiveInfinity.
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static bool IsNegative(ushort value);
+public static bool IsNegativeUnsafe(ushort value);
+```
+
+
+### $6.3 Check for Infinity
 
 All `FP` classes provide checks for infinity.
 
@@ -262,7 +278,7 @@ public static bool IsInfinity(ushort value); // positive or negative
 
 ### §7.1 Safe and Unsafe Algorithms
 
-Most of the following algorithms come in two versions: a safe and an unsafe version.
+Most algorithms come in two versions: a safe and an unsafe version.
 
 The unsafe versions expect their arguments to be neither infinite nor `NaN`.
 
@@ -279,7 +295,20 @@ Algorithms like division or square root return `NaN`, if the result is undefined
 
 ## §8 Unary Algorithms
 
-### §8.1 Negate
+### §8.1 Absolute Value
+
+The absolute value of `NaN` is `NaN`.
+
+The absolute value of NegativeInfinity is PositiveInfinity.
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort Abs(ushort value);
+public static ushort AbsUnsafe(ushort value);
+```
+
+### §8.2 Negate
 
 Toggles the $s$ bit of the value.
 
@@ -290,7 +319,7 @@ public static ushort Negate(ushort value);
 public static ushort NegateUnsafe(ushort value);
 ```
 
-### §8.2 Invert
+### §8.3 Invert
 
 Calculates the inverse ($1/x$) of the value.
 
@@ -301,7 +330,7 @@ public static ushort Invert(ushort value);
 public static ushort InvertUnsafe(ushort value);
 ```
 
-### 8.3 Conversion to `double`
+### 8.4 Conversion to `double`
 
 Converts the value to a `double`. This may result in a loss of precision for
 $N \gt 52$.
