@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
@@ -17,19 +15,14 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public string Mangled { get; }
 
-        public SymbolName(string name)
+        public SymbolName(string name, string mangled)
         {
             Name = name;
-            Mangled = name;
+            Mangled = mangled;
         }
 
-        public SymbolName(string untyped, IEnumerable<string> parameterTypes)
-        {
-            bool hasParameters = parameterTypes.Any();
-
-            Name = hasParameters ? $"{untyped}<{string.Join(',', parameterTypes)}>" : untyped;
-            Mangled = hasParameters ? $"{untyped}-{parameterTypes.Count()}" : untyped;
-        }
+        public SymbolName(string name)
+            : this(name, name) { }
 
         public bool Equals(SymbolName? other)
             => Comparer.Equals(Name, other?.Name);

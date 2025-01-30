@@ -48,6 +48,11 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         public void Add(MemberSymbol member);
     }
 
+    internal interface IParameterReceiver : IReceiver
+    {
+        public void Add(ParameterSymbol parameter);
+    }
+
     internal interface IPropertyReceiver : IReceiver
     {
         public void Add(PropertySymbol property);

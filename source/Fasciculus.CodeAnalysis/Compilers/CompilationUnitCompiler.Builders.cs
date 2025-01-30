@@ -23,6 +23,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private readonly Stack<PropertyBuilder> propertyBuilders = [];
         private readonly Stack<AccessorBuilder> accessorBuilders = [];
 
+        private readonly Stack<ParameterBuilder> parameterBuilders = [];
         private readonly Stack<ConstructorBuilder> constructorBuilders = [];
 
         private void PushComment()
@@ -45,6 +46,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             if (builder is PropertyBuilder propertyBuilder) propertyBuilders.Push(propertyBuilder);
             if (builder is AccessorBuilder accessorBuilder) accessorBuilders.Push(accessorBuilder);
 
+            if (builder is ParameterBuilder parameterBuilder) parameterBuilders.Push(parameterBuilder);
             if (builder is ConstructorBuilder constructorBuilder) constructorBuilders.Push(constructorBuilder);
 
             PushReceiver(builder);
@@ -76,6 +78,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private AccessorBuilder PopAccessorBuilder()
             => PopReceiver(accessorBuilders.Pop());
+
+        private ParameterBuilder PopParameterBuilder()
+            => PopReceiver(parameterBuilders.Pop());
 
         private ConstructorBuilder PopConstructorBuilder()
             => PopReceiver(constructorBuilders.Pop());
@@ -169,7 +174,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private ClassSymbol PopClass()
             => PopClassBuilder().Build(PopComment());
 
-        private void PushField(SymbolName name, SymbolModifiers modifiers, string type)
+        private void PushField(SymbolName name, SymbolModifiers modifiers, SymbolName type)
         {
             UriPath link = fieldReceivers.Peek().Link.Append(name.Name);
 
@@ -203,7 +208,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 Package = package,
                 Modifiers = modifiers,
                 Source = Source,
-                Type = string.Empty,
+                Type = new(string.Empty),
             };
 
             PushBuilder(builder);
@@ -213,7 +218,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private MemberSymbol PopMember()
             => PopMemberBuilder().Build(PopComment());
 
-        private void PushEvent(SymbolName name, SymbolModifiers modifiers, string type)
+        private void PushEvent(SymbolName name, SymbolModifiers modifiers, SymbolName type)
         {
             UriPath link = eventReceivers.Peek().Link.Append(name.Name);
 
@@ -235,7 +240,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private EventSymbol PopEvent()
             => PopEventBuilder().Build(PopComment());
 
-        private void PushProperty(SymbolName name, SymbolModifiers modifiers, string type)
+        private void PushProperty(SymbolName name, SymbolModifiers modifiers, SymbolName type)
         {
             UriPath link = propertyReceivers.Peek().Link.Append(name.Name);
 
@@ -278,6 +283,28 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private AccessorSymbol PopAccessor()
             => PopAccessorBuilder().Build(PopComment());
 
+        private void PushParameter(SymbolName name, SymbolModifiers modifiers, SymbolName type)
+        {
+            UriPath link = parameterReceivers.Peek().Link.Append(name.Name);
+
+            ParameterBuilder builder = new()
+            {
+                Name = name,
+                Link = link,
+                Framework = framework,
+                Package = package,
+                Modifiers = modifiers,
+                Source = Source,
+                Type = type,
+            };
+
+            PushBuilder(builder);
+            PushComment();
+        }
+
+        private ParameterSymbol PopParameter()
+            => PopParameterBuilder().Build(PopComment());
+
         private void PushConstructor(SymbolName name, SymbolModifiers modifiers)
         {
             UriPath link = constructorReceivers.Peek().Link.Append(name.Mangled);
@@ -290,7 +317,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 Package = package,
                 Modifiers = modifiers,
                 Source = Source,
-                Type = string.Empty,
+                Type = new(string.Empty),
             };
 
             PushBuilder(builder);

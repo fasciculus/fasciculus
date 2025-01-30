@@ -16,7 +16,7 @@ namespace Fasciculus.CodeAnalysis.Debugging
                 "public", "private", "protected", "internal",
                 "abstract", "static", "readonly",
                 "virtual", "override", "unsafe", "async",
-                "partial"]);
+                "partial", "params"]);
         }
 
         public void Add(string modifier)

@@ -162,10 +162,10 @@ namespace Fasciculus.CodeAnalysis.Tests
 
             Assert.AreEqual(context.Summaries, summaries.Length, "Summaries");
 
-            Assert.AreEqual(0, context.SyntaxDebugger.GetUnhandled().Count);
-            Assert.AreEqual(0, context.ModifierDebugger.GetUnhandled().Count);
-            Assert.AreEqual(0, context.AccessorDebugger.GetUnhandled().Count);
-            Assert.AreEqual(0, context.CommentDebugger.GetUnhandled().Count);
+            Assert.AreEqual(0, context.SyntaxDebugger.GetUnhandled().Count, "SyntaxDebugger");
+            Assert.AreEqual(0, context.ModifierDebugger.GetUnhandled().Count, "ModifierDebugger");
+            Assert.AreEqual(0, context.AccessorDebugger.GetUnhandled().Count, "AccessorDebugger");
+            Assert.AreEqual(0, context.CommentDebugger.GetUnhandled().Count, "CommentDebugger");
         }
 
         private void LogProductions(TestContext context)

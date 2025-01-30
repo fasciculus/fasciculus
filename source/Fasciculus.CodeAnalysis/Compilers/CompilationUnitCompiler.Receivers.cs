@@ -17,6 +17,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private readonly Stack<IPropertyReceiver> propertyReceivers = [];
 
         private readonly Stack<IAccessorReceiver> accessorReceivers = [];
+        private readonly Stack<IParameterReceiver> parameterReceivers = [];
         private readonly Stack<IConstructorReceiver> constructorReceivers = [];
 
         private void PushReceiver(SymbolBuilder builder)
@@ -32,6 +33,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             if (builder is IPropertyReceiver propertyReceiver) propertyReceivers.Push(propertyReceiver);
 
             if (builder is IAccessorReceiver accessorReceiver) accessorReceivers.Push(accessorReceiver);
+            if (builder is IParameterReceiver parameterReceiver) parameterReceivers.Push(parameterReceiver);
             if (builder is IConstructorReceiver constructorReceiver) constructorReceivers.Push(constructorReceiver);
         }
 
@@ -49,6 +51,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             if (builder is IPropertyReceiver) propertyReceivers.Pop();
 
             if (builder is IAccessorReceiver) accessorReceivers.Pop();
+            if (builder is IParameterReceiver) parameterReceivers.Pop();
             if (builder is IConstructorReceiver) constructorReceivers.Pop();
 
             return builder;
@@ -80,6 +83,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private void Add(AccessorSymbol accessor)
             => accessorReceivers.Peek().Add(accessor);
+
+        private void Add(ParameterSymbol parameter)
+            => parameterReceivers.Peek().Add(parameter);
 
         private void Add(ConstructorSymbol constructor)
             => constructorReceivers.Peek().Add(constructor);

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    internal class ParameterList : SymbolDictionary<ParameterSymbol>
+    internal class ParameterList : SymbolList<ParameterSymbol>
     {
         public ParameterList(IEnumerable<ParameterSymbol> parameters)
             : base(parameters) { }

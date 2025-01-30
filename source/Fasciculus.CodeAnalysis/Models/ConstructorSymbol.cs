@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Frameworking;
+using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
@@ -25,5 +26,8 @@ namespace Fasciculus.CodeAnalysis.Models
                 Type = Type,
             };
         }
+
+        protected override string GetId()
+            => $"{Kind}{string.Join("", Parameters.Select(p => $"-{p.Type.Mangled}"))}";
     }
 }

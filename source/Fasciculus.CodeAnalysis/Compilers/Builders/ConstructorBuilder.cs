@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Collections;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
@@ -8,12 +9,13 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
         {
             ConstructorSymbol constructor = new(Framework, Package, comment)
             {
-                Name = Name,
-                Link = Link,
+                Name = CreateName(),
+                Link = CreateLink(),
                 Modifiers = Modifiers,
                 Type = Type,
             };
 
+            Parameters.Apply(constructor.Add);
             constructor.AddSource(Source);
 
             return constructor;

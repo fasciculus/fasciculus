@@ -1,16 +1,20 @@
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Net.Navigating;
+using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
     public interface IInvokableSymbol : ITypedSymbol
     {
+        public IEnumerable<IParameterSymbol> Parameters { get; }
     }
 
     internal class InvokableSymbol<T> : TypedSymbol<T>, IInvokableSymbol
         where T : notnull, InvokableSymbol<T>
     {
         private readonly ParameterList parameters;
+
+        public IEnumerable<IParameterSymbol> Parameters => parameters;
 
         public InvokableSymbol(SymbolKind kind, TargetFramework framework, string package, SymbolComment comment)
             : base(kind, framework, package, comment)
@@ -27,8 +31,6 @@ namespace Fasciculus.CodeAnalysis.Models
         public override void MergeWith(T other)
         {
             base.MergeWith(other);
-
-            parameters.AddOrMergeWith(other.parameters);
         }
 
         public override void ReBase(UriPath newBase)
@@ -39,6 +41,6 @@ namespace Fasciculus.CodeAnalysis.Models
         }
 
         public void Add(ParameterSymbol parameter)
-            => parameters.AddOrMergeWith(parameter);
+            => parameters.Add(parameter);
     }
 }

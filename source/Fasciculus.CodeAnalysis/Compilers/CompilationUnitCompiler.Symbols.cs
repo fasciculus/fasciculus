@@ -125,7 +125,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             if (IsIncluded(modifiers))
             {
                 SymbolName name = new(node.Declaration.Variables.First().Identifier.ValueText);
-                string type = GetTypeName(node.Declaration.Type);
+                SymbolName type = GetTypeName(node.Declaration.Type);
 
                 PushField(name, modifiers, type);
                 base.VisitFieldDeclaration(node);
@@ -145,7 +145,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             if (IsIncluded(modifiers))
             {
                 SymbolName name = new(node.Declaration.Variables.First().Identifier.ValueText);
-                string type = GetTypeName(node.Declaration.Type);
+                SymbolName type = GetTypeName(node.Declaration.Type);
 
                 PushEvent(name, modifiers, type);
                 base.VisitEventFieldDeclaration(node);
@@ -169,7 +169,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             if (IsIncluded(modifiers))
             {
                 SymbolName name = new(node.Identifier.ValueText);
-                string type = GetTypeName(node.Type);
+                SymbolName type = GetTypeName(node.Type);
 
                 PushProperty(name, modifiers, type);
                 base.VisitPropertyDeclaration(node);
@@ -200,6 +200,31 @@ namespace Fasciculus.CodeAnalysis.Compilers
             }
         }
 
+        public override void VisitParameter(ParameterSyntax node)
+        {
+            // Parameter
+            // : IdentifierName EqualsValueClause?
+            // | GenericName
+            // | PredefinedType EqualsValueClause?
+            // | ArrayType
+            // | PointerType
+            // | NullableType EqualsValueClause?
+
+            nodeDebugger.Add(node);
+
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
+
+            if (IsIncluded(modifiers))
+            {
+                SymbolName name = GetName(node.Identifier, null);
+                SymbolName type = GetTypeName(node.Type);
+
+                PushParameter(name, modifiers, type);
+                base.VisitParameter(node);
+                Add(PopParameter());
+            }
+        }
+
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
             // ConstructorDeclaration
@@ -211,7 +236,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (IsIncluded(modifiers))
             {
-                SymbolName name = GetName(node.Identifier, node.ParameterList, null);
+                SymbolName name = GetName(node.Identifier, null);
 
                 PushConstructor(name, modifiers);
                 base.VisitConstructorDeclaration(node);

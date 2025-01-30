@@ -1,5 +1,5 @@
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Collections;
+using Fasciculus.Support;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
@@ -43,67 +43,72 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private static SymbolName GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
         {
-            string name = identifier.Text;
+            string untyped = identifier.Text;
 
             if (typeParameters is null || typeParameters.Parameters.Count == 0)
             {
-                return new(name);
+                return new(untyped);
             }
 
             string[] parameters = [.. typeParameters.Parameters.Select(p => p.Identifier.Text)];
+            string name = $"{untyped}<{string.Join(',', parameters)}>";
+            string mangled = $"{untyped}-{parameters.Count()}";
 
-            return new(name, parameters);
+            return new(name, mangled);
         }
 
-        private static SymbolName GetName(SyntaxToken identifier, ParameterListSyntax? parameters, TypeParameterListSyntax? typeParameters)
+        private static SymbolName GetTypeName(TypeSyntax? type)
         {
-            SymbolName prefix = GetName(identifier, typeParameters);
-
-            if (parameters is null || parameters.Parameters.Count == 0)
+            if (type is not null)
             {
-                return prefix;
+                if (type is PredefinedTypeSyntax predefined) return GetPredefinedTypeName(predefined);
+                if (type is IdentifierNameSyntax identifier) return GetIdentifierTypeName(identifier);
+                if (type is GenericNameSyntax generic) return GetGenericTypeName(generic);
+                if (type is NullableTypeSyntax nullable) return GetNullableTypeName(nullable);
+                if (type is ArrayTypeSyntax array) return GetArrayTypeName(array);
+
+                throw Ex.InvalidOperation("unhandled type");
             }
 
-            TypeSyntax[] types = [.. parameters.Parameters.Select(p => p.Type).NotNull()];
-            string[] typeNames = [.. types.Select(t => t.ToFullString().TrimEnd())];
-
-            string name = $"{prefix}({string.Join(",", typeNames)})";
-
-            return new(name);
+            throw Ex.InvalidOperation("type is null");
         }
 
-        private static string GetTypeName(TypeSyntax type)
-        {
-            if (type is PredefinedTypeSyntax predefined) return GetPredefinedTypeName(predefined);
-            if (type is IdentifierNameSyntax identifier) return GetIdentifierTypeName(identifier);
-            if (type is GenericNameSyntax generic) return GetGenericTypeName(generic);
-            if (type is NullableTypeSyntax nullable) return GetNullableTypeName(nullable);
+        private static SymbolName GetPredefinedTypeName(PredefinedTypeSyntax predefined)
+            => new(predefined.Keyword.ToString());
 
-            return string.Empty;
+        private static SymbolName GetIdentifierTypeName(IdentifierNameSyntax identifier)
+            => new(identifier.Identifier.ValueText);
+
+        private static SymbolName GetGenericTypeName(GenericNameSyntax generic)
+        {
+            string untyped = generic.Identifier.ValueText;
+            TypeSyntax[] args = [.. generic.TypeArgumentList.Arguments];
+            SymbolName[] names = [.. args.Select(GetTypeName)];
+
+            string name = $"{untyped}<{string.Join(',', names.Select(n => n.Name))}>";
+            string mangled = $"{untyped}-{names.Length}";
+
+            return new(name, mangled);
         }
 
-        private static string GetPredefinedTypeName(PredefinedTypeSyntax type)
+        private static SymbolName GetNullableTypeName(NullableTypeSyntax nullable)
         {
-            return type.Keyword.ToString();
+            SymbolName elementName = GetTypeName(nullable.ElementType);
+
+            string name = $"{elementName.Name}?";
+            string mangled = $"{elementName.Mangled}-opt";
+
+            return new(name, mangled);
         }
 
-        private static string GetIdentifierTypeName(IdentifierNameSyntax identifier)
+        private static SymbolName GetArrayTypeName(ArrayTypeSyntax array)
         {
-            return identifier.Identifier.ValueText;
-        }
+            SymbolName elementName = GetTypeName(array.ElementType);
 
-        private static string GetGenericTypeName(GenericNameSyntax type)
-        {
-            string name = type.Identifier.ValueText;
-            TypeSyntax[] args = [.. type.TypeArgumentList.Arguments];
-            string[] names = [.. args.Select(GetTypeName)];
+            string name = $"{elementName.Name}[]";
+            string mangled = $"{elementName.Mangled}-array";
 
-            return $"{name}<{string.Join(",", names)}>";
-        }
-
-        private static string GetNullableTypeName(NullableTypeSyntax nullable)
-        {
-            return GetTypeName(nullable.ElementType) + "?";
+            return new(name, mangled);
         }
     }
 }

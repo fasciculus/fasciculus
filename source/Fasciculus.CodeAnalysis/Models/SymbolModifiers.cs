@@ -29,6 +29,8 @@ namespace Fasciculus.CodeAnalysis.Models
         public bool IsAsync { get; }
 
         public bool IsPartial { get; }
+
+        public bool IsParams { get; }
     }
 
     internal class SymbolModifiers : ISymbolModifiers
@@ -60,6 +62,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public bool IsPartial { get; set; }
 
+        public bool IsParams { get; set; }
+
         public static SymbolModifiers Public()
             => new() { IsPublic = true };
 
@@ -78,6 +82,7 @@ namespace Fasciculus.CodeAnalysis.Models
             IsUnsafe = other.IsUnsafe;
             IsAsync = other.IsAsync;
             IsPartial = other.IsPartial;
+            IsParams = other.IsParams;
         }
 
         public override string? ToString()
@@ -96,6 +101,7 @@ namespace Fasciculus.CodeAnalysis.Models
             if (IsUnsafe) sb.Append("unsafe ");
             if (IsAsync) sb.Append("async ");
             if (IsPartial) sb.Append("partial ");
+            if (IsPartial) sb.Append("params ");
 
             return sb.ToString().TrimEnd();
         }
