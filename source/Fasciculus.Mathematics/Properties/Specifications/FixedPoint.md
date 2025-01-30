@@ -208,3 +208,51 @@ Example for `AFP16`:
 public const short Epsilon = 0x0001; // binary: 0000_0000_0000_0001
 ```
 
+## §5 Masks
+
+## §6 Validation Check Algorithms
+
+### $6.1 Check for `NaN`
+
+All `FP` classes provide a ckeck for `NaN` named `IsNaN`.
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static bool IsNaN(ushort value);
+```
+
+### $6.1 Check for Infinity
+
+All `FP` classes provide checks for infinity.
+
+Example for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static bool IsPositiveInfinity(ushort value);
+public static bool IsNegativeInfinity(ushort value);
+public static bool IsInfinity(ushort value); // positive or negative
+```
+
+## §7 Algorithm restrictions
+
+### §7.1 Safe and Unsafe Algorithms
+
+Most of the following algorithms come in two versions: a safe and an unsafe version.
+
+The unsafe versions expect their arguments to be neither infinite nor `NaN`.
+
+### §7.2 Overflow or Underflow
+
+Most algorithms may return $+\infty$ on overflow or $-\infty$ on underflow.
+
+### §7.3 Returning `NaN`
+
+All algorithms return `NaN`, if at least on of their arguments is `NaN`.
+
+Algorithms like division or square root return `NaN`, if the result is undefined
+(like division by zero or square root of negative values).
+
+## §8 Unary Algorithms
+
+## §9 Arithmetic Algorithms
