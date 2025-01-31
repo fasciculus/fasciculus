@@ -18,8 +18,8 @@ namespace Fasciculus.Mathematics.Tests.FixedPoint
                 Assert.IsFalse(FP16Q8.IsNaN(neg), "0x{0:X}", neg);
             }
 
-            Assert.IsFalse(FP16Q8.IsNaN(FP16Q8.PositiveInfinity), "PositiveInfinity");
-            Assert.IsFalse(FP16Q8.IsNaN(FP16Q8.NegativeInfinity), "NegativeInfinity");
+            Assert.IsFalse(FP16Q8.IsNaN(FP16Q8.PosInf), "PositiveInfinity");
+            Assert.IsFalse(FP16Q8.IsNaN(FP16Q8.NegInf), "NegativeInfinity");
 
             for (ushort value = 1; value < 0x4000; ++value)
             {

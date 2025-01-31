@@ -14,15 +14,15 @@ namespace Fasciculus.Mathematics.Tests.FixedPoint
         public void TestFP16Q8()
         {
             ushort x;
-            ushort a = FP16Q8.Add(FP16Q8.One, FP16Q8.Epsilon);
+            ushort a = FP16Q8.Add(FP16Q8.One, FP16Q8.Eps);
 
             x = FP16Q8.Mul(FP16Q8.One, FP16Q8.One);
             Assert.AreEqual(FP16Q8.One, x);
 
-            x = FP16Q8.Mul(FP16Q8.One, FP16Q8.NegativeOne);
-            Assert.AreEqual(FP16Q8.NegativeOne, x);
+            x = FP16Q8.Mul(FP16Q8.One, FP16Q8.NegOne);
+            Assert.AreEqual(FP16Q8.NegOne, x);
 
-            x = FP16Q8.Mul(FP16Q8.NegativeOne, FP16Q8.NegativeOne);
+            x = FP16Q8.Mul(FP16Q8.NegOne, FP16Q8.NegOne);
             Assert.AreEqual(FP16Q8.One, x);
 
             x = FP16Q8.Mul(a, a);

@@ -7,7 +7,7 @@
     </tr>
     <tr>
         <td>Version</td>
-        <td>2025-01-31</td>
+        <td>2025-02-01</td>
     </tr>
 </table>
 
@@ -473,8 +473,8 @@ public static ushort DivUnsafe(ushort lhs, ushort rhs);
 
 ## §A Division Algorithms
 
-The division algorithms are implemented as a multiplication of the nominator $n$ with the
-reciprocal $r$ of the denominator $d$ to get the quotient $q$:
+For $N \gt 32$ the division algorithms are implemented as a multiplication of the nominator
+$n$ with the reciprocal $r$ of the denominator $d$ to get the quotient $q$:
 
 $$
 \tag{A.1}
@@ -515,42 +515,18 @@ $$
 Starting from an initial estimate $r_0$, a Newton iteration is given as:
 
 $$
-\tag{A.2.3}
-r_{i+1} = r_i - \frac{f(r_i)}{f'(r_i)}
-$$
-
-Placing (A.2.1) and (A.2.2) into (A.2.3):
-
-$$
-\tag{A.2.4}
-r_{i+1} = r_i - \frac{r^{-1} - d}{-r^{-2}}
-$$
-
-Eliminating the minus in the denominator by multiplying the fraction in (A.2.4) with $-1$:
-
-$$
-\tag{A.2.5}
-r_{i+1} = r_i + \frac{r^{-1} - d}{r^{-2}}
-$$
-
-Eliminating the denominator of the fraction in (A.2.5) by multiplying both the nominator and
-the denominator with $r_i^2$:
-
-$$
-\tag{A.2.6}
-r_{i+1} = r_i + r_i^2(r^{-1} - d)
-$$
-
-Eliminating the $r^{-1}$ in (A.2.6):
-
-$$
 \begin{align}
-\tag{A.2.7}     r_{i+1} &= r_i + r_i(1 - r_i d) \\
-\notag                  &= r_i (2 - r_i d)
+\notag r_{i+1} &= r_i - \frac{f(r_i)}{f'(r_i)} \\
+\notag r_{i+1} &= r_i - \frac{r^{-1} - d}{-r^{-2}} \\
+\notag r_{i+1} &= r_i + \frac{r^{-1} - d}{r^{-2}} \\
+\notag r_{i+1} &= r_i + r_i^2(r^{-1} - d) \\
+\tag{A.2.3} r_{i+1} &= r_i + r_i(1 - r_i d) \\
+\tag{A.2.4} r_{i+1} &= r_i (2 - r_i d)
 \end{align}
 $$
 
-The resulting iteration step uses addition, subtraction and multiplication only.
+The resulting iteration step uses addition, subtraction and multiplication only. For
+comptational precision, (A.2.3) is preferred.
 
 Since $d r = 1$ and $d r_i \approx 1$ the error $\epsilon_i$ is defined as:
 
@@ -586,8 +562,8 @@ with the lower bound $d_0$ and the upper bound $d_1$:
 
 $$
 \begin{align}
-\notag    d_0 &= 0.5 = 1/2 \\
-\notag    d_1 &= 1
+\tag{A.3.1}    d_0 &= 0.5 = 1/2 \\
+\tag{A.3.2}    d_1 &= 1
 \end{align}
 $$
 
@@ -610,13 +586,13 @@ This gives the error function and its derivative:
 
 $$
 \begin{align}
-\notag  \epsilon = f(d) &= 1 - d(t_0 + d t_1) \\
-\notag                  &= 1 - t_0 d - t_1 d^2 \\
-\notag            f'(d) &= -t_0 - 2 t_1 d
+\tag{A.3.3}   f(d) &= 1 - d(t_0 + d t_1) \\
+\tag{A.3.4}   f(d) &= 1 - t_0 d - t_1 d^2 \\
+\notag        f'(d) &= -t_0 - 2 t_1 d
 \end{align}
 $$
 
-To minimize the error $|\epsilon_0|$, the local minimum of $f(d)$ is reuired.
+To minimize the error $|\epsilon_0|$, the local minimum of $f(d)$ is required.
 It occurs at $f'(d) = 0$. Solving for d:
 
 $$
@@ -624,7 +600,7 @@ $$
 \notag           f'(d) &= 0 \\
 \notag  -t_0 - 2 t_1 d &= 0 \\
 \notag        -2 t_1 d &= t_0 \\
-\notag               d &= - \frac{t_0}{2 t_1}
+\tag{A.3.5}          d &= - \frac{t_0}{2 t_1}
 \end{align}
 $$
 
@@ -632,13 +608,13 @@ Applying the Chebyshev equioscillation theorem gives the equations:
 
 $$
 \begin{align}
-\notag  f(d_0) &= f(d_1) \\
-\notag  f(d_0) &= -f(d) \\
-\notag  f(d_1) &= -f(d)
+\tag{A.3.6}  f(d_0) &= f(d_1) \\
+\notag       f(d_0) &= -f(d) \\
+\tag{A.3.7}  f(d_1) &= -f(d)
 \end{align}
 $$
 
-Using (A3.?) to solve for $t_1$:
+Using (A.3.6) with (A.3.4) to solve for $t_1$:
 
 $$
 \begin{align}
@@ -649,22 +625,22 @@ $$
 \notag  - 2 t_0 - t_1 &= - 4 t_0 - 4 t_1 \\
 \notag  - t_1 &= - 2 t_0 - 4 t_1 \\
 \notag  3 t_1 &= - 2 t_0 \\
-\notag  t_1 &= - \frac{2}{3} t_0
+\tag{A.3.8}  t_1 &= - \frac{2}{3} t_0
 \end{align}
 $$
 
-Replacing:
+Using (A.3.8) with (A.3.3) to define $f(d_1)$:
 
 $$
 \begin{align}
-\notag  f(d_1) &= 1 - d_1(t_0 + d_1 t_1) \\
-\notag  f(d_1) &= 1 - (t_0 + t_1) \\
-\notag  f(d_1) &= 1 - \bigg(t_0 - \frac{2}{3} t_0\bigg) \\
-\notag  f(d_1) &= 1 - \frac{1}{3} t_0
+\notag       f(d_1) &= 1 - d_1(t_0 + d_1 t_1) \\
+\notag       f(d_1) &= 1 - (t_0 + t_1) \\
+\notag       f(d_1) &= 1 - \bigg(t_0 - \frac{2}{3} t_0\bigg) \\
+\tag{A.3.9}  f(d_1) &= 1 - \frac{1}{3} t_0
 \end{align}
 $$
 
-Replacing:
+Using (A.3.5) and (A.3.8) to redefine (A.3.4):
 
 $$
 \begin{align}
@@ -675,11 +651,11 @@ $$
 \notag  f(d) &= 1 - \bigg(\frac{t_0}{\frac{4}{3}}\bigg) + \frac{2}{3} t_0 \bigg(\frac{1}{\frac{4}{3}}\bigg)^2 \\
 \notag  f(d) &= 1 - \frac{3}{4}t_0 + \frac{2}{3} t_0 \bigg(\frac{1}{\frac{16}{9}}\bigg) \\
 \notag  f(d) &= 1 - \frac{36}{48}t_0 + \frac{18}{48} t_0 \\
-\notag  f(d) &= 1 - \frac{9}{24}t_0  \\
+\tag{A.3.10}  f(d) &= 1 - \frac{9}{24}t_0  \\
 \end{align}
 $$
 
-Using:
+Using (A.3.7) with (A.3.9) and (A.3.10) to solve for $t_1$:
 
 $$
 \begin{align}
@@ -691,7 +667,26 @@ $$
 \notag   t_0 &= \frac{48}{17} \\
 \notag   t_1 &= - \frac{2}{3} t_0 \\
 \notag   t_1 &= - \frac{2}{3} \frac{48}{17} \\
-\notag   t_1 &= - \frac{32}{17} \\
+\tag{A.3.11}   t_1 &= - \frac{32}{17} \\
+\end{align}
+$$
+
+Using (A.3.8) and (A.3.11) to solve for $t_0$:
+
+$$
+\begin{align}
+\notag - \frac{2}{3} t_0 &= t_1 \\
+\notag - \frac{2}{3} t_0 &= - \frac{32}{17} \\
+\tag{A.3.12} t_0 &= \frac{96}{34} = \frac{48}{17} \\
+\end{align}
+$$
+
+The resulting initial estimate is therefore:
+
+$$
+\begin{align}
+\notag r_0 &= t_0 + t_1 d \\
+\tag{A.3.13} r_0 &= \frac{48}{17} - \frac{32}{17} d
 \end{align}
 $$
 
@@ -715,12 +710,24 @@ $$
 p = -2^i \log_2 \epsilon_0 - 1
 $$
 
+This gives the following precisions $p$ after $i$ Newton iterations:
+
 | $i$ | $p$ | Satisfies
 | --- | ---: | --- |
 | 0 | 3.08 | |
 | 1 | 7.17 | FP8 |
 | 2 | 15.35 | FP16 |
-| 3 | 31.70 | FP32 |
-| 4 | 64.40 | FP64 |
+| 3 | 31.70 | FP32, `float` |
+| 4 | 64.40 | FP64, `double` |
+
+Using a third-order Chebyshev polynomial for $r_0$:
+
+$$
+r_0 = t_0 + t_1 d + t_2 d^2
+$$
+
+which has an $\epsilon_0$ of $1/99$ doesn't reduce the number of iterations as $p$ is
+$52.03$ for $i = 3$. That would almost satisfy `double` (52 bit mantissa) but not
+`FP64` (62 bit mantissa).
 
 [wiki_div]: https://en.wikipedia.org/wiki/Division_algorithm#Newton%E2%80%93Raphson_division

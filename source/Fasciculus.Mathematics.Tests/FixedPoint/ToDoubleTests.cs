@@ -9,9 +9,9 @@ namespace Fasciculus.Mathematics.Tests.FixedPoint
         [TestMethod]
         public void TestFP16Q8()
         {
-            double minValue = FP16Q8.ToDouble(FP16Q8.MinValue);
-            double maxValue = FP16Q8.ToDouble(FP16Q8.MaxValue);
-            double epsilon = FP16Q8.ToDouble(FP16Q8.Epsilon);
+            double minValue = FP16Q8.ToDouble(FP16Q8.MinVal);
+            double maxValue = FP16Q8.ToDouble(FP16Q8.MaxVal);
+            double epsilon = FP16Q8.ToDouble(FP16Q8.Eps);
 
             Assert.AreEqual(-32.0, minValue);
             Assert.AreEqual(32.0, maxValue);
