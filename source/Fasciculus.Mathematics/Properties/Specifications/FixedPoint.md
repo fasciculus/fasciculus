@@ -1,5 +1,16 @@
 # Fixed Point Algorithms
 
+<table>
+    <tr>
+        <td>Status</td>
+        <td>pre-draft</td>
+    </tr>
+    <tr>
+        <td>Version</td>
+        <td>2025-01-31</td>
+    </tr>
+</table>
+
 > [!WARNING]
 > This is work-in-progress. It isn't even a draft yet.
 
@@ -96,9 +107,14 @@ If both the $s$ bit and the $e$ bit are set and $m = 0$, the represented value i
 
 #### §3.3.7 Not-a-Number
 
-If the $e$ bit is set and $m \ne 0$, the represented value is `NaN`.
+#### §3.3.8 Zero
 
-#### §3.3.8 Represented Value
+If the $e$ bit is not set and $m = 0$, the represented value is $0$. The $s$ bit
+is ignored.
+
+This results in the fact that $-0$ exists. It is treated as $0$.
+
+#### §3.3.9 Represented Value
 
 Unless the $e$ bit is set, the represented value is:
 
@@ -128,7 +144,7 @@ $$
 All `FP` classes provide a constant representing `NaN`. Its binary value has all bits except
 the $s$ bit set.
 
-Example for `FP16Q8` and `FP16Q16`:
+Value for `FP16Q8` and `FP16Q16`:
 
 ```cs
 public const ushort NaN = 0x7FFF; // binary: 0111_1111_1111_1111
@@ -140,50 +156,50 @@ All `FP` classes provide constants for $\plusmn\infty$. Its binary values have t
 $s$ bit set according to the represented sign, the $e$ bit set to 1 and the $m$ bits
 set to zero.
 
-Example for `FP16Q8` and `FP16Q16`:
+Values for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public const ushort PositiveInfinity = 0x4000; // binary: 0100_0000_0000_0000
-public const ushort NegativeInfinity = 0xC000; // binary: 1100_0000_0000_0000
+public const ushort PosInf = 0x4000; // binary: 0100_0000_0000_0000
+public const ushort NegInf = 0xC000; // binary: 1100_0000_0000_0000
 ```
 
 ### §4.1.3 One Constants
 
 All `FP` classes provide constants for $\plusmn1$.
 
-Example for `FP16Q8`:
+Values for `FP16Q8`:
 
 ```cs
 public const ushort One = 0x0100; // binary: 0000_0001_0000_0000
-public const ushort NegativeOne = 0x8100; // binary: 1000_0001_0000_0000
+public const ushort NegOne = 0x8100; // binary: 1000_0001_0000_0000
 ```
 
-Example for `FP16Q16`:
+Values for `FP16Q16`:
 
 ```cs
 public const ushort One = 0x2000; // binary: 0010_0000_0000_0000
-public const ushort NegativeOne = 0xA000; // binary: 1010_0000_0000_0000
+public const ushort NegOne = 0xA000; // binary: 1010_0000_0000_0000
 ```
 
 ### §4.1.4 Min and Max Value Constants
 
 All `FP` classes where $Q \ne N$ provide constants for their minimum and maximum value.
 
-Example for `FP16Q8`:
+Values for `FP16Q8`:
 
 ```cs
-public const ushort MinValue = 0xA000; // binary: 1010_0000_0000_0000
-public const ushort MaxValue = 0x2000; // binary: 0010_0000_0000_0000
+public const ushort MinVal = 0xA000; // binary: 1010_0000_0000_0000
+public const ushort MaxVal = 0x2000; // binary: 0010_0000_0000_0000
 ```
 
 ### §4.1.4 Epsilon Constant
 
 All `FP` classes provide constants for $\epsilon$.
 
-Example for `FP16Q8` and `FP16Q16`:
+Value for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public const ushort Epsilon = 0x0001; // binary: 0000_0000_0000_0001
+public const ushort Eps = 0x0001; // binary: 0000_0000_0000_0001
 ```
 
 ### §4.2 Angular Fixed Point Value Constants
@@ -192,7 +208,7 @@ public const ushort Epsilon = 0x0001; // binary: 0000_0000_0000_0001
 
 All `AFP` classes provide constants for $\pi$.
 
-Example for `AFP16`:
+Value for `AFP16`:
 
 ```cs
 public const short Pi = 0x8000; // binary: 1000_0000_0000_0000
@@ -202,36 +218,36 @@ public const short Pi = 0x8000; // binary: 1000_0000_0000_0000
 
 All `AFP` classes provide constants for $\epsilon$.
 
-Example for `AFP16`:
+Value for `AFP16`:
 
 ```cs
-public const short Epsilon = 0x0001; // binary: 0000_0000_0000_0001
+public const short Eps = 0x0001; // binary: 0000_0000_0000_0001
 ```
 
 ## §5 Masks
 
 ### §5.1 Sign Mask
 
-Example for `FP16Q8` and `FP16Q16`:
+Value for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public const ushort SignMask = 0x8000; // binary: 1000_0000_0000_0000
+public const ushort SgnMsk = 0x8000; // binary: 1000_0000_0000_0000
 ```
 
 ### §5.2 Exception Mask
 
-Example for `FP16Q8` and `FP16Q16`:
+Value for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public const ushort ExceptionMask = 0x4000; // binary: 0100_0000_0000_0000
+public const ushort ExcMsk = 0x4000; // binary: 0100_0000_0000_0000
 ```
 
 ### §5.2 Mantissa Mask
 
-Example for `FP16Q8` and `FP16Q16`:
+Value for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public const ushort MantissaMask = 0x3FFF; // binary: 0011_1111_1111_1111
+public const ushort MntMsk = 0x3FFF; // binary: 0011_1111_1111_1111
 ```
 
 ## §6 Validation Check Algorithms
@@ -240,7 +256,7 @@ public const ushort MantissaMask = 0x3FFF; // binary: 0011_1111_1111_1111
 
 All `FP` classes provide a ckeck for `NaN` named `IsNaN`.
 
-Example for `FP16Q8` and `FP16Q16`:
+Signature for `FP16Q8` and `FP16Q16`:
 
 ```cs
 public static bool IsNaN(ushort value);
@@ -252,26 +268,35 @@ Checks whether the given value is negative.
 
 The result is `false` for `NaN`.
 
-The result is `true` for NegativeInfinity, `false` for PositiveInfinity.
+The result is `true` for $-\infty$, `false` for $\infty$.
 
-Example for `FP16Q8` and `FP16Q16`:
+The result is `false` for $0$.
+
+Signatures for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public static bool IsNegative(ushort value);
-public static bool IsNegativeUnsafe(ushort value);
+public static bool IsNeg(ushort value);
+public static bool IsNegUnsafe(ushort value);
 ```
-
 
 ### $6.3 Check for Infinity
 
 All `FP` classes provide checks for infinity.
 
-Example for `FP16Q8` and `FP16Q16`:
+Signatures for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public static bool IsPositiveInfinity(ushort value);
-public static bool IsNegativeInfinity(ushort value);
-public static bool IsInfinity(ushort value); // positive or negative
+public static bool IsPosInf(ushort value);
+public static bool IsNegInf(ushort value);
+public static bool IsInf(ushort value); // positive or negative
+```
+
+### $6.3 Check for Zero
+
+Signature for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static bool IsZero(ushort value);
 ```
 
 ## §7 Algorithm restrictions
@@ -280,7 +305,9 @@ public static bool IsInfinity(ushort value); // positive or negative
 
 Most algorithms come in two versions: a safe and an unsafe version.
 
-The unsafe versions expect their arguments to be neither infinite nor `NaN`.
+The unsafe versions expect their arguments to not be `NaN`.
+
+Some unsafe versions expect their arguments to not be infinite neither.
 
 ### §7.2 Overflow or Underflow
 
@@ -288,9 +315,9 @@ Most algorithms may return $+\infty$ on overflow or $-\infty$ on underflow.
 
 ### §7.3 Returning `NaN`
 
-All algorithms return `NaN`, if at least on of their arguments is `NaN`.
+All safe algorithms return `NaN`, if at least on of their arguments is `NaN`.
 
-Algorithms like division or square root return `NaN`, if the result is undefined
+Safe algorithms like division or square root return `NaN`, if the result is undefined
 (like division by zero or square root of negative values).
 
 ## §8 Unary Algorithms
@@ -299,9 +326,11 @@ Algorithms like division or square root return `NaN`, if the result is undefined
 
 The absolute value of `NaN` is `NaN`.
 
-The absolute value of NegativeInfinity is PositiveInfinity.
+The absolute value of $-\infty$ is $\infty$.
 
-Example for `FP16Q8` and `FP16Q16`:
+`AbsUnsafe` expects its argument to not be `NaN`.
+
+Signatures for `FP16Q8` and `FP16Q16`:
 
 ```cs
 public static ushort Abs(ushort value);
@@ -312,42 +341,67 @@ public static ushort AbsUnsafe(ushort value);
 
 Toggles the $s$ bit of the value.
 
-Example for `FP16Q8` and `FP16Q16`:
+Signatures for `FP16Q8` and `FP16Q16`:
+
+`NegUnsafe` expects its argument to not be `NaN`.
 
 ```cs
-public static ushort Negate(ushort value);
-public static ushort NegateUnsafe(ushort value);
+public static ushort Neg(ushort value);
+public static ushort NegUnsafe(ushort value);
 ```
 
-### §8.3 Invert
+### §8.3 Reciprocal ($1/x$)
 
-Calculates the inverse ($1/x$) of the value.
+Calculates the reciprocal ($1/x$) of the value.
 
-Example for `FP16Q8` and `FP16Q16`:
+The reciprocals of `NaN`, $\infty$, $-\infty$ and $0$ are all `NaN`.
+
+`RecUnsafe` expects its argument to neither be `NaN`, infinite nor $0$.
+
+Signatures for `FP16Q8` and `FP16Q16`:
 
 ```cs
-public static ushort Invert(ushort value);
-public static ushort InvertUnsafe(ushort value);
+public static ushort Rec(ushort value);
+public static ushort RecUnsafe(ushort value);
 ```
 
-### 8.4 Conversion to `double`
+### 8.4 Conversions
 
-Converts the value to a `double`. This may result in a loss of precision for
-$N \gt 52$.
+All conversions may result in a loss of precision.
+
+#### 8.4.1 Conversion to `double`
+
+This conversion may result in a loss of precision for $N \gt 52$.
 
 If the $e$ bit is set, this function returns the respective `double` counterpart.
 
-Example for `FP16Q8` and `FP16Q16`:
+Signature for `FP16Q8` and `FP16Q16`:
 
 ```cs
 public static double ToDouble(ushort value);
+```
+
+#### 8.4.1 Conversion from `double`
+
+This conversion may result in a loss of precision for $N \lt 52$.
+
+This conversion returns $\infty$ (or $-\infty$) if the given value doesn't fit into
+the target type.
+
+This conversion returns `NaN`, $\infty$ or $-\infty$ if the given value is one
+of these values.
+
+Signature for `FP16Q8` and `FP16Q16`:
+
+```cs
+public static ushort FromDouble(double value);
 ```
 
 ## §9 Shift Algorithms
 
 ### $9.1 Left Shift
 
-Example for `FP16Q8` and `FP16Q16`:
+Signatures for `FP16Q8` and `FP16Q16`:
 
 ```cs
 public static ushort ShiftLeft(ushort value, uint count);
@@ -356,7 +410,7 @@ public static ushort ShiftLeftUnsafe(ushort value, uint count);
 
 ### $9.1 Right Shift
 
-Example for `FP16Q8` and `FP16Q16`:
+Signatures for `FP16Q8` and `FP16Q16`:
 
 ```cs
 public static ushort ShiftRight(ushort value, uint count);
@@ -369,6 +423,10 @@ public static ushort ShiftRightUnsafe(ushort value, uint count);
 
 Example for `FP16Q8` and `FP16Q16`:
 
+`AddUnsafe` expects its arguments to neither be `NaN` nor infinite.
+
+Signatures for `FP16Q8` and `FP16Q16`:
+
 ```cs
 public static ushort Add(ushort lhs, ushort rhs);
 public static ushort AddUnsafe(ushort lhs, ushort rhs);
@@ -377,6 +435,10 @@ public static ushort AddUnsafe(ushort lhs, ushort rhs);
 ### §10.2 Subtraction
 
 Example for `FP16Q8` and `FP16Q16`:
+
+`SubUnsafe` expects its arguments to neither be `NaN` nor infinite.
+
+Signatures for `FP16Q8` and `FP16Q16`:
 
 ```cs
 public static ushort Sub(ushort lhs, ushort rhs);
@@ -387,6 +449,10 @@ public static ushort SubUnsafe(ushort lhs, ushort rhs);
 
 Example for `FP16Q8` and `FP16Q16`:
 
+`MulUnsafe` expects its arguments to neither be `NaN` nor infinite.
+
+Signatures for `FP16Q8` and `FP16Q16`:
+
 ```cs
 public static ushort Mul(ushort lhs, ushort rhs);
 public static ushort MulUnsafe(ushort lhs, ushort rhs);
@@ -394,10 +460,267 @@ public static ushort MulUnsafe(ushort lhs, ushort rhs);
 
 ### §10.4 Division
 
-Example for `FP16Q8` and `FP16Q16`:
+`DivUnsafe` expects its arguments to neither be `NaN` nor infinite.
+
+`DivUnsafe` expects its secon argument (the divisor) to not be $0$.
+
+Signatures for `FP16Q8` and `FP16Q16`:
 
 ```cs
 public static ushort Div(ushort lhs, ushort rhs);
 public static ushort DivUnsafe(ushort lhs, ushort rhs);
 ```
 
+## §A Division Algorithms
+
+The division algorithms are implemented as a multiplication of the nominator $n$ with the
+reciprocal $r$ of the denominator $d$ to get the quotient $q$:
+
+$$
+\tag{A.1}
+q = n / d = n (1 / d) = n r
+$$
+
+### §A.1 Preparations
+
+To calculate the initial estimate of the Newton iterations, $d$ must be
+in the range $[0.5, 1.0]$. This can be achieved as follows.
+
+1. If $d \lt 0$, both $n$ and $d$ are negated.
+2. If $d \notin [0.5, 1.0]$ both $n$ and $d$ are bit shifted:
+    1. If $d \lt 0.5$, both $n$ and $d$ are left shifted by the appropriate number of bits.
+    2. If $d \gt 1.0$, both $n$ and $d$ are right shifted by the appropriate number of bits.
+
+Step 2.1. may overflow $n$, leading to a premature $\infty$ or $-\infty$ result.
+
+Step 2.2. may lead to $n$ becoming $0$, leading to a premature $0$ result.
+
+### §A.2 Newton Iteration Step
+
+According to this [Wikipedia article][wiki_div], to find the inverse (reciprocal) $r$ of
+$d$ we use Newton's method to solve the equation:
+
+$$
+\tag{A.2.1}
+f(r) = (1/r) - d = r^{-1} - d = 0
+$$
+
+The derivative of (A.2.1) is:
+
+$$
+\tag{A.2.2}
+f'(r) = -1 / r^2= -r^{-2}
+$$
+
+Starting from an initial estimate $r_0$, a Newton iteration is given as:
+
+$$
+\tag{A.2.3}
+r_{i+1} = r_i - \frac{f(r_i)}{f'(r_i)}
+$$
+
+Placing (A.2.1) and (A.2.2) into (A.2.3):
+
+$$
+\tag{A.2.4}
+r_{i+1} = r_i - \frac{r^{-1} - d}{-r^{-2}}
+$$
+
+Eliminating the minus in the denominator by multiplying the fraction in (A.2.4) with $-1$:
+
+$$
+\tag{A.2.5}
+r_{i+1} = r_i + \frac{r^{-1} - d}{r^{-2}}
+$$
+
+Eliminating the denominator of the fraction in (A.2.5) by multiplying both the nominator and
+the denominator with $r_i^2$:
+
+$$
+\tag{A.2.6}
+r_{i+1} = r_i + r_i^2(r^{-1} - d)
+$$
+
+Eliminating the $r^{-1}$ in (A.2.6):
+
+$$
+\begin{align}
+\tag{A.2.7}     r_{i+1} &= r_i + r_i(1 - r_i d) \\
+\notag                  &= r_i (2 - r_i d)
+\end{align}
+$$
+
+The resulting iteration step uses addition, subtraction and multiplication only.
+
+Since $d r = 1$ and $d r_i \approx 1$ the error $\epsilon_i$ is defined as:
+
+$$
+\notag    \epsilon_i = 1 - d r_i
+$$
+
+After an iteration the error is:
+
+$$
+\begin{align}
+\notag    \epsilon_{i+1} &= 1 - d r_{i+1} \\
+\notag    &= 1 - d (r_i (2 - r_i d)) \\
+\notag    &= 1 - d (2 r_i - r_i^2 d) \\
+\notag    &= 1 - 2 d r_i + r_i^2 d^2 \\
+\notag    &= (1 - d r_i)^2 \\
+\notag    &= \epsilon_i^2
+\end{align}
+$$
+
+Given a good initial estimate $r_0$, such that |$\epsilon_0| \lt 1$, every iteration will
+double the amount of correct digits (bits) of the result.
+
+### §A.3 Initial Estimate
+
+For the following to work, $d$ must be limited:
+
+$$
+d \in [0.5, 1.0]
+$$
+
+with the lower bound $d_0$ and the upper bound $d_1$:
+
+$$
+\begin{align}
+\notag    d_0 &= 0.5 = 1/2 \\
+\notag    d_1 &= 1
+\end{align}
+$$
+
+The initial estimate $r_0$ is (second order Chebyshev polynomial):
+
+$$
+\notag  r_0 = t_0 + t_1 d \approx r
+$$
+
+Since $d r = 1$ and $d r_0 \approx 1$, the absolute value of the error $\epsilon_0$ is:
+
+$$
+\begin{align}
+\notag  |\epsilon_0| &= |d r - d r_0| \\
+\notag               &= |1 - d(t_0 + d t_1)|    
+\end{align}
+$$
+
+This gives the error function and its derivative:
+
+$$
+\begin{align}
+\notag  \epsilon = f(d) &= 1 - d(t_0 + d t_1) \\
+\notag                  &= 1 - t_0 d - t_1 d^2 \\
+\notag            f'(d) &= -t_0 - 2 t_1 d
+\end{align}
+$$
+
+To minimize the error $|\epsilon_0|$, the local minimum of $f(d)$ is reuired.
+It occurs at $f'(d) = 0$. Solving for d:
+
+$$
+\begin{align}
+\notag           f'(d) &= 0 \\
+\notag  -t_0 - 2 t_1 d &= 0 \\
+\notag        -2 t_1 d &= t_0 \\
+\notag               d &= - \frac{t_0}{2 t_1}
+\end{align}
+$$
+
+Applying the Chebyshev equioscillation theorem gives the equations:
+
+$$
+\begin{align}
+\notag  f(d_0) &= f(d_1) \\
+\notag  f(d_0) &= -f(d) \\
+\notag  f(d_1) &= -f(d)
+\end{align}
+$$
+
+Using (A3.?) to solve for $t_1$:
+
+$$
+\begin{align}
+\notag  f(d_0) &= f(d_1) \\
+\notag  1 - t_0 d_0 - t_1 d_0^2 &= 1 - t_0 d_1 - t_1 d_1^2 \\
+\notag  1 - \frac{1}{2} t_0 - \frac{1}{4} t_1 &=  1 - t_0 - t_1 \\
+\notag  4 - 2 t_0 - t_1 &= 4 - 4 t_0 - 4 t_1 \\
+\notag  - 2 t_0 - t_1 &= - 4 t_0 - 4 t_1 \\
+\notag  - t_1 &= - 2 t_0 - 4 t_1 \\
+\notag  3 t_1 &= - 2 t_0 \\
+\notag  t_1 &= - \frac{2}{3} t_0
+\end{align}
+$$
+
+Replacing:
+
+$$
+\begin{align}
+\notag  f(d_1) &= 1 - d_1(t_0 + d_1 t_1) \\
+\notag  f(d_1) &= 1 - (t_0 + t_1) \\
+\notag  f(d_1) &= 1 - \bigg(t_0 - \frac{2}{3} t_0\bigg) \\
+\notag  f(d_1) &= 1 - \frac{1}{3} t_0
+\end{align}
+$$
+
+Replacing:
+
+$$
+\begin{align}
+\notag  f(d) &= 1 - t_0 d - t_1 d^2 \\
+\notag  f(d) &= 1 - t_0 \bigg(- \frac{t_0}{2 t_1}\bigg) - t_1 \bigg(- \frac{t_0}{2 t_1}\bigg)^2 \\
+\notag  f(d) &= 1 - t_0 \bigg(- \frac{t_0}{2 (- \frac{2}{3} t_0)}\bigg) - \bigg(- \frac{2}{3} t_0\bigg) \bigg(- \frac{t_0}{2 (- \frac{2}{3} t_0)}\bigg)^2 \\
+\notag  f(d) &= 1 - \bigg(\frac{t_0^2}{\frac{4}{3} t_0}\bigg) - \bigg(- \frac{2}{3} t_0\bigg) \bigg(\frac{t_0}{\frac{4}{3} t_0}\bigg)^2 \\
+\notag  f(d) &= 1 - \bigg(\frac{t_0}{\frac{4}{3}}\bigg) + \frac{2}{3} t_0 \bigg(\frac{1}{\frac{4}{3}}\bigg)^2 \\
+\notag  f(d) &= 1 - \frac{3}{4}t_0 + \frac{2}{3} t_0 \bigg(\frac{1}{\frac{16}{9}}\bigg) \\
+\notag  f(d) &= 1 - \frac{36}{48}t_0 + \frac{18}{48} t_0 \\
+\notag  f(d) &= 1 - \frac{9}{24}t_0  \\
+\end{align}
+$$
+
+Using:
+
+$$
+\begin{align}
+\notag  -f(d) &= f(d1) \\
+\notag  -(1 - \frac{9}{24}t_0) &= 1 - \frac{1}{3} t_0 \\
+\notag   \frac{9}{24}t_0 - 1 &= 1 - \frac{8}{24} t_0 \\
+\notag   \frac{9}{24}t_0 &= 2 - \frac{8}{24} t_0 \\
+\notag   \frac{17}{24}t_0 &= \frac{48}{24} \\
+\notag   t_0 &= \frac{48}{17} \\
+\notag   t_1 &= - \frac{2}{3} t_0 \\
+\notag   t_1 &= - \frac{2}{3} \frac{48}{17} \\
+\notag   t_1 &= - \frac{32}{17} \\
+\end{align}
+$$
+
+### §A.4 Required Newton Iterations
+
+The error $\epsilon_0$ produced by these parameters is at most:
+
+$$
+\begin{align}
+\notag  |\epsilon_0| &= |f(d_1)| \\
+\notag  |\epsilon_0| &= \bigg|1 - \frac{1}{3} t_0\bigg| \\
+\notag  |\epsilon_0| &= \bigg|1 - \frac{1}{3} \frac{48}{17}\bigg| \\
+\notag  |\epsilon_0| &= \bigg|1 - \frac{16}{17}\bigg| \\
+\notag  |\epsilon_0| &= \frac{1}{17} \\
+\end{align}
+$$
+
+The precision $p$ (binary digits of reciprocal accuracy) after $i$ iterations is:
+
+$$
+p = -2^i \log_2 \epsilon_0 - 1
+$$
+
+| $i$ | $p$ | Satisfies
+| --- | ---: | --- |
+| 0 | 3.08 | |
+| 1 | 7.17 | FP8 |
+| 2 | 15.35 | FP16 |
+| 3 | 31.70 | FP32 |
+| 4 | 64.40 | FP64 |
+
+[wiki_div]: https://en.wikipedia.org/wiki/Division_algorithm#Newton%E2%80%93Raphson_division
