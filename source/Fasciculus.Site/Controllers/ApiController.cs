@@ -3,8 +3,6 @@ using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Api.Models;
 using Fasciculus.Site.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Site.Controllers
@@ -151,8 +149,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @enum.Name + " Enum",
                 Enum = @enum,
-                Symbol = @enum,
-                SourceUris = [.. GetSourceUris(@enum)],
                 AppliesTo = new(@enum.Frameworks),
                 Navigation = apiNavigation.Create(@enum.Link)
             };
@@ -166,8 +162,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @interface.Name + " Interface",
                 Interface = @interface,
-                Symbol = @interface,
-                SourceUris = [.. GetSourceUris(@interface)],
                 AppliesTo = new(@interface.Frameworks),
                 Navigation = apiNavigation.Create(@interface.Link)
             };
@@ -181,8 +175,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @class.Name + " Class",
                 Class = @class,
-                Symbol = @class,
-                SourceUris = [.. GetSourceUris(@class)],
                 AppliesTo = new(@class.Frameworks),
                 Navigation = apiNavigation.Create(@class.Link)
             };
@@ -196,8 +188,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = field.Name + " Field",
                 Field = field,
-                Symbol = field,
-                SourceUris = [.. GetSourceUris(field)],
                 AppliesTo = new(field.Frameworks),
                 Navigation = apiNavigation.Create(field.Link)
             };
@@ -211,8 +201,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = member.Name + " Member",
                 Member = member,
-                Symbol = member,
-                SourceUris = [.. GetSourceUris(member)],
                 AppliesTo = new(member.Frameworks),
                 Navigation = apiNavigation.Create(member.Link)
             };
@@ -226,8 +214,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @event.Name + " Event",
                 Event = @event,
-                Symbol = @event,
-                SourceUris = [.. GetSourceUris(@event)],
                 AppliesTo = new(@event.Frameworks),
                 Navigation = apiNavigation.Create(@event.Link)
             };
@@ -241,8 +227,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = property.Name + " Property",
                 Property = property,
-                Symbol = property,
-                SourceUris = [.. GetSourceUris(property)],
                 AppliesTo = new(property.Frameworks),
                 Navigation = apiNavigation.Create(property.Link)
             };
@@ -267,29 +251,6 @@ namespace Fasciculus.Site.Controllers
             }
 
             return NotFound();
-
-        }
-
-        private IEnumerable<Uri> GetSourceUris<T>(T symbol)
-            where T : notnull, ISymbol
-        {
-            return symbol.Sources;
-
-            //if (symbol.Packages.Count() > 0)
-            //{
-            //    UriPath packageLink = new(symbol.Packages.First());
-            //    IPackageSymbol? package = apiContent.GetSymbol(packageLink) as IPackageSymbol;
-
-            //    if (package is not null)
-            //    {
-            //        foreach (UriPath source in symbol.Sources)
-            //        {
-            //            string uri = $"{package.Repository}/{source}";
-
-            //            yield return new(uri);
-            //        }
-            //    }
-            //}
         }
     }
 }

@@ -1,8 +1,11 @@
-@model ApiSymbolInfoViewModel
+@model ISymbol
 @{
-    string packagesLabel = Model.Symbol.Packages.Count() == 1 ? "Package" : "Packages";
+    string[] packages = [.. Model.Packages];
+    Uri[] sources = [.. Model.Sources];
+
+    string packagesLabel = packages.Length == 1 ? "Package" : "Packages";
     bool firstPackage = true;
-    string sourcesLabel = Model.SourceUris.Length == 1 ? "Source" : "Sources";
+    string sourcesLabel = sources.Length == 1 ? "Source" : "Sources";
     bool firstSource = true;
 }
 <table class="fsc-typeinfo">
@@ -10,7 +13,7 @@
         <tr>
             <td>@(packagesLabel)</td>
             <td>
-                @foreach (string package in Model.Symbol.Packages)
+                @foreach (string package in packages)
                 {
                     @(firstPackage ? "" : ", ")
                     <a href="~/api/@package/">@package</a>
@@ -21,10 +24,10 @@
         <tr>
             <td>@(sourcesLabel)</td>
             <td>
-                @foreach (Uri sourceUri in Model.SourceUris)
+                @foreach (Uri source in sources)
                 {
                     @(firstSource ? "" : ", ")
-                    <a href="@sourceUri">@(sourceUri.Segments.Last())</a>
+                    <a href="@source">@(source.Segments.Last())</a>
                     firstSource = false;
                 }
             </td>

@@ -1,10 +1,12 @@
 @model ApiClassViewModel
 @{
-    bool hasFields = Model.Class.Fields.Any();
-    bool hasEvents = Model.Class.Events.Any();
-    bool hasProperties = Model.Class.Properties.Any();
+    IClassSymbol cls = Model.Class;
 
-    bool hasConstructors = Model.Class.Constructors.Any();
+    bool hasFields = cls.Fields.Any();
+    bool hasEvents = cls.Events.Any();
+    bool hasProperties = cls.Properties.Any();
+
+    bool hasConstructors = cls.Constructors.Any();
 }
 
 <h1>@Model.Class.Name Class</h1>
@@ -34,30 +36,30 @@
 
 <h2 id="definition">Definition</h2>
 
-<partial name="_SymbolInfo.cshtml" model=Model />
+<partial name="_SymbolInfo.cshtml" model=cls />
 
-<code>@Model.Class.Modifiers class @Model.Class.Name</code>
+<code>@cls.Modifiers class @cls.Name</code>
 
-<p>@Html.Raw(@Model.Class.Comment.Summary)</p>
+<p>@Html.Raw(@cls.Comment.Summary)</p>
 
 @if (hasFields)
 {
-    <partial name="_Fields.cshtml" model=Model.Class.Fields />
+    <partial name="_Fields.cshtml" model=cls.Fields />
 }
 
 @if (hasEvents)
 {
-    <partial name="_Events.cshtml" model=Model.Class.Events />
+    <partial name="_Events.cshtml" model=cls.Events />
 }
 
 @if (hasProperties)
 {
-    <partial name="_Properties.cshtml" model=Model.Class.Properties />
+    <partial name="_Properties.cshtml" model=cls.Properties />
 }
 
 @if (hasConstructors)
 {
-    <partial name="_Constructors.cshtml" model=Model.Class.Constructors />
+    <partial name="_Constructors.cshtml" model=cls.Constructors />
 }
 
 <partial name="_AppliesTo.cshtml" model=Model.AppliesTo />
