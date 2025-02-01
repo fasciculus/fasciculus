@@ -704,21 +704,21 @@ $$
 \end{align}
 $$
 
-The precision $p$ (binary digits of reciprocal accuracy) after $i$ iterations is:
+The number of bits affected (precise) at an error $\epsilon$ is:
 
 $$
-p = -2^i \log_2 \epsilon_0 - 1
+p = \lfloor - log_2 \epsilon \rfloor - 1
 $$
 
 This gives the following precisions $p$ after $i$ Newton iterations:
 
-| $i$ | $p$ | Satisfies
-| --- | ---: | --- |
-| 0 | 3.08 | |
-| 1 | 7.17 | FP8 |
-| 2 | 15.35 | FP16 |
-| 3 | 31.70 | FP32, `float` |
-| 4 | 64.40 | FP64, `double` |
+| $i$ | $\epsilon$ | $p$ | Satisfies |
+| --- | --- | ---: | --- |
+| 0 | $17^{-1}$ | 3 | |
+| 1 | $17^{-2}$ | 7 | FP8 |
+| 2 | $17^{-4}$ | 15 | FP16 |
+| 3 | $17^{-8}$ | 31 | FP32, `float` |
+| 4 | $17^{-16}$ | 64 | FP64, `double` |
 
 Using a third-order Chebyshev polynomial for $r_0$:
 
@@ -727,7 +727,7 @@ r_0 = t_0 + t_1 d + t_2 d^2
 $$
 
 which has an $\epsilon_0$ of $1/99$ doesn't reduce the number of iterations as $p$ is
-$52.03$ for $i = 3$. That would almost satisfy `double` (52 bit mantissa) but not
+$52$ for $i = 3$. That may satisfy `double` (52 bit mantissa) but not
 `FP64` (62 bit mantissa).
 
 [wiki_div]: https://en.wikipedia.org/wiki/Division_algorithm#Newton%E2%80%93Raphson_division
