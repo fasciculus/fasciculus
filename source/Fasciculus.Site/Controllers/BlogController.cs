@@ -71,7 +71,8 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = entry.Title,
                 Navigation = navigation.Create(link),
-                Entry = entry
+                Entry = entry,
+                UseKaTeX = true,
             };
 
             return View(model);
