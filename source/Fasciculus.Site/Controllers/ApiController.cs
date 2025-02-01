@@ -271,23 +271,25 @@ namespace Fasciculus.Site.Controllers
         }
 
         private IEnumerable<Uri> GetSourceUris<T>(T symbol)
-            where T : notnull, ISourceSymbol
+            where T : notnull, ISymbol
         {
-            if (symbol.Packages.Count() > 0)
-            {
-                UriPath packageLink = new(symbol.Packages.First());
-                IPackageSymbol? package = apiContent.GetSymbol(packageLink) as IPackageSymbol;
+            return symbol.Sources;
 
-                if (package is not null)
-                {
-                    foreach (UriPath source in symbol.Sources)
-                    {
-                        string uri = $"{package.Repository}/{source}";
+            //if (symbol.Packages.Count() > 0)
+            //{
+            //    UriPath packageLink = new(symbol.Packages.First());
+            //    IPackageSymbol? package = apiContent.GetSymbol(packageLink) as IPackageSymbol;
 
-                        yield return new(uri);
-                    }
-                }
-            }
+            //    if (package is not null)
+            //    {
+            //        foreach (UriPath source in symbol.Sources)
+            //        {
+            //            string uri = $"{package.Repository}/{source}";
+
+            //            yield return new(uri);
+            //        }
+            //    }
+            //}
         }
     }
 }

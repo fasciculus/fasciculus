@@ -1,6 +1,7 @@
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Net.Navigating;
+using System;
 
 namespace Fasciculus.CodeAnalysis.Compilers.Builders
 {
@@ -16,7 +17,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         public required SymbolModifiers Modifiers { get; init; }
 
-        public required UriPath Source { get; init; }
+        public required Uri Source { get; init; }
     }
 
     internal abstract class SymbolBuilder<T> : SymbolBuilder

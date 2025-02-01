@@ -3,11 +3,11 @@ using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Compilers
@@ -21,6 +21,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private bool IncludeNonAccessible { get; }
 
         private DirectoryInfo Directory { get; }
+        private Uri Repository { get; }
 
         private CommentContext CommentContext { get; }
 
@@ -28,7 +29,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private IModifierDebugger ModifierDebugger { get; }
         private INodeDebugger NodeDebugger { get; }
 
-        private UriPath Source { get; set; } = UriPath.Empty;
+        private Uri Source { get; set; }
 
         private CompilationUnitInfo compilationUnit = new();
 
@@ -40,19 +41,22 @@ namespace Fasciculus.CodeAnalysis.Compilers
             IncludeNonAccessible = context.IncludeNonAccessible;
 
             Directory = context.Directory;
+            Repository = context.Repository;
 
             CommentContext = context.CommentContext;
 
             AccessorDebugger = context.Debuggers.AccessorDebugger;
             ModifierDebugger = context.Debuggers.ModifierDebugger;
             NodeDebugger = context.Debuggers.NodeDebugger;
+
+            Source = Repository;
         }
 
         public virtual CompilationUnitInfo Compile(CompilationUnitSyntax node)
         {
             using Locker locker = Locker.Lock(mutex);
 
-            Source = node.GetSource(Directory);
+            Source = node.GetSource(Directory).ToUri(Repository.OriginalString);
 
             compilationUnit = new();
 

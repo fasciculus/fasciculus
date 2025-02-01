@@ -95,7 +95,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 Link = link,
                 Framework = Framework,
                 Package = Package,
-                Source = UriPath.Empty,
+                Source = Repository,
                 Modifiers = SymbolModifiers.Public(),
             };
 

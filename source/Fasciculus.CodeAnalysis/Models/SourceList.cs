@@ -38,6 +38,16 @@ namespace Fasciculus.CodeAnalysis.Models
         public SourceList()
             : this([]) { }
 
+        public void Add(Uri source)
+        {
+            sources.Add(source);
+        }
+
+        public void MergeWith(SourceList other)
+        {
+            sources.UnionWith(other.sources);
+        }
+
         public SourceList Clone()
             => new(this);
 

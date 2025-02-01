@@ -1,5 +1,6 @@
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Net.Navigating;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -22,6 +23,8 @@ namespace Fasciculus.CodeAnalysis.Models
         public ITargetFrameworks Frameworks { get; }
 
         public IEnumerable<string> Packages { get; }
+
+        public IEnumerable<Uri> Sources { get; }
 
         public ISymbolComment Comment { get; }
     }
@@ -55,6 +58,10 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public IEnumerable<string> Packages => packages;
 
+        private readonly SourceList sources = [];
+
+        public IEnumerable<Uri> Sources => sources;
+
         private readonly SymbolComment comment;
 
         public ISymbolComment Comment => comment;
@@ -80,6 +87,7 @@ namespace Fasciculus.CodeAnalysis.Models
             frameworks.Add(other.frameworks);
             packages = new(other.packages);
 
+            sources = other.sources.Clone();
             comment = other.comment.Clone();
         }
 
@@ -93,11 +101,17 @@ namespace Fasciculus.CodeAnalysis.Models
             link = link.Replace(0, 1, newBase);
         }
 
-        public virtual void MergeWith(Symbol other)
+        protected virtual void MergeWith(Symbol other)
         {
             frameworks.Add(other.frameworks);
             packages.UnionWith(other.packages);
+            sources.MergeWith(other.sources);
             comment.MergeWith(other.comment);
+        }
+
+        public void AddSource(Uri source)
+        {
+            sources.Add(source);
         }
     }
 

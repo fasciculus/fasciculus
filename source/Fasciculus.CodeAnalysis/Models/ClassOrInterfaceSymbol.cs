@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
 {
-    public interface IClassOrInterfaceSymbol : ISourceSymbol
+    public interface IClassOrInterfaceSymbol : ISymbol
     {
         public IEnumerable<IEventSymbol> Events { get; }
 
@@ -13,7 +13,7 @@ namespace Fasciculus.CodeAnalysis.Models
         public IEnumerable<IMethodSymbol> Methods { get; }
     }
 
-    internal class ClassOrInterfaceSymbol<T> : SourceSymbol<T>, IClassOrInterfaceSymbol
+    internal class ClassOrInterfaceSymbol<T> : Symbol<T>, IClassOrInterfaceSymbol
         where T : notnull, ClassOrInterfaceSymbol<T>
     {
         private readonly EventList events;
