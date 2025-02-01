@@ -8,7 +8,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // BracketedParameterList: Parameter
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             //base.VisitBracketedParameterList(node);
         }
@@ -17,7 +17,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         {
             // ParameterList: Parameter*
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             base.VisitParameterList(node);
         }

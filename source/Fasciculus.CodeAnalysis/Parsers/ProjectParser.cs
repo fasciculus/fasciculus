@@ -34,14 +34,14 @@ namespace Fasciculus.CodeAnalysis.Parsers
 
             return new(syntaxTrees)
             {
-                AssemblyName = project.AssemblyName,
+                Name = project.AssemblyName,
                 Framework = project.GetTargetFramework(),
-                ProjectDirectory = directory,
+                Directory = directory,
                 Repository = unparsed.Repository,
             };
         }
 
-        private bool CheckGenerated(SyntaxTree syntaxTree, DirectoryInfo projectDirectory)
-            => IncludeGenerated || !syntaxTree.IsGenerated(projectDirectory);
+        private bool CheckGenerated(SyntaxTree syntaxTree, DirectoryInfo directory)
+            => IncludeGenerated || !syntaxTree.IsGenerated(directory);
     }
 }

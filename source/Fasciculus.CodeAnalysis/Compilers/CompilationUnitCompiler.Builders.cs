@@ -27,7 +27,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private readonly Stack<ConstructorBuilder> constructorBuilders = [];
 
         private void PushComment()
-            => commentBuilders.Push(new(commentContext));
+            => commentBuilders.Push(new(CommentContext));
 
         private SymbolComment PopComment()
             => commentBuilders.Pop().Build();
@@ -87,14 +87,14 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private void PushNamespace(SymbolName name)
         {
-            UriPath link = new(package, name);
+            UriPath link = new(Package, name);
 
             NamespaceBuilder builder = new()
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Source = UriPath.Empty,
                 Modifiers = SymbolModifiers.Public(),
             };
@@ -105,8 +105,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private NamespaceSymbol PopNamespace()
         {
             NamespaceBuilder builder = PopNamespaceBuilder();
-            FileInfo commentFile = namespaceCommentsDirectory.File($"{builder.Name}.xml");
-            SymbolComment comment = SymbolComment.FromFile(commentContext, commentFile);
+            FileInfo commentFile = Directory.Combine("Properties", "Comments", "Namespaces").File($"{builder.Name}.xml");
+            SymbolComment comment = SymbolComment.FromFile(CommentContext, commentFile);
 
             return builder.Build(comment);
         }
@@ -119,8 +119,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Source = Source,
             };
@@ -140,8 +140,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Source = Source,
             };
@@ -161,8 +161,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Source = Source,
             };
@@ -182,8 +182,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Source = Source,
                 Type = type,
@@ -204,8 +204,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Source = Source,
                 Type = new(string.Empty),
@@ -226,8 +226,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Source = Source,
                 Type = type,
@@ -248,8 +248,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Type = type,
                 Source = Source,
@@ -270,8 +270,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Source = Source,
             };
@@ -291,8 +291,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Source = Source,
                 Type = type,
@@ -313,8 +313,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 Name = name,
                 Link = link,
-                Framework = framework,
-                Package = package,
+                Framework = Framework,
+                Package = Package,
                 Modifiers = modifiers,
                 Source = Source,
                 Type = new(string.Empty),

@@ -9,7 +9,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
     internal partial class CompilationUnitCompiler
     {
         private bool IsIncluded(SymbolModifiers modifiers)
-            => includeNonAccessible || modifiers.IsAccessible;
+            => IncludeNonAccessible || modifiers.IsAccessible;
 
         private SymbolModifiers GetModifiers(SyntaxTokenList tokens)
         {
@@ -19,7 +19,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 string name = token.Text;
 
-                modifierDebugger.Add(name);
+                ModifierDebugger.Add(name);
 
                 switch (name)
                 {

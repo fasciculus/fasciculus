@@ -13,7 +13,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // 
             // may have Block?
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             string name = node.Type.ToString();
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
@@ -33,7 +33,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // DestructorDeclaration: ParameterList Block
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -53,7 +53,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // IndexerDeclaration
             // : PredefinedType BracketedParameterList ArrowExpressionClause
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -80,7 +80,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | ArrayType
             // | NullableType
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -100,7 +100,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // OperatorDeclaration
             // : AttributeList IdentifierName ParameterList ArrowExpressionClause
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 

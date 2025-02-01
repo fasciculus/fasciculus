@@ -3,7 +3,6 @@ using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Extensions;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.CodeAnalysis;
@@ -17,18 +16,17 @@ namespace Fasciculus.CodeAnalysis.Compilers
     {
         private readonly TaskSafeMutex mutex = new();
 
-        private readonly TargetFramework framework;
-        private readonly string package;
-        protected readonly bool includeNonAccessible;
+        private TargetFramework Framework { get; }
+        private string Package { get; }
+        private bool IncludeNonAccessible { get; }
 
-        private readonly DirectoryInfo projectDirectory;
-        private readonly DirectoryInfo namespaceCommentsDirectory;
+        private DirectoryInfo Directory { get; }
 
-        private readonly CommentContext commentContext;
+        private CommentContext CommentContext { get; }
 
-        private readonly IAccessorDebugger accessorDebugger;
-        private readonly IModifierDebugger modifierDebugger;
-        private readonly INodeDebugger nodeDebugger;
+        private IAccessorDebugger AccessorDebugger { get; }
+        private IModifierDebugger ModifierDebugger { get; }
+        private INodeDebugger NodeDebugger { get; }
 
         private UriPath Source { get; set; } = UriPath.Empty;
 
@@ -37,25 +35,24 @@ namespace Fasciculus.CodeAnalysis.Compilers
         public CompilationUnitCompiler(CompilerContext context)
             : base(SyntaxWalkerDepth.StructuredTrivia)
         {
-            framework = context.Framework;
-            package = context.Project.AssemblyName;
-            includeNonAccessible = context.IncludeNonAccessible;
+            Framework = context.Framework;
+            Package = context.Project.Name;
+            IncludeNonAccessible = context.IncludeNonAccessible;
 
-            projectDirectory = context.ProjectDirectory;
-            namespaceCommentsDirectory = context.CommentsDirectory.Combine("Namespaces");
+            Directory = context.Directory;
 
-            commentContext = context.CommentContext;
+            CommentContext = context.CommentContext;
 
-            accessorDebugger = context.Debuggers.AccessorDebugger;
-            modifierDebugger = context.Debuggers.ModifierDebugger;
-            nodeDebugger = context.Debuggers.NodeDebugger;
+            AccessorDebugger = context.Debuggers.AccessorDebugger;
+            ModifierDebugger = context.Debuggers.ModifierDebugger;
+            NodeDebugger = context.Debuggers.NodeDebugger;
         }
 
         public virtual CompilationUnitInfo Compile(CompilationUnitSyntax node)
         {
             using Locker locker = Locker.Lock(mutex);
 
-            Source = node.GetSource(projectDirectory);
+            Source = node.GetSource(Directory);
 
             compilationUnit = new();
 
@@ -71,7 +68,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //
             // CompilationUnit: UsingDirective* AttributeList* NamespaceDeclaration*
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             base.VisitCompilationUnit(node);
         }

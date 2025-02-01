@@ -34,7 +34,7 @@ namespace Fasciculus.CodeAnalysis.Models
                 {
                     Name = name,
                     Link = link,
-                    Modifiers = PackageSymbol.PackageModifiers,
+                    Modifiers = PackageSymbol.DefaultModifiers(),
                     Repository = repository,
                 };
 
@@ -48,7 +48,7 @@ namespace Fasciculus.CodeAnalysis.Models
             {
                 Name = name,
                 Link = link,
-                Modifiers = PackageSymbol.PackageModifiers,
+                Modifiers = PackageSymbol.DefaultModifiers(),
                 Repository = new(""),
             };
         }

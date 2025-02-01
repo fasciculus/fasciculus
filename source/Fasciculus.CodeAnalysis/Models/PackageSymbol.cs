@@ -15,7 +15,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
     internal class PackageSymbol : Symbol<PackageSymbol>, IPackageSymbol
     {
-        public static SymbolModifiers PackageModifiers
+        public static SymbolModifiers DefaultModifiers()
             => new() { IsPublic = true };
 
         private readonly NamespaceList namespaces;

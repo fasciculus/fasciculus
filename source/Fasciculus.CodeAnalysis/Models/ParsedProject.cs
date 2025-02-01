@@ -13,11 +13,11 @@ namespace Fasciculus.CodeAnalysis.Models
     /// </summary>
     public class ParsedProject : IEnumerable<SyntaxTree>
     {
-        public required string AssemblyName { get; init; }
+        public required string Name { get; init; }
 
         public required TargetFramework Framework { get; init; }
 
-        public required DirectoryInfo ProjectDirectory { get; init; }
+        public required DirectoryInfo Directory { get; init; }
 
         public required Uri Repository { get; init; }
 

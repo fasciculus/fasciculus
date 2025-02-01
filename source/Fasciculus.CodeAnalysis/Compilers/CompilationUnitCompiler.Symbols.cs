@@ -11,7 +11,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // NamespaceDeclaration
             // : QualifiedName ClassDeclaration* InterfaceDeclaration* EnumDeclaration*
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolName name = new(node.Name.ToString());
 
@@ -26,7 +26,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // EnumDeclaration
             // : EnumMemberDeclaration*
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -46,7 +46,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // InterfaceDeclaration
             // : TypeParameterList? BaseList? TypeParameterConstraintClause? MethodDeclaration*
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -80,7 +80,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             //
             // TypeParameterConstraintClause only when TypeParameterList 
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -99,7 +99,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // Leaf
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -118,7 +118,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // FieldDeclaration: VariableDeclaration
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -138,7 +138,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // EventFieldDeclaration: VariableDeclaration
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -162,7 +162,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // <return-type>
             // : AttributeList? (IdentifierName | GenericName | PredefinedType | NullableType) 
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -185,8 +185,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // GetAccessorDeclaration: ArrowExpressionClause?
             // SetAccessorDeclaration:
 
-            nodeDebugger.Add(node);
-            accessorDebugger.Add(node);
+            NodeDebugger.Add(node);
+            AccessorDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -210,7 +210,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | PointerType
             // | NullableType EqualsValueClause?
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
@@ -230,7 +230,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // ConstructorDeclaration
             // : ParameterList (BaseConstructorInitializer | ThisConstructorInitializer)? Block
 
-            nodeDebugger.Add(node);
+            NodeDebugger.Add(node);
 
             SymbolModifiers modifiers = GetModifiers(node.Modifiers);
 
