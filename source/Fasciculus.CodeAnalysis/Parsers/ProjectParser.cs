@@ -21,23 +21,23 @@ namespace Fasciculus.CodeAnalysis.Parsers
             IncludeGenerated = context.IncludeGenerated;
         }
 
-        public ParsedProject Parse(UnparsedProject unparsedProject)
+        public ParsedProject Parse(UnparsedProject unparsed)
         {
-            Project project = unparsedProject.Project;
-            DirectoryInfo projectDirectory = unparsedProject.ProjectDirectory;
+            Project project = unparsed.Project;
+            DirectoryInfo directory = unparsed.Directory;
             IEnumerable<SyntaxTree> syntaxTrees = [];
 
             if (Tasks.Wait(project.GetCompilationAsync()) is CSharpCompilation compilation)
             {
-                syntaxTrees = compilation.SyntaxTrees.Where(t => CheckGenerated(t, projectDirectory));
+                syntaxTrees = compilation.SyntaxTrees.Where(t => CheckGenerated(t, directory));
             }
 
             return new(syntaxTrees)
             {
                 AssemblyName = project.AssemblyName,
                 Framework = project.GetTargetFramework(),
-                ProjectDirectory = unparsedProject.ProjectDirectory,
-                Repository = unparsedProject.Repository,
+                ProjectDirectory = directory,
+                Repository = unparsed.Repository,
             };
         }
 

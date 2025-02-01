@@ -77,18 +77,18 @@ namespace Fasciculus.CodeAnalysis
                 {
                     if (project.HasDocuments)
                     {
-                        DirectoryInfo? projectDirectory = project.GetDirectory();
+                        DirectoryInfo? directory = project.GetDirectory();
 
-                        if (projectDirectory is not null)
+                        if (directory is not null)
                         {
-                            yield return ParseProject(project, projectDirectory);
+                            yield return ParseProject(project, directory);
                         }
                     }
                 }
             }
         }
 
-        private ParsedProject ParseProject(Project project, DirectoryInfo projectDirectory)
+        private ParsedProject ParseProject(Project project, DirectoryInfo directory)
         {
             ProjectParserContext context = new()
             {
@@ -100,7 +100,7 @@ namespace Fasciculus.CodeAnalysis
             UnparsedProject unparsedProject = new()
             {
                 Project = project,
-                ProjectDirectory = projectDirectory,
+                Directory = directory,
                 Repository = GetRepository(project),
                 Framework = project.GetTargetFramework()
             };

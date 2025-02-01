@@ -9,7 +9,7 @@ namespace Fasciculus.CodeAnalysis.Models
     {
         public required Project Project { get; init; }
 
-        public required DirectoryInfo ProjectDirectory { get; init; }
+        public required DirectoryInfo Directory { get; init; }
 
         public required Uri Repository { get; init; }
 
