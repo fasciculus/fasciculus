@@ -248,7 +248,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             return new()
             {
                 ProjectFile = directory.File(name + ".csproj"),
-                RepositoryDirectory = new("tree", "main", "source", name)
+                Repository = new($"https://github.com/fasciculus/fasciculus/tree/main/source/{name}/"),
             };
         }
     }

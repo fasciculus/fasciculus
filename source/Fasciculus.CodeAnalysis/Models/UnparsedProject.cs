@@ -1,6 +1,6 @@
 using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis;
+using System;
 using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Models
@@ -11,7 +11,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public required DirectoryInfo ProjectDirectory { get; init; }
 
-        public required UriPath RepositoryDirectory { get; init; }
+        public required Uri Repository { get; init; }
 
         public required TargetFramework Framework { get; init; }
 

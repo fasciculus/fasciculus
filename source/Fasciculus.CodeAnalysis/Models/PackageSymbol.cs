@@ -1,5 +1,6 @@
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Net.Navigating;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +10,7 @@ namespace Fasciculus.CodeAnalysis.Models
     {
         public IEnumerable<INamespaceSymbol> Namespaces { get; }
 
-        public UriPath RepositoryDirectory { get; }
+        public Uri Repository { get; }
     }
 
     internal class PackageSymbol : Symbol<PackageSymbol>, IPackageSymbol
@@ -23,7 +24,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public override bool IsAccessible => namespaces.HasAccessible;
 
-        public required UriPath RepositoryDirectory { get; init; }
+        public required Uri Repository { get; init; }
 
         public PackageSymbol(SymbolName name, TargetFramework framework, SymbolComment comment,
             IEnumerable<CompilationUnitInfo> compilationUnits)
@@ -45,7 +46,7 @@ namespace Fasciculus.CodeAnalysis.Models
                 Name = Name,
                 Link = Link,
                 Modifiers = Modifiers,
-                RepositoryDirectory = RepositoryDirectory,
+                Repository = Repository,
             };
         }
 

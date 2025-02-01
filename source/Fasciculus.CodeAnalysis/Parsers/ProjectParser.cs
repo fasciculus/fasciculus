@@ -37,7 +37,7 @@ namespace Fasciculus.CodeAnalysis.Parsers
                 AssemblyName = project.AssemblyName,
                 Framework = project.GetTargetFramework(),
                 ProjectDirectory = unparsedProject.ProjectDirectory,
-                RepositoryDirectory = unparsedProject.RepositoryDirectory,
+                Repository = unparsedProject.Repository,
             };
         }
 

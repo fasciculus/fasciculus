@@ -7,9 +7,9 @@ using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.CodeAnalysis.Parsers;
 using Fasciculus.CodeAnalysis.Workspaces;
 using Fasciculus.Collections;
-using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -101,15 +101,15 @@ namespace Fasciculus.CodeAnalysis
             {
                 Project = project,
                 ProjectDirectory = projectDirectory,
-                RepositoryDirectory = GetRepositoryDirectory(project),
+                Repository = GetRepository(project),
                 Framework = project.GetTargetFramework()
             };
 
             return parser.Parse(unparsedProject);
         }
 
-        private UriPath GetRepositoryDirectory(Project project)
-            => options.Projects.First(p => p.ProjectFile.FullName == project.FilePath).RepositoryDirectory;
+        private Uri GetRepository(Project project)
+            => options.Projects.First(p => p.ProjectFile.FullName == project.FilePath).Repository;
 
         private SymbolIndex CreateIndex(PackageList packages, PackageSymbol combined)
         {

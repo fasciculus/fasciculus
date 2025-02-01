@@ -1,4 +1,4 @@
-using Fasciculus.Net.Navigating;
+using System;
 using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Configuration
@@ -7,14 +7,14 @@ namespace Fasciculus.CodeAnalysis.Configuration
     {
         public required FileInfo ProjectFile { get; init; }
 
-        public required UriPath RepositoryDirectory { get; init; }
+        public required Uri Repository { get; init; }
 
         public CodeAnalyzerProject() { }
 
-        public CodeAnalyzerProject(FileInfo projectFile, UriPath repositoryDirectory)
+        public CodeAnalyzerProject(FileInfo projectFile, Uri repository)
         {
             ProjectFile = projectFile;
-            RepositoryDirectory = repositoryDirectory;
+            Repository = repository;
         }
     }
 }

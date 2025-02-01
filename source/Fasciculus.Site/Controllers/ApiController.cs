@@ -11,8 +11,6 @@ namespace Fasciculus.Site.Controllers
 {
     public class ApiController : Controller
     {
-        private static readonly string RepositoryPrefix = "https://github.com/fasciculus/fasciculus";
-
         private readonly ApiContent apiContent;
         private readonly ApiNavigation apiNavigation;
 
@@ -126,7 +124,7 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = package.Name + " Package",
                 Package = package,
-                PackageUri = new($"{RepositoryPrefix}/{package.RepositoryDirectory}/"),
+                PackageUri = package.Repository,
                 AppliesTo = new(package.Frameworks),
                 Navigation = apiNavigation.Create(package.Link)
             };
@@ -284,7 +282,7 @@ namespace Fasciculus.Site.Controllers
                 {
                     foreach (UriPath source in symbol.Sources)
                     {
-                        string uri = $"{RepositoryPrefix}/{package.RepositoryDirectory}/{source}";
+                        string uri = $"{package.Repository}/{source}";
 
                         yield return new(uri);
                     }

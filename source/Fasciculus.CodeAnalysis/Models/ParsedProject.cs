@@ -1,6 +1,6 @@
 using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +19,7 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public required DirectoryInfo ProjectDirectory { get; init; }
 
-        public required UriPath RepositoryDirectory { get; init; }
+        public required Uri Repository { get; init; }
 
         private readonly SyntaxTree[] syntaxTrees;
 

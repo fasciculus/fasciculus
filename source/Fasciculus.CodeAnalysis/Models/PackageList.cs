@@ -2,6 +2,7 @@ using Fasciculus.CodeAnalysis.Commenting;
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.Collections;
 using Fasciculus.Net.Navigating;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -27,13 +28,14 @@ namespace Fasciculus.CodeAnalysis.Models
             if (Count > 0)
             {
                 TargetFramework framework = this.First().Frameworks.First();
+                Uri repository = this.First().Repository;
 
                 PackageSymbol result = new(name, framework, comment, [])
                 {
                     Name = name,
                     Link = link,
                     Modifiers = PackageSymbol.PackageModifiers,
-                    RepositoryDirectory = packageLink,
+                    Repository = repository,
                 };
 
                 this.Select(p => p.Clone()).Apply(result.MergeWith);
@@ -47,7 +49,7 @@ namespace Fasciculus.CodeAnalysis.Models
                 Name = name,
                 Link = link,
                 Modifiers = PackageSymbol.PackageModifiers,
-                RepositoryDirectory = packageLink,
+                Repository = new(""),
             };
         }
     }
