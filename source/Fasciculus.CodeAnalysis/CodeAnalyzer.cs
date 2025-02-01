@@ -73,7 +73,7 @@ namespace Fasciculus.CodeAnalysis
 
             foreach (Project project in projects)
             {
-                if (options.Projects.Any(p => p.ProjectFile.FullName == project.FilePath))
+                if (options.Projects.Any(p => p.File.FullName == project.FilePath))
                 {
                     if (project.HasDocuments)
                     {
@@ -109,7 +109,7 @@ namespace Fasciculus.CodeAnalysis
         }
 
         private Uri GetRepository(Project project)
-            => options.Projects.First(p => p.ProjectFile.FullName == project.FilePath).Repository;
+            => options.Projects.First(p => p.File.FullName == project.FilePath).Repository;
 
         private SymbolIndex CreateIndex(PackageList packages, PackageSymbol combined)
         {
@@ -128,7 +128,7 @@ namespace Fasciculus.CodeAnalysis
         {
             MSBuildWorkspace workspace = WorkspaceFactory.CreateWorkspace();
 
-            options.Projects.Apply(f => workspace.AddProjectFile(f.ProjectFile));
+            options.Projects.Apply(f => workspace.AddProjectFile(f.File));
 
             return workspace;
         }

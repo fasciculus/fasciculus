@@ -46,7 +46,7 @@ namespace Fasciculus.Site.Api.Services
 
                 CodeAnalyzerProject project = new()
                 {
-                    ProjectFile = directory.File(projectName + ".csproj"),
+                    File = directory.File(projectName + ".csproj"),
                     Repository = new($"https://github.com/fasciculus/fasciculus/tree/main/source/{projectName}/"),
                 };
 
