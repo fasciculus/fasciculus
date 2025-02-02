@@ -2,17 +2,20 @@
 
 <h1>@Model.Title</h1>
 
-@foreach (IConstructorSymbol constructor in Model.Constructors)
+@foreach (IConstructorSymbol ctor in Model.Constructors)
 {
-    <h2 id="@constructor.Id">@constructor.Name</h2>
+    ApiAppliesTo appliesTo = new(ctor.Frameworks, ApiAppliesToLevel.H3, ctor.Id);
+    string code = "tbd";
+
+    <h2 id="@ctor.Id">@ctor.Name</h2>
 
     <h3>Definition</h3>
 
-    <partial name="_SymbolInfo.cshtml" model=constructor />
+    <partial name="_SymbolInfo.cshtml" model=ctor />
 
-    <p>@Html.Raw(constructor.Comment.Summary)</p>
+    <div class="csharp"><pre><code>@code</code></pre></div>
 
-    <h3>Applies To</h3>
+    <p>@Html.Raw(ctor.Comment.Summary)</p>
 
-    <partial name="_TargetFrameworks.cshtml" model=constructor.Frameworks />
+    <partial name="_AppliesTo.cshtml" model=appliesTo />
 }
