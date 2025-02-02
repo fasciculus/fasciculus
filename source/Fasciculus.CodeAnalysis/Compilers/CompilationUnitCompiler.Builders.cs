@@ -318,6 +318,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 Modifiers = modifiers,
                 Source = Source,
                 Type = new(string.Empty),
+                BareName = name,
             };
 
             PushBuilder(builder);

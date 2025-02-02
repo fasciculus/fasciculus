@@ -5,7 +5,6 @@
 @foreach (IConstructorSymbol ctor in Model.Constructors)
 {
     ApiAppliesTo appliesTo = new(ctor.Frameworks, ApiAppliesToLevel.H3, ctor.Id);
-    string code = "tbd";
 
     <h2 id="@ctor.Id">@ctor.Name</h2>
 
@@ -13,7 +12,7 @@
 
     <partial name="_SymbolInfo.cshtml" model=ctor />
 
-    <div class="csharp"><pre><code>@code</code></pre></div>
+    <div class="csharp"><pre><code>@ApiCode.Create(ctor)</code></pre></div>
 
     <p>@Html.Raw(ctor.Comment.Summary)</p>
 

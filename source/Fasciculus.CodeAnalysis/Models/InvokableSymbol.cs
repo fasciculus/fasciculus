@@ -6,12 +6,16 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public interface IInvokableSymbol : ITypedSymbol
     {
+        public string BareName { get; }
+
         public IEnumerable<IParameterSymbol> Parameters { get; }
     }
 
     internal class InvokableSymbol<T> : TypedSymbol<T>, IInvokableSymbol
         where T : notnull, InvokableSymbol<T>
     {
+        public required string BareName { get; init; }
+
         private readonly ParameterList parameters;
 
         public IEnumerable<IParameterSymbol> Parameters => parameters;
@@ -25,6 +29,8 @@ namespace Fasciculus.CodeAnalysis.Models
         protected InvokableSymbol(T other, bool clone)
             : base(other, clone)
         {
+            BareName = other.BareName;
+
             parameters = other.parameters.Clone();
         }
 

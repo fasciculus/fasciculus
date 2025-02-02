@@ -8,6 +8,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
     internal abstract class InvokableBuilder<T> : TypedSymbolBuilder<T>, IParameterReceiver
         where T : notnull, InvokableSymbol<T>
     {
+        public required string BareName { get; init; }
+
         private readonly ParameterList parameters = [];
 
         protected IEnumerable<ParameterSymbol> Parameters

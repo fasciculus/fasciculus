@@ -5,7 +5,6 @@ namespace Fasciculus.CodeAnalysis.Models
 {
     public interface IConstructorSymbol : IInvokableSymbol
     {
-
     }
 
     internal class ConstructorSymbol : InvokableSymbol<ConstructorSymbol>, IConstructorSymbol
@@ -24,6 +23,7 @@ namespace Fasciculus.CodeAnalysis.Models
                 Link = Link,
                 Modifiers = Modifiers,
                 Type = Type,
+                BareName = BareName,
             };
         }
 

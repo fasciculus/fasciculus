@@ -13,6 +13,7 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
                 Link = CreateLink(),
                 Modifiers = Modifiers,
                 Type = Type,
+                BareName = BareName,
             };
 
             Parameters.Apply(constructor.Add);
