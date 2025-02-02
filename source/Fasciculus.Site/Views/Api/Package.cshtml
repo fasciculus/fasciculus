@@ -1,6 +1,10 @@
 @model ApiPackageViewModel
+@{
+    IPackageSymbol pkg = Model.Package;
+    ApiAppliesTo appliesTo = new(pkg.Frameworks);
+}
 
-<h1>@Model.Package.Name Package</h1>
+<h1>@pkg.Name Package</h1>
 <h2>In this article</h2>
 <ul>
     <li><a href="#definition">Definition</a></li>
@@ -9,7 +13,7 @@
 </ul>
 <h2 id="definition">Definition</h2>
 <p><a href="@(Model.PackageUri)">View on GitHub</a>.</p>
-<p>@Html.Raw(@Model.Package.Comment.Summary)</p>
+<p>@Html.Raw(pkg.Comment.Summary)</p>
 <h2 id="namespaces">Namespaces</h2>
 <table class="table">
     <thead>
@@ -19,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var ns in Model.Package.Namespaces)
+        @foreach (var ns in pkg.Namespaces)
         {
             <tr>
                 <td><a href="~/api/@(ns.Link)/">@ns.Name</a></td>
@@ -29,4 +33,4 @@
     </tbody>
 </table>
 
-<partial name="_AppliesTo.cshtml" model=Model.AppliesTo />
+<partial name="_AppliesTo.cshtml" model=appliesTo />

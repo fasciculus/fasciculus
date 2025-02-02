@@ -1,4 +1,9 @@
 @model ApiEnumViewModel
+@{
+    IEnumSymbol enm = Model.Enum;
+
+    ApiAppliesTo appliesTo = new(enm.Frameworks);
+}
 
 <h1>@Model.Enum.Name Enum</h1>
 
@@ -12,11 +17,11 @@
 
 <h2 id="definition">Definition</h2>
 
-<partial name="_SymbolInfo.cshtml" model=Model.Enum />
+<partial name="_SymbolInfo.cshtml" model=enm />
 
-<code>@Model.Enum.Modifiers enum @Model.Enum.Name</code>
+<code>@enm.Modifiers enum @enm.Name</code>
 
-<p>@Html.Raw(@Model.Enum.Comment.Summary)</p>
+<p>@Html.Raw(@enm.Comment.Summary)</p>
 
 <h2 id="members">Members</h2>
 
@@ -28,7 +33,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (IMemberSymbol member in Model.Enum.Members)
+        @foreach (IMemberSymbol member in enm.Members)
         {
             <tr>
                 <td><a href="~/api/@(member.Link).html">@member.Name</a></td>
@@ -38,4 +43,4 @@
     </tbody>
 </table>
 
-<partial name="_AppliesTo.cshtml" model=Model.AppliesTo />
+<partial name="_AppliesTo.cshtml" model=appliesTo />

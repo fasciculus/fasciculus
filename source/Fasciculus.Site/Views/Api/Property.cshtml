@@ -1,6 +1,7 @@
 @model ApiPropertyViewModel
 @{
     IPropertySymbol property = Model.Property;
+    ApiAppliesTo appliesTo = new(property.Frameworks);
 }
 
 <h1>@property.Name Property</h1>
@@ -20,4 +21,4 @@
 
 <p>@Html.Raw(property.Comment.Summary)</p>
 
-<partial name="_AppliesTo.cshtml" model=Model.AppliesTo />
+<partial name="_AppliesTo.cshtml" model=appliesTo />

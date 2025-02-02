@@ -7,6 +7,8 @@
     bool hasProperties = cls.Properties.Any();
 
     bool hasConstructors = cls.Constructors.Any();
+
+    ApiAppliesTo appliesTo = new(cls.Frameworks);
 }
 
 <h1>@Model.Class.Name Class</h1>
@@ -62,4 +64,4 @@
     <partial name="_Constructors.cshtml" model=cls.Constructors />
 }
 
-<partial name="_AppliesTo.cshtml" model=Model.AppliesTo />
+<partial name="_AppliesTo.cshtml" model=appliesTo />

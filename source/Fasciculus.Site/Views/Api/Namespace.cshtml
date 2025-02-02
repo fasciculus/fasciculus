@@ -1,6 +1,10 @@
 @model ApiNamespaceViewModel
+@{
+    INamespaceSymbol nms = Model.Namespace;
+    ApiAppliesTo appliesTo = new(nms.Frameworks);
+}
 
-<h1>@Model.Namespace.Name Namespace</h1>
+<h1>@nms.Name Namespace</h1>
 
 <h2>In this article</h2>
 
@@ -25,7 +29,7 @@
 
 <partial name="_Packages.cshtml" model=Model.Namespace />
 
-<p>@Html.Raw(@Model.Namespace.Comment.Summary)</p>
+<p>@Html.Raw(nms.Comment.Summary)</p>
 
 @if (Model.HasEnums)
 {
@@ -94,4 +98,4 @@
     </table>
 }
 
-<partial name="_AppliesTo.cshtml" model=Model.AppliesTo />
+<partial name="_AppliesTo.cshtml" model=appliesTo />

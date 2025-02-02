@@ -1,10 +1,12 @@
 @model ApiInterfaceViewModel
 @{
-    bool hasEvents = Model.Interface.Events.Any();
-    bool hasProperties = @Model.Interface.Properties.Any();
+    IInterfaceSymbol ifc = Model.Interface;
+    bool hasEvents = ifc.Events.Any();
+    bool hasProperties = ifc.Properties.Any();
+    ApiAppliesTo appliesTo = new(ifc.Frameworks);
 }
 
-<h1>@Model.Interface.Name Interface</h1>
+<h1>@ifc.Name Interface</h1>
 
 <h2>In this article</h2>
 
@@ -23,20 +25,20 @@
 
 <h2 id="definition">Definition</h2>
 
-<partial name="_SymbolInfo.cshtml" model=Model.Interface />
+<partial name="_SymbolInfo.cshtml" model=ifc />
 
-<code>@Model.Interface.Modifiers interface @Model.Interface.Name</code>
+<code>@ifc.Modifiers interface @ifc.Name</code>
 
-<p>@Html.Raw(@Model.Interface.Comment.Summary)</p>
+<p>@Html.Raw(ifc.Comment.Summary)</p>
 
 @if (hasEvents)
 {
-    <partial name="_Events.cshtml" model=Model.Interface.Events />
+    <partial name="_Events.cshtml" model=ifc.Events />
 }
 
 @if (hasProperties)
 {
-    <partial name="_Properties.cshtml" model=Model.Interface.Properties />
+    <partial name="_Properties.cshtml" model=ifc.Properties />
 }
 
-<partial name="_AppliesTo.cshtml" model=Model.AppliesTo />
+<partial name="_AppliesTo.cshtml" model=appliesTo />

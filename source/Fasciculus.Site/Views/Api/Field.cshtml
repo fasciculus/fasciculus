@@ -1,6 +1,8 @@
 @model ApiFieldViewModel
 @{
     IFieldSymbol field = Model.Field;
+
+    ApiAppliesTo appliesTo = new(field.Frameworks);
 }
 
 <h1>@field.Name Property</h1>
@@ -20,4 +22,4 @@
 
 <p>@Html.Raw(field.Comment.Summary)</p>
 
-<partial name="_AppliesTo.cshtml" model=Model.AppliesTo />
+<partial name="_AppliesTo.cshtml" model=appliesTo />
