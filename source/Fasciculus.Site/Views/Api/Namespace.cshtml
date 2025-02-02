@@ -1,6 +1,6 @@
-@model ApiNamespaceViewModel
+@model ApiSymbolViewModel<INamespaceSymbol>
 @{
-    INamespaceSymbol nms = Model.Namespace;
+    INamespaceSymbol nms = Model.Symbol;
 
     IEnumerable<IEnumSymbol> enums = nms.Enums;
     bool hasEnums = enums.Any();

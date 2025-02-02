@@ -1,6 +1,6 @@
-@model ApiMemberViewModel
+@model ApiSymbolViewModel<IMemberSymbol>
 @{
-    IMemberSymbol member = Model.Member;
+    IMemberSymbol member = Model.Symbol;
     ApiAppliesTo appliesTo = new(member.Frameworks);
 
 }

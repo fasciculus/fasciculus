@@ -1,6 +1,6 @@
-@model ApiInterfaceViewModel
+@model ApiSymbolViewModel<IInterfaceSymbol>
 @{
-    IInterfaceSymbol ifc = Model.Interface;
+    IInterfaceSymbol ifc = Model.Symbol;
     bool hasEvents = ifc.Events.Any();
     bool hasProperties = ifc.Properties.Any();
     ApiAppliesTo appliesTo = new(ifc.Frameworks);

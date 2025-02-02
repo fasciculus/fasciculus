@@ -1,6 +1,6 @@
-@model ApiClassViewModel
+@model ApiSymbolViewModel<IClassSymbol>
 @{
-    IClassSymbol cls = Model.Class;
+    IClassSymbol cls = Model.Symbol;
 
     bool hasFields = cls.Fields.Any();
     bool hasEvents = cls.Events.Any();
@@ -11,7 +11,7 @@
     ApiAppliesTo appliesTo = new(cls.Frameworks);
 }
 
-<h1>@Model.Class.Name Class</h1>
+<h1>@cls.Name Class</h1>
 
 <h2>In this article</h2>
 

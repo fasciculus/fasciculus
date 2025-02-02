@@ -1,6 +1,6 @@
-@model ApiEventViewModel
+@model ApiSymbolViewModel<IEventSymbol>
 @{
-    IEventSymbol evt = Model.Event;
+    IEventSymbol evt = Model.Symbol;
 
     ApiAppliesTo appliesTo = new(evt.Frameworks);
 }
@@ -18,7 +18,7 @@
 
 <partial name="_SymbolInfo.cshtml" model=evt />
 
-<div class="csharp"><code>@evt.Modifiers event @evt.Type @evt.Name</code></pre></div>
+<div class="csharp"><pre><code>@evt.Modifiers event @evt.Type @evt.Name</code></pre></div>
 
 <p>@Html.Raw(evt.Comment.Summary)</p>
 

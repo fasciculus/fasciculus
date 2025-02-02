@@ -118,10 +118,10 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Package(IPackageSymbol package)
         {
-            ApiPackageViewModel model = new()
+            ApiSymbolViewModel<IPackageSymbol> model = new()
             {
                 Title = package.Name + " Package",
-                Package = package,
+                Symbol = package,
                 Navigation = apiNavigation.Create(package.Link)
             };
 
@@ -130,10 +130,10 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Namespace(INamespaceSymbol @namespace)
         {
-            ApiNamespaceViewModel model = new()
+            ApiSymbolViewModel<INamespaceSymbol> model = new()
             {
                 Title = @namespace.Name + " Namespace",
-                Namespace = @namespace,
+                Symbol = @namespace,
                 Navigation = apiNavigation.Create(@namespace.Link)
             };
 
@@ -142,10 +142,10 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Enum(IEnumSymbol @enum)
         {
-            ApiEnumViewModel model = new()
+            ApiSymbolViewModel<IEnumSymbol> model = new()
             {
                 Title = @enum.Name + " Enum",
-                Enum = @enum,
+                Symbol = @enum,
                 Navigation = apiNavigation.Create(@enum.Link)
             };
 
@@ -154,10 +154,10 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Interface(IInterfaceSymbol @interface)
         {
-            ApiInterfaceViewModel model = new()
+            ApiSymbolViewModel<IInterfaceSymbol> model = new()
             {
                 Title = @interface.Name + " Interface",
-                Interface = @interface,
+                Symbol = @interface,
                 Navigation = apiNavigation.Create(@interface.Link)
             };
 
@@ -166,10 +166,10 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Class(IClassSymbol @class)
         {
-            ApiClassViewModel model = new()
+            ApiSymbolViewModel<IClassSymbol> model = new()
             {
                 Title = @class.Name + " Class",
-                Class = @class,
+                Symbol = @class,
                 Navigation = apiNavigation.Create(@class.Link)
             };
 
@@ -178,10 +178,10 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Field(IFieldSymbol field)
         {
-            ApiFieldViewModel model = new()
+            ApiSymbolViewModel<IFieldSymbol> model = new()
             {
                 Title = field.Name + " Field",
-                Field = field,
+                Symbol = field,
                 Navigation = apiNavigation.Create(field.Link)
             };
 
@@ -190,10 +190,10 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Member(IMemberSymbol member)
         {
-            ApiMemberViewModel model = new()
+            ApiSymbolViewModel<IMemberSymbol> model = new()
             {
                 Title = member.Name + " Member",
-                Member = member,
+                Symbol = member,
                 Navigation = apiNavigation.Create(member.Link)
             };
 
@@ -202,10 +202,10 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Event(IEventSymbol @event)
         {
-            ApiEventViewModel model = new()
+            ApiSymbolViewModel<IEventSymbol> model = new()
             {
                 Title = @event.Name + " Event",
-                Event = @event,
+                Symbol = @event,
                 Navigation = apiNavigation.Create(@event.Link)
             };
 
@@ -214,10 +214,10 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Property(IPropertySymbol property)
         {
-            ApiPropertyViewModel model = new()
+            ApiSymbolViewModel<IPropertySymbol> model = new()
             {
                 Title = property.Name + " Property",
-                Property = property,
+                Symbol = property,
                 Navigation = apiNavigation.Create(property.Link)
             };
 
@@ -230,10 +230,10 @@ namespace Fasciculus.Site.Controllers
 
             if (@class is not null)
             {
-                ApiConstructorsViewModel model = new()
+                ApiSymbolsViewModel<IConstructorSymbol> model = new()
                 {
                     Title = $"{@class.Name} Constructors",
-                    Constructors = @class.Constructors,
+                    Symbols = [.. @class.Constructors],
                     Navigation = apiNavigation.Create(path)
                 };
 

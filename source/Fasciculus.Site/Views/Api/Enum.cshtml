@@ -1,11 +1,11 @@
-@model ApiEnumViewModel
+@model ApiSymbolViewModel<IEnumSymbol>
 @{
-    IEnumSymbol enm = Model.Enum;
+    IEnumSymbol enm = Model.Symbol;
 
     ApiAppliesTo appliesTo = new(enm.Frameworks);
 }
 
-<h1>@Model.Enum.Name Enum</h1>
+<h1>@enm.Name Enum</h1>
 
 <h2>In this article</h2>
 

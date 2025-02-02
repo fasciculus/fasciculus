@@ -1,6 +1,6 @@
-@model ApiPropertyViewModel
+@model ApiSymbolViewModel<IPropertySymbol>
 @{
-    IPropertySymbol property = Model.Property;
+    IPropertySymbol property = Model.Symbol;
     ApiAppliesTo appliesTo = new(property.Frameworks);
 }
 
@@ -15,7 +15,7 @@
 
 <h2 id="definition">Definition</h2>
 
-<partial name="_SymbolInfo.cshtml" model=Model.Property />
+<partial name="_SymbolInfo.cshtml" model=property />
 
 <div class="csharp"><pre><code>@property.Modifiers @property.Type @property.Name @property.Accessors</code></pre></div>
 

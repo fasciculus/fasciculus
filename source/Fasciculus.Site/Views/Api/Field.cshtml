@@ -1,6 +1,6 @@
-@model ApiFieldViewModel
+@model ApiSymbolViewModel<IFieldSymbol>
 @{
-    IFieldSymbol field = Model.Field;
+    IFieldSymbol field = Model.Symbol;
 
     ApiAppliesTo appliesTo = new(field.Frameworks);
 }

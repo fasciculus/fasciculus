@@ -1,8 +1,8 @@
-@model ApiConstructorsViewModel
+@model ApiSymbolsViewModel<IConstructorSymbol>
 
 <h1>@Model.Title</h1>
 
-@foreach (IConstructorSymbol ctor in Model.Constructors)
+@foreach (IConstructorSymbol ctor in Model.Symbols)
 {
     ApiAppliesTo appliesTo = new(ctor.Frameworks, ApiAppliesToLevel.H3, ctor.Id);
 

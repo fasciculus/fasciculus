@@ -1,6 +1,6 @@
-@model ApiPackageViewModel
+@model ApiSymbolViewModel<IPackageSymbol>
 @{
-    IPackageSymbol pkg = Model.Package;
+    IPackageSymbol pkg = Model.Symbol;
     ApiAppliesTo appliesTo = new(pkg.Frameworks);
 }
 
