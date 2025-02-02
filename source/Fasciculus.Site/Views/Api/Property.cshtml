@@ -17,7 +17,7 @@
 
 <partial name="_SymbolInfo.cshtml" model=Model.Property />
 
-<code>@property.Modifiers @property.Type @property.Name @property.Accessors</code>
+<div class="csharp"><pre><code>@property.Modifiers @property.Type @property.Name @property.Accessors</code></pre></div>
 
 <p>@Html.Raw(property.Comment.Summary)</p>
 

@@ -40,7 +40,7 @@
 
 <partial name="_SymbolInfo.cshtml" model=cls />
 
-<code>@cls.Modifiers class @cls.Name</code>
+<div class="csharp"><pre><code>@cls.Modifiers class @cls.Name</code></pre></div>
 
 <p>@Html.Raw(@cls.Comment.Summary)</p>
 
