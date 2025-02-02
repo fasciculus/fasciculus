@@ -1,6 +1,16 @@
 @model ApiNamespaceViewModel
 @{
     INamespaceSymbol nms = Model.Namespace;
+
+    IEnumerable<IEnumSymbol> enums = nms.Enums;
+    bool hasEnums = enums.Any();
+
+    IEnumerable<IInterfaceSymbol> interfaces = nms.Interfaces;
+    bool hasInterfaces = interfaces.Any();
+
+    IEnumerable<IClassSymbol> classes = nms.Classes;
+    bool hasClasses = classes.Any();
+
     ApiAppliesTo appliesTo = new(nms.Frameworks);
 }
 
@@ -10,15 +20,15 @@
 
 <ul>
     <li><a href="#definition">Definition</a></li>
-    @if (Model.HasEnums)
+    @if (hasEnums)
     {
         <li><a href="#enums">Enums</a></li>
     }
-    @if (Model.HasInterfaces)
+    @if (hasInterfaces)
     {
         <li><a href="#interfaces">Interfaces</a></li>
     }
-    @if (Model.HasClasses)
+    @if (hasClasses)
     {
         <li><a href="#classes">Classes</a></li>
     }
@@ -27,11 +37,11 @@
 
 <h2 id="definition">Definition</h2>
 
-<partial name="_Packages.cshtml" model=Model.Namespace />
+<partial name="_Packages.cshtml" model=nms />
 
 <p>@Html.Raw(nms.Comment.Summary)</p>
 
-@if (Model.HasEnums)
+@if (hasEnums)
 {
     <h2 id="enums">Enums</h2>
 
@@ -43,17 +53,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var e in Model.Enums)
+            @foreach (var enm in enums)
             {
                 <tr>
-                    <td><a href="~/api/@(e.Link)/">@e.Name</a></td>
-                    <td>@Html.Raw(@e.Comment.Summary)</td>
+                    <td><a href="~/api/@(enm.Link)/">@enm.Name</a></td>
+                    <td>@Html.Raw(@enm.Comment.Summary)</td>
                 </tr>
             }
         </tbody>
     </table>
 }
-@if (Model.HasInterfaces)
+@if (hasInterfaces)
 {
     <h2 id="interfaces">Interfaces</h2>
 
@@ -65,17 +75,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var i in Model.Interfaces)
+            @foreach (var ifc in interfaces)
             {
                 <tr>
-                    <td><a href="~/api/@(i.Link)/">@i.Name</a></td>
-                    <td>@Html.Raw(@i.Comment.Summary)</td>
+                    <td><a href="~/api/@(ifc.Link)/">@ifc.Name</a></td>
+                    <td>@Html.Raw(ifc.Comment.Summary)</td>
                 </tr>
             }
         </tbody>
     </table>
 }
-@if (Model.HasClasses)
+@if (hasClasses)
 {
     <h2 id="classes">Classes</h2>
 
@@ -87,11 +97,11 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var c in Model.Classes)
+        @foreach (var cls in classes)
         {
             <tr>
-                <td><a href="~/api/@(c.Link)/">@c.Name</a></td>
-                <td>@Html.Raw(@c.Comment.Summary)</td>
+                <td><a href="~/api/@(cls.Link)/">@cls.Name</a></td>
+                <td>@Html.Raw(@cls.Comment.Summary)</td>
             </tr>
         }
         </tbody>
