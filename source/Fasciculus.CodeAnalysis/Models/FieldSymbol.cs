@@ -25,5 +25,10 @@ namespace Fasciculus.CodeAnalysis.Models
                 Type = Type,
             };
         }
+
+        protected override string GetId()
+        {
+            return $"{Kind}-{Name.Name}";
+        }
     }
 }

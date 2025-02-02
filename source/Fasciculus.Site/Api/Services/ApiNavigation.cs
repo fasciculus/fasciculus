@@ -145,16 +145,6 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, "Members", link, children, isOpen);
         }
 
-        private static NavigationNode CreateFieldsNode(IClassSymbol @class, UriPath selected)
-        {
-            int kind = NavigationKind.ApiFields;
-            UriPath link = ToSiteLink(@class.Link);
-            IEnumerable<NavigationNode> children = @class.Fields.Select(x => CreateFieldNode(x, selected));
-            bool isOpen = children.Any(x => x.IsOpen);
-
-            return new(kind, "Fields", link, children, isOpen);
-        }
-
         private static NavigationNode CreateEventsNode(IClassSymbol @class, UriPath selected)
         {
             int kind = NavigationKind.ApiEvents;
@@ -243,16 +233,6 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, isOpen);
         }
 
-        private static NavigationNode CreateFieldNode(IFieldSymbol field, UriPath selected)
-        {
-            int kind = NavigationKind.ApiField;
-            string label = field.Name;
-            UriPath link = ToSiteLink(field.Link);
-            bool isOpen = selected.IsSelfOrDescendantOf(field.Link);
-
-            return new(kind, label, link, isOpen);
-        }
-
         private static NavigationNode CreateEventNode(IEventSymbol @event, UriPath selected)
         {
             int kind = NavigationKind.ApiEvent;
@@ -269,6 +249,16 @@ namespace Fasciculus.Site.Api.Services
             string label = property.Name;
             UriPath link = ToSiteLink(property.Link);
             bool isOpen = selected.IsSelfOrDescendantOf(property.Link);
+
+            return new(kind, label, link, isOpen);
+        }
+
+        private static NavigationNode CreateFieldsNode(IClassSymbol @class, UriPath selected)
+        {
+            int kind = NavigationKind.ApiFields;
+            string label = "Fields";
+            UriPath link = ToSiteLink(@class.Link).Append("-Fields");
+            bool isOpen = selected.IsSelfOrDescendantOf(@class.Link);
 
             return new(kind, label, link, isOpen);
         }

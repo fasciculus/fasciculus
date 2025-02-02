@@ -60,6 +60,11 @@ namespace Fasciculus.Site.Generating.Services
 
                     if (symbol is IClassSymbol @class)
                     {
+                        if (@class.Fields.Any())
+                        {
+                            Add($"/api/{@class.Link}/-Fields.html");
+                        }
+
                         if (@class.Constructors.Any())
                         {
                             Add($"/api/{@class.Link}/-Constructors.html");
@@ -73,6 +78,7 @@ namespace Fasciculus.Site.Generating.Services
         {
             return kind switch
             {
+                SymbolKind.Field => false,
                 SymbolKind.Constructor => false,
                 _ => true,
             };

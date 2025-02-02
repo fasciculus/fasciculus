@@ -96,6 +96,7 @@ namespace Fasciculus.Site.Controllers
 
             switch (last)
             {
+                case "-Fields": return Fields(path);
                 case "-Constructors": return Constructors(path);
             }
 
@@ -105,7 +106,6 @@ namespace Fasciculus.Site.Controllers
             {
                 return symbol.Kind switch
                 {
-                    SymbolKind.Field => Field((IFieldSymbol)symbol),
                     SymbolKind.Member => Member((IMemberSymbol)symbol),
                     SymbolKind.Event => Event((IEventSymbol)symbol),
                     SymbolKind.Property => Property((IPropertySymbol)symbol),
@@ -176,18 +176,6 @@ namespace Fasciculus.Site.Controllers
             return View("Class", model);
         }
 
-        private ViewResult Field(IFieldSymbol field)
-        {
-            ApiSymbolViewModel<IFieldSymbol> model = new()
-            {
-                Title = field.Name + " Field",
-                Symbol = field,
-                Navigation = apiNavigation.Create(field.Link)
-            };
-
-            return View("Field", model);
-        }
-
         private ViewResult Member(IMemberSymbol member)
         {
             ApiSymbolViewModel<IMemberSymbol> model = new()
@@ -222,6 +210,25 @@ namespace Fasciculus.Site.Controllers
             };
 
             return View("Property", model);
+        }
+
+        private IActionResult Fields(UriPath path)
+        {
+            IClassSymbol? @class = apiContent.GetSymbol(path.Parent) as IClassSymbol;
+
+            if (@class is not null)
+            {
+                ApiSymbolsViewModel<IFieldSymbol> model = new()
+                {
+                    Title = $"{@class.Name} Fields",
+                    Symbols = [.. @class.Fields],
+                    Navigation = apiNavigation.Create(path)
+                };
+
+                return View("Fields", model);
+            }
+
+            return NotFound();
         }
 
         private IActionResult Constructors(UriPath path)

@@ -13,7 +13,7 @@
         @foreach (IFieldSymbol field in Model)
         {
             <tr>
-                <td><a href="~/api/@(field.Link).html">@field.Name</a></td>
+                <td><a href="~/api/@(field.Link.Parent)/-Fields.html#@(field.Id)">@field.Name</a></td>
                 <td>@Html.Raw(@field.Comment.Summary)</td>
             </tr>
         }
