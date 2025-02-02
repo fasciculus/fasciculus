@@ -123,7 +123,6 @@ namespace Fasciculus.Site.Controllers
                 Title = package.Name + " Package",
                 Package = package,
                 PackageUri = package.Repository,
-                AppliesTo = new(package.Frameworks),
                 Navigation = apiNavigation.Create(package.Link)
             };
 
@@ -136,7 +135,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @namespace.Name + " Namespace",
                 Namespace = @namespace,
-                AppliesTo = new(@namespace.Frameworks),
                 Navigation = apiNavigation.Create(@namespace.Link)
             };
 
@@ -149,7 +147,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @enum.Name + " Enum",
                 Enum = @enum,
-                AppliesTo = new(@enum.Frameworks),
                 Navigation = apiNavigation.Create(@enum.Link)
             };
 
@@ -162,7 +159,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @interface.Name + " Interface",
                 Interface = @interface,
-                AppliesTo = new(@interface.Frameworks),
                 Navigation = apiNavigation.Create(@interface.Link)
             };
 
@@ -175,7 +171,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @class.Name + " Class",
                 Class = @class,
-                AppliesTo = new(@class.Frameworks),
                 Navigation = apiNavigation.Create(@class.Link)
             };
 
@@ -188,7 +183,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = field.Name + " Field",
                 Field = field,
-                AppliesTo = new(field.Frameworks),
                 Navigation = apiNavigation.Create(field.Link)
             };
 
@@ -201,7 +195,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = member.Name + " Member",
                 Member = member,
-                AppliesTo = new(member.Frameworks),
                 Navigation = apiNavigation.Create(member.Link)
             };
 
@@ -214,7 +207,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = @event.Name + " Event",
                 Event = @event,
-                AppliesTo = new(@event.Frameworks),
                 Navigation = apiNavigation.Create(@event.Link)
             };
 
@@ -227,7 +219,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = property.Name + " Property",
                 Property = property,
-                AppliesTo = new(property.Frameworks),
                 Navigation = apiNavigation.Create(property.Link)
             };
 

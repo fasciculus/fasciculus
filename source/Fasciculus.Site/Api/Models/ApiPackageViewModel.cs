@@ -9,7 +9,5 @@ namespace Fasciculus.Site.Api.Models
         public required IPackageSymbol Package { get; init; }
 
         public required Uri PackageUri { get; init; }
-
-        public required ApiAppliesTo AppliesTo { get; init; }
     }
 }
