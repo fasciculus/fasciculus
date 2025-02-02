@@ -122,7 +122,6 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = package.Name + " Package",
                 Package = package,
-                PackageUri = package.Repository,
                 Navigation = apiNavigation.Create(package.Link)
             };
 
