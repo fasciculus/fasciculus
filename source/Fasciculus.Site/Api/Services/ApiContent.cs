@@ -23,6 +23,7 @@ namespace Fasciculus.Site.Api.Services
         {
             result = CodeAnalyzer.Create()
                 .WithProjects(GetProjects())
+                .WithCombinedPackageName(SiteConstants.CombinedPackageName)
                 .WithCombinedPackageLink(new("tree", "main", "source"))
                 .Build().Analyze();
         }
