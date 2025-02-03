@@ -97,6 +97,7 @@ namespace Fasciculus.Site.Controllers
             switch (last)
             {
                 case "-Fields": return Fields(path);
+                case "-Events": return Events(path);
                 case "-Constructors": return Constructors(path);
             }
 
@@ -226,6 +227,25 @@ namespace Fasciculus.Site.Controllers
                 };
 
                 return View("Fields", model);
+            }
+
+            return NotFound();
+        }
+
+        private IActionResult Events(UriPath path)
+        {
+            IClassOrInterfaceSymbol? cori = apiContent.GetSymbol(path.Parent) as IClassOrInterfaceSymbol;
+
+            if (cori is not null)
+            {
+                ApiSymbolsViewModel<IEventSymbol> model = new()
+                {
+                    Title = $"{cori.Name} Events",
+                    Symbols = [.. cori.Events],
+                    Navigation = apiNavigation.Create(path)
+                };
+
+                return View("Events", model);
             }
 
             return NotFound();

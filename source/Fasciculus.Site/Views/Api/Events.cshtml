@@ -1,0 +1,20 @@
+@model ApiSymbolsViewModel<IEventSymbol>
+
+<h1>@Model.Title</h1>
+
+@foreach (IEventSymbol evt in Model.Symbols)
+{
+    ApiAppliesTo appliesTo = new(evt.Frameworks, ApiAppliesToLevel.H3, evt.Id);
+
+    <h2 id="@evt.Id">@evt.Name</h2>
+
+    <h3>Definition</h3>
+
+    <partial name="_SymbolInfo.cshtml" model=evt />
+
+    <div class="csharp"><pre><code>@evt.Modifiers event @evt.Type @evt.Name</code></pre></div>
+
+    <p>@Html.Raw(evt.Comment.Summary)</p>
+
+    <partial name="_AppliesTo.cshtml" model=appliesTo />
+}

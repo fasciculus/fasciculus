@@ -10,11 +10,11 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (IEventSymbol e in Model)
+        @foreach (IEventSymbol evt in Model)
         {
             <tr>
-                <td><a href="~/api/@(e.Link).html">@e.Name</a></td>
-                <td>@Html.Raw(@e.Comment.Summary)</td>
+                <td><a href="~/api/@(evt.Link.Parent)/-Events.html#@(evt.Id)">@evt.Name</a></td>
+                <td>@Html.Raw(@evt.Comment.Summary)</td>
             </tr>
         }
     </tbody>

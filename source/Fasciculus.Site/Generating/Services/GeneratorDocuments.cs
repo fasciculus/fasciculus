@@ -58,6 +58,14 @@ namespace Fasciculus.Site.Generating.Services
                         Add($"/api/{symbol.Link}/");
                     }
 
+                    if (symbol is IClassOrInterfaceSymbol cori)
+                    {
+                        if (cori.Events.Any())
+                        {
+                            Add($"/api/{cori.Link}/-Events.html");
+                        }
+                    }
+
                     if (symbol is IClassSymbol @class)
                     {
                         if (@class.Fields.Any())
@@ -79,6 +87,7 @@ namespace Fasciculus.Site.Generating.Services
             return kind switch
             {
                 SymbolKind.Field => false,
+                SymbolKind.Event => false,
                 SymbolKind.Constructor => false,
                 _ => true,
             };

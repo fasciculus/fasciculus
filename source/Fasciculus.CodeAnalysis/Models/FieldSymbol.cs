@@ -27,8 +27,6 @@ namespace Fasciculus.CodeAnalysis.Models
         }
 
         protected override string GetId()
-        {
-            return $"{Kind}-{Name.Name}";
-        }
+            => $"{Kind}-{Name.Name}";
     }
 }
