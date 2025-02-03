@@ -151,5 +151,41 @@ namespace Fasciculus.Net.Navigating
         /// </summary>
         public int CompareTo(UriPath? other)
             => other is null ? -1 : parts.SequenceCompare(other.parts, StringComparer.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// Indicates whether the <paramref name="left"/> link is equal to the <paramref name="right"/> link.
+        /// </summary>
+        public static bool operator ==(UriPath left, UriPath right)
+            => left.Equals(right);
+
+        /// <summary>
+        /// Indicates whether the <paramref name="left"/> link is not equal to the <paramref name="right"/> link.
+        /// </summary>
+        public static bool operator !=(UriPath left, UriPath right)
+            => !left.Equals(right);
+
+        /// <summary>
+        /// Indicates whether the <paramref name="left"/> link is less than the <paramref name="right"/> link.
+        /// </summary>
+        public static bool operator <(UriPath left, UriPath right)
+            => left.CompareTo(right) < 0;
+
+        /// <summary>
+        /// Indicates whether the <paramref name="left"/> link is greater than the <paramref name="right"/> link.
+        /// </summary>
+        public static bool operator >(UriPath left, UriPath right)
+            => left.CompareTo(right) > 0;
+
+        /// <summary>
+        /// Indicates whether the <paramref name="left"/> link is less than or equal to the <paramref name="right"/> link.
+        /// </summary>
+        public static bool operator <=(UriPath left, UriPath right)
+            => left.CompareTo(right) <= 0;
+
+        /// <summary>
+        /// Indicates whether the <paramref name="left"/> link is greater than or equal to the <paramref name="right"/> link.
+        /// </summary>
+        public static bool operator >=(UriPath left, UriPath right)
+            => left.CompareTo(right) >= 0;
     }
 }
