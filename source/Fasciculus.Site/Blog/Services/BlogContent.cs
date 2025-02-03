@@ -31,6 +31,8 @@ namespace Fasciculus.Site.Blog.Services
             months = new(years.SelectMany(y => y), comparer);
             entries = new(months.SelectMany(m => m), comparer);
 
+            LinkEntries();
+
             yearMap = years.ToDictionary(y => y.Link);
             monthMap = months.ToDictionary(m => m.Link);
             entryMap = entries.ToDictionary(e => e.Link);
@@ -52,5 +54,22 @@ namespace Fasciculus.Site.Blog.Services
 
         public BlogItem GetItem(UriPath link)
             => itemMap[link];
+
+        private void LinkEntries()
+        {
+            BlogEntry? next = null;
+
+            foreach (BlogEntry entry in entries)
+            {
+                entry.Next = next;
+
+                if (next is not null)
+                {
+                    next.Prev = entry;
+                }
+
+                next = entry;
+            }
+        }
     }
 }

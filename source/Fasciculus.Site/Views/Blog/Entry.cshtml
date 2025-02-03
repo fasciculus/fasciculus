@@ -1,2 +1,28 @@
 @model BlogEntryViewModel
-@Html.Raw(Model.Entry.Content)
+@{
+    BlogEntry entry = Model.Entry;
+    BlogEntry? prev = entry.Prev;
+    BlogEntry? next = entry.Next;
+}
+@Html.Raw(entry.Content)
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            @if (prev is not null)
+            {
+                <a href="~/@(prev.Link).html">Previous Entry</a>
+                <h6>@prev.Title</h6>
+                <p>@(prev.Published.ToString("yyyy-MM-dd"))<br />@prev.Summary</p>
+            }
+        </div>
+        <div class="col text-end">
+            @if (next is not null)
+            {
+                <a href="~/@(next.Link).html">Next Entry</a>
+                <h6>@next.Title</h6>
+                <p>@(next.Published.ToString("yyyy-MM-dd"))<br />@next.Summary</p>
+            }
+        </div>
+    </div>
+</div>
