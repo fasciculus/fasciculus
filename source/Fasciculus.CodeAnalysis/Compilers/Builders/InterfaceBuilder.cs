@@ -17,6 +17,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
             Events.Apply(@interface.Add);
             Properties.Apply(@interface.Add);
 
+            Methods.Apply(@interface.Add);
+
             @interface.AddSource(Source);
 
             return @interface;

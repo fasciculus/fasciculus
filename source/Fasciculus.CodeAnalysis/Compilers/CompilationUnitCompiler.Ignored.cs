@@ -34,6 +34,12 @@ namespace Fasciculus.CodeAnalysis.Compilers
         //    base.VisitArrayType(node);
         //}
 
+        //public override void VisitClassOrStructConstraint(ClassOrStructConstraintSyntax node)
+        //{
+        //    // ClassConstraint or StructConstraint
+        //    // Leaf
+        //}
+
         //public override void VisitElifDirectiveTrivia(ElifDirectiveTriviaSyntax node)
         //{
         //}

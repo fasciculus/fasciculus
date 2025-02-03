@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Fasciculus.Support
 {
@@ -10,19 +10,19 @@ namespace Fasciculus.Support
         /// <summary>
         /// Throws an <see cref="InvalidOperationException"/> if the given <paramref name="value"/> is <c>null</c>.
         /// </summary>
-        public static T NotNull<T>(T? value)
+        public static T NotNull<T>(T? value, string? message = null)
             where T : notnull
         {
-            return value ?? throw new InvalidOperationException();
+            return value ?? throw Ex.InvalidOperation(message);
         }
 
         /// <summary>
         /// Throws an <see cref="InvalidOperationException"/> if the given <paramref name="value"/> is not <c>null</c>.
         /// </summary>
-        public static void IsNull<T>(T? value)
+        public static void IsNull<T>(T? value, string? message = null)
             where T : notnull
         {
-            if (value is not null) throw new InvalidOperationException();
+            if (value is not null) Ex.InvalidOperation(message);
         }
     }
 }

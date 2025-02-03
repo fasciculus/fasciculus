@@ -29,11 +29,17 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
 
         protected UriPath CreateLink()
         {
-            SymbolName[] types = [.. parameters.Select(p => p.Type)];
-            string[] mangleds = [.. types.Select(p => p.Mangled)];
-            string[] prefixeds = [.. mangleds.Select(m => $"-{m}")];
-            string mangled = string.Join("", prefixeds);
-            UriPath link = Link.Parent.Append(Link[^1] + mangled);
+            UriPath[] links = [.. parameters.Select(p => p.Link)];
+            string[] parts = [.. links.Select(l => l[0])];
+            string prefix = Link[^1];
+            string part = string.Join("-", parts.Prepend(prefix));
+            UriPath link = Link.Parent.Append(part);
+
+            //SymbolName[] types = [.. parameters.Select(p => p.Type)];
+            //string[] mangleds = [.. types.Select(p => p.Mangled)];
+            //string[] prefixeds = [.. mangleds.Select(m => $"-{m}")];
+            //string mangled = string.Join("", prefixeds);
+            //UriPath link = Link.Parent.Append(Link[^1] + mangled);
 
             return link;
         }

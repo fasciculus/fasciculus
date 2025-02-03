@@ -25,6 +25,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private readonly Stack<ParameterBuilder> parameterBuilders = [];
         private readonly Stack<ConstructorBuilder> constructorBuilders = [];
+        private readonly Stack<MethodBuilder> methodBuilders = [];
 
         private void PushComment()
             => commentBuilders.Push(new(CommentContext));
@@ -48,6 +49,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             if (builder is ParameterBuilder parameterBuilder) parameterBuilders.Push(parameterBuilder);
             if (builder is ConstructorBuilder constructorBuilder) constructorBuilders.Push(constructorBuilder);
+            if (builder is MethodBuilder methodBuilder) methodBuilders.Push(methodBuilder);
 
             PushReceiver(builder);
         }
@@ -84,6 +86,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private ConstructorBuilder PopConstructorBuilder()
             => PopReceiver(constructorBuilders.Pop());
+
+        private MethodBuilder PopMethodBuilder()
+            => PopReceiver(methodBuilders.Pop());
 
         private void PushNamespace(SymbolName name)
         {
@@ -283,10 +288,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private AccessorSymbol PopAccessor()
             => PopAccessorBuilder().Build(PopComment());
 
-        private void PushParameter(SymbolName name, SymbolModifiers modifiers, SymbolName type)
+        private void PushParameter(SymbolName name, SymbolModifiers modifiers, SymbolName type, UriPath link)
         {
-            UriPath link = parameterReceivers.Peek().Link.Append(name.Name);
-
             ParameterBuilder builder = new()
             {
                 Name = name,
@@ -327,5 +330,28 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private ConstructorSymbol PopConstructor()
             => PopConstructorBuilder().Build(PopComment());
+
+        private void PushMethod(SymbolName name, SymbolModifiers modifiers, SymbolName type)
+        {
+            UriPath link = methodReceivers.Peek().Link.Append(name.Mangled);
+
+            MethodBuilder builder = new()
+            {
+                Name = name,
+                Link = link,
+                Framework = Framework,
+                Package = Package,
+                Modifiers = modifiers,
+                Source = Source,
+                Type = type,
+                BareName = name,
+            };
+
+            PushBuilder(builder);
+            PushComment();
+        }
+
+        private MethodSymbol PopMethod()
+            => PopMethodBuilder().Build(PopComment());
     }
 }

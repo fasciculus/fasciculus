@@ -15,8 +15,8 @@ namespace Fasciculus.Support
         /// <summary>
         /// Creates a new <see cref="NotImplementedException"/>.
         /// </summary>
-        public static NotImplementedException NotImplemented()
-            => new();
+        public static NotImplementedException NotImplemented(string? message = null)
+            => message is null ? new() : new(message);
 
         /// <summary>
         /// Creates a new <see cref="InvalidOperationException"/>.

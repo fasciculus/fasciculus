@@ -80,6 +80,8 @@ namespace Fasciculus.CodeAnalysis.Indexing
                 index.Add(@interface.Link, @interface);
                 AddEvents(@interface.Events);
                 AddProperties(@interface.Properties);
+
+                AddMethods(@interface.Methods);
             }
         }
 
@@ -97,6 +99,7 @@ namespace Fasciculus.CodeAnalysis.Indexing
                 AddProperties(@class.Properties);
 
                 AddConstructors(@class.Constructors);
+                AddMethods(@class.Methods);
             }
         }
 
@@ -152,6 +155,17 @@ namespace Fasciculus.CodeAnalysis.Indexing
             if (IsIncluded(constructor))
             {
                 index.Add(constructor.Link, constructor);
+            }
+        }
+
+        private void AddMethods(IEnumerable<IMethodSymbol> methods)
+            => methods.Apply(AddMethod);
+
+        private void AddMethod(IMethodSymbol method)
+        {
+            if (IsIncluded(method))
+            {
+                index.Add(method.Link, method);
             }
         }
 

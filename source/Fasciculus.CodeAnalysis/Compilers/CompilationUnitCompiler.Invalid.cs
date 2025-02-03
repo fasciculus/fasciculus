@@ -167,14 +167,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             throw Ex.InvalidOperation("VisitCheckedStatement");
         }
 
-        public override void VisitClassOrStructConstraint(ClassOrStructConstraintSyntax node)
-        {
-            // ClassConstraint or StructConstraint
-            // Leaf
-
-            throw Ex.InvalidOperation("VisitClassOrStructConstraint");
-        }
-
         public override void VisitCollectionExpression(CollectionExpressionSyntax node)
         {
             // CollectionExpression:

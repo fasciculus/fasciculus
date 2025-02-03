@@ -1,7 +1,10 @@
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Collections;
+using Fasciculus.Net.Navigating;
 using Fasciculus.Support;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
@@ -13,32 +16,11 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
         private SymbolModifiers GetModifiers(SyntaxTokenList tokens)
         {
-            SymbolModifiers modifiers = new();
+            string[] names = [.. tokens.Select(t => t.Text)];
 
-            foreach (SyntaxToken token in tokens)
-            {
-                string name = token.Text;
+            names.Apply(ModifierDebugger.Add);
 
-                ModifierDebugger.Add(name);
-
-                switch (name)
-                {
-                    case "public": modifiers.IsPublic = true; break;
-                    case "private": modifiers.IsPrivate = true; break;
-                    case "protected": modifiers.IsProtected = true; break;
-                    case "internal": modifiers.IsInternal = true; break;
-                    case "abstract": modifiers.IsAbstract = true; break;
-                    case "static": modifiers.IsStatic = true; break;
-                    case "readonly": modifiers.IsReadonly = true; break;
-                    case "virtual": modifiers.IsVirtual = true; break;
-                    case "override": modifiers.IsOverride = true; break;
-                    case "unsafe": modifiers.IsUnsafe = true; break;
-                    case "async": modifiers.IsAsync = true; break;
-                    case "partial": modifiers.IsPartial = true; break;
-                }
-            }
-
-            return modifiers;
+            return SymbolModifiers.Parse(names);
         }
 
         private static SymbolName GetName(SyntaxToken identifier, TypeParameterListSyntax? typeParameters)
@@ -52,7 +34,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             string[] parameters = [.. typeParameters.Parameters.Select(p => p.Identifier.Text)];
             string name = $"{untyped}<{string.Join(',', parameters)}>";
-            string mangled = $"{untyped}-{parameters.Count()}";
+            string mangled = $"{untyped}-{parameters.Length}";
 
             return new(name, mangled);
         }
@@ -110,5 +92,49 @@ namespace Fasciculus.CodeAnalysis.Compilers
 
             return new(name, mangled);
         }
+
+        private static UriPath GetParameterLink(ParameterSyntax node)
+        {
+            TypeSyntax type = Cond.NotNull(node.Type);
+            string name = node.Identifier.ValueText;
+            IEnumerable<string> suffixes = GetParameterSuffixes(type);
+            string path = string.Join("-", suffixes.Prepend(name));
+
+            return new(path);
+        }
+
+        private static IEnumerable<string> GetParameterSuffixes(TypeSyntax type)
+        {
+            return type switch
+            {
+                PredefinedTypeSyntax predefined => GetPredefinedParameterSuffixes(predefined),
+                IdentifierNameSyntax identifier => GetIdentifierParameterSuffixes(identifier),
+                GenericNameSyntax generic => GetGenericParameterSuffixes(generic),
+                NullableTypeSyntax nullable => GetNullableParameterSuffixes(nullable),
+                ArrayTypeSyntax array => GetArrayParameterSuffixes(array),
+                _ => throw Ex.InvalidOperation($"{type.GetType()}")
+            };
+        }
+
+        private static IEnumerable<string> GetGenericParameterSuffixes(GenericNameSyntax generic)
+        {
+            string untyped = generic.Identifier.ValueText;
+            IEnumerable<TypeSyntax> args = generic.TypeArgumentList.Arguments;
+            IEnumerable<string> suffixes = args.SelectMany(GetParameterSuffixes);
+
+            return suffixes.Prepend(untyped);
+        }
+
+        private static IEnumerable<string> GetPredefinedParameterSuffixes(PredefinedTypeSyntax predefined)
+            => [predefined.Keyword.ToString()];
+
+        private static IEnumerable<string> GetIdentifierParameterSuffixes(IdentifierNameSyntax identifier)
+            => [identifier.Identifier.ValueText];
+
+        private static IEnumerable<string> GetNullableParameterSuffixes(NullableTypeSyntax nullable)
+            => GetParameterSuffixes(nullable.ElementType).Append("*opt");
+
+        private static IEnumerable<string> GetArrayParameterSuffixes(ArrayTypeSyntax array)
+            => GetParameterSuffixes(array.ElementType).Append("*array");
     }
 }

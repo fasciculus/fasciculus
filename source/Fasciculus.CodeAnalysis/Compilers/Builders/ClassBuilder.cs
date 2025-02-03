@@ -23,6 +23,8 @@ namespace Fasciculus.CodeAnalysis.Compilers.Builders
             fields.Apply(@class.Add);
             constructors.Apply(@class.Add);
 
+            Methods.Apply(@class.Add);
+
             @class.AddSource(Source);
 
             return @class;

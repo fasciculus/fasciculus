@@ -1,4 +1,5 @@
 using Fasciculus.CodeAnalysis.Models;
+using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Fasciculus.CodeAnalysis.Compilers
@@ -218,8 +219,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             {
                 SymbolName name = GetName(node.Identifier, null);
                 SymbolName type = GetTypeName(node.Type);
+                UriPath link = GetParameterLink(node);
 
-                PushParameter(name, modifiers, type);
+                PushParameter(name, modifiers, type, link);
                 base.VisitParameter(node);
                 Add(PopParameter());
             }
@@ -241,6 +243,34 @@ namespace Fasciculus.CodeAnalysis.Compilers
                 PushConstructor(name, modifiers);
                 base.VisitConstructorDeclaration(node);
                 Add(PopConstructor());
+            }
+        }
+
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            // HasTrivia: True
+            // MethodDeclaration
+            // : AttributeList? <return-type> ExplicitInterfaceSpecifier? ParameterList TypeParameterConstraintClause? (ArrowExpressionClause | Block)
+            //
+            // return-type
+            // : IdentifierName TypeParameterList?
+            // | GenericName TypeParameterList?
+            // | PredefinedType TypeParameterList?
+            // | ArrayType
+            // | NullableType
+
+            NodeDebugger.Add(node);
+
+            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
+
+            if (IsIncluded(modifiers))
+            {
+                SymbolName name = GetName(node.Identifier, null);
+                SymbolName type = GetTypeName(node.ReturnType);
+
+                PushMethod(name, modifiers, type);
+                base.VisitMethodDeclaration(node);
+                Add(PopMethod());
             }
         }
 

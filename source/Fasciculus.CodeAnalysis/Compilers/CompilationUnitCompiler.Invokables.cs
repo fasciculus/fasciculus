@@ -67,33 +67,6 @@ namespace Fasciculus.CodeAnalysis.Compilers
             }
         }
 
-        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
-        {
-            // HasTrivia: True
-            // MethodDeclaration
-            // : AttributeList? <return-type> ExplicitInterfaceSpecifier? ParameterList TypeParameterConstraintClause? (ArrowExpressionClause | Block)
-            //
-            // return-type
-            // : IdentifierName TypeParameterList?
-            // | GenericName TypeParameterList?
-            // | PredefinedType TypeParameterList?
-            // | ArrayType
-            // | NullableType
-
-            NodeDebugger.Add(node);
-
-            SymbolModifiers modifiers = GetModifiers(node.Modifiers);
-
-            if (IsIncluded(modifiers))
-            {
-                //PushComment();
-
-                //base.VisitMethodDeclaration(node);
-
-                //PopComment();
-            }
-        }
-
         public override void VisitOperatorDeclaration(OperatorDeclarationSyntax node)
         {
             // HasTrivia: True

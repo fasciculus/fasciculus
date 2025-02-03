@@ -34,6 +34,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             public required int Properties { get; init; }
 
             public required int Constructors { get; init; }
+            public required int Methods { get; init; }
 
             public required int Summaries { get; init; }
 
@@ -83,8 +84,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Properties = 104,
 
                 Constructors = 62,
+                Methods = 644,
 
-                Summaries = 312,
+                Summaries = 940,
             };
 
             Test(context);
@@ -110,8 +112,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Properties = 4,
 
                 Constructors = 4,
+                Methods = 14,
 
-                Summaries = 13,
+                Summaries = 27,
             };
 
             Test(context);
@@ -136,6 +139,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             IPropertySymbol[] properties = [.. symbols.Where(x => x.Kind == SymbolKind.Property).Cast<IPropertySymbol>()];
 
             IConstructorSymbol[] constructors = [.. symbols.Where(x => x.Kind == SymbolKind.Constructor).Cast<IConstructorSymbol>()];
+            IMethodSymbol[] methods = [.. symbols.Where(x => x.Kind == SymbolKind.Method).Cast<IMethodSymbol>()];
 
             string[] summaries = [.. symbols.Select(x => x.Comment.Summary).Where(x => !string.IsNullOrEmpty(x))];
 
@@ -159,6 +163,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Assert.IsTrue(properties.All(p => p.Accessors.Any()));
 
             Assert.AreEqual(context.Constructors, constructors.Length, "Constructors");
+            Assert.AreEqual(context.Methods, methods.Length, "Methods");
 
             Assert.AreEqual(context.Summaries, summaries.Length, "Summaries");
 

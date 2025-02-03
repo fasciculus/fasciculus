@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 
 namespace Fasciculus.CodeAnalysis.Models
@@ -31,6 +32,10 @@ namespace Fasciculus.CodeAnalysis.Models
         public bool IsPartial { get; }
 
         public bool IsParams { get; }
+
+        public bool IsThis { get; }
+
+        public bool IsOut { get; set; }
     }
 
     internal class SymbolModifiers : ISymbolModifiers
@@ -64,6 +69,10 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public bool IsParams { get; set; }
 
+        public bool IsThis { get; set; }
+
+        public bool IsOut { get; set; }
+
         public static SymbolModifiers Public()
             => new() { IsPublic = true };
 
@@ -83,6 +92,8 @@ namespace Fasciculus.CodeAnalysis.Models
             IsAsync = other.IsAsync;
             IsPartial = other.IsPartial;
             IsParams = other.IsParams;
+            IsThis = other.IsThis;
+            IsOut = other.IsOut;
         }
 
         public override string? ToString()
@@ -102,8 +113,39 @@ namespace Fasciculus.CodeAnalysis.Models
             if (IsAsync) sb.Append("async ");
             if (IsPartial) sb.Append("partial ");
             if (IsPartial) sb.Append("params ");
+            if (IsThis) sb.Append("this ");
+            if (IsOut) sb.Append("out ");
 
             return sb.ToString().TrimEnd();
+        }
+
+        public static SymbolModifiers Parse(IEnumerable<string> names)
+        {
+            SymbolModifiers modifiers = new();
+
+            foreach (string name in names)
+            {
+                switch (name)
+                {
+                    case "public": modifiers.IsPublic = true; break;
+                    case "private": modifiers.IsPrivate = true; break;
+                    case "protected": modifiers.IsProtected = true; break;
+                    case "internal": modifiers.IsInternal = true; break;
+                    case "abstract": modifiers.IsAbstract = true; break;
+                    case "static": modifiers.IsStatic = true; break;
+                    case "readonly": modifiers.IsReadonly = true; break;
+                    case "virtual": modifiers.IsVirtual = true; break;
+                    case "override": modifiers.IsOverride = true; break;
+                    case "unsafe": modifiers.IsUnsafe = true; break;
+                    case "async": modifiers.IsAsync = true; break;
+                    case "partial": modifiers.IsPartial = true; break;
+                    case "params": modifiers.IsParams = true; break;
+                    case "this": modifiers.IsThis = true; break;
+                    case "out": modifiers.IsOut = true; break;
+                }
+            }
+
+            return modifiers;
         }
     }
 }
