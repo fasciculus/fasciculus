@@ -96,6 +96,7 @@ namespace Fasciculus.Site.Controllers
 
             switch (last)
             {
+                case "-Members": return Members(path);
                 case "-Fields": return Fields(path);
                 case "-Events": return Events(path);
                 case "-Constructors": return Constructors(path);
@@ -211,6 +212,25 @@ namespace Fasciculus.Site.Controllers
             };
 
             return View("Property", model);
+        }
+
+        private IActionResult Members(UriPath path)
+        {
+            IEnumSymbol? @enum = apiContent.GetSymbol(path.Parent) as IEnumSymbol;
+
+            if (@enum is not null)
+            {
+                ApiSymbolsViewModel<IMemberSymbol> model = new()
+                {
+                    Title = $"{@enum.Name} Members",
+                    Symbols = [.. @enum.Members],
+                    Navigation = apiNavigation.Create(path)
+                };
+
+                return View("Members", model);
+            }
+
+            return NotFound();
         }
 
         private IActionResult Fields(UriPath path)

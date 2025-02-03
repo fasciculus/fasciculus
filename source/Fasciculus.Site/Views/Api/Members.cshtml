@@ -1,0 +1,20 @@
+@model ApiSymbolsViewModel<IMemberSymbol>
+
+<h1>@Model.Title</h1>
+
+@foreach (IMemberSymbol member in Model.Symbols)
+{
+    ApiAppliesTo appliesTo = new(member.Frameworks, ApiAppliesToLevel.H3, member.Id);
+
+    <h2 id="@member.Id">@member.Name</h2>
+
+    <h3>Definition</h3>
+
+    @* <partial name="_SymbolInfo.cshtml" model=member /> *@
+
+    <div class="csharp"><pre><code>@member.Name</code></pre></div>
+
+    <p>@Html.Raw(member.Comment.Summary)</p>
+
+    @* <partial name="_AppliesTo.cshtml" model=appliesTo /> *@
+}

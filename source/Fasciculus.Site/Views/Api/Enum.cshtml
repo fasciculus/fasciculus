@@ -36,7 +36,7 @@
         @foreach (IMemberSymbol member in enm.Members)
         {
             <tr>
-                <td><a href="~/api/@(member.Link).html">@member.Name</a></td>
+                <td><a href="~/api/@(member.Link.Parent)/-Members.html#@(member.Id)">@member.Name</a></td>
                 <td>@Html.Raw(@member.Comment.Summary)</td>
             </tr>
         }

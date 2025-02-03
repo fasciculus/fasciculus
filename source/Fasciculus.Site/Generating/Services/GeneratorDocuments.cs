@@ -58,6 +58,14 @@ namespace Fasciculus.Site.Generating.Services
                         Add($"/api/{symbol.Link}/");
                     }
 
+                    if (symbol is IEnumSymbol @enum)
+                    {
+                        if (@enum.Members.Any())
+                        {
+                            Add($"/api/{@enum.Link}/-Members.html");
+                        }
+                    }
+
                     if (symbol is IClassOrInterfaceSymbol cori)
                     {
                         if (cori.Events.Any())
@@ -86,6 +94,7 @@ namespace Fasciculus.Site.Generating.Services
         {
             return kind switch
             {
+                SymbolKind.Member => false,
                 SymbolKind.Field => false,
                 SymbolKind.Event => false,
                 SymbolKind.Constructor => false,

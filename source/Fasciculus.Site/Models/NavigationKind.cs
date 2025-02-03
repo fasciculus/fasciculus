@@ -40,6 +40,7 @@ namespace Fasciculus.Site.Models
                 LicenseList => true,
                 ApiField => true,
                 ApiMember => true,
+                ApiMembers => true,
                 ApiEvent => true,
                 ApiProperty => true,
                 ApiFields => true,
