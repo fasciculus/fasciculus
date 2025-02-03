@@ -41,5 +41,8 @@ namespace Fasciculus.CodeAnalysis.Models
         {
             accessors.AddOrMergeWith(accessor);
         }
+
+        protected override string GetId()
+            => $"{Kind}-{Name.Name}";
     }
 }

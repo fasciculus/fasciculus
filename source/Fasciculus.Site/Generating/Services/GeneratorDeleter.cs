@@ -1,4 +1,5 @@
 using Fasciculus.Collections;
+using Fasciculus.IO;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -28,10 +29,30 @@ namespace Fasciculus.Site.Generating.Services
             Console.WriteLine($"~~~ FILES TO DELETE ({toDelete.Count}) ~~~");
             Debug.WriteLine($"~~~ FILES TO DELETE ({toDelete.Count}) ~~~");
 
-            toDelete.Apply(f => { Console.WriteLine(f); Debug.WriteLine(f); });
+            toDelete.Apply(Delete);
 
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Debug.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        }
+
+        private void Delete(string relativePath)
+        {
+            Console.WriteLine(relativePath);
+            Debug.WriteLine(relativePath);
+
+            FileInfo file = outputDirectory.File(relativePath);
+
+            file.Delete();
+
+            DirectoryInfo directory = file.Directory!;
+
+            if (directory.GetDirectories().Length == 0)
+            {
+                if (directory.GetFiles().Length == 0)
+                {
+                    directory.Delete(false);
+                }
+            }
         }
 
         private SortedSet<string> GetExistingFiles()

@@ -37,6 +37,8 @@ namespace Fasciculus.Site.Generating.Services
 
         public void Run()
         {
+            writer.Reset();
+
             documents.Apply(Generate);
         }
 

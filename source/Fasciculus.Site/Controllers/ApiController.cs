@@ -99,6 +99,7 @@ namespace Fasciculus.Site.Controllers
                 case "-Members": return Members(path);
                 case "-Fields": return Fields(path);
                 case "-Events": return Events(path);
+                case "-Properties": return Properties(path);
                 case "-Constructors": return Constructors(path);
             }
 
@@ -108,9 +109,6 @@ namespace Fasciculus.Site.Controllers
             {
                 return symbol.Kind switch
                 {
-                    SymbolKind.Member => Member((IMemberSymbol)symbol),
-                    SymbolKind.Event => Event((IEventSymbol)symbol),
-                    SymbolKind.Property => Property((IPropertySymbol)symbol),
                     _ => NotFound()
                 };
             }
@@ -178,42 +176,6 @@ namespace Fasciculus.Site.Controllers
             return View("Class", model);
         }
 
-        private ViewResult Member(IMemberSymbol member)
-        {
-            ApiSymbolViewModel<IMemberSymbol> model = new()
-            {
-                Title = member.Name + " Member",
-                Symbol = member,
-                Navigation = apiNavigation.Create(member.Link)
-            };
-
-            return View("Member", model);
-        }
-
-        private ViewResult Event(IEventSymbol @event)
-        {
-            ApiSymbolViewModel<IEventSymbol> model = new()
-            {
-                Title = @event.Name + " Event",
-                Symbol = @event,
-                Navigation = apiNavigation.Create(@event.Link)
-            };
-
-            return View("Event", model);
-        }
-
-        private ViewResult Property(IPropertySymbol property)
-        {
-            ApiSymbolViewModel<IPropertySymbol> model = new()
-            {
-                Title = property.Name + " Property",
-                Symbol = property,
-                Navigation = apiNavigation.Create(property.Link)
-            };
-
-            return View("Property", model);
-        }
-
         private IActionResult Members(UriPath path)
         {
             IEnumSymbol? @enum = apiContent.GetSymbol(path.Parent) as IEnumSymbol;
@@ -266,6 +228,25 @@ namespace Fasciculus.Site.Controllers
                 };
 
                 return View("Events", model);
+            }
+
+            return NotFound();
+        }
+
+        private IActionResult Properties(UriPath path)
+        {
+            IClassOrInterfaceSymbol? cori = apiContent.GetSymbol(path.Parent) as IClassOrInterfaceSymbol;
+
+            if (cori is not null)
+            {
+                ApiSymbolsViewModel<IPropertySymbol> model = new()
+                {
+                    Title = $"{cori.Name} Properties",
+                    Symbols = [.. cori.Properties],
+                    Navigation = apiNavigation.Create(path)
+                };
+
+                return View("Properties", model);
             }
 
             return NotFound();

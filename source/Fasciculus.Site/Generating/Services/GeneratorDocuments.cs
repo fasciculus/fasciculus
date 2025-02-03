@@ -72,6 +72,10 @@ namespace Fasciculus.Site.Generating.Services
                         {
                             Add($"/api/{cori.Link}/-Events.html");
                         }
+                        if (cori.Properties.Any())
+                        {
+                            Add($"/api/{cori.Link}/-Properties.html");
+                        }
                     }
 
                     if (symbol is IClassSymbol @class)
@@ -97,6 +101,7 @@ namespace Fasciculus.Site.Generating.Services
                 SymbolKind.Member => false,
                 SymbolKind.Field => false,
                 SymbolKind.Event => false,
+                SymbolKind.Property => false,
                 SymbolKind.Constructor => false,
                 _ => true,
             };

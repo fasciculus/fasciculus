@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +20,12 @@ namespace Fasciculus.Site.Generating.Services
         public GeneratorWriter([FromKeyedServices(OutputDirectoryKey)] DirectoryInfo outputDirectory)
         {
             this.outputDirectory = outputDirectory;
+        }
+
+        public void Reset()
+        {
+            allFiles.Clear();
+            modifiedFiles.Clear();
         }
 
         public void Write(string document, string contentType, byte[] content)

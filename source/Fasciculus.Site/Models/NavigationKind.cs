@@ -43,6 +43,7 @@ namespace Fasciculus.Site.Models
                 ApiMembers => true,
                 ApiEvent => true,
                 ApiProperty => true,
+                ApiProperties => true,
                 ApiFields => true,
                 ApiEvents => true,
                 ApiConstructors => true,

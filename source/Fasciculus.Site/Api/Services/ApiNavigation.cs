@@ -135,16 +135,6 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, "Classes", link, children, isOpen);
         }
 
-        private static NavigationNode CreatePropertiesNode(IClassSymbol @class, UriPath selected)
-        {
-            int kind = NavigationKind.ApiProperties;
-            UriPath link = ToSiteLink(@class.Link);
-            IEnumerable<NavigationNode> children = @class.Properties.Select(x => CreatePropertyNode(x, selected));
-            bool isOpen = children.Any(x => x.IsOpen);
-
-            return new(kind, "Properties", link, children, isOpen);
-        }
-
         private static NavigationNode CreateEnumNode(IEnumSymbol @enum, UriPath selected)
         {
             int kind = NavigationKind.ApiEnum;
@@ -174,6 +164,10 @@ namespace Fasciculus.Site.Api.Services
             if (@interface.Events.Any())
             {
                 children = children.Append(CreateEventsNode(@interface, selected));
+            }
+            if (@interface.Properties.Any())
+            {
+                children = children.Append(CreatePropertiesNode(@interface, selected));
             }
 
             return new(kind, label, link, children, isOpen);
@@ -208,26 +202,6 @@ namespace Fasciculus.Site.Api.Services
             return new(kind, label, link, children, isOpen);
         }
 
-        private static NavigationNode CreateMemberNode(IMemberSymbol member, UriPath selected)
-        {
-            int kind = NavigationKind.ApiMember;
-            string label = member.Name;
-            UriPath link = ToSiteLink(member.Link);
-            bool isOpen = selected.IsSelfOrDescendantOf(member.Link);
-
-            return new(kind, label, link, isOpen);
-        }
-
-        private static NavigationNode CreatePropertyNode(IPropertySymbol property, UriPath selected)
-        {
-            int kind = NavigationKind.ApiProperty;
-            string label = property.Name;
-            UriPath link = ToSiteLink(property.Link);
-            bool isOpen = selected.IsSelfOrDescendantOf(property.Link);
-
-            return new(kind, label, link, isOpen);
-        }
-
         private static NavigationNode CreateMembersNode(IEnumSymbol @enum, UriPath selected)
         {
             int kind = NavigationKind.ApiMembers;
@@ -253,6 +227,15 @@ namespace Fasciculus.Site.Api.Services
             bool isOpen = selected.IsSelfOrDescendantOf(cori.Link);
 
             return new(kind, "Events", link, isOpen);
+        }
+
+        private static NavigationNode CreatePropertiesNode(IClassOrInterfaceSymbol cori, UriPath selected)
+        {
+            int kind = NavigationKind.ApiProperties;
+            UriPath link = ToSiteLink(cori.Link).Append("-Properties");
+            bool isOpen = selected.IsSelfOrDescendantOf(cori.Link);
+
+            return new(kind, "Properties", link, isOpen);
         }
 
         private static NavigationNode CreateConstructorsNode(IClassSymbol @class, UriPath selected)

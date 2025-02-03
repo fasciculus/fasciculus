@@ -1,0 +1,20 @@
+@model ApiSymbolsViewModel<IPropertySymbol>
+
+<h1>@Model.Title</h1>
+
+@foreach (IPropertySymbol prp in Model.Symbols)
+{
+    ApiAppliesTo appliesTo = new(prp.Frameworks, ApiAppliesToLevel.H3, prp.Id);
+
+    <h2 id="@prp.Id">@prp.Name</h2>
+
+    <h3>Definition</h3>
+
+    <partial name="_SymbolInfo.cshtml" model=prp />
+
+    <div class="csharp"><pre><code>@prp.Modifiers @prp.Type @prp.Name @prp.Accessors</code></pre></div>
+
+    <p>@Html.Raw(prp.Comment.Summary)</p>
+
+    <partial name="_AppliesTo.cshtml" model=appliesTo />
+}
