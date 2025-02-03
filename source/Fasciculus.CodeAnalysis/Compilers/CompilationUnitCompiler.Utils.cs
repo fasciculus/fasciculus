@@ -132,9 +132,9 @@ namespace Fasciculus.CodeAnalysis.Compilers
             => [identifier.Identifier.ValueText];
 
         private static IEnumerable<string> GetNullableParameterSuffixes(NullableTypeSyntax nullable)
-            => GetParameterSuffixes(nullable.ElementType).Append("*opt");
+            => GetParameterSuffixes(nullable.ElementType).Append(".opt");
 
         private static IEnumerable<string> GetArrayParameterSuffixes(ArrayTypeSyntax array)
-            => GetParameterSuffixes(array.ElementType).Append("*array");
+            => GetParameterSuffixes(array.ElementType).Append(".array");
     }
 }

@@ -103,6 +103,7 @@ namespace Fasciculus.Site.Generating.Services
                 SymbolKind.Event => false,
                 SymbolKind.Property => false,
                 SymbolKind.Constructor => false,
+                SymbolKind.Method => false,
                 _ => true,
             };
         }
