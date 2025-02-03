@@ -9,7 +9,6 @@ namespace Fasciculus.Collections
     /// <summary>
     /// Observable and task-safe sorted set.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class ObservableSortedSet<T> : TaskSafeSortedSet<T>, INotifyPropertyChanged, INotifyingEnumerable<T>
         where T : notnull
     {

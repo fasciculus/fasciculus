@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -40,7 +40,6 @@ namespace Fasciculus.Collections
         /// <summary>
         /// Initializes this event args from the given <paramref name="args"/>.
         /// </summary>
-        /// <param name="args"></param>
         public TypedNotifyCollectionChangedEventArgs(NotifyCollectionChangedEventArgs args)
         {
             Action = args.Action;

@@ -25,8 +25,6 @@ namespace Fasciculus.IO.Resources
         /// <summary>
         /// Initializes the embedded resource representation.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="name"></param>
         public EmbeddedResource(Assembly assembly, string name)
         {
             Assembly = assembly;

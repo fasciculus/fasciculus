@@ -11,6 +11,8 @@ namespace Fasciculus.CodeAnalysis.Commenting
         public DefaultCommentResolver(ICommentDebugger debugger)
         {
             this.debugger = debugger;
+
+            debugger.Handled(["c", "para", "paramref", "see", "typeparamref"]);
         }
 
         public XElement? Resolve(XElement? element)
@@ -33,6 +35,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
 
             switch (name)
             {
+                case "c": VisitC(element); break;
                 case "para": VisitPara(element); break;
                 case "paramref": VisitParamref(element); break;
                 case "see": VisitSee(element); break;
@@ -40,6 +43,11 @@ namespace Fasciculus.CodeAnalysis.Commenting
             }
 
             base.VisitElement(element);
+        }
+
+        private static void VisitC(XElement element)
+        {
+            element.Name = "code";
         }
 
         private static void VisitPara(XElement element)
@@ -54,7 +62,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
             if (name is not null)
             {
                 string content = name.Value;
-                XElement code = new("c", content);
+                XElement code = new("code", content);
 
                 element.ReplaceWith(code);
             }
@@ -67,7 +75,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
             if (cref is not null)
             {
                 string content = cref.Value.Replace("{", "&lt;").Replace("}", "&gt;");
-                XElement code = new("c", content);
+                XElement code = new("code", content);
 
                 element.ReplaceWith(code);
             }
@@ -80,7 +88,7 @@ namespace Fasciculus.CodeAnalysis.Commenting
             if (name is not null)
             {
                 string content = name.Value;
-                XElement code = new("c", content);
+                XElement code = new("code", content);
 
                 element.ReplaceWith(code);
             }

@@ -24,10 +24,10 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
+    <ProjectReference Include="../Fasciculus.Html/Fasciculus.Html.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Compilers\CompilationUnitCompiler.Parameters.cs" />
     <None Include="README.md" Pack="true" PackagePath="/" />
     <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
   </ItemGroup>

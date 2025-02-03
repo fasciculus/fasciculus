@@ -1,3 +1,4 @@
+using Fasciculus.Html;
 using Fasciculus.Threading.Synchronization;
 using System.Collections.Generic;
 
@@ -12,16 +13,12 @@ namespace Fasciculus.CodeAnalysis.Debugging
 
         public DefaultCommentDebugger()
         {
-            handled.Add("b");
-            handled.Add("c");
-            handled.Add("code");
-            handled.Add("li");
-            handled.Add("ul");
+            handled.UnionWith(HtmlConstants.TagNames);
+        }
 
-            handled.Add("para");
-            handled.Add("paramref");
-            handled.Add("see");
-            handled.Add("typeparamref");
+        public void Handled(IEnumerable<string> tagNames)
+        {
+            handled.UnionWith(tagNames);
         }
 
         public void Used(string name)
