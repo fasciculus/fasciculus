@@ -1,4 +1,4 @@
-﻿using Fasciculus.Algorithms;
+using Fasciculus.Algorithms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -62,11 +62,11 @@ namespace Fasciculus.IO
 
         /// <summary>
         /// Returns <c>true</c> if:
-        /// <list type="bullet">
-        /// <item>the given <paramref name="file"/> doesn't exist.</item>
-        /// <item>the given <paramref name="file"/> is older than the given <paramref name="dateTimeUtc"/>.</item>
-        /// <item>the given <paramref name="mode"/> is <see cref="FileOverwriteMode.Always"/>.</item>
-        /// </list>
+        /// <ul>
+        /// <li>the given <paramref name="file"/> doesn't exist.</li>
+        /// <li>the given <paramref name="file"/> is older than the given <paramref name="dateTimeUtc"/>.</li>
+        /// <li>the given <paramref name="mode"/> is <see cref="FileOverwriteMode.Always"/>.</li>
+        /// </ul>
         /// </summary>
         public static bool RequiresOverwrite(this FileInfo file, DateTime dateTimeUtc, FileOverwriteMode mode)
         {
@@ -213,11 +213,11 @@ namespace Fasciculus.IO
 
         /// <summary>
         /// Returns <c>true</c> if:
-        /// <list type="bullet">
-        /// <item>the <paramref name="file"/> doesn't exist.</item>
-        /// <item>the <paramref name="file"/> has not the same length as the given <paramref name="bytes"/>.</item>
-        /// <item>the <paramref name="file"/>'s content differs from the given <paramref name="bytes"/>.</item>
-        /// </list>
+        /// <ul>
+        /// <li>the <paramref name="file"/> doesn't exist.</li>
+        /// <li>the <paramref name="file"/> has not the same length as the given <paramref name="bytes"/>.</li>
+        /// <li>the <paramref name="file"/>'s content differs from the given <paramref name="bytes"/>.</li>
+        /// </ul>
         /// </summary>
         public static bool IsDifferent(this FileInfo file, byte[] bytes)
         {
