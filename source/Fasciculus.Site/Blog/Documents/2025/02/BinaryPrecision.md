@@ -101,11 +101,13 @@ $$
 \end{align}
 $$
 
-Being conservative, this can be rewritten as
+Being conservative*, this can be rewritten as
 
 $$
 q = N - \lfloor \log_2(d) \rfloor + 1 \\
 $$
+
+\* $q$ is too large by 1, if $d$ is a power of 2.
 
 This gives the number of correct bits $p$ as
 

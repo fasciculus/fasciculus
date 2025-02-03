@@ -47,19 +47,5 @@ namespace Fasciculus.Site.Models
                 _ => false,
             };
         }
-
-        public static bool HasOverview(int kind)
-        {
-            return false;
-            //return kind switch
-            //{
-            //    ApiPackage => true,
-            //    ApiNamespace => true,
-            //    ApiEnum => true,
-            //    ApiInterface => true,
-            //    ApiClass => true,
-            //    _ => false,
-            //};
-        }
     }
 }

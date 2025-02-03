@@ -2,7 +2,6 @@
 @{
     int kind = Model.Kind;
     bool isLeaf = NavigationKind.IsLeaf(kind);
-    bool hasOverview = NavigationKind.HasOverview(kind);
     string link = Model.Link.ToString() + (isLeaf ? ".html" : "/");
 }
 <li>
@@ -11,10 +10,6 @@
         <details @(Model.IsOpen ? "open" : "")>
             <summary>@Model.Label</summary>
             <ul>
-                @if (hasOverview)
-                {
-                    <li><a href="~/@link">Overview</a></li>
-                }
                 @foreach (var child in Model.Children)
                 {
                     <partial name="~/Views/Shared/_NavigationNode.cshtml" model=child />
@@ -24,6 +19,6 @@
     }
     else
     {
-        <a href="~/@link">@(hasOverview ? "\u2003" : "")@Model.Label</a>
+        <a href="~/@link">@Model.Label</a>
     }
 </li>
