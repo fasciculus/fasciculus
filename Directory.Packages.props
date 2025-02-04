@@ -4,6 +4,8 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Antlr4.CodeGenerator" Version="4.6.6" />
+    <PackageVersion Include="Antlr4.Runtime" Version="4.6.6" />
     <PackageVersion Include="ColorCode.Core" Version="2.0.15" />
     <PackageVersion Include="ColorCode.HTML" Version="2.0.15" />
     <PackageVersion Include="CommunityToolkit.Maui" Version="11.0.0" />
