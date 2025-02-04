@@ -72,6 +72,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // HasTrivia: True
             // OperatorDeclaration
             // : AttributeList IdentifierName ParameterList ArrowExpressionClause
+            // | PredefinedType ParameterList ArrowExpressionClause
 
             NodeDebugger.Add(node);
 

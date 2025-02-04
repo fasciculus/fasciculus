@@ -70,7 +70,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             TestContext context = new()
             {
                 Projects = [GetProject("Fasciculus.Core")],
-                ProductionKind = SyntaxKind.None,
+                ProductionKind = SyntaxKind.OperatorDeclaration, // SyntaxKind.None,
 
                 Packages = 1,
                 Namespaces = 34,

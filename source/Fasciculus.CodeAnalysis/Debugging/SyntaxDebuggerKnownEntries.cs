@@ -83,7 +83,7 @@ namespace Fasciculus.CodeAnalysis.Debugging
             Add(SyntaxKind.ObjectCreationExpression, [SyntaxKind.ArgumentList, SyntaxKind.GenericName]);
 
             Add(SyntaxKind.OperatorDeclaration, [SyntaxKind.ArrowExpressionClause, SyntaxKind.AttributeList, SyntaxKind.IdentifierName,
-                SyntaxKind.ParameterList]);
+                SyntaxKind.ParameterList, SyntaxKind.PredefinedType]);
 
             Add(SyntaxKind.Parameter, [SyntaxKind.ArrayType, SyntaxKind.EqualsValueClause, SyntaxKind.GenericName, SyntaxKind.IdentifierName,
                 SyntaxKind.NullableType, SyntaxKind.PointerType, SyntaxKind.PredefinedType]);
