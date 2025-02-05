@@ -33,7 +33,7 @@ namespace Fasciculus.Xml
             => Convert(value, s => XmlConvert.ToDateTime(s, mode), defaultValue ?? DateTime.FromBinary(0));
 
         public static DateTimeOffset ToDateTimeOffset(string? value, DateTimeOffset? defaultValue = null)
-            => Convert(value, XmlConvert.ToDateTimeOffset, defaultValue ?? DateTime.FromBinary(0));
+            => Convert(value, XmlConvert.ToDateTimeOffset, defaultValue ?? DateTimeOffset.FromUnixTimeSeconds(0));
 
         public static decimal ToDecimal(string? value, decimal defaultValue = 0)
             => Convert(value, XmlConvert.ToDecimal, defaultValue);
