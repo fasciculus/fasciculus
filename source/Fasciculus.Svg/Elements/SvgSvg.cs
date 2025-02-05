@@ -8,7 +8,7 @@ namespace Fasciculus.Svg.Elements
     /// <summary>
     /// Represents a <c>SVGSVGElement</c>
     /// </summary>
-    public class SvgRoot : SvgElement
+    public class SvgSvg : SvgElement
     {
         public static XAttribute NamespaceAttribute
             => new("xmlns", NamespaceUri);
@@ -31,13 +31,13 @@ namespace Fasciculus.Svg.Elements
             set => SetAttributeValue("height", value);
         }
 
-        public SvgRoot(SvgViewBox viewBox)
+        public SvgSvg(SvgViewBox viewBox)
             : base(Namespace + "svg", NamespaceAttribute)
         {
             ViewBox = viewBox;
         }
 
-        public SvgRoot(double minX, double minY, double width, double height)
+        public SvgSvg(double minX, double minY, double width, double height)
             : this(new(minX, minY, width, height)) { }
 
         public static SvgRootBuilder Create(SvgViewBox viewBox)

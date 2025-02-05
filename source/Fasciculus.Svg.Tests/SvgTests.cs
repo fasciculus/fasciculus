@@ -11,7 +11,7 @@ namespace Fasciculus.Svg.Tests
         [TestMethod]
         public void Test()
         {
-            SvgRoot svg = SvgRoot.Create(0, 0, 160, 80).Width("16rem").Height("8rem").Build();
+            SvgSvg svg = SvgSvg.Create(0, 0, 160, 80).Width("16rem").Height("8rem").Build();
 
             SvgRect rect1 = SvgRect.Create(10, 10, 40, 20).Fill("red").StrokeWidth("10").Build();
             SvgRect rect2 = SvgRect.Create(30, 20, 100, 40).Fill("green").StrokeWidth("10").Build();

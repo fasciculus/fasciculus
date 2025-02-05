@@ -3,10 +3,10 @@ using Fasciculus.Svg.Types;
 
 namespace Fasciculus.Svg.Builders
 {
-    public class SvgRootBuilder : SvgElementBuilder<SvgRootBuilder, SvgRoot>
+    public class SvgRootBuilder : SvgElementBuilder<SvgRootBuilder, SvgSvg>
     {
         public SvgRootBuilder(SvgViewBox viewBox)
-            : base(() => new SvgRoot(viewBox)) { }
+            : base(() => new SvgSvg(viewBox)) { }
 
         public SvgRootBuilder ViewBox(SvgViewBox viewBox)
         {
