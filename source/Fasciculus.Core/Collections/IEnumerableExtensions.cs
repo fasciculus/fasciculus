@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,6 +25,19 @@ namespace Fasciculus.Collections
             {
                 action(value);
             }
+        }
+
+        /// <summary>
+        /// Returns exactly <paramref name="count"/> values, filling up with <paramref name="defaultValue"/> if the
+        /// <paramref name="values"/> sequence has not enough values.
+        /// </summary>
+        public static IEnumerable<T> Take<T>(this IEnumerable<T> values, int count, T defaultValue)
+        {
+            IEnumerable<T> existing = values.Take(count);
+            int existingCount = existing.Count();
+            int missingCount = Math.Max(0, count - existingCount);
+
+            return existing.Concat(Enumerable.Repeat(defaultValue, missingCount));
         }
 
 #if NETSTANDARD

@@ -35,6 +35,12 @@ namespace Fasciculus.Xml
         public static string InnerXml(this XElement? element)
             => element.ReadContent(r => r.ReadInnerXml());
 
+        public static bool HasAttribute(this XElement element, XName name)
+            => element.Attribute(name) is not null;
+
+        public static string GetString(this XElement element, XName name, string? defaultValue = null)
+            => element.Attribute(name)?.Value ?? defaultValue ?? string.Empty;
+
         public static bool GetBool(this XElement element, XName name, bool defaultValue = false)
             => element.Attribute(name).ToBool(defaultValue);
 
