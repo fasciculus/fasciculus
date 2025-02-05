@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
     <ProjectReference Include="../Fasciculus.Xml/Fasciculus.Xml.csproj" />
   </ItemGroup>
 

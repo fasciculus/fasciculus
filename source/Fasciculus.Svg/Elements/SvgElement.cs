@@ -5,6 +5,10 @@ namespace Fasciculus.Svg.Elements
 {
     public abstract class SvgElement : XElement
     {
+        public const string NamespaceUri = "http://www.w3.org/2000/svg";
+
+        public static XNamespace Namespace => NamespaceUri;
+
         public string? Class
         {
             get => this.HasAttribute("class") ? this.GetString("class") : null;
@@ -35,13 +39,7 @@ namespace Fasciculus.Svg.Elements
             set => SetAttributeValue("font-size", value);
         }
 
-        public string? Stroke
-        {
-            get => this.HasAttribute("stroke") ? this.GetString("stroke") : null;
-            set => SetAttributeValue("stroke", value);
-        }
-
-        protected SvgElement(string name)
-            : base(name) { }
+        protected SvgElement(XName name, params object[] content)
+            : base(name, content) { }
     }
 }

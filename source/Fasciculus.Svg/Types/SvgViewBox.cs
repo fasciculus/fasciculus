@@ -1,8 +1,6 @@
-using Fasciculus.Collections;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Fasciculus.Svg.Types
 {
@@ -36,12 +34,12 @@ namespace Fasciculus.Svg.Types
 
         public SvgViewBox(IEnumerable<double> values)
         {
-            double[] xywh = [.. values.Take(4, 0.0)];
+            double[] xywh = [.. values];
 
-            MinX = xywh[0];
-            MinY = xywh[1];
-            Width = xywh[2];
-            Height = xywh[3];
+            MinX = xywh.Length > 0 ? xywh[0] : 0;
+            MinY = xywh.Length > 1 ? xywh[1] : 0;
+            Width = xywh.Length > 2 ? xywh[2] : 0;
+            Height = xywh.Length > 3 ? xywh[3] : 0;
         }
 
         private IEnumerable<double> GetValues()

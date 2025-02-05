@@ -3,7 +3,7 @@ using Fasciculus.Xml;
 
 namespace Fasciculus.Svg.Elements
 {
-    public class SvgRect : SvgShapeElement
+    public class SvgRect : SvgShape
     {
         public double X
         {
@@ -42,16 +42,13 @@ namespace Fasciculus.Svg.Elements
         }
 
         public SvgRect(double x, double y, double width, double height)
-            : base("rect")
+            : base(Namespace + "rect")
         {
             X = x;
             Y = y;
             Width = width;
             Height = height;
         }
-
-        public SvgRect()
-            : this(0, 0, 0, 0) { }
 
         public static SvgRectBuilder Create()
             => new(0, 0, 0, 0);

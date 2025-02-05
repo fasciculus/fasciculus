@@ -5,28 +5,12 @@ namespace Fasciculus.Svg.Builders
 {
     public class SvgRootBuilder : SvgElementBuilder<SvgRootBuilder, SvgRoot>
     {
-        public SvgRootBuilder() { }
-
         public SvgRootBuilder(SvgViewBox viewBox)
-        {
-            ViewBox(viewBox);
-        }
-
-        public SvgRootBuilder(double minX, double minY, double width, double height)
-        {
-            ViewBox(minX, minY, width, height);
-        }
+            : base(() => new SvgRoot(viewBox)) { }
 
         public SvgRootBuilder ViewBox(SvgViewBox viewBox)
         {
             element.ViewBox = viewBox;
-
-            return this;
-        }
-
-        public SvgRootBuilder ViewBox(double minX, double minY, double width, double height)
-        {
-            element.ViewBox = new(minX, minY, width, height);
 
             return this;
         }
@@ -45,7 +29,7 @@ namespace Fasciculus.Svg.Builders
             return this;
         }
 
-        protected override SvgRootBuilder GetThis()
+        protected override SvgRootBuilder This()
             => this;
     }
 }

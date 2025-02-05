@@ -1,55 +1,54 @@
 using Fasciculus.Svg.Elements;
+using System;
 
 namespace Fasciculus.Svg.Builders
 {
     public abstract class SvgElementBuilder<B, E>
         where B : notnull, SvgElementBuilder<B, E>
-        where E : notnull, SvgElement, new()
+        where E : notnull, SvgElement
     {
-        protected readonly E element = new();
+        protected readonly E element;
 
-        protected abstract B GetThis();
+        protected SvgElementBuilder(Func<E> factory)
+        {
+            element = factory();
+        }
+
+        protected abstract B This();
 
         public B Class(string @class)
         {
             element.Class = @class;
 
-            return GetThis();
+            return This();
         }
 
         public B Style(string style)
         {
             element.Style = style;
 
-            return GetThis();
+            return This();
         }
 
         public B Color(string color)
         {
             element.Color = color;
 
-            return GetThis();
+            return This();
         }
 
         public B FontFamily(string fontFamily)
         {
             element.FontFamily = fontFamily;
 
-            return GetThis();
+            return This();
         }
 
         public B FontSize(string fontSize)
         {
             element.FontSize = fontSize;
 
-            return GetThis();
-        }
-
-        public B Stroke(string stroke)
-        {
-            element.Stroke = stroke;
-
-            return GetThis();
+            return This();
         }
 
         public virtual E Build()

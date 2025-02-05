@@ -5,12 +5,7 @@ namespace Fasciculus.Svg.Builders
     public class SvgRectBuilder : SvgShapeBuilder<SvgRectBuilder, SvgRect>
     {
         public SvgRectBuilder(double x, double y, double width, double height)
-        {
-            X(x);
-            Y(y);
-            Width(width);
-            Height(height);
-        }
+            : base(() => new(x, y, width, height)) { }
 
         public SvgRectBuilder X(double x)
         {
@@ -66,7 +61,7 @@ namespace Fasciculus.Svg.Builders
         public SvgRectBuilder R(double rx, double ry)
             => RX(rx).RY(ry);
 
-        protected override SvgRectBuilder GetThis()
+        protected override SvgRectBuilder This()
             => this;
     }
 }
