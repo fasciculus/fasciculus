@@ -32,5 +32,11 @@ namespace Fasciculus.Svg.Elements
 
         public static SvgRootBuilder Create()
             => new();
+
+        public static SvgRootBuilder Create(SvgViewBox viewBox)
+            => new(viewBox);
+
+        public static SvgRootBuilder Create(double minX, double minY, double width, double height)
+            => new(minX, minY, width, height);
     }
 }
