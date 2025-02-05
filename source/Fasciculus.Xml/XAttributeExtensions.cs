@@ -20,43 +20,43 @@ namespace Fasciculus.Xml
             XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.Utc)
             => XConvert.ToDateTime(attribute?.Value, defaultValue, mode);
 
-        public static DateTimeOffset ToDateTimeOffset(this XAttribute attribute, DateTimeOffset? defaultValue = null)
+        public static DateTimeOffset ToDateTimeOffset(this XAttribute? attribute, DateTimeOffset? defaultValue = null)
             => XConvert.ToDateTimeOffset(attribute?.Value, defaultValue);
 
-        public static decimal ToDecimal(this XAttribute attribute, decimal defaultValue = 0)
+        public static decimal ToDecimal(this XAttribute? attribute, decimal defaultValue = 0)
             => XConvert.ToDecimal(attribute?.Value, defaultValue);
 
-        public static double ToDouble(this XAttribute attribute, double defaultValue = 0)
+        public static double ToDouble(this XAttribute? attribute, double defaultValue = 0)
             => XConvert.ToDouble(attribute?.Value, defaultValue);
 
-        public static Guid ToGuid(this XAttribute attribute, Guid? defaultValue = null)
+        public static Guid ToGuid(this XAttribute? attribute, Guid? defaultValue = null)
             => XConvert.ToGuid(attribute?.Value, defaultValue);
 
-        public static short ToInt16(this XAttribute attribute, short defaultValue = 0)
+        public static short ToInt16(this XAttribute? attribute, short defaultValue = 0)
             => XConvert.ToInt16(attribute?.Value, defaultValue);
 
-        public static int ToInt32(this XAttribute attribute, int defaultValue = 0)
+        public static int ToInt32(this XAttribute? attribute, int defaultValue = 0)
             => XConvert.ToInt32(attribute?.Value, defaultValue);
 
-        public static long ToInt64(this XAttribute attribute, long defaultValue = 0)
+        public static long ToInt64(this XAttribute? attribute, long defaultValue = 0)
             => XConvert.ToInt64(attribute?.Value, defaultValue);
 
-        public static sbyte ToSByte(this XAttribute attribute, sbyte defaultValue = 0)
+        public static sbyte ToSByte(this XAttribute? attribute, sbyte defaultValue = 0)
             => XConvert.ToSByte(attribute?.Value, defaultValue);
 
-        public static float ToSingle(this XAttribute attribute, float defaultValue = 0)
+        public static float ToSingle(this XAttribute? attribute, float defaultValue = 0)
             => XConvert.ToSingle(attribute?.Value, defaultValue);
 
-        public static TimeSpan ToTimeSpan(this XAttribute attribute, TimeSpan? defaultValue = null)
+        public static TimeSpan ToTimeSpan(this XAttribute? attribute, TimeSpan? defaultValue = null)
             => XConvert.ToTimeSpan(attribute?.Value, defaultValue);
 
-        public static ushort ToUInt16(this XAttribute attribute, ushort defaultValue = 0)
+        public static ushort ToUInt16(this XAttribute? attribute, ushort defaultValue = 0)
             => XConvert.ToUInt16(attribute?.Value, defaultValue);
 
-        public static uint ToUInt32(this XAttribute attribute, uint defaultValue = 0)
+        public static uint ToUInt32(this XAttribute? attribute, uint defaultValue = 0)
             => XConvert.ToUInt32(attribute?.Value, defaultValue);
 
-        public static ulong ToUInt64(this XAttribute attribute, ulong defaultValue = 0)
+        public static ulong ToUInt64(this XAttribute? attribute, ulong defaultValue = 0)
             => XConvert.ToUInt64(attribute?.Value, defaultValue);
 
         public static string[] ToStrings(this XAttribute? attribute)
