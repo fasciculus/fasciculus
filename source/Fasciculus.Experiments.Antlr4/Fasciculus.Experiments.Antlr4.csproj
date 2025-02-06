@@ -13,16 +13,6 @@
 
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime" />
-    <PackageReference Include="Antlr4.CodeGenerator" PrivateAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Antlr4 Include="Calculator\Expr.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>Fasciculus.Experiments.Calculator</CustomToolNamespace>
-      <Listener>False</Listener>
-      <Visitor>True</Visitor>
-    </Antlr4>
   </ItemGroup>
 
 </Project>
