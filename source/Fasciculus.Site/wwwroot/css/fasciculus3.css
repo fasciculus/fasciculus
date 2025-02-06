@@ -108,20 +108,14 @@ div.fsc-navigation-forest {
     padding-bottom: 4px;
 }
 
-div.csharp {
+div.csharp, div.xml {
     background-color: #eee;
     margin-bottom: 1rem;
     padding: 0.625rem;
 }
 
-div.csharp pre {
+div.csharp pre, div.xml pre {
     margin-bottom: 0;
-}
-
-.xml {
-    background-color: #eee;
-    padding: 0.625rem;
-    margin-bottom: 1rem;
 }
 
 .comment {
