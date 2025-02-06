@@ -95,8 +95,8 @@ allowing me to get the (four) values out of the `viewBox` attribute.
 ## Fasciculus.Svg
 
 With the above out of the way, I started the Fasciculus.Svg project. As of this
-writing, `SvgSvg` (the `svg` element) and `ScgRect` are implemented only. They both
-come with their associated "builder" allowing fluent creation.
+writing, `SvgSvg` (the `svg` element) and `SvgRect` (the `rect` element) are somewhat implemented.
+They both come with their associated "builders" allowing fluent creation.
 
 The code
 
@@ -130,7 +130,7 @@ Visual Studio Code shows a preview, if Simon Siefke's "Svg Preview" extension is
 even without the `xmlns` attribute. When embedding SVG into HTML documents, the attribute
 isn't required neither, but it doesn't hurt.
 
-I had some difficulties setting this attribute until I stumbled over Microsot's
+I had some difficulties setting this attribute until I stumbled over Microsoft's
 [article][5] describing how to do it.
 
 [1]: https://www.nuget.org/packages/Svg
