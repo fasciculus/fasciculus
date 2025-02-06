@@ -19,6 +19,8 @@ namespace Fasciculus.Site.CheckLinks
             FileInfo[] files = directory.GetFiles("*.html", SearchOption.AllDirectories);
             SortedSet<string> links = [];
 
+            Log("parsing documents");
+
             foreach (FileInfo file in files)
             {
                 HtmlDocument document = new();
@@ -33,31 +35,40 @@ namespace Fasciculus.Site.CheckLinks
                 }
             }
 
-            string[] externalLinks = [.. links.Where(x => x.StartsWith("http"))];
+            string[] externalLinks = links
+                .Where(x => x.StartsWith("http"))
+                .Where(x => !x.StartsWith("https://github.com/fasciculus/fasciculus/"))
+                .Where(x => !x.StartsWith("https://www.nuget.org/"))
+                .ToArray();
+
+            Log("checking links");
+
             using HttpClient httpClient = HttpClientFactory.Create(null);
-            int broken = 0;
+            int broken = externalLinks.AsParallel().Select(link => CheckLink(httpClient, link)).Count(x => !x);
 
-            foreach (string externalLink in externalLinks)
+            Log($"{broken} / {externalLinks.Length} broken links");
+        }
+
+        private static bool CheckLink(HttpClient httpClient, string link)
+        {
+            try
             {
-                try
-                {
-                    httpClient.Head(new(externalLink));
-                }
-                catch
-                {
-                    string message = $"broken: {externalLink}";
+                httpClient.Head(new(link));
 
-                    Console.WriteLine(message);
-                    Debug.WriteLine(message);
-
-                    ++broken;
-                }
+                return true;
+            }
+            catch
+            {
+                Log($"broken: {link}");
             }
 
-            string brokenMessage = $"{broken} / {externalLinks.Length} broken links";
+            return false;
+        }
 
-            Console.WriteLine(brokenMessage);
-            Debug.WriteLine(brokenMessage);
+        private static void Log(string message)
+        {
+            Console.WriteLine(message);
+            Debug.WriteLine(message);
         }
     }
 }
