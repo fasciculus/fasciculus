@@ -53,5 +53,8 @@ namespace Fasciculus.Svg.Builders
 
         public virtual E Build()
             => element;
+
+        public static implicit operator E(SvgElementBuilder<B, E> builder)
+            => builder.Build();
     }
 }

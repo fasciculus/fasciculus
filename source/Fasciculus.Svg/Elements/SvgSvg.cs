@@ -40,10 +40,16 @@ namespace Fasciculus.Svg.Elements
         public SvgSvg(double minX, double minY, double width, double height)
             : this(new(minX, minY, width, height)) { }
 
-        public static SvgRootBuilder Create(SvgViewBox viewBox)
+        public SvgSvg(double width, double height)
+            : this(0, 0, width, height) { }
+
+        public static SvgSvgBuilder Create(SvgViewBox viewBox)
             => new(viewBox);
 
-        public static SvgRootBuilder Create(double minX, double minY, double width, double height)
+        public static SvgSvgBuilder Create(double minX, double minY, double width, double height)
             => Create(new(minX, minY, width, height));
+
+        public static SvgSvgBuilder Create(double width, double height)
+            => Create(0, 0, width, height);
     }
 }
