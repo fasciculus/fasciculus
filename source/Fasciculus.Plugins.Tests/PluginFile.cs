@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace Fasciculus.Plugins.Tests
 {
-    public static class PluginFiles
+    public static class PluginFile
     {
 #if DEBUG
-        public const bool IsDebug = true;
+        public const string Configuration = "Debug";
 #else
-        public const bool IsDebug = false;
+        public const string Configuration = "Release";
 #endif
 
         public static FileInfo GetTestee()
@@ -18,7 +18,7 @@ namespace Fasciculus.Plugins.Tests
             return DirectorySearch
                 .Search("Fasciculus.Plugins.Testee", SearchPath.WorkingDirectoryAndParents)
                 .First()
-                .Combine("bin", IsDebug ? "Debug" : "Release", "net9.0")
+                .Combine("bin", Configuration, "net9.0")
                 .File("Fasciculus.Plugins.Testee.dll");
         }
     }

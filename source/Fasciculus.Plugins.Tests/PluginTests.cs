@@ -11,20 +11,9 @@ namespace Fasciculus.Plugins.Tests
         [TestMethod]
         public void Test()
         {
-            DateTime expected;
-            DateTime actual;
-
-            FileInfo pluginFile = PluginFiles.GetTestee();
-            using Plugin<IPluginTestee> plugin = new(pluginFile);
-
-            expected = pluginFile.LastWriteTimeUtc;
-            actual = plugin.Target.Version;
-
-            Assert.AreEqual(expected, actual);
-
-            expected = DateTime.UtcNow;
-            pluginFile.LastWriteTimeUtc = expected;
-            actual = plugin.Target.Version;
+            FileInfo pluginFile = PluginFile.GetTestee();
+            DateTime expected = pluginFile.LastWriteTimeUtc;
+            DateTime actual = Plugin.Select<IPluginTestee, DateTime>(pluginFile, p => p.Version);
 
             Assert.AreEqual(expected, actual);
         }

@@ -1,140 +1,64 @@
-using Fasciculus.IO;
-using Fasciculus.Support;
-using Fasciculus.Threading.Synchronization;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 
 namespace Fasciculus.Plugins
 {
-    public abstract class Plugin : IDisposable
+    public static class Plugin
     {
-        protected readonly ReentrantTaskSafeMutex mutex = new();
-
-        private FileInfo file;
-        private AssemblyName name;
-        private PluginLoadContext? context = null;
-        private Assembly? assembly = null;
-        private DateTime version = DateTime.MinValue;
-
-        public Plugin(FileInfo file)
+        public static void Apply<I>(FileInfo file, Action<I> action)
+            where I : class
         {
-            this.file = file;
+            using GenericPlugin<I> plugin = new(file);
 
-            name = new(file.NameWithoutExtension());
-
-            Load();
+            action(plugin.Target);
         }
 
-        ~Plugin()
+        public static void Apply<I, T1>(FileInfo file, Action<I, T1> action, T1 t1)
+            where I : class
+            => Apply<I>(file, i => action(i, t1));
+
+        public static void Apply<I, T1, T2>(FileInfo file, Action<I, T1, T2> action, T1 t1, T2 t2)
+            where I : class
+            => Apply<I>(file, i => action(i, t1, t2));
+
+        public static void Apply<I, T1, T2, T3>(FileInfo file, Action<I, T1, T2, T3> action, T1 t1, T2 t2, T3 t3)
+            where I : class
+            => Apply<I>(file, i => action(i, t1, t2, t3));
+
+        public static void Apply<I, T1, T2, T3, T4>(FileInfo file, Action<I, T1, T2, T3, T4> action, T1 t1, T2 t2, T3 t3, T4 t4)
+            where I : class
+            => Apply<I>(file, i => action(i, t1, t2, t3, t4));
+
+        public static void Apply<I, T1, T2, T3, T4, T5>(FileInfo file, Action<I, T1, T2, T3, T4, T5> action, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5)
+            where I : class
+            => Apply<I>(file, i => action(i, t1, t2, t3, t4, t5));
+
+        public static R Select<I, R>(FileInfo file, Func<I, R> func)
+            where I : class
         {
-            Dispose(false);
+            using GenericPlugin<I> plugin = new(file);
+
+            return func(plugin.Target);
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        public static R Select<I, T1, R>(FileInfo file, Func<I, T1, R> func, T1 t1)
+            where I : class
+            => Select<I, R>(file, i => func(i, t1));
 
-        private void Dispose(bool _)
-        {
-            Unload();
-        }
+        public static R Select<I, T1, T2, R>(FileInfo file, Func<I, T1, T2, R> func, T1 t1, T2 t2)
+            where I : class
+            => Select<I, R>(file, i => func(i, t1, t2));
 
-        protected virtual void Load()
-        {
-            using Locker locker = Locker.Lock(mutex);
+        public static R Select<I, T1, T2, T3, R>(FileInfo file, Func<I, T1, T2, T3, R> func, T1 t1, T2 t2, T3 t3)
+            where I : class
+            => Select<I, R>(file, i => func(i, t1, t2, t3));
 
-            context = new(file);
-            assembly = context.LoadFromAssemblyName(name);
-            version = file.Update().LastWriteTimeUtc;
-        }
+        public static R Select<I, T1, T2, T3, T4, R>(FileInfo file, Func<I, T1, T2, T3, T4, R> func, T1 t1, T2 t2, T3 t3, T4 t4)
+            where I : class
+            => Select<I, R>(file, i => func(i, t1, t2, t3, t4));
 
-        protected virtual void Unload()
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            if (context is not null)
-            {
-                context.Unload();
-                context = null;
-            }
-
-            assembly = null;
-            version = DateTime.MinValue;
-        }
-
-        protected void Update()
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            DateTime current = file.Update().LastWriteTimeUtc;
-
-            if (current != version)
-            {
-                Unload();
-                Load();
-            }
-        }
-
-        protected IEnumerable<Type> GetTargetTypes(Type type)
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            return assembly is null ? [] : assembly.GetTypes().Where(t => t.IsAssignableTo(type));
-        }
-    }
-
-    public class Plugin<T> : Plugin
-        where T : class
-    {
-        private T? target;
-
-        public T Target => GetTarget();
-
-        public Plugin(FileInfo file)
-            : base(file) { }
-
-        private T GetTarget()
-        {
-            using Locker locker = Locker.Lock(mutex);
-
-            Update();
-
-            if (target is null)
-            {
-                throw Ex.InvalidOperation();
-            }
-
-            return target;
-        }
-
-        protected override void Load()
-        {
-            base.Load();
-
-            Type type = GetTargetTypes(typeof(T)).First();
-
-            target = Activator.CreateInstance(type) as T;
-        }
-
-        protected override void Unload()
-        {
-            if (target is IAsyncDisposable asyncDisposable)
-            {
-                asyncDisposable.DisposeAsync();
-            }
-            else if (target is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
-
-            target = null;
-
-            base.Unload();
-        }
+        public static R Select<I, T1, T2, T3, T4, T5, R>(FileInfo file, Func<I, T1, T2, T3, T4, T5, R> func, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5)
+            where I : class
+            => Select<I, R>(file, i => func(i, t1, t2, t3, t4, t5));
     }
 }
