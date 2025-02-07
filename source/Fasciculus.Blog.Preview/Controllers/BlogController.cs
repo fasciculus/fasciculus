@@ -1,23 +1,42 @@
 using Fasciculus.Blog.Preview.Models;
+using Fasciculus.Blog.Preview.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fasciculus.Blog.Preview.Controllers
 {
     public class BlogController : Controller
     {
-        public BlogController()
+        private readonly Entries entries;
+
+        public BlogController(Entries entries)
         {
+            this.entries = entries;
         }
 
         [Route("/")]
         public IActionResult Index()
         {
-            ViewModel model = new()
+            IndexViewModel model = new()
             {
-                Title = "Index"
+                Title = "Index",
+                Keys = [.. entries.GetKeys()]
             };
 
             return View("Index", model);
+        }
+
+        [Route("/entry/{key}")]
+        public IActionResult Entry(string key)
+        {
+            Entry entry = entries.GetEntry(key);
+
+            EntryViewModel model = new()
+            {
+                Title = entry.Title,
+                Entry = entry,
+            };
+
+            return View("Entry", model);
         }
     }
 }

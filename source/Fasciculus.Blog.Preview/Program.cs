@@ -1,5 +1,7 @@
+using Fasciculus.Blog.Preview.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Fasciculus.Blog.Preview
 {
@@ -18,6 +20,8 @@ namespace Fasciculus.Blog.Preview
             IServiceCollection services = builder.Services;
 
             services.AddControllersWithViews();
+
+            services.TryAddSingleton<Entries>();
 
             return CreateWebApplication(builder);
         }
