@@ -1,6 +1,6 @@
 using Fasciculus.Blog.Preview.Models;
+using Fasciculus.IO;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Blog.Preview.Services
@@ -12,7 +12,7 @@ namespace Fasciculus.Blog.Preview.Services
             return BlogFiles
                 .GetFiles()
                 .OrderByDescending(f => f.LastWriteTime)
-                .Select(f => Path.GetFileNameWithoutExtension(f.Name));
+                .Select(f => f.NameWithoutExtension());
         }
 
         public Entry GetEntry(string key)
