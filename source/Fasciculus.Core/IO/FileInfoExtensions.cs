@@ -22,6 +22,12 @@ namespace Fasciculus.IO
         }
 
         /// <summary>
+        /// Returns the name of the given <paramref name="file"/> stripped from its extension.
+        /// </summary>
+        public static string NameWithoutExtension(this FileInfo file)
+            => Path.GetFileNameWithoutExtension(file.Name);
+
+        /// <summary>
         /// Deletes the given <paramref name="file"/> if it exists.
         /// </summary>
         public static FileInfo DeleteIfExists(this FileInfo file)
