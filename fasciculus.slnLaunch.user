@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Blog",
+    "Projects": [
+      {
+        "Path": "source\\Fasciculus.Blog.Preview\\Fasciculus.Blog.Preview.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "source\\Fasciculus.Blog\\Fasciculus.Blog.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
