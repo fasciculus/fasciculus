@@ -7,7 +7,7 @@ namespace Fasciculus.Plugins
 {
     public class PluginLoadContext : AssemblyLoadContext
     {
-        private readonly AssemblyDependencyResolver resolver;
+        private AssemblyDependencyResolver resolver;
 
         public PluginLoadContext(FileInfo pluginFile)
             : base(true)

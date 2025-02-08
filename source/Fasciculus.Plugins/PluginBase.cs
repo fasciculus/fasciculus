@@ -10,7 +10,7 @@ namespace Fasciculus.Plugins
 {
     public abstract class PluginBase : IDisposable
     {
-        protected readonly ReentrantTaskSafeMutex mutex = new();
+        private readonly TaskSafeMutex mutex = new();
 
         private readonly FileInfo file;
         private readonly AssemblyName name;
@@ -56,14 +56,25 @@ namespace Fasciculus.Plugins
         {
             using Locker locker = Locker.Lock(mutex);
 
+            version = DateTime.MinValue;
+            assembly = null;
+
             if (context is not null)
             {
+                //WeakReference contextRef = new(context);
+
                 context.Unload();
                 context = null;
-            }
 
-            assembly = null;
-            version = DateTime.MinValue;
+                //GC.WaitForPendingFinalizers();
+
+                //while (contextRef.IsAlive)
+                //{
+                //    Thread.Yield();
+                //    GC.Collect();
+                //    GC.WaitForPendingFinalizers();
+                //}
+            }
         }
 
         protected void Update()

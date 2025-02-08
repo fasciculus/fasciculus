@@ -10,6 +10,7 @@ namespace Fasciculus.Plugins
     public class GenericPlugin<T> : PluginBase
         where T : class
     {
+        private readonly TaskSafeMutex mutex = new();
         private readonly List<T> targets = [];
 
         public T[] Targets => GetTargets();

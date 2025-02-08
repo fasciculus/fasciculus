@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Blog/Fasciculus.Blog.csproj" />
+    <ProjectReference Include="../Fasciculus.Blog.Definitions/Fasciculus.Blog.Definitions.csproj" />
+    <ProjectReference Include="../Fasciculus.Plugins/Fasciculus.Plugins.csproj" />
   </ItemGroup>
 
 </Project>
