@@ -1,3 +1,4 @@
+using Fasciculus.Markdown.ColorCode;
 using Fasciculus.Markdown.Svg;
 using Markdig;
 
@@ -16,6 +17,7 @@ namespace Fasciculus.Docs.Preview.Services
                 .UsePipeTables()
                 .UseBootstrap()
                 .UseSvg(graphics)
+                .UseColorCode()
                 .Build();
         }
 
