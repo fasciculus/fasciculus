@@ -21,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.CodeAnalysis/Fasciculus.CodeAnalysis.csproj" />
     <ProjectReference Include="../Fasciculus.Extensions/Fasciculus.Extensions.csproj" />
-    <ProjectReference Include="../Fasciculus.Markup/Fasciculus.Markup.csproj" />
+    <ProjectReference Include="../Fasciculus.Markdown/Fasciculus.Markdown.csproj" />
     <ProjectReference Include="../Fasciculus.NuGet/Fasciculus.NuGet.csproj" />
   </ItemGroup>
 

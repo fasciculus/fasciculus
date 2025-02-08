@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net9.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ColorCode.Core" />
+    <PackageReference Include="ColorCode.HTML" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Markdown.Core/Fasciculus.Markdown.Core.csproj" />
+  </ItemGroup>
+
+</Project>
