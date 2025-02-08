@@ -93,6 +93,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Blog", "source\F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "source\WebApplication1\WebApplication1.csproj", "{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Docs.Content", "source\Fasciculus.Docs.Content\Fasciculus.Docs.Content.csproj", "{E14E2C1A-248B-4964-99D7-4A4EF866360C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Docs.Preview", "source\Fasciculus.Docs.Preview\Fasciculus.Docs.Preview.csproj", "{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -255,6 +259,14 @@ Global
 		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E14E2C1A-248B-4964-99D7-4A4EF866360C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E14E2C1A-248B-4964-99D7-4A4EF866360C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E14E2C1A-248B-4964-99D7-4A4EF866360C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E14E2C1A-248B-4964-99D7-4A4EF866360C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
