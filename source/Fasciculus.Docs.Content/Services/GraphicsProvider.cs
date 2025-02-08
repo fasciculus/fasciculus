@@ -1,4 +1,4 @@
-using Fasciculus.Markdown.Extensions.Svg;
+using Fasciculus.Markdown.Svg;
 using Fasciculus.Svg.Attributes;
 using System;
 using System.Collections.Generic;

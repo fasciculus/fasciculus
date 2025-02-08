@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net9.0</TargetFrameworks>
+    <RootNamespace>Fasciculus.Markdown</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Markdown.Svg/Fasciculus.Markdown.Svg.csproj" />
+    <PackageReference Include="Markdig" />
   </ItemGroup>
 
 </Project>

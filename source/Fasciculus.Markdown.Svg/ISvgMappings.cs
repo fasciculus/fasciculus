@@ -1,6 +1,6 @@
 using System.Xml.Linq;
 
-namespace Fasciculus.Markdown.Extensions.Svg
+namespace Fasciculus.Markdown.Svg
 {
     public interface ISvgMappings
     {

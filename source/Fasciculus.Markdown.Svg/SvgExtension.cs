@@ -1,7 +1,7 @@
 using Markdig;
 using Markdig.Renderers;
 
-namespace Fasciculus.Markdown.Extensions.Svg
+namespace Fasciculus.Markdown.Svg
 {
     public class SvgExtension : IMarkdownExtension
     {

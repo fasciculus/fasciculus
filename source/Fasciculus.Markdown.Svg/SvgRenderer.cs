@@ -1,7 +1,7 @@
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 
-namespace Fasciculus.Markdown.Extensions.Svg
+namespace Fasciculus.Markdown.Svg
 {
     public class SvgRenderer : HtmlObjectRenderer<SvgBlock>
     {

@@ -1,4 +1,4 @@
-using Fasciculus.Markdown.Extensions.Svg;
+using Fasciculus.Markdown.Svg;
 using System.Net.Http;
 using System.Xml.Linq;
 

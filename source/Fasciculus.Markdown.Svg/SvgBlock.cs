@@ -2,7 +2,7 @@ using Markdig.Parsers;
 using Markdig.Syntax;
 using System.Xml.Linq;
 
-namespace Fasciculus.Markdown.Extensions.Svg
+namespace Fasciculus.Markdown.Svg
 {
     public class SvgBlock : LeafBlock
     {

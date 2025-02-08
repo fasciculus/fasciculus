@@ -1,4 +1,4 @@
-using Fasciculus.Markdown;
+using Fasciculus.Markdown.Svg;
 using Markdig;
 
 namespace Fasciculus.Docs.Preview.Services

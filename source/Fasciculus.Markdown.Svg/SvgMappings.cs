@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace Fasciculus.Markdown.Extensions.Svg
+namespace Fasciculus.Markdown.Svg
 {
     public class SvgMappings : ISvgMappings
     {

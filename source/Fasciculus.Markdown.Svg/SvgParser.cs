@@ -2,7 +2,7 @@ using Markdig.Parsers;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace Fasciculus.Markdown.Extensions.Svg
+namespace Fasciculus.Markdown.Svg
 {
     public class SvgParser : BlockParser
     {

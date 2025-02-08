@@ -1,9 +1,8 @@
-using Fasciculus.Markdown.Extensions.Svg;
 using Markdig;
 
-namespace Fasciculus.Markdown
+namespace Fasciculus.Markdown.Svg
 {
-    public static class FasciculusMarkdownExtensions
+    public static class SvgExtensionConfiguration
     {
         public static MarkdownPipelineBuilder UseSvg(this MarkdownPipelineBuilder pipeline, ISvgMappings mappings)
         {

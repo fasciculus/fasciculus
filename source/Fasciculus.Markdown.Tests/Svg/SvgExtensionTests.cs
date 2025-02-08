@@ -1,4 +1,4 @@
-using Fasciculus.Markdown.Extensions.Svg;
+using Fasciculus.Markdown.Svg;
 using Fasciculus.Svg.Elements;
 using Markdig;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

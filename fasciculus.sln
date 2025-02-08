@@ -93,6 +93,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Docs.Content", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Docs.Preview", "source\Fasciculus.Docs.Preview\Fasciculus.Docs.Preview.csproj", "{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markdown.Svg", "source\Fasciculus.Markdown.Svg\Fasciculus.Markdown.Svg.csproj", "{B818D9BD-7C7E-46D5-81E6-D829EA6155B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markdown.Core", "source\Fasciculus.Markdown.Core\Fasciculus.Markdown.Core.csproj", "{034947E3-036C-449C-A508-0D0229452ACD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -255,6 +259,14 @@ Global
 		{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B818D9BD-7C7E-46D5-81E6-D829EA6155B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B818D9BD-7C7E-46D5-81E6-D829EA6155B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B818D9BD-7C7E-46D5-81E6-D829EA6155B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B818D9BD-7C7E-46D5-81E6-D829EA6155B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{034947E3-036C-449C-A508-0D0229452ACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{034947E3-036C-449C-A508-0D0229452ACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{034947E3-036C-449C-A508-0D0229452ACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{034947E3-036C-449C-A508-0D0229452ACD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

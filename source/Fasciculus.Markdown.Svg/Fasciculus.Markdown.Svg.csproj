@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Markdown.Svg/Fasciculus.Markdown.Svg.csproj" />
+    <ProjectReference Include="../Fasciculus.Markdown.Core/Fasciculus.Markdown.Core.csproj" />
   </ItemGroup>
 
 </Project>
