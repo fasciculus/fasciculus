@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Fasciculus.Blog
 {
-    public class BlogPlugin : IBlogPlugin
+    public class BlogPlugin
     {
         public DateTime Version => GetVersion();
 

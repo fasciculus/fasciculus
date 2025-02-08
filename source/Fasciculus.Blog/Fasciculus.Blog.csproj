@@ -2,15 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Blog.Definitions/Fasciculus.Blog.Definitions.csproj">
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </ProjectReference>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />

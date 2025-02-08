@@ -1,7 +1,6 @@
 using Fasciculus.Blog.Preview.Models;
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
-using Fasciculus.Plugins;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,12 +35,12 @@ namespace Fasciculus.Blog.Preview.Services
 
         private DateTime GetVersion()
         {
-            return Plugin.Select<IBlogPlugin, DateTime>(plugin, p => p.Version).ToLocalTime();
+            return DateTime.Now;
         }
 
         private FileInfo[] GetFiles()
         {
-            return Plugin.Select<IBlogPlugin, FileInfo[]>(plugin, p => p.GetFiles());
+            return [];
         }
 
         private static FileInfo GetPluginFile()
