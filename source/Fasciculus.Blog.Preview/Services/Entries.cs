@@ -1,61 +1,51 @@
 using Fasciculus.Blog.Preview.Models;
-using Fasciculus.IO;
-using Fasciculus.IO.Searching;
+using Fasciculus.Markdown;
+using Markdig;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Net.Http;
 
 namespace Fasciculus.Blog.Preview.Services
 {
-    public class Entries
+    public class Entries : Client
     {
-        private readonly FileInfo plugin;
+        private readonly MarkdownPipeline pipeline;
 
-        public DateTime Version => GetVersion();
-
-        public Entries()
+        public Entries(HttpClient client, Graphics graphics)
+            : base(client)
         {
-            plugin = GetPluginFile();
+            pipeline = new MarkdownPipelineBuilder()
+                .UseAlertBlocks()
+                .UseMathematics()
+                .UsePipeTables()
+                .UseBootstrap()
+                .UseSvg(graphics)
+                .Build();
         }
 
-        public IEnumerable<string> GetKeys()
+        public string[] GetKeys()
         {
-            return GetFiles().OrderByDescending(f => f.LastWriteTimeUtc).Select(f => f.NameWithoutExtension());
+            string text = GetString("Keys");
+
+            return text.Split(',');
         }
 
         public Entry GetEntry(string key)
         {
+            string markdown = GetString($"Entry/{key}");
+            string html = Markdig.Markdown.ToHtml(markdown, pipeline);
+
             return new()
             {
                 Title = key,
-                Content = key
+                Content = html,
             };
         }
 
-        private DateTime GetVersion()
+        public DateTime GetVersion()
         {
-            return DateTime.Now;
-        }
+            string text = GetString("Version");
 
-        private FileInfo[] GetFiles()
-        {
-            return [];
-        }
-
-        private static FileInfo GetPluginFile()
-        {
-#if DEBUG
-            string configuration = "Debug";
-#else
-            string configuration = "Release";
-#endif
-
-            return DirectorySearch
-                .Search("Fasciculus.Blog", SearchPath.WorkingDirectoryAndParents)
-                .First()
-                .Combine("bin", configuration, "net9.0")
-                .File("Fasciculus.Blog.dll");
+            return DateTime.FromBinary(long.Parse(text));
         }
     }
 }

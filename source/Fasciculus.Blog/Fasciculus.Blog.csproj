@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
+    <ProjectReference Include="../Fasciculus.Markdown/Fasciculus.Markdown.csproj" />
+    <ProjectReference Include="../Fasciculus.Svg/Fasciculus.Svg.csproj" />
   </ItemGroup>
 
   <ItemGroup>

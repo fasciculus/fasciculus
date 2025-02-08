@@ -19,14 +19,14 @@ namespace Fasciculus.Blog.Preview.Controllers
             IndexViewModel model = new()
             {
                 Title = "Index",
-                Version = entries.Version,
+                Version = entries.GetVersion(),
                 Keys = [.. entries.GetKeys()]
             };
 
             return View("Index", model);
         }
 
-        [Route("/entry/{key}")]
+        [Route("/Entry/{key}")]
         public IActionResult Entry(string key)
         {
             Entry entry = entries.GetEntry(key);
@@ -34,7 +34,7 @@ namespace Fasciculus.Blog.Preview.Controllers
             EntryViewModel model = new()
             {
                 Title = entry.Title,
-                Version = entries.Version,
+                Version = entries.GetVersion(),
                 Entry = entry,
             };
 
