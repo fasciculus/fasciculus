@@ -87,10 +87,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markdown", "sour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markdown.Tests", "source\Fasciculus.Markdown.Tests\Fasciculus.Markdown.Tests.csproj", "{242C4741-4A12-4AE3-BAB4-768CBDB6A513}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Blog.Preview", "source\Fasciculus.Blog.Preview\Fasciculus.Blog.Preview.csproj", "{06F5F64D-825E-4522-AD82-5F5FE35572BC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Blog", "source\Fasciculus.Blog\Fasciculus.Blog.csproj", "{97C63588-8915-4E4C-BF87-A28F3AF27EEF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "source\WebApplication1\WebApplication1.csproj", "{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Docs.Content", "source\Fasciculus.Docs.Content\Fasciculus.Docs.Content.csproj", "{E14E2C1A-248B-4964-99D7-4A4EF866360C}"
@@ -247,14 +243,6 @@ Global
 		{242C4741-4A12-4AE3-BAB4-768CBDB6A513}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{242C4741-4A12-4AE3-BAB4-768CBDB6A513}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{242C4741-4A12-4AE3-BAB4-768CBDB6A513}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06F5F64D-825E-4522-AD82-5F5FE35572BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06F5F64D-825E-4522-AD82-5F5FE35572BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06F5F64D-825E-4522-AD82-5F5FE35572BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06F5F64D-825E-4522-AD82-5F5FE35572BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{97C63588-8915-4E4C-BF87-A28F3AF27EEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{97C63588-8915-4E4C-BF87-A28F3AF27EEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{97C63588-8915-4E4C-BF87-A28F3AF27EEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{97C63588-8915-4E4C-BF87-A28F3AF27EEF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Release|Any CPU.ActiveCfg = Release|Any CPU

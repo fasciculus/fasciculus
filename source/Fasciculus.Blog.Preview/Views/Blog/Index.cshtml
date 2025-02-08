@@ -1,9 +1,0 @@
-@model IndexViewModel
-<h1>Blog Index</h1>
-
-<ul>
-    @foreach(string key in Model.Keys)
-    {
-        <li><a href="~/Entry/@key">@key</a></li>
-    }
-</ul>
