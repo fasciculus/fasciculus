@@ -10,6 +10,7 @@ namespace Fasciculus.Docs.Preview.Services
         public Renderer(GraphicsClient graphics)
         {
             pipeline = new MarkdownPipelineBuilder()
+                .UseYamlFrontMatter()
                 .UseAlertBlocks()
                 .UseMathematics()
                 .UsePipeTables()
