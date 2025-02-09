@@ -1,4 +1,5 @@
 using Fasciculus.Collections;
+using Fasciculus.Markdown.Yaml;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Blog.Models;
 using Fasciculus.Site.Rendering.Services;
@@ -30,8 +31,8 @@ namespace Fasciculus.Site.Blog.Compilers
 
         private BlogEntry? Compile(FileInfo file)
         {
-            MarkdownDocument markdown = markup.Parse(file);
-            BlogFrontMatter frontMatter = markup.FrontMatter<BlogFrontMatter>(markdown);
+            MarkdownDocument document = markup.Parse(file);
+            BlogFrontMatter frontMatter = document.FrontMatter<BlogFrontMatter>();
             DateTime published = frontMatter.Published;
 
             if (published == DateTime.MinValue)
@@ -42,7 +43,7 @@ namespace Fasciculus.Site.Blog.Compilers
             UriPath link = CreateLink(published, file);
             string title = frontMatter.Title;
             string summary = frontMatter.Summary;
-            string content = markup.Render(markdown);
+            string content = markup.Render(document);
 
             return new(link, title, published, summary, content);
         }

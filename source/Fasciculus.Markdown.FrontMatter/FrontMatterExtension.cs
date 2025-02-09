@@ -1,4 +1,5 @@
 using Fasciculus.Collections;
+using Fasciculus.Markdown.Yaml;
 using Fasciculus.Yaml;
 using Markdig;
 using Markdig.Renderers;
@@ -36,7 +37,7 @@ namespace Fasciculus.Markdown.FrontMatter
 
         private void OnDocumentProcessed(MarkdownDocument document)
         {
-            YDocument entries = YDocument.Deserialize(document.GetFrontMatter(), deserializer);
+            YDocument entries = YDocument.Deserialize(document.FrontMatter(), deserializer);
 
             document.Descendants<FrontMatterBlock>().Apply(block => { block.Entries = entries; });
         }

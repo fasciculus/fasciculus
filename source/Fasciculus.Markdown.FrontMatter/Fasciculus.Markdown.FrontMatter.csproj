@@ -7,7 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
     <ProjectReference Include="../Fasciculus.Markdown.Core/Fasciculus.Markdown.Core.csproj" />
-    <ProjectReference Include="../Fasciculus.Yaml/Fasciculus.Yaml.csproj" />
+    <ProjectReference Include="../Fasciculus.Markdown.Yaml/Fasciculus.Markdown.Yaml.csproj" />
   </ItemGroup>
 
 </Project>

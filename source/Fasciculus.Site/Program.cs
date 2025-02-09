@@ -1,4 +1,6 @@
 using Fasciculus.Docs.Content.Services;
+using Fasciculus.Markdown.ColorCode;
+using Fasciculus.Markdown.FrontMatter;
 using Fasciculus.NuGet.Logging;
 using Fasciculus.NuGet.Services;
 using Fasciculus.Site.Api.Services;
@@ -9,6 +11,7 @@ using Fasciculus.Site.Licenses.Services;
 using Fasciculus.Site.Rendering.Services;
 using Fasciculus.Site.Specifications.Services;
 using Fasciculus.Yaml;
+using Markdig;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -59,6 +62,7 @@ namespace Fasciculus.Site
             services
                 .AddCommon()
                 .AddApi()
+                .AddPipeline()
                 .AddBlog()
                 .AddSpecifications()
                 .AddLicenses();
@@ -96,6 +100,23 @@ namespace Fasciculus.Site
         {
             services.TryAddSingleton<ApiContent>();
             services.TryAddSingleton<ApiNavigation>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddPipeline(this IServiceCollection services)
+        {
+            MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
+                .UseYamlFrontMatter()
+                .UseFrontMatter()
+                .UseAlertBlocks()
+                .UseColorCode()
+                .UseMathematics()
+                .UsePipeTables()
+                .UseBootstrap()
+                .Build();
+
+            services.TryAddSingleton<MarkdownPipeline>(pipeline);
 
             return services;
         }

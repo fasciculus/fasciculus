@@ -99,6 +99,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markdown.FrontMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Yaml", "source\Fasciculus.Yaml\Fasciculus.Yaml.csproj", "{88209C7D-C17A-4AD9-8A9A-E46F30DF770A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markdown.Yaml", "source\Fasciculus.Markdown.Yaml\Fasciculus.Markdown.Yaml.csproj", "{8ABF2687-B6E3-4060-B284-5A0BF17AF86A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -273,6 +275,10 @@ Global
 		{88209C7D-C17A-4AD9-8A9A-E46F30DF770A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88209C7D-C17A-4AD9-8A9A-E46F30DF770A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88209C7D-C17A-4AD9-8A9A-E46F30DF770A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ABF2687-B6E3-4060-B284-5A0BF17AF86A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ABF2687-B6E3-4060-B284-5A0BF17AF86A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ABF2687-B6E3-4060-B284-5A0BF17AF86A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ABF2687-B6E3-4060-B284-5A0BF17AF86A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
