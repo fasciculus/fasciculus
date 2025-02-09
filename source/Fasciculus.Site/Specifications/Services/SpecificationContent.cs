@@ -1,3 +1,4 @@
+using Fasciculus.Docs.Content.Services;
 using Fasciculus.Site.Specifications.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Fasciculus.Site.Specifications.Services
 
         public SpecificationContent(SpecificationFiles files, SpecificationCompiler compiler)
         {
-            entries = files.Select(compiler.Compile).ToDictionary(e => e.Id);
+            entries = files.GetFiles().Select(compiler.Compile).ToDictionary(e => e.Id);
         }
 
         public SpecificationEntry GetEntry(string id)

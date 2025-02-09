@@ -1,3 +1,6 @@
+---
+Title: "Fixed Point Algorithms"
+---
 # Fixed Point Algorithms
 
 <table>
