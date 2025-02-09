@@ -1,3 +1,4 @@
+using Fasciculus.Collections;
 using Fasciculus.Yaml;
 using Markdig;
 using Markdig.Renderers;
@@ -19,10 +20,7 @@ namespace Fasciculus.Markdown.FrontMatter
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
-            if (!pipeline.BlockParsers.Contains<FrontMatterParser>())
-            {
-                pipeline.BlockParsers.Add(new FrontMatterParser());
-            }
+            pipeline.BlockParsers.AddIfNotAlready(new FrontMatterParser());
 
             pipeline.DocumentProcessed -= OnDocumentProcessed;
             pipeline.DocumentProcessed += OnDocumentProcessed;
@@ -32,10 +30,7 @@ namespace Fasciculus.Markdown.FrontMatter
         {
             if (renderer is HtmlRenderer htmlRenderer)
             {
-                if (!htmlRenderer.ObjectRenderers.Contains<FrontMatterRenderer>())
-                {
-                    htmlRenderer.ObjectRenderers.Add(new FrontMatterRenderer(mappings));
-                }
+                htmlRenderer.ObjectRenderers.AddIfNotAlready(new FrontMatterRenderer(mappings));
             }
         }
 
@@ -43,10 +38,7 @@ namespace Fasciculus.Markdown.FrontMatter
         {
             YDocument entries = YDocument.Deserialize(document.GetFrontMatter(), deserializer);
 
-            foreach (FrontMatterBlock block in document.Descendants<FrontMatterBlock>())
-            {
-                block.Entries = entries;
-            }
+            document.Descendants<FrontMatterBlock>().Apply(block => { block.Entries = entries; });
         }
     }
 }
