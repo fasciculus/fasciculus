@@ -10,7 +10,7 @@ namespace Fasciculus.Site.Generating.Services
 {
     public class GeneratorDocuments : List<string>
     {
-        public GeneratorDocuments(ApiContent apiContent, BlogContent blogContent)
+        public GeneratorDocuments(ApiContent apiContent, BlogSiteContent blogContent)
         {
             AddGlobals();
             AddStatics();
@@ -120,7 +120,7 @@ namespace Fasciculus.Site.Generating.Services
             };
         }
 
-        private void AddBlog(BlogContent blogContent)
+        private void AddBlog(BlogSiteContent blogContent)
         {
             Add("/blog/");
 
