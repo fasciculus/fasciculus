@@ -14,9 +14,10 @@ namespace Fasciculus.Docs.Content
 
             builder.Services.AddControllers();
 
-            services.TryAddSingleton<VersionProvider>();
+            services.TryAddSingleton<ContentVersion>();
             services.TryAddSingleton<GraphicsProvider>();
-            services.TryAddSingleton<BlogContent>();
+            services.TryAddSingleton<ContentFiles>();
+            services.TryAddSingleton<BlogFiles>();
 
             WebApplication app = builder.Build();
 

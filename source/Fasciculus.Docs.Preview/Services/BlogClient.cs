@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net.Http;
 
 namespace Fasciculus.Docs.Preview.Services
@@ -14,9 +15,9 @@ namespace Fasciculus.Docs.Preview.Services
             return text.Split(',');
         }
 
-        public string GetEntry(string key)
+        public FileInfo GetFile(string key)
         {
-            return GetString($"Blog/Entry/{key}");
+            return new(GetString($"Blog/File/{key}"));
         }
     }
 }

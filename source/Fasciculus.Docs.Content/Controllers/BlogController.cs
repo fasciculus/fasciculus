@@ -5,23 +5,23 @@ namespace Fasciculus.Docs.Content.Controllers
 {
     public class BlogController : Controller
     {
-        private readonly BlogContent blog;
+        private readonly BlogFiles blogFiles;
 
-        public BlogController(BlogContent blog)
+        public BlogController(BlogFiles blogFiles)
         {
-            this.blog = blog;
+            this.blogFiles = blogFiles;
         }
 
         [Route("/Blog/Keys")]
         public string Keys()
         {
-            return string.Join(",", blog.GetKeys());
+            return string.Join(",", blogFiles.GetKeys());
         }
 
-        [Route("/Blog/Entry/{key}")]
+        [Route("/Blog/File/{key}")]
         public string Entry(string key)
         {
-            return blog.GetEntry(key);
+            return blogFiles.GetFile(key).FullName;
         }
     }
 }

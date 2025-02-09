@@ -1,5 +1,6 @@
 using Fasciculus.Docs.Preview.Models;
 using Fasciculus.Docs.Preview.Services;
+using Fasciculus.IO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fasciculus.Docs.Preview.Controllers
@@ -31,7 +32,7 @@ namespace Fasciculus.Docs.Preview.Controllers
         [Route("/Blog/{key}")]
         public IActionResult Entry(string key)
         {
-            string text = blog.GetEntry(key);
+            string text = blog.GetFile(key).ReadAllText();
 
             BlogEntryViewModel model = new()
             {

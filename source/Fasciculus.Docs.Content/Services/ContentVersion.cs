@@ -3,11 +3,11 @@ using System.IO;
 
 namespace Fasciculus.Docs.Content.Services
 {
-    public class VersionProvider
+    public class ContentVersion
     {
         public DateTime GetVersion()
         {
-            FileInfo assemblyFile = new(typeof(VersionProvider).Assembly.Location);
+            FileInfo assemblyFile = new(typeof(ContentVersion).Assembly.Location);
 
             return assemblyFile.LastWriteTime;
         }

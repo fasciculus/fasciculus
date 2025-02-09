@@ -5,9 +5,9 @@ namespace Fasciculus.Docs.Content.Controllers
 {
     public class VersionController : Controller
     {
-        private readonly VersionProvider version;
+        private readonly ContentVersion version;
 
-        public VersionController(VersionProvider version)
+        public VersionController(ContentVersion version)
         {
             this.version = version;
         }
