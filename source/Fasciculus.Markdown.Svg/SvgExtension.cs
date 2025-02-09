@@ -14,20 +14,14 @@ namespace Fasciculus.Markdown.Svg
 
         public void Setup(MarkdownPipelineBuilder pipeline)
         {
-            if (!pipeline.BlockParsers.Contains<SvgParser>())
-            {
-                pipeline.BlockParsers.Add(new SvgParser(mappings));
-            }
+            pipeline.BlockParsers.AddIfNotAlready(new SvgParser(mappings));
         }
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
             if (renderer is HtmlRenderer htmlRenderer)
             {
-                if (!htmlRenderer.ObjectRenderers.Contains<SvgRenderer>())
-                {
-                    htmlRenderer.ObjectRenderers.Add(new SvgRenderer());
-                }
+                htmlRenderer.ObjectRenderers.AddIfNotAlready(new SvgRenderer());
             }
         }
     }
