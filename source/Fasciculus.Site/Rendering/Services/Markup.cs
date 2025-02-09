@@ -2,7 +2,6 @@ using Fasciculus.IO;
 using Fasciculus.Markdown.ColorCode;
 using Fasciculus.Site.Rendering.Models;
 using Fasciculus.Site.Rendering.Rendering;
-using Fasciculus.Site.Services;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
@@ -10,15 +9,16 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using YamlDotNet.Serialization;
 
 namespace Fasciculus.Site.Rendering.Services
 {
     public class Markup
     {
-        private readonly YamlDeserializer deserializer;
+        private readonly IDeserializer deserializer;
         private readonly MarkdownPipeline pipeline;
 
-        public Markup(YamlDeserializer deserializer)
+        public Markup(IDeserializer deserializer)
         {
             this.deserializer = deserializer;
 

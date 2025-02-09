@@ -6,8 +6,8 @@ using Fasciculus.Site.Blog.Services;
 using Fasciculus.Site.Generating.Services;
 using Fasciculus.Site.Licenses.Services;
 using Fasciculus.Site.Rendering.Services;
-using Fasciculus.Site.Services;
 using Fasciculus.Site.Specifications.Services;
+using Fasciculus.Yaml;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -15,6 +15,7 @@ using NuGet.Common;
 using NuGet.Protocol.Core.Types;
 using System;
 using System.IO;
+using YamlDotNet.Serialization;
 
 namespace Fasciculus.Site
 {
@@ -82,7 +83,7 @@ namespace Fasciculus.Site
 
         private static IServiceCollection AddCommon(this IServiceCollection services)
         {
-            services.TryAddSingleton<YamlDeserializer>();
+            services.TryAddSingleton<IDeserializer>(YDeserializer.Default);
             services.TryAddSingleton<Markup>();
 
             return services;
