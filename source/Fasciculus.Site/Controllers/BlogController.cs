@@ -7,10 +7,10 @@ namespace Fasciculus.Site.Controllers
 {
     public class BlogController : Controller
     {
-        private readonly BlogSiteContent content;
+        private readonly BlogContent content;
         private readonly BlogSiteNavigation navigation;
 
-        public BlogController(BlogSiteContent content, BlogSiteNavigation navigation)
+        public BlogController(BlogContent content, BlogSiteNavigation navigation)
         {
             this.content = content;
             this.navigation = navigation;

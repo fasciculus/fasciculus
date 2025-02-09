@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Fasciculus.Site.Blog.Services
 {
-    public class BlogSiteContent
+    public class BlogContent
     {
         private readonly SortedSet<BlogYear> years;
         private readonly SortedSet<BlogMonth> months;
@@ -24,7 +24,7 @@ namespace Fasciculus.Site.Blog.Services
         public IEnumerable<BlogMonth> Months => months;
         public IEnumerable<BlogEntry> Entries => entries;
 
-        public BlogSiteContent(BlogFiles files, BlogCompiler compiler)
+        public BlogContent(BlogFiles files, BlogCompiler compiler)
         {
             BlogItemComparer comparer = BlogItemComparer.Instance;
 

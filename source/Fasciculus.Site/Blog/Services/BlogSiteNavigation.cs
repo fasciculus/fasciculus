@@ -9,9 +9,9 @@ namespace Fasciculus.Site.Blog.Services
 {
     public class BlogSiteNavigation : NavigationFactory
     {
-        private readonly BlogSiteContent content;
+        private readonly BlogContent content;
 
-        public BlogSiteNavigation(BlogSiteContent content)
+        public BlogSiteNavigation(BlogContent content)
         {
             this.content = content;
         }
