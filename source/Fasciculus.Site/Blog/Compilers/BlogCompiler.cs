@@ -1,8 +1,9 @@
 using Fasciculus.Collections;
+using Fasciculus.IO;
 using Fasciculus.Markdown.Yaml;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Blog.Models;
-using Fasciculus.Site.Rendering.Services;
+using Markdig;
 using Markdig.Syntax;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,11 @@ namespace Fasciculus.Site.Blog.Compilers
 {
     public class BlogCompiler
     {
-        private readonly Markup markup;
+        private readonly MarkdownPipeline pipeline;
 
-        public BlogCompiler(Markup markup)
+        public BlogCompiler(MarkdownPipeline pipeline)
         {
-            this.markup = markup;
+            this.pipeline = pipeline;
         }
 
         public BlogYears Compile(IEnumerable<FileInfo> files)
@@ -31,7 +32,7 @@ namespace Fasciculus.Site.Blog.Compilers
 
         private BlogEntry? Compile(FileInfo file)
         {
-            MarkdownDocument document = markup.Parse(file);
+            MarkdownDocument document = Markdig.Markdown.Parse(file.ReadAllText(), pipeline);
             BlogFrontMatter frontMatter = document.FrontMatter<BlogFrontMatter>();
             DateTime published = frontMatter.Published;
 
@@ -43,9 +44,9 @@ namespace Fasciculus.Site.Blog.Compilers
             UriPath link = CreateLink(published, file);
             string title = frontMatter.Title;
             string summary = frontMatter.Summary;
-            string content = markup.Render(document);
+            string html = document.ToHtml(pipeline);
 
-            return new(link, title, published, summary, content);
+            return new(link, title, published, summary, html);
         }
 
         private static UriPath CreateLink(DateTime published, FileInfo file)

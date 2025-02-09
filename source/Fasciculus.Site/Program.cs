@@ -8,7 +8,6 @@ using Fasciculus.Site.Blog.Services;
 using Fasciculus.Site.Generating.Services;
 using Fasciculus.Site.Licenses.Services;
 using Fasciculus.Site.Markdown;
-using Fasciculus.Site.Rendering.Services;
 using Fasciculus.Site.Specifications.Services;
 using Fasciculus.Yaml;
 using Markdig;
@@ -92,7 +91,6 @@ namespace Fasciculus.Site
             services.TryAddSingleton<ISvgMappings, SiteGraphics>();
             services.TryAddSingleton<MarkdownPipelineBuilder, SiteMarkdownPipelineBuilder>();
             services.TryAddSingleton(s => s.GetRequiredService<MarkdownPipelineBuilder>().Build());
-            services.TryAddSingleton<Markup>();
 
             services.TryAddSingleton<ContentFiles>();
 

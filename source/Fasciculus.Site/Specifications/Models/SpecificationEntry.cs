@@ -6,6 +6,6 @@ namespace Fasciculus.Site.Specifications.Models
 
         public required string Title { get; init; }
 
-        public required string Content { get; init; }
+        public required string Html { get; init; }
     }
 }
