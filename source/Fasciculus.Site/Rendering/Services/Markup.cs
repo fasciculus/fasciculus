@@ -1,13 +1,11 @@
 using Fasciculus.IO;
+using Fasciculus.Markdown;
 using Fasciculus.Markdown.ColorCode;
 using Fasciculus.Markdown.FrontMatter;
 using Fasciculus.Site.Rendering.Models;
 using Markdig;
-using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
-using Newtonsoft.Json.Linq;
 using System.IO;
-using System.Linq;
 using YamlDotNet.Serialization;
 
 namespace Fasciculus.Site.Rendering.Services
@@ -43,16 +41,7 @@ namespace Fasciculus.Site.Rendering.Services
         public T FrontMatter<T>(MarkdownDocument document)
             where T : IFrontMatter, new()
         {
-            YamlFrontMatterBlock? block = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
-
-            if (block is not null)
-            {
-                string text = string.Join("\r\n", block.Lines);
-
-                return deserializer.Deserialize<T>(text);
-            }
-
-            return new T();
+            return deserializer.Deserialize<T>(document.GetFrontMatter());
         }
 
         public string Render(MarkdownDocument document)

@@ -1,10 +1,7 @@
 using Fasciculus.Yaml;
 using Markdig;
-using Markdig.Extensions.Yaml;
 using Markdig.Renderers;
 using Markdig.Syntax;
-using System.Collections.Generic;
-using System.Linq;
 using YamlDotNet.Serialization;
 
 namespace Fasciculus.Markdown.FrontMatter
@@ -44,8 +41,7 @@ namespace Fasciculus.Markdown.FrontMatter
 
         private void OnDocumentProcessed(MarkdownDocument document)
         {
-            IEnumerable<string> yaml = document.Descendants<YamlFrontMatterBlock>().Select(b => b.Lines.ToString());
-            YDictionary entries = YDictionary.Deserialize(string.Join("\r\n", yaml), deserializer);
+            YDictionary entries = YDictionary.Deserialize(document.GetFrontMatter(), deserializer);
 
             foreach (FrontMatterBlock block in document.Descendants<FrontMatterBlock>())
             {
