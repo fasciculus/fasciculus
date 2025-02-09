@@ -7,13 +7,13 @@ using System.Xml.Linq;
 
 namespace Fasciculus.Docs.Content.Services
 {
-    public class GraphicsProvider : ISvgMappings
+    public class ContentGraphics : ISvgMappings
     {
         private readonly Dictionary<string, MethodInfo> methods = [];
 
-        public GraphicsProvider()
+        public ContentGraphics()
         {
-            foreach (Type type in typeof(GraphicsProvider).Assembly.GetTypes())
+            foreach (Type type in typeof(ContentGraphics).Assembly.GetTypes())
             {
                 foreach (MethodInfo method in type.GetMethods())
                 {

@@ -6,9 +6,9 @@ namespace Fasciculus.Docs.Content.Controllers
 {
     public class GraphicsController : Controller
     {
-        private readonly GraphicsProvider graphics;
+        private readonly ContentGraphics graphics;
 
-        public GraphicsController(GraphicsProvider graphics)
+        public GraphicsController(ContentGraphics graphics)
         {
             this.graphics = graphics;
         }
