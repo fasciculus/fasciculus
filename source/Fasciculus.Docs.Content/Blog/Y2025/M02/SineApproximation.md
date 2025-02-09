@@ -1,10 +1,12 @@
 ---
-title: "Fixed Point Sine Approximation"
-publishedx: 2025-02-01
-author: "Roger H. Jörg"
-summary: "How to approximate trigonometric functions with fixed point"
+Title: "Fixed Point Sine Approximation"
+Publishedx: 2025-02-01
+Author: "Roger H. Jörg"
+Summary: "How to approximate trigonometric functions with fixed point"
 ---
 # Fixed Point Sine Approximation
+
+!frontmatter{Author, Published}
 
 My (future) fixed point library provides representations for angles. The
 classes are named `AFP<N>` with $N \in \{8, 16, 32, 64\}$. They use the

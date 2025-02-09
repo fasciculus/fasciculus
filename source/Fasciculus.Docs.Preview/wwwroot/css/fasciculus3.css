@@ -86,13 +86,17 @@ div.fsc-navigation-forest {
     padding-top: 1rem;
 }
 
-.fsc-frontmatter {
+.frontmatter {
     margin-left: 1rem;
     margin-bottom: 1rem;
 }
 
-.fsc-frontmatter td {
+.frontmatter td {
     padding-right: 1rem;
+}
+
+.frontmatter-label {
+    font-weight: 600;
 }
 
 .fsc-typeinfo {

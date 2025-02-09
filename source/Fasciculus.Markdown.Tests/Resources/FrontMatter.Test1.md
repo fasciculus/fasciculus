@@ -1,9 +1,6 @@
 ---
 Author: "Roger H. Jörg"
-Publishedx: "2025-02-09"
+Published: "2025-02-08"
 ---
-# Test
-
+# Test 1
 !frontmatter{Author, Published}
-
-!svg{Blog.Test1,16rem,8rem}

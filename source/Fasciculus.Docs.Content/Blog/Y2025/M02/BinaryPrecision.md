@@ -1,10 +1,12 @@
 ---
-title: "Binary Precision in Approximation Algorithms"
-published: 2025-02-01
-author: "Roger H. Jörg"
-summary: "How many bits are precise in a fixed point approximation algorithm."
+Title: "Binary Precision in Approximation Algorithms"
+Published: 2025-02-01
+Author: "Roger H. Jörg"
+Summary: "How many bits are precise in a fixed point approximation algorithm."
 ---
 # Binary Precision
+
+!frontmatter{Author, Published}
 
 While researching the division algorithm for my fixed point library,
 I stumbled over the following formula that gives the count of correct bits $p_i$

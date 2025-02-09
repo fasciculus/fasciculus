@@ -1,10 +1,12 @@
 ---
-title: "Valid HTML Tags"
-published: 2025-02-03
-author: "Roger H. Jörg"
-summary: "Constants for all valid HTML tags?"
+Title: "Valid HTML Tags"
+Published: 2025-02-03
+Author: "Roger H. Jörg"
+Summary: "Constants for all valid HTML tags?"
 ---
 # Valid HTML Tags
+
+!frontmatter{Author, Published}
 
 I am writing a library to create the API documentation of this site directly from
 the source code.

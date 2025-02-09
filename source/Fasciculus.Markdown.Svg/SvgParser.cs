@@ -7,7 +7,7 @@ namespace Fasciculus.Markdown.Svg
     public class SvgParser : BlockParser
     {
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
-        public static readonly Regex SvgRegex = new(@"^!svg\{([^,]+),([^,]+),([^}]+)}\s*$");
+        public static readonly Regex SvgRegex = new(@"^!svg\{([^,]+),([^,]+),([^}]+)\}\s*$");
 #pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
         private readonly ISvgMappings mappings;

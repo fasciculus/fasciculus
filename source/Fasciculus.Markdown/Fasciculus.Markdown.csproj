@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Markdown.ColorCode/Fasciculus.Markdown.ColorCode.csproj" />
+    <ProjectReference Include="../Fasciculus.Markdown.FrontMatter/Fasciculus.Markdown.FrontMatter.csproj" />
     <ProjectReference Include="../Fasciculus.Markdown.Svg/Fasciculus.Markdown.Svg.csproj" />
   </ItemGroup>
 

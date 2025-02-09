@@ -1,4 +1,5 @@
 using Fasciculus.Markdown.ColorCode;
+using Fasciculus.Markdown.FrontMatter;
 using Fasciculus.Markdown.Svg;
 using Markdig;
 
@@ -12,6 +13,7 @@ namespace Fasciculus.Docs.Preview.Services
         {
             pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
+                .UseFrontMatter()
                 .UseAlertBlocks()
                 .UseMathematics()
                 .UsePipeTables()

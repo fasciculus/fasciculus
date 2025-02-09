@@ -1,10 +1,12 @@
 ---
-title: "Programmatically Create SVG"
-published: 2025-02-05
-author: "Roger H. Jörg"
-summary: "How to programmatically create SVG files with C#"
+Title: "Programmatically Create SVG"
+Published: 2025-02-05
+Author: "Roger H. Jörg"
+Summary: "How to programmatically create SVG files with C#"
 ---
 # Programmatically Create SVG
+
+!frontmatter{Author, Published}
 
 I am not good at manually painting graphics. Neither do I like using graphics editors
 to create them. The result is usually not precise enough for my "gusto".
