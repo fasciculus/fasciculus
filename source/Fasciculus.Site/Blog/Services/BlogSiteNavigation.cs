@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace Fasciculus.Site.Blog.Services
 {
-    public class BlogNavigation : NavigationFactory
+    public class BlogSiteNavigation : NavigationFactory
     {
         private readonly BlogSiteContent content;
 
-        public BlogNavigation(BlogSiteContent content)
+        public BlogSiteNavigation(BlogSiteContent content)
         {
             this.content = content;
         }

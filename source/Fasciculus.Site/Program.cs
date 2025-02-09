@@ -102,7 +102,7 @@ namespace Fasciculus.Site
             services.TryAddSingleton<BlogFiles>();
             services.TryAddSingleton<BlogCompiler>();
             services.TryAddSingleton<BlogSiteContent>();
-            services.TryAddSingleton<BlogNavigation>();
+            services.TryAddSingleton<BlogSiteNavigation>();
 
             return services;
         }
