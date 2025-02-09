@@ -1,3 +1,4 @@
+using Fasciculus.Docs.Content.Services;
 using Fasciculus.NuGet.Logging;
 using Fasciculus.NuGet.Services;
 using Fasciculus.Site.Api.Services;
@@ -85,6 +86,8 @@ namespace Fasciculus.Site
         {
             services.TryAddSingleton<IDeserializer>(YDeserializer.Default);
             services.TryAddSingleton<Markup>();
+
+            services.TryAddSingleton<ContentFiles>();
 
             return services;
         }

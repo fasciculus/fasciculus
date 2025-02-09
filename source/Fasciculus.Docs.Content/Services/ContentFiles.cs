@@ -12,10 +12,9 @@ namespace Fasciculus.Docs.Content.Services
 
         public ContentFiles()
         {
-            projectDirectory = FileSearch
-                .Search("Fasciculus.Docs.Content.csproj", SearchPath.WorkingDirectoryAndParents)
-                .First()
-                .Directory!;
+            projectDirectory = DirectorySearch
+                .Search("source", SearchPath.WorkingDirectoryAndParents)
+                .First().Combine("Fasciculus.Docs.Content");
         }
 
         public IEnumerable<FileInfo> GetFiles(string directory)

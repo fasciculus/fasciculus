@@ -1,3 +1,4 @@
+using Fasciculus.Docs.Content.Services;
 using Fasciculus.Net.Navigating;
 using Fasciculus.Site.Blog.Compilers;
 using Fasciculus.Site.Blog.Models;
@@ -27,7 +28,7 @@ namespace Fasciculus.Site.Blog.Services
         {
             BlogItemComparer comparer = BlogItemComparer.Instance;
 
-            years = new(compiler.Compile(files), comparer);
+            years = new(compiler.Compile(files.GetFiles()), comparer);
             months = new(years.SelectMany(y => y), comparer);
             entries = new(months.SelectMany(m => m), comparer);
 

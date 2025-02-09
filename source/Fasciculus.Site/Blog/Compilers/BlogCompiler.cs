@@ -42,7 +42,7 @@ namespace Fasciculus.Site.Blog.Compilers
             UriPath link = CreateLink(published, file);
             string title = frontMatter.Title;
             string summary = frontMatter.Summary;
-            string content = markup.Render(markdown, frontMatter);
+            string content = markup.Render(markdown);
 
             return new(link, title, published, summary, content);
         }

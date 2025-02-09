@@ -1,12 +1,11 @@
 using Fasciculus.IO;
 using Fasciculus.Markdown.ColorCode;
+using Fasciculus.Markdown.FrontMatter;
 using Fasciculus.Site.Rendering.Models;
-using Fasciculus.Site.Rendering.Rendering;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using YamlDotNet.Serialization;
@@ -24,6 +23,7 @@ namespace Fasciculus.Site.Rendering.Services
 
             pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
+                .UseFrontMatter()
                 .UseAlertBlocks()
                 .UseColorCode()
                 .UseMathematics()
@@ -55,16 +55,9 @@ namespace Fasciculus.Site.Rendering.Services
             return new T();
         }
 
-        public string Render(MarkdownDocument document, IFrontMatter? frontMatter = null)
+        public string Render(MarkdownDocument document)
         {
-            using StringWriter writer = new();
-            IEnumerable<FrontMatterEntry> entries = frontMatter?.GetEntries() ?? [];
-            MarkupRenderer renderer = new(writer, pipeline, entries);
-
-            renderer.Render(document);
-            writer.Flush();
-
-            return writer.ToString();
+            return document.ToHtml(pipeline);
         }
     }
 }
