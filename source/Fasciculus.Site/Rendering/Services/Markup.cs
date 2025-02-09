@@ -15,12 +15,12 @@ namespace Fasciculus.Site.Rendering.Services
 {
     public class Markup
     {
-        private readonly Yaml yaml;
+        private readonly YamlDeserializer deserializer;
         private readonly MarkdownPipeline pipeline;
 
-        public Markup(Yaml yaml)
+        public Markup(YamlDeserializer deserializer)
         {
-            this.yaml = yaml;
+            this.deserializer = deserializer;
 
             pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
@@ -49,7 +49,7 @@ namespace Fasciculus.Site.Rendering.Services
             {
                 string text = string.Join("\r\n", block.Lines);
 
-                return yaml.Deserialize<T>(text);
+                return deserializer.Deserialize<T>(text);
             }
 
             return new T();

@@ -5,12 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="YamlDotNet" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
     <ProjectReference Include="../Fasciculus.Markdown.Core/Fasciculus.Markdown.Core.csproj" />
+    <ProjectReference Include="../Fasciculus.Yaml/Fasciculus.Yaml.csproj" />
   </ItemGroup>
 
 </Project>

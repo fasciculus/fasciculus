@@ -2,11 +2,11 @@ using YamlDotNet.Serialization;
 
 namespace Fasciculus.Site.Services
 {
-    public class Yaml
+    public class YamlDeserializer
     {
         private readonly IDeserializer deserializer;
 
-        public Yaml()
+        public YamlDeserializer()
         {
             deserializer = new DeserializerBuilder()
                 .IgnoreUnmatchedProperties()

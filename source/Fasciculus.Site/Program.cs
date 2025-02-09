@@ -82,7 +82,7 @@ namespace Fasciculus.Site
 
         private static IServiceCollection AddCommon(this IServiceCollection services)
         {
-            services.TryAddSingleton<Yaml>();
+            services.TryAddSingleton<YamlDeserializer>();
             services.TryAddSingleton<Markup>();
 
             return services;
