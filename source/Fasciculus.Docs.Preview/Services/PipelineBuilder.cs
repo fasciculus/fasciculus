@@ -3,11 +3,11 @@ using Fasciculus.Markdown.FrontMatter;
 using Fasciculus.Markdown.Svg;
 using Markdig;
 
-namespace Fasciculus.Site.Markdown
+namespace Fasciculus.Docs.Preview.Services
 {
-    public class SiteMarkdownPipelineBuilder : MarkdownPipelineBuilder
+    public class PipelineBuilder : MarkdownPipelineBuilder
     {
-        public SiteMarkdownPipelineBuilder(ISvgMappings svgMappings)
+        public PipelineBuilder(ISvgMappings svgMappings)
         {
             this.UseYamlFrontMatter()
                 .UseFrontMatter()

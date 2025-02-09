@@ -1,4 +1,6 @@
 using Fasciculus.Docs.Preview.Services;
+using Fasciculus.Markdown.Svg;
+using Markdig;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -24,9 +26,11 @@ namespace Fasciculus.Docs.Preview
 
             services.TryAddSingleton<HttpClient>();
             services.TryAddSingleton<ContentClient>();
-            services.TryAddSingleton<GraphicsClient>();
+            services.TryAddSingleton<ISvgMappings, GraphicsClient>();
+            services.TryAddSingleton<MarkdownPipelineBuilder, PipelineBuilder>();
+            services.TryAddSingleton(s => s.GetRequiredService<MarkdownPipelineBuilder>().Build());
+
             services.TryAddSingleton<BlogClient>();
-            services.TryAddSingleton<Renderer>();
 
             return CreateWebApplication(builder);
         }

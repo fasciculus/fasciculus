@@ -1,6 +1,7 @@
 using Fasciculus.Docs.Preview.Models;
 using Fasciculus.Docs.Preview.Services;
 using Fasciculus.IO;
+using Markdig;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fasciculus.Docs.Preview.Controllers
@@ -8,12 +9,12 @@ namespace Fasciculus.Docs.Preview.Controllers
     public class BlogController : Controller
     {
         private readonly BlogClient blog;
-        private readonly Renderer renderer;
+        private readonly MarkdownPipeline pipeline;
 
-        public BlogController(BlogClient blog, Renderer renderer)
+        public BlogController(BlogClient blog, MarkdownPipeline pipeline)
         {
             this.blog = blog;
-            this.renderer = renderer;
+            this.pipeline = pipeline;
         }
 
         [Route("/Blog/")]
@@ -38,7 +39,7 @@ namespace Fasciculus.Docs.Preview.Controllers
             {
                 Title = key,
                 Version = blog.GetVersion(),
-                Content = renderer.Render(text)
+                Html = Markdig.Markdown.ToHtml(text, pipeline)
             };
 
             return View("Entry", model);

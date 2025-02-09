@@ -89,7 +89,7 @@ namespace Fasciculus.Site
             services.TryAddSingleton<IDeserializer>(YDeserializer.Instance);
             services.TryAddSingleton<ContentGraphics>();
             services.TryAddSingleton<ISvgMappings, SiteGraphics>();
-            services.TryAddSingleton<MarkdownPipelineBuilder, SiteMarkdownPipelineBuilder>();
+            services.TryAddSingleton<MarkdownPipelineBuilder, PipelineBuilder>();
             services.TryAddSingleton(s => s.GetRequiredService<MarkdownPipelineBuilder>().Build());
 
             services.TryAddSingleton<ContentFiles>();
