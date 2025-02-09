@@ -10,8 +10,4 @@
     <ProjectReference Include="../Fasciculus.Svg/Fasciculus.Svg.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Blog/**/*.md" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
 </Project>

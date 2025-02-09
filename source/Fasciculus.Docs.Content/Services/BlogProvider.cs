@@ -28,8 +28,9 @@ namespace Fasciculus.Docs.Content.Services
 
         private static IEnumerable<FileInfo> GetFiles()
         {
-            FileInfo location = new(typeof(BlogProvider).Assembly.Location);
-            SearchPath searchPath = new([location.Directory!], true);
+            FileInfo project = FileSearch.Search("Fasciculus.Docs.Content.csproj", SearchPath.WorkingDirectoryAndParents).First();
+            DirectoryInfo directory = project.Directory!.Combine("Blog");
+            SearchPath searchPath = new([directory], true);
 
             return FileSearch.Search("*.md", searchPath);
         }
