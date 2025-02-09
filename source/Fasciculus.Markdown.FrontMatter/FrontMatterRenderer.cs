@@ -19,25 +19,23 @@ namespace Fasciculus.Markdown.FrontMatter
 
             foreach (string key in block.Keys)
             {
-                if (block.Entries.TryGetValue(key, out string? value))
-                {
-                    string label = mappings.GetLabel(key) ?? key;
-                    string content = mappings.GetContent(key, value) ?? string.Empty;
+                string label = mappings.GetLabel(key) ?? key;
+                string value = block.Entries.GetString(key);
+                string content = mappings.GetContent(key, value) ?? string.Empty;
 
-                    renderer.Write("<tr>").WriteLine();
-                    renderer.PushIndent("  ");
+                renderer.Write("<tr>").WriteLine();
+                renderer.PushIndent("  ");
 
-                    renderer.Write("<td class=\"frontmatter-label\">");
-                    renderer.Write(label);
-                    renderer.Write("</td>").WriteLine();
+                renderer.Write("<td class=\"frontmatter-label\">");
+                renderer.Write(label);
+                renderer.Write("</td>").WriteLine();
 
-                    renderer.Write("<td class=\"frontmatter-content\">");
-                    renderer.Write(content);
-                    renderer.Write("</td>").WriteLine();
+                renderer.Write("<td class=\"frontmatter-content\">");
+                renderer.Write(content);
+                renderer.Write("</td>").WriteLine();
 
-                    renderer.PopIndent();
-                    renderer.Write("</tr>").WriteLine();
-                }
+                renderer.PopIndent();
+                renderer.Write("</tr>").WriteLine();
             }
 
             renderer.PopIndent();

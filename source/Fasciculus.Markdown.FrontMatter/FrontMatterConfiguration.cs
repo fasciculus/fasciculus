@@ -1,3 +1,4 @@
+using Fasciculus.Yaml;
 using Markdig;
 using YamlDotNet.Serialization;
 
@@ -16,25 +17,12 @@ namespace Fasciculus.Markdown.FrontMatter
         }
 
         public static MarkdownPipelineBuilder UseFrontMatter(this MarkdownPipelineBuilder pipeline, IDeserializer deserializer)
-        {
-            IFrontMapperMappings mappings = new FrontMapperMappings();
-
-            return pipeline.UseFrontMatter(deserializer, mappings);
-        }
+            => pipeline.UseFrontMatter(deserializer, FrontMapperMappings.Empty());
 
         public static MarkdownPipelineBuilder UseFrontMatter(this MarkdownPipelineBuilder pipeline, IFrontMapperMappings mappings)
-        {
-            DeserializerBuilder builder = new DeserializerBuilder();
-            IDeserializer deserializer = builder.Build();
-
-            return pipeline.UseFrontMatter(deserializer, mappings);
-        }
+            => pipeline.UseFrontMatter(YDeserializer.Default, mappings);
 
         public static MarkdownPipelineBuilder UseFrontMatter(this MarkdownPipelineBuilder pipeline)
-        {
-            IFrontMapperMappings mappings = new FrontMapperMappings();
-
-            return pipeline.UseFrontMatter(mappings);
-        }
+            => pipeline.UseFrontMatter(FrontMapperMappings.Empty());
     }
 }

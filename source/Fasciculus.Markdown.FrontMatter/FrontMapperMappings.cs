@@ -64,5 +64,8 @@ namespace Fasciculus.Markdown.FrontMatter
 
             return this;
         }
+
+        public static FrontMapperMappings Empty()
+            => new();
     }
 }

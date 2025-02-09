@@ -5,8 +5,6 @@ namespace Fasciculus.Yaml
 {
     public class YDictionary
     {
-        private readonly static IDeserializer Deserializer = new DeserializerBuilder().Build();
-
         private Dictionary<string, string> entries;
 
         private YDictionary(Dictionary<string, string> entries)
@@ -25,6 +23,8 @@ namespace Fasciculus.Yaml
         }
 
         public static YDictionary Deserialize(string data)
-            => Deserialize(data, Deserializer);
+            => Deserialize(data, YDeserializer.Default);
+
+        public static YDictionary Empty { get; } = new([]);
     }
 }
