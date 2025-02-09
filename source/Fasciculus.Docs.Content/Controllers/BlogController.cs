@@ -5,9 +5,9 @@ namespace Fasciculus.Docs.Content.Controllers
 {
     public class BlogController : Controller
     {
-        private readonly BlogProvider blog;
+        private readonly BlogContent blog;
 
-        public BlogController(BlogProvider blog)
+        public BlogController(BlogContent blog)
         {
             this.blog = blog;
         }

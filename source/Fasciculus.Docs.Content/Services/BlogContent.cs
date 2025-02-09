@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Fasciculus.Docs.Content.Services
 {
-    public class BlogProvider
+    public class BlogContent
     {
         public string[] GetKeys()
             => [.. GetEntries().OrderByDescending(kvp => kvp.Value.LastWriteTime).Select(kvp => kvp.Key)];

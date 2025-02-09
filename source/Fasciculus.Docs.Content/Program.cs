@@ -16,16 +16,13 @@ namespace Fasciculus.Docs.Content
 
             services.TryAddSingleton<VersionProvider>();
             services.TryAddSingleton<GraphicsProvider>();
-            services.TryAddSingleton<BlogProvider>();
+            services.TryAddSingleton<BlogContent>();
 
             WebApplication app = builder.Build();
 
             app.MapControllers();
 
-            app.Services.GetRequiredService<BlogProvider>();
-
             app.Run();
-
         }
     }
 }
