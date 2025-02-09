@@ -41,7 +41,7 @@ namespace Fasciculus.Markdown.FrontMatter
 
         private void OnDocumentProcessed(MarkdownDocument document)
         {
-            YDictionary entries = YDictionary.Deserialize(document.GetFrontMatter(), deserializer);
+            YDocument entries = YDocument.Deserialize(document.GetFrontMatter(), deserializer);
 
             foreach (FrontMatterBlock block in document.Descendants<FrontMatterBlock>())
             {

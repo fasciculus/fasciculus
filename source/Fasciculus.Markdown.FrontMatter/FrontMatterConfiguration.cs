@@ -20,7 +20,7 @@ namespace Fasciculus.Markdown.FrontMatter
             => pipeline.UseFrontMatter(deserializer, FrontMapperMappings.Empty());
 
         public static MarkdownPipelineBuilder UseFrontMatter(this MarkdownPipelineBuilder pipeline, IFrontMapperMappings mappings)
-            => pipeline.UseFrontMatter(YDeserializer.Default, mappings);
+            => pipeline.UseFrontMatter(YDeserializer.Instance, mappings);
 
         public static MarkdownPipelineBuilder UseFrontMatter(this MarkdownPipelineBuilder pipeline)
             => pipeline.UseFrontMatter(FrontMapperMappings.Empty());

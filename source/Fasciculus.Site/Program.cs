@@ -84,7 +84,7 @@ namespace Fasciculus.Site
 
         private static IServiceCollection AddCommon(this IServiceCollection services)
         {
-            services.TryAddSingleton<IDeserializer>(YDeserializer.Default);
+            services.TryAddSingleton<IDeserializer>(YDeserializer.Instance);
             services.TryAddSingleton<Markup>();
 
             services.TryAddSingleton<ContentFiles>();

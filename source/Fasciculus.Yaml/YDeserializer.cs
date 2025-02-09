@@ -9,7 +9,7 @@ namespace Fasciculus.Yaml
     {
         private readonly IDeserializer deserializer;
 
-        public static YDeserializer Default { get; } = new();
+        public static YDeserializer Instance { get; } = new();
 
         private YDeserializer()
         {

@@ -9,7 +9,7 @@ namespace Fasciculus.Markdown.FrontMatter
     {
         public string[] Keys { get; }
 
-        public YDictionary Entries { get; set; } = YDictionary.Empty;
+        public YDocument Entries { get; set; } = YDocument.Empty();
 
         public FrontMatterBlock(BlockParser? parser, IEnumerable<string> keys)
             : base(parser)
