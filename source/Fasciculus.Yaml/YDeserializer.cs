@@ -13,7 +13,10 @@ namespace Fasciculus.Yaml
 
         private YDeserializer()
         {
-            deserializer = new DeserializerBuilder().Build();
+            deserializer = new DeserializerBuilder()
+                .IgnoreUnmatchedProperties()
+                .WithCaseInsensitivePropertyMatching()
+                .Build();
         }
 
         public T Deserialize<T>(string input)
