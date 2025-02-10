@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Fasciculus.Collections
@@ -24,12 +24,11 @@ namespace Fasciculus.Collections
         /// <summary>
         /// Initializes a stack that contains elements copied from the specified collection.
         /// </summary>
-        /// <param name="collection"></param>
         public DisposableStack(IEnumerable<T> collection)
             : base(collection) { }
 
         /// <summary>
-        /// Disposes the stack's entries.
+        /// Disposes the stack entries.
         /// </summary>
         ~DisposableStack()
         {
