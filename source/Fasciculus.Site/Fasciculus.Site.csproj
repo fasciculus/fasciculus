@@ -24,6 +24,7 @@
     <ProjectReference Include="../Fasciculus.Extensions/Fasciculus.Extensions.csproj" />
     <ProjectReference Include="../Fasciculus.Markdown/Fasciculus.Markdown.csproj" />
     <ProjectReference Include="../Fasciculus.NuGet/Fasciculus.NuGet.csproj" />
+    <ProjectReference Include="../Fasciculus.Web.Extensions/Fasciculus.Web.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

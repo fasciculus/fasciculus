@@ -9,6 +9,7 @@ using Fasciculus.Site.Generating.Services;
 using Fasciculus.Site.Licenses.Services;
 using Fasciculus.Site.Markdown;
 using Fasciculus.Site.Specifications.Services;
+using Fasciculus.Web.Extensions;
 using Fasciculus.Yaml;
 using Markdig;
 using Microsoft.AspNetCore.Builder;
@@ -67,6 +68,7 @@ namespace Fasciculus.Site
 
             if (generate)
             {
+                builder.UseApplicationDelegate();
                 services.AddGenerator();
             }
 
