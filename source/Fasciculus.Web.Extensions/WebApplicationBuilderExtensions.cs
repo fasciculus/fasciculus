@@ -5,7 +5,7 @@ namespace Fasciculus.Web.Extensions
 {
     public static class WebApplicationBuilderExtensions
     {
-        public static WebApplicationBuilder UseApplicationDelegate(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder UseApplicationInvoker(this WebApplicationBuilder builder)
         {
             builder.Services.TryAddSingleton<WebApplicationInvoker>();
 

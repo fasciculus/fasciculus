@@ -68,7 +68,7 @@ namespace Fasciculus.Site
 
             if (generate)
             {
-                builder.UseApplicationDelegate();
+                builder.UseApplicationInvoker();
                 services.AddGenerator();
             }
 
