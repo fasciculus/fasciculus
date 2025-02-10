@@ -9,10 +9,10 @@ namespace Fasciculus.Web.Resources
         private static readonly Assembly assembly = typeof(WebResources).Assembly;
 
         public static EmbeddedFileProvider BootstrapProvider
-            => new EmbeddedFileProvider(assembly, "Fasciculus.Web.Resources.Bootstrap");
+            => new(assembly, "Fasciculus.Web.Resources.Bootstrap");
 
         public static EmbeddedFileProvider KatexProvider
-            => new EmbeddedFileProvider(assembly, "Fasciculus.Web.Resources.Katex");
+            => new(assembly, "Fasciculus.Web.Resources.Katex");
 
         public static StaticFileOptions BootstrapOptions
             => new() { FileProvider = BootstrapProvider };
