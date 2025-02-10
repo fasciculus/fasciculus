@@ -7,14 +7,14 @@ namespace Fasciculus.Site.Generating.Services
 {
     public class Generator
     {
-        private readonly WebApplicationInvoker applicationDelegate;
+        private readonly WebApplicationInvoker invoker;
 
         private readonly GeneratorDocuments documents;
         private readonly GeneratorWriter writer;
 
-        public Generator(WebApplicationInvoker applicationDelegate, GeneratorDocuments documents, GeneratorWriter writer)
+        public Generator(WebApplicationInvoker invoker, GeneratorDocuments documents, GeneratorWriter writer)
         {
-            this.applicationDelegate = applicationDelegate;
+            this.invoker = invoker;
             this.documents = documents;
             this.writer = writer;
         }
@@ -29,7 +29,7 @@ namespace Fasciculus.Site.Generating.Services
         private void Generate(string document)
         {
             using MemoryStream responseBody = new();
-            HttpResponse response = applicationDelegate.Invoke(document, responseBody);
+            HttpResponse response = invoker.Invoke(document, responseBody);
 
             writer.Write(document, response.ContentType ?? string.Empty, responseBody.ToArray());
         }
