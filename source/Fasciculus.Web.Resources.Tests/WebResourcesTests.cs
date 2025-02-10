@@ -10,36 +10,34 @@ namespace Fasciculus.Web.Resources.Tests
     [TestClass]
     public class WebResourcesTests : WebTestsBase
     {
-        protected override void Configure(WebApplicationBuilder builder)
-        {
-
-        }
+        protected override void Configure(WebApplicationBuilder builder) { }
 
         protected override void Configure(WebApplication app)
         {
-            app.UseTestResources();
+            app.UseBootstrapResources();
+            app.UseKatexResources();
         }
 
         [TestMethod]
-        public void TestFooAndBar()
+        public void TestBootstrap()
         {
-            HttpResponse response;
-            byte[] bytes;
-            string content;
-
-            response = Invoke("/foo.txt");
-            bytes = response.Body.ReadAllBytes();
-            content = Encoding.UTF8.GetString(bytes);
+            HttpResponse response = Invoke("/lib/bootstrap/dist/css/bootstrap.css");
+            byte[] bytes = response.Body.ReadAllBytes();
+            string content = Encoding.UTF8.GetString(bytes);
 
             Assert.AreEqual(200, response.StatusCode);
-            Assert.AreEqual("foo", content);
+            Assert.AreEqual(281043, content.Length);
+        }
 
-            response = Invoke("/foobar/bar.txt");
-            bytes = response.Body.ReadAllBytes();
-            content = Encoding.UTF8.GetString(bytes);
+        [TestMethod]
+        public void TestKatex()
+        {
+            HttpResponse response = Invoke("/lib/katex/katex.css");
+            byte[] bytes = response.Body.ReadAllBytes();
+            string content = Encoding.UTF8.GetString(bytes);
 
             Assert.AreEqual(200, response.StatusCode);
-            Assert.AreEqual("bar", content);
+            Assert.AreEqual(31329, content.Length);
         }
     }
 }

@@ -8,22 +8,22 @@ namespace Fasciculus.Web.Resources
     {
         private static readonly Assembly assembly = typeof(WebResources).Assembly;
 
-        public static EmbeddedFileProvider TestProvider
-            => new EmbeddedFileProvider(assembly, "Fasciculus.Web.Resources.Test");
-
         public static EmbeddedFileProvider BootstrapProvider
             => new EmbeddedFileProvider(assembly, "Fasciculus.Web.Resources.Bootstrap");
 
-        public static StaticFileOptions TestOptions
-            => new() { FileProvider = TestProvider };
+        public static EmbeddedFileProvider KatexProvider
+            => new EmbeddedFileProvider(assembly, "Fasciculus.Web.Resources.Katex");
 
         public static StaticFileOptions BootstrapOptions
             => new() { FileProvider = BootstrapProvider };
 
-        public static IApplicationBuilder UseTestResources(this IApplicationBuilder app)
-            => app.UseStaticFiles(TestOptions);
+        public static StaticFileOptions KatexOptions
+            => new() { FileProvider = KatexProvider };
 
         public static IApplicationBuilder UseBootstrapResources(this IApplicationBuilder app)
             => app.UseStaticFiles(BootstrapOptions);
+
+        public static IApplicationBuilder UseKatexResources(this IApplicationBuilder app)
+            => app.UseStaticFiles(KatexOptions);
     }
 }
