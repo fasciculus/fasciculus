@@ -15,14 +15,14 @@ using System.Linq;
 
 namespace Fasciculus.Web.Extensions
 {
-    public class WebApplicationDelegate
+    public class WebApplicationInvoker
     {
         private readonly IServer server;
         private readonly IHttpContextFactory httpContextFactory;
 
         private readonly RequestDelegate requestDelegate;
 
-        public WebApplicationDelegate(IServer server, IHttpContextFactory httpContextFactory, IEnumerable<IHostedService> hostedServices,
+        public WebApplicationInvoker(IServer server, IHttpContextFactory httpContextFactory, IEnumerable<IHostedService> hostedServices,
             IEnumerable<IStartupFilter> startupFilters, IApplicationBuilderFactory applicationBuilderFactory)
         {
             this.server = server;
