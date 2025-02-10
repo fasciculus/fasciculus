@@ -105,6 +105,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Web.Resources", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Web.Extensions", "source\Fasciculus.Web.Extensions\Fasciculus.Web.Extensions.csproj", "{CF10987F-5648-4232-BB06-AF0FC2883977}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Testing.Web", "source\Fasciculus.Testing.Web\Fasciculus.Testing.Web.csproj", "{693C20C3-E704-4FB9-8D72-F6EEF8A9F4AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -291,6 +293,10 @@ Global
 		{CF10987F-5648-4232-BB06-AF0FC2883977}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF10987F-5648-4232-BB06-AF0FC2883977}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF10987F-5648-4232-BB06-AF0FC2883977}.Release|Any CPU.Build.0 = Release|Any CPU
+		{693C20C3-E704-4FB9-8D72-F6EEF8A9F4AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{693C20C3-E704-4FB9-8D72-F6EEF8A9F4AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{693C20C3-E704-4FB9-8D72-F6EEF8A9F4AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{693C20C3-E704-4FB9-8D72-F6EEF8A9F4AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

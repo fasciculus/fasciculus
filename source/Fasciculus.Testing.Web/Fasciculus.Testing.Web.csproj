@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Testing/Fasciculus.Testing.csproj" />
+    <ProjectReference Include="../Fasciculus.Web.Extensions/Fasciculus.Web.Extensions.csproj" />
+  </ItemGroup>
+
+</Project>
