@@ -9,4 +9,8 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Test/**/*.*" />
+  </ItemGroup>
+
 </Project>

@@ -45,7 +45,11 @@ namespace Fasciculus.Testing.Web
 
             streams.Add(stream);
 
-            return invoker.Value.Invoke(uri, stream);
+            HttpResponse response = invoker.Value.Invoke(uri, stream);
+
+            stream.Position = 0;
+
+            return response;
         }
 
         protected abstract void Configure(WebApplicationBuilder builder);
