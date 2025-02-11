@@ -16,5 +16,11 @@ namespace Fasciculus.Web.Resources.Tests
             contents = provider.GetDirectoryContents("");
             Assert.AreEqual(45, contents.Count());
         }
+
+        [TestMethod]
+        public void TestBootstrapFileInfo()
+        {
+            IFileInfo fileInfo = WebResources.BootstrapProvider.GetFileInfo("/lib/bootstrap/dist/css/bootstrap.min.css");
+        }
     }
 }

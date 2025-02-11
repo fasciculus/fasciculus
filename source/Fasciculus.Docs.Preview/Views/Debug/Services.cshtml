@@ -1,0 +1,12 @@
+@using Microsoft.Extensions.DependencyInjection
+@model DebugServicesViewModel
+<h1>Services</h1>
+<table class="table">
+    @foreach (ServiceDescriptor descriptor in Model.Descriptors)
+    {
+        <tr>
+            <td style="padding-right:1rem"> @(descriptor.ServiceType.Namespace).@(descriptor.ServiceType.Name)</td>
+            <td>@descriptor.ServiceKey</td>
+        </tr>
+    }
+</table>
