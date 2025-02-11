@@ -13,7 +13,7 @@ namespace Fasciculus.NuGet.Tests.Services
             DirectoryPackagesProvider service = new();
             PackageIdentity[] packages = service.GetPackages();
 
-            Assert.AreEqual(46, packages.Length);
+            Assert.AreEqual(48, packages.Length);
         }
     }
 }
