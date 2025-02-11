@@ -74,6 +74,8 @@ namespace Fasciculus.Dependencies
 
         private Tuple<PackageIdentity, NuGetVersion>? GetUpgrade(PackageIdentity package)
         {
+            logger.LogWarning($"- Checking {package.Id}");
+
             bool includePrerelease = package.Version.IsPrerelease;
             SortedSet<NuGetVersion> versions = versionsProvider.GetVersions(package.Id, includePrerelease);
 
