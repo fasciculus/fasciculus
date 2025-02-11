@@ -14,7 +14,7 @@ namespace Fasciculus.Testing.Web
 
         private readonly Lazy<WebApplicationBuilder> builder;
         private readonly Lazy<WebApplication> app;
-        private readonly Lazy<WebApplicationInvoker> invoker;
+        private readonly Lazy<RequestInvoker> invoker;
 
         protected WebTestsBase()
         {
@@ -75,9 +75,9 @@ namespace Fasciculus.Testing.Web
             return app;
         }
 
-        private WebApplicationInvoker GetInvoker()
+        private RequestInvoker GetInvoker()
         {
-            return app.Value.Services.GetRequiredService<WebApplicationInvoker>();
+            return app.Value.Services.GetRequiredService<RequestInvoker>();
         }
     }
 }

@@ -7,12 +7,12 @@ namespace Fasciculus.Site.Generating.Services
 {
     public class Generator
     {
-        private readonly WebApplicationInvoker invoker;
+        private readonly RequestInvoker invoker;
 
         private readonly GeneratorDocuments documents;
         private readonly GeneratorWriter writer;
 
-        public Generator(WebApplicationInvoker invoker, GeneratorDocuments documents, GeneratorWriter writer)
+        public Generator(RequestInvoker invoker, GeneratorDocuments documents, GeneratorWriter writer)
         {
             this.invoker = invoker;
             this.documents = documents;
