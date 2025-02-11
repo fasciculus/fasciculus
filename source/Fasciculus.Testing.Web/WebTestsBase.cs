@@ -60,7 +60,8 @@ namespace Fasciculus.Testing.Web
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder();
 
-            builder.UseApplicationInvoker();
+            builder.Services.AddRequestInvoker();
+
             Configure(builder);
 
             return builder;
