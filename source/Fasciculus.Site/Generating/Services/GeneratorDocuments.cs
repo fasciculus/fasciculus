@@ -1,5 +1,7 @@
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
+using Fasciculus.IO;
+using Fasciculus.IO.Searching;
 using Fasciculus.Site.Api.Services;
 using Fasciculus.Site.Blog.Services;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Linq;
 
 namespace Fasciculus.Site.Generating.Services
 {
-    public class GeneratorDocuments : List<string>
+    public class GeneratorDocuments : SortedSet<string>
     {
         public GeneratorDocuments(ApiContent apiContent, BlogContent blogContent)
         {
@@ -31,12 +33,27 @@ namespace Fasciculus.Site.Generating.Services
 
         private void AddStatics()
         {
-            DirectoryInfo wwwroot = new(Path.GetFullPath("wwwroot"));
-            FileInfo[] files = [.. wwwroot.EnumerateFiles("*", SearchOption.AllDirectories)];
-            string[] relative = [.. files.Select(file => Path.GetRelativePath(wwwroot.FullName, file.FullName))];
+            //DirectoryInfo wwwroot = new(Path.GetFullPath("wwwroot"));
+            //FileInfo[] files = [.. wwwroot.EnumerateFiles("*", SearchOption.AllDirectories)];
+            //string[] relative = [.. files.Select(file => Path.GetRelativePath(wwwroot.FullName, file.FullName))];
+            //string[] paths = [.. relative.Select(path => "/" + path.Replace("\\", "/"))];
+
+            //paths.Apply(Add);
+
+            AddStatics("Fasciculus.Site", "wwwroot");
+            AddStatics("Fasciculus.Web.Resources", "Bootstrap");
+            AddStatics("Fasciculus.Web.Resources", "Katex");
+        }
+
+        private void AddStatics(string projectName, string directoryName)
+        {
+            DirectoryInfo projectDirectory = DirectorySearch.Search(projectName, SearchPath.WorkingDirectoryAndParents).First();
+            DirectoryInfo staticsDirectory = projectDirectory.Combine(directoryName);
+            FileInfo[] files = [.. staticsDirectory.EnumerateFiles("*", SearchOption.AllDirectories)];
+            string[] relative = [.. files.Select(file => Path.GetRelativePath(staticsDirectory.FullName, file.FullName))];
             string[] paths = [.. relative.Select(path => "/" + path.Replace("\\", "/"))];
 
-            paths.Apply(Add);
+            paths.Apply(p => { Add(p); });
         }
 
         private void AddApi(ApiContent apiContent)

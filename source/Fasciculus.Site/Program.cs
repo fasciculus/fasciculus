@@ -10,6 +10,7 @@ using Fasciculus.Site.Licenses.Services;
 using Fasciculus.Site.Markdown;
 using Fasciculus.Site.Specifications.Services;
 using Fasciculus.Web.Extensions;
+using Fasciculus.Web.Resources;
 using Fasciculus.Yaml;
 using Markdig;
 using Microsoft.AspNetCore.Builder;
@@ -78,6 +79,9 @@ namespace Fasciculus.Site
         private static WebApplication CreateApplication(WebApplicationBuilder builder)
         {
             WebApplication app = builder.Build();
+
+            app.UseBootstrapResources();
+            app.UseKatexResources();
 
             app.UseRouting();
             app.MapStaticAssets();
