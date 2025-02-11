@@ -82,6 +82,7 @@ namespace Fasciculus.Site
 
             app.UseBootstrapResources();
             app.UseKatexResources();
+            app.UseSiteResources();
 
             app.UseRouting();
             app.MapStaticAssets();

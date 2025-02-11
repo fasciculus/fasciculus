@@ -1,5 +1,6 @@
 using Fasciculus.Docs.Preview.Services;
 using Fasciculus.Markdown.Svg;
+using Fasciculus.Site;
 using Fasciculus.Web.Resources;
 using Markdig;
 using Microsoft.AspNetCore.Builder;
@@ -43,6 +44,7 @@ namespace Fasciculus.Docs.Preview
         {
             WebApplication app = builder.Build();
 
+            app.UseSiteResources();
             app.UseBootstrapResources();
             app.UseKatexResources();
 
