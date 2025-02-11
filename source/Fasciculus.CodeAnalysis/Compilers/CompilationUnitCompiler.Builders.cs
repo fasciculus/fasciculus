@@ -1,9 +1,7 @@
 using Fasciculus.CodeAnalysis.Compilers.Builders;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Fasciculus.CodeAnalysis.Compilers
 {
@@ -110,8 +108,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
         private NamespaceSymbol PopNamespace()
         {
             NamespaceBuilder builder = PopNamespaceBuilder();
-            FileInfo commentFile = Directory.Combine("Properties", "Comments", "Namespaces").File($"{builder.Name}.xml");
-            SymbolComment comment = SymbolComment.FromFile(CommentContext, commentFile);
+            SymbolComment comment = SymbolComment.Empty(CommentContext);
 
             return builder.Build(comment);
         }
