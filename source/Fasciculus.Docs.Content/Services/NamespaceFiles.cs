@@ -3,10 +3,10 @@ using System.IO;
 
 namespace Fasciculus.Docs.Content.Services
 {
-    public class PackageFiles : Files
+    public class NamespaceFiles : Files
     {
-        public PackageFiles(ContentFiles contentFiles)
-            : base(contentFiles, "Packages") { }
+        public NamespaceFiles(ContentFiles contentFiles)
+            : base(contentFiles, "Namespaces") { }
 
         protected override string GetKey(FileInfo file)
             => file.NameWithoutExtension();

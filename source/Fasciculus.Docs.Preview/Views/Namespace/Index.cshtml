@@ -1,0 +1,8 @@
+@model NamespaceIndexViewModel
+<h1>@Model.Title</h1>
+<ul>
+    @foreach (string key in Model.Keys)
+    {
+        <li><a href="~/Namespaces/@key">@key</a></li>
+    }
+</ul>
