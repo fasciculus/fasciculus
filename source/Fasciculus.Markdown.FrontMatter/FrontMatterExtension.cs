@@ -37,7 +37,7 @@ namespace Fasciculus.Markdown.FrontMatter
 
         private void OnDocumentProcessed(MarkdownDocument document)
         {
-            YDocument entries = YDocument.Deserialize(document.FrontMatter(), deserializer);
+            YDocument entries = document.FrontMatterDocument(deserializer);
 
             document.Descendants<FrontMatterBlock>().Apply(block => { block.Entries = entries; });
         }

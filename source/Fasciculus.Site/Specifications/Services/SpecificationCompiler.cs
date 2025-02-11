@@ -19,7 +19,7 @@ namespace Fasciculus.Site.Specifications.Services
         public SpecificationEntry Compile(FileInfo file)
         {
             MarkdownDocument document = Markdig.Markdown.Parse(file.ReadAllText(), pipeline);
-            SpecificationFrontMatter frontMatter = document.FrontMatter<SpecificationFrontMatter>();
+            SpecificationFrontMatter frontMatter = document.FrontMatterObject<SpecificationFrontMatter>();
             string id = file.Name[..file.Name.IndexOf('.')];
             string html = document.ToHtml(pipeline);
 

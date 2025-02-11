@@ -33,7 +33,7 @@ namespace Fasciculus.Site.Blog.Compilers
         private BlogEntry? Compile(FileInfo file)
         {
             MarkdownDocument document = Markdig.Markdown.Parse(file.ReadAllText(), pipeline);
-            BlogFrontMatter frontMatter = document.FrontMatter<BlogFrontMatter>();
+            BlogFrontMatter frontMatter = document.FrontMatterObject<BlogFrontMatter>();
             DateTime published = frontMatter.Published;
 
             if (published == DateTime.MinValue)
