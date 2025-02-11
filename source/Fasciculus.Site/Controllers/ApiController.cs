@@ -25,11 +25,10 @@ namespace Fasciculus.Site.Controllers
             {
                 Title = "API Doc",
                 Navigation = apiNavigation.Create(),
-                Combined = apiContent.Combined,
                 Packages = apiContent.Packages
             };
 
-            return View(model);
+            return View("Packages", model);
         }
 
         [Route("/api/{p1}/")]

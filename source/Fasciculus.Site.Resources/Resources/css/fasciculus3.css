@@ -32,6 +32,14 @@ c {
     padding-inline-end: 0.25em;
 }
 
+div.search {
+    margin-bottom: 1rem;
+}
+
+div.search input {
+    width: 50%;
+}
+
 .container {
     max-width: 100%;
 }

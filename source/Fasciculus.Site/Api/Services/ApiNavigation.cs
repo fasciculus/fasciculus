@@ -53,7 +53,7 @@ namespace Fasciculus.Site.Api.Services
 
         private static NavigationForest CreateForest()
         {
-            string[] packageNames = [.. SiteConstants.PackageNames.Prepend("Combined")];
+            string[] packageNames = [.. SiteConstants.PackageNames];
             NavigationNode[] trees = [.. packageNames.Select(CreatePackageNode)];
 
             return new(trees);

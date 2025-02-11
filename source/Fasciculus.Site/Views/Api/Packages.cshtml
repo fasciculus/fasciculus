@@ -1,16 +1,21 @@
 @model ApiPackagesViewModel
 <h1>API Documentation</h1>
 
-@if (Model.Combined.Namespaces.Any())
-{
-    <h2>All-In-One</h2>
+<div class="search">
+    <search>
+        <form>
+            <input type="search" placeholder="Search API" />
+        </form>
+    </search>
+</div>
 
-    <p><a href="~/api/Combined/">Combined</a></p>
-}
+<div class="alert alert-warning">
+    <p class="mb-0">Search not yet available.</p>
+</div>
 
 @if (Model.Packages.Any())
 {
-    <h2>Individual Packages</h2>
+    <h2>Packages</h2>
 
     <table class="table">
         <tbody>

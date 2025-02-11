@@ -1,5 +1,4 @@
 using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
@@ -51,15 +50,6 @@ namespace Fasciculus.CodeAnalysis.Models
             events.AddOrMergeWith(other.events);
             properties.AddOrMergeWith(other.properties);
             methods.AddOrMergeWith(other.methods);
-        }
-
-        public override void ReBase(UriPath newBase)
-        {
-            base.ReBase(newBase);
-
-            events.ReBase(newBase);
-            properties.ReBase(newBase);
-            methods.ReBase(newBase);
         }
 
         public void Add(EventSymbol @event)

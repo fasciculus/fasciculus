@@ -96,11 +96,6 @@ namespace Fasciculus.CodeAnalysis.Models
             return $"{Kind}-{Name.GetHashCode()}";
         }
 
-        public virtual void ReBase(UriPath newBase)
-        {
-            link = link.Replace(0, 1, newBase);
-        }
-
         protected virtual void MergeWith(Symbol other)
         {
             frameworks.Add(other.frameworks);

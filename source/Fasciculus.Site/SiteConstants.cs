@@ -9,8 +9,6 @@ namespace Fasciculus.Site
     {
         public static readonly string[] PackageNames = ["Fasciculus.Core", "Fasciculus.Extensions"];
 
-        public const string CombinedPackageName = "Combined";
-
         public static readonly Dictionary<string, NuGetFramework[]> PackageFrameworks = new()
         {
             { "Fasciculus.Core", [NetStandard20, Net90] },

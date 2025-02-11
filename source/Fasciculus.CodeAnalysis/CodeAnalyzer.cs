@@ -38,10 +38,9 @@ namespace Fasciculus.CodeAnalysis
         {
             using MSBuildWorkspace workspace = LoadWorkspace();
             PackageList packages = CompilePackages(workspace);
-            PackageSymbol combined = packages.Combine(options.CombinedPackageName, options.CombinedPackageLink, commentContext);
-            SymbolIndex index = CreateIndex(packages, combined);
+            SymbolIndex index = CreateIndex(packages);
 
-            return new CodeAnalyzerResult(packages, combined, index);
+            return new CodeAnalyzerResult(packages, index);
         }
 
         private PackageList CompilePackages(MSBuildWorkspace workspace)
@@ -111,7 +110,7 @@ namespace Fasciculus.CodeAnalysis
         private Uri GetRepository(Project project)
             => options.Projects.First(p => p.File.FullName == project.FilePath).Repository;
 
-        private SymbolIndex CreateIndex(PackageList packages, PackageSymbol combined)
+        private SymbolIndex CreateIndex(PackageList packages)
         {
             SymbolIndexOptions options = new()
             {
@@ -120,7 +119,6 @@ namespace Fasciculus.CodeAnalysis
 
             return SymbolIndex.Create(options)
                 .WithPackages(packages)
-                .WithPackages(combined)
                 .Build();
         }
 

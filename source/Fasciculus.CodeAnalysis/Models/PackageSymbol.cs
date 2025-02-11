@@ -1,5 +1,4 @@
 using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Net.Navigating;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,13 +54,6 @@ namespace Fasciculus.CodeAnalysis.Models
             base.MergeWith(other);
 
             namespaces.AddOrMergeWith(other.namespaces);
-        }
-
-        public override void ReBase(UriPath newBase)
-        {
-            base.ReBase(newBase);
-
-            namespaces.ReBase(newBase);
         }
     }
 }

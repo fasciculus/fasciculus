@@ -1,5 +1,4 @@
 using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
@@ -54,14 +53,6 @@ namespace Fasciculus.CodeAnalysis.Models
 
             fields.AddOrMergeWith(other.fields);
             constructors.AddOrMergeWith(other.constructors);
-        }
-
-        public override void ReBase(UriPath newBase)
-        {
-            base.ReBase(newBase);
-
-            fields.ReBase(newBase);
-            constructors.ReBase(newBase);
         }
 
         public void Add(FieldSymbol field)

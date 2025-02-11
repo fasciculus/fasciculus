@@ -1,5 +1,4 @@
 using Fasciculus.CodeAnalysis.Frameworking;
-using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 
 namespace Fasciculus.CodeAnalysis.Models
@@ -77,15 +76,6 @@ namespace Fasciculus.CodeAnalysis.Models
             enums.AddOrMergeWith(other.enums);
             interfaces.AddOrMergeWith(other.interfaces);
             classes.AddOrMergeWith(other.classes);
-        }
-
-        public override void ReBase(UriPath newBase)
-        {
-            base.ReBase(newBase);
-
-            enums.ReBase(newBase);
-            interfaces.ReBase(newBase);
-            classes.ReBase(newBase);
         }
     }
 }

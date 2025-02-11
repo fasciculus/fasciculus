@@ -17,14 +17,11 @@ namespace Fasciculus.Site.Api.Services
 
         public ISymbolIndex Index => result.Index;
         public IPackageSymbol[] Packages => result.Packages;
-        public IPackageSymbol Combined => result.Combined;
 
         public ApiContent()
         {
             result = CodeAnalyzer.Create()
                 .WithProjects(GetProjects())
-                .WithCombinedPackageName(SiteConstants.CombinedPackageName)
-                .WithCombinedPackageLink(new("tree", "main", "source"))
                 .Build().Analyze();
         }
 

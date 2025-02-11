@@ -1,5 +1,4 @@
 using Fasciculus.Collections;
-using Fasciculus.Net.Navigating;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +22,6 @@ namespace Fasciculus.CodeAnalysis.Models
         protected SymbolList(IEnumerable<T> symbols)
         {
             Add(symbols);
-        }
-
-        public virtual void ReBase(UriPath newBase)
-        {
-            symbols.Apply(s => { s.ReBase(newBase); });
         }
 
         public void Add(T symbol)
