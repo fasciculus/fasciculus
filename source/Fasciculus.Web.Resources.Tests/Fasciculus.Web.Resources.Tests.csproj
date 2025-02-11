@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Testing.Web/Fasciculus.Testing.Web.csproj" />
+    <ProjectReference Include="../Fasciculus.Web.Extensions/Fasciculus.Web.Extensions.csproj" />
     <ProjectReference Include="../Fasciculus.Web.Resources/Fasciculus.Web.Resources.csproj" />
   </ItemGroup>
 

@@ -1,3 +1,4 @@
+using Fasciculus.Web.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
@@ -8,19 +9,12 @@ namespace Fasciculus.Web.Resources.Tests
     public class FileProviderTests
     {
         [TestMethod]
-        public void TestBootstrap()
+        public void Test()
         {
-            IFileProvider provider = WebResources.BootstrapProvider;
-            IDirectoryContents contents;
+            EmbeddedFileProvider provider = WebResources.BootstrapProvider;
 
-            contents = provider.GetDirectoryContents("");
-            Assert.AreEqual(45, contents.Count());
-        }
-
-        [TestMethod]
-        public void TestBootstrapFileInfo()
-        {
-            IFileInfo fileInfo = WebResources.BootstrapProvider.GetFileInfo("/lib/bootstrap/dist/css/bootstrap.min.css");
+            Assert.AreEqual(45, provider.GetDirectoryContents("").Count());
+            Assert.AreEqual(275, provider.GetSubPaths().Count());
         }
     }
 }
