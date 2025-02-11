@@ -109,6 +109,9 @@ namespace Fasciculus.Site
             services.TryAddSingleton<PackageFiles>();
             services.TryAddSingleton<ApiPackages>();
 
+            services.TryAddSingleton<NamespaceFiles>();
+            services.TryAddSingleton<ApiNamespaces>();
+
             services.TryAddSingleton<ApiContent>();
             services.TryAddSingleton<ApiNavigation>();
 

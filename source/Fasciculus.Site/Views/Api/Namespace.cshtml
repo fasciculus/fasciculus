@@ -1,4 +1,4 @@
-@model ApiSymbolViewModel<INamespaceSymbol>
+@model ApiNamespaceViewModel
 @{
     INamespaceSymbol nms = Model.Symbol;
 
@@ -39,7 +39,8 @@
 
 <partial name="_Packages.cshtml" model=nms />
 
-<p>@Html.Raw(nms.Comment.Summary)</p>
+<p>@Html.Raw(Model.Description)</p>
+@Html.Raw(Model.Content)
 
 @if (hasEnums)
 {

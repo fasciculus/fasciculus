@@ -24,11 +24,11 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var ns in pkg.Namespaces)
+        @foreach (var ns in Model.Namespaces)
         {
             <tr>
-                <td><a href="~/api/@(ns.Link)/">@ns.Name</a></td>
-                <td>@Html.Raw(@ns.Comment.Summary)</td>
+                <td><a href="~/api/@(ns.Symbol.Link)/">@ns.Symbol.Name</a></td>
+                <td>@Html.Raw(@ns.Description)</td>
             </tr>
         }
     </tbody>

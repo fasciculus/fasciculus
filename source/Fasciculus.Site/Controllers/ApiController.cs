@@ -12,12 +12,14 @@ namespace Fasciculus.Site.Controllers
         private readonly ApiContent apiContent;
         private readonly ApiNavigation apiNavigation;
         private readonly ApiPackages apiPackages;
+        private readonly ApiNamespaces apiNamespaces;
 
-        public ApiController(ApiContent apiContent, ApiNavigation apiNavigation, ApiPackages apiPackages)
+        public ApiController(ApiContent apiContent, ApiNavigation apiNavigation, ApiPackages apiPackages, ApiNamespaces apiNamespaces)
         {
             this.apiContent = apiContent;
             this.apiNavigation = apiNavigation;
             this.apiPackages = apiPackages;
+            this.apiNamespaces = apiNamespaces;
         }
 
         [Route("/api/")]
@@ -122,6 +124,7 @@ namespace Fasciculus.Site.Controllers
         private ViewResult Package(IPackageSymbol package)
         {
             ApiPackage apiPackage = apiPackages.GetPackage(package);
+            ApiNamespace[] namespaces = [.. package.Namespaces.Select(apiNamespaces.GetNamespace)];
 
             ApiPackageViewModel model = new()
             {
@@ -129,6 +132,7 @@ namespace Fasciculus.Site.Controllers
                 Symbol = package,
                 Description = apiPackage.Description,
                 Content = apiPackage.Content,
+                Namespaces = namespaces,
                 Navigation = apiNavigation.Create(package.Link)
             };
 
@@ -137,10 +141,14 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Namespace(INamespaceSymbol @namespace)
         {
-            ApiSymbolViewModel<INamespaceSymbol> model = new()
+            ApiNamespace apiNamespace = apiNamespaces.GetNamespace(@namespace);
+
+            ApiNamespaceViewModel model = new()
             {
                 Title = @namespace.Name + " Namespace",
                 Symbol = @namespace,
+                Description = apiNamespace.Description,
+                Content = apiNamespace.Content,
                 Navigation = apiNavigation.Create(@namespace.Link)
             };
 
