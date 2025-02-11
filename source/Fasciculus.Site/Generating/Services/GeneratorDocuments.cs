@@ -33,14 +33,8 @@ namespace Fasciculus.Site.Generating.Services
 
         private void AddStatics()
         {
-            //DirectoryInfo wwwroot = new(Path.GetFullPath("wwwroot"));
-            //FileInfo[] files = [.. wwwroot.EnumerateFiles("*", SearchOption.AllDirectories)];
-            //string[] relative = [.. files.Select(file => Path.GetRelativePath(wwwroot.FullName, file.FullName))];
-            //string[] paths = [.. relative.Select(path => "/" + path.Replace("\\", "/"))];
-
-            //paths.Apply(Add);
-
-            AddStatics("Fasciculus.Site", "wwwroot");
+            //AddStatics("Fasciculus.Site", "wwwroot");
+            AddStatics("Fasciculus.Site.Resources", "Resources");
             AddStatics("Fasciculus.Web.Resources", "Bootstrap");
             AddStatics("Fasciculus.Web.Resources", "Katex");
         }
