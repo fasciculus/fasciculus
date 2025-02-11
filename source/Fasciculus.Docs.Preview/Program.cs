@@ -34,6 +34,7 @@ namespace Fasciculus.Docs.Preview
 
             services.TryAddSingleton<BlogClient>();
             services.TryAddSingleton<SpecificationClient>();
+            services.TryAddSingleton<PackageClient>();
 
             services.TryAddSingleton(services);
 

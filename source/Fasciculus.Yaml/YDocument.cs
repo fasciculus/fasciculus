@@ -19,7 +19,7 @@ namespace Fasciculus.Yaml
 
         public static YDocument Deserialize(string data, IDeserializer deserializer)
         {
-            Dictionary<string, string> entries = deserializer.Deserialize<Dictionary<string, string>>(data);
+            Dictionary<string, string> entries = deserializer.Deserialize<Dictionary<string, string>>(data) ?? [];
 
             return new(entries, deserializer);
         }

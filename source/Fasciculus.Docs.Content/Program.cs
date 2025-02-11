@@ -19,6 +19,7 @@ namespace Fasciculus.Docs.Content
             services.TryAddSingleton<ContentFiles>();
             services.TryAddSingleton<BlogFiles>();
             services.TryAddSingleton<SpecificationFiles>();
+            services.TryAddSingleton<PackageFiles>();
 
             WebApplication app = builder.Build();
 

@@ -1,0 +1,8 @@
+@model PackageIndexViewModel
+<h1>@Model.Title</h1>
+<ul>
+    @foreach (string key in Model.Keys)
+    {
+        <li><a href="~/Packages/@key">@key</a></li>
+    }
+</ul>
