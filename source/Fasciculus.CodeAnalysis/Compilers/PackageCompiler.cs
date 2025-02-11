@@ -1,11 +1,9 @@
 using Fasciculus.CodeAnalysis.Frameworking;
 using Fasciculus.CodeAnalysis.Models;
-using Fasciculus.IO;
 using Fasciculus.Net.Navigating;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Compilers
@@ -30,8 +28,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             SymbolName name = new(project.Name);
             UriPath link = new(name);
             TargetFramework framework = context.Framework;
-            FileInfo commentFile = context.Directory.Combine("Properties", "Comments").File(context.Project.Name + ".xml");
-            SymbolComment comment = SymbolComment.FromFile(context.CommentContext, commentFile);
+            SymbolComment comment = SymbolComment.Empty(context.CommentContext);
             CompilationUnitCompiler compiler = new(context);
             CompilationUnitInfo[] compilationUnits = [.. roots.Select(compiler.Compile)];
 
