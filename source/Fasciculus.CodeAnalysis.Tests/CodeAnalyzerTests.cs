@@ -86,7 +86,7 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Constructors = 34,
                 Methods = 298,
 
-                Summaries = 446,
+                Summaries = 439,
             };
 
             Test(context);
