@@ -28,24 +28,18 @@ namespace Fasciculus.Site.Api.Services
         public ISymbol? GetSymbol(UriPath link)
             => Index.TryGetSymbol(link, out ISymbol? symbol) ? symbol : null;
 
-        private static readonly string[] ProjectNames =
-        [
-            "Fasciculus.Core",
-            "Fasciculus.Extensions"
-        ];
-
         private static IEnumerable<CodeAnalyzerProject> GetProjects()
         {
             SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
 
-            foreach (string projectName in ProjectNames)
+            foreach (string packageName in SiteConstants.PackageNames)
             {
-                DirectoryInfo directory = DirectorySearch.Search(projectName, searchPath).First();
+                DirectoryInfo directory = DirectorySearch.Search(packageName, searchPath).First();
 
                 CodeAnalyzerProject project = new()
                 {
-                    File = directory.File(projectName + ".csproj"),
-                    Repository = new($"https://github.com/fasciculus/fasciculus/tree/main/source/{projectName}/"),
+                    File = directory.File(packageName + ".csproj"),
+                    Repository = new($"https://github.com/fasciculus/fasciculus/tree/main/source/{packageName}/"),
                 };
 
                 yield return project;

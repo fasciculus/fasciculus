@@ -11,21 +11,25 @@ namespace Fasciculus.Site.Controllers
     {
         private readonly ApiContent apiContent;
         private readonly ApiNavigation apiNavigation;
+        private readonly ApiPackages apiPackages;
 
-        public ApiController(ApiContent apiContent, ApiNavigation apiNavigation)
+        public ApiController(ApiContent apiContent, ApiNavigation apiNavigation, ApiPackages apiPackages)
         {
             this.apiContent = apiContent;
             this.apiNavigation = apiNavigation;
+            this.apiPackages = apiPackages;
         }
 
         [Route("/api/")]
         public IActionResult Packages()
         {
+            ApiPackage[] packages = [.. apiContent.Packages.Select(apiPackages.GetPackage)];
+
             ApiPackagesViewModel model = new()
             {
                 Title = "API Doc",
                 Navigation = apiNavigation.Create(),
-                Packages = apiContent.Packages
+                Packages = packages
             };
 
             return View("Packages", model);
@@ -117,10 +121,14 @@ namespace Fasciculus.Site.Controllers
 
         private ViewResult Package(IPackageSymbol package)
         {
-            ApiSymbolViewModel<IPackageSymbol> model = new()
+            ApiPackage apiPackage = apiPackages.GetPackage(package);
+
+            ApiPackageViewModel model = new()
             {
                 Title = package.Name + " Package",
                 Symbol = package,
+                Description = apiPackage.Description,
+                Content = apiPackage.Content,
                 Navigation = apiNavigation.Create(package.Link)
             };
 

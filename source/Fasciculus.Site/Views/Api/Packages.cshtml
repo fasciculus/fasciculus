@@ -21,11 +21,13 @@
         <tbody>
             @foreach (var package in Model.Packages)
             {
-                @if (package.Namespaces.Any())
+                IPackageSymbol symbol = package.Symbol;
+
+                @if (symbol.Namespaces.Any())
                 {
                     <tr>
-                        <td><a href="~/api/@(package.Link)/">@package.Name</a></td>
-                        <td>@package.Comment.Summary</td>
+                        <td><a href="~/api/@(symbol.Link)/">@symbol.Name</a></td>
+                        <td>@package.Description</td>
                     </tr>
                 }
             }

@@ -106,6 +106,9 @@ namespace Fasciculus.Site
 
         private static IServiceCollection AddApi(this IServiceCollection services)
         {
+            services.TryAddSingleton<PackageFiles>();
+            services.TryAddSingleton<ApiPackages>();
+
             services.TryAddSingleton<ApiContent>();
             services.TryAddSingleton<ApiNavigation>();
 
