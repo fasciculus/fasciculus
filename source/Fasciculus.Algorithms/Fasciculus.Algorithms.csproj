@@ -1,10 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net9.0</TargetFrameworks>
-    <RootNamespace>Fasciculus</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <Import Project="Properties/Description.props" />
@@ -19,21 +17,6 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <PackageReference Include="System.Memory" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
-    <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
-  </ItemGroup>
-
-  <Import Project="../../MultiTargeting.props" />
-
-  <!--
-  <Target Name="DisableWinRTSourceGenerator" BeforeTargets="CoreCompile">
-    <ItemGroup>
-      <Analyzer Remove="@(Analyzer)" Condition="'%(FileName)%(Extension)' == 'WinRT.SourceGenerator.dll'" />
-    </ItemGroup>
-  </Target>
-  -->
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="/" />

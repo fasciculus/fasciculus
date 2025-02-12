@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <PropertyGroup>
+    <Description>
+      This package provides:
+      - Search algoritms for base types.
+      - Equality algoritms for base type arrays.
+      See the README for more information.
+    </Description>
+  </PropertyGroup>
+  
+</Project>

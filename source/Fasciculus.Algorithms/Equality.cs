@@ -1,17 +1,16 @@
-﻿using System;
+using System;
 
 namespace Fasciculus.Algorithms
 {
     /// <summary>
-    /// Fast implementation to check equality of base type arrays.
+    /// Fast implementations to check equality of base type arrays.
     /// </summary>
     public static class Equality
     {
         /// <summary>
         /// Returns whether the given arrays have the same size and contain the same values.
         /// </summary>
-        /// <returns>Whether the two arrays are identical.</returns>
-        public static unsafe bool AreEqual(ReadOnlySpan<byte> a, ReadOnlySpan<byte> b)
+        public static bool AreEqual(ReadOnlySpan<byte> a, ReadOnlySpan<byte> b)
         {
             int na = a.Length;
             int nb = b.Length;
@@ -21,15 +20,7 @@ namespace Fasciculus.Algorithms
                 return false;
             }
 
-            fixed (byte* pa = a, pb = b)
-            {
-                return AreEqual(pa, pb, na);
-            }
-        }
-
-        private static unsafe bool AreEqual(byte* a, byte* b, int n)
-        {
-            for (int i = 0; i < n; ++i)
+            for (int i = 0; i < na; ++i)
             {
                 if (a[i] != b[i])
                 {
