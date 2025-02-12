@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,14 +23,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                TypeId = bin.ReadInt();
+                TypeId = bin.ReadInt32();
                 AveragePrice = bin.ReadDouble();
                 AdjustedPrice = bin.ReadDouble();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(TypeId);
+                bin.WriteInt32(TypeId);
                 bin.WriteDouble(AveragePrice);
                 bin.WriteDouble(AdjustedPrice);
             }
@@ -119,18 +119,18 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Type = bin.ReadInt();
-                Location = bin.ReadLong();
+                Type = bin.ReadInt32();
+                Location = bin.ReadInt64();
                 Price = bin.ReadDouble();
-                Quantity = bin.ReadInt();
+                Quantity = bin.ReadInt32();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Type);
-                bin.WriteLong(Location);
+                bin.WriteInt32(Type);
+                bin.WriteInt64(Location);
                 bin.WriteDouble(Price);
-                bin.WriteInt(Quantity);
+                bin.WriteInt32(Quantity);
             }
         }
 

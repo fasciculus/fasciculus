@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO;
 using Fasciculus.Text;
 using System;
 using System.Collections;
@@ -51,16 +51,16 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadLong();
-                Operation = bin.ReadInt();
-                Owner = bin.ReadInt();
+                Id = bin.ReadInt64();
+                Operation = bin.ReadInt32();
+                Owner = bin.ReadInt32();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteLong(Id);
-                bin.WriteInt(Operation);
-                bin.WriteInt(Owner);
+                bin.WriteInt64(Id);
+                bin.WriteInt32(Operation);
+                bin.WriteInt32(Owner);
             }
         }
 
@@ -136,15 +136,15 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadInt();
-                CelestialIndex = bin.ReadInt();
+                Id = bin.ReadInt32();
+                CelestialIndex = bin.ReadInt32();
                 stations = bin.ReadArray(() => new EveStation.Data(bin));
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Id);
-                bin.WriteInt(CelestialIndex);
+                bin.WriteInt32(Id);
+                bin.WriteInt32(CelestialIndex);
                 bin.WriteArray(stations, x => x.Write(bin));
             }
         }
@@ -260,15 +260,15 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadInt();
-                CelestialIndex = bin.ReadInt();
+                Id = bin.ReadInt32();
+                CelestialIndex = bin.ReadInt32();
                 moons = bin.ReadArray(() => new EveMoon.Data(bin));
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Id);
-                bin.WriteInt(CelestialIndex);
+                bin.WriteInt32(Id);
+                bin.WriteInt32(CelestialIndex);
                 bin.WriteArray(moons, m => m.Write(bin));
             }
         }
@@ -379,14 +379,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadUInt();
-                Destination = bin.ReadUInt();
+                Id = bin.ReadUInt32();
+                Destination = bin.ReadUInt32();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteUInt(Id);
-                bin.WriteUInt(Destination);
+                bin.WriteUInt32(Id);
+                bin.WriteUInt32(Destination);
             }
         }
 
@@ -450,7 +450,7 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadUInt();
+                Id = bin.ReadUInt32();
                 Name = bin.ReadString();
                 Security = bin.ReadDouble();
                 planets = bin.ReadArray(() => new EvePlanet.Data(bin));
@@ -459,7 +459,7 @@ namespace Fasciculus.Eve.Models
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteUInt(Id);
+                bin.WriteUInt32(Id);
                 bin.WriteString(Name);
                 bin.WriteDouble(Security);
                 bin.WriteArray(planets, p => p.Write(bin));
@@ -549,14 +549,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadUInt();
+                Id = bin.ReadUInt32();
                 Name = bin.ReadString();
                 solarSystems = bin.ReadArray(() => new EveSolarSystem.Data(bin));
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteUInt(Id);
+                bin.WriteUInt32(Id);
                 bin.WriteString(Name);
                 bin.WriteArray(solarSystems, s => s.Write(bin));
             }
@@ -626,14 +626,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadUInt();
+                Id = bin.ReadUInt32();
                 Name = bin.ReadString();
                 constellations = bin.ReadArray(() => new EveConstellation.Data(bin));
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteUInt(Id);
+                bin.WriteUInt32(Id);
                 bin.WriteString(Name);
                 bin.WriteArray(constellations, c => c.Write(bin));
             }

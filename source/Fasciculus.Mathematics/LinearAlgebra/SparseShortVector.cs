@@ -1,4 +1,4 @@
-﻿using Fasciculus.Algorithms;
+using Fasciculus.Algorithms;
 using Fasciculus.Collections;
 using Fasciculus.IO;
 using System.Collections.Generic;
@@ -54,8 +54,8 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// </summary>
         public SparseShortVector(BinaryRW bin)
         {
-            indices = bin.ReadUIntArray();
-            values = bin.ReadShortArray();
+            indices = bin.ReadUInt32Array();
+            values = bin.ReadInt16Array();
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// </summary>
         public void Write(BinaryRW bin)
         {
-            bin.WriteUIntArray(indices);
-            bin.WriteShortArray(values);
+            bin.WriteUInt32Array(indices);
+            bin.WriteInt16Array(values);
         }
 
         /// <summary>

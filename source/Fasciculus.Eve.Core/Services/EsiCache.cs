@@ -1,4 +1,4 @@
-﻿using Fasciculus.Eve.Models;
+using Fasciculus.Eve.Models;
 using Fasciculus.IO;
 using Fasciculus.Threading.Synchronization;
 using System;
@@ -93,7 +93,7 @@ namespace Fasciculus.Eve.Services
             {
                 using Stream stream = file.OpenRead();
                 BinaryRW bin = stream;
-                int version = bin.ReadInt();
+                int version = bin.ReadInt32();
 
                 if (version == Version)
                 {
@@ -113,7 +113,7 @@ namespace Fasciculus.Eve.Services
             using Stream stream = file.Create();
             BinaryRW binary = stream;
 
-            binary.WriteInt(Version);
+            binary.WriteInt32(Version);
             write(binary);
         }
     }

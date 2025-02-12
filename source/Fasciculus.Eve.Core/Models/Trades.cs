@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO;
 using System;
 
 namespace Fasciculus.Eve.Models
@@ -31,16 +31,16 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                MaxDistance = bin.ReadInt();
-                MaxVolumePerType = bin.ReadInt();
-                MaxIskPerType = bin.ReadInt();
+                MaxDistance = bin.ReadInt32();
+                MaxVolumePerType = bin.ReadInt32();
+                MaxIskPerType = bin.ReadInt32();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(MaxDistance);
-                bin.WriteInt(MaxVolumePerType);
-                bin.WriteInt(MaxIskPerType);
+                bin.WriteInt32(MaxDistance);
+                bin.WriteInt32(MaxVolumePerType);
+                bin.WriteInt32(MaxIskPerType);
             }
 
             public bool Equals(Data? other)

@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Fasciculus.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,14 +30,14 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// Initializes new matrix from the given binary data.
         /// </summary>
         public SparseBoolMatrix(BinaryRW bin)
-            : this(bin.ReadDictionary(bin.ReadUInt, () => new SparseBoolVector(bin))) { }
+            : this(bin.ReadDictionary(bin.ReadUInt32, () => new SparseBoolVector(bin))) { }
 
         /// <summary>
         /// Writes the matrix to the given binary data.
         /// </summary>
         public void Write(BinaryRW bin)
         {
-            bin.WriteDictionary(rows, bin.WriteUInt, v => { v.Write(bin); });
+            bin.WriteDictionary(rows, bin.WriteUInt32, v => { v.Write(bin); });
         }
 
         /// <summary>

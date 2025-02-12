@@ -1,4 +1,4 @@
-﻿using Fasciculus.Eve.Services;
+using Fasciculus.Eve.Services;
 using Fasciculus.IO;
 using System;
 using System.Collections;
@@ -33,18 +33,18 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadInt();
+                Id = bin.ReadInt32();
                 Name = bin.ReadString();
-                CycleTime = bin.ReadInt();
+                CycleTime = bin.ReadInt32();
                 inputs = bin.ReadArray(() => new EvePlanetTypeQuantity.Data(bin));
                 Output = new EvePlanetTypeQuantity.Data(bin);
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Id);
+                bin.WriteInt32(Id);
                 bin.WriteString(Name);
-                bin.WriteInt(CycleTime);
+                bin.WriteInt32(CycleTime);
                 bin.WriteArray(inputs, x => x.Write(bin));
                 Output.Write(bin);
             }

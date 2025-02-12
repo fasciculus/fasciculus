@@ -52,13 +52,13 @@ namespace Fasciculus.Collections
         /// Initializes new bit set from the given binary data.
         /// </summary>
         public BitSet(BinaryRW bin)
-            : this(bin.ReadUIntArray()) { }
+            : this(bin.ReadUInt32Array()) { }
 
         /// <summary>
         /// Writes the vector to the given binary data.
         /// </summary>
         public void Write(BinaryRW bin)
-            => bin.WriteUIntArray(entries);
+            => bin.WriteUInt32Array(entries);
 
         /// <summary>
         /// Returns <c>true</c> if this bit set shares a value with the given bit set.

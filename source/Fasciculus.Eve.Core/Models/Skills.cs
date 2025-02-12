@@ -75,14 +75,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadInt();
-                Level = bin.ReadInt();
+                Id = bin.ReadInt32();
+                Level = bin.ReadInt32();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Id);
-                bin.WriteInt(Level);
+                bin.WriteInt32(Id);
+                bin.WriteInt32(Level);
             }
         }
 

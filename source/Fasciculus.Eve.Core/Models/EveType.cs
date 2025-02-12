@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,20 +29,20 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadInt();
+                Id = bin.ReadInt32();
                 Name = bin.ReadString();
                 Volume = bin.ReadDouble();
-                MetaGroupId = bin.ReadInt();
-                MarketGroupId = bin.ReadInt();
+                MetaGroupId = bin.ReadInt32();
+                MarketGroupId = bin.ReadInt32();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Id);
+                bin.WriteInt32(Id);
                 bin.WriteString(Name);
                 bin.WriteDouble(Volume);
-                bin.WriteInt(MetaGroupId);
-                bin.WriteInt(MarketGroupId);
+                bin.WriteInt32(MetaGroupId);
+                bin.WriteInt32(MarketGroupId);
             }
         }
 

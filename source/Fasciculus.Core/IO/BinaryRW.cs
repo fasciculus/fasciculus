@@ -36,205 +36,205 @@ namespace Fasciculus.IO
         /// Reads a <see cref="bool"/> from the stream
         /// </summary>
         public bool ReadBool()
-            => ReadByte() != 0;
+            => ReadUInt8() != 0;
 
         /// <summary>
         /// Writes a <see cref="bool"/> to the stream.
         /// </summary>
         public void WriteBool(bool value)
-            => WriteByte((byte)(value ? 1 : 0));
+            => WriteUInt8((byte)(value ? 1 : 0));
 
         /// <summary>
         /// Reads a <see cref="byte"/> from the stream
         /// </summary>
-        public byte ReadByte()
+        public byte ReadUInt8()
             => ReadCore(1)[0];
 
         /// <summary>
         /// Writes a <see cref="byte"/> to the stream.
         /// </summary>
-        public void WriteByte(byte value)
+        public void WriteUInt8(byte value)
             => WriteCore([value], 1);
 
         /// <summary>
         /// Reads a <see cref="sbyte"/> from the stream
         /// </summary>
-        public sbyte ReadSByte()
-            => (sbyte)ReadByte();
+        public sbyte ReadInt8()
+            => (sbyte)ReadUInt8();
 
         /// <summary>
         /// Writes a <see cref="sbyte"/> to the stream.
         /// </summary>
-        public void WriteSByte(sbyte value)
-            => WriteByte((byte)value);
+        public void WriteInt8(sbyte value)
+            => WriteUInt8((byte)value);
 
         /// <summary>
         /// Reads a <see cref="short"/> from the stream using the given endianness.
         /// </summary>
-        public short ReadShort(Endian endian)
+        public short ReadInt16(Endian endian)
             => endian.GetShort(ReadCore(sizeof(short)));
 
         /// <summary>
         /// Reads a <see cref="short"/> from the stream using little-endian.
         /// </summary>
-        public short ReadShort()
-            => ReadShort(Endian.Little);
+        public short ReadInt16()
+            => ReadInt16(Endian.Little);
 
         /// <summary>
         /// Writes a <see cref="short"/> to the stream using the given endianness.
         /// </summary>
-        public void WriteShort(short value, Endian endian)
+        public void WriteInt16(short value, Endian endian)
             => WriteCore(endian.SetShort(smallBuffer, value), sizeof(short));
 
         /// <summary>
         /// Writes a <see cref="short"/> to the stream using little-endian.
         /// </summary>
-        public void WriteShort(short value)
-            => WriteShort(value, Endian.Little);
+        public void WriteInt16(short value)
+            => WriteInt16(value, Endian.Little);
 
         /// <summary>
         /// Reads a <see cref="ushort"/> from the stream using the given endianness.
         /// </summary>
-        public ushort ReadUShort(Endian endian)
+        public ushort ReadUInt16(Endian endian)
             => endian.GetUShort(ReadCore(sizeof(short)));
 
         /// <summary>
         /// Reads a <see cref="ushort"/> from the stream using little-endian.
         /// </summary>
-        public ushort ReadUShort()
-            => ReadUShort(Endian.Little);
+        public ushort ReadUInt16()
+            => ReadUInt16(Endian.Little);
 
         /// <summary>
         /// Writes a <see cref="ushort"/> to the stream using the given endianness.
         /// </summary>
-        public void WriteUShort(ushort value, Endian endian)
+        public void WriteUInt16(ushort value, Endian endian)
             => WriteCore(endian.SetUShort(smallBuffer, value), sizeof(short));
 
         /// <summary>
         /// Writes a <see cref="ushort"/> to the stream using little-endian.
         /// </summary>
-        public void WriteUShort(ushort value)
-            => WriteUShort(value, Endian.Little);
+        public void WriteUInt16(ushort value)
+            => WriteUInt16(value, Endian.Little);
 
         /// <summary>
         /// Reads a <see cref="int"/> from the stream using the given endianness.
         /// </summary>
-        public int ReadInt(Endian endian)
+        public int ReadInt32(Endian endian)
             => endian.GetInt(ReadCore(sizeof(int)));
 
         /// <summary>
         /// Reads a <see cref="int"/> from the stream using little-endian.
         /// </summary>
-        public int ReadInt()
-            => ReadInt(Endian.Little);
+        public int ReadInt32()
+            => ReadInt32(Endian.Little);
 
         /// <summary>
         /// Writes a <see cref="int"/> to the stream using the given endianness.
         /// </summary>
-        public void WriteInt(int value, Endian endian)
+        public void WriteInt32(int value, Endian endian)
             => WriteCore(endian.SetInt(smallBuffer, value), sizeof(int));
 
         /// <summary>
         /// Writes a <see cref="int"/> to the stream using little-endian.
         /// </summary>
-        public void WriteInt(int value)
-            => WriteInt(value, Endian.Little);
+        public void WriteInt32(int value)
+            => WriteInt32(value, Endian.Little);
 
         /// <summary>
         /// Reads a <see cref="uint"/> from the stream using the given endianness.
         /// </summary>
-        public uint ReadUInt(Endian endian)
+        public uint ReadUInt32(Endian endian)
             => endian.GetUInt(ReadCore(sizeof(uint)));
 
         /// <summary>
         /// Reads a <see cref="uint"/> from the stream using little-endian.
         /// </summary>
-        public uint ReadUInt()
-            => ReadUInt(Endian.Little);
+        public uint ReadUInt32()
+            => ReadUInt32(Endian.Little);
 
         /// <summary>
         /// Writes a <see cref="uint"/> to the stream using the given endianness.
         /// </summary>
-        public void WriteUInt(uint value, Endian endian)
+        public void WriteUInt32(uint value, Endian endian)
             => WriteCore(endian.SetUInt(smallBuffer, value), sizeof(uint));
 
         /// <summary>
         /// Writes a <see cref="uint"/> to the stream using little-endian.
         /// </summary>
-        public void WriteUInt(uint value)
-            => WriteUInt(value, Endian.Little);
+        public void WriteUInt32(uint value)
+            => WriteUInt32(value, Endian.Little);
 
         /// <summary>
         /// Reads a <see cref="long"/> from the stream using the given endianness.
         /// </summary>
-        public long ReadLong(Endian endian)
+        public long ReadInt64(Endian endian)
             => endian.GetLong(ReadCore(sizeof(long)));
 
         /// <summary>
         /// Reads a <see cref="long"/> from the stream using little-endian.
         /// </summary>
-        public long ReadLong()
-            => ReadLong(Endian.Little);
+        public long ReadInt64()
+            => ReadInt64(Endian.Little);
 
         /// <summary>
         /// Writes a <see cref="long"/> to the stream using the given endianness.
         /// </summary>
-        public void WriteLong(long value, Endian endian)
+        public void WriteInt64(long value, Endian endian)
             => WriteCore(endian.SetLong(smallBuffer, value), sizeof(long));
 
         /// <summary>
         /// Writes a <see cref="long"/> to the stream using little-endian.
         /// </summary>
-        public void WriteLong(long value)
-            => WriteLong(value, Endian.Little);
+        public void WriteInt64(long value)
+            => WriteInt64(value, Endian.Little);
 
         /// <summary>
         /// Reads a <see cref="ulong"/> from the stream using the given endianness.
         /// </summary>
-        public ulong ReadULong(Endian endian)
+        public ulong ReadUInt64(Endian endian)
             => endian.GetULong(ReadCore(sizeof(ulong)));
 
         /// <summary>
         /// Reads a <see cref="ulong"/> from the stream using little-endian.
         /// </summary>
-        public ulong ReadULong()
-            => ReadULong(Endian.Little);
+        public ulong ReadUInt64()
+            => ReadUInt64(Endian.Little);
 
         /// <summary>
         /// Writes a <see cref="ulong"/> to the stream using the given endianness.
         /// </summary>
-        public void WriteULong(ulong value, Endian endian)
+        public void WriteUInt64(ulong value, Endian endian)
             => WriteCore(endian.SetULong(smallBuffer, value), sizeof(ulong));
 
         /// <summary>
         /// Writes a <see cref="ulong"/> to the stream using little-endian.
         /// </summary>
-        public void WriteULong(ulong value)
-            => WriteULong(value, Endian.Little);
+        public void WriteUInt64(ulong value)
+            => WriteUInt64(value, Endian.Little);
 
         /// <summary>
         /// Reads a <see cref="float"/> from the stream using the given endianness.
         /// </summary>
-        public float ReadFloat(Endian endian)
+        public float ReadSingle(Endian endian)
             => endian.GetFloat(ReadCore(sizeof(float)));
 
         /// <summary>
         /// Reads a <see cref="float"/> from the stream using little-endian.
         /// </summary>
-        public float ReadFloat()
-            => ReadFloat(Endian.Little);
+        public float ReadSingle()
+            => ReadSingle(Endian.Little);
 
         /// <summary>
         /// Writes a <see cref="float"/> to the stream using the given endianness.
         /// </summary>
-        public void WriteFloat(float value, Endian endian)
+        public void WriteSingle(float value, Endian endian)
             => WriteCore(endian.SetFloat(smallBuffer, value), sizeof(float));
 
         /// <summary>
         /// Writes a <see cref="float"/> to the stream using little-endian.
         /// </summary>
-        public void WriteFloat(float value)
-            => WriteFloat(value, Endian.Little);
+        public void WriteSingle(float value)
+            => WriteSingle(value, Endian.Little);
 
         /// <summary>
         /// Reads a <see cref="double"/> from the stream using the given endianness.
@@ -264,7 +264,7 @@ namespace Fasciculus.IO
         /// Reads a <see cref="DateTime"/> from the stream using the given endianness.
         /// </summary>
         public DateTime ReadDateTime(Endian endian)
-            => DateTime.FromBinary(ReadLong(endian));
+            => DateTime.FromBinary(ReadInt64(endian));
 
         /// <summary>
         /// Reads a <see cref="DateTime"/> from the stream using little-endian.
@@ -276,7 +276,7 @@ namespace Fasciculus.IO
         /// Writes a <see cref="DateTime"/> to the stream using the given endianness.
         /// </summary>
         public void WriteDateTime(DateTime value, Endian endian)
-            => WriteLong(value.ToBinary(), endian);
+            => WriteInt64(value.ToBinary(), endian);
 
         /// <summary>
         /// Writes a <see cref="DateTime"/> to the stream using little-endian.
@@ -289,7 +289,7 @@ namespace Fasciculus.IO
         /// </summary>
         public string ReadString(Endian endian)
         {
-            int length = ReadInt(endian);
+            int length = ReadInt32(endian);
             byte[] bytes = new byte[length];
 
             ReadCore(bytes, length);
@@ -311,7 +311,7 @@ namespace Fasciculus.IO
             byte[] bytes = Encoding.UTF8.GetBytes(value);
             int length = bytes.Length;
 
-            WriteInt(length, endian);
+            WriteInt32(length, endian);
             WriteCore(bytes, length);
         }
 
@@ -348,218 +348,218 @@ namespace Fasciculus.IO
         /// <summary>
         /// Reads an array of <see cref="byte"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public byte[] ReadByteArray(Endian endian)
-            => ReadArrayCore(_ => ReadByte(), endian);
+        public byte[] ReadUInt8Array(Endian endian)
+            => ReadArrayCore(_ => ReadUInt8(), endian);
 
         /// <summary>
         /// Reads an array of <see cref="byte"/> using little-endian.
         /// </summary>
-        public byte[] ReadByteArray()
-            => ReadByteArray(Endian.Little);
+        public byte[] ReadUInt8Array()
+            => ReadUInt8Array(Endian.Little);
 
         /// <summary>
         /// Writes an array of <see cref="byte"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public void WriteByteArray(byte[] values, Endian endian)
-            => WriteArrayCore(values, (x, _) => { WriteByte(x); }, endian);
+        public void WriteUInt8Array(byte[] values, Endian endian)
+            => WriteArrayCore(values, (x, _) => { WriteUInt8(x); }, endian);
 
         /// <summary>
         /// Writes an array of <see cref="byte"/> using little-endian.
         /// </summary>
-        public void WriteByteArray(byte[] values)
-            => WriteByteArray(values, Endian.Little);
+        public void WriteUInt8Array(byte[] values)
+            => WriteUInt8Array(values, Endian.Little);
 
         /// <summary>
         /// Reads an array of <see cref="sbyte"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public sbyte[] ReadSByteArray(Endian endian)
-            => ReadArrayCore(_ => ReadSByte(), endian);
+        public sbyte[] ReadInt8Array(Endian endian)
+            => ReadArrayCore(_ => ReadInt8(), endian);
 
         /// <summary>
         /// Reads an array of <see cref="sbyte"/> using little-endian.
         /// </summary>
-        public sbyte[] ReadSByteArray()
-            => ReadSByteArray(Endian.Little);
+        public sbyte[] ReadInt8Array()
+            => ReadInt8Array(Endian.Little);
 
         /// <summary>
         /// Writes an array of <see cref="sbyte"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public void WriteSByteArray(sbyte[] values, Endian endian)
-            => WriteArrayCore(values, (x, _) => { WriteSByte(x); }, endian);
+        public void WriteInt8Array(sbyte[] values, Endian endian)
+            => WriteArrayCore(values, (x, _) => { WriteInt8(x); }, endian);
 
         /// <summary>
         /// Writes an array of <see cref="byte"/> using little-endian.
         /// </summary>
-        public void WriteSByteArray(sbyte[] values)
-            => WriteSByteArray(values, Endian.Little);
+        public void WriteInt8Array(sbyte[] values)
+            => WriteInt8Array(values, Endian.Little);
 
         /// <summary>
         /// Reads an array of <see cref="short"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public short[] ReadShortArray(Endian endian)
-            => ReadArrayCore(ReadShort, endian);
+        public short[] ReadInt16Array(Endian endian)
+            => ReadArrayCore(ReadInt16, endian);
 
         /// <summary>
         /// Reads an array of <see cref="short"/> using little-endian.
         /// </summary>
-        public short[] ReadShortArray()
-            => ReadShortArray(Endian.Little);
+        public short[] ReadInt16Array()
+            => ReadInt16Array(Endian.Little);
 
         /// <summary>
         /// Writes an array of <see cref="short"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public void WriteShortArray(short[] values, Endian endian)
-            => WriteArrayCore(values, WriteShort, endian);
+        public void WriteInt16Array(short[] values, Endian endian)
+            => WriteArrayCore(values, WriteInt16, endian);
 
         /// <summary>
         /// Writes an array of <see cref="short"/> using little-endian.
         /// </summary>
-        public void WriteShortArray(short[] values)
-            => WriteShortArray(values, Endian.Little);
+        public void WriteInt16Array(short[] values)
+            => WriteInt16Array(values, Endian.Little);
 
         /// <summary>
         /// Reads an array of <see cref="ushort"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public ushort[] ReadUShortArray(Endian endian)
-            => ReadArrayCore(ReadUShort, endian);
+        public ushort[] ReadUInt16Array(Endian endian)
+            => ReadArrayCore(ReadUInt16, endian);
 
         /// <summary>
         /// Reads an array of <see cref="ushort"/> using little-endian.
         /// </summary>
-        public ushort[] ReadUShortArray()
-            => ReadUShortArray(Endian.Little);
+        public ushort[] ReadUInt16Array()
+            => ReadUInt16Array(Endian.Little);
 
         /// <summary>
         /// Writes an array of <see cref="ushort"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public void WriteUShortArray(ushort[] values, Endian endian)
-            => WriteArrayCore(values, WriteUShort, endian);
+        public void WriteUInt16Array(ushort[] values, Endian endian)
+            => WriteArrayCore(values, WriteUInt16, endian);
 
         /// <summary>
         /// Writes an array of <see cref="ushort"/> using little-endian.
         /// </summary>
-        public void WriteUShortArray(ushort[] values)
-            => WriteUShortArray(values, Endian.Little);
+        public void WriteUInt16Array(ushort[] values)
+            => WriteUInt16Array(values, Endian.Little);
 
         /// <summary>
         /// Reads an array of <see cref="int"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public int[] ReadIntArray(Endian endian)
-            => ReadArrayCore(ReadInt, endian);
+        public int[] ReadInt32Array(Endian endian)
+            => ReadArrayCore(ReadInt32, endian);
 
         /// <summary>
         /// Reads an array of <see cref="int"/> using little-endian.
         /// </summary>
-        public int[] ReadIntArray()
-            => ReadIntArray(Endian.Little);
+        public int[] ReadInt32Array()
+            => ReadInt32Array(Endian.Little);
 
         /// <summary>
         /// Writes an array of <see cref="int"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public void WriteIntArray(int[] values, Endian endian)
-            => WriteArrayCore(values, WriteInt, endian);
+        public void WriteInt32Array(int[] values, Endian endian)
+            => WriteArrayCore(values, WriteInt32, endian);
 
         /// <summary>
         /// Writes an array of <see cref="int"/> using little-endian.
         /// </summary>
-        public void WriteIntArray(int[] values)
-            => WriteIntArray(values, Endian.Little);
+        public void WriteInt32Array(int[] values)
+            => WriteInt32Array(values, Endian.Little);
 
         /// <summary>
         /// Reads an array of <see cref="uint"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public uint[] ReadUIntArray(Endian endian)
-            => ReadArrayCore(ReadUInt, endian);
+        public uint[] ReadUInt32Array(Endian endian)
+            => ReadArrayCore(ReadUInt32, endian);
 
         /// <summary>
         /// Reads an array of <see cref="uint"/> using little-endian.
         /// </summary>
-        public uint[] ReadUIntArray()
-            => ReadUIntArray(Endian.Little);
+        public uint[] ReadUInt32Array()
+            => ReadUInt32Array(Endian.Little);
 
         /// <summary>
         /// Writes an array of <see cref="uint"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public void WriteUIntArray(uint[] values, Endian endian)
-            => WriteArrayCore(values, WriteUInt, endian);
+        public void WriteUInt32Array(uint[] values, Endian endian)
+            => WriteArrayCore(values, WriteUInt32, endian);
 
         /// <summary>
         /// Writes an array of <see cref="uint"/> using little-endian.
         /// </summary>
-        public void WriteUIntArray(uint[] values)
-            => WriteUIntArray(values, Endian.Little);
+        public void WriteUInt32Array(uint[] values)
+            => WriteUInt32Array(values, Endian.Little);
 
         /// <summary>
         /// Reads an array of <see cref="long"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public long[] ReadLongArray(Endian endian)
-            => ReadArrayCore(ReadLong, endian);
+        public long[] ReadInt64Array(Endian endian)
+            => ReadArrayCore(ReadInt64, endian);
 
         /// <summary>
         /// Reads an array of <see cref="long"/> using little-endian.
         /// </summary>
-        public long[] ReadLongArray()
-            => ReadLongArray(Endian.Little);
+        public long[] ReadInt64Array()
+            => ReadInt64Array(Endian.Little);
 
         /// <summary>
         /// Writes an array of <see cref="long"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public void WriteLongArray(long[] values, Endian endian)
-            => WriteArrayCore(values, WriteLong, endian);
+        public void WriteInt64Array(long[] values, Endian endian)
+            => WriteArrayCore(values, WriteInt64, endian);
 
         /// <summary>
         /// Writes an array of <see cref="long"/> using little-endian.
         /// </summary>
-        public void WriteLongArray(long[] values)
-            => WriteLongArray(values, Endian.Little);
+        public void WriteInt64Array(long[] values)
+            => WriteInt64Array(values, Endian.Little);
 
         /// <summary>
         /// Reads an array of <see cref="ulong"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public ulong[] ReadULongArray(Endian endian)
-            => ReadArrayCore(ReadULong, endian);
+        public ulong[] ReadUInt64Array(Endian endian)
+            => ReadArrayCore(ReadUInt64, endian);
 
         /// <summary>
         /// Reads an array of <see cref="ulong"/> using little-endian.
         /// </summary>
-        public ulong[] ReadULongArray()
-            => ReadULongArray(Endian.Little);
+        public ulong[] ReadUInt64Array()
+            => ReadUInt64Array(Endian.Little);
 
         /// <summary>
         /// Writes an array of <see cref="ulong"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public void WriteULongArray(ulong[] values, Endian endian)
-            => WriteArrayCore(values, WriteULong, endian);
+        public void WriteUInt64Array(ulong[] values, Endian endian)
+            => WriteArrayCore(values, WriteUInt64, endian);
 
         /// <summary>
         /// Writes an array of <see cref="ulong"/> using little-endian.
         /// </summary>
-        public void WriteULongArray(ulong[] values)
-            => WriteULongArray(values, Endian.Little);
+        public void WriteUInt64Array(ulong[] values)
+            => WriteUInt64Array(values, Endian.Little);
 
         /// <summary>
         /// Reads an array of <see cref="float"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public float[] ReadFloatArray(Endian endian)
-            => ReadArrayCore(ReadFloat, endian);
+        public float[] ReadSingleArray(Endian endian)
+            => ReadArrayCore(ReadSingle, endian);
 
         /// <summary>
         /// Reads an array of <see cref="float"/> using little-endian.
         /// </summary>
-        public float[] ReadFloatArray()
-            => ReadFloatArray(Endian.Little);
+        public float[] ReadSingleArray()
+            => ReadSingleArray(Endian.Little);
 
         /// <summary>
         /// Writes an array of <see cref="float"/> using the given <paramref name="endian"/>.
         /// </summary>
-        public void WriteFloatArray(float[] values, Endian endian)
-            => WriteArrayCore(values, WriteFloat, endian);
+        public void WriteSingleArray(float[] values, Endian endian)
+            => WriteArrayCore(values, WriteSingle, endian);
 
         /// <summary>
         /// Writes an array of <see cref="float"/> using little-endian.
         /// </summary>
-        public void WriteFloatArray(float[] values)
-            => WriteFloatArray(values, Endian.Little);
+        public void WriteSingleArray(float[] values)
+            => WriteSingleArray(values, Endian.Little);
 
         /// <summary>
         /// Reads an array of <see cref="double"/> using the given <paramref name="endian"/>.
@@ -670,7 +670,7 @@ namespace Fasciculus.IO
         public Dictionary<K, V> ReadDictionary<K, V>(Func<Endian, K> readKey, Func<Endian, V> readValue, Endian endian)
             where K : notnull, IComparable<K>
         {
-            int length = ReadInt(endian);
+            int length = ReadInt32(endian);
             Dictionary<K, V> result = [];
 
             for (int i = 0; i < length; ++i)
@@ -702,7 +702,7 @@ namespace Fasciculus.IO
         {
             KeyValuePair<K, V>[] kvps = [.. dictionary.OrderBy(x => x.Key)];
 
-            WriteInt(kvps.Length, endian);
+            WriteInt32(kvps.Length, endian);
             kvps.Apply(x => { writeKey(x.Key, endian); writeValue(x.Value, endian); });
         }
 
@@ -736,7 +736,7 @@ namespace Fasciculus.IO
 
         private T[] ReadArrayCore<T>(Func<Endian, T> read, Endian endian)
         {
-            int length = ReadInt(endian);
+            int length = ReadInt32(endian);
 
             return Enumerable.Range(0, length).Select(_ => read(endian)).ToArray();
         }
@@ -745,7 +745,7 @@ namespace Fasciculus.IO
         {
             int length = array.Length;
 
-            WriteInt(length, endian);
+            WriteInt32(length, endian);
 
             Enumerable.Range(0, length).Apply(x => { write(array[x], endian); });
         }

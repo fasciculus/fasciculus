@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,12 +21,12 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                indices = bin.ReadDictionary(bin.ReadUInt, bin.ReadDouble);
+                indices = bin.ReadDictionary(bin.ReadUInt32, bin.ReadDouble);
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteDictionary(indices, bin.WriteUInt, bin.WriteDouble);
+                bin.WriteDictionary(indices, bin.WriteUInt32, bin.WriteDouble);
             }
         }
 
@@ -63,14 +63,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Type = bin.ReadInt();
-                Quantity = bin.ReadInt();
+                Type = bin.ReadInt32();
+                Quantity = bin.ReadInt32();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Type);
-                bin.WriteInt(Quantity);
+                bin.WriteInt32(Type);
+                bin.WriteInt32(Quantity);
             }
         }
 
@@ -114,7 +114,7 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Time = bin.ReadInt();
+                Time = bin.ReadInt32();
 
                 materials = bin.ReadArray(() => new EveMaterial.Data(bin));
                 products = bin.ReadArray(() => new EveMaterial.Data(bin));
@@ -123,7 +123,7 @@ namespace Fasciculus.Eve.Models
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Time);
+                bin.WriteInt32(Time);
 
                 bin.WriteArray(materials, x => x.Write(bin));
                 bin.WriteArray(products, x => x.Write(bin));
@@ -173,15 +173,15 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadInt();
-                MaxRuns = bin.ReadInt();
+                Id = bin.ReadInt32();
+                MaxRuns = bin.ReadInt32();
                 Manufacturing = new EveManufacturing.Data(bin);
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Id);
-                bin.WriteInt(MaxRuns);
+                bin.WriteInt32(Id);
+                bin.WriteInt32(MaxRuns);
                 Manufacturing.Write(bin);
             }
         }

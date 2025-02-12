@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Fasciculus.IO;
 using System;
 using System.Collections;
@@ -26,16 +26,16 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadInt();
+                Id = bin.ReadInt32();
                 Name = bin.ReadString();
-                ParentId = bin.ReadInt();
+                ParentId = bin.ReadInt32();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Id);
+                bin.WriteInt32(Id);
                 bin.WriteString(Name);
-                bin.WriteInt(ParentId);
+                bin.WriteInt32(ParentId);
             }
         }
 
@@ -100,13 +100,13 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadInt();
+                Id = bin.ReadInt32();
                 Name = bin.ReadString();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Id);
+                bin.WriteInt32(Id);
                 bin.WriteString(Name);
             }
         }
@@ -158,13 +158,13 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Id = bin.ReadInt();
+                Id = bin.ReadInt32();
                 Name = bin.ReadString();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Id);
+                bin.WriteInt32(Id);
                 bin.WriteString(Name);
             }
         }

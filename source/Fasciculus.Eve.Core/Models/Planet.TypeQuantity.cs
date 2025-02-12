@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO;
 using System.Diagnostics;
 
 namespace Fasciculus.Eve.Models
@@ -19,14 +19,14 @@ namespace Fasciculus.Eve.Models
 
             public Data(BinaryRW bin)
             {
-                Type = bin.ReadInt();
-                Quantity = bin.ReadInt();
+                Type = bin.ReadInt32();
+                Quantity = bin.ReadInt32();
             }
 
             public void Write(BinaryRW bin)
             {
-                bin.WriteInt(Type);
-                bin.WriteInt(Quantity);
+                bin.WriteInt32(Type);
+                bin.WriteInt32(Quantity);
             }
         }
 
