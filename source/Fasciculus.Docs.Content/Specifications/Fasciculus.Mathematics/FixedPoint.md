@@ -1,18 +1,11 @@
 ---
 Title: "Fixed Point Algorithms"
+Status: "pre-draft"
+Version: "2025-02-12"
 ---
 # Fixed Point Algorithms
 
-<table>
-    <tr>
-        <td>Status</td>
-        <td>pre-draft</td>
-    </tr>
-    <tr>
-        <td>Version</td>
-        <td>2025-02-01</td>
-    </tr>
-</table>
+!frontmatter{Status,Version}
 
 > [!WARNING]
 > This is work-in-progress. It isn't even a draft yet.
