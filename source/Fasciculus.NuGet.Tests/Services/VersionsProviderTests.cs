@@ -21,7 +21,7 @@ namespace Fasciculus.NuGet.Tests.Services
 
             SortedSet<NuGetVersion> versions = versionsProvider.GetVersions("NuGet.Protocol", false);
 
-            Assert.AreEqual(83, versions.Count);
+            Assert.AreEqual(84, versions.Count);
         }
     }
 }
