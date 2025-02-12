@@ -1,6 +1,7 @@
 using Fasciculus.Collections;
-using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Mathematics.LinearAlgebra
@@ -29,15 +30,15 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// <summary>
         /// Initializes new matrix from the given binary data.
         /// </summary>
-        public SparseBoolMatrix(BinaryRW bin)
-            : this(bin.ReadDictionary(bin.ReadUInt32, () => new SparseBoolVector(bin))) { }
+        public SparseBoolMatrix(Stream stream)
+            : this(stream.ReadDictionary(s => s.ReadUInt32(), s => new SparseBoolVector(s))) { }
 
         /// <summary>
         /// Writes the matrix to the given binary data.
         /// </summary>
-        public void Write(BinaryRW bin)
+        public void Write(Stream stream)
         {
-            bin.WriteDictionary(rows, bin.WriteUInt32, v => { v.Write(bin); });
+            stream.WriteDictionary(rows, (s, k) => s.WriteUInt32(k), (s, v) => { v.Write(s); });
         }
 
         /// <summary>

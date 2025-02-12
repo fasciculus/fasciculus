@@ -1,6 +1,6 @@
-﻿using Fasciculus.Collections;
-using Fasciculus.IO;
+using Fasciculus.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace Fasciculus.Mathematics.LinearAlgebra
@@ -52,14 +52,14 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// <summary>
         /// Initializes a vector from the given binary data.
         /// </summary>
-        public SparseBoolVector(BinaryRW bin)
-            : this(new BitSet(bin)) { }
+        public SparseBoolVector(Stream stream)
+            : this(new BitSet(stream)) { }
 
         /// <summary>
         /// Writes the vector to the given binary data.
         /// </summary>
-        public void Write(BinaryRW bin)
-            => entries.Write(bin);
+        public void Write(Stream stream)
+            => entries.Write(stream);
 
         /// <summary>
         /// The vector length <c>|v|</c> of this vector.

@@ -1,6 +1,7 @@
 using Fasciculus.Collections;
-using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Mathematics.LinearAlgebra
@@ -29,13 +30,13 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// <summary>
         /// Initializes new matrix from the given binary data.
         /// </summary>
-        public SparseShortMatrix(BinaryRW bin)
-            : this(bin.ReadDictionary(bin.ReadUInt32, () => new SparseShortVector(bin))) { }
+        public SparseShortMatrix(Stream stream)
+            : this(stream.ReadDictionary(s => s.ReadUInt32(), s => new SparseShortVector(s))) { }
 
         /// <summary>
         /// Writes the matrix to the given binary data.
         /// </summary>
-        public void Write(BinaryRW bin)
-            => bin.WriteDictionary(rows, bin.WriteUInt32, v => v.Write(bin));
+        public void Write(Stream stream)
+            => stream.WriteDictionary(rows, (s, k) => s.WriteUInt32(k), (s, v) => v.Write(s));
     }
 }

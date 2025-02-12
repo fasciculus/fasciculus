@@ -1,8 +1,9 @@
 using Fasciculus.Algorithms;
-using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -51,14 +52,14 @@ namespace Fasciculus.Collections
         /// <summary>
         /// Initializes new bit set from the given binary data.
         /// </summary>
-        public BitSet(BinaryRW bin)
-            : this(bin.ReadUInt32Array()) { }
+        public BitSet(Stream stream)
+            : this(stream.ReadUInt32Array()) { }
 
         /// <summary>
         /// Writes the vector to the given binary data.
         /// </summary>
-        public void Write(BinaryRW bin)
-            => bin.WriteUInt32Array(entries);
+        public void Write(Stream stream)
+            => stream.WriteUInt32Array(entries);
 
         /// <summary>
         /// Returns <c>true</c> if this bit set shares a value with the given bit set.

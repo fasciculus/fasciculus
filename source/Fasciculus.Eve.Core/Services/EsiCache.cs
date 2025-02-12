@@ -1,5 +1,6 @@
 using Fasciculus.Eve.Models;
 using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using Fasciculus.Threading.Synchronization;
 using System;
 using System.IO;
@@ -82,7 +83,7 @@ namespace Fasciculus.Eve.Services
         public void SetIndustryIndices(EveIndustryIndices.Data data)
             => Write(GetIndustryIndicesFile(), data.Write);
 
-        private T? Read<T>(FileInfo file, TimeSpan maxAge, Func<BinaryRW, T> read)
+        private T? Read<T>(FileInfo file, TimeSpan maxAge, Func<Stream, T> read)
             where T : notnull
         {
             using Locker locker = Locker.Lock(mutex);
@@ -92,29 +93,27 @@ namespace Fasciculus.Eve.Services
             if (file.Exists && file.IsNewerThan(DateTime.UtcNow - maxAge))
             {
                 using Stream stream = file.OpenRead();
-                BinaryRW bin = stream;
-                int version = bin.ReadInt32();
+                int version = stream.ReadInt32();
 
                 if (version == Version)
                 {
-                    result = read(bin);
+                    result = read(stream);
                 }
             }
 
             return result;
         }
 
-        private void Write(FileInfo file, Action<BinaryRW> write)
+        private void Write(FileInfo file, Action<Stream> write)
         {
             using Locker locker = Locker.Lock(mutex);
 
             file.DeleteIfExists();
 
             using Stream stream = file.Create();
-            BinaryRW binary = stream;
 
-            binary.WriteInt32(Version);
-            write(binary);
+            stream.WriteInt32(Version);
+            write(stream);
         }
     }
 }

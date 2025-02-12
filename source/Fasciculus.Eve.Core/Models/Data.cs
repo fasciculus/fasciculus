@@ -1,9 +1,10 @@
 using Fasciculus.Collections;
-using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -24,18 +25,18 @@ namespace Fasciculus.Eve.Models
                 ParentId = parentId;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadInt32();
-                Name = bin.ReadString();
-                ParentId = bin.ReadInt32();
+                Id = stream.ReadInt32();
+                Name = stream.ReadString();
+                ParentId = stream.ReadInt32();
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Id);
-                bin.WriteString(Name);
-                bin.WriteInt32(ParentId);
+                stream.WriteInt32(Id);
+                stream.WriteString(Name);
+                stream.WriteInt32(ParentId);
             }
         }
 
@@ -98,16 +99,16 @@ namespace Fasciculus.Eve.Models
                 Name = name;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadInt32();
-                Name = bin.ReadString();
+                Id = stream.ReadInt32();
+                Name = stream.ReadString();
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Id);
-                bin.WriteString(Name);
+                stream.WriteInt32(Id);
+                stream.WriteString(Name);
             }
         }
 
@@ -156,16 +157,16 @@ namespace Fasciculus.Eve.Models
                 Name = name;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadInt32();
-                Name = bin.ReadString();
+                Id = stream.ReadInt32();
+                Name = stream.ReadString();
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Id);
-                bin.WriteString(Name);
+                stream.WriteInt32(Id);
+                stream.WriteString(Name);
             }
         }
 
@@ -237,26 +238,26 @@ namespace Fasciculus.Eve.Models
                 this.blueprints = blueprints.ToArray();
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Version = bin.ReadDateTime();
-                marketGroups = bin.ReadArray(() => new EveMarketGroup.Data(bin));
-                types = bin.ReadArray(() => new EveType.Data(bin));
-                stationOperations = bin.ReadArray(() => new EveStationOperation.Data(bin));
-                npcCorporations = bin.ReadArray(() => new EveNpcCorporation.Data(bin));
-                planetSchematics = bin.ReadArray(() => new EvePlanetSchematic.Data(bin));
-                blueprints = bin.ReadArray(() => new EveBlueprint.Data(bin));
+                Version = stream.ReadDateTime();
+                marketGroups = stream.ReadArray(s => new EveMarketGroup.Data(s));
+                types = stream.ReadArray(s => new EveType.Data(s));
+                stationOperations = stream.ReadArray(s => new EveStationOperation.Data(s));
+                npcCorporations = stream.ReadArray(s => new EveNpcCorporation.Data(s));
+                planetSchematics = stream.ReadArray(s => new EvePlanetSchematic.Data(s));
+                blueprints = stream.ReadArray(s => new EveBlueprint.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteDateTime(Version);
-                bin.WriteArray(marketGroups, x => x.Write(bin));
-                bin.WriteArray(types, x => x.Write(bin));
-                bin.WriteArray(stationOperations, x => x.Write(bin));
-                bin.WriteArray(npcCorporations, x => x.Write(bin));
-                bin.WriteArray(planetSchematics, x => x.Write(bin));
-                bin.WriteArray(blueprints, x => x.Write(bin));
+                stream.WriteDateTime(Version);
+                stream.WriteArray(marketGroups, (s, x) => x.Write(s));
+                stream.WriteArray(types, (s, x) => x.Write(s));
+                stream.WriteArray(stationOperations, (s, x) => x.Write(s));
+                stream.WriteArray(npcCorporations, (s, x) => x.Write(s));
+                stream.WriteArray(planetSchematics, (s, x) => x.Write(s));
+                stream.WriteArray(blueprints, (s, x) => x.Write(s));
             }
         }
 
@@ -282,12 +283,12 @@ namespace Fasciculus.Eve.Models
             Blueprints = new(data.Blueprints.Select(x => new EveBlueprint(x, Types)));
         }
 
-        public EveData(BinaryRW bin)
-            : this(new Data(bin)) { }
+        public EveData(Stream stream)
+            : this(new Data(stream)) { }
 
-        public void Write(BinaryRW bin)
+        public void Write(Stream stream)
         {
-            data.Write(bin);
+            data.Write(stream);
         }
     }
 }

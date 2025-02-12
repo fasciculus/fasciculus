@@ -1,7 +1,8 @@
-using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -21,18 +22,18 @@ namespace Fasciculus.Eve.Models
                 AdjustedPrice = adjustedPrice;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                TypeId = bin.ReadInt32();
-                AveragePrice = bin.ReadDouble();
-                AdjustedPrice = bin.ReadDouble();
+                TypeId = stream.ReadInt32();
+                AveragePrice = stream.ReadDouble();
+                AdjustedPrice = stream.ReadDouble();
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(TypeId);
-                bin.WriteDouble(AveragePrice);
-                bin.WriteDouble(AdjustedPrice);
+                stream.WriteInt32(TypeId);
+                stream.WriteDouble(AveragePrice);
+                stream.WriteDouble(AdjustedPrice);
             }
         }
 
@@ -67,14 +68,14 @@ namespace Fasciculus.Eve.Models
                 this.prices = prices.ToArray();
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                prices = bin.ReadArray(() => new EveMarketPrice.Data(bin));
+                prices = stream.ReadArray(s => new EveMarketPrice.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteArray(prices, x => x.Write(bin));
+                stream.WriteArray(prices, (s, x) => x.Write(s));
             }
         }
 
@@ -117,20 +118,20 @@ namespace Fasciculus.Eve.Models
                 Quantity = quantity;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Type = bin.ReadInt32();
-                Location = bin.ReadInt64();
-                Price = bin.ReadDouble();
-                Quantity = bin.ReadInt32();
+                Type = stream.ReadInt32();
+                Location = stream.ReadInt64();
+                Price = stream.ReadDouble();
+                Quantity = stream.ReadInt32();
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Type);
-                bin.WriteInt64(Location);
-                bin.WriteDouble(Price);
-                bin.WriteInt32(Quantity);
+                stream.WriteInt32(Type);
+                stream.WriteInt64(Location);
+                stream.WriteDouble(Price);
+                stream.WriteInt32(Quantity);
             }
         }
 
@@ -209,14 +210,14 @@ namespace Fasciculus.Eve.Models
                 this.orders = orders.ToArray();
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                orders = bin.ReadArray(() => new EveMarketOrder.Data(bin));
+                orders = stream.ReadArray(s => new EveMarketOrder.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteArray(orders, x => x.Write(bin));
+                stream.WriteArray(orders, (s, x) => x.Write(s));
             }
         }
 

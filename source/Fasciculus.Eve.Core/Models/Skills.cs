@@ -1,11 +1,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Collections;
-using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -73,16 +74,16 @@ namespace Fasciculus.Eve.Models
                 Level = level;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadInt32();
-                Level = bin.ReadInt32();
+                Id = stream.ReadInt32();
+                Level = stream.ReadInt32();
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Id);
-                bin.WriteInt32(Level);
+                stream.WriteInt32(Id);
+                stream.WriteInt32(Level);
             }
         }
 

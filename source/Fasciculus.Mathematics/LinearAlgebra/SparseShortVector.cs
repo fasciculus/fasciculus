@@ -1,7 +1,8 @@
 using Fasciculus.Algorithms;
 using Fasciculus.Collections;
-using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Mathematics.LinearAlgebra
@@ -45,26 +46,26 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         {
             KeyValuePair<uint, short>[] sorted = [.. entries.Where(x => x.Value != 0).OrderBy(x => x.Key)];
 
-            indices = sorted.Select(x => x.Key).ToArray();
-            values = sorted.Select(x => x.Value).ToArray();
+            indices = [.. sorted.Select(x => x.Key)];
+            values = [.. sorted.Select(x => x.Value)];
         }
 
         /// <summary>
         /// Initializes a vector from the given binary data.
         /// </summary>
-        public SparseShortVector(BinaryRW bin)
+        public SparseShortVector(Stream stream)
         {
-            indices = bin.ReadUInt32Array();
-            values = bin.ReadInt16Array();
+            indices = stream.ReadUInt32Array();
+            values = stream.ReadInt16Array();
         }
 
         /// <summary>
         /// Writes the vector to the given binary data.
         /// </summary>
-        public void Write(BinaryRW bin)
+        public void Write(Stream stream)
         {
-            bin.WriteUInt32Array(indices);
-            bin.WriteInt16Array(values);
+            stream.WriteUInt32Array(indices);
+            stream.WriteInt16Array(values);
         }
 
         /// <summary>

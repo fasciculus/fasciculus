@@ -12,7 +12,7 @@ namespace Fasciculus.NuGet.Tests.Services
         public void ListPackages()
         {
             DirectoryInfo fwk = SpecialDirectories.ProgramFiles
-                .Combine("dotnet", "packs", "Microsoft.NETCore.App.Ref", "9.0.1", "ref", "net9.0");
+                .Combine("dotnet", "packs", "Microsoft.NETCore.App.Ref", "9.0.2", "ref", "net9.0");
 
             Assert.IsTrue(fwk.Exists);
 

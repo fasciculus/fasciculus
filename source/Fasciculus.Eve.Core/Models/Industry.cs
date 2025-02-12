@@ -1,8 +1,9 @@
-using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -19,14 +20,14 @@ namespace Fasciculus.Eve.Models
                 this.indices = new(indices);
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                indices = bin.ReadDictionary(bin.ReadUInt32, bin.ReadDouble);
+                indices = stream.ReadDictionary(s => s.ReadUInt32(), s => s.ReadDouble());
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteDictionary(indices, bin.WriteUInt32, bin.WriteDouble);
+                stream.WriteDictionary(indices, (s, x) => s.WriteUInt32(x), (s, x) => s.WriteDouble(x));
             }
         }
 
@@ -61,16 +62,16 @@ namespace Fasciculus.Eve.Models
                 Quantity = quantity;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Type = bin.ReadInt32();
-                Quantity = bin.ReadInt32();
+                Type = stream.ReadInt32();
+                Quantity = stream.ReadInt32();
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Type);
-                bin.WriteInt32(Quantity);
+                stream.WriteInt32(Type);
+                stream.WriteInt32(Quantity);
             }
         }
 
@@ -112,22 +113,22 @@ namespace Fasciculus.Eve.Models
                 this.skills = skills.ToArray();
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Time = bin.ReadInt32();
+                Time = stream.ReadInt32();
 
-                materials = bin.ReadArray(() => new EveMaterial.Data(bin));
-                products = bin.ReadArray(() => new EveMaterial.Data(bin));
-                skills = bin.ReadArray(() => new EveSkill.Data(bin));
+                materials = stream.ReadArray(s => new EveMaterial.Data(s));
+                products = stream.ReadArray(s => new EveMaterial.Data(s));
+                skills = stream.ReadArray(s => new EveSkill.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Time);
+                stream.WriteInt32(Time);
 
-                bin.WriteArray(materials, x => x.Write(bin));
-                bin.WriteArray(products, x => x.Write(bin));
-                bin.WriteArray(skills, x => x.Write(bin));
+                stream.WriteArray(materials, (s, x) => x.Write(s));
+                stream.WriteArray(products, (s, x) => x.Write(s));
+                stream.WriteArray(skills, (s, x) => x.Write(s));
             }
         }
 
@@ -171,18 +172,18 @@ namespace Fasciculus.Eve.Models
                 Manufacturing = manufacturing;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadInt32();
-                MaxRuns = bin.ReadInt32();
-                Manufacturing = new EveManufacturing.Data(bin);
+                Id = stream.ReadInt32();
+                MaxRuns = stream.ReadInt32();
+                Manufacturing = new EveManufacturing.Data(stream);
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Id);
-                bin.WriteInt32(MaxRuns);
-                Manufacturing.Write(bin);
+                stream.WriteInt32(Id);
+                stream.WriteInt32(MaxRuns);
+                Manufacturing.Write(stream);
             }
         }
 

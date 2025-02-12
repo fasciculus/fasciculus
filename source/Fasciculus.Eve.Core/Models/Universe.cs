@@ -1,9 +1,10 @@
-using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using Fasciculus.Text;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace Fasciculus.Eve.Models
@@ -49,18 +50,18 @@ namespace Fasciculus.Eve.Models
                 Owner = owner;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadInt64();
-                Operation = bin.ReadInt32();
-                Owner = bin.ReadInt32();
+                Id = stream.ReadInt64();
+                Operation = stream.ReadInt32();
+                Owner = stream.ReadInt32();
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt64(Id);
-                bin.WriteInt32(Operation);
-                bin.WriteInt32(Owner);
+                stream.WriteInt64(Id);
+                stream.WriteInt32(Operation);
+                stream.WriteInt32(Owner);
             }
         }
 
@@ -134,18 +135,18 @@ namespace Fasciculus.Eve.Models
                 this.stations = stations.ToArray();
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadInt32();
-                CelestialIndex = bin.ReadInt32();
-                stations = bin.ReadArray(() => new EveStation.Data(bin));
+                Id = stream.ReadInt32();
+                CelestialIndex = stream.ReadInt32();
+                stations = stream.ReadArray(s => new EveStation.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Id);
-                bin.WriteInt32(CelestialIndex);
-                bin.WriteArray(stations, x => x.Write(bin));
+                stream.WriteInt32(Id);
+                stream.WriteInt32(CelestialIndex);
+                stream.WriteArray(stations, (s, x) => x.Write(s));
             }
         }
 
@@ -258,18 +259,18 @@ namespace Fasciculus.Eve.Models
                 this.moons = moons.ToArray();
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadInt32();
-                CelestialIndex = bin.ReadInt32();
-                moons = bin.ReadArray(() => new EveMoon.Data(bin));
+                Id = stream.ReadInt32();
+                CelestialIndex = stream.ReadInt32();
+                moons = stream.ReadArray(s => new EveMoon.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteInt32(Id);
-                bin.WriteInt32(CelestialIndex);
-                bin.WriteArray(moons, m => m.Write(bin));
+                stream.WriteInt32(Id);
+                stream.WriteInt32(CelestialIndex);
+                stream.WriteArray(moons, (s, x) => x.Write(s));
             }
         }
 
@@ -377,16 +378,16 @@ namespace Fasciculus.Eve.Models
                 Destination = destination;
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadUInt32();
-                Destination = bin.ReadUInt32();
+                Id = stream.ReadUInt32();
+                Destination = stream.ReadUInt32();
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteUInt32(Id);
-                bin.WriteUInt32(Destination);
+                stream.WriteUInt32(Id);
+                stream.WriteUInt32(Destination);
             }
         }
 
@@ -448,22 +449,22 @@ namespace Fasciculus.Eve.Models
                 this.stargates = stargates.ToArray();
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadUInt32();
-                Name = bin.ReadString();
-                Security = bin.ReadDouble();
-                planets = bin.ReadArray(() => new EvePlanet.Data(bin));
-                stargates = bin.ReadArray(() => new EveStargate.Data(bin));
+                Id = stream.ReadUInt32();
+                Name = stream.ReadString();
+                Security = stream.ReadDouble();
+                planets = stream.ReadArray(s => new EvePlanet.Data(s));
+                stargates = stream.ReadArray(s => new EveStargate.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteUInt32(Id);
-                bin.WriteString(Name);
-                bin.WriteDouble(Security);
-                bin.WriteArray(planets, p => p.Write(bin));
-                bin.WriteArray(stargates, sg => sg.Write(bin));
+                stream.WriteUInt32(Id);
+                stream.WriteString(Name);
+                stream.WriteDouble(Security);
+                stream.WriteArray(planets, (s, x) => x.Write(s));
+                stream.WriteArray(stargates, (s, x) => x.Write(s));
             }
         }
 
@@ -547,18 +548,18 @@ namespace Fasciculus.Eve.Models
                 this.solarSystems = solarSystems.ToArray();
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadUInt32();
-                Name = bin.ReadString();
-                solarSystems = bin.ReadArray(() => new EveSolarSystem.Data(bin));
+                Id = stream.ReadUInt32();
+                Name = stream.ReadString();
+                solarSystems = stream.ReadArray(s => new EveSolarSystem.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteUInt32(Id);
-                bin.WriteString(Name);
-                bin.WriteArray(solarSystems, s => s.Write(bin));
+                stream.WriteUInt32(Id);
+                stream.WriteString(Name);
+                stream.WriteArray(solarSystems, (s, x) => x.Write(s));
             }
         }
 
@@ -621,21 +622,21 @@ namespace Fasciculus.Eve.Models
             {
                 Id = id;
                 Name = name;
-                this.constellations = constellations.ToArray();
+                this.constellations = [.. constellations];
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                Id = bin.ReadUInt32();
-                Name = bin.ReadString();
-                constellations = bin.ReadArray(() => new EveConstellation.Data(bin));
+                Id = stream.ReadUInt32();
+                Name = stream.ReadString();
+                constellations = stream.ReadArray(s => new EveConstellation.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteUInt32(Id);
-                bin.WriteString(Name);
-                bin.WriteArray(constellations, c => c.Write(bin));
+                stream.WriteUInt32(Id);
+                stream.WriteString(Name);
+                stream.WriteArray(constellations, (s, x) => x.Write(s));
             }
         }
 
@@ -700,14 +701,14 @@ namespace Fasciculus.Eve.Models
                 this.regions = regions.ToArray();
             }
 
-            public Data(BinaryRW bin)
+            public Data(Stream stream)
             {
-                regions = bin.ReadArray(() => new EveRegion.Data(bin));
+                regions = stream.ReadArray(s => new EveRegion.Data(s));
             }
 
-            public void Write(BinaryRW bin)
+            public void Write(Stream stream)
             {
-                bin.WriteArray(regions, r => r.Write(bin));
+                stream.WriteArray(regions, (s, x) => x.Write(s));
             }
         }
 
@@ -734,12 +735,12 @@ namespace Fasciculus.Eve.Models
             Stargates = new(SolarSystems.SelectMany(s => s.Stargates));
         }
 
-        public EveUniverse(BinaryRW bin, EveData eveData)
-            : this(new Data(bin), eveData) { }
+        public EveUniverse(Stream stream, EveData eveData)
+            : this(new Data(stream), eveData) { }
 
-        public void Write(BinaryRW bin)
+        public void Write(Stream stream)
         {
-            data.Write(bin);
+            data.Write(stream);
         }
     }
 }
