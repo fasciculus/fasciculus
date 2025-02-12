@@ -1,4 +1,5 @@
 using Fasciculus.Collections;
+using Fasciculus.IO.Binary;
 using Fasciculus.Support;
 using System;
 using System.Collections.Generic;

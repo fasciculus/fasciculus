@@ -1,4 +1,4 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO.Binary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fasciculus.Core.Tests.IO

@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Fasciculus.IO
+namespace Fasciculus.IO.Binary
 {
     /// <summary>
     /// Converters to and from byte arrays for little-endian and big-endian.
