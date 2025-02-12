@@ -76,7 +76,7 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Namespaces = 16,
                 Enums = 1,
                 Interfaces = 3,
-                Classes = 50,
+                Classes = 49,
 
                 Fields = 2,
                 Members = 3,
@@ -84,9 +84,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Properties = 47,
 
                 Constructors = 30,
-                Methods = 173,
+                Methods = 167,
 
-                Summaries = 304,
+                Summaries = 299,
             };
 
             Test(context);
