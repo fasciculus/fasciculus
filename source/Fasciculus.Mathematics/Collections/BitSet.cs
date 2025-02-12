@@ -30,7 +30,7 @@ namespace Fasciculus.Mathematics.Collections
         /// Returns <c>true</c> if the bit set contains the given value.
         /// </summary>
         public bool this[uint value]
-            => BinarySearch.IndexOf(entries, value) >= 0;
+            => BinarySearchUnsafe.IndexOf(entries, value) >= 0;
 
         private BitSet(uint[] entries)
         {

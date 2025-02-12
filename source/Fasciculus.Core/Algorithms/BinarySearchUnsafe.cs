@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 
 namespace Fasciculus.Algorithms
 {
     /// <summary>
     /// Fast binary search implementation for base types.
     /// </summary>
-    public static class BinarySearch
+    public static class BinarySearchUnsafe
     {
         /// <summary>
         /// Searches the position of an occurrance of the given value in the given <b>sorted</b> array.
