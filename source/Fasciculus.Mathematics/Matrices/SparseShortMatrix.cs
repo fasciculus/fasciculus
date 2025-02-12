@@ -1,10 +1,11 @@
 using Fasciculus.Collections;
 using Fasciculus.IO.Binary;
+using Fasciculus.Mathematics.Vectors;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.Mathematics.LinearAlgebra
+namespace Fasciculus.Mathematics.Matrices
 {
     /// <summary>
     /// Sparse matrix of <see cref="short"/>.

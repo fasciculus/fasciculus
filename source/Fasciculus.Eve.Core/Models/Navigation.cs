@@ -1,5 +1,6 @@
 using Fasciculus.IO.Binary;
-using Fasciculus.Mathematics.LinearAlgebra;
+using Fasciculus.Mathematics.Matrices;
+using Fasciculus.Mathematics.Vectors;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

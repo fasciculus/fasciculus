@@ -1,11 +1,10 @@
 using Fasciculus.Algorithms;
-using Fasciculus.Collections;
 using Fasciculus.IO.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Fasciculus.Mathematics.LinearAlgebra
+namespace Fasciculus.Mathematics.Vectors
 {
     /// <summary>
     /// Immutable sparse vector of <see cref="short"/>.
@@ -76,7 +75,10 @@ namespace Fasciculus.Mathematics.LinearAlgebra
             Dictionary<uint, short> entries = [];
             IEnumerable<uint> indices = lhs.indices.Concat(rhs.Indices).Distinct();
 
-            indices.Apply(x => { entries[x] = (short)(lhs[x] + rhs[x]); });
+            foreach (uint i in indices)
+            {
+                entries[i] = (short)(lhs[i] + rhs[i]);
+            }
 
             return new(entries);
         }

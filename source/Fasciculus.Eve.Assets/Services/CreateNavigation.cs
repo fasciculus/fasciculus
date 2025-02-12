@@ -1,6 +1,7 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Fasciculus.Eve.Models;
-using Fasciculus.Mathematics.LinearAlgebra;
+using Fasciculus.Mathematics.Matrices;
+using Fasciculus.Mathematics.Vectors;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 
