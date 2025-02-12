@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>$(FasciculusDotNetWindowsTfm)</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
