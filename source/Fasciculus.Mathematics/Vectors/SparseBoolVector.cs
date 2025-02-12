@@ -1,4 +1,3 @@
-using Fasciculus.Collections;
 using Fasciculus.Mathematics.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -101,7 +100,10 @@ namespace Fasciculus.Mathematics.Vectors
         {
             Dictionary<uint, short> result = [];
 
-            vector.Indices.Apply(i => { result[i] = factor; });
+            foreach (uint i in vector.Indices)
+            {
+                result[i] = factor;
+            }
 
             return new(result);
         }

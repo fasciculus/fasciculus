@@ -1,4 +1,3 @@
-using Fasciculus.Collections;
 using Fasciculus.IO.Binary;
 using Fasciculus.Mathematics.Vectors;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ namespace Fasciculus.Mathematics.Matrices
         /// </summary>
         public SparseShortMatrix(Dictionary<uint, SparseShortVector> rows)
         {
-            this.rows = rows.Where(r => r.Value.Indices.Any()).ToDictionary();
+            this.rows = rows.Where(r => r.Value.Indices.Any()).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         /// <summary>
