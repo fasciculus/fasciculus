@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Fasciculus.Collections
+namespace Fasciculus.Mathematics.Collections
 {
     /// <summary>
     /// Immutable bit set.
@@ -137,13 +137,41 @@ namespace Fasciculus.Collections
         {
             for (int i = 0; i < na; ++i)
             {
-                if (BinarySearch.IndexOf(pb, nb, pa[i]) >= 0)
+                if (IndexOf(pb, nb, pa[i]) >= 0)
                 {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private static unsafe int IndexOf(uint* pa, int na, uint value)
+        {
+            int lo = 0;
+            int hi = na - 1;
+
+            while (lo <= hi)
+            {
+                int i = lo + ((hi - lo) >> 1);
+                uint x = pa[i];
+
+                if (x == value)
+                {
+                    return i;
+                }
+
+                if (x < value)
+                {
+                    lo = i + 1;
+                }
+                else
+                {
+                    hi = i - 1;
+                }
+            }
+
+            return -1;
         }
 
         private static unsafe bool IntersectsLinear(uint* pa, int na, uint* pb, int nb)

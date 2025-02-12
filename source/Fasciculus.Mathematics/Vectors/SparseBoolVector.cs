@@ -1,4 +1,5 @@
 using Fasciculus.Collections;
+using Fasciculus.Mathematics.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;

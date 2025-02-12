@@ -4,8 +4,9 @@
   <PropertyGroup>
     <Description>
       This package provides:
-      - Sparse vectors and sparse matrices
-      - Bit set
+      - Bit set.
+      - Sparse vectors and sparse matrices.
+      - Fixed point algorithms.
       See the README for more information.
     </Description>
   </PropertyGroup>
