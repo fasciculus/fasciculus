@@ -7,10 +7,17 @@ namespace Fasciculus.Site
 {
     public static class SiteConstants
     {
-        public static readonly string[] PackageNames = ["Fasciculus.Core", "Fasciculus.Extensions", "Fasciculus.IO"];
+        public static readonly string[] PackageNames =
+        {
+            "Fasciculus.Algorithms",
+            "Fasciculus.Core",
+            "Fasciculus.Extensions",
+            "Fasciculus.IO"
+        };
 
         public static readonly Dictionary<string, NuGetFramework[]> PackageFrameworks = new()
         {
+            { "Fasciculus.Algorithms", [NetStandard20, Net90] },
             { "Fasciculus.Core", [NetStandard20, Net90] },
             { "Fasciculus.Extensions", [NetStandard20, Net90] },
             { "Fasciculus.IO", [NetStandard20, Net90] },
