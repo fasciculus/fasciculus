@@ -32,7 +32,7 @@ namespace Fasciculus.Mathematics.Vectors
         {
             get
             {
-                int i = BinarySearchUnsafe.IndexOf(indices, index);
+                int i = BinarySearch.IndexOf(indices, index);
 
                 return i >= 0 ? values[i] : default;
             }

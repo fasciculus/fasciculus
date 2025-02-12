@@ -30,7 +30,7 @@ namespace Fasciculus.Mathematics.Collections
         /// Returns <c>true</c> if the bit set contains the given value.
         /// </summary>
         public bool this[uint value]
-            => BinarySearchUnsafe.IndexOf(entries, value) >= 0;
+            => BinarySearch.IndexOf(entries, value) >= 0;
 
         private BitSet(uint[] entries)
         {
@@ -100,7 +100,7 @@ namespace Fasciculus.Mathematics.Collections
         IEnumerator IEnumerable.GetEnumerator()
             => entries.GetEnumerator();
 
-        private static unsafe bool Intersects(ReadOnlySpan<uint> a, ReadOnlySpan<uint> b)
+        private static bool Intersects(ReadOnlySpan<uint> a, ReadOnlySpan<uint> b)
         {
             int na = a.Length;
             int nb = b.Length;
@@ -110,34 +110,31 @@ namespace Fasciculus.Mathematics.Collections
                 return false;
             }
 
-            fixed (uint* pa = a, pb = b)
+            if (a[0] > b[nb - 1])
             {
-                if (pa[0] > pb[nb - 1])
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                if (pb[0] > pa[na - 1])
-                {
-                    return false;
-                }
+            if (b[0] > a[na - 1])
+            {
+                return false;
+            }
 
-                if (na < nb)
-                {
-                    return na < nb >> 3 ? IntersectsBinary(pa, na, pb, nb) : IntersectsLinear(pa, na, pb, nb);
-                }
-                else
-                {
-                    return nb < na >> 3 ? IntersectsBinary(pb, nb, pa, na) : IntersectsLinear(pa, na, pb, nb);
-                }
+            if (na < nb)
+            {
+                return na < nb >> 3 ? IntersectsBinary(a, na, b) : IntersectsLinear(a, na, b, nb);
+            }
+            else
+            {
+                return nb < na >> 3 ? IntersectsBinary(b, nb, a) : IntersectsLinear(b, nb, a, na);
             }
         }
 
-        private static unsafe bool IntersectsBinary(uint* pa, int na, uint* pb, int nb)
+        private static bool IntersectsBinary(ReadOnlySpan<uint> a, int na, ReadOnlySpan<uint> b)
         {
             for (int i = 0; i < na; ++i)
             {
-                if (IndexOf(pb, nb, pa[i]) >= 0)
+                if (BinarySearch.IndexOf(b, a[i]) >= 0)
                 {
                     return true;
                 }
@@ -146,43 +143,15 @@ namespace Fasciculus.Mathematics.Collections
             return false;
         }
 
-        private static unsafe int IndexOf(uint* pa, int na, uint value)
-        {
-            int lo = 0;
-            int hi = na - 1;
-
-            while (lo <= hi)
-            {
-                int i = lo + ((hi - lo) >> 1);
-                uint x = pa[i];
-
-                if (x == value)
-                {
-                    return i;
-                }
-
-                if (x < value)
-                {
-                    lo = i + 1;
-                }
-                else
-                {
-                    hi = i - 1;
-                }
-            }
-
-            return -1;
-        }
-
-        private static unsafe bool IntersectsLinear(uint* pa, int na, uint* pb, int nb)
+        private static bool IntersectsLinear(ReadOnlySpan<uint> a, int na, ReadOnlySpan<uint> b, int nb)
         {
             int i = 0;
             int j = 0;
 
             while (i < na && j < nb)
             {
-                uint x = pa[i];
-                uint y = pb[j];
+                uint x = a[i];
+                uint y = b[j];
 
                 if (x == y)
                 {
@@ -204,138 +173,129 @@ namespace Fasciculus.Mathematics.Collections
             return false;
         }
 
-        private static unsafe uint[] Union(ReadOnlySpan<uint> a, ReadOnlySpan<uint> b)
+        private static uint[] Union(ReadOnlySpan<uint> a, ReadOnlySpan<uint> b)
         {
             int na = a.Length;
             int nb = b.Length;
-            Span<uint> c = stackalloc uint[na + nb];
+            uint[] c = new uint[na + nb];
             int i = 0;
             int j = 0;
             int k = 0;
 
-            fixed (uint* pa = a, pb = b)
+            while (i < na && j < nb)
             {
-                while (i < na && j < nb)
-                {
-                    uint x = pa[i];
-                    uint y = pb[j];
+                uint x = a[i];
+                uint y = b[j];
 
-                    if (x == y)
+                if (x == y)
+                {
+                    c[k++] = x;
+                    ++i;
+                    ++j;
+                }
+                else
+                {
+                    if (x < y)
                     {
                         c[k++] = x;
                         ++i;
-                        ++j;
                     }
                     else
                     {
-                        if (x < y)
-                        {
-                            c[k++] = x;
-                            ++i;
-                        }
-                        else
-                        {
-                            c[k++] = y;
-                            ++j;
-                        }
+                        c[k++] = y;
+                        ++j;
                     }
-                }
-
-                while (i < na)
-                {
-                    c[k++] = pa[i++];
-                }
-
-                while (j < nb)
-                {
-                    c[k++] = pb[j++];
                 }
             }
 
-            return c.Slice(0, k).ToArray();
+            while (i < na)
+            {
+                c[k++] = a[i++];
+            }
+
+            while (j < nb)
+            {
+                c[k++] = b[j++];
+            }
+
+            return [.. c.Take(k)];
         }
 
-        private static unsafe uint[] Difference(ReadOnlySpan<uint> a, ReadOnlySpan<uint> b)
+        private static uint[] Difference(ReadOnlySpan<uint> a, ReadOnlySpan<uint> b)
         {
             int na = a.Length;
             int nb = b.Length;
-            Span<uint> c = stackalloc uint[na];
+            uint[] c = new uint[na];
             int i = 0;
             int j = 0;
             int k = 0;
 
-            fixed (uint* pa = a, pb = b)
+            while (i < na && j < nb)
             {
-                while (i < na && j < nb)
-                {
-                    uint x = pa[i];
-                    uint y = pb[j];
+                uint x = a[i];
+                uint y = b[j];
 
-                    if (x == y)
-                    {
-                        ++i;
-                        ++j;
-                    }
-                    else
-                    {
-                        if (x < y)
-                        {
-                            c[k++] = x;
-                            ++i;
-                        }
-                        else
-                        {
-                            ++j;
-                        }
-                    }
+                if (x == y)
+                {
+                    ++i;
+                    ++j;
                 }
-
-                while (i < na)
+                else
                 {
-                    c[k++] = pa[i++];
-                }
-            }
-
-            return c.Slice(0, k).ToArray();
-        }
-
-        private static unsafe uint[] Intersection(ReadOnlySpan<uint> a, ReadOnlySpan<uint> b)
-        {
-            int na = a.Length;
-            int nb = b.Length;
-            Span<uint> c = stackalloc uint[Math.Min(na, nb)];
-            int i = 0;
-            int j = 0;
-            int k = 0;
-
-            fixed (uint* pa = a, pb = b)
-            {
-                while (i < na && j < nb)
-                {
-                    uint x = pa[i];
-                    uint y = pb[j];
-
-                    if (x == y)
+                    if (x < y)
                     {
                         c[k++] = x;
                         ++i;
-                        ++j;
                     }
                     else
                     {
-                        if (x < y)
-                        {
-                            ++i;
-                        }
-                        else
-                        {
-                            ++j;
-                        }
+                        ++j;
                     }
                 }
             }
 
-            return c.Slice(0, k).ToArray();
+            while (i < na)
+            {
+                c[k++] = a[i++];
+            }
+
+            return [.. c.Take(k)];
+        }
+
+        private static uint[] Intersection(ReadOnlySpan<uint> a, ReadOnlySpan<uint> b)
+        {
+            int na = a.Length;
+            int nb = b.Length;
+            uint[] c = new uint[Math.Min(na, nb)];
+            int i = 0;
+            int j = 0;
+            int k = 0;
+
+            while (i < na && j < nb)
+            {
+                uint x = a[i];
+                uint y = b[j];
+
+                if (x == y)
+                {
+                    c[k++] = x;
+                    ++i;
+                    ++j;
+                }
+                else
+                {
+                    if (x < y)
+                    {
+                        ++i;
+                    }
+                    else
+                    {
+                        ++j;
+                    }
+                }
+            }
+
+            return [.. c.Take(k)];
         }
     }
 }

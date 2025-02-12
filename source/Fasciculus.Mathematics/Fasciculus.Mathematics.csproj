@@ -17,6 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
+    <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
   </ItemGroup>
 
