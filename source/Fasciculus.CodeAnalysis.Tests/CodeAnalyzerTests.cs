@@ -76,17 +76,45 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Namespaces = 16,
                 Enums = 1,
                 Interfaces = 3,
-                Classes = 53,
+                Classes = 52,
 
                 Fields = 2,
                 Members = 3,
                 Events = 2,
-                Properties = 52,
+                Properties = 49,
 
                 Constructors = 34,
-                Methods = 298,
+                Methods = 282,
 
-                Summaries = 439,
+                Summaries = 419,
+            };
+
+            Test(context);
+        }
+
+        [TestMethod]
+        public void TestFasciculusIO()
+        {
+            TestContext context = new()
+            {
+                Projects = [GetProject("Fasciculus.IO")],
+                ProductionKind = SyntaxKind.None,
+
+                Packages = 1,
+                Namespaces = 2,
+                Enums = 0,
+                Interfaces = 0,
+                Classes = 2,
+
+                Fields = 0,
+                Members = 0,
+                Events = 0,
+                Properties = 3,
+
+                Constructors = 0,
+                Methods = 16,
+
+                Summaries = 21,
             };
 
             Test(context);
