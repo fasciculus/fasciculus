@@ -1,4 +1,3 @@
-using Fasciculus.Support;
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -176,7 +175,7 @@ namespace Fasciculus.IO
             {
                 if (buffer.Length < requiredLength)
                 {
-                    throw Ex.IndexOutOfRange();
+                    throw new IndexOutOfRangeException();
                 }
 
                 return buffer;
@@ -186,7 +185,7 @@ namespace Fasciculus.IO
             {
                 if (buffer.Length < requiredLength)
                 {
-                    throw Ex.IndexOutOfRange();
+                    throw new IndexOutOfRangeException();
                 }
 
                 return buffer;

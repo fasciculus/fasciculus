@@ -18,10 +18,10 @@ namespace Fasciculus.Eve.Models
                 this.distances = distances.ToArray();
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
                 : this(bin.ReadArray(() => new SparseShortMatrix(bin))) { }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteArray(distances, x => x.Write(bin));
             }
@@ -36,7 +36,7 @@ namespace Fasciculus.Eve.Models
             this.solarSystems = solarSystems;
         }
 
-        public EveNavigation(Binary bin, EveSolarSystems solarSystems)
+        public EveNavigation(BinaryRW bin, EveSolarSystems solarSystems)
             : this(new Data(bin), solarSystems) { }
 
         public IEnumerable<EveSolarSystem> AtDistance(EveSolarSystem origin, int distance, EveSecurity.Level security)

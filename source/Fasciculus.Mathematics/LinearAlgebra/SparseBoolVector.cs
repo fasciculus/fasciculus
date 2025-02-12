@@ -52,13 +52,13 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// <summary>
         /// Initializes a vector from the given binary data.
         /// </summary>
-        public SparseBoolVector(Binary bin)
+        public SparseBoolVector(BinaryRW bin)
             : this(new BitSet(bin)) { }
 
         /// <summary>
         /// Writes the vector to the given binary data.
         /// </summary>
-        public void Write(Binary bin)
+        public void Write(BinaryRW bin)
             => entries.Write(bin);
 
         /// <summary>

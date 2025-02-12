@@ -19,12 +19,12 @@ namespace Fasciculus.Eve.Models
                 this.indices = new(indices);
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 indices = bin.ReadDictionary(bin.ReadUInt, bin.ReadDouble);
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteDictionary(indices, bin.WriteUInt, bin.WriteDouble);
             }
@@ -61,13 +61,13 @@ namespace Fasciculus.Eve.Models
                 Quantity = quantity;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Type = bin.ReadInt();
                 Quantity = bin.ReadInt();
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Type);
                 bin.WriteInt(Quantity);
@@ -112,7 +112,7 @@ namespace Fasciculus.Eve.Models
                 this.skills = skills.ToArray();
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Time = bin.ReadInt();
 
@@ -121,7 +121,7 @@ namespace Fasciculus.Eve.Models
                 skills = bin.ReadArray(() => new EveSkill.Data(bin));
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Time);
 
@@ -171,14 +171,14 @@ namespace Fasciculus.Eve.Models
                 Manufacturing = manufacturing;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Id = bin.ReadInt();
                 MaxRuns = bin.ReadInt();
                 Manufacturing = new EveManufacturing.Data(bin);
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Id);
                 bin.WriteInt(MaxRuns);

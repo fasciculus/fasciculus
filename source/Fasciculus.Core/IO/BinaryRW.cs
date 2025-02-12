@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Fasciculus.Support;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace Fasciculus.IO
     /// <summary>
     /// Read and write binary data from or to a stream.
     /// </summary>
-    public class Binary
+    public class BinaryRW
     {
         private readonly Stream stream;
 
@@ -20,15 +20,15 @@ namespace Fasciculus.IO
         /// <summary>
         /// Initializes a binary reader/writer with the given <paramref name="stream"/>
         /// </summary>
-        public Binary(Stream stream)
+        public BinaryRW(Stream stream)
         {
             this.stream = stream;
         }
 
         /// <summary>
-        /// Implicit creation of a <see cref="Binary"/> from a <see cref="Stream"/>
+        /// Implicit creation of a <see cref="BinaryRW"/> from a <see cref="Stream"/>
         /// </summary>
-        public static implicit operator Binary(Stream stream)
+        public static implicit operator BinaryRW(Stream stream)
             => new(stream);
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace Fasciculus.Core.Tests.IO
         public void Test()
         {
             using MemoryStream output = new MemoryStream();
-            Binary binary = output;
+            BinaryRW binary = output;
 
             binary.WriteSByte(-2);
             binary.WriteShort(2);

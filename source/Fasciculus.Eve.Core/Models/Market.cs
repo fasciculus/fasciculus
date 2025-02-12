@@ -21,14 +21,14 @@ namespace Fasciculus.Eve.Models
                 AdjustedPrice = adjustedPrice;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 TypeId = bin.ReadInt();
                 AveragePrice = bin.ReadDouble();
                 AdjustedPrice = bin.ReadDouble();
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(TypeId);
                 bin.WriteDouble(AveragePrice);
@@ -67,12 +67,12 @@ namespace Fasciculus.Eve.Models
                 this.prices = prices.ToArray();
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 prices = bin.ReadArray(() => new EveMarketPrice.Data(bin));
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteArray(prices, x => x.Write(bin));
             }
@@ -117,7 +117,7 @@ namespace Fasciculus.Eve.Models
                 Quantity = quantity;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Type = bin.ReadInt();
                 Location = bin.ReadLong();
@@ -125,7 +125,7 @@ namespace Fasciculus.Eve.Models
                 Quantity = bin.ReadInt();
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Type);
                 bin.WriteLong(Location);
@@ -209,12 +209,12 @@ namespace Fasciculus.Eve.Models
                 this.orders = orders.ToArray();
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 orders = bin.ReadArray(() => new EveMarketOrder.Data(bin));
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteArray(orders, x => x.Write(bin));
             }

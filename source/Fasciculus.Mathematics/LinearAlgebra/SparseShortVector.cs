@@ -52,7 +52,7 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// <summary>
         /// Initializes a vector from the given binary data.
         /// </summary>
-        public SparseShortVector(Binary bin)
+        public SparseShortVector(BinaryRW bin)
         {
             indices = bin.ReadUIntArray();
             values = bin.ReadShortArray();
@@ -61,7 +61,7 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// <summary>
         /// Writes the vector to the given binary data.
         /// </summary>
-        public void Write(Binary bin)
+        public void Write(BinaryRW bin)
         {
             bin.WriteUIntArray(indices);
             bin.WriteShortArray(values);

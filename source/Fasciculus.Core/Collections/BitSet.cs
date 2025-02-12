@@ -51,13 +51,13 @@ namespace Fasciculus.Collections
         /// <summary>
         /// Initializes new bit set from the given binary data.
         /// </summary>
-        public BitSet(Binary bin)
+        public BitSet(BinaryRW bin)
             : this(bin.ReadUIntArray()) { }
 
         /// <summary>
         /// Writes the vector to the given binary data.
         /// </summary>
-        public void Write(Binary bin)
+        public void Write(BinaryRW bin)
             => bin.WriteUIntArray(entries);
 
         /// <summary>

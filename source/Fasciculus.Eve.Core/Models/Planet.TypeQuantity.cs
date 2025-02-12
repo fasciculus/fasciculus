@@ -17,13 +17,13 @@ namespace Fasciculus.Eve.Models
                 Quantity = quantity;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Type = bin.ReadInt();
                 Quantity = bin.ReadInt();
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Type);
                 bin.WriteInt(Quantity);

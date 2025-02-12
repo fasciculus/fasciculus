@@ -29,13 +29,13 @@ namespace Fasciculus.Mathematics.LinearAlgebra
         /// <summary>
         /// Initializes new matrix from the given binary data.
         /// </summary>
-        public SparseBoolMatrix(Binary bin)
+        public SparseBoolMatrix(BinaryRW bin)
             : this(bin.ReadDictionary(bin.ReadUInt, () => new SparseBoolVector(bin))) { }
 
         /// <summary>
         /// Writes the matrix to the given binary data.
         /// </summary>
-        public void Write(Binary bin)
+        public void Write(BinaryRW bin)
         {
             bin.WriteDictionary(rows, bin.WriteUInt, v => { v.Write(bin); });
         }

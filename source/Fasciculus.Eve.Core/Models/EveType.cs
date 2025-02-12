@@ -27,7 +27,7 @@ namespace Fasciculus.Eve.Models
                 MarketGroupId = marketGroupId;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Id = bin.ReadInt();
                 Name = bin.ReadString();
@@ -36,7 +36,7 @@ namespace Fasciculus.Eve.Models
                 MarketGroupId = bin.ReadInt();
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Id);
                 bin.WriteString(Name);

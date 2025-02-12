@@ -31,7 +31,7 @@ namespace Fasciculus.Eve.Models
                 Output = output;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Id = bin.ReadInt();
                 Name = bin.ReadString();
@@ -40,7 +40,7 @@ namespace Fasciculus.Eve.Models
                 Output = new EvePlanetTypeQuantity.Data(bin);
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Id);
                 bin.WriteString(Name);

@@ -29,14 +29,14 @@ namespace Fasciculus.Eve.Models
             public Data(Data data)
                 : this(data.MaxDistance, data.MaxVolumePerType, data.MaxIskPerType) { }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 MaxDistance = bin.ReadInt();
                 MaxVolumePerType = bin.ReadInt();
                 MaxIskPerType = bin.ReadInt();
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(MaxDistance);
                 bin.WriteInt(MaxVolumePerType);
@@ -81,10 +81,10 @@ namespace Fasciculus.Eve.Models
         public EveTradeOptions(EveTradeOptions options)
             : this(options.data, options.stations) { }
 
-        public EveTradeOptions(Binary bin, EveStations stations)
+        public EveTradeOptions(BinaryRW bin, EveStations stations)
             : this(new Data(bin), stations) { }
 
-        public void Write(Binary bin)
+        public void Write(BinaryRW bin)
         {
             data.Write(bin);
         }

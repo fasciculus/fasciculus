@@ -24,14 +24,14 @@ namespace Fasciculus.Eve.Models
                 ParentId = parentId;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Id = bin.ReadInt();
                 Name = bin.ReadString();
                 ParentId = bin.ReadInt();
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Id);
                 bin.WriteString(Name);
@@ -98,13 +98,13 @@ namespace Fasciculus.Eve.Models
                 Name = name;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Id = bin.ReadInt();
                 Name = bin.ReadString();
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Id);
                 bin.WriteString(Name);
@@ -156,13 +156,13 @@ namespace Fasciculus.Eve.Models
                 Name = name;
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Id = bin.ReadInt();
                 Name = bin.ReadString();
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteInt(Id);
                 bin.WriteString(Name);
@@ -237,7 +237,7 @@ namespace Fasciculus.Eve.Models
                 this.blueprints = blueprints.ToArray();
             }
 
-            public Data(Binary bin)
+            public Data(BinaryRW bin)
             {
                 Version = bin.ReadDateTime();
                 marketGroups = bin.ReadArray(() => new EveMarketGroup.Data(bin));
@@ -248,7 +248,7 @@ namespace Fasciculus.Eve.Models
                 blueprints = bin.ReadArray(() => new EveBlueprint.Data(bin));
             }
 
-            public void Write(Binary bin)
+            public void Write(BinaryRW bin)
             {
                 bin.WriteDateTime(Version);
                 bin.WriteArray(marketGroups, x => x.Write(bin));
@@ -282,10 +282,10 @@ namespace Fasciculus.Eve.Models
             Blueprints = new(data.Blueprints.Select(x => new EveBlueprint(x, Types)));
         }
 
-        public EveData(Binary bin)
+        public EveData(BinaryRW bin)
             : this(new Data(bin)) { }
 
-        public void Write(Binary bin)
+        public void Write(BinaryRW bin)
         {
             data.Write(bin);
         }
