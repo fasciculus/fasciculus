@@ -3,6 +3,7 @@
   <PropertyGroup>
     <Description>
       This package provides:
+      - binary I/O
       See the README for more information.
     </Description>
   </PropertyGroup>
