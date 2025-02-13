@@ -90,9 +90,9 @@ namespace Fasciculus.CodeAnalysis.Debugging
 
             Add(SyntaxKind.ParameterList, [SyntaxKind.Parameter]);
 
-            Add(SyntaxKind.PropertyDeclaration, [SyntaxKind.AccessorList, SyntaxKind.ArrowExpressionClause, SyntaxKind.AttributeList,
-                SyntaxKind.EqualsValueClause, SyntaxKind.ExplicitInterfaceSpecifier, SyntaxKind.GenericName, SyntaxKind.IdentifierName,
-                SyntaxKind.NullableType, SyntaxKind.PredefinedType]);
+            Add(SyntaxKind.PropertyDeclaration, [SyntaxKind.AccessorList, SyntaxKind.ArrayType, SyntaxKind.ArrowExpressionClause,
+                SyntaxKind.AttributeList, SyntaxKind.EqualsValueClause, SyntaxKind.ExplicitInterfaceSpecifier, SyntaxKind.GenericName,
+                SyntaxKind.IdentifierName, SyntaxKind.NullableType, SyntaxKind.PredefinedType]);
 
             Add(SyntaxKind.QualifiedName, [SyntaxKind.AliasQualifiedName, SyntaxKind.IdentifierName, SyntaxKind.QualifiedName]);
 

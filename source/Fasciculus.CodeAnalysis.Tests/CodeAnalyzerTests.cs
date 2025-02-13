@@ -76,17 +76,17 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Namespaces = 1,
                 Enums = 0,
                 Interfaces = 0,
-                Classes = 4,
+                Classes = 6,
 
                 Fields = 0,
                 Members = 0,
                 Events = 0,
-                Properties = 2,
+                Properties = 4,
 
-                Constructors = 0,
-                Methods = 11,
+                Constructors = 1,
+                Methods = 13,
 
-                Summaries = 17,
+                Summaries = 24,
             };
 
             Test(context);
