@@ -234,7 +234,7 @@ namespace Fasciculus.IO
 
             byte[] existing = file.ReadAllBytes();
 
-            return !Equality.AreEqual(existing, bytes);
+            return !ByteArrayEqualityComparer.AreEqual(existing, bytes);
         }
 
         /// <summary>

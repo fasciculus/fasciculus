@@ -26,7 +26,7 @@ namespace Fasciculus.Algorithms
         /// <summary>
         /// Compares the given byte arrays.
         /// </summary>
-        public static int Compare(Span<byte> a, Span<byte> b)
+        public static int Compare(ReadOnlySpan<byte> a, ReadOnlySpan<byte> b)
         {
             int na = a.Length;
             int nb = b.Length;

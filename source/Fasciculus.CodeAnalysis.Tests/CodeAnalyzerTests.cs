@@ -70,7 +70,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             TestContext context = new()
             {
                 Projects = [GetProject("Fasciculus.Algorithms")],
-                ProductionKind = SyntaxKind.None,
+                ProductionKind = SyntaxKind.Parameter,
 
                 Packages = 1,
                 Namespaces = 1,
@@ -81,12 +81,12 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Fields = 0,
                 Members = 0,
                 Events = 0,
-                Properties = 1,
+                Properties = 2,
 
                 Constructors = 0,
-                Methods = 9,
+                Methods = 11,
 
-                Summaries = 14,
+                Summaries = 17,
             };
 
             Test(context);

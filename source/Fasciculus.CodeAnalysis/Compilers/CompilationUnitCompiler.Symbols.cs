@@ -210,6 +210,8 @@ namespace Fasciculus.CodeAnalysis.Compilers
             // | ArrayType
             // | PointerType
             // | NullableType EqualsValueClause?
+            //
+            // may be preceeded with AttributeList
 
             NodeDebugger.Add(node);
 

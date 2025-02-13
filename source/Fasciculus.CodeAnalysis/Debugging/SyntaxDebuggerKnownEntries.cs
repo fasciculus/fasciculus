@@ -85,8 +85,8 @@ namespace Fasciculus.CodeAnalysis.Debugging
             Add(SyntaxKind.OperatorDeclaration, [SyntaxKind.ArrowExpressionClause, SyntaxKind.AttributeList, SyntaxKind.IdentifierName,
                 SyntaxKind.ParameterList, SyntaxKind.PredefinedType]);
 
-            Add(SyntaxKind.Parameter, [SyntaxKind.ArrayType, SyntaxKind.EqualsValueClause, SyntaxKind.GenericName, SyntaxKind.IdentifierName,
-                SyntaxKind.NullableType, SyntaxKind.PointerType, SyntaxKind.PredefinedType]);
+            Add(SyntaxKind.Parameter, [SyntaxKind.ArrayType, SyntaxKind.AttributeList, SyntaxKind.EqualsValueClause, SyntaxKind.GenericName,
+                SyntaxKind.IdentifierName, SyntaxKind.NullableType, SyntaxKind.PointerType, SyntaxKind.PredefinedType]);
 
             Add(SyntaxKind.ParameterList, [SyntaxKind.Parameter]);
 

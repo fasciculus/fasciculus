@@ -1,4 +1,4 @@
-﻿using Fasciculus.Algorithms;
+using Fasciculus.Algorithms;
 using Fasciculus.IO;
 using Fasciculus.IO.Compressing;
 
@@ -52,7 +52,7 @@ namespace Fasciculus.Eve.Assets.Services
             {
                 byte[] existing = Read(destination, compress);
 
-                result = !Equality.AreEqual(source, existing);
+                result = !ByteArrayEqualityComparer.AreEqual(source, existing);
             }
 
             return result;
