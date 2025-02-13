@@ -1,6 +1,6 @@
-using Fasciculus.Interop;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using static System.Environment;
 
 namespace Fasciculus.IO
@@ -35,7 +35,7 @@ namespace Fasciculus.IO
         /// Shorthand for <c>Environment.GetFolderPath(SpecialFolder.Personal) on otherwise</c>.
         /// </para>
         /// </summary>
-        public static string Documents => GetFolderPath(OS.IsWindows ? SpecialFolder.MyDocuments : SpecialFolder.Personal);
+        public static string Documents => GetFolderPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? SpecialFolder.MyDocuments : SpecialFolder.Personal);
 
         /// <summary>
         /// Downloads directory.
@@ -46,7 +46,7 @@ namespace Fasciculus.IO
         /// <c><see cref="Home"/></c> otherwise
         /// </para>
         /// </summary>
-        public static string Downloads => OS.IsWindows ? Path.Combine(Home, "Downloads") : Home;
+        public static string Downloads => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Path.Combine(Home, "Downloads") : Home;
 
         /// <summary>
         /// Program files.
