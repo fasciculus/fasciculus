@@ -16,6 +16,7 @@
     <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
     <ProjectReference Include="../Fasciculus.Mathematics/Fasciculus.Mathematics.csproj" />
     <ProjectReference Include="../Fasciculus.Maui/Fasciculus.Maui.csproj" />
+    <ProjectReference Include="../Fasciculus.Text/Fasciculus.Text.csproj" />
   </ItemGroup>
 
   <ItemGroup>

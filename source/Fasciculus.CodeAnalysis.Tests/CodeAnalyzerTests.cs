@@ -101,10 +101,10 @@ namespace Fasciculus.CodeAnalysis.Tests
                 ProductionKind = SyntaxKind.OperatorDeclaration, // SyntaxKind.None,
 
                 Packages = 1,
-                Namespaces = 13,
+                Namespaces = 12,
                 Enums = 0,
                 Interfaces = 3,
-                Classes = 40,
+                Classes = 39,
 
                 Fields = 2,
                 Members = 0,
@@ -112,9 +112,37 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Properties = 32,
 
                 Constructors = 30,
-                Methods = 133,
+                Methods = 132,
 
-                Summaries = 237,
+                Summaries = 235,
+            };
+
+            Test(context);
+        }
+
+        [TestMethod]
+        public void TestFasciculusExtensions()
+        {
+            TestContext context = new()
+            {
+                Projects = [GetProject("Fasciculus.Extensions")],
+                ProductionKind = SyntaxKind.None,
+
+                Packages = 1,
+                Namespaces = 2,
+                Enums = 0,
+                Interfaces = 0,
+                Classes = 4,
+
+                Fields = 0,
+                Members = 0,
+                Events = 0,
+                Properties = 2,
+
+                Constructors = 2,
+                Methods = 7,
+
+                Summaries = 13,
             };
 
             Test(context);
@@ -149,28 +177,28 @@ namespace Fasciculus.CodeAnalysis.Tests
         }
 
         [TestMethod]
-        public void TestFasciculusExtensions()
+        public void TestFasciculusText()
         {
             TestContext context = new()
             {
-                Projects = [GetProject("Fasciculus.Extensions")],
+                Projects = [GetProject("Fasciculus.Text")],
                 ProductionKind = SyntaxKind.None,
 
                 Packages = 1,
-                Namespaces = 2,
+                Namespaces = 1,
                 Enums = 0,
                 Interfaces = 0,
-                Classes = 4,
+                Classes = 1,
 
                 Fields = 0,
                 Members = 0,
                 Events = 0,
-                Properties = 2,
+                Properties = 0,
 
-                Constructors = 2,
-                Methods = 7,
+                Constructors = 0,
+                Methods = 1,
 
-                Summaries = 13,
+                Summaries = 2,
             };
 
             Test(context);
