@@ -1,4 +1,4 @@
-using Fasciculus.Support;
+using System;
 using System.IO;
 using System.Text;
 
@@ -21,7 +21,7 @@ namespace Fasciculus.IO
 
             if (count > int.MaxValue)
             {
-                throw Ex.InvalidOperation("stream too big");
+                throw new InvalidOperationException("stream too big");
             }
 
             byte[] result = new byte[count];
