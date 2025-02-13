@@ -104,7 +104,7 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Namespaces = 14,
                 Enums = 0,
                 Interfaces = 3,
-                Classes = 42,
+                Classes = 41,
 
                 Fields = 2,
                 Members = 0,
@@ -112,9 +112,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Properties = 32,
 
                 Constructors = 30,
-                Methods = 139,
+                Methods = 138,
 
-                Summaries = 245,
+                Summaries = 243,
             };
 
             Test(context);
@@ -132,7 +132,7 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Namespaces = 2,
                 Enums = 1,
                 Interfaces = 0,
-                Classes = 6,
+                Classes = 7,
 
                 Fields = 0,
                 Members = 3,
@@ -140,9 +140,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Properties = 17,
 
                 Constructors = 0,
-                Methods = 151,
+                Methods = 152,
 
-                Summaries = 178,
+                Summaries = 180,
             };
 
             Test(context);
