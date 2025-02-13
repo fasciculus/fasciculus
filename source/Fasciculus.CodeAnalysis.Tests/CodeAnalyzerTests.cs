@@ -102,19 +102,19 @@ namespace Fasciculus.CodeAnalysis.Tests
 
                 Packages = 1,
                 Namespaces = 14,
-                Enums = 1,
+                Enums = 0,
                 Interfaces = 3,
                 Classes = 44,
 
                 Fields = 2,
-                Members = 3,
+                Members = 0,
                 Events = 2,
                 Properties = 32,
 
                 Constructors = 30,
                 Methods = 164,
 
-                Summaries = 276,
+                Summaries = 272,
             };
 
             Test(context);
@@ -130,19 +130,19 @@ namespace Fasciculus.CodeAnalysis.Tests
 
                 Packages = 1,
                 Namespaces = 2,
-                Enums = 0,
+                Enums = 1,
                 Interfaces = 0,
                 Classes = 4,
 
                 Fields = 0,
-                Members = 0,
+                Members = 3,
                 Events = 0,
                 Properties = 17,
 
                 Constructors = 0,
                 Methods = 126,
 
-                Summaries = 147,
+                Summaries = 151,
             };
 
             Test(context);
