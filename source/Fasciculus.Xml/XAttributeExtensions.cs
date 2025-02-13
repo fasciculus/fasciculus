@@ -61,59 +61,58 @@ namespace Fasciculus.Xml
 
         public static string[] ToStrings(this XAttribute? attribute)
         {
-            return (attribute?.Value ?? string.Empty)
+            return [.. (attribute?.Value ?? string.Empty)
                 .Split([' '])
                 .Where(s => !string.IsNullOrEmpty(s))
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .ToArray();
+                .Where(s => !string.IsNullOrWhiteSpace(s))];
         }
 
         public static bool[] ToBools(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToBool(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToBool(s))];
 
         public static byte[] ToBytes(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToByte(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToByte(s))];
 
         public static DateTime[] ToDateTimes(this XAttribute? attribute, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.Utc)
-            => attribute.ToStrings().Select(s => XConvert.ToDateTime(s, null, mode)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToDateTime(s, null, mode))];
 
         public static DateTimeOffset[] ToDateTimeOffsets(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToDateTimeOffset(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToDateTimeOffset(s))];
 
         public static decimal[] ToDecimals(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToDecimal(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToDecimal(s))];
 
         public static double[] ToDoubles(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToDouble(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToDouble(s))];
 
         public static Guid[] ToGuids(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToGuid(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToGuid(s))];
 
         public static short[] ToInt16s(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToInt16(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToInt16(s))];
 
         public static int[] ToInt32s(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToInt32(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToInt32(s))];
 
         public static long[] ToInt64s(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToInt64(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToInt64(s))];
 
         public static sbyte[] ToSBytes(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToSByte(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToSByte(s))];
 
         public static float[] ToSingles(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToSingle(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToSingle(s))];
 
         public static TimeSpan[] ToTimeSpans(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToTimeSpan(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToTimeSpan(s))];
 
         public static ushort[] ToUInt16s(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToUInt16(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToUInt16(s))];
 
         public static uint[] ToUInt32s(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToUInt32(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToUInt32(s))];
 
         public static ulong[] ToUInt64s(this XAttribute? attribute)
-            => attribute.ToStrings().Select(s => XConvert.ToUInt64(s)).ToArray();
+            => [.. attribute.ToStrings().Select(s => XConvert.ToUInt64(s))];
     }
 }
