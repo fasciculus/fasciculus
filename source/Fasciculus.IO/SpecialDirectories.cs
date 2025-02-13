@@ -1,14 +1,11 @@
-using System;
 using System.IO;
-using System.Runtime.InteropServices;
-using static System.Environment;
 
 namespace Fasciculus.IO
 {
     /// <summary>
-    /// Special paths.
+    /// Special directories.
     /// </summary>
-    public static class SpecialPaths
+    public static class SpecialDirectories
     {
         /// <summary>
         /// Home directory.
@@ -16,8 +13,7 @@ namespace Fasciculus.IO
         /// Shorthand for <c>Environment.GetFolderPath(SpecialFolder.UserProfile)</c>.
         /// </para>
         /// </summary>
-        public static string Home
-            => GetFolderPath(SpecialFolder.UserProfile);
+        public static DirectoryInfo Home => new(SpecialPaths.Home);
 
         /// <summary>
         /// Personal directory.
@@ -25,8 +21,7 @@ namespace Fasciculus.IO
         /// Shorthand for <c>Environment.GetFolderPath(SpecialFolder.Personal)</c>.
         /// </para>
         /// </summary>
-        public static string Personal
-            => GetFolderPath(SpecialFolder.Personal);
+        public static DirectoryInfo Personal => new(SpecialPaths.Personal);
 
         /// <summary>
         /// Documents directory.
@@ -37,8 +32,7 @@ namespace Fasciculus.IO
         /// Shorthand for <c>Environment.GetFolderPath(SpecialFolder.Personal) on otherwise</c>.
         /// </para>
         /// </summary>
-        public static string Documents
-            => GetFolderPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? SpecialFolder.MyDocuments : SpecialFolder.Personal);
+        public static DirectoryInfo Documents => new(SpecialPaths.Documents);
 
         /// <summary>
         /// Downloads directory.
@@ -49,8 +43,7 @@ namespace Fasciculus.IO
         /// <c><see cref="Home"/></c> otherwise
         /// </para>
         /// </summary>
-        public static string Downloads
-            => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Path.Combine(Home, "Downloads") : Home;
+        public static DirectoryInfo Downloads => new(SpecialPaths.Downloads);
 
         /// <summary>
         /// Program files.
@@ -58,8 +51,7 @@ namespace Fasciculus.IO
         /// Shorthand for <c>Environment.GetFolderPath(SpecialFolder.ProgramFiles)</c>.
         /// </para>
         /// </summary>
-        public static string ProgramFiles
-            => GetFolderPath(SpecialFolder.ProgramFiles);
+        public static DirectoryInfo ProgramFiles => new(SpecialPaths.ProgramFiles);
 
         /// <summary>
         /// Application base directory.
@@ -67,8 +59,7 @@ namespace Fasciculus.IO
         /// Shorthand for <c>AppDomain.CurrentDomain.BaseDirectory</c>
         /// </para>
         /// </summary>
-        public static string BaseDirectory
-            => AppDomain.CurrentDomain.BaseDirectory;
+        public static DirectoryInfo BaseDirectory => new(SpecialPaths.BaseDirectory);
 
         /// <summary>
         /// Working directory.
@@ -76,7 +67,6 @@ namespace Fasciculus.IO
         /// Shorthand for <c>Environment.CurrentDirectory</c>
         /// </para>
         /// </summary>
-        public static string WorkingDirectory
-            => CurrentDirectory;
+        public static DirectoryInfo WorkingDirectory => new(SpecialPaths.WorkingDirectory);
     }
 }
