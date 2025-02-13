@@ -5,4 +5,12 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <PackageReference Include="System.Memory" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
+  </ItemGroup>
+
 </Project>
