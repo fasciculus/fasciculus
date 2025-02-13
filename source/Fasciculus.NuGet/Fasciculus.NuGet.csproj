@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
+    <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
   </ItemGroup>
 
 </Project>

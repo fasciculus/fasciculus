@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.CodeAnalysis/Fasciculus.CodeAnalysis.csproj" />
+    <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
     <ProjectReference Include="../Fasciculus.Testing/Fasciculus.Testing.csproj" />
   </ItemGroup>
 
