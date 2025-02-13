@@ -1,4 +1,3 @@
-using Fasciculus.Net.Navigating;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +14,7 @@ namespace Fasciculus.IO
         /// Returns the relative path from the <paramref name="origin"/> to the <paramref name="target"/>
         /// prepending the optionally <paramref name="prefix"/>.
         /// </summary>
-        public static UriPath RelativeTo(this FileSystemInfo origin, FileSystemInfo target, IEnumerable<string>? prefix = null)
+        public static string[] RelativeTo(this FileSystemInfo origin, FileSystemInfo target, IEnumerable<string>? prefix = null)
         {
             Uri originUri = new(origin.FullName);
             Uri targetUri = new(target.FullName);
@@ -25,7 +24,7 @@ namespace Fasciculus.IO
 
             prefix ??= [];
 
-            return new(prefix.Concat(result));
+            return [.. prefix.Concat(result)];
         }
     }
 }

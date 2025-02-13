@@ -38,7 +38,7 @@ namespace Fasciculus.Core.Tests.IO
             FileInfo file = directory.Combine("IO").File("RelativeTests.cs");
 
             UriPath expected = new("IO", "RelativeTests.cs");
-            UriPath actual = file.RelativeTo(directory);
+            UriPath actual = new(file.RelativeTo(directory));
 
             Assert.AreEqual(expected, actual);
         }

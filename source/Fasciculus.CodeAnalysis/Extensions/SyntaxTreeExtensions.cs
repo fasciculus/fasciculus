@@ -12,7 +12,7 @@ namespace Fasciculus.CodeAnalysis.Extensions
             => new(syntaxTree.FilePath);
 
         public static UriPath GetSource(this SyntaxTree syntaxTree, DirectoryInfo projectDirectory)
-            => syntaxTree.GetFile().RelativeTo(projectDirectory);
+            => new(syntaxTree.GetFile().RelativeTo(projectDirectory));
 
         /// <summary>
         /// Determines whether the given <paramref name="syntaxTree"/> is generated.
