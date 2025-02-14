@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="Properties/Description.props" />
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageType></PackageType>
+    <PackageIcon>fasciculus.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Build/Fasciculus.NetStandard.props" Pack="true" PackagePath="/build" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <SourcePackagePath>contentFiles/cs/netstandard2.0/Fasciculus.NetStandard</SourcePackagePath>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="Attributes/DisallowNullAttribute.cs" Pack="true" PackagePath="$(SourcePackagePath)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Attributes/DisallowNullAttribute.cs" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <IncludeSymbols>false</IncludeSymbols>
+    <NuspecFile>obj/Debug/Fasciculus.NetStandard.nuspec</NuspecFile>
+  </PropertyGroup>
+
+  <Target Name="CreateCustomNuSpec" BeforeTargets="Compile">
+    
+  </Target>
+
+  <Target Name="FixNuspec">
+    <Message Importance="high" Text="Fixing NuSpec: $(GenerateNuspecDependsOn)" />
+    <Message Importance="high" Text="_PackageFiles: @(_PackageFiles)" />
+    <Message Importance="high" Text="IncludeContentInPack: $(IncludeContentInPack)" />
+  </Target>
+
+</Project>
