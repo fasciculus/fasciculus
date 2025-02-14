@@ -6,14 +6,14 @@ Summary: "Where creating fuzzy strings blow into my face."
 ---
 # The Fuzzy String Desaster
 
-!frontmatter{Author, Published}
-
 ... or where creating fuzzy strings blow into my face.
+
+!frontmatter{Author, Published}
 
 ## Motivation
 
 While researching possibilities to create a future search engine or auto-completion feature, I
-stumbled over fuzzyness of strings.
+stumbled over fuzzyness of strings. This could be interesting for search engines or auto-completion.
 
 ## Edit Distance
 
