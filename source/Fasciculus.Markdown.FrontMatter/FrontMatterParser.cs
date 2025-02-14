@@ -7,7 +7,7 @@ namespace Fasciculus.Markdown.FrontMatter
     public class FrontMatterParser : BlockParser
     {
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
-        public static readonly Regex FrontMatterRegex = new(@"^!frontmatter\{([^}]+)\}\s*$");
+        public static readonly Regex FrontMatterRegex = new(@"^!frontmatter\{([^}]+)\}\s*$", RegexOptions.Compiled);
 #pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
         public FrontMatterParser()
