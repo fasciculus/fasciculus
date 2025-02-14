@@ -39,8 +39,4 @@
     <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Text\" />
-  </ItemGroup>
-
 </Project>
