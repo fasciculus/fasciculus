@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.NetStandard/Fasciculus.NetStandard.csproj" />
+    <Compile Include="../Fasciculus.NetStandard/*.cs" Visible="false" />
   </ItemGroup>
-
-  <Import Project="../Fasciculus.NetStandard/build/Fasciculus.NetStandard.props"/>
 
 </Project>
