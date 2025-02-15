@@ -92,4 +92,12 @@ Besides all the properties you usually set to create a package (`Deterministic`,
 </PropertyGroup>
 ```
 
+In addition, the following property should be set to not propagate the dependency to the project.
+
+```xml
+<PropertyGroup>
+  <DevelopmentDependency>true</DevelopmentDependency>
+</PropertyGroup>
+```
+
 And voilà, the project gets packed.
