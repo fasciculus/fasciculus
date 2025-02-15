@@ -5,8 +5,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <PackageReference Include="System.Memory" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Compile Include="../Fasciculus.NetStandard/*.cs" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
