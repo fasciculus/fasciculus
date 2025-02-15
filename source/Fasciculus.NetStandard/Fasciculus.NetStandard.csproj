@@ -12,6 +12,7 @@
     <PackageIcon>fasciculus.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <IncludeSymbols>false</IncludeSymbols>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
@@ -21,19 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Build/Fasciculus.NetStandard.props" Pack="true" PackagePath="/build" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <SourcePackagePath>contentFiles/cs/netstandard2.0/Fasciculus.NetStandard</SourcePackagePath>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <None Include="Attributes/DisallowNullAttribute.cs" Pack="true" PackagePath="$(SourcePackagePath)" />
+    <Content Include="DisallowNullAttribute.cs" />
   </ItemGroup>
   
-  <ItemGroup>
-    <Compile Remove="Attributes/DisallowNullAttribute.cs" />
-  </ItemGroup>
-
 </Project>

@@ -3,6 +3,8 @@
 
   <PropertyGroup>
     <Description>
+      Source code files for:
+      - DisallowNullAttribute
       See the README for more information.
     </Description>
   </PropertyGroup>
