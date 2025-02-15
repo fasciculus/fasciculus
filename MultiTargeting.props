@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <ItemGroup Condition="'$(_FasciculusTargetPlatformIsWindows)' != 'true'">
+  <ItemGroup Condition="'$(TargetPlatformIsWindows)' != 'true'">
     <Compile Remove="**/*.windows.cs" />
     <None Include="**/*.windows.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != '$(FasciculusDotNetTfm)' AND !$(TargetFramework.StartsWith('netstandard'))">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net9.0' AND !$(TargetFramework.StartsWith('netstandard'))">
     <Compile Remove="**/*.netstandard.cs" />
     <None Include="**/*.netstandard.cs" />
   </ItemGroup>

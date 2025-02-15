@@ -24,8 +24,6 @@
     <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
   </ItemGroup>
 
-  <Import Project="../../MultiTargeting.props" />
-
   <!--
   <Target Name="DisableWinRTSourceGenerator" BeforeTargets="CoreCompile">
     <ItemGroup>

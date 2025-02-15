@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFrameworks>$(FasciculusDotNetTfm)</TargetFrameworks>
+    <TargetFrameworks>net9.0</TargetFrameworks>
     <RootNamespace>Fasciculus.Site</RootNamespace>
   </PropertyGroup>
 

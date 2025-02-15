@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>$(FasciculusDotNetTfm)</TargetFrameworks>
+    <TargetFrameworks>net9.0</TargetFrameworks>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 

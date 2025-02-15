@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+  
+  <!-- Build Control Settings -->
 
-    <!-- Directories -->
+  <PropertyGroup>
+    <TargetPlatformIsWindows>false</TargetPlatformIsWindows>
+    <TargetPlatformIsWindows Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'Windows'">true</TargetPlatformIsWindows>
+  </PropertyGroup>
+
+  <!-- Directories -->
 
   <PropertyGroup>
     <FasciculusRootDirectory>$(MSBuildThisFileDirectory)</FasciculusRootDirectory>
     <FasciculusRepositoryDirectory>$([System.IO.Path]::Combine($(FasciculusRootDirectory), '.repository'))</FasciculusRepositoryDirectory>
     <FasciculusPackagesDirectory>$([System.IO.Path]::Combine($(FasciculusRepositoryDirectory), 'packages'))</FasciculusPackagesDirectory>
+    <FasciculusInstalledPackagesDirectory>$([System.IO.Path]::Combine($(FasciculusPackagesDirectory), 'installed'))</FasciculusInstalledPackagesDirectory>
     <FasciculusModulesDirectory>$([System.IO.Path]::Combine($(FasciculusRepositoryDirectory), 'node_modules'))</FasciculusModulesDirectory>
-   <FasciculusInstalledPackagesDirectory>$([System.IO.Path]::Combine($(FasciculusPackagesDirectory), 'installed'))</FasciculusInstalledPackagesDirectory>
   </PropertyGroup>
   
   <!-- Compiler Settings -->
@@ -24,6 +31,12 @@
     <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
   
+  <!-- MAUI Settings -->
+
+  <PropertyGroup Condition="'$(TargetPlatformIsWindows)' == 'true'">
+    <WindowsSdkPackageVersion>10.0.19041.57</WindowsSdkPackageVersion>
+  </PropertyGroup>
+
   <!-- Debugger / SourceLink Settings -->
 
   <PropertyGroup>
@@ -50,48 +63,8 @@
     <IsPackable>false</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <_FasciculusDotNetVersionMajor Condition="'$(_FasciculusDotNetVersionMajor)' == ''">9</_FasciculusDotNetVersionMajor>
-    <_FasciculusDotNetVersionMinor Condition="'$(_FasciculusDotNetVersionMinor)' == ''">0</_FasciculusDotNetVersionMinor>
-    <_FasciculusDotNetVersion Condition="'$(_FasciculusDotNetVersion)' == ''">$(_FasciculusDotNetVersionMajor).$(_FasciculusDotNetVersionMinor)</_FasciculusDotNetVersion>
-    <_FasciculusDotNetTfm Condition="'$(_FasciculusDotNetTfm)' == ''">net$(_FasciculusDotNetVersion)</_FasciculusDotNetTfm>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <_FasciculusTargetPlatformIdentifier>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</_FasciculusTargetPlatformIdentifier>
-    <_FasciculusTargetPlatformIsWindows>false</_FasciculusTargetPlatformIsWindows>
-    <_FasciculusTargetPlatformIsWindows Condition="$(_FasciculusTargetPlatformIdentifier.Contains('windows')) == 'true'">true</_FasciculusTargetPlatformIsWindows>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <FasciculusTargetPlatformIsWindows Condition="'$(FasciculusTargetPlatformIsWindows)' == ''">$(_FasciculusTargetPlatformIsWindows)</FasciculusTargetPlatformIsWindows>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <DefineConstants Condition="'$(_FasciculusTargetPlatformIsWindows)' == 'true'">$(DefineConstants);WINDOWS</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(_FasciculusTargetPlatformIsWindows)' == 'true'">
-    <WindowsSdkPackageVersion>10.0.19041.57</WindowsSdkPackageVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <WindowsTargetFrameworkVersion>10.0.19041.0</WindowsTargetFrameworkVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <IncludeWindowsTargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">true</IncludeWindowsTargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <FasciculusDotNetTfm Condition="'$(FasciculusDotNetTfm)' == ''">$(_FasciculusDotNetTfm)</FasciculusDotNetTfm>
-    <FasciculusDotNetWindowsTfm Condition="'$(FasciculusDotNetWindowsTfm)' == ''">$(FasciculusDotNetTfm)-windows$(WindowsTargetFrameworkVersion)</FasciculusDotNetWindowsTfm>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <FasciculusPlatforms Condition="'$(IncludeWindowsTargetFrameworks)' == 'true'">$(FasciculusDotNetWindowsTfm);$(FasciculusPlatforms)</FasciculusPlatforms>
-  </PropertyGroup>
+  
+  <!-- SourceLink -->
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
