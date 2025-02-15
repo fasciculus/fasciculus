@@ -120,13 +120,13 @@ div.fsc-navigation-forest {
     padding-bottom: 4px;
 }
 
-div.csharp, div.xml {
+div.csharp, div.xml, div.json {
     background-color: #eee;
     margin-bottom: 1rem;
     padding: 0.625rem;
 }
 
-div.csharp pre, div.xml pre {
+div.csharp pre, div.xml pre, div.json pre {
     margin-bottom: 0;
 }
 

@@ -11,6 +11,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>fasciculus.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>false</IncludeSymbols>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
@@ -34,9 +35,5 @@
   <ItemGroup>
     <Compile Remove="Attributes/DisallowNullAttribute.cs" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <IncludeSymbols>false</IncludeSymbols>
-  </PropertyGroup>
 
 </Project>
