@@ -44,7 +44,9 @@
     <Company>The Fasciculus Project</Company>
     <Copyright>Copyright (c) The Fasciculus Project</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>https://fasciculus.github.io/releases.html</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      The release notes for all Fasciculus packages can be fount at https://fasciculus.github.io/releases.html
+    </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
