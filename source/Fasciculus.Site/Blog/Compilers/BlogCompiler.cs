@@ -36,7 +36,7 @@ namespace Fasciculus.Site.Blog.Compilers
             BlogFrontMatter frontMatter = document.FrontMatterObject<BlogFrontMatter>();
             DateTime published = frontMatter.Published;
 
-            if (published == DateTime.MinValue)
+            if (published == DateTime.MinValue || published > DateTime.Now)
             {
                 return null;
             }
