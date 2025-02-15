@@ -49,14 +49,7 @@ namespace Fasciculus.Algorithms
         /// <summary>
         /// Returns a hash code for the given array. 
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-#if NETSTANDARD
-        public int GetHashCode(byte[] obj)
-#else
         public int GetHashCode([DisallowNull] byte[] obj)
-#endif
         {
             int result = 0;
 

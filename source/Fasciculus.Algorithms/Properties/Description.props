@@ -5,7 +5,9 @@
     <Description>
       This package provides:
       - Search algoritms for base types.
-      - Equality algoritms for base type arrays.
+      - Comparers for byte arrays.
+      - Edit distance for arrays.
+      - Fuzzy byte array generator.
       See the README for more information.
     </Description>
   </PropertyGroup>
