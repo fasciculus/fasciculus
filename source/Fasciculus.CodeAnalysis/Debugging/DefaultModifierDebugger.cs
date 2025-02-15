@@ -14,7 +14,7 @@ namespace Fasciculus.CodeAnalysis.Debugging
         {
             handled = new([
                 "public", "private", "protected", "internal",
-                "abstract", "static", "readonly",
+                "abstract", "static", "sealed", "readonly",
                 "virtual", "override", "unsafe", "async",
                 "partial", "params", "this", "out"]);
         }

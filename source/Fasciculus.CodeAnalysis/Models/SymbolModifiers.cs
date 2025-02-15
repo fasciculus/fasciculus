@@ -19,6 +19,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public bool IsStatic { get; }
 
+        public bool IsSealed { get; }
+
         public bool IsReadonly { get; }
 
         public bool IsVirtual { get; }
@@ -55,6 +57,8 @@ namespace Fasciculus.CodeAnalysis.Models
 
         public bool IsStatic { get; set; }
 
+        public bool IsSealed { get; set; }
+
         public bool IsReadonly { get; set; }
 
         public bool IsVirtual { get; set; }
@@ -85,6 +89,7 @@ namespace Fasciculus.CodeAnalysis.Models
             IsProtected = other.IsProtected;
             IsInternal = other.IsInternal;
             IsStatic = other.IsStatic;
+            IsSealed = other.IsSealed;
             IsReadonly = other.IsReadonly;
             IsVirtual = other.IsVirtual;
             IsOverride = other.IsOverride;
@@ -106,6 +111,7 @@ namespace Fasciculus.CodeAnalysis.Models
             if (IsInternal) sb.Append("internal ");
             if (IsAbstract) sb.Append("abstract ");
             if (IsStatic) sb.Append("static ");
+            if (IsSealed) sb.Append("sealed ");
             if (IsReadonly) sb.Append("readonly ");
             if (IsVirtual) sb.Append("virtual ");
             if (IsOverride) sb.Append("override ");
@@ -133,6 +139,7 @@ namespace Fasciculus.CodeAnalysis.Models
                     case "internal": modifiers.IsInternal = true; break;
                     case "abstract": modifiers.IsAbstract = true; break;
                     case "static": modifiers.IsStatic = true; break;
+                    case "sealed": modifiers.IsSealed = true; break;
                     case "readonly": modifiers.IsReadonly = true; break;
                     case "virtual": modifiers.IsVirtual = true; break;
                     case "override": modifiers.IsOverride = true; break;
