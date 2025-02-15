@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -9,9 +9,9 @@
   <PropertyGroup>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageType></PackageType>
     <PackageIcon>fasciculus.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,17 +37,6 @@
 
   <PropertyGroup>
     <IncludeSymbols>false</IncludeSymbols>
-    <NuspecFile>obj/Debug/Fasciculus.NetStandard.nuspec</NuspecFile>
   </PropertyGroup>
-
-  <Target Name="CreateCustomNuSpec" BeforeTargets="Compile">
-    
-  </Target>
-
-  <Target Name="FixNuspec">
-    <Message Importance="high" Text="Fixing NuSpec: $(GenerateNuspecDependsOn)" />
-    <Message Importance="high" Text="_PackageFiles: @(_PackageFiles)" />
-    <Message Importance="high" Text="IncludeContentInPack: $(IncludeContentInPack)" />
-  </Target>
 
 </Project>
