@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Content Include="DisallowNullAttribute.cs" />
+    <Compile Include="NotNullWhenAttribute.cs" />
   </ItemGroup>
   
 </Project>
