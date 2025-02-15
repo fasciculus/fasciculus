@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Memory" />
-    <Compile Include="../Fasciculus.NetStandard/*.cs" Visible="false" />
+    <Compile Include="../Fasciculus.NetStandard.Attributes/*.cs" Visible="false" />
   </ItemGroup>
 
 </Project>
