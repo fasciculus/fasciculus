@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Settings", "_Settings", "{
 		Directory.Build.targets = Directory.Build.targets
 		Directory.Packages.props = Directory.Packages.props
 		global.json = global.json
+		MultiFramework.props = MultiFramework.props
 		MultiTargeting.props = MultiTargeting.props
 		NuGet.config = NuGet.config
 	EndProjectSection

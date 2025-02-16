@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <PropertyGroup>
+    <IsNetStandard20>false</IsNetStandard20>
+    <IsNetStandard20 Condition="'$(TargetFramework)' == 'netstandard2.0'">true</IsNetStandard20>
+    <IsNet9_0>false</IsNet9_0>
+    <IsNet9_0 Condition="$(TargetFramework.StartsWith('net9.0'))">true</IsNet9_0>
+  </PropertyGroup>
+
+</Project>

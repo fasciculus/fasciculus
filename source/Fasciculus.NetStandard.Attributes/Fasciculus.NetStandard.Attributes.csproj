@@ -29,5 +29,5 @@
     <Content Include="DisallowNullAttribute.cs" />
     <Content Include="NotNullWhenAttribute.cs" />
   </ItemGroup>
-  
+
 </Project>

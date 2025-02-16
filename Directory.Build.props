@@ -75,5 +75,5 @@
   <PropertyGroup>
     <HasSystemMemory>@(PackageReference->AnyHaveMetadataValue('Identity', 'System.Memory'))</HasSystemMemory>
   </PropertyGroup>
-
+  
 </Project>
