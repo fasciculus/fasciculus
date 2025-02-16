@@ -26,11 +26,8 @@ namespace Fasciculus.IO
 
             byte[] result = new byte[count];
 
-#if NETSTANDARD
-            stream.Read(result, 0, (int)count);
-#else
             stream.ReadExactly(result);
-#endif
+
             return result;
         }
 
