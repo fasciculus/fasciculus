@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net7.0</TargetFrameworks>
   </PropertyGroup>
 
   <Import Project="Properties/Description.props" />
@@ -16,7 +16,7 @@
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Memory" PrivateAssets="All" />
   </ItemGroup>
 
@@ -26,11 +26,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="build/*" Pack="true" PackagePath="/build" />
+    <None Include="build/Fasciculus.NetStandard.IO.props" Pack="true" PackagePath="/build" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <NetStandard2_0PackagePath>contentFiles/any/netstandard2.0</NetStandard2_0PackagePath>
+    <NetStandard2_1PackagePath>contentFiles/any/netstandard2.1</NetStandard2_1PackagePath>
+    <Net7_0PackagePath>contentFiles/any/net7.0</Net7_0PackagePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Fasciculus.NetStandard.Stream.Read.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="Fasciculus.NetStandard.Stream.ReadAtLeastCore.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="Fasciculus.NetStandard.Stream.ReadAtLeast.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="Fasciculus.NetStandard.Stream.ReadExactly.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="StreamExtensions20.cs" />
+    <None Include="Fasciculus.NetStandard.Stream.ReadAtLeastCore.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
+    <None Include="Fasciculus.NetStandard.Stream.ReadAtLeast.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
+    <None Include="Fasciculus.NetStandard.Stream.ReadExactly.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="content/Fasciculus.NetStandard.net7.0.txt" Pack="true" PackagePath="$(Net7_0PackagePath)" />
   </ItemGroup>
 
 </Project>
