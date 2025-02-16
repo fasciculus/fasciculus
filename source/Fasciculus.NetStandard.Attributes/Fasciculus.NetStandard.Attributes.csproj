@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net9.0</TargetFrameworks>
   </PropertyGroup>
 
   <Import Project="Properties/Description.props" />
@@ -22,12 +22,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="build/*" Pack="true" PackagePath="/build" />
+    <None Include="build/Fasciculus.NetStandard.Attributes.props" Pack="true" PackagePath="/build" />
   </ItemGroup>
+  
+  <PropertyGroup>
+    <NetStandard2_0PackagePath>contentFiles/any/netstandard2.0</NetStandard2_0PackagePath>
+    <NetStandard2_1PackagePath>contentFiles/any/netstandard2.1</NetStandard2_1PackagePath>
+    <Net9_0PackagePath>/contentFiles/any/net9.0</Net9_0PackagePath>
+  </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="DisallowNullAttribute.cs" />
-    <Content Include="NotNullWhenAttribute.cs" />
+    <None Include="DisallowNullAttribute.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="NotNullWhenAttribute.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="content/Fasciculus.NetStandard.netstandard2.1.txt" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
+    <None Include="content/Fasciculus.NetStandard.net9.0.txt" Pack="true" PackagePath="$(Net9_0PackagePath)" />
   </ItemGroup>
 
 </Project>

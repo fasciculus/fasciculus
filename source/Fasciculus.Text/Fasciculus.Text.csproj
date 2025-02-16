@@ -5,9 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <Compile Include="../Fasciculus.NetStandard.Attributes/*.cs" Visible="false" />
-  </ItemGroup>
+  <Import Project="../Fasciculus.NetStandard.Attributes/local/Fasciculus.NetStandard.Attributes.props"/>
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
