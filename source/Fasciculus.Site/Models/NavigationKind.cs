@@ -11,6 +11,9 @@ namespace Fasciculus.Site.Models
 
         public const int LicenseList = 20;
 
+        public const int SpecificationPackage = 30;
+        public const int SpecificationEntry = 31;
+
         public const int ApiPackage = 100;
         public const int ApiNamespace = 101;
 
@@ -38,6 +41,7 @@ namespace Fasciculus.Site.Models
             {
                 BlogEntry => true,
                 LicenseList => true,
+                SpecificationEntry => true,
                 ApiField => true,
                 ApiMember => true,
                 ApiMembers => true,

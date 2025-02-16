@@ -133,6 +133,7 @@ namespace Fasciculus.Site
             services.TryAddSingleton<SpecificationFiles>();
             services.TryAddSingleton<SpecificationCompiler>();
             services.TryAddSingleton<SpecificationContent>();
+            services.TryAddSingleton<SpecificationNavigation>();
 
             return services;
         }
