@@ -69,5 +69,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
+  
+  <!-- Dependency Checks -->
+
+  <PropertyGroup>
+    <HasSystemMemory>@(PackageReference->AnyHaveMetadataValue('Identity', 'System.Memory'))</HasSystemMemory>
+  </PropertyGroup>
 
 </Project>
