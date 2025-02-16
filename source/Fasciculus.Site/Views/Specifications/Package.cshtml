@@ -1,0 +1,13 @@
+@model SpecificationPackageViewModel
+<h1>@Model.Title</h1>
+
+<p>The following specifications are available:</p>
+
+<ul>
+    @foreach (var specification in Model.Entries)
+    {
+        <li>
+            <a href="~/specifications/@specification.Package/@(specification.Id).html">@specification.Title</a>
+        </li>
+    }
+</ul>

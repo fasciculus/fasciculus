@@ -1,22 +1,26 @@
 using Fasciculus.Docs.Content.Services;
 using Fasciculus.Site.Specifications.Models;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Fasciculus.Site.Specifications.Services
 {
     public class SpecificationContent
     {
-        private readonly Dictionary<string, SpecificationEntry> entries;
+        private readonly SpecificationPackages packages;
 
         public SpecificationContent(SpecificationFiles files, SpecificationCompiler compiler)
         {
-            entries = files.GetFiles().Select(compiler.Compile).ToDictionary(e => e.Id);
+            packages = new(files.GetKeys().Select(compiler.Compile));
         }
 
-        public SpecificationEntry GetEntry(string id)
+        public SpecificationPackage[] GetPackages()
         {
-            return entries[id];
+            return [.. packages.GetPackages()];
+        }
+
+        public SpecificationPackage GetPackage(string name)
+        {
+            return packages.GetPackage(name);
         }
     }
 }

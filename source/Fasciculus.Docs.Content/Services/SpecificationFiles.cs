@@ -13,7 +13,7 @@ namespace Fasciculus.Docs.Content.Services
             string name = file.NameWithoutExtension();
             string package = file.Directory!.Name;
 
-            return $"{package}.{name}";
+            return $"{package}|{name}";
         }
     }
 }

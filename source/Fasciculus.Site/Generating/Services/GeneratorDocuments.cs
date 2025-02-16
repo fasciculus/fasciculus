@@ -4,6 +4,8 @@ using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Fasciculus.Site.Api.Services;
 using Fasciculus.Site.Blog.Services;
+using Fasciculus.Site.Specifications.Models;
+using Fasciculus.Site.Specifications.Services;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,14 +14,14 @@ namespace Fasciculus.Site.Generating.Services
 {
     public class GeneratorDocuments : SortedSet<string>
     {
-        public GeneratorDocuments(ApiContent apiContent, BlogContent blogContent)
+        public GeneratorDocuments(ApiContent apiContent, BlogContent blogContent, SpecificationContent specificationContent)
         {
             AddGlobals();
             AddStatics();
             AddApi(apiContent);
             AddBlog(blogContent);
             AddConcepts();
-            AddSpecifications();
+            AddSpecifications(specificationContent);
             AddLicenses();
         }
 
@@ -145,10 +147,19 @@ namespace Fasciculus.Site.Generating.Services
             Add("/concepts/");
         }
 
-        private void AddSpecifications()
+        private void AddSpecifications(SpecificationContent specificationContent)
         {
             Add("/specifications/");
-            Add("/specifications/FixedPoint.html");
+
+            foreach (SpecificationPackage package in specificationContent.GetPackages())
+            {
+                Add($"/specifications/{package.Name}/");
+
+                foreach (SpecificationEntry entry in package.GetEntries())
+                {
+                    Add($"/specifications/{package.Name}/{entry.Id}.html");
+                }
+            }
         }
 
         private void AddLicenses()

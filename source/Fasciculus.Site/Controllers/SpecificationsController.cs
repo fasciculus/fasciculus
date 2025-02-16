@@ -1,4 +1,3 @@
-using Fasciculus.Site.Models;
 using Fasciculus.Site.Specifications.Models;
 using Fasciculus.Site.Specifications.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,27 +16,42 @@ namespace Fasciculus.Site.Controllers
         [Route("/specifications/")]
         public IActionResult Index()
         {
-            ViewModel model = new()
+            SpecificationIndexViewModel model = new()
             {
-                Title = "Specifications"
+                Title = "Specifications",
+                Packages = content.GetPackages(),
             };
 
             return View(model);
         }
 
-        [Route("/specifications/{id}.html")]
-        public IActionResult Entry(string id)
+        [Route("/specifications/{name}/")]
+        public IActionResult Package(string name)
         {
-            SpecificationEntry entry = content.GetEntry(id);
+            SpecificationPackage package = content.GetPackage(name);
 
-            SpecificationViewModel model = new()
+            SpecificationPackageViewModel model = new()
+            {
+                Title = package.Name + " Specifications",
+                Entries = [.. package.GetEntries()],
+            };
+
+            return View("Package", model);
+        }
+
+        [Route("/specifications/{package}/{id}.html")]
+        public IActionResult Entry(string package, string id)
+        {
+            SpecificationEntry entry = content.GetPackage(package).GetEntry(id);
+
+            SpecificationEntryViewModel model = new()
             {
                 Title = entry.Title,
                 Entry = entry,
                 UseKaTeX = true,
             };
 
-            return View(model);
+            return View("Entry", model);
         }
     }
 }

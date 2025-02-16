@@ -1,13 +1,16 @@
-@model ViewModel
+@model SpecificationIndexViewModel
 
 <h1>@Model.Title</h1>
 
 <h2>Fasciculus Specifications</h2>
 
-<h3>Fasciculus.Mathematics</h3>
+<p>Specifications are available for the following packages</p>
 
 <ul>
-    <li><a href="~/specifications/FixedPoint.html">Fixed Point Algorithms</a></li>
+    @foreach (var package in Model.Packages)
+    {
+        <li><a href="~/specifications/@package.Name/">@package.Name</a></li>
+    }
 </ul>
 
 <h2>External Specifications</h2>
