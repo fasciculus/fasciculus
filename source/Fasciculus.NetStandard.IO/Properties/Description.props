@@ -4,8 +4,7 @@
   <PropertyGroup>
     <Description>
       Source code files for:
-      - DisallowNullAttribute
-      - NotNullWhenAttribute
+      - Stream operations
       See the README for more information.
     </Description>
   </PropertyGroup>

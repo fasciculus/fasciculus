@@ -128,6 +128,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NetStandard.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NetStandard.Attributes", "source\Fasciculus.NetStandard.Attributes\Fasciculus.NetStandard.Attributes.csproj", "{97668EDE-DA86-D1AB-03AE-48E45880D626}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NetStandard.IO", "source\Fasciculus.NetStandard.IO\Fasciculus.NetStandard.IO.csproj", "{7B1AF745-4C8E-4FEA-85DC-6B22AA699B3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -362,6 +364,10 @@ Global
 		{97668EDE-DA86-D1AB-03AE-48E45880D626}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97668EDE-DA86-D1AB-03AE-48E45880D626}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97668EDE-DA86-D1AB-03AE-48E45880D626}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B1AF745-4C8E-4FEA-85DC-6B22AA699B3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B1AF745-4C8E-4FEA-85DC-6B22AA699B3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B1AF745-4C8E-4FEA-85DC-6B22AA699B3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B1AF745-4C8E-4FEA-85DC-6B22AA699B3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

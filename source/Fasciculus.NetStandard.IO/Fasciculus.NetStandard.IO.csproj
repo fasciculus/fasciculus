@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Memory" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="/" />
     <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
   </ItemGroup>
@@ -26,8 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="DisallowNullAttribute.cs" />
-    <Content Include="NotNullWhenAttribute.cs" />
+    <Content Include="StreamExtensions20.cs" />
   </ItemGroup>
-  
+
 </Project>
