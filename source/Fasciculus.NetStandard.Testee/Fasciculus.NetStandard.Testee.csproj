@@ -4,9 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <Import Project="../Fasciculus.NetStandard.Attributes/local/Fasciculus.NetStandard.Attributes.props"/>
+
   <ItemGroup>
     <PackageReference Include="System.Memory" />
-    <Compile Include="../Fasciculus.NetStandard.Attributes/*.cs" Visible="false" />
   </ItemGroup>
 
 </Project>
