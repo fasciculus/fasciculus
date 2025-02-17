@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <Import Project="Properties/Description.props" />
@@ -27,11 +27,17 @@
 
   <PropertyGroup>
     <NetStandard2_0PackagePath>contentFiles/any/netstandard2.0</NetStandard2_0PackagePath>
-    <Net8_0PackagePath>/contentFiles/any/net9.0</Net8_0PackagePath>
+    <NetStandard2_1PackagePath>contentFiles/any/netstandard2.1</NetStandard2_1PackagePath>
+    <Net8_0PackagePath>/contentFiles/any/net8.0</Net8_0PackagePath>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Fasciculus.Dictionary.TryAdd.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
     <None Include="Fasciculus.Enumerable.ToDictionary.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Fasciculus.Enumerable.ToDictionary.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
   </ItemGroup>
 
   <ItemGroup>
