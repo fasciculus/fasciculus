@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <Import Project="Properties/Description.props" />
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>fasciculus.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>false</IncludeSymbols>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="build/Fasciculus.NetStandard.Collections.props" Pack="true" PackagePath="/build" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <NetStandard2_0PackagePath>contentFiles/any/netstandard2.0</NetStandard2_0PackagePath>
+    <Net8_0PackagePath>/contentFiles/any/net9.0</Net8_0PackagePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Fasciculus.NetStandard.Enumerable.ToDictionary.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="content/Fasciculus.NetStandard.net8.0.txt" Pack="true" PackagePath="$(Net8_0PackagePath)" />
+  </ItemGroup>
+
+</Project>
