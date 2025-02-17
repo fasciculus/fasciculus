@@ -31,8 +31,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Fasciculus.NetStandard.Enumerable.ToDictionary.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
-    <None Include="content/Fasciculus.NetStandard.net8.0.txt" Pack="true" PackagePath="$(Net8_0PackagePath)" />
+    <None Include="Fasciculus.Enumerable.ToDictionary.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="content\Fasciculus.NetStandard.Collections.net8.0.txt" Pack="true" PackagePath="$(Net8_0PackagePath)" />
   </ItemGroup>
 
 </Project>

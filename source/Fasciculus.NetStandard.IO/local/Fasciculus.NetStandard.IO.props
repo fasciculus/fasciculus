@@ -2,16 +2,16 @@
 <Project>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.Stream.Read.cs" Visible="false" />
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.Stream.ReadAtLeast.cs" Visible="false" />
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.Stream.ReadAtLeastCore.cs" Visible="false" />
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.Stream.ReadExactly.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.Read.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.ReadAtLeast.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.ReadAtLeastCore.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.ReadExactly.cs" Visible="false" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.Stream.ReadAtLeast.cs" Visible="false" />
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.Stream.ReadAtLeastCore.cs" Visible="false" />
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.Stream.ReadExactly.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.ReadAtLeast.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.ReadAtLeastCore.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.ReadExactly.cs" Visible="false" />
   </ItemGroup>
   
 </Project>

@@ -112,9 +112,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Properties = 32,
 
                 Constructors = 30,
-                Methods = 132,
+                Methods = 131,
 
-                Summaries = 235,
+                Summaries = 234,
             };
 
             Test(context);

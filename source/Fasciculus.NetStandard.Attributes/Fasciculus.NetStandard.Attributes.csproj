@@ -32,10 +32,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Fasciculus.NetStandard.DisallowNullAttribute.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
-    <None Include="Fasciculus.NetStandard.NotNullWhenAttribute.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
-    <None Include="content/Fasciculus.NetStandard.netstandard2.1.txt" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
-    <None Include="content/Fasciculus.NetStandard.net9.0.txt" Pack="true" PackagePath="$(Net9_0PackagePath)" />
+    <None Include="Fasciculus.DisallowNullAttribute.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="Fasciculus.NotNullWhenAttribute.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="content\Fasciculus.NetStandard.Attributes.net9.0.txt" Pack="true" PackagePath="$(Net9_0PackagePath)" />
+    <None Include="content\Fasciculus.NetStandard.Attributes.netstandard2.1.txt" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
   </ItemGroup>
 
 </Project>

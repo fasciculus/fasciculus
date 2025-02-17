@@ -2,7 +2,7 @@
 <Project>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.Enumerable.ToDictionary.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Enumerable.ToDictionary.cs" Visible="false" />
   </ItemGroup>
 
 </Project>

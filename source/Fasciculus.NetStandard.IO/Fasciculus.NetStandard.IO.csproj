@@ -36,20 +36,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Fasciculus.NetStandard.Stream.Read.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
-    <None Include="Fasciculus.NetStandard.Stream.ReadAtLeastCore.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
-    <None Include="Fasciculus.NetStandard.Stream.ReadAtLeast.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
-    <None Include="Fasciculus.NetStandard.Stream.ReadExactly.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="Fasciculus.Stream.Read.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="Fasciculus.Stream.ReadAtLeastCore.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="Fasciculus.Stream.ReadAtLeast.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="Fasciculus.Stream.ReadExactly.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Fasciculus.NetStandard.Stream.ReadAtLeastCore.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
-    <None Include="Fasciculus.NetStandard.Stream.ReadAtLeast.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
-    <None Include="Fasciculus.NetStandard.Stream.ReadExactly.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
+    <None Include="Fasciculus.Stream.ReadAtLeastCore.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
+    <None Include="Fasciculus.Stream.ReadAtLeast.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
+    <None Include="Fasciculus.Stream.ReadExactly.cs" Pack="true" PackagePath="$(NetStandard2_1PackagePath)" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="content/Fasciculus.NetStandard.net7.0.txt" Pack="true" PackagePath="$(Net7_0PackagePath)" />
+    <None Include="content\Fasciculus.NetStandard.IO.net7.0.txt" Pack="true" PackagePath="$(Net7_0PackagePath)" />
   </ItemGroup>
 
 </Project>

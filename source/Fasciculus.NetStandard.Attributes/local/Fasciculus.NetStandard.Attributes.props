@@ -2,8 +2,8 @@
 <Project>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.DisallowNullAttribute.cs" Visible="false" />
-    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NetStandard.NotNullWhenAttribute.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.DisallowNullAttribute.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NotNullWhenAttribute.cs" Visible="false" />
   </ItemGroup>
   
 </Project>
