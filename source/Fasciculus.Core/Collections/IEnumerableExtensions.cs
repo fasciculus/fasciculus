@@ -40,15 +40,6 @@ namespace Fasciculus.Collections
             return existing.Concat(Enumerable.Repeat(defaultValue, missingCount));
         }
 
-#if NETSTANDARD
-        /// <summary>
-        /// Adds <c>ToDictionary</c> for <see cref="KeyValuePair{TKey, TValue}"/> collection missing in netstandard.
-        /// </summary>
-        public static Dictionary<K, V> ToDictionary<K, V>(this IEnumerable<KeyValuePair<K, V>> kvps)
-            where K : notnull
-            => kvps.ToDictionary(x => x.Key, x => x.Value);
-#endif
-
         /// <summary>
         /// Converts the given key/value pairs into a dictionary.
         /// </summary>
