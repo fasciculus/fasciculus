@@ -49,14 +49,8 @@ namespace Fasciculus.Net.Navigating
 
         private void AddNode(NavigationNode node)
         {
-#if NETSTANDARD
-            if (!byLink.ContainsKey(node.Link))
-            {
-                byLink.Add(node.Link, node);
-            }
-#else
             byLink.TryAdd(node.Link, node);
-#endif
+
             node.Children.Apply(AddNode);
         }
 

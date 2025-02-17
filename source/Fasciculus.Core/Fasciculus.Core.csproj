@@ -19,6 +19,8 @@
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 
+  <Import Project="../Fasciculus.NetStandard.Collections/local/Fasciculus.NetStandard.Collections.props"/>
+
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
     <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
