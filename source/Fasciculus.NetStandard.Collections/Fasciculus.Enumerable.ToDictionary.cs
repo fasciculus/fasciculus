@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace System.Linq
 {
-    internal static partial class FasciculusNetStandardEnumerableExtensions
+    internal static partial class FasciculusEnumerableExtensions
     {
         internal static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
             where TKey : notnull

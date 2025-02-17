@@ -1,6 +1,6 @@
 namespace System.IO
 {
-    internal static partial class FasciculusNetStandardStreamExtensions
+    internal static partial class FasciculusStreamExtensions
     {
         private static int ReadAtLeastCore(Stream stream, Span<byte> buffer, int minimumBytes, bool throwOnEndOfStream)
         {

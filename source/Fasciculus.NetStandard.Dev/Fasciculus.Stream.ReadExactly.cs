@@ -2,7 +2,7 @@ namespace System.IO
 {
     // available in net7.0
 
-    internal static partial class FasciculusNetStandardStreamExtensions
+    internal static partial class FasciculusStreamExtensions
     {
         internal static void ReadExactly(this Stream stream, Span<byte> buffer)
         {
