@@ -22,6 +22,7 @@ namespace Fasciculus.Site.Generating.Services
             AddBlog(blogContent);
             AddConcepts();
             AddSpecifications(specificationContent);
+            AddReleases();
             AddLicenses();
         }
 
@@ -30,7 +31,6 @@ namespace Fasciculus.Site.Generating.Services
             Add("/");
             Add("/about.html");
             Add("/privacy.html");
-            Add("/releases.html");
         }
 
         private void AddStatics()
@@ -160,6 +160,12 @@ namespace Fasciculus.Site.Generating.Services
                     Add($"/specifications/{package.Name}/{entry.Id}.html");
                 }
             }
+        }
+
+        private void AddReleases()
+        {
+            Add("/releases/");
+            Add("/releases/Roadmap.html");
         }
 
         private void AddLicenses()

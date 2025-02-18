@@ -27,17 +27,6 @@ namespace Fasciculus.Site.Controllers
             return View(model);
         }
 
-        [Route("/releases.html")]
-        public IActionResult Releases()
-        {
-            ViewModel model = new()
-            {
-                Title = "Releases"
-            };
-
-            return View(model);
-        }
-
         [Route("/about.html")]
         public IActionResult About()
         {

@@ -8,6 +8,7 @@ using Fasciculus.Site.Blog.Services;
 using Fasciculus.Site.Generating.Services;
 using Fasciculus.Site.Licenses.Services;
 using Fasciculus.Site.Markdown;
+using Fasciculus.Site.Releases.Services;
 using Fasciculus.Site.Specifications.Services;
 using Fasciculus.Web.Extensions;
 using Fasciculus.Web.Resources;
@@ -65,6 +66,7 @@ namespace Fasciculus.Site
                 .AddApi()
                 .AddBlog()
                 .AddSpecifications()
+                .AddReleases()
                 .AddLicenses();
 
             if (generate)
@@ -134,6 +136,17 @@ namespace Fasciculus.Site
             services.TryAddSingleton<SpecificationCompiler>();
             services.TryAddSingleton<SpecificationContent>();
             services.TryAddSingleton<SpecificationNavigation>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddReleases(this IServiceCollection services)
+        {
+            services.TryAddSingleton<RoadmapFiles>();
+            services.TryAddSingleton<RoadmapCompiler>();
+            services.TryAddSingleton<ReleasesCompiler>();
+            services.TryAddSingleton<ReleasesContent>();
+            services.TryAddSingleton<ReleasesNavigation>();
 
             return services;
         }
