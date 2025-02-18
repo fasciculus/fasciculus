@@ -5,7 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <Import Project="../Fasciculus.NetStandard.Attributes/local/Fasciculus.NetStandard.Attributes.props"/>
+  <Import Project="../Fasciculus.Extensions.Attributes/local/Fasciculus.Extensions.Attributes.props"/>
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
