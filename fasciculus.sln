@@ -83,8 +83,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markdown", "sour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Markdown.Tests", "source\Fasciculus.Markdown.Tests\Fasciculus.Markdown.Tests.csproj", "{242C4741-4A12-4AE3-BAB4-768CBDB6A513}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "source\WebApplication1\WebApplication1.csproj", "{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Docs.Content", "source\Fasciculus.Docs.Content\Fasciculus.Docs.Content.csproj", "{E14E2C1A-248B-4964-99D7-4A4EF866360C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Docs.Preview", "source\Fasciculus.Docs.Preview\Fasciculus.Docs.Preview.csproj", "{AB3C9875-3AE5-4FB8-9621-CF10A5A07990}"
@@ -120,8 +118,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Text", "source\Fasciculus.Text\Fasciculus.Text.csproj", "{D18556A6-FF06-42C6-80AD-DADB71E163C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Algorithms.Tests", "source\Fasciculus.Algorithms.Tests\Fasciculus.Algorithms.Tests.csproj", "{58F0D1AD-A90C-421D-A39A-4152BD565FF5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NullableTests", "source\NullableTests\NullableTests.csproj", "{7D57A2AF-23C7-4EED-B38C-D9E6A60483A4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Algorithms", "Algorithms", "{29CDB012-C9F9-4703-AA85-987647854196}"
 EndProject
@@ -307,10 +303,6 @@ Global
 		{242C4741-4A12-4AE3-BAB4-768CBDB6A513}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{242C4741-4A12-4AE3-BAB4-768CBDB6A513}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{242C4741-4A12-4AE3-BAB4-768CBDB6A513}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DDCF9ED-D3DC-4B56-8DCE-99299F3F9140}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E14E2C1A-248B-4964-99D7-4A4EF866360C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E14E2C1A-248B-4964-99D7-4A4EF866360C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E14E2C1A-248B-4964-99D7-4A4EF866360C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -383,10 +375,6 @@ Global
 		{58F0D1AD-A90C-421D-A39A-4152BD565FF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58F0D1AD-A90C-421D-A39A-4152BD565FF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58F0D1AD-A90C-421D-A39A-4152BD565FF5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D57A2AF-23C7-4EED-B38C-D9E6A60483A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D57A2AF-23C7-4EED-B38C-D9E6A60483A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D57A2AF-23C7-4EED-B38C-D9E6A60483A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D57A2AF-23C7-4EED-B38C-D9E6A60483A4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B4B07A1F-060E-440D-9030-C0D7154EEFEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4B07A1F-060E-440D-9030-C0D7154EEFEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4B07A1F-060E-440D-9030-C0D7154EEFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
