@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <ItemGroup>
+    <Compile Update="@(Compile)">
+      <Visible Condition="'%(NuGetItemType)' == 'Compile' and '%(NuGetPackageId)' == 'Fasciculus.Extensions.Attributes'">false</Visible>
+    </Compile>
+  </ItemGroup>
+  
+</Project>

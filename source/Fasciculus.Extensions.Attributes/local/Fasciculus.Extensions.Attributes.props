@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.DisallowNullAttribute.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.NotNullWhenAttribute.cs" Visible="false" />
+  </ItemGroup>
+
+</Project>
