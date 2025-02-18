@@ -1,0 +1,2 @@
+DisallowNullAttribute >= netstandard2.1
+NotNullWhenAttribute  >= netstandard2.1
