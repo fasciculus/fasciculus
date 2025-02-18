@@ -14,7 +14,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <Import Project="../Fasciculus.NetStandard.IO/local/Fasciculus.NetStandard.IO.props"/>
+  <Import Project="../Fasciculus.Extensions.IO/local/Fasciculus.Extensions.IO.props"/>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Memory" />

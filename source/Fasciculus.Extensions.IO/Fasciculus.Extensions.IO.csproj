@@ -16,23 +16,19 @@
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Memory" PrivateAssets="All" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="/" />
     <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="build/Fasciculus.NetStandard.IO.props" Pack="true" PackagePath="/build" />
+    <None Include="build/Fasciculus.Extensions.IO.props" Pack="true" PackagePath="/build" />
   </ItemGroup>
 
   <PropertyGroup>
     <NetStandard2_0PackagePath>contentFiles/any/netstandard2.0</NetStandard2_0PackagePath>
     <NetStandard2_1PackagePath>contentFiles/any/netstandard2.1</NetStandard2_1PackagePath>
-    <Net7_0PackagePath>contentFiles/any/net7.0</Net7_0PackagePath>
+    <Net7_0PackagePath>/contentFiles/any/net7.0</Net7_0PackagePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -49,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="content\Fasciculus.NetStandard.IO.net7.0.txt" Pack="true" PackagePath="$(Net7_0PackagePath)" />
+    <None Include="content\Fasciculus.Extensions.IO.net7.0.txt" Pack="true" PackagePath="$(Net7_0PackagePath)" />
   </ItemGroup>
 
 </Project>

@@ -2,8 +2,6 @@ using System.Buffers;
 
 namespace System.IO
 {
-    // available in netstandard2.1
-
     internal static partial class FasciculusStreamExtensions
     {
         internal static int Read(this Stream stream, Span<byte> buffer)

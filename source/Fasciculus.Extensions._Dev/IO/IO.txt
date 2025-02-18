@@ -1,0 +1,3 @@
+Stream.Read(Span<byte>) >= netstandard2.1
+Stream.ReadAtLeast(pan<byte> buffer, int, bool) >= net7.0
+Stream.ReadExactly >= net7.0

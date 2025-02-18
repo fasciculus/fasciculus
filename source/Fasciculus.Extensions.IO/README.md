@@ -1,6 +1,6 @@
 # Fasciculus.NetStandard.IO
 
-This source-only package contains sources for IO operations not supported by `netstandard2.0`.
+This source-only package contains sources for IO operations not supported in older `TargetFramework`s.
 All sources are attributed with `internal`.
 
 > To use this in a `netstandard2.0` project you need to reference the package `System.Memory`.
