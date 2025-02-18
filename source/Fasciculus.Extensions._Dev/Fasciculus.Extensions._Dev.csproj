@@ -4,12 +4,23 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Namespace does not match folder structure -->
+    <NoWarn>$(NoWarn),IDE0130</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Memory" />
+  </ItemGroup>
+
   <ItemGroup>
     <AttributesSourceFiles Include="Attributes/*.cs" />
+    <CollectionsSourceFiles Include="Collections/*.cs" />
   </ItemGroup>
 
   <Target Name="DistributeFiles" AfterTargets="Compile">
     <Copy SourceFiles="@(AttributesSourceFiles)" DestinationFolder="../Fasciculus.Extensions.Attributes" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(CollectionsSourceFiles)" DestinationFolder="../Fasciculus.Extensions.Collections" SkipUnchangedFiles="true" />
   </Target>
 
 </Project>

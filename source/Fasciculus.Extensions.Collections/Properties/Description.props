@@ -4,6 +4,8 @@
   <PropertyGroup>
     <Description>
       Source code files for:
+      - IDictionary.TryAdd
+      - IEnumerable.ToDictionary
       See the README for more information.
     </Description>
   </PropertyGroup>

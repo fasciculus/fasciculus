@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="build/Fasciculus.NetStandard.Collections.props" Pack="true" PackagePath="/build" />
+    <None Include="build/Fasciculus.Extensions.Collections.props" Pack="true" PackagePath="/build" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="content\Fasciculus.NetStandard.Collections.net8.0.txt" Pack="true" PackagePath="$(Net8_0PackagePath)" />
+    <None Include="content\Fasciculus.Extensions.Collections.net8.0.txt" Pack="true" PackagePath="$(Net8_0PackagePath)" />
   </ItemGroup>
 
 </Project>

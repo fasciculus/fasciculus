@@ -1,0 +1,2 @@
+IDictionary.TryAdd >= netstandard2.1
+IEnumerable.ToDictionary >= net8.0

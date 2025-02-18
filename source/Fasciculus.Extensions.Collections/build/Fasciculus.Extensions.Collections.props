@@ -3,7 +3,7 @@
 
   <ItemGroup>
     <Compile Update="@(Compile)">
-      <Visible Condition="'%(NuGetItemType)' == 'Compile' and '%(NuGetPackageId)' == 'Fasciculus.NetStandard.Collections'">false</Visible>
+      <Visible Condition="'%(NuGetItemType)' == 'Compile' and '%(NuGetPackageId)' == 'Fasciculus.Extensions.Collections'">false</Visible>
     </Compile>
   </ItemGroup>
   
