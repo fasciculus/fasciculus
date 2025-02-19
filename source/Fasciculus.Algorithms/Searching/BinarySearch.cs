@@ -1,6 +1,6 @@
 using System;
 
-namespace Fasciculus.Algorithms
+namespace Fasciculus.Algorithms.Searching
 {
     /// <summary>
     /// Fast binary search implementations for base types.
@@ -18,7 +18,7 @@ namespace Fasciculus.Algorithms
 
             while (lo <= hi)
             {
-                int i = lo + ((hi - lo) >> 1);
+                int i = lo + (hi - lo >> 1);
                 int x = sorted[i];
 
                 if (x == value)
@@ -50,7 +50,7 @@ namespace Fasciculus.Algorithms
 
             while (lo <= hi)
             {
-                int i = lo + ((hi - lo) >> 1);
+                int i = lo + (hi - lo >> 1);
                 uint x = sorted[i];
 
                 if (x == value)

@@ -1,4 +1,4 @@
-using Fasciculus.Algorithms;
+using Fasciculus.Algorithms.Searching;
 using Fasciculus.IO.Binary;
 using System;
 using System.Collections;

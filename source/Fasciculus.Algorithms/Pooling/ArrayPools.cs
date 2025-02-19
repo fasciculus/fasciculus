@@ -1,7 +1,7 @@
 using System;
 using System.Buffers;
 
-namespace Fasciculus.Algorithms
+namespace Fasciculus.Algorithms.Pooling
 {
     /// <summary>
     /// Array extensions.
