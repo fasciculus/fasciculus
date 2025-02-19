@@ -31,73 +31,73 @@ namespace Fasciculus.IO.Binary
         /// Reads the first 2 bytes of the given <paramref name="buffer"/> and converts them to a <see cref="short"/>
         /// </summary>
         /// <returns></returns>
-        public abstract short GetShort(ReadOnlySpan<byte> buffer);
+        public abstract short GetInt16(ReadOnlySpan<byte> buffer);
 
         /// <summary>
         /// Converts the given <paramref name="value"/> into 2 bytes and writes them to the beginning of the given <paramref name="buffer"/>.
         /// </summary>
-        public abstract Span<byte> SetShort(Span<byte> buffer, short value);
+        public abstract Span<byte> SetInt16(Span<byte> buffer, short value);
 
         /// <summary>
         /// Reads the first 2 bytes of the given <paramref name="buffer"/> and converts them to a <see cref="ushort"/>
         /// </summary>
         /// <returns></returns>
-        public abstract ushort GetUShort(ReadOnlySpan<byte> buffer);
+        public abstract ushort GetUInt16(ReadOnlySpan<byte> buffer);
 
         /// <summary>
         /// Converts the given <paramref name="value"/> into 2 bytes and writes them to the beginning of the given <paramref name="buffer"/>.
         /// </summary>
-        public abstract Span<byte> SetUShort(Span<byte> buffer, ushort value);
+        public abstract Span<byte> SetUInt16(Span<byte> buffer, ushort value);
 
         /// <summary>
         /// Reads the first 4 bytes of the given <paramref name="buffer"/> and converts them to a <see cref="int"/>
         /// </summary>
-        public abstract int GetInt(ReadOnlySpan<byte> buffer);
+        public abstract int GetInt32(ReadOnlySpan<byte> buffer);
 
         /// <summary>
         /// Converts the given <paramref name="value"/> into 4 bytes and writes them to the beginning of the given <paramref name="buffer"/>.
         /// </summary>
-        public abstract Span<byte> SetInt(Span<byte> buffer, int value);
+        public abstract Span<byte> SetInt32(Span<byte> buffer, int value);
 
         /// <summary>
         /// Reads the first 4 bytes of the given <paramref name="buffer"/> and converts them to a <see cref="uint"/>
         /// </summary>
-        public abstract uint GetUInt(ReadOnlySpan<byte> buffer);
+        public abstract uint GetUInt32(ReadOnlySpan<byte> buffer);
 
         /// <summary>
         /// Converts the given <paramref name="value"/> into 4 bytes and writes them to the beginning of the given <paramref name="buffer"/>.
         /// </summary>
-        public abstract Span<byte> SetUInt(Span<byte> buffer, uint value);
+        public abstract Span<byte> SetUInt32(Span<byte> buffer, uint value);
 
         /// <summary>
         /// Reads the first 8 bytes of the given <paramref name="buffer"/> and converts them to a <see cref="long"/>
         /// </summary>
-        public abstract long GetLong(ReadOnlySpan<byte> buffer);
+        public abstract long GetInt64(ReadOnlySpan<byte> buffer);
 
         /// <summary>
         /// Converts the given <paramref name="value"/> into 8 bytes and writes them to the beginning of the given <paramref name="buffer"/>.
         /// </summary>
-        public abstract Span<byte> SetLong(Span<byte> buffer, long value);
+        public abstract Span<byte> SetInt64(Span<byte> buffer, long value);
 
         /// <summary>
         /// Reads the first 8 bytes of the given <paramref name="buffer"/> and converts them to a <see cref="ulong"/>
         /// </summary>
-        public abstract ulong GetULong(ReadOnlySpan<byte> buffer);
+        public abstract ulong GetUInt64(ReadOnlySpan<byte> buffer);
 
         /// <summary>
         /// Converts the given <paramref name="value"/> into 8 bytes and writes them to the beginning of the given <paramref name="buffer"/>.
         /// </summary>
-        public abstract Span<byte> SetULong(Span<byte> buffer, ulong value);
+        public abstract Span<byte> SetUInt64(Span<byte> buffer, ulong value);
 
         /// <summary>
         /// Reads the first 4 bytes of the given <paramref name="buffer"/> and converts them to a <see cref="float"/>
         /// </summary>
-        public abstract float GetFloat(ReadOnlySpan<byte> buffer);
+        public abstract float GetSingle(ReadOnlySpan<byte> buffer);
 
         /// <summary>
         /// Converts the given <paramref name="value"/> into 4 bytes and writes them to the beginning of the given <paramref name="buffer"/>.
         /// </summary>
-        public abstract Span<byte> SetFloat(Span<byte> buffer, float value);
+        public abstract Span<byte> SetSingle(Span<byte> buffer, float value);
 
         /// <summary>
         /// Reads the first 8 bytes of the given <paramref name="buffer"/> and converts them to a <see cref="double"/>
@@ -111,46 +111,46 @@ namespace Fasciculus.IO.Binary
 
         private class Straight : Endian
         {
-            public override short GetShort(ReadOnlySpan<byte> buffer)
+            public override short GetInt16(ReadOnlySpan<byte> buffer)
                 => GetCore<short>(buffer, sizeof(short));
 
-            public override Span<byte> SetShort(Span<byte> buffer, short value)
+            public override Span<byte> SetInt16(Span<byte> buffer, short value)
                 => SetCore(buffer, value, sizeof(short));
 
-            public override ushort GetUShort(ReadOnlySpan<byte> buffer)
+            public override ushort GetUInt16(ReadOnlySpan<byte> buffer)
                 => GetCore<ushort>(buffer, sizeof(ushort));
 
-            public override Span<byte> SetUShort(Span<byte> buffer, ushort value)
+            public override Span<byte> SetUInt16(Span<byte> buffer, ushort value)
                 => SetCore(buffer, value, sizeof(ushort));
 
-            public override int GetInt(ReadOnlySpan<byte> buffer)
+            public override int GetInt32(ReadOnlySpan<byte> buffer)
                 => GetCore<int>(buffer, sizeof(int));
 
-            public override Span<byte> SetInt(Span<byte> buffer, int value)
+            public override Span<byte> SetInt32(Span<byte> buffer, int value)
                 => SetCore(buffer, value, sizeof(int));
 
-            public override uint GetUInt(ReadOnlySpan<byte> buffer)
+            public override uint GetUInt32(ReadOnlySpan<byte> buffer)
                 => GetCore<uint>(buffer, sizeof(uint));
 
-            public override Span<byte> SetUInt(Span<byte> buffer, uint value)
+            public override Span<byte> SetUInt32(Span<byte> buffer, uint value)
                 => SetCore(buffer, value, sizeof(uint));
 
-            public override long GetLong(ReadOnlySpan<byte> buffer)
+            public override long GetInt64(ReadOnlySpan<byte> buffer)
                 => GetCore<long>(buffer, sizeof(long));
 
-            public override Span<byte> SetLong(Span<byte> buffer, long value)
+            public override Span<byte> SetInt64(Span<byte> buffer, long value)
                 => SetCore(buffer, value, sizeof(long));
 
-            public override ulong GetULong(ReadOnlySpan<byte> buffer)
+            public override ulong GetUInt64(ReadOnlySpan<byte> buffer)
                 => GetCore<ulong>(buffer, sizeof(ulong));
 
-            public override Span<byte> SetULong(Span<byte> buffer, ulong value)
+            public override Span<byte> SetUInt64(Span<byte> buffer, ulong value)
                 => SetCore(buffer, value, sizeof(ulong));
 
-            public override float GetFloat(ReadOnlySpan<byte> buffer)
+            public override float GetSingle(ReadOnlySpan<byte> buffer)
                 => GetCore<float>(buffer, sizeof(float));
 
-            public override Span<byte> SetFloat(Span<byte> buffer, float value)
+            public override Span<byte> SetSingle(Span<byte> buffer, float value)
                 => SetCore(buffer, value, sizeof(float));
 
             public override double GetDouble(ReadOnlySpan<byte> buffer)
@@ -194,47 +194,47 @@ namespace Fasciculus.IO.Binary
 
         private class Reverted : Endian
         {
-            public override short GetShort(ReadOnlySpan<byte> buffer)
-                => straight.GetShort(ReverseInput(buffer, sizeof(short)));
+            public override short GetInt16(ReadOnlySpan<byte> buffer)
+                => straight.GetInt16(ReverseInput(buffer, sizeof(short)));
 
-            public override Span<byte> SetShort(Span<byte> buffer, short value)
-                => ReverseOutput(straight.SetShort(buffer, value), sizeof(short));
+            public override Span<byte> SetInt16(Span<byte> buffer, short value)
+                => ReverseOutput(straight.SetInt16(buffer, value), sizeof(short));
 
-            public override ushort GetUShort(ReadOnlySpan<byte> buffer)
-                => straight.GetUShort(ReverseInput(buffer, sizeof(ushort)));
+            public override ushort GetUInt16(ReadOnlySpan<byte> buffer)
+                => straight.GetUInt16(ReverseInput(buffer, sizeof(ushort)));
 
-            public override Span<byte> SetUShort(Span<byte> buffer, ushort value)
-                => ReverseOutput(straight.SetUShort(buffer, value), sizeof(short));
+            public override Span<byte> SetUInt16(Span<byte> buffer, ushort value)
+                => ReverseOutput(straight.SetUInt16(buffer, value), sizeof(short));
 
-            public override int GetInt(ReadOnlySpan<byte> buffer)
-                => straight.GetInt(ReverseInput(buffer, sizeof(int)));
+            public override int GetInt32(ReadOnlySpan<byte> buffer)
+                => straight.GetInt32(ReverseInput(buffer, sizeof(int)));
 
-            public override Span<byte> SetInt(Span<byte> buffer, int value)
-                => ReverseOutput(straight.SetInt(buffer, value), sizeof(int));
+            public override Span<byte> SetInt32(Span<byte> buffer, int value)
+                => ReverseOutput(straight.SetInt32(buffer, value), sizeof(int));
 
-            public override uint GetUInt(ReadOnlySpan<byte> buffer)
-                => straight.GetUInt(ReverseInput(buffer, sizeof(uint)));
+            public override uint GetUInt32(ReadOnlySpan<byte> buffer)
+                => straight.GetUInt32(ReverseInput(buffer, sizeof(uint)));
 
-            public override Span<byte> SetUInt(Span<byte> buffer, uint value)
-                => ReverseOutput(straight.SetUInt(buffer, value), sizeof(uint));
+            public override Span<byte> SetUInt32(Span<byte> buffer, uint value)
+                => ReverseOutput(straight.SetUInt32(buffer, value), sizeof(uint));
 
-            public override long GetLong(ReadOnlySpan<byte> buffer)
-                => straight.GetLong(ReverseInput(buffer, sizeof(long)));
+            public override long GetInt64(ReadOnlySpan<byte> buffer)
+                => straight.GetInt64(ReverseInput(buffer, sizeof(long)));
 
-            public override Span<byte> SetLong(Span<byte> buffer, long value)
-                => ReverseOutput(straight.SetLong(buffer, value), sizeof(long));
+            public override Span<byte> SetInt64(Span<byte> buffer, long value)
+                => ReverseOutput(straight.SetInt64(buffer, value), sizeof(long));
 
-            public override ulong GetULong(ReadOnlySpan<byte> buffer)
-                => straight.GetULong(ReverseInput(buffer, sizeof(ulong)));
+            public override ulong GetUInt64(ReadOnlySpan<byte> buffer)
+                => straight.GetUInt64(ReverseInput(buffer, sizeof(ulong)));
 
-            public override Span<byte> SetULong(Span<byte> buffer, ulong value)
-                => ReverseOutput(straight.SetULong(buffer, value), sizeof(ulong));
+            public override Span<byte> SetUInt64(Span<byte> buffer, ulong value)
+                => ReverseOutput(straight.SetUInt64(buffer, value), sizeof(ulong));
 
-            public override float GetFloat(ReadOnlySpan<byte> buffer)
-                => straight.GetFloat(ReverseInput(buffer, sizeof(float)));
+            public override float GetSingle(ReadOnlySpan<byte> buffer)
+                => straight.GetSingle(ReverseInput(buffer, sizeof(float)));
 
-            public override Span<byte> SetFloat(Span<byte> buffer, float value)
-                => ReverseOutput(straight.SetFloat(buffer, value), sizeof(float));
+            public override Span<byte> SetSingle(Span<byte> buffer, float value)
+                => ReverseOutput(straight.SetSingle(buffer, value), sizeof(float));
 
             public override double GetDouble(ReadOnlySpan<byte> buffer)
                 => straight.GetDouble(ReverseInput(buffer, sizeof(double)));
@@ -256,10 +256,7 @@ namespace Fasciculus.IO.Binary
 
             private static Span<byte> ReverseOutput(Span<byte> buffer, int count)
             {
-                for (int i = 0, j = count - 1; i < j; ++i, --j)
-                {
-                    (buffer[i], buffer[j]) = (buffer[j], buffer[i]);
-                }
+                buffer.Reverse();
 
                 return buffer;
             }
