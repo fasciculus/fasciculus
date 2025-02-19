@@ -1,3 +1,4 @@
+using Fasciculus.Algorithms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,13 +46,13 @@ namespace Fasciculus.IO.Binary
         /// Writes a <see cref="byte"/> to the stream.
         /// </summary>
         public static void WriteUInt8(this Stream stream, byte value)
-            => WriteCore(stream, [value], 1);
+            => WriteCore(stream, sizeof(byte), buffer => { buffer[0] = value; });
 
         /// <summary>
         /// Reads a <see cref="short"/> from the stream using the given endianness.
         /// </summary>
         public static short ReadInt16(this Stream stream, Endian endian)
-            => endian.GetShort(ReadCore(stream, Alloc(sizeof(short)), sizeof(short)));
+            => endian.GetInt16(ReadCore(stream, Alloc(sizeof(short)), sizeof(short)));
 
         /// <summary>
         /// Reads a <see cref="short"/> from the stream using little-endian.
@@ -63,7 +64,7 @@ namespace Fasciculus.IO.Binary
         /// Writes a <see cref="short"/> to the stream using the given endianness.
         /// </summary>
         public static void WriteInt16(this Stream stream, short value, Endian endian)
-            => WriteCore(stream, endian.SetShort(Alloc(sizeof(short)), value), sizeof(short));
+            => WriteCore(stream, sizeof(short), buffer => { endian.SetInt16(buffer, value); });
 
         /// <summary>
         /// Writes a <see cref="short"/> to the stream using little-endian.
@@ -75,7 +76,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="ushort"/> from the stream using the given endianness.
         /// </summary>
         public static ushort ReadUInt16(this Stream stream, Endian endian)
-            => endian.GetUShort(ReadCore(stream, Alloc(sizeof(ushort)), sizeof(ushort)));
+            => endian.GetUInt16(ReadCore(stream, Alloc(sizeof(ushort)), sizeof(ushort)));
 
         /// <summary>
         /// Reads a <see cref="ushort"/> from the stream using little-endian.
@@ -87,7 +88,7 @@ namespace Fasciculus.IO.Binary
         /// Writes a <see cref="ushort"/> to the stream using the given endianness.
         /// </summary>
         public static void WriteUInt16(this Stream stream, ushort value, Endian endian)
-            => WriteCore(stream, endian.SetUShort(Alloc(sizeof(ushort)), value), sizeof(ushort));
+            => WriteCore(stream, sizeof(ushort), buffer => { endian.SetUInt16(buffer, value); });
 
         /// <summary>
         /// Writes a <see cref="ushort"/> to the stream using little-endian.
@@ -99,7 +100,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="int"/> from the stream using the given endianness.
         /// </summary>
         public static int ReadInt32(this Stream stream, Endian endian)
-            => endian.GetInt(ReadCore(stream, Alloc(sizeof(int)), sizeof(int)));
+            => endian.GetInt32(ReadCore(stream, Alloc(sizeof(int)), sizeof(int)));
 
         /// <summary>
         /// Reads a <see cref="int"/> from the stream using little-endian.
@@ -111,7 +112,7 @@ namespace Fasciculus.IO.Binary
         /// Writes a <see cref="int"/> to the stream using the given endianness.
         /// </summary>
         public static void WriteInt32(this Stream stream, int value, Endian endian)
-            => WriteCore(stream, endian.SetInt(Alloc(sizeof(int)), value), sizeof(int));
+            => WriteCore(stream, sizeof(int), buffer => { endian.SetInt32(buffer, value); });
 
         /// <summary>
         /// Writes a <see cref="int"/> to the stream using little-endian.
@@ -123,7 +124,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="uint"/> from the stream using the given endianness.
         /// </summary>
         public static uint ReadUInt32(this Stream stream, Endian endian)
-            => endian.GetUInt(ReadCore(stream, Alloc(sizeof(uint)), sizeof(uint)));
+            => endian.GetUInt32(ReadCore(stream, Alloc(sizeof(uint)), sizeof(uint)));
 
         /// <summary>
         /// Reads a <see cref="uint"/> from the stream using little-endian.
@@ -135,7 +136,7 @@ namespace Fasciculus.IO.Binary
         /// Writes a <see cref="uint"/> to the stream using the given endianness.
         /// </summary>
         public static void WriteUInt32(this Stream stream, uint value, Endian endian)
-            => WriteCore(stream, endian.SetUInt(Alloc(sizeof(uint)), value), sizeof(uint));
+            => WriteCore(stream, sizeof(uint), buffer => { endian.SetUInt32(buffer, value); });
 
         /// <summary>
         /// Writes a <see cref="uint"/> to the stream using little-endian.
@@ -147,7 +148,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="long"/> from the stream using the given endianness.
         /// </summary>
         public static long ReadInt64(this Stream stream, Endian endian)
-            => endian.GetLong(ReadCore(stream, Alloc(sizeof(long)), sizeof(long)));
+            => endian.GetInt64(ReadCore(stream, Alloc(sizeof(long)), sizeof(long)));
 
         /// <summary>
         /// Reads a <see cref="long"/> from the stream using little-endian.
@@ -159,7 +160,7 @@ namespace Fasciculus.IO.Binary
         /// Writes a <see cref="long"/> to the stream using the given endianness.
         /// </summary>
         public static void WriteInt64(this Stream stream, long value, Endian endian)
-            => WriteCore(stream, endian.SetLong(Alloc(sizeof(long)), value), sizeof(long));
+            => WriteCore(stream, sizeof(long), buffer => { endian.SetInt64(buffer, value); });
 
         /// <summary>
         /// Writes a <see cref="long"/> to the stream using little-endian.
@@ -171,7 +172,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="ulong"/> from the stream using the given endianness.
         /// </summary>
         public static ulong ReadUInt64(this Stream stream, Endian endian)
-            => endian.GetULong(ReadCore(stream, Alloc(sizeof(ulong)), sizeof(ulong)));
+            => endian.GetUInt64(ReadCore(stream, Alloc(sizeof(ulong)), sizeof(ulong)));
 
         /// <summary>
         /// Reads a <see cref="ulong"/> from the stream using little-endian.
@@ -183,7 +184,7 @@ namespace Fasciculus.IO.Binary
         /// Writes a <see cref="ulong"/> to the stream using the given endianness.
         /// </summary>
         public static void WriteUInt64(this Stream stream, ulong value, Endian endian)
-            => WriteCore(stream, endian.SetULong(Alloc(sizeof(ulong)), value), sizeof(ulong));
+            => WriteCore(stream, sizeof(ulong), buffer => { endian.SetUInt64(buffer, value); });
 
         /// <summary>
         /// Writes a <see cref="ulong"/> to the stream using little-endian.
@@ -195,7 +196,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="float"/> from the stream using the given endianness.
         /// </summary>
         public static float ReadSingle(this Stream stream, Endian endian)
-            => endian.GetFloat(ReadCore(stream, Alloc(sizeof(float)), sizeof(float)));
+            => endian.GetSingle(ReadCore(stream, Alloc(sizeof(float)), sizeof(float)));
 
         /// <summary>
         /// Reads a <see cref="float"/> from the stream using little-endian.
@@ -207,7 +208,7 @@ namespace Fasciculus.IO.Binary
         /// Writes a <see cref="float"/> to the stream using the given endianness.
         /// </summary>
         public static void WriteSingle(this Stream stream, float value, Endian endian)
-            => WriteCore(stream, endian.SetFloat(Alloc(sizeof(float)), value), sizeof(float));
+            => WriteCore(stream, sizeof(float), buffer => { endian.SetSingle(buffer, value); });
 
         /// <summary>
         /// Writes a <see cref="float"/> to the stream using little-endian.
@@ -231,7 +232,7 @@ namespace Fasciculus.IO.Binary
         /// Writes a <see cref="double"/> to the stream using the given endianness.
         /// </summary>
         public static void WriteDouble(this Stream stream, double value, Endian endian)
-            => WriteCore(stream, endian.SetDouble(Alloc(sizeof(double)), value), sizeof(double));
+            => WriteCore(stream, sizeof(double), buffer => { endian.SetDouble(buffer, value); });
 
         /// <summary>
         /// Writes a <see cref="double"/> to the stream using little-endian.
@@ -297,7 +298,7 @@ namespace Fasciculus.IO.Binary
             int count = buffer.Length;
 
             stream.WriteInt32(buffer.Length, endian);
-            WriteCore(stream, buffer, count);
+            stream.Write(buffer, 0, count);
         }
 
         /// <summary>
@@ -744,11 +745,14 @@ namespace Fasciculus.IO.Binary
             return buffer;
         }
 
-        private static void WriteCore(Stream stream, byte[] buffer, int count)
-            => stream.Write(buffer, 0, count);
-
-        private static void WriteCore(Stream stream, ReadOnlySpan<byte> buffer, int count)
-            => WriteCore(stream, buffer.ToArray(), count);
+        private static void WriteCore(Stream stream, int size, Action<byte[]> convert)
+        {
+            Arrays.Invoke<byte>(size, buffer =>
+            {
+                convert(buffer);
+                stream.Write(buffer, 0, size);
+            });
+        }
 
         private static T[] ReadArrayCore<T>(Stream stream, Endian endian, Func<Stream, Endian, T> read)
         {
