@@ -1,4 +1,4 @@
-using Fasciculus.Algorithms;
+using Fasciculus.Algorithms.Comparing;
 using Fasciculus.IO;
 using Fasciculus.IO.Compressing;
 

@@ -1,4 +1,4 @@
-using Fasciculus.Algorithms;
+using Fasciculus.Algorithms.Comparing;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Fasciculus.Algorithms
+namespace Fasciculus.Algorithms.Comparing
 {
     /// <summary>
     /// Equality comparer for byte arrays.

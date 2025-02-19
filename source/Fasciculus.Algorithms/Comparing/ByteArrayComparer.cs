@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Fasciculus.Algorithms
+namespace Fasciculus.Algorithms.Comparing
 {
     /// <summary>
     /// A comparer to compare byte arrays.

@@ -1,3 +1,4 @@
+using Fasciculus.Algorithms.Comparing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fasciculus.Algorithms.Tests
