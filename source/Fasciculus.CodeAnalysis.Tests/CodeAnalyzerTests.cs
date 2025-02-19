@@ -177,6 +177,34 @@ namespace Fasciculus.CodeAnalysis.Tests
         }
 
         [TestMethod]
+        public void TestFasciculusReflection()
+        {
+            TestContext context = new()
+            {
+                Projects = [GetProject("Fasciculus.Reflection")],
+                ProductionKind = SyntaxKind.None,
+
+                Packages = 1,
+                Namespaces = 1,
+                Enums = 0,
+                Interfaces = 0,
+                Classes = 2,
+
+                Fields = 0,
+                Members = 0,
+                Events = 0,
+                Properties = 0,
+
+                Constructors = 0,
+                Methods = 4,
+
+                Summaries = 6,
+            };
+
+            Test(context);
+        }
+
+        [TestMethod]
         public void TestFasciculusText()
         {
             TestContext context = new()
