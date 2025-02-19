@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Fasciculus.Algorithms
+namespace Fasciculus.Algorithms.Fuzzy
 {
     /// <summary>
     /// A fuzzy bytes entry returned from the <see cref="FuzzyBytesGenerator"/>.

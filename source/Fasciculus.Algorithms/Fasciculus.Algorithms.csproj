@@ -16,7 +16,7 @@
 
   <Import Project="../Fasciculus.Extensions.Attributes/local/Fasciculus.Extensions.Attributes.props" />
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup>
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 

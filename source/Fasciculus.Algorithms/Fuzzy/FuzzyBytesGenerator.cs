@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fasciculus.Algorithms
+namespace Fasciculus.Algorithms.Fuzzy
 {
     /// <summary>
     /// A generator to create byte arrays fuzzied from a given start array
