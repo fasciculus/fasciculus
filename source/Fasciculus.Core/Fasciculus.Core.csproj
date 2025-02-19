@@ -19,7 +19,7 @@
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 
-  <Import Project="../Fasciculus.Extensions.Collections/local/Fasciculus.Extensions.Collections.props"/>
+  <Import Project="../Fasciculus.Extensions.Collections/local/Fasciculus.Extensions.Collections.props" />
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />

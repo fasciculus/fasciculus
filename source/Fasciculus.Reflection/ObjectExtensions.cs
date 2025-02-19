@@ -1,4 +1,3 @@
-﻿using Fasciculus.Support;
 using System;
 using System.Reflection;
 
@@ -12,14 +11,14 @@ namespace Fasciculus.Reflection
         /// <summary>
         /// Returns a property value of the given object
         /// </summary>
-        public static T GetRequiredProperty<T>(this object obj, string name)
+        public static T? GetRequiredProperty<T>(this object obj, string name)
             where T : class
         {
             Type type = obj.GetType();
-            PropertyInfo propertyInfo = Cond.NotNull(type.GetProperty(name));
-            object value = Cond.NotNull(propertyInfo.GetValue(obj));
+            PropertyInfo? propertyInfo = type.GetProperty(name);
+            object? value = propertyInfo?.GetValue(obj);
 
-            return Cond.NotNull(value as T);
+            return value as T;
         }
     }
 }

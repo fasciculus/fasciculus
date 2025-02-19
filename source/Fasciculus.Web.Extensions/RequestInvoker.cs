@@ -70,8 +70,8 @@ namespace Fasciculus.Web.Extensions
             IEnumerable<IStartupFilter> startupFilters, IServer server, IApplicationBuilderFactory applicationBuilderFactory)
         {
             IHostedService webHost = hostedServices.OfType("Microsoft.AspNetCore.Hosting.GenericWebHostService").Single();
-            object options = webHost.GetRequiredProperty<object>("Options");
-            Action<IApplicationBuilder> configure = options.GetRequiredProperty<Action<IApplicationBuilder>>("ConfigureApplication");
+            object options = webHost.GetRequiredProperty<object>("Options")!;
+            Action<IApplicationBuilder> configure = options.GetRequiredProperty<Action<IApplicationBuilder>>("ConfigureApplication")!;
             IApplicationBuilder applicationBuilder = applicationBuilderFactory.CreateBuilder(server.Features);
 
             foreach (var startupFilter in startupFilters.Reverse())

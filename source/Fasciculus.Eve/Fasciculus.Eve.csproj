@@ -43,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Reflection/Fasciculus.Reflection.csproj" />
     <ProjectReference Include="../Fasciculus.Eve.Core/Fasciculus.Eve.Core.csproj" />
     <ProjectReference Include="../Fasciculus.Maui/Fasciculus.Maui.csproj" />
   </ItemGroup>
