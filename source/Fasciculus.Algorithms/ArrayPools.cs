@@ -6,7 +6,7 @@ namespace Fasciculus.Algorithms
     /// <summary>
     /// Array extensions.
     /// </summary>
-    public static class Arrays
+    public static class ArrayPools
     {
         /// <summary>
         /// Invokes the specified action with an array of the specified minimum length.

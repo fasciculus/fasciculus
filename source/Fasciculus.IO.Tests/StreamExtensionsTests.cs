@@ -15,16 +15,19 @@ namespace Fasciculus.IO.Tests
             bool expectedBool = true;
             short expectedShort = 42;
             float expectedFloat = 3.14f;
+            string expectedString = "Hello, World!";
 
             stream.WriteBool(expectedBool);
             stream.WriteInt16(expectedShort);
             stream.WriteSingle(expectedFloat);
+            stream.WriteString(expectedString);
 
             stream.Position = 0;
 
             Assert.AreEqual(expectedBool, stream.ReadBool());
             Assert.AreEqual(expectedShort, stream.ReadInt16());
             Assert.AreEqual(expectedFloat, stream.ReadSingle());
+            Assert.AreEqual(expectedString, stream.ReadString());
         }
     }
 }

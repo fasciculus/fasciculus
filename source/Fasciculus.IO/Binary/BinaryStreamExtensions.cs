@@ -10,7 +10,7 @@ namespace Fasciculus.IO.Binary
     /// <summary>
     /// Extensions to read/write binary data from streams.
     /// </summary>
-    public static class StreamExtensions
+    public static class BinaryStreamExtensions
     {
         /// <summary>
         /// Reads a <see cref="bool"/> from the stream
@@ -40,7 +40,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="byte"/> from the stream
         /// </summary>
         public static byte ReadUInt8(this Stream stream)
-            => ReadCore(stream, Alloc(1), 1)[0];
+            => ReadCore(stream, sizeof(byte), buffer => buffer[0]);
 
         /// <summary>
         /// Writes a <see cref="byte"/> to the stream.
@@ -52,7 +52,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="short"/> from the stream using the given endianness.
         /// </summary>
         public static short ReadInt16(this Stream stream, Endian endian)
-            => endian.GetInt16(ReadCore(stream, Alloc(sizeof(short)), sizeof(short)));
+            => ReadCore(stream, sizeof(short), buffer => endian.GetInt16(buffer));
 
         /// <summary>
         /// Reads a <see cref="short"/> from the stream using little-endian.
@@ -76,7 +76,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="ushort"/> from the stream using the given endianness.
         /// </summary>
         public static ushort ReadUInt16(this Stream stream, Endian endian)
-            => endian.GetUInt16(ReadCore(stream, Alloc(sizeof(ushort)), sizeof(ushort)));
+            => ReadCore(stream, sizeof(ushort), buffer => endian.GetUInt16(buffer));
 
         /// <summary>
         /// Reads a <see cref="ushort"/> from the stream using little-endian.
@@ -100,7 +100,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="int"/> from the stream using the given endianness.
         /// </summary>
         public static int ReadInt32(this Stream stream, Endian endian)
-            => endian.GetInt32(ReadCore(stream, Alloc(sizeof(int)), sizeof(int)));
+            => ReadCore(stream, sizeof(int), buffer => endian.GetInt32(buffer));
 
         /// <summary>
         /// Reads a <see cref="int"/> from the stream using little-endian.
@@ -124,7 +124,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="uint"/> from the stream using the given endianness.
         /// </summary>
         public static uint ReadUInt32(this Stream stream, Endian endian)
-            => endian.GetUInt32(ReadCore(stream, Alloc(sizeof(uint)), sizeof(uint)));
+            => ReadCore(stream, sizeof(uint), buffer => endian.GetUInt32(buffer));
 
         /// <summary>
         /// Reads a <see cref="uint"/> from the stream using little-endian.
@@ -148,7 +148,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="long"/> from the stream using the given endianness.
         /// </summary>
         public static long ReadInt64(this Stream stream, Endian endian)
-            => endian.GetInt64(ReadCore(stream, Alloc(sizeof(long)), sizeof(long)));
+            => ReadCore(stream, sizeof(long), buffer => endian.GetInt64(buffer));
 
         /// <summary>
         /// Reads a <see cref="long"/> from the stream using little-endian.
@@ -172,7 +172,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="ulong"/> from the stream using the given endianness.
         /// </summary>
         public static ulong ReadUInt64(this Stream stream, Endian endian)
-            => endian.GetUInt64(ReadCore(stream, Alloc(sizeof(ulong)), sizeof(ulong)));
+            => ReadCore(stream, sizeof(ulong), buffer => endian.GetUInt64(buffer));
 
         /// <summary>
         /// Reads a <see cref="ulong"/> from the stream using little-endian.
@@ -196,7 +196,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="float"/> from the stream using the given endianness.
         /// </summary>
         public static float ReadSingle(this Stream stream, Endian endian)
-            => endian.GetSingle(ReadCore(stream, Alloc(sizeof(float)), sizeof(float)));
+            => ReadCore(stream, sizeof(float), buffer => endian.GetSingle(buffer));
 
         /// <summary>
         /// Reads a <see cref="float"/> from the stream using little-endian.
@@ -220,7 +220,7 @@ namespace Fasciculus.IO.Binary
         /// Reads a <see cref="double"/> from the stream using the given endianness.
         /// </summary>
         public static double ReadDouble(this Stream stream, Endian endian)
-            => endian.GetDouble(ReadCore(stream, Alloc(sizeof(double)), sizeof(double)));
+            => ReadCore(stream, sizeof(double), buffer => endian.GetDouble(buffer));
 
         /// <summary>
         /// Reads a <see cref="double"/> from the stream using little-endian.
@@ -270,11 +270,13 @@ namespace Fasciculus.IO.Binary
         public static string ReadString(this Stream stream, Endian endian)
         {
             int count = stream.ReadInt32(endian);
-            byte[] buffer = Alloc(count);
 
-            ReadCore(stream, buffer, count);
+            return ArrayPools.Select<byte, string>(count, buffer =>
+            {
+                stream.Read(buffer, 0, count);
 
-            return Encoding.UTF8.GetString(buffer);
+                return Encoding.UTF8.GetString(buffer, 0, count);
+            });
         }
 
         /// <summary>
@@ -732,22 +734,19 @@ namespace Fasciculus.IO.Binary
             where K : notnull
             => stream.WriteDictionary(dictionary, (s, k, e) => { writeKey(s, k); }, (s, v, e) => { writeValue(s, v); }, Endian.Little);
 
-        private static byte[] Alloc(int count)
-            => new byte[count];
-
-        private static byte[] ReadCore(Stream stream, byte[] buffer, int count)
+        private static T ReadCore<T>(Stream stream, int size, Func<byte[], T> convert)
         {
-            if (stream.Read(buffer, 0, count) != count)
+            return ArrayPools.Select<byte, T>(size, buffer =>
             {
-                throw new EndOfStreamException();
-            }
+                stream.ReadExactly(buffer, 0, size);
 
-            return buffer;
+                return convert(buffer);
+            });
         }
 
         private static void WriteCore(Stream stream, int size, Action<byte[]> convert)
         {
-            Arrays.Invoke<byte>(size, buffer =>
+            ArrayPools.Invoke<byte>(size, buffer =>
             {
                 convert(buffer);
                 stream.Write(buffer, 0, size);

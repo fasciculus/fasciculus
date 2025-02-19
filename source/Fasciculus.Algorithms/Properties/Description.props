@@ -4,6 +4,7 @@
   <PropertyGroup>
     <Description>
       This package provides:
+      - Invocation of actions or functions on pooled arrays.
       - Search algoritms for base types.
       - Comparers for byte arrays.
       - Edit distance for arrays.

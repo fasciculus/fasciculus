@@ -2,6 +2,10 @@
 
 This package includes a bunch of algorithms.
 
+## Array Pools
+
+Invocation of actions or functions on pooled arrays.
+
 ## Array Equality and Comparison
 
 The classes `ByteArrayEqualityComparer` and `ByteArrayComparer` allow testing for equality or
