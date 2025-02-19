@@ -21,13 +21,6 @@ namespace Fasciculus.Git.Tests
                 Log($"commit {commit.Id}");
                 Log($"  Author : {commit.Author}");
                 Log($"  When   : {commit.Author.When}");
-
-                Tree tree = commit.Tree;
-
-                foreach (TreeEntry treeEntry in tree)
-                {
-                    Log($"  {treeEntry.Path}");
-                }
             }
         }
     }
