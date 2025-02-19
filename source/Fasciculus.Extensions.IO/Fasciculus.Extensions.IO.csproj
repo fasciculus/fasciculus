@@ -36,6 +36,7 @@
     <None Include="Fasciculus.Stream.ReadAtLeastCore.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
     <None Include="Fasciculus.Stream.ReadAtLeast.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
     <None Include="Fasciculus.Stream.ReadExactly.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
+    <None Include="Fasciculus.Stream.Write.cs" Pack="true" PackagePath="$(NetStandard2_0PackagePath)" />
   </ItemGroup>
 
   <ItemGroup>

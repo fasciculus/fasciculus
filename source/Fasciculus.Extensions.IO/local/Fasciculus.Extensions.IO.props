@@ -6,6 +6,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.ReadAtLeast.cs" Visible="false" />
     <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.ReadAtLeastCore.cs" Visible="false" />
     <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.ReadExactly.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Stream.Write.cs" Visible="false" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
