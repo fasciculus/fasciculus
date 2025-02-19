@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <PropertyGroup>
+    <Description>
+      This package provides:
+      - access to assembly metadata.
+      - access to object properties.
+      See the README for more information.
+    </Description>
+  </PropertyGroup>
+</Project>
