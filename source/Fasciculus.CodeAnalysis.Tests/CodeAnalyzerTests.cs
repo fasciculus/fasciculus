@@ -101,10 +101,10 @@ namespace Fasciculus.CodeAnalysis.Tests
                 ProductionKind = SyntaxKind.OperatorDeclaration, // SyntaxKind.None,
 
                 Packages = 1,
-                Namespaces = 12,
+                Namespaces = 11,
                 Enums = 0,
                 Interfaces = 3,
-                Classes = 39,
+                Classes = 37,
 
                 Fields = 2,
                 Members = 0,
@@ -112,9 +112,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Properties = 32,
 
                 Constructors = 30,
-                Methods = 131,
+                Methods = 127,
 
-                Summaries = 234,
+                Summaries = 228,
             };
 
             Test(context);
