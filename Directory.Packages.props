@@ -43,8 +43,8 @@
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7" />
     <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="3.8.1" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.8.1" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.8.2" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.8.2" />
     <PackageVersion Include="NuGet.Frameworks" Version="6.13.1" />
     <PackageVersion Include="NuGet.Protocol" Version="6.13.1" />
     <PackageVersion Include="NuGet.Versioning" Version="6.13.1" />
