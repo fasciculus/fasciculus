@@ -73,7 +73,7 @@ namespace Fasciculus.CodeAnalysis.Tests
                 ProductionKind = SyntaxKind.Parameter,
 
                 Packages = 1,
-                Namespaces = 1,
+                Namespaces = 4,
                 Enums = 0,
                 Interfaces = 0,
                 Classes = 7,
@@ -157,20 +157,48 @@ namespace Fasciculus.CodeAnalysis.Tests
                 ProductionKind = SyntaxKind.None,
 
                 Packages = 1,
-                Namespaces = 2,
+                Namespaces = 1,
+                Enums = 0,
+                Interfaces = 0,
+                Classes = 2,
+
+                Fields = 0,
+                Members = 0,
+                Events = 0,
+                Properties = 3,
+
+                Constructors = 0,
+                Methods = 126,
+
+                Summaries = 131,
+            };
+
+            Test(context);
+        }
+
+        [TestMethod]
+        public void TestFasciculusIOCore()
+        {
+            TestContext context = new()
+            {
+                Projects = [GetProject("Fasciculus.IO.Core")],
+                ProductionKind = SyntaxKind.None,
+
+                Packages = 1,
+                Namespaces = 1,
                 Enums = 1,
                 Interfaces = 0,
-                Classes = 8,
+                Classes = 6,
 
                 Fields = 0,
                 Members = 3,
                 Events = 0,
-                Properties = 17,
+                Properties = 14,
 
                 Constructors = 0,
-                Methods = 157,
+                Methods = 31,
 
-                Summaries = 186,
+                Summaries = 55,
             };
 
             Test(context);

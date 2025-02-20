@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Fasciculus</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <Import Project="Properties/Description.props" />
+
+  <Import Project="../Fasciculus.Extensions.IO/local/Fasciculus.Extensions.IO.props"/>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
+  </ItemGroup>
+
+</Project>
