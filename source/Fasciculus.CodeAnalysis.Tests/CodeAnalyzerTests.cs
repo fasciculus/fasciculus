@@ -149,11 +149,11 @@ namespace Fasciculus.CodeAnalysis.Tests
         }
 
         [TestMethod]
-        public void TestFasciculusIO()
+        public void TestFasciculusIOBinary()
         {
             TestContext context = new()
             {
-                Projects = [GetProject("Fasciculus.IO")],
+                Projects = [GetProject("Fasciculus.IO.Binary")],
                 ProductionKind = SyntaxKind.None,
 
                 Packages = 1,
