@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
+    <ProjectReference Include="../Fasciculus.IO.Binary/Fasciculus.IO.Binary.csproj" />
     <ProjectReference Include="../Fasciculus.Testing/Fasciculus.Testing.csproj" />
   </ItemGroup>
 
