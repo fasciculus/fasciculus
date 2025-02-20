@@ -18,6 +18,10 @@ namespace Fasciculus.NuGet.Services
 
         public FindPackageByIdResource FindPackageById => GetFindPackageById();
 
+        private FindLocalPackagesResource? findLocalPackages;
+
+        public FindLocalPackagesResource FindLocalPackages => GetFindLocalPackages();
+
         private PackageMetadataResource? packageMetadata;
 
         public PackageMetadataResource PackageMetadata => GetPackageMetadata();
@@ -31,12 +35,14 @@ namespace Fasciculus.NuGet.Services
         {
             using Locker locker = Locker.Lock(mutex);
 
-            if (findPackageById is null)
-            {
-                findPackageById = Tasks.Wait(repository.GetResourceAsync<FindPackageByIdResource>(CancellationToken.None));
-            }
+            return findPackageById ??= Tasks.Wait(repository.GetResourceAsync<FindPackageByIdResource>(CancellationToken.None));
+        }
 
-            return findPackageById;
+        private FindLocalPackagesResource GetFindLocalPackages()
+        {
+            using Locker locker = Locker.Lock(mutex);
+
+            return findLocalPackages ??= Tasks.Wait(repository.GetResourceAsync<FindLocalPackagesResource>(CancellationToken.None));
         }
 
         private PackageMetadataResource GetPackageMetadata()
