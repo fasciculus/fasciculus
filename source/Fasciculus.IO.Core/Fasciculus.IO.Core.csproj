@@ -6,12 +6,30 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <Import Project="Properties/Description.props" />
+  <PropertyGroup>
+    <Description>
+      This package provides:
+      - A set of classes and methods for working with files and directories.
+      See the README for more information.
+    </Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>fasciculus.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
 
   <Import Project="../Fasciculus.Extensions.IO/local/Fasciculus.Extensions.IO.props"/>
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 </Project>
