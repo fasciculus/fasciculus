@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Fasciculus.Support.Progressing
+namespace Fasciculus.Progress
 {
     /// <summary>
     /// An accumulating progress.

@@ -173,6 +173,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Reflection", "so
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.IO", "source\Fasciculus.IO\Fasciculus.IO.csproj", "{B5C13872-652A-4572-9527-92009E55BD7A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Progress", "Progress", "{D351C552-7748-4898-B718-F5D46E1A4C07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Progress.Common", "source\Fasciculus.Progress.Common\Fasciculus.Progress.Common.csproj", "{510EBC3F-1A63-4D3D-BDC3-E7881B32560F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -415,6 +419,10 @@ Global
 		{B5C13872-652A-4572-9527-92009E55BD7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5C13872-652A-4572-9527-92009E55BD7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5C13872-652A-4572-9527-92009E55BD7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{510EBC3F-1A63-4D3D-BDC3-E7881B32560F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{510EBC3F-1A63-4D3D-BDC3-E7881B32560F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{510EBC3F-1A63-4D3D-BDC3-E7881B32560F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{510EBC3F-1A63-4D3D-BDC3-E7881B32560F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -469,6 +477,7 @@ Global
 		{4A142600-6F1E-40D8-A344-A821D07FB9CE} = {5C6D7258-E451-42A1-87C5-080AA5A392DB}
 		{0C6FB6CE-7EB1-40F1-B82C-CC5CCB9071B2} = {B36B7364-FFB0-4AA4-985B-02CAB17A1E1E}
 		{B5C13872-652A-4572-9527-92009E55BD7A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{510EBC3F-1A63-4D3D-BDC3-E7881B32560F} = {D351C552-7748-4898-B718-F5D46E1A4C07}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {792A3CA0-656F-4B08-A937-422559A917B1}

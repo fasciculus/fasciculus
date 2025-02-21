@@ -103,7 +103,7 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Packages = 1,
                 Namespaces = 10,
                 Enums = 0,
-                Interfaces = 3,
+                Interfaces = 2,
                 Classes = 34,
 
                 Fields = 2,
@@ -112,9 +112,9 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Properties = 30,
 
                 Constructors = 28,
-                Methods = 122,
+                Methods = 120,
 
-                Summaries = 216,
+                Summaries = 213,
             };
 
             Test(context);
@@ -171,6 +171,34 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Methods = 167,
 
                 Summaries = 201,
+            };
+
+            Test(context);
+        }
+
+        [TestMethod]
+        public void TestFasciculusProgressCommon()
+        {
+            TestContext context = new()
+            {
+                Projects = [GetProject("Fasciculus.Progress.Common")],
+                ProductionKind = SyntaxKind.None,
+
+                Packages = 1,
+                Namespaces = 1,
+                Enums = 0,
+                Interfaces = 1,
+                Classes = 0,
+
+                Fields = 0,
+                Members = 0,
+                Events = 0,
+                Properties = 0,
+
+                Constructors = 0,
+                Methods = 2,
+
+                Summaries = 3,
             };
 
             Test(context);

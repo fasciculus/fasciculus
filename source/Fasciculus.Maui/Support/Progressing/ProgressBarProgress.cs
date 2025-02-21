@@ -1,5 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Maui.ComponentModel;
+using Fasciculus.Progress;
 using Fasciculus.Support.Progressing;
 using Fasciculus.Threading.Synchronization;
 using System;

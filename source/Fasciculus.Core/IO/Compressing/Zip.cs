@@ -1,5 +1,5 @@
-﻿using Fasciculus.Collections;
-using Fasciculus.Support.Progressing;
+using Fasciculus.Collections;
+using Fasciculus.Progress;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;

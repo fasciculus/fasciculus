@@ -1,6 +1,6 @@
-﻿using Fasciculus.Maui.Services;
+using Fasciculus.Maui.Services;
 using Fasciculus.Net;
-using Fasciculus.Support.Progressing;
+using Fasciculus.Progress;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 using Microsoft.Extensions.DependencyInjection;

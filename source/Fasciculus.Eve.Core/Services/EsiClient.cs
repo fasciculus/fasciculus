@@ -1,5 +1,5 @@
-﻿using Fasciculus.Eve.Models;
-using Fasciculus.Support.Progressing;
+using Fasciculus.Eve.Models;
+using Fasciculus.Progress;
 using Fasciculus.Threading.Synchronization;
 using System.Threading.Tasks;
 

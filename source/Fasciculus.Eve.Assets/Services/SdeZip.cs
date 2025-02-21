@@ -1,7 +1,7 @@
-﻿using Fasciculus.IO;
+using Fasciculus.IO;
 using Fasciculus.IO.Compressing;
 using Fasciculus.Net;
-using Fasciculus.Support.Progressing;
+using Fasciculus.Progress;
 using Fasciculus.Threading.Synchronization;
 
 namespace Fasciculus.Eve.Assets.Services
