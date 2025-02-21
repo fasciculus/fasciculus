@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -15,15 +15,14 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+  <ItemGroup>
     <PackageReference Include="System.Memory" />
   </ItemGroup>
 
   <Import Project="../Fasciculus.Extensions.Collections/local/Fasciculus.Extensions.Collections.props" />
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
-    <ProjectReference Include="../Fasciculus.IO.Core/Fasciculus.IO.Core.csproj" />
+    <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
   </ItemGroup>
 
   <!--

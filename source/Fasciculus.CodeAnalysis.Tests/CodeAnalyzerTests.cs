@@ -149,56 +149,28 @@ namespace Fasciculus.CodeAnalysis.Tests
         }
 
         [TestMethod]
-        public void TestFasciculusIOBinary()
+        public void TestFasciculusIO()
         {
             TestContext context = new()
             {
-                Projects = [GetProject("Fasciculus.IO.Binary")],
+                Projects = [GetProject("Fasciculus.IO")],
                 ProductionKind = SyntaxKind.None,
 
                 Packages = 1,
-                Namespaces = 1,
-                Enums = 0,
-                Interfaces = 0,
-                Classes = 2,
-
-                Fields = 0,
-                Members = 0,
-                Events = 0,
-                Properties = 3,
-
-                Constructors = 0,
-                Methods = 126,
-
-                Summaries = 131,
-            };
-
-            Test(context);
-        }
-
-        [TestMethod]
-        public void TestFasciculusIOCore()
-        {
-            TestContext context = new()
-            {
-                Projects = [GetProject("Fasciculus.IO.Core")],
-                ProductionKind = SyntaxKind.None,
-
-                Packages = 1,
-                Namespaces = 1,
+                Namespaces = 2,
                 Enums = 1,
                 Interfaces = 0,
-                Classes = 6,
+                Classes = 8,
 
                 Fields = 0,
                 Members = 3,
                 Events = 0,
-                Properties = 14,
+                Properties = 17,
 
                 Constructors = 0,
-                Methods = 31,
+                Methods = 157,
 
-                Summaries = 55,
+                Summaries = 186,
             };
 
             Test(context);

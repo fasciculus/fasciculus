@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Extensions/Fasciculus.Extensions.csproj" />
-    <ProjectReference Include="../Fasciculus.IO.Binary/Fasciculus.IO.Binary.csproj" />
     <ProjectReference Include="../Fasciculus.Mathematics/Fasciculus.Mathematics.csproj" />
     <ProjectReference Include="../Fasciculus.Maui/Fasciculus.Maui.csproj" />
     <ProjectReference Include="../Fasciculus.Text/Fasciculus.Text.csproj" />

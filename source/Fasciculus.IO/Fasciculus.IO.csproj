@@ -8,10 +8,18 @@
   <PropertyGroup>
     <Description>
       This package provides:
-      - A set of classes and methods for working with binary files.
+      - Two classes to access special paths and directories.
+      - A set of classes and methods for working with files and directories.
+      - Extensions for working with binary streams with configurable endianness.
       See the README for more information.
     </Description>
   </PropertyGroup>
+
+  <Import Project="../Fasciculus.Extensions.IO/local/Fasciculus.Extensions.IO.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
+  </ItemGroup>
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
@@ -23,12 +31,6 @@
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="/" />
     <None Include="Properties/fasciculus.png" Pack="true" PackagePath="/" />
-  </ItemGroup>
-
-  <Import Project="../Fasciculus.Extensions.IO/local/Fasciculus.Extensions.IO.props" />
-
-  <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Algorithms/Fasciculus.Algorithms.csproj" />
   </ItemGroup>
 
 </Project>
