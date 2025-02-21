@@ -26,7 +26,7 @@ namespace Fasciculus
         protected virtual DirectoryInfo GetProjectDirectory(string extension = ".csproj")
         {
             return FileSearch
-                .Search($"*{extension}", SearchPath.WorkingDirectoryAndParents)
+                .Search($"*{extension}", SearchPath.WorkingDirectoryAndParents())
                 .FirstOrDefault()
                 ?.Directory!;
         }

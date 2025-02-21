@@ -86,7 +86,7 @@ namespace Fasciculus.Site.Licenses.Services
 
         private static SearchPath GetSearchPath()
         {
-            FileInfo solutionFile = FileSearch.Search("fasciculus.sln", SearchPath.WorkingDirectoryAndParents).First();
+            FileInfo solutionFile = FileSearch.Search("fasciculus.sln", SearchPath.WorkingDirectoryAndParents()).First();
             DirectoryInfo sourceDirectory = solutionFile.Directory!.Combine("source");
 
             return new(sourceDirectory.GetDirectories());

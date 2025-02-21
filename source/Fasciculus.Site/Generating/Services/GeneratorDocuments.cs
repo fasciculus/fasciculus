@@ -43,7 +43,7 @@ namespace Fasciculus.Site.Generating.Services
 
         private void AddStatics(string projectName, string directoryName)
         {
-            DirectoryInfo projectDirectory = DirectorySearch.Search(projectName, SearchPath.WorkingDirectoryAndParents).First();
+            DirectoryInfo projectDirectory = DirectorySearch.Search(projectName, SearchPath.WorkingDirectoryAndParents()).First();
             DirectoryInfo staticsDirectory = projectDirectory.Combine(directoryName);
             FileInfo[] files = [.. staticsDirectory.EnumerateFiles("*", SearchOption.AllDirectories)];
             string[] relative = [.. files.Select(file => Path.GetRelativePath(staticsDirectory.FullName, file.FullName))];

@@ -15,7 +15,7 @@ namespace Fasciculus.Experiments.Antlr4.Gen
         static void Main(string[] args)
         {
             ConsoleLogger logger = new();
-            FileInfo configFile = FileSearch.Search("NuGet.config", SearchPath.WorkingDirectoryAndParents).First();
+            FileInfo configFile = FileSearch.Search("NuGet.config", SearchPath.WorkingDirectoryAndParents()).First();
             DirectoryInfo configDirectory = configFile.Directory!;
             ISettings settings = Settings.LoadDefaultSettings(configDirectory.FullName);
             SettingSection? section = settings.GetSection("config");

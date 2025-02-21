@@ -12,7 +12,7 @@ namespace Fasciculus.Git.Tests
         [TestMethod]
         public void Test()
         {
-            DirectoryInfo directory = DirectorySearch.Search(".git", SearchPath.WorkingDirectoryAndParents).First();
+            DirectoryInfo directory = DirectorySearch.Search(".git", SearchPath.WorkingDirectoryAndParents()).First();
             using Repository repository = new(directory.FullName);
             IQueryableCommitLog commits = repository.Commits;
 

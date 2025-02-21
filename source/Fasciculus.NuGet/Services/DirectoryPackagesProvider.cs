@@ -16,7 +16,7 @@ namespace Fasciculus.NuGet.Services
         public FileInfo? SearchPackagesFile(SearchPath? searchPath = null)
         {
             return FileSearch
-                .Search(DirectoryPackagesFileName, searchPath ?? SearchPath.WorkingDirectoryAndParents)
+                .Search(DirectoryPackagesFileName, searchPath ?? SearchPath.WorkingDirectoryAndParents())
                 .FirstOrDefault();
         }
 

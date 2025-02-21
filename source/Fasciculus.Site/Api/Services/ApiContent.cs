@@ -30,7 +30,7 @@ namespace Fasciculus.Site.Api.Services
 
         private static IEnumerable<CodeAnalyzerProject> GetProjects()
         {
-            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
+            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents();
 
             foreach (string packageName in SiteConstants.PackageNames)
             {

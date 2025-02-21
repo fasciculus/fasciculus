@@ -15,7 +15,7 @@ namespace Fasciculus.NuGet.Tests.Services
         public void Test()
         {
             string[] packageNames = ["Fasciculus.Core", "Fasciculus.Extensions"];
-            FileInfo solutionFile = FileSearch.Search("fasciculus.sln", SearchPath.WorkingDirectoryAndParents).First();
+            FileInfo solutionFile = FileSearch.Search("fasciculus.sln", SearchPath.WorkingDirectoryAndParents()).First();
             DirectoryInfo sourceDirectory = solutionFile.Directory!.Combine("source");
             SearchPath searchPath = new(sourceDirectory.GetDirectories());
             ProjectPackagesProvider provider = new();

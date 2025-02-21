@@ -31,7 +31,7 @@ namespace Fasciculus.NuGet
 
         public static FileInfo? Search()
         {
-            return Search(SearchPath.WorkingDirectoryAndParents);
+            return Search(SearchPath.WorkingDirectoryAndParents());
         }
     }
 }

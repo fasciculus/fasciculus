@@ -101,20 +101,20 @@ namespace Fasciculus.CodeAnalysis.Tests
                 ProductionKind = SyntaxKind.OperatorDeclaration, // SyntaxKind.None,
 
                 Packages = 1,
-                Namespaces = 11,
+                Namespaces = 10,
                 Enums = 0,
                 Interfaces = 3,
-                Classes = 37,
+                Classes = 34,
 
                 Fields = 2,
                 Members = 0,
                 Events = 2,
-                Properties = 32,
+                Properties = 30,
 
-                Constructors = 30,
-                Methods = 128,
+                Constructors = 28,
+                Methods = 122,
 
-                Summaries = 229,
+                Summaries = 216,
             };
 
             Test(context);
@@ -157,20 +157,20 @@ namespace Fasciculus.CodeAnalysis.Tests
                 ProductionKind = SyntaxKind.None,
 
                 Packages = 1,
-                Namespaces = 2,
+                Namespaces = 3,
                 Enums = 1,
                 Interfaces = 0,
-                Classes = 8,
+                Classes = 11,
 
                 Fields = 0,
                 Members = 3,
                 Events = 0,
                 Properties = 17,
 
-                Constructors = 0,
-                Methods = 159,
+                Constructors = 2,
+                Methods = 167,
 
-                Summaries = 188,
+                Summaries = 201,
             };
 
             Test(context);
@@ -359,7 +359,7 @@ namespace Fasciculus.CodeAnalysis.Tests
 
         private static CodeAnalyzerProject GetProject(string name)
         {
-            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
+            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents();
             DirectoryInfo directory = DirectorySearch.Search(name, searchPath).First();
 
             return new()

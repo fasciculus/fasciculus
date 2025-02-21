@@ -12,7 +12,7 @@ namespace Fasciculus.NuGet.Tests
         [TestMethod]
         public void Test()
         {
-            FileInfo configFile = FileSearch.Search("NuGet.config", SearchPath.WorkingDirectoryAndParents).First();
+            FileInfo configFile = FileSearch.Search("NuGet.config", SearchPath.WorkingDirectoryAndParents()).First();
             ISettings settings = SettingsLoader.Load();
             SettingSection? section = settings.GetSection("config");
             AddItem? item = section?.GetFirstItemWithAttribute<AddItem>("key", "repositoryPath");

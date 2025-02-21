@@ -14,7 +14,7 @@ namespace Fasciculus.Site.CheckLinks
     {
         static void Main(string[] args)
         {
-            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
+            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents();
             DirectoryInfo directory = DirectorySearch.Search("fasciculus.github.io", searchPath).First();
             FileInfo[] files = directory.GetFiles("*.html", SearchOption.AllDirectories);
             SortedSet<string> links = [];

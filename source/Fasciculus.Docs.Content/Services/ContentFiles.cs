@@ -13,7 +13,7 @@ namespace Fasciculus.Docs.Content.Services
         public ContentFiles()
         {
             projectDirectory = DirectorySearch
-                .Search("source", SearchPath.WorkingDirectoryAndParents)
+                .Search("source", SearchPath.WorkingDirectoryAndParents())
                 .First().Combine("Fasciculus.Docs.Content");
         }
 

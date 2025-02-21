@@ -1,4 +1,3 @@
-using Fasciculus.Collections;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +21,7 @@ namespace Fasciculus.IO.Searching
         /// </summary>
         public SearchPath(IEnumerable<DirectoryInfo> directories, bool recursive = false)
         {
-            directories.Apply(d => { Add(d, recursive); });
+            Add(directories, recursive);
         }
 
         /// <summary>
@@ -43,20 +42,23 @@ namespace Fasciculus.IO.Searching
 
             if (recursive)
             {
-                directory.GetDirectories().Apply(x => { Add(x, true); });
+                foreach (DirectoryInfo subDirectory in directory.GetDirectories())
+                {
+                    Add(subDirectory, true);
+                }
             }
 
             return this;
         }
 
         /// <summary>
-        /// Adds the given <paramref name="directory"/> and its parent directories.
+        /// Adds the given <paramref name="directories"/>. Recursively adds their subdirectories, if <paramref name="recursive"/> is <c>true</c>.
         /// </summary>
-        public SearchPath AddDirectoryAndParents(DirectoryInfo directory)
+        public SearchPath Add(IEnumerable<DirectoryInfo> directories, bool recursive = false)
         {
-            for (DirectoryInfo? current = directory; current is not null; current = current.Parent)
+            foreach (DirectoryInfo directory in directories)
             {
-                Add(current);
+                Add(directory, recursive);
             }
 
             return this;
@@ -65,20 +67,20 @@ namespace Fasciculus.IO.Searching
         /// <summary>
         /// Returns a new empty search path.
         /// </summary>
-        public static SearchPath Empty
+        public static SearchPath Empty()
             => [];
 
         /// <summary>
         /// Returns the working directory and its parents.
         /// </summary>
-        public static SearchPath WorkingDirectoryAndParents
-            => Empty.AddDirectoryAndParents(SpecialDirectories.WorkingDirectory);
+        public static SearchPath WorkingDirectoryAndParents()
+            => new(SpecialDirectories.WorkingDirectory.GetSelfAndParents());
 
         /// <summary>
         /// Returns the given <paramref name="directory"/> and its parents.
         /// </summary>
         /// <param name="directory"></param>
         public static SearchPath DirectoryAndParents(DirectoryInfo directory)
-            => Empty.AddDirectoryAndParents(directory);
+            => new(directory.GetSelfAndParents());
     }
 }

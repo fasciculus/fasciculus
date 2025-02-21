@@ -14,7 +14,7 @@ namespace Fasciculus.Core.Tests.IO
         [TestMethod]
         public void Experiment()
         {
-            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
+            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents();
             DirectoryInfo directory = DirectorySearch.Search("Fasciculus.Core.Tests", searchPath).First();
             FileInfo file = directory.Combine("IO").File("RelativeTests.cs");
 
@@ -33,7 +33,7 @@ namespace Fasciculus.Core.Tests.IO
         [TestMethod]
         public void TestRelativeTo()
         {
-            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents;
+            SearchPath searchPath = SearchPath.WorkingDirectoryAndParents();
             DirectoryInfo directory = DirectorySearch.Search("Fasciculus.Core.Tests", searchPath).First();
             FileInfo file = directory.Combine("IO").File("RelativeTests.cs");
 
