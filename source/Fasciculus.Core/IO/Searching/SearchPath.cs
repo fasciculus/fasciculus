@@ -50,16 +50,13 @@ namespace Fasciculus.IO.Searching
         }
 
         /// <summary>
-        /// Adds the working directory and its parents.
+        /// Adds the given <paramref name="directory"/> and its parent directories.
         /// </summary>
-        public SearchPath AddWorkingDirectoryAndParents()
+        public SearchPath AddDirectoryAndParents(DirectoryInfo directory)
         {
-            DirectoryInfo? directory = SpecialDirectories.WorkingDirectory;
-
-            while (directory is not null)
+            for (DirectoryInfo? current = directory; current is not null; current = current.Parent)
             {
-                Add(directory);
-                directory = directory.Parent;
+                Add(current);
             }
 
             return this;
@@ -75,6 +72,13 @@ namespace Fasciculus.IO.Searching
         /// Returns the working directory and its parents.
         /// </summary>
         public static SearchPath WorkingDirectoryAndParents
-            => Empty.AddWorkingDirectoryAndParents();
+            => Empty.AddDirectoryAndParents(SpecialDirectories.WorkingDirectory);
+
+        /// <summary>
+        /// Returns the given <paramref name="directory"/> and its parents.
+        /// </summary>
+        /// <param name="directory"></param>
+        public static SearchPath DirectoryAndParents(DirectoryInfo directory)
+            => Empty.AddDirectoryAndParents(directory);
     }
 }
