@@ -1,4 +1,6 @@
-﻿using System.IO;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Fasciculus.IO
 {
@@ -44,6 +46,26 @@ namespace Fasciculus.IO
             }
 
             return new DirectoryInfo(result);
+        }
+
+        /// <summary>
+        /// Returns the parents of the given <paramref name="directory"/>, nearest first.
+        /// </summary>
+        public static DirectoryInfo[] GetParents(this DirectoryInfo directory)
+            => [.. GetParentsCore(directory)];
+
+        /// <summary>
+        /// Returns the given <paramref name="directory"/> and its parents, nearest (i.e. <paramref name="directory"/>) first.
+        /// </summary>
+        public static DirectoryInfo[] GetSelfAndParents(this DirectoryInfo directory)
+            => [.. GetParentsCore(directory).Prepend(directory)];
+
+        private static IEnumerable<DirectoryInfo> GetParentsCore(DirectoryInfo directory)
+        {
+            for (DirectoryInfo current = directory.Parent; current != null; current = current.Parent)
+            {
+                yield return current;
+            }
         }
     }
 }
