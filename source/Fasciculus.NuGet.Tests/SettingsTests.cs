@@ -42,5 +42,13 @@ namespace Fasciculus.NuGet.Tests
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TestRemotePackageSources()
+        {
+            PackageSources packageSources = SettingsLoader.Load().GetRemotePackageSources();
+
+            Assert.AreEqual(1, packageSources.Count);
+        }
     }
 }
