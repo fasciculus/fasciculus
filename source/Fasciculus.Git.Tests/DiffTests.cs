@@ -23,7 +23,7 @@ namespace Fasciculus.Git.Tests
             IEnumerable<string> sourcePaths = sourceChanges.Select(x => x.Path[7..]).Distinct();
             IEnumerable<string> projects = sourcePaths.Where(x => x.Contains('/')).Select(x => x[..x.IndexOf('/')]).Distinct();
 
-            Assert.AreEqual(59, projects.Count());
+            Assert.AreEqual(60, projects.Count());
         }
     }
 }

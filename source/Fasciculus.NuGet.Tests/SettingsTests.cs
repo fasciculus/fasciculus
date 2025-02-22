@@ -1,3 +1,4 @@
+using Fasciculus.IO;
 using Fasciculus.IO.Searching;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuGet.Configuration;
@@ -10,7 +11,7 @@ namespace Fasciculus.NuGet.Tests
     public class SettingsTests
     {
         [TestMethod]
-        public void Test()
+        public void TestConfigPath()
         {
             FileInfo configFile = FileSearch.Search("NuGet.config", SearchPath.WorkingDirectoryAndParents()).First();
             ISettings settings = SettingsLoader.Load();
@@ -22,6 +23,22 @@ namespace Fasciculus.NuGet.Tests
 
             string expected = configFile.FullName.ToLower();
             string actual = item.ConfigPath.ToLower();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestLocalPackageSource()
+        {
+            PackageSource? packageSource = SettingsLoader.Load().GetLocalPackageSource();
+
+            Assert.IsNotNull(packageSource);
+
+            FileInfo configFile = FileSearch.Search("NuGet.config", SearchPath.WorkingDirectoryAndParents()).First();
+            DirectoryInfo directory = configFile.Directory!.Combine(".repository", "packages", "installed");
+
+            string expected = directory.FullName.ToLower();
+            string actual = packageSource.Source.ToLower();
 
             Assert.AreEqual(expected, actual);
         }
