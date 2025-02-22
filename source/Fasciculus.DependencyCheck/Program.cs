@@ -1,6 +1,6 @@
 using Fasciculus.Collections;
+using Fasciculus.NuGet;
 using Fasciculus.NuGet.Frameworks;
-using Fasciculus.NuGet.Logging;
 using Fasciculus.NuGet.Services;
 using NuGet.Common;
 using NuGet.Frameworks;

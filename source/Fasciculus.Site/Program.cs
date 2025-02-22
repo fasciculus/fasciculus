@@ -1,6 +1,6 @@
 using Fasciculus.Docs.Content.Services;
 using Fasciculus.Markdown.Svg;
-using Fasciculus.NuGet.Logging;
+using Fasciculus.NuGet;
 using Fasciculus.NuGet.Services;
 using Fasciculus.Site.Api.Services;
 using Fasciculus.Site.Blog.Compilers;

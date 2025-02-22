@@ -1,4 +1,3 @@
-using Fasciculus.NuGet.Logging;
 using Fasciculus.NuGet.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuGet.Packaging.Core;

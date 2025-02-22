@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Fasciculus.NuGet.Logging
+namespace Fasciculus.NuGet
 {
     public class ConsoleLogger : LoggerBase
     {

@@ -1,6 +1,6 @@
 using Fasciculus.IO;
 using Fasciculus.IO.Searching;
-using Fasciculus.NuGet.Logging;
+using Fasciculus.NuGet;
 using NuGet.Configuration;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
