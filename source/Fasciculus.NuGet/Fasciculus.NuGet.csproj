@@ -8,6 +8,8 @@
     <PackageReference Include="NuGet.Protocol" />
   </ItemGroup>
 
+  <Import Project="../Fasciculus.Extensions.Collections/local/Fasciculus.Extensions.Collections.props" />
+
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Core/Fasciculus.Core.csproj" />
   </ItemGroup>

@@ -13,5 +13,13 @@ namespace Fasciculus.NuGet.Tests
 
             Assert.AreEqual(1, files.Length);
         }
+
+        [TestMethod]
+        public void TestLoad()
+        {
+            DirectoryPackages packages = DirectoryPackages.Load();
+
+            Assert.IsTrue(packages.Count > 1);
+        }
     }
 }
