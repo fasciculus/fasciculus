@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Threading
@@ -60,7 +60,7 @@ namespace Fasciculus.Threading
         /// Sends the calling task into sleep for the given amount of <paramref name="milliseconds"/>.
         /// </summary>
         public static void Sleep(int milliseconds)
-            => Wait(Task.Delay(milliseconds));
+            => Task.Delay(milliseconds).WaitFor();
 
         /// <summary>
         /// Synchronously yields the current task.

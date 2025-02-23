@@ -16,7 +16,7 @@ namespace Fasciculus.CodeAnalysis.Tests
     [TestClass]
     public class CodeAnalyzerTests : TestsBase
     {
-        private class TestContext
+        public class TestContext
         {
             public required List<CodeAnalyzerProject> Projects { get; init; }
 
@@ -255,6 +255,34 @@ namespace Fasciculus.CodeAnalysis.Tests
                 Methods = 4,
 
                 Summaries = 7,
+            };
+
+            Test(context);
+        }
+
+        [TestMethod]
+        public void TestFasciculusThreading()
+        {
+            TestContext context = new()
+            {
+                Projects = [GetProject("Fasciculus.Threading")],
+                ProductionKind = SyntaxKind.None,
+
+                Packages = 1,
+                Namespaces = 1,
+                Enums = 0,
+                Interfaces = 0,
+                Classes = 1,
+
+                Fields = 0,
+                Members = 0,
+                Events = 0,
+                Properties = 0,
+
+                Constructors = 0,
+                Methods = 2,
+
+                Summaries = 3,
             };
 
             Test(context);

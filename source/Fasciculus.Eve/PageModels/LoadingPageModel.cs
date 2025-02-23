@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Eve.Services;
 using Fasciculus.Maui.ComponentModel;
 using Fasciculus.Maui.Services;
@@ -29,7 +29,7 @@ namespace Fasciculus.Eve.PageModels
         public void OnLoaded()
         {
             Tasks.LongRunning(LoadResources)
-                .ContinueWith(_ => Tasks.Wait(navigator.GoTo("//Info")));
+                .ContinueWith(_ => navigator.GoTo("//Info").WaitFor());
         }
 
         private void LoadResources()

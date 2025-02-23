@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
+    <ProjectReference Include="../Fasciculus.Threading/Fasciculus.Threading.csproj" />
   </ItemGroup>
 
   <!--
