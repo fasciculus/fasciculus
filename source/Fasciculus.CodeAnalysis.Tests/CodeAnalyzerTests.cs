@@ -13,282 +13,9 @@ using System.Linq;
 
 namespace Fasciculus.CodeAnalysis.Tests
 {
-    [TestClass]
     public class CodeAnalyzerTests : TestsBase
     {
-        public class TestContext
-        {
-            public required List<CodeAnalyzerProject> Projects { get; init; }
-
-            public required SyntaxKind ProductionKind { get; init; }
-
-            public required int Packages { get; init; }
-            public required int Namespaces { get; init; }
-            public required int Enums { get; init; }
-            public required int Interfaces { get; init; }
-            public required int Classes { get; init; }
-
-            public required int Fields { get; init; }
-            public required int Members { get; init; }
-            public required int Events { get; init; }
-            public required int Properties { get; init; }
-
-            public required int Constructors { get; init; }
-            public required int Methods { get; init; }
-
-            public required int Summaries { get; init; }
-
-            public DefaultSyntaxDebugger SyntaxDebugger { get; }
-            public DefaultProductionDebugger ProductionDebugger { get; }
-            public DefaultModifierDebugger ModifierDebugger { get; }
-            public DefaultAccessorDebugger AccessorDebugger { get; }
-            public DefaultCommentDebugger CommentDebugger { get; }
-
-            public CodeAnalyzerDebuggers Debuggers { get; }
-
-            public TestContext()
-            {
-                SyntaxDebugger = new();
-                ProductionDebugger = new(SyntaxDebugger);
-                ModifierDebugger = new();
-                AccessorDebugger = new();
-                CommentDebugger = new();
-
-                Debuggers = new()
-                {
-                    NodeDebugger = ProductionDebugger,
-                    ModifierDebugger = ModifierDebugger,
-                    AccessorDebugger = AccessorDebugger,
-                    CommentDebugger = CommentDebugger
-                };
-            }
-        }
-
-        [TestMethod]
-        public void TestFasciculusAlgorithms()
-        {
-            TestContext context = new()
-            {
-                Projects = [GetProject("Fasciculus.Algorithms")],
-                ProductionKind = SyntaxKind.Parameter,
-
-                Packages = 1,
-                Namespaces = 4,
-                Enums = 0,
-                Interfaces = 0,
-                Classes = 7,
-
-                Fields = 0,
-                Members = 0,
-                Events = 0,
-                Properties = 4,
-
-                Constructors = 1,
-                Methods = 17,
-
-                Summaries = 29,
-            };
-
-            Test(context);
-        }
-
-        [TestMethod]
-        public void TestFasciculusCore()
-        {
-            TestContext context = new()
-            {
-                Projects = [GetProject("Fasciculus.Core")],
-                ProductionKind = SyntaxKind.OperatorDeclaration, // SyntaxKind.None,
-
-                Packages = 1,
-                Namespaces = 10,
-                Enums = 0,
-                Interfaces = 2,
-                Classes = 34,
-
-                Fields = 2,
-                Members = 0,
-                Events = 2,
-                Properties = 30,
-
-                Constructors = 28,
-                Methods = 120,
-
-                Summaries = 213,
-            };
-
-            Test(context);
-        }
-
-        [TestMethod]
-        public void TestFasciculusExtensions()
-        {
-            TestContext context = new()
-            {
-                Projects = [GetProject("Fasciculus.Extensions")],
-                ProductionKind = SyntaxKind.None,
-
-                Packages = 1,
-                Namespaces = 2,
-                Enums = 0,
-                Interfaces = 0,
-                Classes = 4,
-
-                Fields = 0,
-                Members = 0,
-                Events = 0,
-                Properties = 2,
-
-                Constructors = 2,
-                Methods = 7,
-
-                Summaries = 13,
-            };
-
-            Test(context);
-        }
-
-        [TestMethod]
-        public void TestFasciculusIO()
-        {
-            TestContext context = new()
-            {
-                Projects = [GetProject("Fasciculus.IO")],
-                ProductionKind = SyntaxKind.None,
-
-                Packages = 1,
-                Namespaces = 3,
-                Enums = 1,
-                Interfaces = 0,
-                Classes = 11,
-
-                Fields = 0,
-                Members = 3,
-                Events = 0,
-                Properties = 17,
-
-                Constructors = 2,
-                Methods = 167,
-
-                Summaries = 201,
-            };
-
-            Test(context);
-        }
-
-        [TestMethod]
-        public void TestFasciculusProgressCommon()
-        {
-            TestContext context = new()
-            {
-                Projects = [GetProject("Fasciculus.Progress.Common")],
-                ProductionKind = SyntaxKind.None,
-
-                Packages = 1,
-                Namespaces = 1,
-                Enums = 0,
-                Interfaces = 1,
-                Classes = 0,
-
-                Fields = 0,
-                Members = 0,
-                Events = 0,
-                Properties = 0,
-
-                Constructors = 0,
-                Methods = 2,
-
-                Summaries = 3,
-            };
-
-            Test(context);
-        }
-
-        [TestMethod]
-        public void TestFasciculusReflection()
-        {
-            TestContext context = new()
-            {
-                Projects = [GetProject("Fasciculus.Reflection")],
-                ProductionKind = SyntaxKind.None,
-
-                Packages = 1,
-                Namespaces = 1,
-                Enums = 0,
-                Interfaces = 0,
-                Classes = 2,
-
-                Fields = 0,
-                Members = 0,
-                Events = 0,
-                Properties = 0,
-
-                Constructors = 0,
-                Methods = 4,
-
-                Summaries = 6,
-            };
-
-            Test(context);
-        }
-
-        [TestMethod]
-        public void TestFasciculusText()
-        {
-            TestContext context = new()
-            {
-                Projects = [GetProject("Fasciculus.Text")],
-                ProductionKind = SyntaxKind.None,
-
-                Packages = 1,
-                Namespaces = 1,
-                Enums = 0,
-                Interfaces = 0,
-                Classes = 3,
-
-                Fields = 0,
-                Members = 0,
-                Events = 0,
-                Properties = 0,
-
-                Constructors = 0,
-                Methods = 4,
-
-                Summaries = 7,
-            };
-
-            Test(context);
-        }
-
-        [TestMethod]
-        public void TestFasciculusThreading()
-        {
-            TestContext context = new()
-            {
-                Projects = [GetProject("Fasciculus.Threading")],
-                ProductionKind = SyntaxKind.None,
-
-                Packages = 1,
-                Namespaces = 1,
-                Enums = 0,
-                Interfaces = 0,
-                Classes = 1,
-
-                Fields = 0,
-                Members = 0,
-                Events = 0,
-                Properties = 0,
-
-                Constructors = 0,
-                Methods = 2,
-
-                Summaries = 3,
-            };
-
-            Test(context);
-        }
-
-        private void Test(TestContext context)
+        protected void Test(CodeAnalyzerTestContext context)
         {
             ICodeAnalyzerResult result = CodeAnalyzer.Create()
                 .WithProjects(context.Projects)
@@ -341,7 +68,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Assert.AreEqual(0, context.CommentDebugger.GetUnhandled().Count, "CommentDebugger");
         }
 
-        private void LogProductions(TestContext context)
+        private void LogProductions(CodeAnalyzerTestContext context)
         {
             List<ProductionDebuggerEntry> productions = context.ProductionDebugger[context.ProductionKind];
 
@@ -358,7 +85,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             productions.Apply(p => Log(p.ToString()));
         }
 
-        private void LogUnhandledSyntax(TestContext context)
+        private void LogUnhandledSyntax(CodeAnalyzerTestContext context)
         {
             Dictionary<SyntaxKind, SortedSet<SyntaxKind>> unhandled = context.SyntaxDebugger.GetUnhandled();
 
@@ -380,7 +107,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        private void LogUnhandledModifiers(TestContext context)
+        private void LogUnhandledModifiers(CodeAnalyzerTestContext context)
         {
             SortedSet<string> unhandled = context.ModifierDebugger.GetUnhandled();
 
@@ -391,7 +118,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        private void LogUnhandledAccessors(TestContext context)
+        private void LogUnhandledAccessors(CodeAnalyzerTestContext context)
         {
             SortedSet<SyntaxKind> unhandled = context.AccessorDebugger.GetUnhandled();
 
@@ -402,7 +129,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        private void LogUnhandledComments(TestContext context)
+        private void LogUnhandledComments(CodeAnalyzerTestContext context)
         {
             SortedSet<string> unhandled = context.CommentDebugger.GetUnhandled();
 
@@ -413,7 +140,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             }
         }
 
-        private static CodeAnalyzerProject GetProject(string name)
+        protected static CodeAnalyzerProject GetProject(string name)
         {
             SearchPath searchPath = SearchPath.WorkingDirectoryAndParents();
             DirectoryInfo directory = DirectorySearch.Search(name, searchPath).First();
