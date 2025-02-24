@@ -1,7 +1,9 @@
-﻿using Fasciculus.CodeAnalysis.Frameworking;
+using Fasciculus.CodeAnalysis.Frameworking;
 using Microsoft.CodeAnalysis;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Fasciculus.CodeAnalysis.Extensions
 {
@@ -38,6 +40,21 @@ namespace Fasciculus.CodeAnalysis.Extensions
 
             if (string.IsNullOrEmpty(suffix))
             {
+                string? filePath = project.FilePath;
+
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    XDocument document = XDocument.Load(filePath);
+                    XElement? element = document.Descendants("TargetFramework").FirstOrDefault();
+
+                    if (element is not null)
+                    {
+                        framework = TargetFramework.Parse(element.Value);
+
+                        return true;
+                    }
+                }
+
                 return false;
             }
 

@@ -44,6 +44,8 @@ namespace Fasciculus.CodeAnalysis.Tests
             LogUnhandledAccessors(context);
             LogUnhandledComments(context);
 
+            Assert.IsTrue(result.Index.Symbols.All(s => s.Frameworks.Products.Any()));
+
             Assert.AreEqual(context.Packages, result.Packages.Length);
 
             Assert.AreEqual(context.Namespaces, namespaces.Length, "Namespaces");
