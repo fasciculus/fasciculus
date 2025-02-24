@@ -30,7 +30,7 @@ namespace Fasciculus.CodeAnalysis.Compilers
             TargetFramework framework = context.Framework;
             SymbolComment comment = SymbolComment.Empty(context.CommentContext);
             CompilationUnitCompiler compiler = new(context);
-            CompilationUnitInfo[] compilationUnits = [.. roots.Select(compiler.Compile)];
+            CompilationUnitInfo[] compilationUnits = [.. roots.AsParallel().Select(compiler.Compile)];
 
             return new(name, framework, comment, compilationUnits)
             {
