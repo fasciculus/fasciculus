@@ -1,8 +1,8 @@
 @model ApiAppliesTo
 @{
-    TargetProduct firstProduct = Model.Products.First();
-    string latestVersion = firstProduct.Versions.Last();
-    bool hasOthers = Model.Products.Count() > 1 || firstProduct.Versions.Count() > 1;
+    TargetProduct? firstProduct = Model.Products.FirstOrDefault();
+    string latestVersion = firstProduct?.Versions.Last() ?? string.Empty;
+    bool hasOthers = Model.Products.Count() > 1 || (firstProduct?.Versions.Count() > 1 || false);
 }
 @if (Model.Level == ApiAppliesToLevel.H2)
 {
@@ -21,7 +21,15 @@
     <h5 id="@Model.Id">Applies To</h5>
 }
 <details>
-    <summary>@firstProduct.Name @latestVersion@(hasOthers ? " and others." : string.Empty)</summary>
+    @if (firstProduct is null)
+    {
+        <summary></summary>
+    }
+    else
+    {
+        <summary>@firstProduct.Name @latestVersion@(hasOthers ? " and others." : string.Empty)</summary>
+    }
+    
     <table class="table">
         <colgroup>
             <col style="width:12rem" />

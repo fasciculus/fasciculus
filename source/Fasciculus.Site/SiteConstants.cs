@@ -1,6 +1,5 @@
 using NuGet.Frameworks;
 using System.Collections.Generic;
-using static Fasciculus.NuGet.Frameworks.MoreFrameworks;
 using static NuGet.Frameworks.FrameworkConstants.CommonFrameworks;
 
 namespace Fasciculus.Site
@@ -12,15 +11,21 @@ namespace Fasciculus.Site
             "Fasciculus.Algorithms",
             "Fasciculus.Core",
             "Fasciculus.Extensions",
-            "Fasciculus.IO"
+            "Fasciculus.IO",
+            "Fasciculus.Reflection",
+            "Fasciculus.Text",
+            "Fasciculus.Threading",
         };
 
         public static readonly Dictionary<string, NuGetFramework[]> PackageFrameworks = new()
         {
-            { "Fasciculus.Algorithms", [NetStandard20, Net90] },
-            { "Fasciculus.Core", [NetStandard20, Net90] },
-            { "Fasciculus.Extensions", [NetStandard20, Net90] },
-            { "Fasciculus.IO", [NetStandard20, Net90] },
+            { "Fasciculus.Algorithms", [NetStandard20] },
+            { "Fasciculus.Core", [NetStandard20] },
+            { "Fasciculus.Extensions", [NetStandard20] },
+            { "Fasciculus.IO", [NetStandard20] },
+            { "Fasciculus.Reflection", [NetStandard20] },
+            { "Fasciculus.Text", [NetStandard20] },
+            { "Fasciculus.Threading", [NetStandard20] },
         };
     }
 }
