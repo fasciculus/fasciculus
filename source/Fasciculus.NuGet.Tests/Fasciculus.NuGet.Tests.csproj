@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net472</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +12,12 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Nuget/Fasciculus.Nuget.csproj" />
+    <ProjectReference Include="../Fasciculus.Nuget.Frameworks/Fasciculus.Nuget.Frameworks.csproj" />
     <ProjectReference Include="../Fasciculus.Testing/Fasciculus.Testing.csproj" />
   </ItemGroup>
+
+  <Target Name="LogDefineConstants" BeforeTargets="Compile" Condition="'$(TargetFramework)' != ''">
+    <Message Importance="high" Text="$(TargetFramework): $(DefineConstants)" />
+  </Target>
 
 </Project>
