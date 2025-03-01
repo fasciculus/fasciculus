@@ -187,6 +187,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Threading", "sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NuGet.Frameworks", "source\Fasciculus.NuGet.Frameworks\Fasciculus.NuGet.Frameworks.csproj", "{590AA874-D833-4EF8-B56A-CE8BB030B0D8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Collections", "Collections", "{4DA8E4E5-3AFE-497B-B7AC-AEA2CCC78B30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Collections.Common", "source\Fasciculus.Collections.Common\Fasciculus.Collections.Common.csproj", "{BB2D6D60-32B8-4B0E-BDA1-A8022D05BB10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -445,6 +449,10 @@ Global
 		{590AA874-D833-4EF8-B56A-CE8BB030B0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{590AA874-D833-4EF8-B56A-CE8BB030B0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{590AA874-D833-4EF8-B56A-CE8BB030B0D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB2D6D60-32B8-4B0E-BDA1-A8022D05BB10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB2D6D60-32B8-4B0E-BDA1-A8022D05BB10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB2D6D60-32B8-4B0E-BDA1-A8022D05BB10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB2D6D60-32B8-4B0E-BDA1-A8022D05BB10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -503,6 +511,7 @@ Global
 		{D6FFB9B8-EC4B-4EC3-AE3B-F8088BF0E4B1} = {B7A3143B-BA0D-40F8-A35C-B70CBCB9D93F}
 		{43210A29-1F2A-4500-BEE3-D75E60125DC1} = {5C93F7C8-71F6-4D45-9FEE-1FBDC2B821D1}
 		{590AA874-D833-4EF8-B56A-CE8BB030B0D8} = {A78E1079-D7DE-42F8-BA7F-33E639BAB023}
+		{BB2D6D60-32B8-4B0E-BDA1-A8022D05BB10} = {4DA8E4E5-3AFE-497B-B7AC-AEA2CCC78B30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {792A3CA0-656F-4B08-A937-422559A917B1}
