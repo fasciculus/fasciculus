@@ -3,6 +3,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Dictionary.TryAdd.cs" Visible="false" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Enumerable.Order.cs" Visible="false" />
     <Compile Include="$(MSBuildThisFileDirectory)../Fasciculus.Enumerable.ToDictionary.cs" Visible="false" />
   </ItemGroup>
 
