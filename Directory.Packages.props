@@ -13,7 +13,7 @@
     <PackageVersion Include="CommunityToolkit.Maui.Markup" Version="5.1.0" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="HtmlAgilityPack" Version="1.11.73" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.11.74" />
     <PackageVersion Include="LibGit2Sharp" Version="0.31.0" />
     <PackageVersion Include="Markdig" Version="0.40.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.2" />
@@ -45,9 +45,9 @@
     <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageVersion Include="MSTest.TestAdapter" Version="3.8.2" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.8.2" />
-    <PackageVersion Include="NuGet.Frameworks" Version="6.13.1" />
-    <PackageVersion Include="NuGet.Protocol" Version="6.13.1" />
-    <PackageVersion Include="NuGet.Versioning" Version="6.13.1" />
+    <PackageVersion Include="NuGet.Frameworks" Version="6.13.2" />
+    <PackageVersion Include="NuGet.Protocol" Version="6.13.2" />
+    <PackageVersion Include="NuGet.Versioning" Version="6.13.2" />
     <PackageVersion Include="SkiaSharp" Version="3.116.1" />
     <PackageVersion Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
     <!--<PackageVersion Include="Statiq.Web" Version="1.0.0-beta.60" />-->
