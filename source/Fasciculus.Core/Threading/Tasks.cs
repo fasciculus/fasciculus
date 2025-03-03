@@ -37,15 +37,6 @@ namespace Fasciculus.Threading
             => Task.Factory.StartNew(func, TaskCreationOptions.LongRunning);
 
         /// <summary>
-        /// Synchronously yields the current task.
-        /// <para>
-        /// Shorthand for <c>Task.Yield().GetAwaiter().GetResult()</c>.
-        /// </para>
-        /// </summary>
-        public static void Yield()
-            => Task.Yield().GetAwaiter().GetResult();
-
-        /// <summary>
         /// Synchronously waits for the given <paramref name="task"/> to finish.
         /// <para>
         /// Shorthand for <c>task.GetAwaiter().GetResult()</c>.

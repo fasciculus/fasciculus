@@ -1,4 +1,5 @@
-﻿using System.Threading;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Fasciculus.Threading.Synchronization
 {
@@ -23,7 +24,7 @@ namespace Fasciculus.Threading.Synchronization
                     return;
                 }
 
-                Tasks.Yield();
+                Task.Yield().WaitFor();
             }
         }
 

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Threading
@@ -11,6 +12,12 @@ namespace Fasciculus.Threading
         /// Waits for the <see cref="Task"/> to finish.
         /// </summary>
         public static void WaitFor(this Task task)
+            => task.GetAwaiter().GetResult();
+
+        /// <summary>
+        /// Waits for the <see cref="YieldAwaitable"/> to finish.
+        /// </summary>
+        public static void WaitFor(this YieldAwaitable task)
             => task.GetAwaiter().GetResult();
 
         /// <summary>

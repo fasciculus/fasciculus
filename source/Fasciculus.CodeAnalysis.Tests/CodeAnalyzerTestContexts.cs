@@ -48,9 +48,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             Properties = 30,
 
             Constructors = 28,
-            Methods = 116,
+            Methods = 115,
 
-            Summaries = 209,
+            Summaries = 208,
         };
 
         public static readonly CodeAnalyzerTestContext FasciculusThreadingCommon = new()
@@ -70,9 +70,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             Properties = 0,
 
             Constructors = 0,
-            Methods = 2,
+            Methods = 3,
 
-            Summaries = 3,
+            Summaries = 4,
         };
 
         private static CodeAnalyzerProject GetProject(string name)
