@@ -8,7 +8,7 @@ namespace Fasciculus.Maui.Threading
     public static class Threads
     {
         public static void RunInMainThread(Action action)
-            => RunInMainThreadAync(action).WaitFor();
+            => RunInMainThreadAync(action).WaitResult();
 
         public static Task RunInMainThreadAync(Action action)
             => MainThread.InvokeOnMainThreadAsync(action);

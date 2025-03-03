@@ -183,8 +183,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Build.Tests", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Threading", "Threading", "{5C93F7C8-71F6-4D45-9FEE-1FBDC2B821D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Threading", "source\Fasciculus.Threading\Fasciculus.Threading.csproj", "{43210A29-1F2A-4500-BEE3-D75E60125DC1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NuGet.Frameworks", "source\Fasciculus.NuGet.Frameworks\Fasciculus.NuGet.Frameworks.csproj", "{590AA874-D833-4EF8-B56A-CE8BB030B0D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Collections", "Collections", "{4DA8E4E5-3AFE-497B-B7AC-AEA2CCC78B30}"
@@ -192,6 +190,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Collections.Common", "source\Fasciculus.Collections.Common\Fasciculus.Collections.Common.csproj", "{BB2D6D60-32B8-4B0E-BDA1-A8022D05BB10}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Threading.Experiment", "source\Fasciculus.Threading.Experiment\Fasciculus.Threading.Experiment.csproj", "{9A23F516-1E22-4296-8B2F-D4099543017F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Threading.Common", "source\Fasciculus.Threading.Common\Fasciculus.Threading.Common.csproj", "{47E08E74-4BB3-44D2-B25B-65888756EE34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -443,10 +443,6 @@ Global
 		{D6FFB9B8-EC4B-4EC3-AE3B-F8088BF0E4B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6FFB9B8-EC4B-4EC3-AE3B-F8088BF0E4B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6FFB9B8-EC4B-4EC3-AE3B-F8088BF0E4B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43210A29-1F2A-4500-BEE3-D75E60125DC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43210A29-1F2A-4500-BEE3-D75E60125DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43210A29-1F2A-4500-BEE3-D75E60125DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43210A29-1F2A-4500-BEE3-D75E60125DC1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{590AA874-D833-4EF8-B56A-CE8BB030B0D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{590AA874-D833-4EF8-B56A-CE8BB030B0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{590AA874-D833-4EF8-B56A-CE8BB030B0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -459,6 +455,10 @@ Global
 		{9A23F516-1E22-4296-8B2F-D4099543017F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A23F516-1E22-4296-8B2F-D4099543017F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A23F516-1E22-4296-8B2F-D4099543017F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47E08E74-4BB3-44D2-B25B-65888756EE34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47E08E74-4BB3-44D2-B25B-65888756EE34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47E08E74-4BB3-44D2-B25B-65888756EE34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47E08E74-4BB3-44D2-B25B-65888756EE34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -515,10 +515,10 @@ Global
 		{B5C13872-652A-4572-9527-92009E55BD7A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{510EBC3F-1A63-4D3D-BDC3-E7881B32560F} = {D351C552-7748-4898-B718-F5D46E1A4C07}
 		{D6FFB9B8-EC4B-4EC3-AE3B-F8088BF0E4B1} = {B7A3143B-BA0D-40F8-A35C-B70CBCB9D93F}
-		{43210A29-1F2A-4500-BEE3-D75E60125DC1} = {5C93F7C8-71F6-4D45-9FEE-1FBDC2B821D1}
 		{590AA874-D833-4EF8-B56A-CE8BB030B0D8} = {A78E1079-D7DE-42F8-BA7F-33E639BAB023}
 		{BB2D6D60-32B8-4B0E-BDA1-A8022D05BB10} = {4DA8E4E5-3AFE-497B-B7AC-AEA2CCC78B30}
 		{9A23F516-1E22-4296-8B2F-D4099543017F} = {5C93F7C8-71F6-4D45-9FEE-1FBDC2B821D1}
+		{47E08E74-4BB3-44D2-B25B-65888756EE34} = {5C93F7C8-71F6-4D45-9FEE-1FBDC2B821D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {792A3CA0-656F-4B08-A937-422559A917B1}
