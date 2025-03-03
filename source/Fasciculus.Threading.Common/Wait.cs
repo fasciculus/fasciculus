@@ -10,7 +10,7 @@ namespace Fasciculus.Threading
         /// <summary>
         /// Waits for the <see cref="Task"/> to finish.
         /// </summary>
-        public static void WaitResult(this Task task)
+        public static void WaitFor(this Task task)
             => task.GetAwaiter().GetResult();
 
         /// <summary>

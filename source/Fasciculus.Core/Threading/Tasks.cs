@@ -60,7 +60,7 @@ namespace Fasciculus.Threading
         /// Sends the calling task into sleep for the given amount of <paramref name="milliseconds"/>.
         /// </summary>
         public static void Sleep(int milliseconds)
-            => Task.Delay(milliseconds).WaitResult();
+            => Task.Delay(milliseconds).WaitFor();
 
         /// <summary>
         /// Synchronously yields the current task.
@@ -70,15 +70,6 @@ namespace Fasciculus.Threading
         /// </summary>
         public static void Yield()
             => Task.Yield().GetAwaiter().GetResult();
-
-        /// <summary>
-        /// Synchronously waits for the given <paramref name="task"/> to finish.
-        /// <para>
-        /// Shorthand for <c>task.GetAwaiter().GetResult()</c>.
-        /// </para>
-        /// </summary>
-        public static void Wait(Task task)
-            => task.GetAwaiter().GetResult();
 
         /// <summary>
         /// Synchronously waits for the given <paramref name="task"/> to finish.

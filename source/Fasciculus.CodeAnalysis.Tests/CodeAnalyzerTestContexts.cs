@@ -31,6 +31,50 @@ namespace Fasciculus.CodeAnalysis.Tests
             Summaries = 29,
         };
 
+        public static readonly CodeAnalyzerTestContext FasciculusCore = new()
+        {
+            Projects = [GetProject("Fasciculus.Core")],
+            ProductionKind = SyntaxKind.OperatorDeclaration, // SyntaxKind.None,
+
+            Packages = 1,
+            Namespaces = 10,
+            Enums = 0,
+            Interfaces = 2,
+            Classes = 34,
+
+            Fields = 2,
+            Members = 0,
+            Events = 2,
+            Properties = 30,
+
+            Constructors = 28,
+            Methods = 119,
+
+            Summaries = 212,
+        };
+
+        public static readonly CodeAnalyzerTestContext FasciculusThreadingCommon = new()
+        {
+            Projects = [GetProject("Fasciculus.Threading.Common")],
+            ProductionKind = SyntaxKind.None,
+
+            Packages = 1,
+            Namespaces = 1,
+            Enums = 0,
+            Interfaces = 0,
+            Classes = 1,
+
+            Fields = 0,
+            Members = 0,
+            Events = 0,
+            Properties = 0,
+
+            Constructors = 0,
+            Methods = 2,
+
+            Summaries = 3,
+        };
+
         private static CodeAnalyzerProject GetProject(string name)
         {
             SearchPath searchPath = SearchPath.WorkingDirectoryAndParents();

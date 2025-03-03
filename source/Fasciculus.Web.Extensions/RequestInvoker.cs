@@ -36,7 +36,7 @@ namespace Fasciculus.Web.Extensions
             FeatureCollection features = CreateFeatures(uri, responseBody);
             HttpContext httpContext = httpContextFactory.Create(features);
 
-            Tasks.Wait(requestDelegate(httpContext));
+            requestDelegate(httpContext).WaitFor();
 
             return httpContext.Response;
         }

@@ -29,7 +29,7 @@ namespace Fasciculus.Eve.PageModels
         public void OnLoaded()
         {
             Tasks.LongRunning(LoadResources)
-                .ContinueWith(_ => navigator.GoTo("//Info").WaitResult());
+                .ContinueWith(_ => navigator.GoTo("//Info").WaitFor());
         }
 
         private void LoadResources()

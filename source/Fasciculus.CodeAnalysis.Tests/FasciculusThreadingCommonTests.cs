@@ -3,12 +3,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Fasciculus.CodeAnalysis.Tests
 {
     [TestClass]
-    public class FasciculusCoreTests : CodeAnalyzerTests
+    public class FasciculusThreadingCommonTests : CodeAnalyzerTests
     {
         [TestMethod]
         public void Test()
         {
-            Test(CodeAnalyzerTestContexts.FasciculusCore);
+            Test(CodeAnalyzerTestContexts.FasciculusThreadingCommon);
         }
     }
 }
