@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fasciculus.Eve.Models;
 using Fasciculus.Eve.Services;
@@ -273,7 +273,7 @@ namespace Fasciculus.Eve.PageModels
             string[] lines = [.. Inputs.Select(x => $"{x.Type.Name} [{x.Quantity}]")];
             string text = string.Join(Environment.NewLine, lines);
 
-            return Clipboard.SetTextAsync(text).ContinueWith(_ => Tasks.Sleep(200));
+            return Clipboard.SetTextAsync(text).ContinueWith(_ => Task.Delay(200).WaitFor());
         }
     }
 }

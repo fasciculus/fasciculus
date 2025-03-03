@@ -1,4 +1,4 @@
-﻿using Fasciculus.Maui.Threading;
+using Fasciculus.Maui.Threading;
 using Fasciculus.Threading;
 using Microsoft.Maui.Controls;
 using System.Threading.Tasks;
@@ -20,7 +20,7 @@ namespace Fasciculus.Maui.Services
         private static Task InternalGoTo(string url)
         {
             return Shell.Current.GoToAsync(url)
-                .ContinueWith(_ => Tasks.Sleep(200));
+                .ContinueWith(_ => Task.Delay(200).WaitFor());
         }
     }
 }

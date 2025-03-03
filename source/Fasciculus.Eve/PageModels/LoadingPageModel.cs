@@ -38,21 +38,21 @@ namespace Fasciculus.Eve.PageModels
             Progress.Begin(4);
             Progress.Report(1);
             Tasks.Wait(resources.Data);
-            Tasks.Sleep(250);
+            Task.Delay(250).WaitFor();
 
             State = "Universe";
             Progress.Report(1);
             Tasks.Wait(resources.Universe);
-            Tasks.Sleep(250);
+            Task.Delay(250).WaitFor();
 
             State = "Navigation";
             Progress.Report(1);
             Tasks.Wait(resources.Navigation);
-            Tasks.Sleep(250);
+            Task.Delay(250).WaitFor();
 
             State = "Done";
             Progress.End();
-            Tasks.Sleep(500);
+            Task.Delay(500).WaitFor();
         }
     }
 }

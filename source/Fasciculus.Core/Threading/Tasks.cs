@@ -37,32 +37,6 @@ namespace Fasciculus.Threading
             => Task.Factory.StartNew(func, TaskCreationOptions.LongRunning);
 
         /// <summary>
-        /// Waits for all given <paramref name="tasks"/> to finish and returns them for chaining.
-        /// </summary>
-        public static Task[] WaitAll(Task[] tasks)
-        {
-            Task.WaitAll(tasks);
-
-            return tasks;
-        }
-
-        /// <summary>
-        /// Waits for all given <paramref name="tasks"/> to finish and returns them for chaining.
-        /// </summary>
-        public static Task<T>[] WaitAll<T>(Task<T>[] tasks)
-        {
-            Task.WaitAll(tasks);
-
-            return tasks;
-        }
-
-        /// <summary>
-        /// Sends the calling task into sleep for the given amount of <paramref name="milliseconds"/>.
-        /// </summary>
-        public static void Sleep(int milliseconds)
-            => Task.Delay(milliseconds).WaitFor();
-
-        /// <summary>
         /// Synchronously yields the current task.
         /// <para>
         /// Shorthand for <c>Task.Yield().GetAwaiter().GetResult()</c>.
