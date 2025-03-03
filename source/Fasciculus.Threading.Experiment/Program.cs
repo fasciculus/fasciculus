@@ -39,9 +39,9 @@ namespace Fasciculus.Threading.Experiment
 
             SortedSet<int>[] results = [.. tasks.Select(x => x.Result)];
             int singles = results.Count(x => x.Count == 1);
-            int doubles = results.Count(x => x.Count == 2);
+            int multis = results.Count(x => x.Count > 1);
 
-            Logger.Log($"singles = {singles}, doubles = {doubles}");
+            Logger.Log($"singles = {singles}, multis = {multis}");
 
             int[] threads = [.. results.SelectMany(x => x).Distinct()];
 
@@ -58,9 +58,9 @@ namespace Fasciculus.Threading.Experiment
             Logger.Log($"ElapsedMilliseconds = {sw.ElapsedMilliseconds}");
 
             int singles = results.Count(x => x.Count == 1);
-            int doubles = results.Count(x => x.Count == 2);
+            int multis = results.Count(x => x.Count > 1);
 
-            Logger.Log($"singles = {singles}, doubles = {doubles}");
+            Logger.Log($"singles = {singles}, multis = {multis}");
 
             int[] threads = [.. results.SelectMany(x => x).Distinct()];
 
@@ -79,9 +79,9 @@ namespace Fasciculus.Threading.Experiment
 
             SortedSet<int>[] results = [.. tasks.Select(x => x.Result)];
             int singles = results.Count(x => x.Count == 1);
-            int doubles = results.Count(x => x.Count == 2);
+            int multis = results.Count(x => x.Count > 1);
 
-            Logger.Log($"singles = {singles}, doubles = {doubles}");
+            Logger.Log($"singles = {singles}, multis = {multis}");
 
             int[] threads = [.. results.SelectMany(x => x).Distinct()];
 
@@ -105,9 +105,11 @@ namespace Fasciculus.Threading.Experiment
 
             result.Add(Environment.CurrentManagedThreadId);
 
-            Task.Delay(50).GetAwaiter().GetResult();
-
-            result.Add(Environment.CurrentManagedThreadId);
+            for (int i = 0; i < 5; ++i)
+            {
+                Task.Delay(10).GetAwaiter().GetResult();
+                result.Add(Environment.CurrentManagedThreadId);
+            }
 
             return result;
         }
@@ -118,9 +120,11 @@ namespace Fasciculus.Threading.Experiment
 
             result.Add(Environment.CurrentManagedThreadId);
 
-            await Task.Delay(50);
-
-            result.Add(Environment.CurrentManagedThreadId);
+            for (int i = 0; i < 5; ++i)
+            {
+                await Task.Delay(10);
+                result.Add(Environment.CurrentManagedThreadId);
+            }
 
             return result;
         }
