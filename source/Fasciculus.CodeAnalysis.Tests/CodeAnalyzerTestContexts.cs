@@ -40,7 +40,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Namespaces = 10,
             Enums = 0,
             Interfaces = 2,
-            Classes = 34,
+            Classes = 33,
 
             Fields = 2,
             Members = 0,
@@ -48,9 +48,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             Properties = 30,
 
             Constructors = 28,
-            Methods = 112,
+            Methods = 111,
 
-            Summaries = 205,
+            Summaries = 203,
         };
 
         public static readonly CodeAnalyzerTestContext FasciculusThreadingCommon = new()
@@ -62,7 +62,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Namespaces = 1,
             Enums = 0,
             Interfaces = 0,
-            Classes = 1,
+            Classes = 2,
 
             Fields = 0,
             Members = 0,
@@ -70,9 +70,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             Properties = 0,
 
             Constructors = 0,
-            Methods = 3,
+            Methods = 4,
 
-            Summaries = 4,
+            Summaries = 6,
         };
 
         private static CodeAnalyzerProject GetProject(string name)

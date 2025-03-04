@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -15,26 +15,26 @@ namespace Fasciculus.Threading.Synchronization
         /// <summary>
         /// Locks a task-safe mutex with the given name, creating it if required.
         /// </summary>
-        public static Locker Lock(string name, CancellationToken ctk = default)
+        public static Locker Lock(string name, CancellationToken? ctk = null)
             => Locker.Lock(GetMutex(name, ctk), ctk);
 
 
         /// <summary>
         /// Executes the given <paramref name="action"/> within named lock.
         /// </summary>
-        public static void Locked(string name, Action action, CancellationToken ctk = default)
+        public static void Locked(string name, Action action, CancellationToken? ctk = null)
             => Locker.Locked(GetMutex(name, ctk), action, ctk);
 
         /// <summary>
         /// Executes the given <paramref name="func"/> within named lock.
         /// </summary>
-        public static T Locked<T>(string name, Func<T> func, CancellationToken ctk = default)
+        public static T Locked<T>(string name, Func<T> func, CancellationToken? ctk = null)
             => Locker.Locked(GetMutex(name, ctk), func, ctk);
 
         /// <summary>
         /// Returns a reentrant mutex for the given name.
         /// </summary>
-        public static ReentrantTaskSafeMutex GetMutex(string name, CancellationToken ctk)
+        public static ReentrantTaskSafeMutex GetMutex(string name, CancellationToken? ctk = null)
         {
             using Locker locker = Locker.Lock(mutex, ctk);
 

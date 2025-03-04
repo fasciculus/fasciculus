@@ -3,9 +3,9 @@ using System.Threading;
 namespace Fasciculus.Threading
 {
     /// <summary>
-    /// Extensions for <see cref="CancellationToken"/>
+    /// Extensions for <see cref="CancellationToken" />
     /// </summary>
-    public static class CancellationTokenExtensions
+    public static partial class CancellationTokenExtensions
     {
         /// <summary>
         /// Returns the given CancellationToken or <see cref="CancellationToken.None"/> if the given token is <c>null</c>.

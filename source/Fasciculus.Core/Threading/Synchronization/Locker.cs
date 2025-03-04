@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -55,9 +55,9 @@ namespace Fasciculus.Threading.Synchronization
         /// Locks the given synchronization object and returns a disposable "lock".
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Locker Lock(ILockable lockable, CancellationToken ctk = default)
+        public static Locker Lock(ILockable lockable, CancellationToken? ctk = null)
         {
-            lockable.Lock(ctk);
+            lockable.Lock(ctk.OrNone());
 
             return new(lockable);
         }
@@ -67,7 +67,7 @@ namespace Fasciculus.Threading.Synchronization
         /// <see cref="ILockable.Unlock"/> sequence.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Locked(ILockable lockable, Action action, CancellationToken ctk = default)
+        public static void Locked(ILockable lockable, Action action, CancellationToken? ctk = null)
         {
             using Locker locker = Lock(lockable, ctk);
 
@@ -79,7 +79,7 @@ namespace Fasciculus.Threading.Synchronization
         /// <see cref="ILockable.Unlock"/> sequence.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Locked<T>(ILockable lockable, Func<T> func, CancellationToken ctk = default)
+        public static T Locked<T>(ILockable lockable, Func<T> func, CancellationToken? ctk = null)
         {
             using Locker locker = Lock(lockable, ctk);
 
