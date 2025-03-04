@@ -1,4 +1,4 @@
-﻿using Fasciculus.Eve.Assets.Models;
+using Fasciculus.Eve.Assets.Models;
 using Fasciculus.Eve.Models;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
@@ -39,9 +39,10 @@ namespace Fasciculus.Eve.Assets.Services
 
             if (universe is null)
             {
-                var results = Tasks.Wait(parseUniverse.Regions, parseData.Names);
-                SdeRegion[] sdeRegions = results.Item1;
-                Dictionary<uint, string> names = results.Item2;
+                Task.WaitAll([parseUniverse.Regions, parseData.Names]);
+
+                SdeRegion[] sdeRegions = parseUniverse.Regions.Result;
+                Dictionary<uint, string> names = parseData.Names.Result;
 
                 progress.ConvertUniverse.Begin(2);
                 progress.ConvertUniverse.Report(1);
