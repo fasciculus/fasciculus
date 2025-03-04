@@ -1,17 +1,12 @@
-﻿using Fasciculus.Assets.Support;
-using Fasciculus.IO;
 using SkiaSharp;
-using System.IO;
 
-namespace Fasciculus.Assets.Operations
+namespace Fasciculus.Assets
 {
     public static class CreateLogo
     {
-        private static readonly FileInfo PngFile = AssetsDirectories.Documents.File("fasciculus.png");
-
         private static readonly SKColor Color = new(48, 48, 160, 255);
 
-        public static void Execute()
+        public static byte[] Create()
         {
             using SKBitmap bitmap = new(64, 64);
             using SKCanvas canvas = new(bitmap);
@@ -47,10 +42,7 @@ namespace Fasciculus.Assets.Operations
             FillRect(canvas, 30, 22, 2, 1);
             FillRect(canvas, 31, 23, 1, 1);
 
-            using SKData pngData = bitmap.Encode(SKEncodedImageFormat.Png, 100);
-            using Stream pngStream = PngFile.OpenWrite();
-
-            pngData.SaveTo(pngStream);
+            return bitmap.ToPngBytes();
         }
 
         private static void FillRect(SKCanvas canvas, int x, int y, int w, int h)
