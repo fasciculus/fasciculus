@@ -70,9 +70,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             Properties = 0,
 
             Constructors = 0,
-            Methods = 20,
+            Methods = 29,
 
-            Summaries = 23,
+            Summaries = 32,
         };
 
         private static CodeAnalyzerProject GetProject(string name)

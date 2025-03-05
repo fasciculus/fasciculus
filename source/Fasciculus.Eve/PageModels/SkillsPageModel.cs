@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Fasciculus.Collections;
 using Fasciculus.Eve.Models;
 using Fasciculus.Maui.ComponentModel;
@@ -35,7 +35,7 @@ namespace Fasciculus.Eve.PageModels
         {
             if (Loading)
             {
-                Tasks.LongRunning(AddSkills);
+                Tasks.Start(AddSkills, true);
             }
         }
 

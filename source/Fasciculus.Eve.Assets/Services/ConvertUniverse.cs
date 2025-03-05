@@ -30,7 +30,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         private Task<EveUniverse.Data> GetUniverseAsync()
         {
-            return Tasks.LongRunning(GetUniverse);
+            return Tasks.Start(GetUniverse, true);
         }
 
         private EveUniverse.Data GetUniverse()

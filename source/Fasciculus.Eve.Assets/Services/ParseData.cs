@@ -1,4 +1,4 @@
-﻿using Fasciculus.Eve.Assets.Models;
+using Fasciculus.Eve.Assets.Models;
 using Fasciculus.Threading;
 using Fasciculus.Threading.Synchronization;
 
@@ -94,7 +94,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(namesMutex);
 
-            return Tasks.LongRunning(() => GetNames(GetSdeFiles()));
+            return Tasks.Start(() => GetNames(GetSdeFiles()), true);
         }
 
         private Dictionary<uint, string> GetNames(SdeFiles sdeFiles)
@@ -118,7 +118,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(marketGroupsMutex);
 
-            return Tasks.LongRunning(() => GetMarketGroups(GetSdeFiles()));
+            return Tasks.Start(() => GetMarketGroups(GetSdeFiles()), true);
         }
 
         private Dictionary<int, SdeMarketGroup> GetMarketGroups(SdeFiles sdeFiles)
@@ -138,7 +138,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(typesMutex);
 
-            return Tasks.LongRunning(() => GetTypes(GetSdeFiles()));
+            return Tasks.Start(() => GetTypes(GetSdeFiles()), true);
         }
 
         private Dictionary<int, SdeType> GetTypes(SdeFiles sdeFiles)
@@ -236,7 +236,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         private Task<SdeData> GetDataAsync()
         {
-            return Tasks.LongRunning(GetData);
+            return Tasks.Start(GetData, true);
         }
 
         private SdeData GetData()

@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Fasciculus.Eve.Models;
 using Fasciculus.Support;
 using Fasciculus.Threading;
@@ -99,7 +99,7 @@ namespace Fasciculus.Eve.Services
         }
 
         public Task StartAsync()
-            => Tasks.LongRunning(Start);
+            => Tasks.Start(Start, true);
 
         private void Reset()
             => Productions.Clear();

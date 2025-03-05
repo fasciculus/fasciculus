@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Fasciculus.IO;
 using Fasciculus.Steam.Models;
 using Fasciculus.Steam.Services;
@@ -35,7 +35,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(filesMutex);
 
-            return Tasks.LongRunning(() => GetFilesCopied());
+            return Tasks.Start(GetFilesCopied, true);
         }
 
         private FileInfo[] GetFilesCopied()
@@ -150,7 +150,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             using Locker locker = Locker.Lock(filesCreatedMutex);
 
-            return Tasks.LongRunning(() => GetFilesCreated());
+            return Tasks.Start(GetFilesCreated, true);
         }
 
         private List<FileInfo> GetFilesCreated()

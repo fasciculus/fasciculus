@@ -1,4 +1,4 @@
-﻿using Fasciculus.Collections;
+using Fasciculus.Collections;
 using Fasciculus.Eve.Models;
 using Fasciculus.IO;
 using Fasciculus.Threading;
@@ -51,7 +51,7 @@ namespace Fasciculus.Eve.Assets.Services
 
         public Task CreateAsync()
         {
-            return Tasks.LongRunning(() => Create());
+            return Tasks.Start(Create, true);
         }
 
         private List<FileInfo> WriteData(EveData.Data data)

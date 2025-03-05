@@ -56,7 +56,7 @@ namespace Fasciculus.Eve.Services
         {
             using Locker locker = Locker.Lock(mutex);
 
-            return Tasks.LongRunning(Start);
+            return Tasks.Start(Start, true);
         }
 
         private void Reset()

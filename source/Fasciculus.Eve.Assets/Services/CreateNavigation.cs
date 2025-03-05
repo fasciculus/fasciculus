@@ -70,7 +70,7 @@ namespace Fasciculus.Eve.Assets.Services
         {
             GetUniverse();
 
-            return Tasks.LongRunning(GetNavigation);
+            return Tasks.Start(GetNavigation, true);
         }
 
         private EveNavigation.Data GetNavigation()
@@ -82,7 +82,7 @@ namespace Fasciculus.Eve.Assets.Services
                 progress.CreateDistances.Begin(EveSecurity.Levels.Length * GetSystems().Length);
 
                 Task<SparseShortMatrix>[] tasks = EveSecurity.Levels
-                    .Select(x => Tasks.LongRunning(() => GetDistances(x)))
+                    .Select(x => Tasks.Start(() => GetDistances(x), true))
                     .ToArray();
 
                 Task.WaitAll(tasks);
