@@ -37,10 +37,10 @@ namespace Fasciculus.CodeAnalysis.Tests
             ProductionKind = SyntaxKind.OperatorDeclaration, // SyntaxKind.None,
 
             Packages = 1,
-            Namespaces = 10,
+            Namespaces = 9,
             Enums = 0,
             Interfaces = 2,
-            Classes = 33,
+            Classes = 32,
 
             Fields = 2,
             Members = 0,
@@ -48,9 +48,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             Properties = 30,
 
             Constructors = 28,
-            Methods = 111,
+            Methods = 106,
 
-            Summaries = 203,
+            Summaries = 197,
         };
 
         public static readonly CodeAnalyzerTestContext FasciculusThreadingCommon = new()
@@ -62,7 +62,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Namespaces = 1,
             Enums = 0,
             Interfaces = 0,
-            Classes = 2,
+            Classes = 3,
 
             Fields = 0,
             Members = 0,
@@ -70,9 +70,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             Properties = 0,
 
             Constructors = 0,
-            Methods = 4,
+            Methods = 9,
 
-            Summaries = 6,
+            Summaries = 12,
         };
 
         private static CodeAnalyzerProject GetProject(string name)
