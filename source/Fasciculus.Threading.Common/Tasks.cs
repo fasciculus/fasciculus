@@ -6,15 +6,8 @@ namespace Fasciculus.Threading
     /// <summary>
     /// Utilities for <see cref="Task"/>s.
     /// </summary>
-    public static class Tasks
+    public static partial class Tasks
     {
-        /// <summary>
-        /// Starts a new <see cref="Task"/> for the given <paramref name="action"/>.
-        /// <para>Shorthand for <c>Task.Factory.StartNew(action)</c></para>
-        /// </summary>
-        public static Task Start(Action action)
-            => Task.Factory.StartNew(action);
-
         /// <summary>
         /// Starts a new <see cref="Task"/> for the given <paramref name="func"/>.
         /// <para>Shorthand for <c>Task.Factory.StartNew(func)</c></para>
