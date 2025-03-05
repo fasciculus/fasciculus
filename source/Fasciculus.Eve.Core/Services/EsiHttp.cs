@@ -99,7 +99,7 @@ namespace Fasciculus.Eve.Services
 
                     if (response.StatusCode == HttpStatusCode.GatewayTimeout)
                     {
-                        Task.Delay(2000).WaitFor();
+                        Tasks.Wait(Task.Delay(2000));
                         continue;
                     }
 

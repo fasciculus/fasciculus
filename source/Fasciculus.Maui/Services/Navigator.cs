@@ -20,7 +20,7 @@ namespace Fasciculus.Maui.Services
         private static Task InternalGoTo(string url)
         {
             return Shell.Current.GoToAsync(url)
-                .ContinueWith(_ => Task.Delay(200).WaitFor());
+                .ContinueWith(_ => Tasks.Wait(Task.Delay(200)));
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Fasciculus.Threading.Synchronization
                     return;
                 }
 
-                Task.Yield().WaitFor();
+                Task.Yield().GetAwaiter().GetResult();
             }
         }
 

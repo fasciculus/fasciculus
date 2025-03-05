@@ -107,7 +107,7 @@ namespace Fasciculus.Threading.Experiment
 
             for (int i = 0; i < 5; ++i)
             {
-                Task.Delay(10).WaitFor();
+                Tasks.Wait(Task.Delay(10));
                 result.Add(Environment.CurrentManagedThreadId);
             }
 

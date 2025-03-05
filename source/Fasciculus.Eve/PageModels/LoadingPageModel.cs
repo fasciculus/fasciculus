@@ -29,7 +29,7 @@ namespace Fasciculus.Eve.PageModels
         public void OnLoaded()
         {
             Tasks.Start(LoadResources, true)
-                .ContinueWith(_ => navigator.GoTo("//Info").WaitFor());
+                .ContinueWith(_ => Tasks.Wait(navigator.GoTo("//Info")));
         }
 
         private void LoadResources()
@@ -38,21 +38,21 @@ namespace Fasciculus.Eve.PageModels
             Progress.Begin(4);
             Progress.Report(1);
             Tasks.Wait(resources.Data);
-            Task.Delay(250).WaitFor();
+            Tasks.Wait(Task.Delay(250));
 
             State = "Universe";
             Progress.Report(1);
             Tasks.Wait(resources.Universe);
-            Task.Delay(250).WaitFor();
+            Tasks.Wait(Task.Delay(250));
 
             State = "Navigation";
             Progress.Report(1);
             Tasks.Wait(resources.Navigation);
-            Task.Delay(250).WaitFor();
+            Tasks.Wait(Task.Delay(250));
 
             State = "Done";
             Progress.End();
-            Task.Delay(500).WaitFor();
+            Tasks.Wait(Task.Delay(500));
         }
     }
 }

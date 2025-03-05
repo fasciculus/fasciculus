@@ -273,7 +273,7 @@ namespace Fasciculus.Eve.PageModels
             string[] lines = [.. Inputs.Select(x => $"{x.Type.Name} [{x.Quantity}]")];
             string text = string.Join(Environment.NewLine, lines);
 
-            return Clipboard.SetTextAsync(text).ContinueWith(_ => Task.Delay(200).WaitFor());
+            return Clipboard.SetTextAsync(text).ContinueWith(_ => Tasks.Wait(Task.Delay(200)));
         }
     }
 }
