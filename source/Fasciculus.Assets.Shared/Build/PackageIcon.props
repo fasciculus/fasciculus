@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Project>
+
+  <PropertyGroup>
+    <PackageIcon>fasciculus.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)../Images/fasciculus.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+    
+</Project>
