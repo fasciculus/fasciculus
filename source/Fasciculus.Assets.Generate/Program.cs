@@ -13,17 +13,17 @@ namespace Fasciculus.Assets
             FileInfo file;
             byte[] data;
 
-            file = directory.File("fasciculus.png");
+            file = directory.Combine("Images").File("fasciculus.png");
             data = CreateLogo.Create();
 
             file.WriteIfDifferent(data);
 
-            file = directory.File("todo.png");
+            file = directory.Combine("Images").File("todo.png");
             data = CreateToDo.Create();
 
             file.WriteIfDifferent(data);
 
-            file = directory.File("done.png");
+            file = directory.Combine("Images").File("done.png");
             data = CreateDone.Create();
 
             file.WriteIfDifferent(data);
