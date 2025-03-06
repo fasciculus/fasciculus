@@ -16,27 +16,27 @@ namespace Fasciculus.IO.Compressing
         /// <summary>
         /// Extracts the given <paramref name="file"/> into the given <paramref name="target"/> directory.
         /// </summary>
-        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite)
+        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwrite overwrite)
             => Extract(file, target, overwrite, null, null);
 
         /// <summary>
         /// Extracts the given <paramref name="file"/> into the given <paramref name="target"/> directory.
         /// </summary>
-        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite,
+        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwrite overwrite,
             IAccumulatingProgress<long> lengthProgress)
             => Extract(file, target, overwrite, lengthProgress, null);
 
         /// <summary>
         /// Extracts the given <paramref name="file"/> into the given <paramref name="target"/> directory.
         /// </summary>
-        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite,
+        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwrite overwrite,
             IProgress<string> nameProgress)
             => Extract(file, target, overwrite, null, nameProgress);
 
         /// <summary>
         /// Extracts the given <paramref name="file"/> into the given <paramref name="target"/> directory.
         /// </summary>
-        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwriteMode overwrite,
+        public static DirectoryInfo Extract(FileInfo file, DirectoryInfo target, FileOverwrite overwrite,
             IAccumulatingProgress<long>? lengthProgress, IProgress<string>? nameProgress)
         {
             using Stream stream = file.OpenRead();
@@ -52,7 +52,7 @@ namespace Fasciculus.IO.Compressing
             return target;
         }
 
-        private static void Extract(ZipArchiveEntry entry, DirectoryInfo target, FileOverwriteMode overwrite,
+        private static void Extract(ZipArchiveEntry entry, DirectoryInfo target, FileOverwrite overwrite,
             IAccumulatingProgress<long>? lengthProgress, IProgress<string>? nameProgress)
         {
             nameProgress?.Report(entry.FullName);
@@ -71,7 +71,7 @@ namespace Fasciculus.IO.Compressing
             lengthProgress?.Report(entry.Length);
         }
 
-        private static bool IsExtractRequired(ZipArchiveEntry entry, DirectoryInfo target, FileOverwriteMode overwrite)
+        private static bool IsExtractRequired(ZipArchiveEntry entry, DirectoryInfo target, FileOverwrite overwrite)
         {
             FileInfo file = target.File(entry.FullName);
             DateTime dateTime = entry.LastWriteTime.UtcDateTime;

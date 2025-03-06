@@ -2,9 +2,9 @@ namespace Fasciculus.IO
 {
     /// <summary>
     /// Whether to overwrite a target file. Used with
-    /// <see cref="FileInfoExtensions.RequiresOverwrite(System.IO.FileInfo, System.DateTime, FileOverwriteMode)"/>
+    /// <see cref="FileInfoExtensions.RequiresOverwrite(System.IO.FileInfo, System.DateTime, FileOverwrite)"/>
     /// </summary>
-    public enum FileOverwriteMode
+    public enum FileOverwrite
     {
         /// <summary>
         /// Never overwrite an existing file.

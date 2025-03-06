@@ -115,7 +115,7 @@ namespace Fasciculus.Eve.Assets.Services
             if (files is null)
             {
                 FileInfo file = await downloadSde.DownloadedFile;
-                DirectoryInfo directory = Zip.Extract(file, assetsDirectories.Sde, FileOverwriteMode.IfNewer, progress);
+                DirectoryInfo directory = Zip.Extract(file, assetsDirectories.Sde, FileOverwrite.IfNewer, progress);
 
                 files = new(directory);
             }
