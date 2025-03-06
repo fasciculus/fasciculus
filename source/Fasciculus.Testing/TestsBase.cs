@@ -1,6 +1,6 @@
 
 #if DEBUG
-using Fasciculus.IO.Searching;
+using Fasciculus.IO;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;

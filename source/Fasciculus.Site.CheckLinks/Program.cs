@@ -1,4 +1,4 @@
-using Fasciculus.IO.Searching;
+using Fasciculus.IO;
 using Fasciculus.Net;
 using HtmlAgilityPack;
 using System;

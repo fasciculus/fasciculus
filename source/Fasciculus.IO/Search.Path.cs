@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Fasciculus.IO.Searching
+namespace Fasciculus.IO
 {
     /// <summary>
     /// List of directories to search in.

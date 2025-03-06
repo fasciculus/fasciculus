@@ -1,5 +1,4 @@
 using Fasciculus.IO;
-using Fasciculus.IO.Searching;
 using Fasciculus.NuGet;
 using NuGet.Configuration;
 using NuGet.Protocol;

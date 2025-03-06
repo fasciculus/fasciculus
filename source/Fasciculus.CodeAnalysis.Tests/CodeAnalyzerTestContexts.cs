@@ -1,6 +1,5 @@
 using Fasciculus.CodeAnalysis.Configuration;
 using Fasciculus.IO;
-using Fasciculus.IO.Searching;
 using Microsoft.CodeAnalysis.CSharp;
 using System.IO;
 using System.Linq;

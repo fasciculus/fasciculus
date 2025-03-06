@@ -1,5 +1,5 @@
 using Fasciculus.Collections;
-using Fasciculus.IO.Searching;
+using Fasciculus.IO;
 using NuGet.Packaging.Core;
 using NuGet.Versioning;
 using System.Collections.Generic;

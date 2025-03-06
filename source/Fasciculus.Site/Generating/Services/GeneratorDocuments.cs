@@ -1,7 +1,6 @@
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using Fasciculus.IO;
-using Fasciculus.IO.Searching;
 using Fasciculus.Site.Api.Services;
 using Fasciculus.Site.Blog.Services;
 using Fasciculus.Site.Specifications.Models;

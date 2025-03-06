@@ -3,7 +3,6 @@ using Fasciculus.CodeAnalysis.Debugging;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.Collections;
 using Fasciculus.IO;
-using Fasciculus.IO.Searching;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

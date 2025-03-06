@@ -3,7 +3,6 @@ using Fasciculus.CodeAnalysis.Configuration;
 using Fasciculus.CodeAnalysis.Indexing;
 using Fasciculus.CodeAnalysis.Models;
 using Fasciculus.IO;
-using Fasciculus.IO.Searching;
 using Fasciculus.Net.Navigating;
 using System.Collections.Generic;
 using System.IO;

@@ -1,4 +1,4 @@
-using Fasciculus.IO.Searching;
+using Fasciculus.IO;
 using LibGit2Sharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;

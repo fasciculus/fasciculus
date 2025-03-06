@@ -15,7 +15,7 @@
     </Description>
   </PropertyGroup>
 
-  <Import Project="../Fasciculus.Assets.Shared/Build/PackageIcon.props"/>
+  <Import Project="../Fasciculus.Assets.Shared/Build/PackageIcon.props" />
   <Import Project="../Fasciculus.Extensions.IO/local/Fasciculus.Extensions.IO.props" />
 
   <ItemGroup>

@@ -1,5 +1,4 @@
 using Fasciculus.IO;
-using Fasciculus.IO.Searching;
 using System.IO;
 using System.Linq;
 

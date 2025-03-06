@@ -1,5 +1,4 @@
 using Fasciculus.IO;
-using Fasciculus.IO.Searching;
 using Fasciculus.Net.Navigating;
 using Fasciculus.NuGet.Services;
 using Fasciculus.Site.Licenses.Models;

@@ -1,4 +1,4 @@
-using Fasciculus.IO.Searching;
+using Fasciculus.IO;
 using Microsoft.Build.Construction;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;

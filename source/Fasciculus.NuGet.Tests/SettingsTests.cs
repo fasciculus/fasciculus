@@ -1,5 +1,4 @@
 using Fasciculus.IO;
-using Fasciculus.IO.Searching;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuGet.Configuration;
 using System.IO;

@@ -1,5 +1,4 @@
 using Fasciculus.IO;
-using Fasciculus.IO.Searching;
 using Fasciculus.Net.Navigating;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
