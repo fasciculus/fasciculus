@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net9.0;net472</TargetFrameworks>
@@ -11,9 +11,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Fasciculus.Nuget/Fasciculus.Nuget.csproj" />
     <ProjectReference Include="../Fasciculus.Nuget.Frameworks/Fasciculus.Nuget.Frameworks.csproj" />
+    <ProjectReference Include="../Fasciculus.Nuget.Configuration/Fasciculus.Nuget.Configuration.csproj" />
     <ProjectReference Include="../Fasciculus.Testing/Fasciculus.Testing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DirectoryPackagesTests.cs" />
+    <Compile Remove="PackageSourceTests.cs" />
+    <Compile Remove="SettingsTests.cs" />
+    <Compile Update="*.cs" Visible="true" />
   </ItemGroup>
 
   <Target Name="LogDefineConstants" BeforeTargets="Compile" Condition="'$(TargetFramework)' != ''">

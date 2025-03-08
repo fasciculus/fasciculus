@@ -21,6 +21,7 @@ namespace Fasciculus.NuGet.Tests
                 string versionString = FrameworkNameHelpers.GetVersionString(framework.Version);
 
                 Assert.IsFalse(string.IsNullOrEmpty(shortFolderName));
+                Assert.IsFalse(string.IsNullOrEmpty(versionString));
             }
         }
     }
