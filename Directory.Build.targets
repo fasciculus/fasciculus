@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-    <Target Name="FasciculusCreateDirectories" BeforeTargets="BeforeResolveReferences">
-        <MakeDir Directories="$(FasciculusRepositoryDirectory)" />
-        <MakeDir Directories="$(FasciculusPackagesDirectory)" />
-        <MakeDir Directories="$(FasciculusInstalledPackagesDirectory)" />
-    </Target>
+  <Target Name="FasciculusCreateDirectories" BeforeTargets="BeforeResolveReferences">
+    <MakeDir Directories="$(FasciculusRepositoryDirectory)" />
+    <MakeDir Directories="$(FasciculusPackagesDirectory)" />
+    <MakeDir Directories="$(FasciculusInstalledPackagesDirectory)" />
+    <MakeDir Directories="$(FasciculusInstallablePackagesDirectory)" />
+  </Target>
 
   <Target Name="CreateGeneratedDirectory" AfterTargets="AfterResolveReferences">
     <MakeDir Directories="$(IntermediateOutputPath)/generated" />
+  </Target>
+
+  <Target Name="CopyInstallablePackages" AfterTargets="Pack" Condition="'$(GeneratePackageOnBuild)' == 'true'">
+    <PropertyGroup>
+      <CreatedPackagePath>$(PackageOutputPath)$(AssemblyName).$(PackageVersion).nupkg</CreatedPackagePath>
+      <CreatedPackageExists>$([System.IO.File]::Exists('$(CreatedPackagePath)'))</CreatedPackageExists>
+      <CreatedSymbolPackagePath>$(PackageOutputPath)$(AssemblyName).$(PackageVersion).snupkg</CreatedSymbolPackagePath>
+      <CreatedSymbolPackageExists>$([System.IO.File]::Exists('$(CreatedSymbolPackagePath)'))</CreatedSymbolPackageExists>
+    </PropertyGroup>
+    <Copy Condition="'$(CreatedPackageExists)' == 'true'" SourceFiles="$(CreatedPackagePath)" DestinationFolder="$(FasciculusInstallablePackagesDirectory)" />
+    <Copy Condition="'$(CreatedSymbolPackageExists)' == 'true'" SourceFiles="$(CreatedSymbolPackagePath)" DestinationFolder="$(FasciculusInstallablePackagesDirectory)" />
   </Target>
 
 </Project>

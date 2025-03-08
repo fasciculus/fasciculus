@@ -15,6 +15,7 @@
     <FasciculusRepositoryDirectory>$([System.IO.Path]::Combine($(FasciculusRootDirectory), '.repository'))</FasciculusRepositoryDirectory>
     <FasciculusPackagesDirectory>$([System.IO.Path]::Combine($(FasciculusRepositoryDirectory), 'packages'))</FasciculusPackagesDirectory>
     <FasciculusInstalledPackagesDirectory>$([System.IO.Path]::Combine($(FasciculusPackagesDirectory), 'installed'))</FasciculusInstalledPackagesDirectory>
+    <FasciculusInstallablePackagesDirectory>$([System.IO.Path]::Combine($(FasciculusPackagesDirectory), 'installable'))</FasciculusInstallablePackagesDirectory>
     <FasciculusModulesDirectory>$([System.IO.Path]::Combine($(FasciculusRepositoryDirectory), 'node_modules'))</FasciculusModulesDirectory>
   </PropertyGroup>
   
