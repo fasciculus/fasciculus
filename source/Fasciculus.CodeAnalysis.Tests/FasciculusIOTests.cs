@@ -15,7 +15,7 @@ namespace Fasciculus.CodeAnalysis.Tests
                 ProductionKind = SyntaxKind.None,
 
                 Packages = 1,
-                Namespaces = 3,
+                Namespaces = 2,
                 Enums = 1,
                 Interfaces = 0,
                 Classes = 12,
