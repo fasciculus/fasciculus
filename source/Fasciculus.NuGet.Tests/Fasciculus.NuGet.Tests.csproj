@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Compile Remove="DirectoryPackagesTests.cs" />
-    <Compile Remove="PackageSourceTests.cs" />
     <Compile Remove="SettingsTests.cs" />
     <Compile Update="*.cs" Visible="true" />
   </ItemGroup>
