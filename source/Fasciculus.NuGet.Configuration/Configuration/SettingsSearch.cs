@@ -24,6 +24,9 @@ namespace Fasciculus.NuGet.Configuration
             return result;
         }
 
+        public static FileInfo? Search(DirectoryInfo start)
+            => Search(SearchPath.DirectoryAndParents(start));
+
         public static FileInfo? Search()
             => Search(SearchPath.WorkingDirectoryAndParents());
     }
