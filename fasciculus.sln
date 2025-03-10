@@ -203,6 +203,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.CleanTemp", "sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.NuGet.Configuration", "source\Fasciculus.NuGet.Configuration\Fasciculus.NuGet.Configuration.csproj", "{0A4AB978-28A4-4AE7-83D4-4BA848DAC6D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasciculus.Threading.TaskSafe", "source\Fasciculus.Threading.TaskSafe\Fasciculus.Threading.TaskSafe.csproj", "{D6C5D888-ABC7-4C6B-A01D-9FC317282FAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -481,6 +483,10 @@ Global
 		{0A4AB978-28A4-4AE7-83D4-4BA848DAC6D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A4AB978-28A4-4AE7-83D4-4BA848DAC6D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A4AB978-28A4-4AE7-83D4-4BA848DAC6D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6C5D888-ABC7-4C6B-A01D-9FC317282FAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6C5D888-ABC7-4C6B-A01D-9FC317282FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6C5D888-ABC7-4C6B-A01D-9FC317282FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6C5D888-ABC7-4C6B-A01D-9FC317282FAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -546,6 +552,7 @@ Global
 		{E4AA7E7D-4084-41F7-9255-A6AB88BB41C8} = {0CDD68BC-A549-47C3-98D7-37731C7E81E8}
 		{9A3EDAC9-D44C-426D-862D-9EB6D5E4AACF} = {005511A0-A7FD-4B17-ADDA-4DAA53C7CE16}
 		{0A4AB978-28A4-4AE7-83D4-4BA848DAC6D0} = {A78E1079-D7DE-42F8-BA7F-33E639BAB023}
+		{D6C5D888-ABC7-4C6B-A01D-9FC317282FAE} = {5C93F7C8-71F6-4D45-9FEE-1FBDC2B821D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {792A3CA0-656F-4B08-A937-422559A917B1}
