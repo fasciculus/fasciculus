@@ -1,139 +1,52 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Threading.Experiment
 {
-    internal class Program
+    public static class Program
     {
-        private readonly TaskScheduler defaultScheduler;
-        private readonly TaskScheduler customScheduler;
-
-        private readonly CancellationToken ctk = CancellationToken.None;
-
-        private Program()
+        public static async Task Main(string[] args)
         {
-            defaultScheduler = TaskScheduler.Default;
-            customScheduler = new CustomTaskScheduler(defaultScheduler);
-        }
+            await Task.Yield();
 
-        private void Run()
-        {
-            RunWork();
-            RunWorkParallel();
-            RunWorkAsync();
-        }
-
-        private void RunWork()
-        {
-            Logger.Log("--------- RunWork ---------");
-
-            Stopwatch sw = Stopwatch.StartNew();
-            Task<SortedSet<int>>[] tasks = [.. Enumerable.Range(0, 20).Select(CreateWorkTask)];
+            string current = Task.CurrentId?.ToString() ?? "null";
+            Task<Tuple<int, int>>[] tasks = [.. Enumerable.Range(0, 2).Select(Work1)];
 
             Task.WaitAll(tasks);
-            Logger.Log($"ElapsedMilliseconds = {sw.ElapsedMilliseconds}");
 
-            SortedSet<int>[] results = [.. tasks.Select(x => x.Result)];
-            int singles = results.Count(x => x.Count == 1);
-            int multis = results.Count(x => x.Count > 1);
-
-            Logger.Log($"singles = {singles}, multis = {multis}");
-
-            int[] threads = [.. results.SelectMany(x => x).Distinct()];
-
-            Logger.Log($"threads = {string.Join(", ", threads)}");
-        }
-
-        private void RunWorkParallel()
-        {
-            Logger.Log("--------- RunWorkParallel ---------");
-
-            Stopwatch sw = Stopwatch.StartNew();
-            SortedSet<int>[] results = [.. Enumerable.Range(0, 20).AsParallel().Select(_ => Work())];
-
-            Logger.Log($"ElapsedMilliseconds = {sw.ElapsedMilliseconds}");
-
-            int singles = results.Count(x => x.Count == 1);
-            int multis = results.Count(x => x.Count > 1);
-
-            Logger.Log($"singles = {singles}, multis = {multis}");
-
-            int[] threads = [.. results.SelectMany(x => x).Distinct()];
-
-            Logger.Log($"threads = {string.Join(", ", threads)}");
-        }
-
-        private void RunWorkAsync()
-        {
-            Logger.Log("--------- RunWorkAsync ---------");
-
-            Stopwatch sw = Stopwatch.StartNew();
-            Task<SortedSet<int>>[] tasks = [.. Enumerable.Range(0, 20).Select(CreateWorkAsyncTask)];
-
-            Task.WaitAll(tasks);
-            Logger.Log($"ElapsedMilliseconds = {sw.ElapsedMilliseconds}");
-
-            SortedSet<int>[] results = [.. tasks.Select(x => x.Result)];
-            int singles = results.Count(x => x.Count == 1);
-            int multis = results.Count(x => x.Count > 1);
-
-            Logger.Log($"singles = {singles}, multis = {multis}");
-
-            int[] threads = [.. results.SelectMany(x => x).Distinct()];
-
-            Logger.Log($"threads = {string.Join(", ", threads)}");
-        }
-
-        private Task<SortedSet<int>> CreateWorkTask(int _)
-        {
-            //return Task.Factory.StartNew(Work, ctk, TaskCreationOptions.PreferFairness, customScheduler);
-            return Task.Factory.StartNew(Work, ctk, TaskCreationOptions.PreferFairness, defaultScheduler);
-        }
-
-        private Task<SortedSet<int>> CreateWorkAsyncTask(int _)
-        {
-            return WorkAsync();
-        }
-
-        private static SortedSet<int> Work()
-        {
-            SortedSet<int> result = [];
-
-            result.Add(Environment.CurrentManagedThreadId);
-
-            for (int i = 0; i < 5; ++i)
+            foreach (Task<Tuple<int, int>> task in tasks)
             {
-                Tasks.Wait(Task.Delay(10));
-                result.Add(Environment.CurrentManagedThreadId);
+                Tuple<int, int> result = task.Result;
+
+                Log($"{result.Item1} {result.Item1}");
             }
 
-            return result;
+            Log($"main: {current}");
         }
 
-        private static async Task<SortedSet<int>> WorkAsync()
+        private static async Task<Tuple<int, int>> Work1(int _)
         {
-            SortedSet<int> result = [];
+            int id = Task.CurrentId ?? 0;
+            int child = await Work2(0);
 
-            result.Add(Environment.CurrentManagedThreadId);
-
-            for (int i = 0; i < 5; ++i)
-            {
-                await Task.Delay(10);
-                result.Add(Environment.CurrentManagedThreadId);
-            }
-
-            return result;
+            return Tuple.Create(id, child);
         }
 
-        static void Main(string[] args)
+        private static async Task<int> Work2(int _)
         {
-            Program program = new();
+            int id = Task.CurrentId ?? 0;
 
-            program.Run();
+            await Task.Yield();
+
+            return id;
+        }
+
+        private static void Log(string message)
+        {
+            Console.WriteLine(message);
+            Debug.WriteLine(message);
         }
     }
 }
