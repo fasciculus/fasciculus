@@ -6,7 +6,7 @@ namespace Fasciculus.Threading
     /// <summary>
     /// Non-reentrant task-safe mutex.
     /// </summary>
-    public class TaskSafeMutex : ITaskSafeMutex
+    public class AsyncMutex : IAsyncLockable
     {
         private long locked = 0;
 

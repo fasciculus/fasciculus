@@ -6,4 +6,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Threading.Common/Fasciculus.Threading.Common.csproj" />
+  </ItemGroup>
+
 </Project>
