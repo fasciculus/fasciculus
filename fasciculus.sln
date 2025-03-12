@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Settings", "_Settings", "{
 		MultiFramework.props = MultiFramework.props
 		MultiTargeting.props = MultiTargeting.props
 		NuGet.config = NuGet.config
+		_notes.txt = _notes.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fasciculus.Testing", "source\Fasciculus.Testing\Fasciculus.Testing.csproj", "{F41F5EE9-B775-4B60-B0D5-E3752B9DF5EC}"
