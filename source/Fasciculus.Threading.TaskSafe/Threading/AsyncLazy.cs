@@ -10,17 +10,21 @@ namespace Fasciculus.Threading
     public class AsyncLazy<T>
         where T : notnull
     {
+        private readonly AsyncMutex mutex = new();
+        private readonly IAsyncFunc<T> factory;
+        private Task<T>? value = null;
+
         /// <summary>
         /// Gets the lazily initialized value of the current instance.
         /// </summary>
-        public Task<T> Value { get; }
+        public Task<T> Value => GetValue();
 
         /// <summary>
         /// Initializes a new lazy instance with the given <paramref name="factory"/>.
         /// </summary>
         public AsyncLazy(Func<T> factory)
         {
-            Value = Tasks.Start(factory);
+            this.factory = AsyncFactory.Create(factory);
         }
 
         /// <summary>
@@ -28,7 +32,16 @@ namespace Fasciculus.Threading
         /// </summary>
         public AsyncLazy(Func<Task<T>> factory)
         {
-            Value = Tasks.Start(factory).Unwrap();
+            this.factory = AsyncFactory.Create(factory);
+        }
+
+        private Task<T> GetValue()
+        {
+            using AsyncLock asyncLock = AsyncLock.Lock(mutex);
+
+            value ??= factory.Create();
+
+            return value;
         }
 
         /// <summary>
