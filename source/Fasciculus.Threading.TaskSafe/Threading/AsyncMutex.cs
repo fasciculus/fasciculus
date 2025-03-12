@@ -8,7 +8,7 @@ namespace Fasciculus.Threading
     /// </summary>
     public class AsyncMutex : IAsyncLockable
     {
-        private long locked = 0;
+        private readonly InterlockedBool locked = new();
 
         /// <summary>
         /// Locks this mutex.
@@ -19,7 +19,7 @@ namespace Fasciculus.Threading
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (Interlocked.CompareExchange(ref locked, 1, 0) == 0)
+                if (locked.Replace(true, false))
                 {
                     return;
                 }
@@ -33,7 +33,7 @@ namespace Fasciculus.Threading
         /// </summary>
         public void Unlock()
         {
-            Interlocked.Exchange(ref locked, 0);
+            locked.Write(false);
         }
     }
 }

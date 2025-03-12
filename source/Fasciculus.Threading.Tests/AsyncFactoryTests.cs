@@ -1,5 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Fasciculus.Threading.Tests
@@ -7,19 +6,19 @@ namespace Fasciculus.Threading.Tests
     [TestClass]
     public class AsyncFactoryTests
     {
-        private long work1;
-        private long work2;
+        private readonly InterlockedLong work1 = new();
+        private readonly InterlockedLong work2 = new();
 
         private void Work1()
         {
-            Interlocked.Increment(ref work1);
+            work1.Increment();
         }
 
         private async Task Work2()
         {
             await Task.Yield();
 
-            Interlocked.Increment(ref work2);
+            work2.Increment();
         }
 
         private long Work3()
@@ -40,7 +39,7 @@ namespace Fasciculus.Threading.Tests
             IAsyncAction factory = AsyncFactory.Create(Work1);
             Task task = factory.Create();
             Tasks.Wait(task);
-            long actual = Interlocked.Read(ref work1);
+            long actual = work1.Read();
 
             Assert.AreEqual(1, actual);
         }
@@ -51,7 +50,7 @@ namespace Fasciculus.Threading.Tests
             IAsyncAction factory = AsyncFactory.Create(Work2);
             Task task = factory.Create();
             Tasks.Wait(task);
-            long actual = Interlocked.Read(ref work2);
+            long actual = work2.Read();
 
             Assert.AreEqual(1, actual);
         }
