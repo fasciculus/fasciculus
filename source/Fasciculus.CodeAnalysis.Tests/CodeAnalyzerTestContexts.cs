@@ -61,7 +61,7 @@ namespace Fasciculus.CodeAnalysis.Tests
             Namespaces = 1,
             Enums = 0,
             Interfaces = 2,
-            Classes = 7,
+            Classes = 10,
 
             Fields = 0,
             Members = 0,
@@ -69,9 +69,9 @@ namespace Fasciculus.CodeAnalysis.Tests
             Properties = 0,
 
             Constructors = 4,
-            Methods = 41,
+            Methods = 53,
 
-            Summaries = 54,
+            Summaries = 69,
         };
 
         private static CodeAnalyzerProject GetProject(string name)
