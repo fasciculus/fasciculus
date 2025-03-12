@@ -60,18 +60,18 @@ namespace Fasciculus.CodeAnalysis.Tests
             Packages = 1,
             Namespaces = 1,
             Enums = 0,
-            Interfaces = 0,
-            Classes = 2,
+            Interfaces = 2,
+            Classes = 7,
 
             Fields = 0,
             Members = 0,
             Events = 0,
             Properties = 0,
 
-            Constructors = 0,
-            Methods = 31,
+            Constructors = 4,
+            Methods = 41,
 
-            Summaries = 33,
+            Summaries = 54,
         };
 
         private static CodeAnalyzerProject GetProject(string name)
