@@ -11,7 +11,7 @@ namespace Fasciculus.Threading
         /// <summary>
         /// Locks this synchronization object.
         /// </summary>
-        public Task Lock(CancellationToken cancellationToken);
+        public Task LockAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Unlocks this synchronization object.

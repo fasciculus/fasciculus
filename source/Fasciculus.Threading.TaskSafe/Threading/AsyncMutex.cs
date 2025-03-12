@@ -13,7 +13,7 @@ namespace Fasciculus.Threading
         /// <summary>
         /// Locks this mutex.
         /// </summary>
-        public async Task Lock(CancellationToken cancellationToken)
+        public async Task LockAsync(CancellationToken cancellationToken)
         {
             while (true)
             {

@@ -42,31 +42,51 @@ namespace Fasciculus.Threading
         /// <summary>
         /// Locks the given <paramref name="lockable"/>.
         /// </summary>
-        public static async Task<AsyncLock> Lock(IAsyncLockable lockable, CancellationToken? cancellationToken = null)
+        public static async Task<AsyncLock> LockAsync(IAsyncLockable lockable, CancellationToken? cancellationToken = null)
         {
-            await lockable.Lock(cancellationToken.OrNone());
+            await lockable.LockAsync(cancellationToken.OrNone());
 
             return new AsyncLock(lockable);
         }
 
         /// <summary>
+        /// Locks the given <paramref name="lockable"/>.
+        /// </summary>
+        public static AsyncLock Lock(IAsyncLockable lockable, CancellationToken? cancellationToken = null)
+        {
+            return Tasks.Wait(LockAsync(lockable, cancellationToken));
+        }
+
+        /// <summary>
         /// Invokes the given <paramref name="action"/> while locking the given <paramref name="lockable"/>.
         /// </summary>
-        public static async Task Locked(IAsyncLockable lockable, Action action, CancellationToken? cancellationToken = null)
+        public static async Task LockedAsync(IAsyncLockable lockable, Action action, CancellationToken? cancellationToken = null)
         {
-            using AsyncLock asyncLock = await Lock(lockable, cancellationToken);
+            using AsyncLock asyncLock = await LockAsync(lockable, cancellationToken);
 
             action();
         }
 
         /// <summary>
+        /// Invokes the given <paramref name="action"/> while locking the given <paramref name="lockable"/>.
+        /// </summary>
+        public static void Locked(IAsyncLockable lockable, Action action, CancellationToken? cancellationToken = null)
+            => Tasks.Wait(LockedAsync(lockable, action, cancellationToken));
+
+        /// <summary>
         /// Invokes the given <paramref name="func"/> while locking the given <paramref name="lockable"/>.
         /// </summary>
-        public static async Task<T> Locked<T>(IAsyncLockable lockable, Func<T> func, CancellationToken? cancellationToken = null)
+        public static async Task<T> LockedAsync<T>(IAsyncLockable lockable, Func<T> func, CancellationToken? cancellationToken = null)
         {
-            using AsyncLock asyncLock = await Lock(lockable, cancellationToken);
+            using AsyncLock asyncLock = await LockAsync(lockable, cancellationToken);
 
             return func();
         }
+
+        /// <summary>
+        /// Invokes the given <paramref name="func"/> while locking the given <paramref name="lockable"/>.
+        /// </summary>
+        public static T Locked<T>(IAsyncLockable lockable, Func<T> func, CancellationToken? cancellationToken = null)
+            => Tasks.Wait(LockedAsync(lockable, func, cancellationToken));
     }
 }

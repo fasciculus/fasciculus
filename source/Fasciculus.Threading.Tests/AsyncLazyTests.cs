@@ -36,7 +36,8 @@ namespace Fasciculus.Threading.Tests
         public void TestFactory()
         {
             int count = 4;
-            Task<Foo>[] tasks = [.. Enumerable.Range(0, count).Select(_ => GetValue1())];
+            IAsyncFunc<Foo> factory = AsyncFactory.Create(GetValue1);
+            Task<Foo>[] tasks = [.. Enumerable.Range(0, count).Select(_ => factory.Create())];
             Foo[] foos = Tasks.Wait(tasks);
 
             for (int i = 1; i < count; ++i)
@@ -49,7 +50,8 @@ namespace Fasciculus.Threading.Tests
         public void TestAsyncFactory()
         {
             int count = 4;
-            Task<Foo>[] tasks = [.. Enumerable.Range(0, count).Select(_ => GetValue2())];
+            IAsyncFunc<Foo> factory = AsyncFactory.Create(GetValue2);
+            Task<Foo>[] tasks = [.. Enumerable.Range(0, count).Select(_ => factory.Create())];
             Foo[] foos = Tasks.Wait(tasks);
 
             for (int i = 1; i < count; ++i)
