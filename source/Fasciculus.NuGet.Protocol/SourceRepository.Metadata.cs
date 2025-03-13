@@ -1,0 +1,4 @@
+namespace Fasciculus.NuGet.Protocol
+{
+
+}

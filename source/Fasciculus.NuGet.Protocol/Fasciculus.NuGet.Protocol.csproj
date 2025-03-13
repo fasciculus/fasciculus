@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.Protocol" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.Threading.TaskSafe/Fasciculus.Threading.TaskSafe.csproj" />
+  </ItemGroup>
+
+</Project>

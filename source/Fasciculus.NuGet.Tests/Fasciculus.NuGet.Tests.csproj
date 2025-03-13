@@ -13,12 +13,12 @@
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Nuget.Frameworks/Fasciculus.Nuget.Frameworks.csproj" />
     <ProjectReference Include="../Fasciculus.Nuget.Configuration/Fasciculus.Nuget.Configuration.csproj" />
+    <ProjectReference Include="../Fasciculus.Nuget.Protocol/Fasciculus.Nuget.Protocol.csproj" />
     <ProjectReference Include="../Fasciculus.Testing/Fasciculus.Testing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="DirectoryPackagesTests.cs" />
-    <Compile Remove="SettingsTests.cs" />
     <Compile Update="*.cs" Visible="true" />
   </ItemGroup>
 

@@ -5,7 +5,7 @@ using NuGet.Configuration;
 namespace Fasciculus.NuGet.Tests
 {
     [TestClass]
-    public class PackageSourceTests
+    public class SettingsExtensionsTests
     {
         [TestMethod]
         public void TestLocal()
