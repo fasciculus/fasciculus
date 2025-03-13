@@ -8,16 +8,16 @@ namespace Fasciculus.NuGet.Protocol
 {
     public static class PackageSourceExtensions
     {
-        public static SourceRepository GetRepository(this PackageSource packageSource)
+        public static NuGetRepository GetRepository(this PackageSource packageSource)
         {
             return packageSource.ProtocolVersion switch
             {
-                2 => Repository.Factory.GetCoreV2(packageSource),
-                _ => Repository.Factory.GetCoreV3(packageSource.Source),
+                2 => new(Repository.Factory.GetCoreV2(packageSource)),
+                _ => new(Repository.Factory.GetCoreV3(packageSource.Source)),
             };
         }
 
-        public static SourceRepositories GetRepositories(this IEnumerable<PackageSource> packageSources)
+        public static NuGetRepositories GetRepositories(this IEnumerable<PackageSource> packageSources)
             => new(packageSources.Select(GetRepository));
     }
 }

@@ -2,7 +2,6 @@ using Fasciculus.NuGet.Configuration;
 using Fasciculus.NuGet.Protocol;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuGet.Configuration;
-using NuGet.Protocol.Core.Types;
 using System.Linq;
 
 namespace Fasciculus.NuGet.Tests
@@ -18,10 +17,10 @@ namespace Fasciculus.NuGet.Tests
 
             Assert.IsNotNull(packageSource);
 
-            SourceRepository sourceRepository = packageSource.GetRepository();
+            NuGetRepository sourceRepository = packageSource.GetRepository();
 
             string expected = packageSource.Source;
-            string actual = sourceRepository.PackageSource.Source;
+            string actual = sourceRepository.Repository.PackageSource.Source;
 
             Assert.AreEqual(expected, actual);
         }
@@ -31,10 +30,10 @@ namespace Fasciculus.NuGet.Tests
         {
             ISettings settings = SettingsLoader.Load();
             PackageSources packageSources = settings.GetRemotePackageSources();
-            SourceRepositories sourceRepositories = packageSources.GetRepositories();
+            NuGetRepositories sourceRepositories = packageSources.GetRepositories();
 
             string[] expected = [.. packageSources.Select(x => x.Source)];
-            string[] actual = [.. sourceRepositories.Select(x => x.PackageSource.Source)];
+            string[] actual = [.. sourceRepositories.Select(x => x.Repository.PackageSource.Source)];
 
             CollectionAssert.AreEqual(expected, actual);
         }
