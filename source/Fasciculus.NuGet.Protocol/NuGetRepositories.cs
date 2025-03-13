@@ -10,9 +10,13 @@ namespace Fasciculus.NuGet.Protocol
 
         public int Count => repositories.Length;
 
+        public NuGetResources Resources { get; }
+
         public NuGetRepositories(IEnumerable<NuGetRepository> repositories)
         {
             this.repositories = [.. repositories];
+
+            Resources = new(repositories.Select(x => x.Repository));
         }
 
         public IEnumerator<NuGetRepository> GetEnumerator()

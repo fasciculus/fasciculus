@@ -6,9 +6,12 @@ namespace Fasciculus.NuGet.Protocol
     {
         public SourceRepository Repository { get; }
 
+        public NuGetResources Resources { get; }
+
         public NuGetRepository(SourceRepository repository)
         {
             Repository = repository;
+            Resources = new([repository]);
         }
     }
 }
