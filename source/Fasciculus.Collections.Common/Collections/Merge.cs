@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Fasciculus.Collections
 {
-    public static class EnumerableExtensions
+    public static partial class EnumerableExtensions
     {
         public static SortedSet<T> Merge<T>(this IEnumerable<T> a, IEnumerable<T> b, IComparer<T> comparer, Func<T, T, T> merge)
         {

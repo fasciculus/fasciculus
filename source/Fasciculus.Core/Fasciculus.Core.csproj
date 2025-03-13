@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
+    <ProjectReference Include="../Fasciculus.Collections.Common/Fasciculus.Collections.Common.csproj" />
     <ProjectReference Include="../Fasciculus.Threading.Common/Fasciculus.Threading.Common.csproj" />
   </ItemGroup>
 

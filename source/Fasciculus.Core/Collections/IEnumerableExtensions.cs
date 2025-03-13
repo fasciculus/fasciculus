@@ -10,13 +10,6 @@ namespace Fasciculus.Collections
     public static class IEnumerableExtensions
     {
         /// <summary>
-        /// Returns an enumeration with those entries of the given <paramref name="values"/> that are not <c>null</c>.
-        /// </summary>
-        public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> values)
-            where T : notnull
-            => values.Where(x => x is not null).Cast<T>();
-
-        /// <summary>
         /// A "ForEach" for all <see cref="IEnumerable{T}"/>.
         /// </summary>
         public static void Apply<T>(this IEnumerable<T> values, Action<T> action)
