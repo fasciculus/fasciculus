@@ -1,10 +1,10 @@
 using Fasciculus.NuGet.Configuration;
 using Fasciculus.NuGet.Protocol;
-using Fasciculus.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuGet.Configuration;
 using NuGet.Versioning;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Fasciculus.NuGet.Tests
 {
@@ -12,13 +12,13 @@ namespace Fasciculus.NuGet.Tests
     public class SearchVersionsTests
     {
         [TestMethod]
-        public void Test()
+        public async Task Test()
         {
             ISettings settings = SettingsLoader.Load();
-            NuGetSources packageSources = settings.GetRemotePackageSources();
-            NuGetRepositories repositories = packageSources.GetRepositories();
+            NuGetSources sources = await NuGetSources.Remotes;
+            NuGetRepositories repositories = sources.GetRepositories();
             NuGetResources resources = repositories.Resources;
-            SortedSet<NuGetVersion> versions = Tasks.Wait(NuGetSearch.SearchVersionsAsync(resources, "NuGet.Protocol"));
+            SortedSet<NuGetVersion> versions = await NuGetSearch.SearchVersionsAsync(resources, "NuGet.Protocol");
 
             Assert.IsTrue(versions.Count > 0);
         }

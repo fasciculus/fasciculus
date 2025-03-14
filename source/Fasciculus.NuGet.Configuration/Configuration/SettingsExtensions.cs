@@ -9,37 +9,40 @@ namespace Fasciculus.NuGet.Configuration
 {
     public static class SettingsExtensions
     {
+        public static SettingSection GetRequiredSection(this ISettings settings, string name)
+            => settings.GetSection(name) ?? throw new ArgumentException();
+
+        public static T GetRequiredItem<T>(this SettingSection section, string name, string value)
+            where T : SettingItem
+            => section.GetFirstItemWithAttribute<T>(name, value) ?? throw new ArgumentException();
+
+        public static T GetRequiredItem<T>(this ISettings settings, string section, string name, string value)
+            where T : SettingItem
+            => settings.GetRequiredSection(section).GetRequiredItem<T>(name, value);
+
         public static NuGetSource GetLocalPackageSource(this ISettings settings)
         {
-            NuGetSource? source = null;
-            SettingSection? section = settings.GetSection("config");
+            AddItem item = settings.GetRequiredItem<AddItem>("config", "key", "globalPackagesFolder");
 
-            if (section is not null)
+            string? configPath = item.ConfigPath;
+            string? repositoryPath = item.Value;
+
+            if (configPath is not null && repositoryPath is not null)
             {
-                AddItem? item = section?.GetFirstItemWithAttribute<AddItem>("key", "globalPackagesFolder");
+                FileInfo configFile = new(configPath);
+                DirectoryInfo? configDirectory = configFile.Directory;
 
-                if (item is not null)
+                if (configDirectory is not null)
                 {
-                    string? configPath = item.ConfigPath;
-                    string? repositoryPath = item.Value;
-
-                    if (configPath is not null && repositoryPath is not null)
-                    {
-                        FileInfo configFile = new(configPath);
-                        DirectoryInfo? configDirectory = configFile.Directory;
-
-                        if (configDirectory is not null)
-                        {
-                            DirectoryInfo repositoryDirectory = configDirectory.Combine(repositoryPath);
-
-                            source = new(new PackageSource(repositoryDirectory.FullName));
-                        }
-                    }
+                    return new(configDirectory.Combine(repositoryPath));
                 }
             }
 
-            return source ?? throw new ArgumentException();
+            throw new ArgumentException();
         }
+
+        public static NuGetSource GetLocalPackageSource(this NuGetSettings settings)
+            => settings.Settings.GetLocalPackageSource();
 
         public static NuGetSources GetRemotePackageSources(this ISettings settings)
         {
@@ -50,5 +53,8 @@ namespace Fasciculus.NuGet.Configuration
 
             return new(packageSources);
         }
+
+        public static NuGetSources GetRemotePackageSources(this NuGetSettings settings)
+            => settings.Settings.GetRemotePackageSources();
     }
 }

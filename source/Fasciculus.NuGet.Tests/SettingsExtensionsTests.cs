@@ -1,6 +1,7 @@
 using Fasciculus.NuGet.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Fasciculus.NuGet.Tests
 {
@@ -8,17 +9,17 @@ namespace Fasciculus.NuGet.Tests
     public class SettingsExtensionsTests
     {
         [TestMethod]
-        public void TestLocal()
+        public async Task TestLocal()
         {
-            NuGetSource source = SettingsLoader.Load().GetLocalPackageSource();
+            NuGetSource source = await NuGetSource.Local;
 
             Assert.IsTrue(Directory.Exists(source.Source.Source));
         }
 
         [TestMethod]
-        public void TestRemote()
+        public async Task TestRemote()
         {
-            NuGetSources packageSources = SettingsLoader.Load().GetRemotePackageSources();
+            NuGetSources packageSources = await NuGetSources.Remotes;
 
             Assert.AreEqual(1, packageSources.Count);
         }
