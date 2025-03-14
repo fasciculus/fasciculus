@@ -8,13 +8,13 @@ namespace Fasciculus.NuGet.Configuration
 {
     public class NuGetSources : IEnumerable<NuGetSource>
     {
-        public static AsyncLazy<NuGetSources> Remotes { get; } = new(GetRemotes);
+        public static AsyncLazy<NuGetSources> Default { get; } = new(GetDefault);
 
-        private static async Task<NuGetSources> GetRemotes()
+        private static async Task<NuGetSources> GetDefault()
         {
             NuGetSettings settings = await NuGetSettings.Default;
 
-            return settings.GetRemotePackageSources();
+            return settings.GetDefaultSources();
         }
 
         private readonly NuGetSource[] sources;

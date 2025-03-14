@@ -9,11 +9,11 @@ namespace Fasciculus.NuGet.Protocol
 {
     public class NuGetRepositories : IEnumerable<NuGetRepository>
     {
-        public static AsyncLazy<NuGetRepositories> Remotes { get; } = new(GetRemotes);
+        public static AsyncLazy<NuGetRepositories> Default { get; } = new(GetDefault);
 
-        private static async Task<NuGetRepositories> GetRemotes()
+        private static async Task<NuGetRepositories> GetDefault()
         {
-            NuGetSources sources = await NuGetSources.Remotes;
+            NuGetSources sources = await NuGetSources.Default;
 
             return sources.GetRepositories();
         }

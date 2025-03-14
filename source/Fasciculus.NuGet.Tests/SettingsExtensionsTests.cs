@@ -9,17 +9,17 @@ namespace Fasciculus.NuGet.Tests
     public class SettingsExtensionsTests
     {
         [TestMethod]
-        public async Task TestLocal()
+        public async Task TestGlobal()
         {
-            NuGetSource source = await NuGetSource.Local;
+            NuGetSource source = await NuGetSource.Global;
 
             Assert.IsTrue(Directory.Exists(source.Source.Source));
         }
 
         [TestMethod]
-        public async Task TestRemote()
+        public async Task TestDefault()
         {
-            NuGetSources packageSources = await NuGetSources.Remotes;
+            NuGetSources packageSources = await NuGetSources.Default;
 
             Assert.AreEqual(1, packageSources.Count);
         }

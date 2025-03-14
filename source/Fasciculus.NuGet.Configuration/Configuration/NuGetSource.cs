@@ -7,13 +7,13 @@ namespace Fasciculus.NuGet.Configuration
 {
     public class NuGetSource
     {
-        public static AsyncLazy<NuGetSource> Local { get; } = new(GetLocal);
+        public static AsyncLazy<NuGetSource> Global { get; } = new(GetGlobal);
 
-        private static async Task<NuGetSource> GetLocal()
+        private static async Task<NuGetSource> GetGlobal()
         {
             NuGetSettings settings = await NuGetSettings.Default;
 
-            return settings.GetLocalPackageSource();
+            return settings.GetGlobalSource();
         }
 
         public PackageSource Source { get; }

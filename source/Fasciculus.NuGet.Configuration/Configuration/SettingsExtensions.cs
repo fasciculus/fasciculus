@@ -20,7 +20,7 @@ namespace Fasciculus.NuGet.Configuration
             where T : SettingItem
             => settings.GetRequiredSection(section).GetRequiredItem<T>(name, value);
 
-        public static NuGetSource GetLocalPackageSource(this ISettings settings)
+        public static NuGetSource GetGlobalSource(this ISettings settings)
         {
             AddItem item = settings.GetRequiredItem<AddItem>("config", "key", "globalPackagesFolder");
 
@@ -41,20 +41,20 @@ namespace Fasciculus.NuGet.Configuration
             throw new ArgumentException();
         }
 
-        public static NuGetSource GetLocalPackageSource(this NuGetSettings settings)
-            => settings.Settings.GetLocalPackageSource();
+        public static NuGetSource GetGlobalSource(this NuGetSettings settings)
+            => settings.Settings.GetGlobalSource();
 
-        public static NuGetSources GetRemotePackageSources(this ISettings settings)
+        public static NuGetSources GetDefaultSources(this ISettings settings)
         {
             IEnumerable<NuGetSource> packageSources = PackageSourceProvider
                 .LoadPackageSources(settings)
-                .Where(x => x.IsEnabled && (x.IsHttp || x.IsHttps))
+                .Where(x => x.IsEnabled)
                 .Select(x => new NuGetSource(x));
 
             return new(packageSources);
         }
 
-        public static NuGetSources GetRemotePackageSources(this NuGetSettings settings)
-            => settings.Settings.GetRemotePackageSources();
+        public static NuGetSources GetDefaultSources(this NuGetSettings settings)
+            => settings.Settings.GetDefaultSources();
     }
 }

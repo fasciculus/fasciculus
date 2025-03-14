@@ -10,9 +10,9 @@ namespace Fasciculus.NuGet.Tests
     public class PackageSourceExtensionsTests
     {
         [TestMethod]
-        public async Task TestLocal()
+        public async Task TestGlobal()
         {
-            NuGetSource source = await NuGetSource.Local;
+            NuGetSource source = await NuGetSource.Global;
             NuGetRepository repository = source.GetRepository();
 
             string expected = source.Source.Source;
@@ -22,9 +22,9 @@ namespace Fasciculus.NuGet.Tests
         }
 
         [TestMethod]
-        public async Task TestRemote()
+        public async Task TestDefault()
         {
-            NuGetSources sources = await NuGetSources.Remotes;
+            NuGetSources sources = await NuGetSources.Default;
             NuGetRepositories sourceRepositories = sources.GetRepositories();
 
             string[] expected = [.. sources.Select(x => x.Source.Source)];

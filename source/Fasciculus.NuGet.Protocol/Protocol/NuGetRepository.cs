@@ -7,11 +7,11 @@ namespace Fasciculus.NuGet.Protocol
 {
     public class NuGetRepository
     {
-        public static AsyncLazy<NuGetRepository> Local { get; } = new(GetLocal);
+        public static AsyncLazy<NuGetRepository> Global { get; } = new(GetGlobal);
 
-        private static async Task<NuGetRepository> GetLocal()
+        private static async Task<NuGetRepository> GetGlobal()
         {
-            NuGetSource source = await NuGetSource.Local;
+            NuGetSource source = await NuGetSource.Global;
 
             return source.GetRepository();
         }

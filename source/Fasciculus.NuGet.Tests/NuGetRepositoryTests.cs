@@ -8,9 +8,9 @@ namespace Fasciculus.NuGet.Tests
     public class NuGetRepositoryTests
     {
         [TestMethod]
-        public async Task TestLocal()
+        public async Task TestGlobal()
         {
-            NuGetRepository repository = await NuGetRepository.Local;
+            NuGetRepository repository = await NuGetRepository.Global;
 
             Assert.IsTrue(repository.Repository.PackageSource.IsLocal);
         }
@@ -18,7 +18,7 @@ namespace Fasciculus.NuGet.Tests
         [TestMethod]
         public async Task TestDefault()
         {
-            NuGetRepositories repositories = await NuGetRepositories.Remotes;
+            NuGetRepositories repositories = await NuGetRepositories.Default;
 
             foreach (NuGetRepository repository in repositories)
             {
