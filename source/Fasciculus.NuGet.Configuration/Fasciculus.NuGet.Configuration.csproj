@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
+    <ProjectReference Include="../Fasciculus.Threading.TaskSafe/Fasciculus.Threading.TaskSafe.csproj" />
   </ItemGroup>
 
 </Project>
