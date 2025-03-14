@@ -1,5 +1,6 @@
 using Fasciculus.IO;
 using NuGet.Configuration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,30 +9,44 @@ namespace Fasciculus.NuGet.Configuration
 {
     public static class SettingsExtensions
     {
-        public static PackageSource? GetLocalPackageSource(this ISettings settings)
+        public static NuGetSource GetLocalPackageSource(this ISettings settings)
         {
+            NuGetSource? source = null;
             SettingSection? section = settings.GetSection("config");
-            AddItem? item = section?.GetFirstItemWithAttribute<AddItem>("key", "globalPackagesFolder");
-            string? configPath = item?.ConfigPath;
-            string? repositoryPath = item?.Value;
 
-            if (configPath is not null && repositoryPath is not null)
+            if (section is not null)
             {
-                FileInfo configFile = new(configPath);
-                DirectoryInfo? configDirectory = configFile.Directory;
-                DirectoryInfo? repositoryDirectory = configDirectory?.Combine(repositoryPath);
+                AddItem? item = section?.GetFirstItemWithAttribute<AddItem>("key", "globalPackagesFolder");
 
-                return repositoryDirectory is null ? null : new PackageSource(repositoryDirectory.FullName);
+                if (item is not null)
+                {
+                    string? configPath = item.ConfigPath;
+                    string? repositoryPath = item.Value;
+
+                    if (configPath is not null && repositoryPath is not null)
+                    {
+                        FileInfo configFile = new(configPath);
+                        DirectoryInfo? configDirectory = configFile.Directory;
+
+                        if (configDirectory is not null)
+                        {
+                            DirectoryInfo repositoryDirectory = configDirectory.Combine(repositoryPath);
+
+                            source = new(new PackageSource(repositoryDirectory.FullName));
+                        }
+                    }
+                }
             }
 
-            return null;
+            return source ?? throw new ArgumentException();
         }
 
-        public static PackageSources GetRemotePackageSources(this ISettings settings)
+        public static NuGetSources GetRemotePackageSources(this ISettings settings)
         {
-            IEnumerable<PackageSource> packageSources = PackageSourceProvider
+            IEnumerable<NuGetSource> packageSources = PackageSourceProvider
                 .LoadPackageSources(settings)
-                .Where(x => x.IsEnabled && (x.IsHttp || x.IsHttps));
+                .Where(x => x.IsEnabled && (x.IsHttp || x.IsHttps))
+                .Select(x => new NuGetSource(x));
 
             return new(packageSources);
         }

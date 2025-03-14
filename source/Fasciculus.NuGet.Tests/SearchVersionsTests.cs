@@ -15,7 +15,7 @@ namespace Fasciculus.NuGet.Tests
         public void Test()
         {
             ISettings settings = SettingsLoader.Load();
-            PackageSources packageSources = settings.GetRemotePackageSources();
+            NuGetSources packageSources = settings.GetRemotePackageSources();
             NuGetRepositories repositories = packageSources.GetRepositories();
             NuGetResources resources = repositories.Resources;
             SortedSet<NuGetVersion> versions = Tasks.Wait(NuGetSearch.SearchVersionsAsync(resources, "NuGet.Protocol"));

@@ -13,13 +13,10 @@ namespace Fasciculus.NuGet.Tests
         public void TestLocal()
         {
             ISettings settings = SettingsLoader.Load();
-            PackageSource? packageSource = settings.GetLocalPackageSource();
-
-            Assert.IsNotNull(packageSource);
-
+            NuGetSource packageSource = settings.GetLocalPackageSource();
             NuGetRepository sourceRepository = packageSource.GetRepository();
 
-            string expected = packageSource.Source;
+            string expected = packageSource.Source.Source;
             string actual = sourceRepository.Repository.PackageSource.Source;
 
             Assert.AreEqual(expected, actual);
@@ -29,10 +26,10 @@ namespace Fasciculus.NuGet.Tests
         public void TestRemote()
         {
             ISettings settings = SettingsLoader.Load();
-            PackageSources packageSources = settings.GetRemotePackageSources();
+            NuGetSources packageSources = settings.GetRemotePackageSources();
             NuGetRepositories sourceRepositories = packageSources.GetRepositories();
 
-            string[] expected = [.. packageSources.Select(x => x.Source)];
+            string[] expected = [.. packageSources.Select(x => x.Source.Source)];
             string[] actual = [.. sourceRepositories.Select(x => x.Repository.PackageSource.Source)];
 
             CollectionAssert.AreEqual(expected, actual);
