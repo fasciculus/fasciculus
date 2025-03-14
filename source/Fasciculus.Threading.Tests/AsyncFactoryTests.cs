@@ -34,43 +34,39 @@ namespace Fasciculus.Threading.Tests
         }
 
         [TestMethod]
-        public void TestAction()
+        public async Task TestAction()
         {
             IAsyncAction factory = AsyncFactory.Create(Work1);
-            Task task = factory.Create();
-            Tasks.Wait(task);
-            long actual = work1.Read();
 
-            Assert.AreEqual(1, actual);
+            await factory.Create();
+
+            Assert.AreEqual(1, work1.Read());
         }
 
         [TestMethod]
-        public void TestAsyncAction()
+        public async Task TestAsyncAction()
         {
             IAsyncAction factory = AsyncFactory.Create(Work2);
-            Task task = factory.Create();
-            Tasks.Wait(task);
-            long actual = work2.Read();
 
-            Assert.AreEqual(1, actual);
+            await factory.Create();
+
+            Assert.AreEqual(1, work2.Read());
         }
 
         [TestMethod]
-        public void TestFunc()
+        public async Task TestFunc()
         {
             IAsyncFunc<long> factory = AsyncFactory.Create(Work3);
-            Task<long> task = factory.Create();
-            long actual = Tasks.Wait(task);
+            long actual = await factory.Create();
 
             Assert.AreEqual(3, actual);
         }
 
         [TestMethod]
-        public void TestAsyncFunc()
+        public async Task TestAsyncFunc()
         {
             IAsyncFunc<long> factory = AsyncFactory.Create(Work4);
-            Task<long> task = factory.Create();
-            long actual = Tasks.Wait(task);
+            long actual = await factory.Create();
 
             Assert.AreEqual(4, actual);
         }

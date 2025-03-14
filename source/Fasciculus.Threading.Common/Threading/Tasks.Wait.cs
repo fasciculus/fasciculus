@@ -38,12 +38,12 @@ namespace Fasciculus.Threading
         /// Synchronously waits for the given <paramref name="task"/> to finish.
         /// </summary>
         public static void Wait(Task task)
-            => Wait([task]);
+            => task.GetAwaiter().GetResult();
 
         /// <summary>
         /// Synchronously waits for the given <paramref name="task"/> to finish and returns its result.
         /// </summary>
         public static T Wait<T>(Task<T> task)
-            => Wait([task])[0];
+            => task.GetAwaiter().GetResult();
     }
 }
