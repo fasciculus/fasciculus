@@ -1,7 +1,6 @@
 using Fasciculus.NuGet.Configuration;
 using Fasciculus.NuGet.Protocol;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NuGet.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,7 +24,6 @@ namespace Fasciculus.NuGet.Tests
         [TestMethod]
         public async Task TestRemote()
         {
-            ISettings settings = SettingsLoader.Load();
             NuGetSources sources = await NuGetSources.Remotes;
             NuGetRepositories sourceRepositories = sources.GetRepositories();
 
