@@ -7,15 +7,15 @@ namespace Fasciculus.NuGet.Configuration
     public static class SettingsLoader
     {
         public static ISettings Load()
-            => Load(SettingsSearch.Search());
+            => LoadCore(SettingsSearch.Search());
 
         public static ISettings Load(DirectoryInfo startDirectory)
-            => Load(SettingsSearch.Search(startDirectory));
+            => LoadCore(SettingsSearch.Search(startDirectory));
 
         public static ISettings Load(SearchPath searchPath)
-            => Load(SettingsSearch.Search(searchPath));
+            => LoadCore(SettingsSearch.Search(searchPath));
 
-        public static ISettings Load(FileInfo? file)
-            => Settings.LoadDefaultSettings(file?.Directory?.FullName);
+        private static ISettings LoadCore(DirectoryInfo? directory)
+            => Settings.LoadDefaultSettings(directory?.FullName);
     }
 }

@@ -7,13 +7,13 @@ namespace Fasciculus.NuGet.Configuration
 {
     public static class SettingsSearch
     {
-        public static FileInfo? Search(SearchPath searchPath)
+        public static DirectoryInfo? Search(SearchPath searchPath)
         {
-            FileInfo? result = null;
+            DirectoryInfo? result = null;
 
             foreach (string name in Settings.OrderedSettingsFileNames)
             {
-                result = FileSearch.Search(name, searchPath).FirstOrDefault();
+                result = FileSearch.Search(name, searchPath).FirstOrDefault()?.Directory;
 
                 if (result is not null)
                 {
@@ -24,10 +24,10 @@ namespace Fasciculus.NuGet.Configuration
             return result;
         }
 
-        public static FileInfo? Search(DirectoryInfo start)
+        public static DirectoryInfo? Search(DirectoryInfo start)
             => Search(SearchPath.DirectoryAndParents(start));
 
-        public static FileInfo? Search()
+        public static DirectoryInfo? Search()
             => Search(SearchPath.WorkingDirectoryAndParents());
     }
 }

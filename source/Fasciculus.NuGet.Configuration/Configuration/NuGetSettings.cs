@@ -24,8 +24,5 @@ namespace Fasciculus.NuGet.Configuration
 
         public NuGetSettings(SearchPath searchPath)
             : this(SettingsLoader.Load(searchPath)) { }
-
-        public NuGetSettings(FileInfo? file)
-            : this(SettingsLoader.Load(file)) { }
     }
 }

@@ -12,10 +12,12 @@ namespace Fasciculus.NuGet.Tests
         [TestMethod]
         public void Test()
         {
-            FileInfo expected = FileSearch.Search("NuGet.config", SearchPath.WorkingDirectoryAndParents()).First();
-            FileInfo? actual = SettingsSearch.Search();
+            DirectoryInfo? expected = FileSearch.Search("NuGet.config", SearchPath.WorkingDirectoryAndParents()).FirstOrDefault()?.Directory;
+            DirectoryInfo? actual = SettingsSearch.Search();
 
+            Assert.IsNotNull(expected);
             Assert.IsNotNull(actual);
+
             Assert.AreEqual(expected.FullName, actual.FullName);
         }
     }
