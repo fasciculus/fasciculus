@@ -1,6 +1,7 @@
 using Fasciculus.NuGet.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuGet.Configuration;
+using System.Threading.Tasks;
 
 namespace Fasciculus.NuGet.Tests
 {
@@ -8,9 +9,9 @@ namespace Fasciculus.NuGet.Tests
     public class SettingsLoaderTests
     {
         [TestMethod]
-        public void Test()
+        public async Task Test()
         {
-            ISettings settings = SettingsLoader.Load();
+            ISettings settings = await SettingsLoader.LoadAsync();
             string[] roots = [.. settings.GetConfigRoots()];
 
             Assert.IsTrue(roots.Length > 0);

@@ -2,12 +2,13 @@ using Fasciculus.IO;
 using Fasciculus.Threading;
 using NuGet.Configuration;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Fasciculus.NuGet.Configuration
 {
     public class NuGetSettings
     {
-        public static AsyncLazy<NuGetSettings> Default = new(() => new NuGetSettings());
+        public static AsyncLazy<NuGetSettings> Default = new(LoadAsync);
 
         public ISettings Settings { get; }
 
@@ -16,13 +17,16 @@ namespace Fasciculus.NuGet.Configuration
             Settings = settings;
         }
 
-        public NuGetSettings()
-            : this(SettingsLoader.Load()) { }
+        public static async Task<NuGetSettings> LoadAsync()
+            => new(await SettingsLoader.LoadAsync());
 
-        public NuGetSettings(DirectoryInfo startDirectory)
-            : this(SettingsLoader.Load(startDirectory)) { }
+        public static async Task<NuGetSettings> Load(DirectoryInfo startDirectory)
+            => new(await SettingsLoader.LoadAsync(startDirectory));
 
-        public NuGetSettings(SearchPath searchPath)
-            : this(SettingsLoader.Load(searchPath)) { }
+        public static async Task<NuGetSettings> Load(SearchPath searchPath)
+            => new(await SettingsLoader.LoadAsync(searchPath));
+
+        public static async Task<NuGetSettings> LoadSpecific(FileInfo file)
+            => new(await SettingsLoader.LoadAsync(file));
     }
 }
