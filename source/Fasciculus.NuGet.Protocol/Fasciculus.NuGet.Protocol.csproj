@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="../Fasciculus.Collections.Common/Fasciculus.Collections.Common.csproj" />
     <ProjectReference Include="../Fasciculus.NuGet.Configuration/Fasciculus.NuGet.Configuration.csproj" />
+    <ProjectReference Include="../Fasciculus.NuGet.Versioning/Fasciculus.NuGet.Versioning.csproj" />
     <ProjectReference Include="../Fasciculus.Threading.TaskSafe/Fasciculus.Threading.TaskSafe.csproj" />
   </ItemGroup>
 

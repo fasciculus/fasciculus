@@ -1,8 +1,10 @@
+using Fasciculus.NuGet.Versioning;
 using Fasciculus.Threading;
 using NuGet.Common;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,11 +12,11 @@ namespace Fasciculus.NuGet.Protocol
 {
     public static partial class NuGetSearch
     {
-        public static async Task<SortedSet<NuGetVersion>> SearchVersionsAsync(this IEnumerable<FindPackageByIdResource> finders,
+        public static async Task<NuGetVersions> SearchVersionsAsync(this IEnumerable<FindPackageByIdResource> finders,
             string id, bool includePrerelease = true, SourceCacheContext? cacheContext = null, ILogger? logger = null,
             CancellationToken? cancellationToken = null)
         {
-            SortedSet<NuGetVersion> versions = new(VersionComparer.Default);
+            IEnumerable<NuGetVersion> versions = [];
 
             cacheContext ??= await NuGetSourceCache.Default;
             logger ??= logger.OrNone();
@@ -29,15 +31,15 @@ namespace Fasciculus.NuGet.Protocol
 
                     if (included)
                     {
-                        versions.Add(candidate);
+                        versions = versions.Append(candidate);
                     }
                 }
             }
 
-            return versions;
+            return new(versions);
         }
 
-        public static async Task<SortedSet<NuGetVersion>> SearchVersionsAsync(this NuGetResources resources, string id,
+        public static async Task<NuGetVersions> SearchVersionsAsync(this NuGetResources resources, string id,
             bool includePrerelease = true, SourceCacheContext? cacheContext = null, ILogger? logger = null,
             CancellationToken? cancellationToken = null)
             => await SearchVersionsAsync(await resources.FindPackageById, id, includePrerelease, cacheContext, logger, cancellationToken);

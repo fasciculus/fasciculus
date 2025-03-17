@@ -1,8 +1,7 @@
 using Fasciculus.NuGet.Configuration;
 using Fasciculus.NuGet.Protocol;
+using Fasciculus.NuGet.Versioning;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NuGet.Versioning;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Fasciculus.NuGet.Tests
@@ -16,7 +15,7 @@ namespace Fasciculus.NuGet.Tests
             NuGetSources sources = await NuGetSources.Default;
             NuGetRepositories repositories = sources.GetRepositories();
             NuGetResources resources = repositories.Resources;
-            SortedSet<NuGetVersion> versions = await NuGetSearch.SearchVersionsAsync(resources, "NuGet.Protocol");
+            NuGetVersions versions = await NuGetSearch.SearchVersionsAsync(resources, "NuGet.Protocol");
 
             Assert.IsTrue(versions.Count > 0);
         }
