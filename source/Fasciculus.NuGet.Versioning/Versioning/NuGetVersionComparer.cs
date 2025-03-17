@@ -36,6 +36,7 @@ namespace Fasciculus.NuGet.Versioning
             {
                 return y is null ? 0 : -1;
             }
+
             if (y is null)
             {
                 return 1;
@@ -53,7 +54,7 @@ namespace Fasciculus.NuGet.Versioning
         public class NuGetVersionDescendingComparer : NuGetVersionComparer
         {
             public override int Compare(NuGetVersion? x, NuGetVersion? y)
-                => -CompareCore(y, x);
+                => CompareCore(y, x);
         }
     }
 }
