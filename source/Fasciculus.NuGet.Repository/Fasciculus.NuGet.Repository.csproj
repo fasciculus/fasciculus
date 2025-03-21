@@ -5,4 +5,12 @@
     <RootNamespace>Fasciculus.NuGet</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fasciculus.IO/Fasciculus.IO.csproj" />
+  </ItemGroup>
+
 </Project>
